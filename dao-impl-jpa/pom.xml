@@ -8,9 +8,9 @@
 		<artifactId>pom</artifactId>
 		<version>0.0.1</version>
 	</parent>
-
+ 
 	<name>Data Access Implementation based on JPA</name>
-	
+	 
 	<groupId>org.cyk.system.root.dao</groupId>
 	<artifactId>dao-impl-jpa</artifactId>
 	<packaging>jar</packaging>
@@ -22,7 +22,7 @@
 			<version>0.0.1</version>
 		</dependency-->
 		
-		<dependency>
+		<dependency> 
 			<groupId>org.cyk.system.root.dao</groupId>
 			<artifactId>dao-api</artifactId>
 			<version>0.0.1</version>
