@@ -1,48 +1,15 @@
 package org.cyk.system.root.dao.api;
 
-import java.util.Collection;
-
 import org.cyk.system.root.model.IModel;
 
-public interface IDataAccess<IDENTIFIABLE extends IModel<IDENTIFIER>,IDENTIFIER> {
-	
-	public enum WhereOperator {OR,AND}
-	
-	/**
-	 * CRUD
-	 * 
-	 */
-	
-	/* Create */
-	
-	void create(IDENTIFIABLE object);
-	
-	/* Read */
-	
-	IDENTIFIABLE read(IDENTIFIER identifier);
-	
-	Collection<IDENTIFIABLE> readAll();
-	
-	/* Update */
-	
-	IDENTIFIABLE update(IDENTIFIABLE object);
-	
-	/* Delete */
-	
-	void delete(IDENTIFIABLE object);
-	
-	/* Dynamic query build and execution */
+public interface IDataAccess<IDENTIFIABLE extends IModel<IDENTIFIER>,IDENTIFIER> extends IQueryable<IDENTIFIABLE,IDENTIFIER> {
 		
-	IDataAccess<IDENTIFIABLE, IDENTIFIER> select();
+	/* Create */	IDENTIFIABLE create(IDENTIFIABLE object);
 	
-	IDataAccess<IDENTIFIABLE, IDENTIFIER> where(String anAttributeName,Object aValue,WhereOperator anOperator);
+	/* Read */		IDENTIFIABLE read(IDENTIFIER identifier);
 	
-	String getQueryString();
+	/* Update */	IDENTIFIABLE update(IDENTIFIABLE object);
 	
-	IDataAccess<IDENTIFIABLE, IDENTIFIER> build();
-	
-	Collection<IDENTIFIABLE> all();
-	
-	IDENTIFIABLE one();
+	/* Delete */	IDENTIFIABLE delete(IDENTIFIABLE object);
 
 }

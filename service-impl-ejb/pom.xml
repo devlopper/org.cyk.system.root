@@ -39,6 +39,11 @@
 			<artifactId>service-api</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.cyk.system.root.dao</groupId>
+			<artifactId>dao-impl-jpa</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 	</dependencies>	
 
 </project>

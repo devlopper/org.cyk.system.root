@@ -13,16 +13,17 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /*lombok*/
-@Getter @Setter
+
 /*mapping - jpa*/
 @MappedSuperclass
 public abstract class AbstractModel implements IModel<Long>, Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	@Getter @Setter
 	@Id @GeneratedValue
 	protected Long identifier;
-	
+	 
 	@Transient
 	private String __id__;
 	
