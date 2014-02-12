@@ -7,7 +7,7 @@ import org.cyk.system.root.dao.impl.AbstractTypedDao;
 import org.cyk.system.root.dao.impl.GenericDao;
 import org.cyk.system.root.service.api.IGenericModelService;
 import org.cyk.system.root.service.api.IGenericService;
-import org.cyk.utility.cdi.AbstractBean;
+import org.cyk.utility.common.cdi.AbstractBean;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;

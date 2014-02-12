@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 import lombok.Getter;
 
 import org.cyk.system.root.model.AbstractModel;
-import org.cyk.utility.cdi.AbstractBean;
+import org.cyk.utility.common.cdi.AbstractBean;
 
 public abstract class AbstractDao<IDENTIFIABLE extends AbstractModel> extends AbstractBean implements Serializable {
 

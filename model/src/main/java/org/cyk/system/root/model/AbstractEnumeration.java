@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
+
+import org.cyk.utility.common.validation.Client;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +22,10 @@ public abstract class AbstractEnumeration  extends AbstractModel  implements Ser
 	private static final long serialVersionUID = -8639942019354737162L;
 	
 	@Column(nullable=false,unique=true)
+	@NotNull(groups=Client.class)
 	protected String code;
 	
+	@NotNull(groups=Client.class)
 	protected String libelle;
 	
 	@Column(length=10 * 1024)
