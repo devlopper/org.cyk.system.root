@@ -7,6 +7,12 @@ import org.cyk.system.root.service.api.IModelService;
 
 public interface LanguageService extends IModelService<Language> {
 
-	String i18n(String code,Locale locale);
+	String findText(String code);
+	
+	String findText(String code,Locale locale);
+	
+	void setLocale(Locale locale);
+	
+	void registerResourceBundle(String id,ClassLoader aClassLoader);
 	
 }

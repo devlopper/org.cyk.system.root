@@ -2,7 +2,7 @@ package org.cyk.system.root.service.impl;
 
 import java.util.Locale;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 
 import org.cyk.system.root.dao.api.language.LanguageDao;
 import org.cyk.system.root.dao.impl.AbstractDao;
@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class LanguageServiceTest extends AbstractServiceTest {
 	
-	@EJB
+	@Inject
 	private LanguageService service;
 
 	@Deployment
@@ -43,24 +43,29 @@ public class LanguageServiceTest extends AbstractServiceTest {
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 	
+	@Override
+	protected Boolean initData() {
+		return Boolean.FALSE;
+	}
+	
 	@Test
 	public void frenchGoodMorning() {
-		Assert.assertTrue("bonjour".equals(service.i18n("good.morning", Locale.FRENCH)));
+		Assert.assertTrue("bonjour".equals(service.findText("good.morning", Locale.FRENCH)));
 	}
 	
 	@Test
 	public void englishGoodMorning() {
-		Assert.assertTrue("good morning".equals(service.i18n("good.morning", Locale.ENGLISH)));
+		Assert.assertTrue("good morning".equals(service.findText("good.morning", Locale.ENGLISH)));
 	}
 	
 	@Test
 	public void frenchUnknown() {
-		Assert.assertTrue("##hello##".equals(service.i18n("hello", Locale.FRENCH)));
+		Assert.assertTrue("##hello##".equals(service.findText("hello", Locale.FRENCH)));
 	}
 	
 	@Test
 	public void englishUnknown() {
-		Assert.assertTrue("##hello##".equals(service.i18n("hello", Locale.ENGLISH)));
+		Assert.assertTrue("##hello##".equals(service.findText("hello", Locale.ENGLISH)));
 	}
 
 }

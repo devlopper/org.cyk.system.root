@@ -23,6 +23,10 @@ public abstract class AbstractServiceTest {
 	
 	protected void _initialData_() throws Exception {}
 	
+	protected Boolean initData(){
+		return Boolean.TRUE;
+	}
+	
 	protected Boolean initDataOnce(){
 		return Boolean.FALSE;
 	}
@@ -33,11 +37,13 @@ public abstract class AbstractServiceTest {
 	}
 	
 	protected void _before_() throws Exception{
-		if(Boolean.FALSE.equals(initDataOnce()) )
-			initialData();
-		else if(Boolean.TRUE.equals(initDataOnce()) && Boolean.FALSE.equals(dataInited) ){
-			initialData();
-			dataInited = Boolean.TRUE;
+		if(Boolean.TRUE.equals(initData())){
+			if(Boolean.FALSE.equals(initDataOnce()) )
+				initialData();
+			else if(Boolean.TRUE.equals(initDataOnce()) && Boolean.FALSE.equals(dataInited) ){
+				initialData();
+				dataInited = Boolean.TRUE;
+			}
 		}
 	}
 	

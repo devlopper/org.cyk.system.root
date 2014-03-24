@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
@@ -20,9 +19,10 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractModel> exten
 	private static final long serialVersionUID = -2964204372097468908L;
 
 	@SuppressWarnings("unchecked")
-	@PostConstruct
-	private void postConstruct(){ 
+	@Override
+	protected void initialisation() {
 		clazz = (Class<IDENTIFIABLE>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		super.initialisation();
 	}
 	
 	@Override 
