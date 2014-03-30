@@ -7,7 +7,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.cyk.system.root.dao.impl.GenericDao;
-import org.cyk.system.root.model.AbstractModel;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.service.api.IGenericModelService;
 import org.cyk.system.root.service.api.IGenericService;
 import org.cyk.system.root.service.api.IServiceable;
@@ -20,62 +20,62 @@ public class GenericService extends AbstractService implements IGenericModelServ
 	@Inject private GenericDao dao;
 	 
 	@Override
-	public AbstractModel create(Class<? extends AbstractModel> aClass,AbstractModel object) {
+	public AbstractIdentifiable create(Class<? extends AbstractIdentifiable> aClass,AbstractIdentifiable object) {
 		return dao.create(aClass, object);
 	}
 
 	@Override
-	public AbstractModel read(Class<? extends AbstractModel> aClass,Long identifier) {
+	public AbstractIdentifiable read(Class<? extends AbstractIdentifiable> aClass,Long identifier) {
 		return dao.read(aClass, identifier);
 	}
 
 	@Override
-	public AbstractModel update(Class<? extends AbstractModel> aClass,AbstractModel object) {
+	public AbstractIdentifiable update(Class<? extends AbstractIdentifiable> aClass,AbstractIdentifiable object) {
 		return dao.update(aClass, object);
 	}
 
 	@Override
-	public AbstractModel delete(Class<? extends AbstractModel> aClass,AbstractModel object) {
+	public AbstractIdentifiable delete(Class<? extends AbstractIdentifiable> aClass,AbstractIdentifiable object) {
 		return dao.delete(aClass, object);
 	}
 
 	@Override
-	public IGenericService<AbstractModel, Long> use(Class<? extends AbstractModel> aClass) {
+	public IGenericService<AbstractIdentifiable, Long> use(Class<? extends AbstractIdentifiable> aClass) {
 		dao.use(aClass);
 		return this;
 	}
 
 	@Override
-	public IServiceable<AbstractModel, Long> find() {
+	public IServiceable<AbstractIdentifiable, Long> find() {
 		dao.select();
 		return this;
 	}
 
 	@Override
-	public IServiceable<AbstractModel, Long> where(String anAttributeName,Object aValue) {
+	public IServiceable<AbstractIdentifiable, Long> where(String anAttributeName,Object aValue) {
 		dao.where(anAttributeName, aValue);
 		return this;
 	}
 
 	@Override
-	public IServiceable<AbstractModel, Long> and() {
+	public IServiceable<AbstractIdentifiable, Long> and() {
 		dao.and();
 		return this;
 	}
 
 	@Override
-	public IServiceable<AbstractModel, Long> or() {
+	public IServiceable<AbstractIdentifiable, Long> or() {
 		dao.or();
 		return this;
 	}
 
 	@Override
-	public Collection<AbstractModel> all() {
+	public Collection<AbstractIdentifiable> all() {
 		return dao.all();
 	}
 
 	@Override
-	public AbstractModel one() {
+	public AbstractIdentifiable one() {
 		return dao.one();
 	}
 

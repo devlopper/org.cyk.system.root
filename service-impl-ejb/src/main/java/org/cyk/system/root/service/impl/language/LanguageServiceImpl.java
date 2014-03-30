@@ -23,7 +23,7 @@ public class LanguageServiceImpl extends AbstractTypedService<Language, Language
 
 	private static final long serialVersionUID = -3799482462496328200L;
 
-	private static Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new HashMap<>();
+	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new HashMap<>();
 	
 	@Setter private Locale locale = Locale.FRENCH;
 	

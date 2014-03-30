@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 /*mapping-jpa*/
 @MappedSuperclass
-public abstract class AbstractEnumeration  extends AbstractModel  implements Serializable {
+public abstract class AbstractEnumeration  extends AbstractIdentifiable  implements Serializable {
 
 	private static final long serialVersionUID = -8639942019354737162L;
 	

@@ -2,7 +2,7 @@ package org.cyk.system.root.service.impl;
 
 import javax.ejb.EJB;
 
-import org.cyk.system.root.dao.impl.AbstractDao;
+import org.cyk.system.root.dao.impl.AbstractQueryable;
 import org.cyk.system.root.dao.impl.AbstractTypedDao;
 import org.cyk.system.root.dao.impl.GenericDao;
 import org.cyk.system.root.service.api.IGenericModelService;
@@ -30,7 +30,7 @@ public class GenericServiceCrudTest extends AbstractServiceTest {
 		return ShrinkWrap
 				.create(JavaArchive.class)
 				.addClasses(AbstractBean.class,AbstractService.class,GenericService.class,Person.class,
-						IGenericService.class,IGenericModelService.class,AbstractDao.class, AbstractTypedDao.class,GenericDao.class)
+						IGenericService.class,IGenericModelService.class,AbstractQueryable.class, AbstractTypedDao.class,GenericDao.class)
 				.addAsResource("test-persistence.xml","META-INF/persistence.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 	}

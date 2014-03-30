@@ -1,8 +1,8 @@
 package org.cyk.system.root.service.api;
 
-import org.cyk.system.root.model.IModel;
+import org.cyk.system.root.model.Identifiable;
 
-public interface IGenericService<IDENTIFIABLE extends IModel<IDENTIFIER>,IDENTIFIER> extends IServiceable<IDENTIFIABLE,IDENTIFIER> {
+public interface IGenericService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends IServiceable<IDENTIFIABLE,IDENTIFIER> {
 
 	/* ------------------------ Static methods ---------------------------- */
 	

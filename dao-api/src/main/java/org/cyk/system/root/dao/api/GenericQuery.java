@@ -1,8 +1,8 @@
 package org.cyk.system.root.dao.api;
 
-import org.cyk.system.root.model.IModel;
+import org.cyk.system.root.model.Identifiable;
 
-public interface IGenericDataAccess<IDENTIFIABLE extends IModel<IDENTIFIER>,IDENTIFIER> extends IQueryable<IDENTIFIABLE,IDENTIFIER> {
+public interface GenericQuery<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends Queryable<IDENTIFIABLE,IDENTIFIER> {
 
 	/* ------------------------ Static methods ---------------------------- */
 	
@@ -16,6 +16,6 @@ public interface IGenericDataAccess<IDENTIFIABLE extends IModel<IDENTIFIER>,IDEN
 	
 	/* ------------------------ Dynamic methods ---------------------------- */
 	
-	/* point to */	IGenericDataAccess<IDENTIFIABLE,IDENTIFIER> use(Class<? extends IDENTIFIABLE> aClass);
+	/* point to */	GenericQuery<IDENTIFIABLE,IDENTIFIER> use(Class<? extends IDENTIFIABLE> aClass);
 	
 }

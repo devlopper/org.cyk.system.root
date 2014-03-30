@@ -2,9 +2,9 @@ package org.cyk.system.root.service.api;
 
 import java.util.Collection;
 
-import org.cyk.system.root.model.IModel;
+import org.cyk.system.root.model.Identifiable;
 
-public interface IServiceable <IDENTIFIABLE extends IModel<IDENTIFIER>,IDENTIFIER> {
+public interface IServiceable <IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> {
 	
 	/* select */	IServiceable<IDENTIFIABLE,IDENTIFIER> find();
 	

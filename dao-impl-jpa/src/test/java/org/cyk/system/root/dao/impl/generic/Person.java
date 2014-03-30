@@ -1,4 +1,4 @@
-package org.cyk.system.root.dao.impl;
+package org.cyk.system.root.dao.impl.generic;
 
 import java.io.Serializable;
 
@@ -10,10 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractModel;
+import org.cyk.system.root.model.AbstractIdentifiable;
 
 @Getter @Setter @Entity @AllArgsConstructor @NoArgsConstructor
-public class Person extends AbstractModel implements Serializable {
+public class Person extends AbstractIdentifiable implements Serializable {
 
 	/**
 	 * 

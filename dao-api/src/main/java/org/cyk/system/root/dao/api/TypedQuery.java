@@ -1,8 +1,8 @@
 package org.cyk.system.root.dao.api;
 
-import org.cyk.system.root.model.IModel;
+import org.cyk.system.root.model.Identifiable;
 
-public interface IDataAccess<IDENTIFIABLE extends IModel<IDENTIFIER>,IDENTIFIER> extends IQueryable<IDENTIFIABLE,IDENTIFIER> {
+public interface TypedQuery<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends Queryable<IDENTIFIABLE,IDENTIFIER> {
 		
 	/* Create */	IDENTIFIABLE create(IDENTIFIABLE object);
 	

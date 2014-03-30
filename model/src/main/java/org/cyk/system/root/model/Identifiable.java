@@ -1,7 +1,7 @@
 package org.cyk.system.root.model;
 
 
-public interface IModel<IDENTIFIER>{
+public interface Identifiable<IDENTIFIER>{
 
 	IDENTIFIER getIdentifier();
  

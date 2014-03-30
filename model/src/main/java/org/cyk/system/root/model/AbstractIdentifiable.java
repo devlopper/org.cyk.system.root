@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /*mapping - jpa*/
 @MappedSuperclass
-public abstract class AbstractModel implements IModel<Long>, Serializable{
+public abstract class AbstractIdentifiable implements Identifiable<Long>, Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -29,7 +29,7 @@ public abstract class AbstractModel implements IModel<Long>, Serializable{
 	
 	private String __identifier__(){
 		if(__id__==null)
-			__id__ = identifier==null?null:getClass().getSimpleName()+"/"+identifier;
+			__id__ = getIdentifier()==null?null:getClass().getSimpleName()+"/"+identifier;
 		return __id__;
 	}
 	
@@ -41,9 +41,9 @@ public abstract class AbstractModel implements IModel<Long>, Serializable{
 	
 	@Override
 	public boolean equals(Object object) {
-		if(!(object instanceof AbstractModel))
+		if(!(object instanceof AbstractIdentifiable))
 			return Boolean.FALSE;
-		String id1 = __identifier__() , id2 = ((AbstractModel) object).__identifier__();
+		String id1 = __identifier__() , id2 = ((AbstractIdentifiable) object).__identifier__();
 		if(id1==null || id2==null)
 			return Boolean.FALSE;
 		return id1.equals(id2);

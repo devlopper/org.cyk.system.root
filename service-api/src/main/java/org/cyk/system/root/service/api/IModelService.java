@@ -1,8 +1,8 @@
 package org.cyk.system.root.service.api;
 
-import org.cyk.system.root.model.AbstractModel;
+import org.cyk.system.root.model.AbstractIdentifiable;
 
-public interface IModelService<IDENTIFIABLE extends AbstractModel> extends IServiceable<IDENTIFIABLE, Long> {
+public interface IModelService<IDENTIFIABLE extends AbstractIdentifiable> extends IServiceable<IDENTIFIABLE, Long> {
 
 	/* Create */	IDENTIFIABLE create(IDENTIFIABLE object);
 	

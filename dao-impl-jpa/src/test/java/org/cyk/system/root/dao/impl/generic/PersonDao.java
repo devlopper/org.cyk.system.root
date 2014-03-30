@@ -1,6 +1,8 @@
-package org.cyk.system.root.dao.impl;
+package org.cyk.system.root.dao.impl.generic;
 
 import java.io.Serializable;
+
+import org.cyk.system.root.dao.impl.AbstractTypedDao;
 
 public class PersonDao extends AbstractTypedDao<Person> implements Serializable {
 

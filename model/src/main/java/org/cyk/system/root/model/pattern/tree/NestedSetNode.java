@@ -1,0 +1,79 @@
+package org.cyk.system.root.model.pattern.tree;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import org.cyk.system.root.model.AbstractIdentifiable;
+
+@Getter @Setter
+@Entity
+public class NestedSetNode extends AbstractIdentifiable implements Serializable  {
+
+	private static final long serialVersionUID = 9135086950442356103L;
+
+	public static final Integer FIRST_LEFT_INDEX = 0;
+	public static final Integer FIRST_RIGHT_INDEX = 1;
+	
+	@ManyToOne
+	@JoinColumn(name="nestedset")
+	private NestedSet set;
+	
+	@ManyToOne
+	private NestedSetNode parent;
+	
+	private Integer leftIndex = 0;
+	
+	private Integer rightIndex = 0;
+	
+	public NestedSetNode() {}
+	
+	public NestedSetNode(NestedSet set,NestedSetNode parent, int leftIndex, int rightIndex) {
+		super();
+		this.set = set;
+		this.parent = parent;
+		this.leftIndex = leftIndex;
+		this.rightIndex = rightIndex;
+	}
+
+	public NestedSetNode(NestedSet set,NestedSetNode parent) {
+		this(set,parent,FIRST_LEFT_INDEX,FIRST_RIGHT_INDEX) ;
+	}
+	
+	public boolean isLeaf(){
+		return leftIndex+1==rightIndex;
+	}
+	
+	public void updateBoundariesGreaterThanOrEqualTo(boolean increase,int index){
+		//System.out.println("Index : "+index+" - "+leftIndex+" - "+rightIndex);
+		int sign = increase?+1:-1;
+		if(leftIndex>=index)
+			leftIndex=leftIndex+sign*2;
+		if(rightIndex>=index)
+			rightIndex=rightIndex+sign*2;
+	}
+	
+	public void updateBoundaries(int step,Boolean left){
+		if(left==null || left)
+			leftIndex = leftIndex + step;
+		if(left==null || !left)
+			rightIndex = rightIndex + step;
+	}
+	
+	@Override
+	public String toString() {
+		return "("+leftIndex+","+rightIndex+")";
+	}
+	/*
+	public static NestedSetNode createChildOf(NestedSetNode root){
+		NestedSetNode child = new NestedSetNode(root.getSet(), root, root.getRightIndex(), root.getRightIndex()+1);
+		root.setRightIndex(root.getRightIndex()+2);
+		return child;
+	}*/
+	
+}
