@@ -2,7 +2,7 @@ package org.cyk.system.root.dao.api;
 
 import org.cyk.system.root.model.Identifiable;
 
-public interface GenericQuery<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends Queryable<IDENTIFIABLE,IDENTIFIER> {
+public interface GenericPersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends PersistenceService<IDENTIFIABLE,IDENTIFIER> {
 
 	/* ------------------------ Static methods ---------------------------- */
 	
@@ -16,6 +16,6 @@ public interface GenericQuery<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDEN
 	
 	/* ------------------------ Dynamic methods ---------------------------- */
 	
-	/* point to */	GenericQuery<IDENTIFIABLE,IDENTIFIER> use(Class<? extends IDENTIFIABLE> aClass);
+	/* point to */	GenericPersistenceService<IDENTIFIABLE,IDENTIFIER> use(Class<? extends IDENTIFIABLE> aClass);
 	
 }

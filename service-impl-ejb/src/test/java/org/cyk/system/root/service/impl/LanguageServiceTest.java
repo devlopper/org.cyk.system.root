@@ -5,9 +5,9 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import org.cyk.system.root.dao.api.language.LanguageDao;
-import org.cyk.system.root.dao.impl.AbstractQueryable;
+import org.cyk.system.root.dao.impl.AbstractPersistenceService;
 import org.cyk.system.root.dao.impl.AbstractTypedDao;
-import org.cyk.system.root.dao.impl.GenericDao;
+import org.cyk.system.root.dao.impl.GenericDaoImpl;
 import org.cyk.system.root.dao.impl.language.LanguageDaoImpl;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.service.api.IGenericModelService;
@@ -38,7 +38,7 @@ public class LanguageServiceTest extends AbstractServiceTest {
 				.create(JavaArchive.class)
 				.addClasses(AbstractBean.class,AbstractService.class,GenericService.class,Language.class,LanguageService.class,LanguageServiceImpl.class,
 						LanguageDao.class,LanguageDaoImpl.class,IModelService.class,
-						IGenericService.class,IGenericModelService.class,AbstractQueryable.class, AbstractTypedDao.class,GenericDao.class)
+						IGenericService.class,IGenericModelService.class,AbstractPersistenceService.class, AbstractTypedDao.class,GenericDaoImpl.class)
 				.addAsResource("test-persistence.xml","META-INF/persistence.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 	}

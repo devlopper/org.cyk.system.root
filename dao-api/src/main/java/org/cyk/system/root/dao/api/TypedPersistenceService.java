@@ -2,7 +2,7 @@ package org.cyk.system.root.dao.api;
 
 import org.cyk.system.root.model.Identifiable;
 
-public interface TypedQuery<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends Queryable<IDENTIFIABLE,IDENTIFIER> {
+public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends PersistenceService<IDENTIFIABLE,IDENTIFIER> {
 		
 	/* Create */	IDENTIFIABLE create(IDENTIFIABLE object);
 	

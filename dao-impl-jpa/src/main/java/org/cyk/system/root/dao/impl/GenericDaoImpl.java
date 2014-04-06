@@ -1,9 +1,9 @@
 package org.cyk.system.root.dao.impl;
 
-import org.cyk.system.root.dao.api.GenericIdentifiableQuery;
+import org.cyk.system.root.dao.api.GenericDao;
 import org.cyk.system.root.model.AbstractIdentifiable;
 
-public class GenericDao extends AbstractQueryable<AbstractIdentifiable> implements GenericIdentifiableQuery {
+public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifiable> implements GenericDao {
 
 	private static final long serialVersionUID = 5597848028969504927L;
 	
@@ -35,7 +35,7 @@ public class GenericDao extends AbstractQueryable<AbstractIdentifiable> implemen
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public GenericIdentifiableQuery use(Class<? extends AbstractIdentifiable> aClass) {
+	public GenericDao use(Class<? extends AbstractIdentifiable> aClass) {
 		clazz = (Class<AbstractIdentifiable>) aClass;
 		return this;
 	}

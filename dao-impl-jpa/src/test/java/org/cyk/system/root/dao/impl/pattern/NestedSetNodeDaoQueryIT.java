@@ -2,26 +2,25 @@ package org.cyk.system.root.dao.impl.pattern;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.dao.api.TypedIdentifiableQuery;
+import org.cyk.system.root.dao.api.TypedDao;
 import org.cyk.system.root.dao.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.dao.api.pattern.tree.NestedSetNodeDao;
-import org.cyk.system.root.dao.impl.AbstractQueryTest;
+import org.cyk.system.root.dao.impl.AbstractPersistenceService;
+import org.cyk.system.root.dao.impl.AbstractQueryIT;
+import org.cyk.system.root.dao.impl.generic.Transaction;
 import org.cyk.system.root.dao.impl.pattern.tree.NestedSetNodeDaoImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(Arquillian.class)
-public class NestedSetNodeQueryTest extends AbstractQueryTest<NestedSetNode> {
+public class NestedSetNodeDaoQueryIT extends AbstractQueryIT<NestedSetNode> {
 	
 	@Inject private NestedSetNodeDao dao;
-	private NestedSet set1;
+	private NestedSet set1; 
 	private NestedSetNode a1,a11,a12;
 
 	@Deployment
@@ -30,14 +29,14 @@ public class NestedSetNodeQueryTest extends AbstractQueryTest<NestedSetNode> {
 	}
 	
 	@Override
-	protected TypedIdentifiableQuery<NestedSetNode> dao() {
-		return null;
+	protected TypedDao<NestedSetNode> dao() {
+		return dao;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Class<? extends AbstractIdentifiable>[] entitiesToDelete() {
-		return (Class<? extends AbstractIdentifiable>[]) new Class<?>[]{NestedSet.class,NestedSetNode.class};
+		return (Class<? extends AbstractIdentifiable>[]) new Class<?>[]{NestedSetNode.class,NestedSet.class};
 	}
 		
 	@Override
@@ -68,6 +67,18 @@ public class NestedSetNodeQueryTest extends AbstractQueryTest<NestedSetNode> {
 	@Test
 	public void set1Size1() {
 		Assert.assertTrue(dao.readByParent(a1).size()==5);
+	}
+	
+	@Test
+	public void delete() {
+		Assert.assertEquals(6,dao.select().all().size());
+		new Transaction(transaction,(AbstractPersistenceService<?>) genericDao,null) {
+			@Override
+			public void _execute_() {
+				dao.delete(a11);
+				Assert.assertEquals(4, 10,dao.select().all().size());
+			}
+		}.run();
 	}
 	
 	

@@ -25,8 +25,11 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	@NotNull(groups=Client.class)
 	protected String code;
 	
+	@Column(nullable=false)
 	@NotNull(groups=Client.class)
 	protected String libelle;
+	
+	protected String abbreviation;
 	
 	@Column(length=10 * 1024)
 	protected String description;

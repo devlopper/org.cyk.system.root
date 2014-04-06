@@ -3,12 +3,12 @@ package org.cyk.system.root.service.impl;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.cyk.system.root.dao.api.TypedIdentifiableQuery;
+import org.cyk.system.root.dao.api.TypedDao;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.service.api.IModelService;
 import org.cyk.system.root.service.api.IServiceable;
 
-public abstract class AbstractTypedService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedIdentifiableQuery<IDENTIFIABLE>> extends AbstractService implements
+public abstract class AbstractTypedService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractService implements
 		IModelService<IDENTIFIABLE>, Serializable {
 
 	private static final long serialVersionUID = 6437552355933877400L;

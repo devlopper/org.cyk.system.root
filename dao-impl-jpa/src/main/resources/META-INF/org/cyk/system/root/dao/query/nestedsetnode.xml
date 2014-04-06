@@ -3,12 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd ">
 	
-	<named-query name="NestedSetNode.readByParent"><query><![CDATA[
-		SELECT node
-		FROM NestedSetNode node
-		WHERE node.set=:nestedSet AND node.leftIndex > :leftIndex AND node.leftIndex < :rightIndex
-		ORDER BY node.leftIndex
-	]]></query></named-query>
+	
 	
 	<!--
 	<named-query name="NestedSetNode.findChildrenIdsByNestedSetByParent"><query><![CDATA[

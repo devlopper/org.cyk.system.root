@@ -6,7 +6,7 @@ import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.cyk.system.root.dao.impl.GenericDao;
+import org.cyk.system.root.dao.impl.GenericDaoImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.service.api.IGenericModelService;
 import org.cyk.system.root.service.api.IGenericService;
@@ -17,7 +17,7 @@ public class GenericService extends AbstractService implements IGenericModelServ
 	
 	private static final long serialVersionUID = -1042342183332719272L;
 
-	@Inject private GenericDao dao;
+	@Inject private GenericDaoImpl dao;
 	 
 	@Override
 	public AbstractIdentifiable create(Class<? extends AbstractIdentifiable> aClass,AbstractIdentifiable object) {

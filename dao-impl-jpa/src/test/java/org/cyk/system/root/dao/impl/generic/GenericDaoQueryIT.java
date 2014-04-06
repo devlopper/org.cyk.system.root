@@ -1,25 +1,25 @@
 package org.cyk.system.root.dao.impl.generic;
 
-import org.cyk.system.root.dao.api.TypedIdentifiableQuery;
-import org.cyk.system.root.dao.impl.AbstractQueryTest;
+import org.cyk.system.root.dao.api.TypedDao;
+import org.cyk.system.root.dao.impl.AbstractQueryIT;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class GenericDaoQueryTest extends AbstractQueryTest<Person> {
+public class GenericDaoQueryIT extends AbstractQueryIT<Person> {
 	
 	private Person p;
 	private Long identifier;
 
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return createDeployment(Person.class.getPackage());
+		return createDeployment(Person.class);
 	}
 	
 	@Override
-	protected TypedIdentifiableQuery<Person> dao() {
+	protected TypedDao<Person> dao() {
 		return null;
 	}
 

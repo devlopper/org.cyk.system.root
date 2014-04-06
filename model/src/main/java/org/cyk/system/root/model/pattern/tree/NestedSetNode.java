@@ -2,14 +2,17 @@ package org.cyk.system.root.model.pattern.tree;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.validation.System;
 
 @Getter @Setter
 @Entity
@@ -21,15 +24,21 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	public static final Integer FIRST_RIGHT_INDEX = 1;
 	
 	@ManyToOne
-	@JoinColumn(name="nestedset")
+	@JoinColumn(name="theset")
+	@NotNull(groups=System.class)
 	private NestedSet set;
 	
+	@JoinColumn(name="parent")
 	@ManyToOne
 	private NestedSetNode parent;
 	
-	private Integer leftIndex = 0;
+	@Column(nullable=false)
+	@NotNull(groups=System.class)
+	private Integer leftIndex;
 	
-	private Integer rightIndex = 0;
+	@Column(nullable=false)
+	@NotNull(groups=System.class)
+	private Integer rightIndex;
 	
 	public NestedSetNode() {}
 	

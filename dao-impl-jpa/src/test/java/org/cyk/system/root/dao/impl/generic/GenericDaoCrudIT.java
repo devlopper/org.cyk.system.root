@@ -2,8 +2,8 @@ package org.cyk.system.root.dao.impl.generic;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
-import org.cyk.system.root.dao.impl.AbstractCrudTest;
-import org.cyk.system.root.dao.impl.AbstractQueryable;
+import org.cyk.system.root.dao.impl.AbstractCrudIT;
+import org.cyk.system.root.dao.impl.AbstractPersistenceService;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -12,11 +12,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class GenericDaoCrudTest extends AbstractCrudTest<Person> {
+public class GenericDaoCrudIT extends AbstractCrudIT<Person> {
 	
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return createCrudDeployment(Person.class.getPackage());
+		return createDeployment(Person.class/*,PersonDao.class*/);
 	}
 		
 	@Override
@@ -31,7 +31,7 @@ public class GenericDaoCrudTest extends AbstractCrudTest<Person> {
 	
 	@Test(expected=RuntimeException.class)
 	public void createNoUniqueMatriculeConstraintViolation(){
-		new DatabaseAccess(transaction,(AbstractQueryable<?>) genericDao,SQLIntegrityConstraintViolationException.class) {
+		new Transaction(transaction,(AbstractPersistenceService<?>) genericDao,SQLIntegrityConstraintViolationException.class) {
 			@Override
 			public void _execute_() {
 				Person person = new Person("m01", "Ali", "Bamba");

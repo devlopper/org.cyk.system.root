@@ -3,10 +3,10 @@ package org.cyk.system.root.dao.impl;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 
-import org.cyk.system.root.dao.api.TypedIdentifiableQuery;
+import org.cyk.system.root.dao.api.TypedDao;
 import org.cyk.system.root.model.AbstractIdentifiable;
 
-public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractQueryable<IDENTIFIABLE> implements TypedIdentifiableQuery<IDENTIFIABLE>,Serializable {
+public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
 
 	private static final long serialVersionUID = -2964204372097468908L;
 

@@ -7,13 +7,13 @@ import javax.transaction.UserTransaction;
 
 import lombok.AllArgsConstructor;
 
-import org.cyk.system.root.dao.impl.AbstractQueryable;
+import org.cyk.system.root.dao.impl.AbstractPersistenceService;
 
 @AllArgsConstructor
-public abstract class DatabaseAccess {
+public abstract class Transaction {
 	
 	private UserTransaction transaction;
-	private AbstractQueryable<?> dao;
+	private AbstractPersistenceService<?> dao;
 	private Class<? extends SQLException> exceptionClassExpected;
 	
 	public void run(){

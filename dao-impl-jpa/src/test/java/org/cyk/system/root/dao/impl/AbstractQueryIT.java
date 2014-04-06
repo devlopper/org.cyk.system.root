@@ -1,15 +1,15 @@
 package org.cyk.system.root.dao.impl;
 
-import org.cyk.system.root.dao.api.TypedIdentifiableQuery;
-import org.cyk.system.root.dao.impl.GenericDao;
+import org.cyk.system.root.dao.api.TypedDao;
+import org.cyk.system.root.dao.impl.GenericDaoImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 
-public abstract class AbstractQueryTest<MODEL extends AbstractIdentifiable> extends AbstractDataAccessTest {
+public abstract class AbstractQueryIT<MODEL extends AbstractIdentifiable> extends AbstractPersistenceIT {
 	
 	private Boolean data = Boolean.FALSE;
 	
-	protected abstract TypedIdentifiableQuery<MODEL> dao(); 
-	
+	protected abstract TypedDao<MODEL> dao(); 
+	 
 	@Override
 	protected void _before_() throws Exception {
 		super._before_();
@@ -19,17 +19,14 @@ public abstract class AbstractQueryTest<MODEL extends AbstractIdentifiable> exte
 		
 		transaction.begin();
 		
-		((GenericDao)genericDao).getEntityManager().joinTransaction();
-		for(Class<?> from : entitiesToDelete())
-			((GenericDao)genericDao).getEntityManager().createQuery("delete from "+from.getSimpleName()).executeUpdate();
+		((GenericDaoImpl)genericDao).getEntityManager().joinTransaction();
+		cleanDatabase();
 		
 		populate();
 		transaction.commit();
 		afterCommit();
 		data = Boolean.TRUE;
 	}
-	
-	protected abstract Class<? extends AbstractIdentifiable>[] entitiesToDelete();
 	
 	protected abstract void populate();
 	

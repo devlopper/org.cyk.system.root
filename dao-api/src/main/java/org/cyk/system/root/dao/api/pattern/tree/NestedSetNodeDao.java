@@ -3,15 +3,15 @@ package org.cyk.system.root.dao.api.pattern.tree;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.cyk.system.root.dao.api.TypedIdentifiableQuery;
+import org.cyk.system.root.dao.api.TypedDao;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 
-public interface NestedSetNodeDao extends TypedIdentifiableQuery<NestedSetNode> , Serializable {
+public interface NestedSetNodeDao extends TypedDao<NestedSetNode> , Serializable {
 
 	/**
 	 * Get all child node of parent (direct and indirect child are returned)
-	 * @param parent
+	 * @param parent 
 	 * @return
 	 */
 	Collection<NestedSetNode> readByParent(NestedSetNode parent);

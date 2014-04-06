@@ -15,8 +15,8 @@ public class Language extends AbstractEnumeration implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	public Language(String code, String libelle, String description) {
-		super(code, libelle, description);
+	public Language(String code, String libelle,String abbreviation, String description) {
+		super(code, libelle,abbreviation, description);
 	}
 	
 	private Collection<LanguageEntry> entries = new LinkedHashSet<>();

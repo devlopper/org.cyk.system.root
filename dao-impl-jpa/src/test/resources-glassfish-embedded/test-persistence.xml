@@ -3,10 +3,12 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="test" transaction-type="JTA">
 		<jta-data-source>jdbc/arquillian</jta-data-source>
-		<mapping-file>META-INF/org/cyk/system/root/dao/query/nestedsetnode.xml</mapping-file>
+		<!--mapping-file>META-INF/org/cyk/system/root/dao/query/nestedsetnode.xml</mapping-file-->
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-			<property name="eclipselink.logging.level.sql" value="ALL" />
+			<property name="eclipselink.logging.level" value="ALL"/>
+			<property name="eclipselink.logging.level.sql" value="FINE" />
 			<property name="eclipselink.logging.parameters" value="true" />
 		</properties>
 	</persistence-unit>

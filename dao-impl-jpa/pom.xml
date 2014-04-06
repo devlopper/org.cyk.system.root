@@ -7,21 +7,15 @@
 		<groupId>org.cyk.system.root</groupId>
 		<artifactId>pom</artifactId>
 		<version>0.0.1</version>
-	</parent>
- 
+	</parent> 
+   
 	<name>Data Access Implementation based on JPA</name>
 	 
 	<groupId>org.cyk.system.root.dao</groupId>
 	<artifactId>dao-impl-jpa</artifactId>
 	<packaging>jar</packaging>
-	
-	<dependencies>
-		<!--dependency>
-			<groupId>org.cyk.system.root.dao</groupId>
-			<artifactId>dao-impl-jpa</artifactId>
-			<version>0.0.1</version>
-		</dependency-->
-		
+	 
+	<dependencies> 
 		<dependency> 
 			<groupId>org.cyk.system.root.dao</groupId>
 			<artifactId>dao-api</artifactId>
