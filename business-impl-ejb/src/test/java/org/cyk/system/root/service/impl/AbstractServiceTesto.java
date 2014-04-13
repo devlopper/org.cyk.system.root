@@ -8,7 +8,7 @@ import javax.transaction.UserTransaction;
 import org.junit.After;
 import org.junit.Before;
 
-public abstract class AbstractServiceTest {
+public abstract class AbstractServiceTesto {
 
 	@Inject protected UserTransaction transaction;
 	@PersistenceContext protected EntityManager entityManager;

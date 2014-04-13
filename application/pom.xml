@@ -9,7 +9,7 @@
 		<version>0.0.1</version>
 	</parent> 
 
-	<name>Application</name>
+	<name>Application</name> 
 
 	<artifactId>application</artifactId>
 	<packaging>ear</packaging>
@@ -27,7 +27,7 @@
 		</pluginRepository>
 	</pluginRepositories>
 	
-	<build>
+	<build> 
 		<plugins>
 			<plugin>
 				<artifactId>maven-ear-plugin</artifactId>

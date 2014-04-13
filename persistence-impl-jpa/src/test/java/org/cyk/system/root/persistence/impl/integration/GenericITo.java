@@ -9,7 +9,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class GenericIT extends AbstractPersistenceIT {
+public class GenericITo extends AbstractPersistenceIT {
 	
 	private static final long serialVersionUID = 5955832118708678179L;
 

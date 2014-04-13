@@ -14,7 +14,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
-public class NestedSetIT extends AbstractPersistenceIT {
+public class NestedSetITo extends AbstractPersistenceIT {
 	
 	@Deployment
 	public static Archive<?> createDeployment() {

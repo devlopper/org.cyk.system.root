@@ -12,7 +12,7 @@
 	<name>Business Service Implementation based on EJB</name>
 	
 	<groupId>org.cyk.system.root.business</groupId>
-	<artifactId>service-impl-ejb</artifactId>
+	<artifactId>business-impl-ejb</artifactId>
 	<packaging>ejb</packaging>
 
 	<build>

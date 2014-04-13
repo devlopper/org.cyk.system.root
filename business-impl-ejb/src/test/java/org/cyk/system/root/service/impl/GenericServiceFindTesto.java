@@ -21,11 +21,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class GenericServiceCrudTest extends AbstractServiceTest {
+public class GenericServiceFindTesto extends AbstractServiceTesto {
 	
 	@EJB
 	private IGenericModelService service;
 	private Long identifier;
+	
 
 	@Deployment
 	public static Archive<?> createDeployment() {
@@ -39,50 +40,43 @@ public class GenericServiceCrudTest extends AbstractServiceTest {
 	
 	@Override
 	protected void _initialData_() throws Exception {
+		Person p = null;
 		entityManager.createQuery("delete from Person").executeUpdate();
-		Person person = new Person("m01", "Ali", "Bamba");
-		entityManager.persist(person);
-		identifier = person.getIdentifier();
+		entityManager.persist(new Person("m01", "ali", "Bamba"));
+		entityManager.persist(p = new Person("m21", "Roger", "milla"));
+		entityManager.persist(new Person("m103", "Ange", "Kessi"));
+		entityManager.persist(new Person("m123", "ali", "milla"));
+		identifier = p.getIdentifier();
 	}
-		
+	
+	@Override
+	protected Boolean initDataOnce() {
+		return Boolean.TRUE;
+	}
+
 	@Test
-	public void create(){
-		Person person = new Person("m02", "Ali", "Bamba");
-		service.create(Person.class, person);
-		Assert.assertTrue(service.read(Person.class, person.getIdentifier())!=null);
+	public void all() {
+		Assert.assertTrue(service.use(Person.class).find().all().size()==4);
+	}
+	
+	@Test
+	public void allBy() {
+		Assert.assertTrue(!service.use(Person.class).find().where("name","ali").all().isEmpty());
+	}
+	
+	@Test
+	public void oneOneResult() {
+		Assert.assertTrue(service.use(Person.class).find().where("identifier",identifier).one()!=null);
+	}
+	
+	@Test
+	public void oneNoResult() {
+		Assert.assertTrue(service.use(Person.class).find().where("name","georges").one()==null);
 	}
 	
 	@Test(expected=RuntimeException.class)
-	public void createNoUniqueMatriculeConstraintViolation(){
-		Person person = new Person("m01", "Ali", "Bamba");
-		service.create(Person.class, person);
-		Assert.assertTrue(service.read(Person.class, person.getIdentifier())!=null);
+	public void oneManyResult() {
+		service.use(Person.class).find().where("name","ali").one();
 	}
-	
-	@Test
-	public void read(){
-		Assert.assertTrue(service.read(Person.class, identifier)!=null);
-	}
-	
-	@Test
-	public void update(){
-		String newName = "paul";
-		Person person = (Person) service.read(Person.class, identifier);
-		person.setName(newName);
-		service.update(Person.class, person);
-		person = (Person) service.read(Person.class, identifier);
-		Assert.assertTrue(person.getName().equals(newName));
-			
-		
-	}
-	
-	@Test
-	public void delete(){
-		Person person = (Person) service.read(Person.class, identifier);
-		service.delete(Person.class, person);
-		person = (Person) service.read(Person.class, identifier);
-		Assert.assertTrue(person == null);
-	}
-	
 
 }
