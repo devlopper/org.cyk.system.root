@@ -19,13 +19,13 @@
 	
 	<modules>
 		<module>../model</module> 
-		<module>../dao-api</module>
-		<module>../dao-impl-jpa</module>
-		<module>../service-api</module>
-		<module>../service-impl-ejb</module>
+		<module>../persistence-api</module>
+		<module>../persistence-impl-jpa</module>
+		<module>../business-api</module>
+		<module>../business-impl-ejb</module>
 		<module>../ui-web-primefaces</module>
-		<module>../application</module>
 		<module>../application-resources</module>
+		<module>../application</module>
 	</modules> 
 
 	<properties>

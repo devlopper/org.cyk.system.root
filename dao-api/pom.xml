@@ -9,18 +9,13 @@
 		<version>0.0.1</version>
 	</parent>
 
-	<name>Data Access API</name>
+	<name>Persistence Service API</name>
 	
-	<groupId>org.cyk.system.root.dao</groupId>
-	<artifactId>dao-api</artifactId>
+	<groupId>org.cyk.system.root.persistence</groupId>
+	<artifactId>persistence-api</artifactId>
 	<packaging>jar</packaging>
 	
 	<dependencies>
-		<!--dependency>
-			<groupId>org.cyk.system.root.dao</groupId>
-			<artifactId>dao-api</artifactId>
-			<version>0.0.1</version>
-		</dependency-->
 		<dependency>
 			<groupId>org.cyk.system.root</groupId>
 			<artifactId>model</artifactId>

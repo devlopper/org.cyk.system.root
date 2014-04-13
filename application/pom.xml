@@ -7,7 +7,7 @@
 		<groupId>org.cyk.system.root</groupId>
 		<artifactId>pom</artifactId>
 		<version>0.0.1</version>
-	</parent>
+	</parent> 
 
 	<name>Application</name>
 
@@ -76,8 +76,8 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.cyk.system.root.service</groupId>
-			<artifactId>service-impl-ejb</artifactId>
+			<groupId>org.cyk.system.root.business</groupId>
+			<artifactId>business-impl-ejb</artifactId>
 			<version>0.0.1</version>
 			<type>ejb</type>
 		</dependency>

@@ -9,9 +9,9 @@
 		<version>0.0.1</version>
 	</parent>
 
-	<name>Service Implementation based on EJB</name>
+	<name>Business Service Implementation based on EJB</name>
 	
-	<groupId>org.cyk.system.root.service</groupId>
+	<groupId>org.cyk.system.root.business</groupId>
 	<artifactId>service-impl-ejb</artifactId>
 	<packaging>ejb</packaging>
 
@@ -28,22 +28,16 @@
 	</build>
 	
 	<dependencies>
-		<!--dependency>
-			<groupId>org.cyk.system.root.service</groupId>
-			<artifactId>service-impl-ejb</artifactId>
-			<version>0.0.1</version>
-			 <type>ejb</type>
-		</dependency-->
 		<dependency>
-			<groupId>org.cyk.system.root.service</groupId>
-			<artifactId>service-api</artifactId>
+			<groupId>org.cyk.system.root.business</groupId>
+			<artifactId>business-api</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.cyk.system.root.dao</groupId>
-			<artifactId>dao-impl-jpa</artifactId>
+			<groupId>org.cyk.system.root.persistence</groupId>
+			<artifactId>persistence-impl-jpa</artifactId>
 			<version>0.0.1</version>
 		</dependency>
-	</dependencies>	
+	</dependencies>	 
 
 </project>

@@ -9,18 +9,13 @@
 		<version>0.0.1</version>
 	</parent>
 
-	<name>Service API</name>
+	<name>Business Service API</name>
 	
-	<groupId>org.cyk.system.root.service</groupId>
-	<artifactId>service-api</artifactId>
+	<groupId>org.cyk.system.root.business</groupId>
+	<artifactId>business-api</artifactId>
 	<packaging>jar</packaging>
 	
 	<dependencies>
-		<!--dependency>
-			<groupId>org.cyk.system.root.service</groupId>
-			<artifactId>service-api</artifactId>
-			<version>0.0.1</version>
-		</dependency-->
 		<dependency>
 			<groupId>org.cyk.system.root</groupId>
 			<artifactId>model</artifactId>

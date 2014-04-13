@@ -2,11 +2,13 @@ package org.cyk.system.root.service.impl;
 
 import javax.ejb.EJB;
 
-import org.cyk.system.root.dao.impl.AbstractPersistenceService;
-import org.cyk.system.root.dao.impl.AbstractTypedDao;
-import org.cyk.system.root.dao.impl.GenericDaoImpl;
-import org.cyk.system.root.service.api.IGenericModelService;
-import org.cyk.system.root.service.api.IGenericService;
+import org.cyk.system.root.business.api.IGenericModelService;
+import org.cyk.system.root.business.api.IGenericService;
+import org.cyk.system.root.business.impl.AbstractService;
+import org.cyk.system.root.business.impl.GenericService;
+import org.cyk.system.root.persistence.impl.AbstractPersistenceService;
+import org.cyk.system.root.persistence.impl.AbstractTypedDao;
+import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
