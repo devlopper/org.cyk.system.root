@@ -38,7 +38,7 @@ import org.cyk.utility.common.computation.LogicalOperator;
 public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements Serializable,PersistenceService<IDENTIFIABLE, Long> {
 
 	private static final long serialVersionUID = -8198334103295401293L;
-	  
+	   
 	@PersistenceContext @Getter
 	protected EntityManager entityManager;
 	protected Class<IDENTIFIABLE> clazz;
@@ -199,7 +199,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	protected String entityName(){
 		return clazz.getSimpleName();
-	}
+	}   
 	
 	protected QueryStringBuilder select(String variableName){
 		return queryStringBuilder.init().from(clazz).select(); //KW_JPQL_SELECT+" "+variableName+" "+KW_JPQL_FROM+" "+entityName()+" "+variableName+" ";

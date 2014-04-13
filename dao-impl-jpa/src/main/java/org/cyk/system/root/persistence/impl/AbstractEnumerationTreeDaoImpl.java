@@ -19,7 +19,7 @@ public abstract class AbstractEnumerationTreeDaoImpl<ENUMERATION extends Enumera
 
 	@Inject protected NestedSetNodeDao nestedSetNodeDao;
 	
-	/*
+	/* 
 	 *Named Queries Identifiers Declaration 
 	 */
 	private String readByNodeIds;
