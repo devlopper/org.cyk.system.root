@@ -3,21 +3,31 @@ package org.cyk.system.root.dao.api;
 import java.util.Collection;
 
 import org.cyk.system.root.model.Identifiable;
+import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.computation.Function;
+import org.cyk.utility.common.computation.LogicalOperator;
 
 public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> {
 	
-	/* select */		PersistenceService<IDENTIFIABLE,IDENTIFIER> select();
+	/* select */		PersistenceService<IDENTIFIABLE,IDENTIFIER> select(Function function);
 	
-	/* filter */		PersistenceService<IDENTIFIABLE,IDENTIFIER> where(String anAttributeName,Object aValue);
+						PersistenceService<IDENTIFIABLE,IDENTIFIER> select();
 	
-	/* operator */		PersistenceService<IDENTIFIABLE,IDENTIFIER> and();
+	/* filter */		PersistenceService<IDENTIFIABLE,IDENTIFIER> where(LogicalOperator aLogicalOperator,String anAttributeName,Object aValue,ArithmeticOperator anArithmeticOperator);
 	
-						PersistenceService<IDENTIFIABLE,IDENTIFIER> or();
-	
+						PersistenceService<IDENTIFIABLE,IDENTIFIER> where(String anAttributeName,Object aValue,ArithmeticOperator anArithmeticOperator);
+						
+						PersistenceService<IDENTIFIABLE,IDENTIFIER> where(String anAttributeName,Object aValue);
+						
 	/* read all*/		Collection<IDENTIFIABLE> all();
 	
-	/* read one*/		IDENTIFIABLE one();	
+	/* read one*/		<RESULT_TYPE> RESULT_TYPE one(Class<RESULT_TYPE> resultType);	
+	
+						IDENTIFIABLE one();	
+						
+						Long oneLong();	
 	
 	/* query */			String getQueryString();
+	
 	
 }

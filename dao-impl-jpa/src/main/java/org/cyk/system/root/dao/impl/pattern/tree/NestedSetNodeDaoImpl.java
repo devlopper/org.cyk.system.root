@@ -1,38 +1,57 @@
 package org.cyk.system.root.dao.impl.pattern.tree;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.cyk.system.root.dao.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.dao.impl.AbstractTypedDao;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-
+import static org.cyk.utility.common.computation.ArithmeticOperator.*;
 
 public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implements NestedSetNodeDao,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
 	/* 
-	 *Named Queries Identifiers Declaration 
+	 *Named Queries names 
 	 */
-	private String readByParent;
+	private String readByParent,countByParent;
+	private String readBySet,countBySet;
 	private String readBySetByLeftOrRightGreaterThanOrEqualTo;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
-		 registerNamedQuery(readByParent, "SELECT node FROM NestedSetNode node "
-					+"WHERE node.set=:nestedSet AND node.leftIndex > :leftIndex AND node.leftIndex < :rightIndex ORDER BY node.leftIndex");
-			
-		 registerNamedQuery(readBySetByLeftOrRightGreaterThanOrEqualTo, 
-				"SELECT node FROM NestedSetNode node WHERE node.set=:nestedSet AND (node.leftIndex >= :index OR node.rightIndex >= :index) ORDER BY node.leftIndex");
+		 registerNamedQuery(readByParent, _select().where("set", "nestedSet").and("leftIndex",GT).and("leftIndex","rightIndex",LT));
+		 registerNamedQuery(readBySet,_select().where("set", "nestedSet")); 
+		 registerNamedQuery(readBySetByLeftOrRightGreaterThanOrEqualTo, //_select().
+				 //where("set", "nestedSet").parenthesis(true).and("leftIndex","index",GTE).or("rightIndex", "index",GTE).parenthesis(false).orderBy("leftIndex")
+				 "SELECT node FROM NestedSetNode node WHERE node.set=:nestedSet AND (node.leftIndex >= :index OR node.rightIndex >= :index) ORDER BY node.leftIndex"
+				);
 	}
 	
 	@Override
 	public Collection<NestedSetNode> readByParent(NestedSetNode parent) {
 		return namedQuery(readByParent).parameter("nestedSet", parent.getSet()).parameter("leftIndex", parent.getLeftIndex()).parameter("rightIndex", parent.getRightIndex())
 				.resultMany();
+	}
+	@Override
+	public Long countByParent(NestedSetNode parent) {
+		return namedQuery(countByParent,Long.class).parameter("nestedSet", parent.getSet()).parameter("leftIndex", parent.getLeftIndex()).parameter("rightIndex", parent.getRightIndex())
+				.resultOne();
+	}
+	
+	@Override
+	public Collection<NestedSetNode> readBySet(NestedSet set) {
+		return namedQuery(readBySet).parameter("nestedSet", set).resultMany();
+	}
+	@Override
+	public Long countBySet(NestedSet set) {
+		return namedQuery(countBySet,Long.class).parameter("nestedSet", set).resultOne();
 	}
 	
 	@Override
@@ -77,12 +96,29 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	
 	@Override
 	public NestedSetNode delete(NestedSetNode node) {
-		node.getSet().setRoot(null);
+		List<NestedSetNode> tree = new ArrayList<>(readByParent(node));
+		Collections.reverse(tree);
+		tree.add(node);
+		//System.out.println("To delete : "+tree);
+		int step = tree.size()*2;
+		Integer rightIndex = node.getRightIndex();
+		for(NestedSetNode n : readBySetByLeftOrRightGreaterThanOrEqualTo(node.getSet(), rightIndex+1) ){
+			//those are node to be updated
+			//System.out.print(n+" -> ");
+			n.updateBoundaries(-step, n.getLeftIndex()>rightIndex?null:false);//both bounds or right only
+			//System.out.print(n+" | ");
+			entityManager.merge(n);
+		}
 		
-		node.setParent(null);
-		node.setSet(null);
+		if(node.getParent()==null){
+			node.getSet().setRoot(null);
+			entityManager.merge(node.getSet());
+		}
 		
-		return super.delete(node);
+		//delete tree
+		for(NestedSetNode n : tree)
+			entityManager.remove(entityManager.merge(n));
+		return node;
 	}
 
 }

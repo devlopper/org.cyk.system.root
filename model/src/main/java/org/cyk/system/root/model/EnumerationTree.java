@@ -36,9 +36,4 @@ public class EnumerationTree extends AbstractEnumeration implements Serializable
 		this.type=type;
 	}
 	
-	@Override
-	public String toString() {
-		return (type==null?"":"<"+type.toString()+">")+super.toString();
-	}
-	
 }

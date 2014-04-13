@@ -1,4 +1,4 @@
-package org.cyk.system.root.dao.impl.generic;
+package org.cyk.system.root.dao.impl;
 
 import java.io.Serializable;
 

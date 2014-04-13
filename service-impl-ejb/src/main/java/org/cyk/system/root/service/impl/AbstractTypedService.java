@@ -1,14 +1,12 @@
 package org.cyk.system.root.service.impl;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 import org.cyk.system.root.dao.api.TypedDao;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.service.api.IModelService;
-import org.cyk.system.root.service.api.IServiceable;
 
-public abstract class AbstractTypedService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractService implements
+public  class AbstractTypedService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractService<IDENTIFIABLE> implements
 		IModelService<IDENTIFIABLE>, Serializable {
 
 	private static final long serialVersionUID = 6437552355933877400L;
@@ -18,40 +16,6 @@ public abstract class AbstractTypedService<IDENTIFIABLE extends AbstractIdentifi
 	public AbstractTypedService(TYPED_DAO dao) {
 		super();
 		this.dao = dao;
-	}
-
-	@Override
-	public IServiceable<IDENTIFIABLE, Long> find() {
-		dao.select();
-		return this;
-	}
-
-	@Override
-	public IServiceable<IDENTIFIABLE, Long> where(String anAttributeName, Object aValue) {
-		dao.where(anAttributeName, aValue);
-		return this;
-	}
-
-	@Override
-	public IServiceable<IDENTIFIABLE, Long> and() {
-		dao.and();
-		return this;
-	}
-
-	@Override
-	public IServiceable<IDENTIFIABLE, Long> or() {
-		dao.or();
-		return this;
-	}
-
-	@Override
-	public Collection<IDENTIFIABLE> all() {
-		return dao.all();
-	}
-
-	@Override
-	public IDENTIFIABLE one() {
-		return dao.one();
 	}
 
 	@Override
@@ -73,6 +37,8 @@ public abstract class AbstractTypedService<IDENTIFIABLE extends AbstractIdentifi
 	public IDENTIFIABLE delete(IDENTIFIABLE object) {
 		return dao.delete(object);
 	}
+
+
 
 
 

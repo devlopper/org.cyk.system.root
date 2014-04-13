@@ -1,28 +1,31 @@
-package org.cyk.system.root.dao.impl.generic;
+package org.cyk.system.root.dao.impl;
 
 
 import java.sql.SQLException;
 
 import javax.transaction.UserTransaction;
 
-import lombok.AllArgsConstructor;
-
-import org.cyk.system.root.dao.impl.AbstractPersistenceService;
-
-@AllArgsConstructor
 public abstract class Transaction {
 	
+	private AbstractPersistenceIT persistenceIT;
 	private UserTransaction transaction;
-	private AbstractPersistenceService<?> dao;
+	//private PersistenceService<?, ?> dao;
 	private Class<? extends SQLException> exceptionClassExpected;
 	
+	public Transaction(AbstractPersistenceIT persistenceIT, UserTransaction transaction, Class<? extends SQLException> exceptionClassExpected) {
+		super();
+		this.persistenceIT = persistenceIT;
+		this.transaction = transaction;
+		this.exceptionClassExpected = exceptionClassExpected;
+	}
+
 	public void run(){
 		try {
 			transaction.begin();
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
-		dao.getEntityManager().joinTransaction();
+		((AbstractPersistenceService<?>)persistenceIT.getGenericDao()).getEntityManager().joinTransaction();
 		_execute_();
 		try {
 			transaction.commit();

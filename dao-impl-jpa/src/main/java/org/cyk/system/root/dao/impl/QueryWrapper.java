@@ -1,7 +1,7 @@
 package org.cyk.system.root.dao.impl;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 import javax.persistence.Query;
 
@@ -25,12 +25,13 @@ public class QueryWrapper<T> implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> resultMany() {
+	public Collection<T> resultMany() {
 		return query.getResultList();
 	}
 
-	public Object getSingleResult() {
-		return query.getSingleResult();
+	@SuppressWarnings("unchecked")
+	public T resultOne() {
+		return (T) query.getSingleResult();
 	}
 	
 	

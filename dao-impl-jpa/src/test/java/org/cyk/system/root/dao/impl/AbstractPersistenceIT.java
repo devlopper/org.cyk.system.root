@@ -1,76 +1,110 @@
 package org.cyk.system.root.dao.impl;
 
+import java.sql.SQLException;
+
 import javax.inject.Inject;
 import javax.transaction.UserTransaction;
+
+import lombok.Getter;
 
 import org.cyk.system.root.dao.api.GenericDao;
 import org.cyk.system.root.dao.api.PersistenceService;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.EnumerationTree;
-import org.cyk.system.root.model.pattern.tree.NestedSet;
-import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-import org.cyk.utility.common.AbstractTest;
-import org.jboss.arquillian.junit.Arquillian;
+import org.cyk.utility.common.test.AbstractIntegrationTest;
+import org.cyk.utility.common.test.TestMethod;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.runner.RunWith;
 
 /**
  * Persistence integration test (IT)
  * @author Komenan Y .Christian
  *
  */
-@RunWith(Arquillian.class)
-public abstract class AbstractPersistenceIT extends AbstractTest {
+public abstract class AbstractPersistenceIT extends AbstractIntegrationTest {
 	
-	@Inject protected GenericDao genericDao;
-	@Inject protected UserTransaction transaction;
+	private static final long serialVersionUID = -3977685343817022628L;
+
+	static final Utils UTILS = new Utils();
 	
-	public static Archive<?> createDeployment(Package...packages){
-		return ShrinkWrap
+	@SuppressWarnings("unchecked")
+	public static Archive<?> createDeployment(Class<?>[] classes){
+		JavaArchive archive = ShrinkWrap
 				.create(JavaArchive.class)
-				.addPackage(PersistenceService.class.getPackage()).addPackage(AbstractPersistenceService.class.getPackage())
-				.addPackages(false,packages)
-				.addAsResource("test-persistence.xml","META-INF/persistence.xml")
-				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-	}
-	
-	public static Archive<?> createDeployment(Class<?>...classes){
-		return ShrinkWrap
-				.create(JavaArchive.class)
+				.addClass(QueryStringBuilder.class)
 				.addClass(PersistenceService.class).addClass(AbstractPersistenceService.class).addClass(GenericDao.class).addClass(GenericDaoImpl.class)
-				.addClasses(classes)
+				//.addClasses(classes)
 				.addAsResource("test-persistence.xml","META-INF/persistence.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+		
+		for(Class<?> clazz : classes)
+			if(AbstractIdentifiable.class.isAssignableFrom(clazz))
+				for(String name : UTILS.componentNames((Class<? extends AbstractIdentifiable>) clazz))
+					archive.addClass(name);
+			else
+				archive.addClass(clazz);
+		
+		return archive;
 	}
 	
-	protected void cleanDatabase(){
-		for(Class<? extends AbstractIdentifiable> from : entitiesToDelete()){
-			for(AbstractIdentifiable identifiable : genericDao.use(from).select().all()){
-				detach(identifiable);
-				genericDao.delete(from, identifiable);
+	protected static Boolean data = Boolean.FALSE;
+	protected static AbstractIdentifiable identifiable=null;
+	
+	@Inject @Getter private GenericDao genericDao;
+	@Inject private UserTransaction transaction;
+	
+	@Override
+	protected void _before_() throws Exception {
+		super._before_();
+		if(Boolean.TRUE.equals(data))
+			return;
+		transaction(new TestMethod() { @Override protected void test() { populate(); data = Boolean.TRUE; } });	
+		afterCommit();
+	}
+	
+	protected void afterCommit(){}
+	
+	@Override
+	protected void _execute_() {
+		super._execute_();
+		transaction(new TestMethod() { @Override protected void test() { create(); } });	
+		read(); 
+		transaction(new TestMethod() { @Override protected void test() { update(); } });	
+		transaction(new TestMethod() { @Override protected void test() { delete(); } });	
+		queries();
+	}
+	
+	/**/
+	
+	protected abstract void populate();
+	protected abstract void create();
+	protected abstract void read();
+	protected abstract void update();
+	protected abstract void delete();
+	protected abstract void queries();
+	
+	/* Shortcut */
+	
+	protected void transaction(final TestMethod method,Class<? extends SQLException> exceptionClassExpected){
+		new Transaction(this,transaction,exceptionClassExpected) {
+			@Override
+			public void _execute_() {
+				method.execute();
 			}
-			//System.out.println("Entities "+from.getSimpleName()+" deleted");
-		}
+		}.run();
 	}
 	
-	protected void detach(AbstractIdentifiable identifiable){
-		if(identifiable instanceof NestedSetNode){
-			((NestedSetNode)identifiable).getSet().setRoot(null);
-			genericDao.update(NestedSet.class, ((NestedSetNode)identifiable).getSet());
-			((NestedSetNode)identifiable).setParent(null);
-			((NestedSetNode)identifiable).setSet(null);
-			genericDao.update(NestedSetNode.class, identifiable);
-		}else if(identifiable instanceof NestedSet){
-			//((NestedSet)identifiable).setRoot(null);
-		}else if(identifiable instanceof EnumerationTree){
-			((EnumerationTree)identifiable).setNode(null);
-			((EnumerationTree)identifiable).setType(null);
-		}
+	protected void transaction(final TestMethod method){
+		transaction(method, null);
 	}
 	
-	protected Class<? extends AbstractIdentifiable>[] entitiesToDelete(){return null;}
+	protected void create(AbstractIdentifiable object){
+		genericDao.create(object.getClass(), object);
+	}
+	
+	protected void update(AbstractIdentifiable object){
+		genericDao.update(object.getClass(), object);
+	}
 	
 }
