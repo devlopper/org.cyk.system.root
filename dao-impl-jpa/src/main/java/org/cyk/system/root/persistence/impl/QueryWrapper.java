@@ -17,7 +17,7 @@ public class QueryWrapper<T> implements Serializable {
 	public QueryWrapper(Query query) {
 		super();
 		this.query = query;
-	}
+	}  
 	
 	public QueryWrapper<T> parameter(String name,Object value){
 		query.setParameter(name, value);

@@ -13,7 +13,7 @@ public abstract class Transaction {
 	private UserTransaction transaction;
 	//private PersistenceService<?, ?> dao;
 	private Class<? extends SQLException> exceptionClassExpected;
-	
+	 
 	public Transaction(AbstractPersistenceIT persistenceIT, UserTransaction transaction, Class<? extends SQLException> exceptionClassExpected) {
 		super();
 		this.persistenceIT = persistenceIT;

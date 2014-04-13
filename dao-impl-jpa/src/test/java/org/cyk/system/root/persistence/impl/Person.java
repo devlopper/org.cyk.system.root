@@ -17,11 +17,11 @@ public class Person extends AbstractIdentifiable implements Serializable {
 
 	/**
 	 * 
-	 */ 
+	 */  
 	
 	private static final long serialVersionUID = -7061794989292809428L;
 	@Column(unique=true)
-	private String matricule;
+	private String matricule; 
 	
 	private String name;
 	

@@ -38,7 +38,7 @@ import org.cyk.utility.common.computation.LogicalOperator;
 public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements Serializable,PersistenceService<IDENTIFIABLE, Long> {
 
 	private static final long serialVersionUID = -8198334103295401293L;
-	
+	  
 	@PersistenceContext @Getter
 	protected EntityManager entityManager;
 	protected Class<IDENTIFIABLE> clazz;
@@ -47,7 +47,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	protected Map<String, Object> parameters;
 	private QueryWrapper<?> __queryWrapper__;
 	protected Function selectFunction;
-	
+	  
 	@Override 
 	protected void beforeInitialisation() {
 		super.beforeInitialisation();
@@ -71,7 +71,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	protected void namedQueriesInitialisation(){
 		
 	}
-	
+	 
 	@Override
 	public PersistenceService<IDENTIFIABLE, Long> select(Function function) {
 		queryStringBuilder.init().from(clazz).select(selectFunction = function);

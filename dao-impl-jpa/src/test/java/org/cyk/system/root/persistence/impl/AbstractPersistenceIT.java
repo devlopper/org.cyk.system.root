@@ -25,13 +25,13 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
  * Persistence integration test (IT)
  * @author Komenan Y .Christian
  *
- */
+ */ 
 public abstract class AbstractPersistenceIT extends AbstractIntegrationTest {
-	
+	 
 	private static final long serialVersionUID = -3977685343817022628L;
 
 	static final Utils UTILS = new Utils();
-	
+	 
 	@SuppressWarnings("unchecked")
 	public static Archive<?> createDeployment(Class<?>[] classes){
 		JavaArchive archive = ShrinkWrap

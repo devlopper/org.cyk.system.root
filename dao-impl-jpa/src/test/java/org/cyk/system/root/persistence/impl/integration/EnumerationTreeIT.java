@@ -13,7 +13,7 @@ import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.test.TestMethod;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
-import org.junit.Assert;
+import org.junit.Assert; 
 
 public class EnumerationTreeIT extends AbstractPersistenceIT {
 
@@ -21,7 +21,7 @@ public class EnumerationTreeIT extends AbstractPersistenceIT {
 	public static Archive<?> createDeployment() {
 		return createDeployment(new Class<?>[]{NestedSet.class,NestedSetNode.class,EnumerationTree.class,AbstractEnumerationTreeDao.class,
 				AbstractEnumerationTreeDaoImpl.class});
-	}
+	} 
 	
 	@Inject private EnumerationTreeDao enumerationTreeDao;
 	

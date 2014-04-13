@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 
 public class Utils {
-	
+	 
 	public Set<String> componentNames(Class<? extends AbstractIdentifiable> aClass){
 		Set<String> set = new HashSet<>();
 		set.add(aClass.getName());
@@ -16,6 +16,6 @@ public class Utils {
 			set.add(StringUtils.replaceOnce(aClass.getName(),".model.",".persistence.impl.")+"DaoImpl");
 		}
 		return set;
-	}
+	} 
 
 }

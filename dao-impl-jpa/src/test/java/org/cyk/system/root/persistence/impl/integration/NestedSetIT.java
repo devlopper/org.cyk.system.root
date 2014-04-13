@@ -19,7 +19,7 @@ public class NestedSetIT extends AbstractPersistenceIT {
 	@Deployment
 	public static Archive<?> createDeployment() {
 		return createDeployment(new Class<?>[]{NestedSet.class,NestedSetNode.class});
-	}
+	} 
 	
 	private static NestedSet set1,set2,set3;
 	private static NestedSetNode a1,a11,a12;

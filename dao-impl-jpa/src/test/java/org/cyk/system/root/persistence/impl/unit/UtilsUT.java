@@ -13,7 +13,7 @@ import org.cyk.utility.common.test.AbstractUnitTest;
 public class UtilsUT extends AbstractUnitTest {
 
 	Utils utils = new Utils();
-	
+	 
 	@Override
 	protected void _execute_() {
 		super._execute_();

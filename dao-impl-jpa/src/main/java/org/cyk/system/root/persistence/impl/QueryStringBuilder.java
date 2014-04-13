@@ -18,8 +18,8 @@ public class QueryStringBuilder implements Serializable {
 	public static final String KW_JPQL_COUNT = "COUNT";
 	public static final String KW_JPQL_AND = "AND";
 	public static final String KW_JPQL_OR = "OR";
-	
-	/* Named Queries */
+	 
+	/* Named Queries */ 
 	public static final String KW_NQ_READ = "read";
 	public static final String KW_NQ_COUNT = "count";
 	
