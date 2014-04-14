@@ -202,7 +202,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	}   
 	
 	protected QueryStringBuilder select(String variableName){
-		return queryStringBuilder.init().from(clazz).select(); //KW_JPQL_SELECT+" "+variableName+" "+KW_JPQL_FROM+" "+entityName()+" "+variableName+" ";
+		return queryStringBuilder.init().from(clazz).select();
 	}
 	
 	protected QueryStringBuilder _select(){

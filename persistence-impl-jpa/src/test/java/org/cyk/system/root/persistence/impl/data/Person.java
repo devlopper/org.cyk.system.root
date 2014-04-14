@@ -1,4 +1,4 @@
-package org.cyk.system.root.persistence.impl;
+package org.cyk.system.root.persistence.impl.data;
 
 import java.io.Serializable;
 

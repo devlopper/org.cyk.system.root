@@ -27,7 +27,7 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	
 	@Column(nullable=false)
 	@NotNull(groups=Client.class)
-	protected String libelle;
+	protected String label;
 	
 	protected String abbreviation;
 	
@@ -36,7 +36,7 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 		
 	@Override
 	public String toString() {
-		return libelle;
+		return label;
 	}
 
 	

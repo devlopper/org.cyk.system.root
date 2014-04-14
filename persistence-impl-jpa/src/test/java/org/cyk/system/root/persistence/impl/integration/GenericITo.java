@@ -2,7 +2,7 @@ package org.cyk.system.root.persistence.impl.integration;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
-import org.cyk.system.root.persistence.impl.Person;
+import org.cyk.system.root.persistence.impl.data.Person;
 import org.cyk.utility.common.computation.Function;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
