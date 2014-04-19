@@ -2,7 +2,7 @@ package org.cyk.system.root.business.api;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 
-public interface TypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable> extends BusinessService<IDENTIFIABLE, Long> {
+public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extends BusinessService<IDENTIFIABLE, Long> {
 
 	/* Create */	IDENTIFIABLE create(IDENTIFIABLE object);
 	

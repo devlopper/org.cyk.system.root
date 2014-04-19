@@ -2,13 +2,13 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.business.api.TypedBusinessService;
+import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 
 public  class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractBusinessService<IDENTIFIABLE> implements
-		TypedBusinessService<IDENTIFIABLE>, Serializable {
+		TypedBusiness<IDENTIFIABLE>, Serializable {
 
 	private static final long serialVersionUID = 6437552355933877400L;
 

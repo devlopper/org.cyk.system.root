@@ -21,7 +21,7 @@ import org.junit.Test;
 public class LanguageBusinessIT extends AbstractBusinessIT {
 	
 	@Inject private LanguageBusiness languageBusiness;
-
+ 
 	@Deployment
 	public static Archive<?> createDeployment() {
 		return deployment(new Class<?>[]{Language.class,LanguageEntry.class}).getArchive();
