@@ -3,11 +3,14 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 import java.util.Collection;
 
+import lombok.Getter;
+
 import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.computation.DataReadConfig;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 
@@ -15,29 +18,36 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 
 	private static final long serialVersionUID = 6437552355933877400L;
 	
-	protected PersistenceService<IDENTIFIABLE, Long> persistenceService;
+	@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
+	
+	protected abstract PersistenceService<IDENTIFIABLE, Long> getPersistenceService();
 	
 	@Override
 	public BusinessService<IDENTIFIABLE, Long> find() {
-		persistenceService.select();
+		getPersistenceService().select();
 		return this;
 	}
 	
 	@Override
+	public IDENTIFIABLE find(Long identifier) {
+	    return getPersistenceService().read(identifier);
+	}
+	
+	@Override
 	public BusinessService<IDENTIFIABLE, Long> find(Function function) {
-		persistenceService.select(function);
+		getPersistenceService().select(function);
 		return this;
 	}
 	
 	@Override
 	public BusinessService<IDENTIFIABLE, Long> where(LogicalOperator aLogicalOperator, String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
-		persistenceService.where(aLogicalOperator, anAttributeName, aValue, anArithmeticOperator);
+		getPersistenceService().where(aLogicalOperator, anAttributeName, aValue, anArithmeticOperator);
 		return this;
 	}
 
 	@Override
 	public BusinessService<IDENTIFIABLE, Long> where(String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
-		persistenceService.where(anAttributeName, aValue, anArithmeticOperator);
+		getPersistenceService().where(anAttributeName, aValue, anArithmeticOperator);
 		return this;
 	}
 	
@@ -48,22 +58,24 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 
 	@Override
 	public <RESULT_TYPE> RESULT_TYPE one(Class<RESULT_TYPE> resultType) {
-		return persistenceService.one(resultType);
+		return getPersistenceService().one(resultType);
 	}
 	
 	@Override
 	public Collection<IDENTIFIABLE> all() {
-		return persistenceService.all();
+		return getPersistenceService().all();
 	}
 
 	@Override
 	public IDENTIFIABLE one() {
-		return persistenceService.one();
+		return getPersistenceService().one();
 	}
 	
 	@Override
 	public Long oneLong() {
-		return persistenceService.oneLong();
+		return getPersistenceService().oneLong();
 	}
+
+    
 	
 }

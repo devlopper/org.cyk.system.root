@@ -42,7 +42,7 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	}
 	@Override
 	public Long countByParent(NestedSetNode parent) {
-		return namedQuery(countByParent,Long.class).parameter("nestedSet", parent.getSet()).parameter("leftIndex", parent.getLeftIndex()).parameter("rightIndex", parent.getRightIndex())
+		return countNamedQuery(countByParent).parameter("nestedSet", parent.getSet()).parameter("leftIndex", parent.getLeftIndex()).parameter("rightIndex", parent.getRightIndex())
 				.resultOne();
 	}
 	
@@ -52,7 +52,7 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	}
 	@Override
 	public Long countBySet(NestedSet set) {
-		return namedQuery(countBySet,Long.class).parameter("nestedSet", set).resultOne();
+		return countNamedQuery(countBySet).parameter("nestedSet", set).resultOne();
 	}
 	
 	@Override

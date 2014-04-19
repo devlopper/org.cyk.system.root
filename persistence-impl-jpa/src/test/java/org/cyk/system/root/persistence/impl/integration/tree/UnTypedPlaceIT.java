@@ -1,7 +1,8 @@
-package org.cyk.system.root.persistence.impl.integration;
+package org.cyk.system.root.persistence.impl.integration.tree;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
@@ -17,7 +18,7 @@ public class UnTypedPlaceIT extends AbstractPersistenceIT {
 
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return deployment().persistence(new Class<?>[]{NestedSet.class,NestedSetNode.class,UnTypedPlace.class,UnTypedPlaceDao.class})
+		return deployment(new Class<?>[]{NestedSet.class,NestedSetNode.class,UnTypedPlace.class,UnTypedPlaceDao.class,AbstractDataTreeNode.class})
 				.getArchive();
 	} 
 	

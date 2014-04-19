@@ -4,12 +4,15 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.computation.DataReadConfig;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 
 public interface BusinessService <IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> {
 	
 	/* select */	BusinessService<IDENTIFIABLE,IDENTIFIER> find();
+	
+	                IDENTIFIABLE find(IDENTIFIER identifier);
 	
 					BusinessService<IDENTIFIABLE,IDENTIFIER> find(Function function);
 	
@@ -26,5 +29,7 @@ public interface BusinessService <IDENTIFIABLE extends Identifiable<IDENTIFIER>,
 					IDENTIFIABLE one();	
 	
 					Long oneLong();	
+					
+					DataReadConfig getDataReadConfig();
 
 }

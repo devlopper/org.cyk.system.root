@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @MappedSuperclass
-public abstract class AbstractEnumerationTreeType extends AbstractEnumerationNode implements Serializable {
+public abstract class AbstractDataTreeType extends AbstractDataTreeNode implements Serializable {
 
 	private static final long serialVersionUID = 4388503557071277363L;
 		
-	public AbstractEnumerationTreeType(AbstractEnumerationTreeType parent,String code,String label) {
+	public AbstractDataTreeType(AbstractDataTreeType parent,String code,String label) {
 		super(parent,code,label);
 	}
 	
-	public AbstractEnumerationTreeType(AbstractEnumerationTreeType parent,String code) {
+	public AbstractDataTreeType(AbstractDataTreeType parent,String code) {
 		this(parent,code,code);
 	}
 	

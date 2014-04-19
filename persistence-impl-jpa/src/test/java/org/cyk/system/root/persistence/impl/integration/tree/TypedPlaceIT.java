@@ -1,17 +1,15 @@
-package org.cyk.system.root.persistence.impl.integration;
+package org.cyk.system.root.persistence.impl.integration.tree;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.model.pattern.tree.AbstractEnumerationTree;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-import org.cyk.system.root.persistence.api.pattern.tree.AbstractEnumerationTreeDao;
 import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
 import org.cyk.system.root.persistence.impl.data.PlaceType;
 import org.cyk.system.root.persistence.impl.data.PlaceTypeDao;
 import org.cyk.system.root.persistence.impl.data.TypedPlace;
 import org.cyk.system.root.persistence.impl.data.TypedPlaceDao;
-import org.cyk.system.root.persistence.impl.pattern.tree.AbstractEnumerationTreeDaoImpl;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.test.TestMethod;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -22,8 +20,8 @@ public class TypedPlaceIT extends AbstractPersistenceIT {
 
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return deployment().persistence(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractEnumerationTree.class,AbstractEnumerationTreeDao.class,
-				AbstractEnumerationTreeDaoImpl.class,TypedPlace.class,TypedPlaceDao.class,PlaceType.class,PlaceTypeDao.class})
+		return deployment(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractDataTree.class,TypedPlace.class,TypedPlaceDao.class,
+		        PlaceType.class,PlaceTypeDao.class})
 				.getArchive();
 	} 
 	

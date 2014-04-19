@@ -39,11 +39,11 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	@Column(nullable=false)
 	@NotNull(groups=System.class)
 	private Integer rightIndex;
-	
-	@JoinColumn(name="enumeration")
+	/*
+	@JoinColumn(name="data")
 	@ManyToOne
-	private AbstractEnumerationNode enumeration;
-	
+	private AbstractDataTreeNode data;
+	*/
 	public NestedSetNode() {}
 	
 	public NestedSetNode(NestedSet set,NestedSetNode parent, int leftIndex, int rightIndex) {

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.cyk.system.root.business.api.TypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 
 public  class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractBusinessService<IDENTIFIABLE> implements
@@ -16,6 +17,11 @@ public  class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifi
 	public AbstractTypedBusinessService(TYPED_DAO dao) {
 		super();
 		this.dao = dao;
+	}
+	
+	@Override
+	protected PersistenceService<IDENTIFIABLE, Long> getPersistenceService() {
+	    return dao;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl.language;
 
 import java.io.Serializable;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new HashMap<>();
 	
 	@Setter private Locale locale = Locale.FRENCH;
-	
+	 
 	@Inject
 	public LanguageBusinessImpl(LanguageDao dao) {
 		super(dao); 
@@ -65,30 +64,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	@Override
 	public void registerResourceBundle(String id,ClassLoader aClassLoader) {
-		/*System.out.println("LanguageServiceImpl.registerResourceBundle() "+id);
-		Enumeration<String> e = ResourceBundle.getBundle(id,locale).getKeys();
-		System.out.println(e);
-		while(e.hasMoreElements())
-			System.out.println(e.nextElement());*/
-		/*if(locale==null)
-			throw new RuntimeException("No locale set");
-		if(!locale.equals(resourceBundle.getLocale()))
-			throw new RuntimeException("No same locale : "+locale+" <> "+resourceBundle.getLocale());*/
 		RESOURCE_BUNDLE_MAP.put(id,aClassLoader);
 	}
 	
-	
-	protected void debug(){
-		for(Entry<String, ClassLoader> entry : RESOURCE_BUNDLE_MAP.entrySet()){
-			try {
-				ResourceBundle resourceBundle = ResourceBundle.getBundle(entry.getKey(), locale, entry.getValue());
-				Enumeration<String> e = resourceBundle.getKeys();
-				System.out.println("Bundle : "+e);
-				while(e.hasMoreElements())
-					System.out.println(e.nextElement());
-			} catch (Exception e) {}
-		}
-	}
-	
-
 }

@@ -27,10 +27,11 @@ import lombok.extern.java.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.computation.DataReadConfig;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 
@@ -39,13 +40,15 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 
 	private static final long serialVersionUID = -8198334103295401293L;
 	   
+	private QueryWrapper<?> __queryWrapper__;
+	@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
+	
 	@PersistenceContext @Getter
 	protected EntityManager entityManager;
 	protected Class<IDENTIFIABLE> clazz;
 
 	@Inject protected QueryStringBuilder queryStringBuilder;
 	protected Map<String, Object> parameters;
-	private QueryWrapper<?> __queryWrapper__;
 	protected Function selectFunction;
 	  
 	@Override 
@@ -68,8 +71,11 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		namedQueriesInitialisation();
 	}
 	
-	protected void namedQueriesInitialisation(){
-		
+	protected void namedQueriesInitialisation(){}
+	
+	@Override
+	public IDENTIFIABLE read(Long identifier) {
+	    return entityManager.find(clazz, identifier);
 	}
 	 
 	@Override
@@ -141,6 +147,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		if(parameters!=null)
 			for(Entry<String, Object> parameter : parameters.entrySet())
 				query.setParameter(parameter.getKey(), parameter.getValue());
+		QueryWrapper.applyReadConfig(query, getDataReadConfig());
 		return query;
 	}
 	
@@ -155,8 +162,8 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	@SuppressWarnings("unchecked")
 	protected <RESULT_CLASS> QueryWrapper<RESULT_CLASS> query(String value,QueryType type,Class<RESULT_CLASS> aResultClass){
 		switch(type){
-		case JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createQuery(value, aResultClass));break;
-		case NAMED_JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createNamedQuery(value, aResultClass));break;
+		case JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createQuery(value, aResultClass),getDataReadConfig());break;
+		case NAMED_JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createNamedQuery(value, aResultClass),getDataReadConfig());break;
 		default:__queryWrapper__ = null;log.severe("Query <"+value+"> cannot be built for "+type);break;
 		}
 		return (QueryWrapper<RESULT_CLASS>) __queryWrapper__;
@@ -168,6 +175,9 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	protected QueryWrapper<IDENTIFIABLE> namedQuery(String value){
 		return namedQuery(value, clazz);
 	}
+	protected QueryWrapper<Long> countNamedQuery(String value){
+        return namedQuery(value, Long.class);
+    }
 	
 	protected void registerNamedQuery(String name,String query,Class<?> aResultClass){
 		entityManager.getEntityManagerFactory().addNamedQuery(name, entityManager.createQuery(query, aResultClass));	

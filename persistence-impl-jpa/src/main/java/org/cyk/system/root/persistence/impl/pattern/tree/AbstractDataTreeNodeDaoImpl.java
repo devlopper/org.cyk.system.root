@@ -1,21 +1,22 @@
 package org.cyk.system.root.persistence.impl.pattern.tree;
 
+import static org.cyk.utility.common.computation.ArithmeticOperator.GT;
+import static org.cyk.utility.common.computation.ArithmeticOperator.LT;
+
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.model.pattern.tree.AbstractEnumerationNode;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-import org.cyk.system.root.persistence.api.pattern.tree.AbstractEnumerationNodeDao;
+import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.persistence.impl.AbstractEnumerationDaoImpl;
-import org.cyk.utility.common.computation.ArithmeticOperator;
 
-public abstract class AbstractEnumerationNodeDaoImpl<ENUMERATION extends AbstractEnumerationNode> extends AbstractEnumerationDaoImpl<ENUMERATION> 
-	implements AbstractEnumerationNodeDao<ENUMERATION>,Serializable {
+public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDataTreeNode> extends AbstractEnumerationDaoImpl<ENUMERATION> 
+	implements AbstractDataTreeNodeDao<ENUMERATION>,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
 
@@ -24,25 +25,26 @@ public abstract class AbstractEnumerationNodeDaoImpl<ENUMERATION extends Abstrac
 	/* 
 	 *Named Queries Identifiers Declaration 
 	 */
-	private String readByNodeIds; 
+	private String readByParent,countByParent; 
 	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
-		registerNamedQuery(readByNodeIds, _select().where("node.identifier", "ids",ArithmeticOperator.IN));
+		registerNamedQuery(readByParent, _select().where("node.set", "nestedSet").and("node.leftIndex","leftIndex",GT).and("node.leftIndex","rightIndex",LT));
 	}
 		
 	@Override
 	public Collection<ENUMERATION> readByParent(ENUMERATION parent) {
-		Collection<NestedSetNode> nodes = nestedSetNodeDao.readByParent(parent.getNode());
-		if(nodes.isEmpty())
-			return new HashSet<>();
-		return namedQuery(readByNodeIds).parameter("ids", ids(nodes)).resultMany();
+	    NestedSetNode n = parent.getNode();
+	    return namedQuery(readByParent).parameter("nestedSet", n.getSet()).parameter("leftIndex", n.getLeftIndex()).parameter("rightIndex", n.getRightIndex())
+                .resultMany();
 	}
 	
 	@Override
 	public Long countByParent(ENUMERATION parent) {
-		return nestedSetNodeDao.countByParent(parent.getNode());
+	    NestedSetNode n = parent.getNode();
+        return countNamedQuery(countByParent).parameter("nestedSet", n.getSet()).parameter("leftIndex", n.getLeftIndex()).parameter("rightIndex", n.getRightIndex())
+                .resultOne();
 	}
 	
 	/*

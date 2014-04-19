@@ -15,12 +15,11 @@ public class GenericIT extends AbstractPersistenceIT {
 
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return deployment().persistence(new Class<?>[]{Person.class}).getArchive();
+		return deployment(new Class<?>[]{Person.class}).getArchive();
 	} 
 	
-	
-	
 	private Long createId;
+    private static Person identifiable;
 	private static Long pid;
 		
 	@Override
@@ -28,6 +27,9 @@ public class GenericIT extends AbstractPersistenceIT {
 		create(new Person("m01", "ali", "Bamba"));
 		create(identifiable = new Person("m103", "Ange", "Kessi"));
 		create(new Person("m123", "ali", "milla"));
+		create(new Person("m128", "ali1", "milla1"));
+		create(new Person("m129", "ali2", "milla2"));
+		create(new Person("m130", "ali3", "milla3"));
 		pid = identifiable.getIdentifier();
 	}
 					
@@ -68,14 +70,17 @@ public class GenericIT extends AbstractPersistenceIT {
 	
 	@Override
 	protected void queries() {
-		Assert.assertEquals(3,getGenericDao().use(Person.class).select().all().size());
-		Assert.assertEquals(3,getGenericDao().use(Person.class).select(Function.COUNT).oneLong().intValue());
+		Assert.assertEquals(6,getGenericDao().use(Person.class).select().all().size());
+		Assert.assertEquals(6,getGenericDao().use(Person.class).select(Function.COUNT).oneLong().intValue());
 		
 		Assert.assertEquals(2,getGenericDao().use(Person.class).select().where("name","ali").all().size());
 		Assert.assertEquals(2,getGenericDao().use(Person.class).select(Function.COUNT).where("name","ali").oneLong().intValue());
 		
 		Assert.assertEquals(0,getGenericDao().use(Person.class).select().where("identifier",identifiable.getIdentifier()).one()==null?0:1);
 		Assert.assertEquals(0,getGenericDao().use(Person.class).select().where("name","georges").one()==null?0:1);
+		
+		getGenericDao().getDataReadConfig().setMaximumResultCount(2l);
+		Assert.assertEquals(2,getGenericDao().use(Person.class).select().all().size());
 	}
 	
 	

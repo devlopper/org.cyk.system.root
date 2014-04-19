@@ -20,8 +20,8 @@ public class Language extends AbstractEnumeration implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	public Language(String code, String libelle,String abbreviation, String description) {
-		super(code, libelle,abbreviation, description);
+	public Language(String code, String libelle) {
+		super(code, libelle,libelle, null);
 	}
 	
 	@OneToMany(cascade=CascadeType.ALL,orphanRemoval=true,fetch=FetchType.LAZY)

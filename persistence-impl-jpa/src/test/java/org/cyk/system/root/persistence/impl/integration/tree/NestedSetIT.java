@@ -1,10 +1,10 @@
-package org.cyk.system.root.persistence.impl.integration;
+package org.cyk.system.root.persistence.impl.integration.tree;
 
 import java.util.Collection;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.model.pattern.tree.AbstractEnumerationNode;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
@@ -19,8 +19,7 @@ public class NestedSetIT extends AbstractPersistenceIT {
 	
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return deployment().persistence(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractEnumerationNode.class})
-				.getArchive();
+		return deployment(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractDataTreeNode.class}).getArchive();
 	} 
 	
 	private static NestedSet set1,set2,set3;

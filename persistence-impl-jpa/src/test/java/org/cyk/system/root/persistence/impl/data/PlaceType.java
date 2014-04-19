@@ -8,12 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.pattern.tree.AbstractEnumerationTreeType;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 
 @Getter @Setter @Entity @NoArgsConstructor
-public class PlaceType extends AbstractEnumerationTreeType implements Serializable {
+public class PlaceType extends AbstractDataTreeType implements Serializable {
 	
-	public PlaceType(AbstractEnumerationTreeType parent, String code) {
+	public PlaceType(AbstractDataTreeType parent, String code) {
 		super(parent, code);
 	}
 	
