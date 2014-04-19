@@ -9,14 +9,16 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class GenericITo extends AbstractPersistenceIT {
+public class GenericIT extends AbstractPersistenceIT {
 	
 	private static final long serialVersionUID = 5955832118708678179L;
 
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return createDeployment(new Class<?>[]{Person.class});
-	}  
+		return deployment().persistence(new Class<?>[]{Person.class}).getArchive();
+	} 
+	
+	
 	
 	private Long createId;
 	private static Long pid;
@@ -75,5 +77,8 @@ public class GenericITo extends AbstractPersistenceIT {
 		Assert.assertEquals(0,getGenericDao().use(Person.class).select().where("identifier",identifiable.getIdentifier()).one()==null?0:1);
 		Assert.assertEquals(0,getGenericDao().use(Person.class).select().where("name","georges").one()==null?0:1);
 	}
+	
+	
+	
 	
 }

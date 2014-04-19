@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
-Sun Apr 13 22:11:59 UTC 2014:
-Amorçage de Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872) : instance a816c00e-0145-5d25-a55b-00000792bef0 
-dans le répertoire de base de données H:\Repositories\source code\git\org\cyk\system\root\service-impl-ejb\target\databases\derby  avec le chargeur de classe org.apache.maven.surefire.booter.IsolatedClassLoader@7700b3c2
+Fri Apr 18 22:10:18 UTC 2014:
+AmorÃ§age de Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872) : instance a816c00e-0145-76e3-e4c2-000002a0a970 
+dans le rÃ©pertoire de base de donnÃ©es H:\Repositories\source code\git\org\cyk\system\root\business-impl-ejb\target\databases\derby  avec le chargeur de classe sun.misc.Launcher$AppClassLoader@2e2e1b6c
 
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_45-b18
-user.dir=H:\Repositories\source code\git\org\cyk\system\root\service-impl-ejb
+user.dir=H:\Repositories\source code\git\org\cyk\system\root\business-impl-ejb
 derby.system.home=null
-Chargeur de classe de la base de données démarré - derby.database.classpath=''
+Chargeur de classe de la base de donnÃ©es dÃ©marrÃ© - derby.database.classpath=''

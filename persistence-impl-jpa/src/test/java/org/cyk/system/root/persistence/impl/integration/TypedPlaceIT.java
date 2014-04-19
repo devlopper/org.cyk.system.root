@@ -18,12 +18,13 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
-public class TypedPlaceITo extends AbstractPersistenceIT {
+public class TypedPlaceIT extends AbstractPersistenceIT {
 
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return createDeployment(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractEnumerationTree.class,AbstractEnumerationTreeDao.class,
-				AbstractEnumerationTreeDaoImpl.class,TypedPlace.class,TypedPlaceDao.class,PlaceType.class,PlaceTypeDao.class});
+		return deployment().persistence(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractEnumerationTree.class,AbstractEnumerationTreeDao.class,
+				AbstractEnumerationTreeDaoImpl.class,TypedPlace.class,TypedPlaceDao.class,PlaceType.class,PlaceTypeDao.class})
+				.getArchive();
 	} 
 	
 	@Inject private TypedPlaceDao dao;

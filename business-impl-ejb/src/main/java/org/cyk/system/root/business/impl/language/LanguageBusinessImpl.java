@@ -13,13 +13,13 @@ import javax.inject.Singleton;
 
 import lombok.Setter;
 
-import org.cyk.system.root.business.api.language.LanguageService;
-import org.cyk.system.root.business.impl.AbstractTypedService;
+import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
 
 @Singleton
-public class LanguageServiceImpl extends AbstractTypedService<Language, LanguageDao> implements LanguageService,Serializable {
+public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 
@@ -28,8 +28,8 @@ public class LanguageServiceImpl extends AbstractTypedService<Language, Language
 	@Setter private Locale locale = Locale.FRENCH;
 	
 	@Inject
-	public LanguageServiceImpl(LanguageDao dao) {
-		super(dao);
+	public LanguageBusinessImpl(LanguageDao dao) {
+		super(dao); 
 	} 
 	
 	

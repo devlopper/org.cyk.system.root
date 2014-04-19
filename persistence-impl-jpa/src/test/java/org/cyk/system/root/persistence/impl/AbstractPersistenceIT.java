@@ -7,19 +7,12 @@ import javax.transaction.UserTransaction;
 
 import lombok.Getter;
 
-import org.cyk.system.root.persistence.api.GenericDao;
-import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.persistence.impl.AbstractPersistenceService;
-import org.cyk.system.root.persistence.impl.GenericDaoImpl;
-import org.cyk.system.root.persistence.impl.QueryStringBuilder;
-import org.cyk.system.root.persistence.impl.Utils;
+import org.cyk.system.root.persistence.api.GenericDao;
+import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.test.AbstractIntegrationTest;
+import org.cyk.utility.common.test.ArchiveBuilder;
 import org.cyk.utility.common.test.TestMethod;
-import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 
 /**
  * Persistence integration test (IT)
@@ -30,26 +23,22 @@ public abstract class AbstractPersistenceIT extends AbstractIntegrationTest {
 	 
 	private static final long serialVersionUID = -3977685343817022628L;
 
-	static final Utils UTILS = new Utils();
-	 
-	@SuppressWarnings("unchecked")
-	public static Archive<?> createDeployment(Class<?>[] classes){
-		JavaArchive archive = ShrinkWrap
-				.create(JavaArchive.class)
-				.addClass(QueryStringBuilder.class)
-				.addClass(PersistenceService.class).addClass(AbstractPersistenceService.class).addClass(GenericDao.class).addClass(GenericDaoImpl.class)
-				//.addClasses(classes)
-				.addAsResource("test-persistence.xml","META-INF/persistence.xml")
-				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-		
-		for(Class<?> clazz : classes)
-			if(AbstractIdentifiable.class.isAssignableFrom(clazz))
-				for(String name : UTILS.componentNames((Class<? extends AbstractIdentifiable>) clazz))
-					archive.addClass(name);
-			else
-				archive.addClass(clazz);
-		
-		return archive;
+	public static ArchiveBuilder deployment(){
+		ArchiveBuilder builder = new ArchiveBuilder();
+		builder.create().addClasses(PersistenceIntegrationTestHelper.BASE_CLASSES);
+		return builder;
+	}
+	
+	static int i=1;
+	static {
+		AFTER_CLASS_METHOD = new AbstractMethod<Object, Object>() {
+			@Override
+			protected Object __execute__(Object parameter) {
+				data = false;
+				identifiable = null;
+				return null;
+			}
+		};
 	}
 	
 	protected static Boolean data = Boolean.FALSE;

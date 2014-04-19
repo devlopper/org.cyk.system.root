@@ -13,9 +13,13 @@ public class QueryStringBuilderUT extends AbstractUnitTest {
 	@Override
 	protected void _execute_() {
 		super._execute_();
-		assertEquals("select r from table r".toLowerCase(),builder.init().from("table").select().getValue().toLowerCase());
-		assertEquals("select r from table r where r.age = :age".toLowerCase(),builder.init().from("table").select().where("age").getValue().toLowerCase());
-		assertEquals("select count(r.identifier) from table r".toLowerCase(),builder.init().from("table").select(Function.COUNT).getValue().toLowerCase());
+		queryStringEquals("select r from table r",builder.init().from("table").select());
+		queryStringEquals("select r from table r where r.age = :age",builder.init().from("table").select().where("age"));
+		queryStringEquals("select count(r.identifier) from table r",builder.init().from("table").select(Function.COUNT));
+	}
+	
+	private void queryStringEquals(String query,QueryStringBuilder builder){
+		assertEquals(query.toLowerCase(),builder.getValue().toLowerCase());
 	}
 	
 }

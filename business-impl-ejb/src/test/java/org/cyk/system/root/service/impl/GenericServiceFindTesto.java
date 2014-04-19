@@ -2,10 +2,10 @@ package org.cyk.system.root.service.impl;
 
 import javax.ejb.EJB;
 
-import org.cyk.system.root.business.api.IGenericModelService;
-import org.cyk.system.root.business.api.IGenericService;
-import org.cyk.system.root.business.impl.AbstractService;
-import org.cyk.system.root.business.impl.GenericService;
+import org.cyk.system.root.business.api.GenericBusinessService;
+import org.cyk.system.root.business.api.AbstractGenericBusinessService;
+import org.cyk.system.root.business.impl.AbstractBusinessService;
+import org.cyk.system.root.business.impl.GenericBusinessServiceImpl;
 import org.cyk.system.root.persistence.impl.AbstractPersistenceService;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
@@ -21,10 +21,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class GenericServiceFindTesto extends AbstractServiceTesto {
+public class GenericServiceFindTesto extends AbstractBusinessIT {
 	
 	@EJB
-	private IGenericModelService service;
+	private GenericBusinessService service;
 	private Long identifier;
 	
 
@@ -32,8 +32,8 @@ public class GenericServiceFindTesto extends AbstractServiceTesto {
 	public static Archive<?> createDeployment() {
 		return ShrinkWrap
 				.create(JavaArchive.class)
-				.addClasses(AbstractBean.class,AbstractService.class,GenericService.class,Person.class,
-						IGenericService.class,IGenericModelService.class,AbstractPersistenceService.class, AbstractTypedDao.class,GenericDaoImpl.class)
+				.addClasses(AbstractBean.class,AbstractBusinessService.class,GenericBusinessServiceImpl.class,Person.class,
+						AbstractGenericBusinessService.class,GenericBusinessService.class,AbstractPersistenceService.class, AbstractTypedDao.class,GenericDaoImpl.class)
 				.addAsResource("test-persistence.xml","META-INF/persistence.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 	}

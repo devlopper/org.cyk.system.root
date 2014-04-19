@@ -4,21 +4,23 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.model.pattern.tree.AbstractEnumerationNode;
+import org.cyk.system.root.model.pattern.tree.NestedSet;
+import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
-import org.cyk.system.root.model.pattern.tree.NestedSet;
-import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.utility.common.test.TestMethod;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
-public class NestedSetITo extends AbstractPersistenceIT {
+public class NestedSetIT extends AbstractPersistenceIT {
 	
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return createDeployment(new Class<?>[]{NestedSet.class,NestedSetNode.class});
+		return deployment().persistence(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractEnumerationNode.class})
+				.getArchive();
 	} 
 	
 	private static NestedSet set1,set2,set3;

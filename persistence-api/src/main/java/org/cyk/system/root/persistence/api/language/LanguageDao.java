@@ -5,4 +5,4 @@ import org.cyk.system.root.persistence.api.TypedDao;
 
 public interface LanguageDao extends TypedDao<Language> {
 
-}
+} 

@@ -2,8 +2,8 @@ package org.cyk.system.root.model.pattern.tree;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -13,8 +13,8 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.utility.common.validation.Client;
 
-@Getter @Setter @NoArgsConstructor @MappedSuperclass
-public abstract class AbstractEnumerationNode extends AbstractEnumeration implements Serializable {
+@Getter @Setter @NoArgsConstructor @Entity
+public class AbstractEnumerationNode extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	

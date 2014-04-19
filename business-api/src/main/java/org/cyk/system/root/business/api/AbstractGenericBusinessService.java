@@ -2,7 +2,7 @@ package org.cyk.system.root.business.api;
 
 import org.cyk.system.root.model.Identifiable;
 
-public interface IGenericService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends BusinessService<IDENTIFIABLE,IDENTIFIER> {
+public interface AbstractGenericBusinessService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends BusinessService<IDENTIFIABLE,IDENTIFIER> {
 
 	/* ------------------------ Static methods ---------------------------- */
 	
@@ -16,7 +16,7 @@ public interface IGenericService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,I
 	
 	/* ------------------------ Dynamic methods ---------------------------- */
 	
-	/* point to */	IGenericService<IDENTIFIABLE,IDENTIFIER> use(Class<? extends IDENTIFIABLE> aClass);
+	/* point to */	AbstractGenericBusinessService<IDENTIFIABLE,IDENTIFIER> use(Class<? extends IDENTIFIABLE> aClass);
 	
 }
 

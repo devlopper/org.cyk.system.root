@@ -2,35 +2,32 @@ package org.cyk.system.root.persistence.impl.integration;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.model.pattern.tree.AbstractEnumerationTree;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-import org.cyk.system.root.persistence.api.pattern.tree.AbstractEnumerationTreeDao;
 import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
 import org.cyk.system.root.persistence.impl.data.UnTypedPlace;
 import org.cyk.system.root.persistence.impl.data.UnTypedPlaceDao;
-import org.cyk.system.root.persistence.impl.pattern.tree.AbstractEnumerationTreeDaoImpl;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.test.TestMethod;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
-public class UnTypedPlaceITo extends AbstractPersistenceIT {
+public class UnTypedPlaceIT extends AbstractPersistenceIT {
 
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return createDeployment(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractEnumerationTree.class,AbstractEnumerationTreeDao.class,
-				AbstractEnumerationTreeDaoImpl.class,UnTypedPlace.class,UnTypedPlaceDao.class});
+		return deployment().persistence(new Class<?>[]{NestedSet.class,NestedSetNode.class,UnTypedPlace.class,UnTypedPlaceDao.class})
+				.getArchive();
 	} 
-	
-	@Inject private UnTypedPlaceDao dao;
 	
 	static UnTypedPlace continent,country,city;
 	
 	static UnTypedPlace afrique,europe;
 	static UnTypedPlace afriqueCI,afriqueGH,europeFR,europeIT;
 	static UnTypedPlace afriqueCIAbidjan,afriqueCIBouake,afriqueGHAccra,afriqueGHNoe,europeFRParis,europeFRLyon,europeITRome,europeITViennes;
+	
+	@Inject private UnTypedPlaceDao dao;
 	
 	@Override
 	protected void populate() {
