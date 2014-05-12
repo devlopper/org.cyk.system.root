@@ -40,7 +40,7 @@
 					<modules>
 						<webModule>
 							<groupId>org.cyk.system.root.ui.web.jsf</groupId>
-							<artifactId>ui-web-primefaces</artifactId>
+							<artifactId>root-ui-web-primefaces</artifactId>
 							<bundleFileName>root.war</bundleFileName>
 							<contextRoot>/root</contextRoot>
 						</webModule>
@@ -77,19 +77,19 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.cyk.system.root.business</groupId>
-			<artifactId>business-impl-ejb</artifactId>
+			<artifactId>root-business-impl-ejb</artifactId>
 			<version>0.0.1</version>
 			<type>ejb</type>
 		</dependency>
 		<dependency>
 			<groupId>org.cyk.system.root.ui.web.jsf</groupId>
-			<artifactId>ui-web-primefaces</artifactId>
+			<artifactId>root-ui-web-primefaces</artifactId>
 			<version>0.0.1</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>org.cyk.system.root</groupId>
-			<artifactId>application-resources</artifactId>
+			<artifactId>root-application-resources</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 	</dependencies>	

@@ -18,13 +18,13 @@
 	<url>http://www.cykcorp.org</url>
 	
 	<modules>
-		<module>../model</module> 
-		<module>../persistence-api</module>
-		<module>../persistence-impl-jpa</module>
-		<module>../business-api</module>
-		<module>../business-impl-ejb</module>
-		<module>../ui-web-primefaces</module>
-		<module>../application-resources</module>
+		<module>../root-model</module> 
+		<module>../root-persistence-api</module>
+		<module>../root-persistence-impl-jpa</module>
+		<module>../root-business-api</module>
+		<module>../root-business-impl-ejb</module>
+		<module>../root-ui-web-primefaces</module>
+		<module>../root-application-resources</module>
 		<module>../application</module>
 	</modules> 
 
