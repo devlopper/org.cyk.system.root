@@ -39,7 +39,7 @@ public class BusinessManagerImpl extends AbstractStartupBean implements Business
     public Collection<BusinessEntityInfos> findEntitiesInfos(CrudStrategy crudStrategy) {
         Collection<BusinessEntityInfos> l = new HashSet<>();
         for(BusinessEntityInfos infos : findEntitiesInfos()){
-            if(infos.getCrudStrategy().equals(crudStrategy))
+            if(infos.getCrudStrategy()!=null && infos.getCrudStrategy().equals(crudStrategy))
                 l.add(infos);
         }
         return l;

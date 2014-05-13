@@ -13,6 +13,7 @@ import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.annotation.Model;
+import org.cyk.utility.common.annotation.Model.CrudInheritanceStrategy;
 import org.cyk.utility.common.annotation.Model.CrudStrategy;
 
 @EqualsAndHashCode(of="clazz")
@@ -31,7 +32,14 @@ public class BusinessEntityInfos implements Serializable {
     }
 
     public CrudStrategy getCrudStrategy() {
-        return modelAnnotation==null?null:modelAnnotation.crudStrategy();
+        if(modelAnnotation==null)
+            return null;
+        if(modelAnnotation.crudInheritanceStrategy().equals(CrudInheritanceStrategy.CHILDREN_ONLY)){
+            if(modelAnnotation.equals(clazz.getAnnotation(Model.class)))
+                return null;
+            return modelAnnotation.crudStrategy();
+        }
+        return modelAnnotation.crudStrategy();
     }
     
     @Override
