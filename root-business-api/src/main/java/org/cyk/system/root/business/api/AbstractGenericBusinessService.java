@@ -6,7 +6,7 @@ public interface AbstractGenericBusinessService<IDENTIFIABLE extends Identifiabl
 
 	/* ------------------------ Static methods ---------------------------- */
 	
-	/* Create */	IDENTIFIABLE create(Class<? extends IDENTIFIABLE> aClass,IDENTIFIABLE object);
+	/* Create */	IDENTIFIABLE create(/*Class<? extends IDENTIFIABLE> aClass,*/IDENTIFIABLE object);
 	
 	/* Read */ 		IDENTIFIABLE read(Class<? extends IDENTIFIABLE> aClass,IDENTIFIER identifier);
 	

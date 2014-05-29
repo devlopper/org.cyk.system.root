@@ -5,4 +5,5 @@
 /.settings
 .project
 .classpath
+.log
 /Workspaces

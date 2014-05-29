@@ -1,97 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.cyk.system.root</groupId>
-		<artifactId>pom</artifactId>
-		<version>0.0.1</version>
-	</parent> 
+    <parent>
+        <groupId>org.cyk.system.root</groupId>
+        <artifactId>pom</artifactId>
+        <version>0.0.1</version>
+    </parent> 
 
-	<name>Application</name> 
+    <name>Application</name> 
 
-	<artifactId>application</artifactId>
-	<packaging>ear</packaging>
+    <artifactId>application</artifactId>
+    <packaging>ear</packaging>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>maven.java.net</id>
-			<name>Java.net Repository for Maven</name>
-			<url>https://maven.java.net/content/groups/promoted/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Repository for Maven</name>
-			<url>http://download.java.net/maven/glassfish/</url>
-		</pluginRepository>
-	</pluginRepositories>
-	
-	<build> 
-		<plugins>
-			<plugin>
-				<artifactId>maven-ear-plugin</artifactId>
-				<version>${maven-ear-plugin}</version>
-				<configuration>
-					<earSourceDirectory>EarContent</earSourceDirectory>
-					<generateApplicationXml>false</generateApplicationXml>
-					<version>${earVersion}</version>
-					<defaultLibBundleDir>lib</defaultLibBundleDir>
-					<modules>
-						<webModule>
-							<groupId>org.cyk.system.root.ui.web.jsf</groupId>
-							<artifactId>root-ui-web-primefaces</artifactId>
-							<bundleFileName>root.war</bundleFileName>
-							<contextRoot>/root</contextRoot>
-						</webModule>
-					</modules>
-				</configuration>
-			</plugin>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>https://maven.java.net/content/groups/promoted/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/glassfish/</url>
+        </pluginRepository>
+    </pluginRepositories>
+    
+    <build> 
+        <plugins>
+            <plugin>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>${maven-ear-plugin}</version>
+                <configuration>
+                    <earSourceDirectory>EarContent</earSourceDirectory>
+                    <generateApplicationXml>false</generateApplicationXml>
+                    <version>${earVersion}</version>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <webModule>
+                            <groupId>org.cyk.system.root.ui.web.jsf</groupId>
+                            <artifactId>root-ui-web-primefaces</artifactId>
+                            <bundleFileName>root.war</bundleFileName>
+                            <contextRoot>/root</contextRoot>
+                        </webModule>
+                    </modules>
+                </configuration>
+            </plugin>
 
-			<plugin>
-				<groupId>org.glassfish.embedded</groupId>
-				<artifactId>maven-embedded-glassfish-plugin</artifactId>
-				<version>3.1.2.2</version>
-				<configuration>
-					<app>target/${project.artifactId}-${project.version}</app>
-					<port>8281</port>
-					<contextRoot>${project.artifactId}</contextRoot>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.glassfish.main</groupId>
-						<artifactId>simple-glassfish-api</artifactId>
-						<version>4.0-b79</version>
-					</dependency>
-					<dependency>
-						<groupId>org.glassfish.main.extras</groupId>
-						<artifactId>glassfish-embedded-all</artifactId>
-						<version>4.0-b83</version>
-					</dependency>
-				</dependencies>
-			</plugin>
+            <!--plugin>
+                <groupId>org.glassfish.embedded</groupId>
+                <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                <version>3.1.2.2</version>
+                <configuration>
+                    <app>target/${project.artifactId}-${project.version}</app>
+                    <port>8281</port>
+                    <contextRoot>${project.artifactId}</contextRoot>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.glassfish.main</groupId>
+                        <artifactId>simple-glassfish-api</artifactId>
+                        <version>4.0-b79</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.glassfish.main.extras</groupId>
+                        <artifactId>glassfish-embedded-all</artifactId>
+                        <version>4.0-b83</version>
+                    </dependency>
+                </dependencies>
+            </plugin-->
 
-		</plugins>
-	</build>
-	
-	<dependencies>
-		<dependency>
-			<groupId>org.cyk.system.root.business</groupId>
-			<artifactId>root-business-impl-ejb</artifactId>
-			<version>0.0.1</version>
-			<type>ejb</type>
-		</dependency>
-		<dependency>
-			<groupId>org.cyk.system.root.ui.web.jsf</groupId>
-			<artifactId>root-ui-web-primefaces</artifactId>
-			<version>0.0.1</version>
-			<type>war</type>
-		</dependency>
-		<dependency>
-			<groupId>org.cyk.system.root</groupId>
-			<artifactId>root-application-resources</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-	</dependencies>	
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.cyk.system.root.business</groupId>
+            <artifactId>root-business-impl-ejb</artifactId>
+            <version>0.0.1</version>
+            <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>org.cyk.system.root.ui.web.jsf</groupId>
+            <artifactId>root-ui-web-primefaces</artifactId>
+            <version>0.0.1</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.cyk.system.root</groupId>
+            <artifactId>root-application-resources</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+    </dependencies> 
 
 </project>

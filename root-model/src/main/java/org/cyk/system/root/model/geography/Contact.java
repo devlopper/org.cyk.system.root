@@ -18,7 +18,7 @@ import org.cyk.utility.common.annotation.Model.CrudInheritanceStrategy;
 import org.cyk.utility.common.annotation.Model.CrudStrategy;
 
 @Getter @Setter @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @AllArgsConstructor @NoArgsConstructor 
 @Model(crudStrategy=CrudStrategy.ENUMERATION,crudInheritanceStrategy=CrudInheritanceStrategy.CHILDREN_ONLY)
 public class Contact extends AbstractIdentifiable implements Serializable{

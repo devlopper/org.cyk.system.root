@@ -4,6 +4,7 @@
 /bin
 /.settings
 .project
+.log
 .classpath
 /Workspaces
 rebel.xml

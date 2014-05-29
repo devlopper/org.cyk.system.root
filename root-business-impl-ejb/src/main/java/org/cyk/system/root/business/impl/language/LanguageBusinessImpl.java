@@ -36,6 +36,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	protected void initialisation() {
 		super.initialisation();
 		registerResourceBundle("org.cyk.system.root.model.language.i18n",getClass().getClassLoader());
+		registerResourceBundle("org.cyk.system.root.model.language.word",getClass().getClassLoader());
+		registerResourceBundle("org.cyk.system.root.business.impl.language.ui",getClass().getClassLoader());
 	}
 
 	@Override

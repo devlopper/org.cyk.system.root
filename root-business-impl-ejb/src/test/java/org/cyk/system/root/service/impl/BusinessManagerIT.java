@@ -18,7 +18,6 @@ import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.PersistenceManager;
 import org.cyk.system.root.persistence.impl.PersistenceManagerImpl;
-import org.cyk.utility.common.annotation.Model.CrudStrategy;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -56,9 +55,11 @@ public class BusinessManagerIT extends AbstractBusinessIT {
 
     @Override
     protected void finds() {
-        System.out.println(businessManager.findEntitiesInfos());
-        System.out.println(businessManager.findEntitiesInfos(CrudStrategy.ENUMERATION));
+        //System.out.println(businessManager.findEntitiesInfos());
+        //System.out.println(businessManager.findEntitiesInfos(CrudStrategy.ENUMERATION));
         //Assert.assertEquals(2, businessManager.findEntitiesInfos().size());
+        businessManager.createData();
+       
     }
 
     /**/
