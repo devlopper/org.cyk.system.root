@@ -2,7 +2,7 @@ package org.cyk.system.root.business.api;
 
 import java.util.Collection;
 
-import org.cyk.utility.common.annotation.Model.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
 public interface BusinessManager {
 
@@ -15,4 +15,5 @@ public interface BusinessManager {
     
     Collection<BusinessEntityInfos> findEntitiesInfos(CrudStrategy crudStrategy);
     
+    Collection<BusinessLayer> findBusinessLayers();
 }

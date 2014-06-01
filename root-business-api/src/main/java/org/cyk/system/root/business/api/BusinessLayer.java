@@ -1,10 +1,12 @@
 package org.cyk.system.root.business.api;
 
-public interface SpecificBusinessManager {
-    
+
+public interface BusinessLayer {
+
+   
     /**
      * Create application initial data. 
      */
     void createInitialData();
-
+    
 }

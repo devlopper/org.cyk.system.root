@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -10,12 +11,12 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.BusinessEntityInfos;
+import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessManager;
-import org.cyk.system.root.business.api.SpecificBusinessManager;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.persistence.api.PersistenceManager;
-import org.cyk.utility.common.annotation.Model.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.cdi.AbstractStartupBean;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -26,24 +27,21 @@ public class BusinessManagerImpl extends AbstractStartupBean implements Business
     @Inject private PersistenceManager persistenceManager;
     @Inject private LanguageBusiness languageBusiness;
     
+    private Collection<BusinessLayer> businessLayers = new ArrayList<>();
+    
+    @Override
+    protected void initialisation() {
+        super.initialisation();
+        for(Object object : startupBeanExtension.getReferences())
+            if(BusinessLayer.class.isAssignableFrom(object.getClass()))
+                businessLayers.add((BusinessLayer) object);
+    }
+    
     @Override
     public void createData() {
-        for(Object object : startupBeanExtension.getReferences()){
-            if(SpecificBusinessManager.class.isAssignableFrom(object.getClass()))
-                ((SpecificBusinessManager)object).createInitialData();
-        }
-        /*
-       Reflections reflections = new Reflections("org.cyk.system");
-
-        Set<Class<? extends SpecificBusinessManager>> specificBusinessManagerClasses = reflections.getSubTypesOf(SpecificBusinessManager.class);
-        for(Class<? extends SpecificBusinessManager> specificBusinessManagerClass : specificBusinessManagerClasses)
-            try {
-                specificBusinessManagerClass.newInstance().createInitialData();
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new BusinessException(e.toString());
-            }
-            */
+        for(BusinessLayer layer : businessLayers)
+            layer.createInitialData();
+       
     }
     
     @Override
@@ -67,6 +65,11 @@ public class BusinessManagerImpl extends AbstractStartupBean implements Business
                 l.add(infos);
         }
         return l;
+    }
+    
+    @Override
+    public Collection<BusinessLayer> findBusinessLayers() {
+       return businessLayers;
     }
 
 }

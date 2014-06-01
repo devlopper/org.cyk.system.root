@@ -52,11 +52,11 @@ public abstract class AbstractPersistenceIT extends AbstractIntegrationTestJpaBa
 	/* Shortcut */
 	
 	protected void create(AbstractIdentifiable object){
-		genericDao.create(object.getClass(), object);
+		genericDao.create(object);
 	}
 	
 	protected void update(AbstractIdentifiable object){
-		genericDao.update(object.getClass(), object);
+		genericDao.update(object);
 	}
 	
 }

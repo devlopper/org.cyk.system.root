@@ -9,27 +9,7 @@ public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifia
 	
 	/*-------------------------------------------------------------------------------------------*/
 	
-	@Override
-	public AbstractIdentifiable create(Class<? extends AbstractIdentifiable> aClass,AbstractIdentifiable object) {
-		entityManager.persist(object);
-		return object;
-	}
 	
-	@Override
-	public AbstractIdentifiable read(Class<? extends AbstractIdentifiable> aClass,Long identifier) {
-		return entityManager.find(aClass, identifier);
-	}
-
-	@Override
-	public AbstractIdentifiable update(Class<? extends AbstractIdentifiable> aClass,AbstractIdentifiable object) {
-		return entityManager.merge(object);
-	}
-
-	@Override
-	public AbstractIdentifiable delete(Class<? extends AbstractIdentifiable> aClass,AbstractIdentifiable object) {
-		entityManager.remove(entityManager.merge(object));
-		return object;
-	}
 	
 	/*--------------------------------------------------------------------------------------------*/
 	

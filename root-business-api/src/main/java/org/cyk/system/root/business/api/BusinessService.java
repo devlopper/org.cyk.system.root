@@ -10,6 +10,20 @@ import org.cyk.utility.common.computation.LogicalOperator;
 
 public interface BusinessService <IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> {
 	
+    /* ------------------------ Static methods ---------------------------- */
+    
+    /* Create */    IDENTIFIABLE create(IDENTIFIABLE object);
+    
+    /* Read */      //IDENTIFIABLE read(IDENTIFIER identifier);
+    
+    /* Update */    IDENTIFIABLE update(IDENTIFIABLE object);
+    
+    /* Delete */    IDENTIFIABLE delete(IDENTIFIABLE object);   
+    
+    /* ------------------------ Dynamic methods ---------------------------- */
+    
+    /* --- Selection --- */
+    
 	/* select */	BusinessService<IDENTIFIABLE,IDENTIFIER> find();
 	
 	                IDENTIFIABLE find(IDENTIFIER identifier);

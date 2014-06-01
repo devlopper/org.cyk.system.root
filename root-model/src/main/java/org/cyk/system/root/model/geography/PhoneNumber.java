@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.cyk.utility.common.annotation.UIField;
 
@@ -16,16 +17,16 @@ public class PhoneNumber extends Contact implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne @UIField
+	@ManyToOne @UIField @NotNull
 	private PhoneNumberType type;
 	
-	@ManyToOne @UIField
+	@ManyToOne @UIField @NotNull
 	private Locality country;
 	
-	@UIField
+	@UIField(label="phone.number") @NotNull
 	private String number;
 	
-	@ManyToOne @UIField
+	@ManyToOne @UIField(label="location") @NotNull
 	private LocationType locationType;
 	
 	@Override

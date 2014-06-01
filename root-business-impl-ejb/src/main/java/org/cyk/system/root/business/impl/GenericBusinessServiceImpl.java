@@ -24,23 +24,18 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	}
 	
 	@Override
-	public AbstractIdentifiable create(/*Class<? extends AbstractIdentifiable> aClass,*/AbstractIdentifiable anObject) {
-		return dao.create(anObject.getClass(), anObject);
+	public AbstractIdentifiable create(AbstractIdentifiable anObject) {
+		return dao.create(anObject);
 	}
 
 	@Override
-	public AbstractIdentifiable read(Class<? extends AbstractIdentifiable> aClass,Long identifier) {
-		return dao.read(aClass, identifier);
+	public AbstractIdentifiable update(AbstractIdentifiable anObject) {
+		return dao.update(anObject);
 	}
 
 	@Override
-	public AbstractIdentifiable update(Class<? extends AbstractIdentifiable> aClass,AbstractIdentifiable anObject) {
-		return dao.update(aClass, anObject);
-	}
-
-	@Override
-	public AbstractIdentifiable delete(Class<? extends AbstractIdentifiable> aClass,AbstractIdentifiable anObject) {
-		return dao.delete(aClass, anObject);
+	public AbstractIdentifiable delete(AbstractIdentifiable anObject) {
+		return dao.delete(anObject);
 	}
 
 	@Override

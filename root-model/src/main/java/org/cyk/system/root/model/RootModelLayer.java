@@ -1,20 +1,11 @@
 package org.cyk.system.root.model;
 
 import java.io.Serializable;
-import java.util.Collection;
 
-import org.cyk.utility.common.annotation.Layer;
-import org.cyk.utility.common.annotation.Layer.Type;
+import org.cyk.utility.common.annotation.ModelLayer;
 
-@Layer(type=Type.MODEL)
+@ModelLayer
 public class RootModelLayer extends AbstractModelLayer implements Serializable {
 
-    @Override
-    public Collection<Object> data() {
-        System.out.println("RootModelLayer.data()");
-        return null;
-    }
-
-   
     
 }

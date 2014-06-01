@@ -74,9 +74,26 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	protected void namedQueriesInitialisation(){}
 	
 	@Override
-	public IDENTIFIABLE read(Long identifier) {
-	    return entityManager.find(clazz, identifier);
-	}
+    public IDENTIFIABLE create(IDENTIFIABLE object) {
+        entityManager.persist(object);
+        return object;
+    }
+    
+	@Override
+    public IDENTIFIABLE read(Long identifier) {
+        return entityManager.find(clazz, identifier);
+    }
+
+    @Override
+    public IDENTIFIABLE update(IDENTIFIABLE object) {
+        return entityManager.merge(object);
+    }
+
+    @Override
+    public IDENTIFIABLE delete(IDENTIFIABLE object) {
+        entityManager.remove(entityManager.merge(object));
+        return object;
+    }
 	 
 	@Override
 	public PersistenceService<IDENTIFIABLE, Long> select(Function function) {

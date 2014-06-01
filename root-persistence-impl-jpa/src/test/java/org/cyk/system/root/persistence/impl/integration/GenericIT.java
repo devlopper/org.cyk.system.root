@@ -45,26 +45,26 @@ public class GenericIT extends AbstractPersistenceIT {
 		AbstractIdentifiable identifiable;
 		create(identifiable = new Person("m21", "Roger", "milla"));
 		createId = identifiable.getIdentifier();
-		Assert.assertTrue("Create", getGenericDao().read(Person.class, createId)!=null);
+		Assert.assertTrue("Create", getGenericDao().use(Person.class).read(createId)!=null);
 	}
 
 	@Override
 	protected void read() {
-		Assert.assertTrue("Read", getGenericDao().read(Person.class, pid)!=null);
+		Assert.assertTrue("Read", getGenericDao().use(Person.class).read(pid)!=null);
 	}
 
 	@Override
 	protected void update() {
 		((Person)identifiable).setName("Jack");
 		update(identifiable);
-		Person person = (Person) getGenericDao().read(Person.class, identifiable.getIdentifier());
+		Person person = (Person) getGenericDao().use(Person.class).read(identifiable.getIdentifier());
 		Assert.assertTrue("Update","Jack".equals(person.getName()));
 	}
 
 	@Override
 	protected void delete() {
-		getGenericDao().delete(Person.class, identifiable);
-		Person person = (Person) getGenericDao().read(Person.class, identifiable.getIdentifier());
+		getGenericDao().delete(identifiable);
+		Person person = (Person) getGenericDao().use(Person.class).read(identifiable.getIdentifier());
 		Assert.assertTrue("Delete",person==null);
 	}
 	

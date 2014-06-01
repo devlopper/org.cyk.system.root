@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.cyk.utility.common.annotation.UIField;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +15,10 @@ public class Location extends Contact implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne
+	@ManyToOne @UIField
 	private Locality locality;
 	
+	@UIField(textArea=true,textRowCount=3)
 	private String comment;
     
 	public Location() {}

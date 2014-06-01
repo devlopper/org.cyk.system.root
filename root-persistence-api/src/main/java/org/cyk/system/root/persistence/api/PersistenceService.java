@@ -10,6 +10,16 @@ import org.cyk.utility.common.computation.LogicalOperator;
 
 public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> {
 	
+    /* Create */    IDENTIFIABLE create(IDENTIFIABLE object);
+    
+    /* Read */      //IDENTIFIABLE read(Class<? extends IDENTIFIABLE> aClass,IDENTIFIER identifier);
+    
+    /* Update */    IDENTIFIABLE update(IDENTIFIABLE object);
+    
+    /* Delete */    IDENTIFIABLE delete(IDENTIFIABLE object);
+    
+    
+    
 	/* select */		PersistenceService<IDENTIFIABLE,IDENTIFIER> select(Function function);
 	
 						PersistenceService<IDENTIFIABLE,IDENTIFIER> select();

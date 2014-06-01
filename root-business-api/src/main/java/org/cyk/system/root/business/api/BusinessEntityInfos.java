@@ -12,34 +12,34 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.utility.common.CommonUtils;
-import org.cyk.utility.common.annotation.Model;
-import org.cyk.utility.common.annotation.Model.CrudInheritanceStrategy;
-import org.cyk.utility.common.annotation.Model.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudInheritanceStrategy;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
 @EqualsAndHashCode(of="clazz")
 public class BusinessEntityInfos implements Serializable {
     
     @Getter @Setter private Class<? extends Identifiable<?>> clazz;
-    private Model modelAnnotation;
+    private ModelBean modelBeanAnnotation;
     @Getter @Setter private String uiLabelId,identifier;
     
     public BusinessEntityInfos(Class<? extends Identifiable<?>> clazz,LanguageBusiness languageBusiness) {
         super();
         this.clazz = clazz;
         this.identifier=clazz.getSimpleName();
-        modelAnnotation = CommonUtils.getInstance().getAnnotation(clazz,Model.class);
-        uiLabelId = "entity."+Introspector.decapitalize(clazz.getSimpleName());
+        modelBeanAnnotation = CommonUtils.getInstance().getAnnotation(clazz,ModelBean.class);
+        uiLabelId = "model.entity."+Introspector.decapitalize(clazz.getSimpleName());
     }
 
     public CrudStrategy getCrudStrategy() {
-        if(modelAnnotation==null)
+        if(modelBeanAnnotation==null)
             return null;
-        if(modelAnnotation.crudInheritanceStrategy().equals(CrudInheritanceStrategy.CHILDREN_ONLY)){
-            if(modelAnnotation.equals(clazz.getAnnotation(Model.class)))
+        if(modelBeanAnnotation.crudInheritanceStrategy().equals(CrudInheritanceStrategy.CHILDREN_ONLY)){
+            if(modelBeanAnnotation.equals(clazz.getAnnotation(ModelBean.class)))
                 return null;
-            return modelAnnotation.crudStrategy();
+            return modelBeanAnnotation.crudStrategy();
         }
-        return modelAnnotation.crudStrategy();
+        return modelBeanAnnotation.crudStrategy();
     }
     
     @Override

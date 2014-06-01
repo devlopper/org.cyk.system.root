@@ -12,12 +12,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.utility.common.annotation.Model;
-import org.cyk.utility.common.annotation.Model.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.validation.System;
 
 @Getter @Setter
-@Entity @Model(crudStrategy=CrudStrategy.INTERNAL)
+@Entity @ModelBean(crudStrategy=CrudStrategy.INTERNAL)
 public class NestedSetNode extends AbstractIdentifiable implements Serializable  {
 
 	private static final long serialVersionUID = 9135086950442356103L;

@@ -16,29 +16,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		clazz = (Class<IDENTIFIABLE>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		super.initialisation();
 	}
-	
-	@Override 
-	public IDENTIFIABLE create(IDENTIFIABLE object) {
-		entityManager.persist(object);
-		return object;
-	}
-
-	@Override
-	public IDENTIFIABLE read(Long identifier) {
-		return entityManager.find(clazz, identifier);
-	}
-
-	@Override
-	public IDENTIFIABLE update(IDENTIFIABLE object) {
-		return entityManager.merge(object);
-	}
-
-	@Override
-	public IDENTIFIABLE delete(IDENTIFIABLE object) {
-		entityManager.remove(entityManager.merge(object));
-		return object;
-	}
-	
+		
 	/**/
 	
 	

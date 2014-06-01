@@ -9,7 +9,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 
-public  class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractBusinessService<IDENTIFIABLE> implements
+public class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractBusinessService<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
 
 	private static final long serialVersionUID = 6437552355933877400L;
@@ -30,11 +30,6 @@ public  class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifi
 	@Override
 	public IDENTIFIABLE create(IDENTIFIABLE object) {
 		return dao.create(object);
-	}
-
-	@Override
-	public IDENTIFIABLE read(Long identifier) {
-		return dao.read(identifier);
 	}
 
 	@Transactional

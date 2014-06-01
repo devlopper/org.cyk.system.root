@@ -11,15 +11,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.utility.common.annotation.Model;
-import org.cyk.utility.common.annotation.Model.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.UIField;
 import org.cyk.utility.common.validation.Client;
 
 /*lombok*/
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 /*mapping-jpa*/
-@MappedSuperclass @Model(crudStrategy=CrudStrategy.ENUMERATION)
+@MappedSuperclass @ModelBean(crudStrategy=CrudStrategy.ENUMERATION)
 public abstract class AbstractEnumeration  extends AbstractIdentifiable  implements Serializable {
 
 	private static final long serialVersionUID = -8639942019354737162L;
@@ -37,7 +37,7 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	@UIField
 	protected String abbreviation;
 	
-	@UIField(tableColumnIgnore=true)
+	@UIField(textArea=true,tableColumnIgnore=true)
 	@Column(length=10 * 1024)
 	protected String description;
 		

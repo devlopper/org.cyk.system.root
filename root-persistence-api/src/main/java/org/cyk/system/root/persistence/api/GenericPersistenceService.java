@@ -6,13 +6,7 @@ public interface GenericPersistenceService<IDENTIFIABLE extends Identifiable<IDE
 
 	/* ------------------------ Static methods ---------------------------- */
 	
-	/* Create */	IDENTIFIABLE create(Class<? extends IDENTIFIABLE> aClass,IDENTIFIABLE object);
 	
-	/* Read */ 		IDENTIFIABLE read(Class<? extends IDENTIFIABLE> aClass,IDENTIFIER identifier);
-	
-	/* Update */	IDENTIFIABLE update(Class<? extends IDENTIFIABLE> aClass,IDENTIFIABLE object);
-	
-	/* Delete */	IDENTIFIABLE delete(Class<? extends IDENTIFIABLE> aClass,IDENTIFIABLE object);
 	
 	/* ------------------------ Dynamic methods ---------------------------- */
 	
