@@ -3,6 +3,9 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 import java.util.Collection;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import lombok.Getter;
 
 import org.cyk.system.root.business.api.BusinessService;
@@ -28,7 +31,7 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 		return this;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IDENTIFIABLE find(Long identifier) {
 	    return getPersistenceService().read(identifier);
 	}
@@ -56,22 +59,22 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 		return where(anAttributeName, aValue, ArithmeticOperator.EQ);
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public <RESULT_TYPE> RESULT_TYPE one(Class<RESULT_TYPE> resultType) {
 		return getPersistenceService().one(resultType);
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> all() {
 		return getPersistenceService().all();
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IDENTIFIABLE one() {
 		return getPersistenceService().one();
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Long oneLong() {
 		return getPersistenceService().oneLong();
 	}

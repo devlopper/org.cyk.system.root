@@ -9,7 +9,11 @@ public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifia
 	
 	/*-------------------------------------------------------------------------------------------*/
 	
-	
+	 @Override
+	    public AbstractIdentifiable refresh(AbstractIdentifiable identifiable) {
+	     entityManager.refresh(identifiable);   
+	     return identifiable;
+	    }
 	
 	/*--------------------------------------------------------------------------------------------*/
 	
@@ -19,5 +23,7 @@ public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifia
 		clazz = (Class<AbstractIdentifiable>) aClass;
 		return this;
 	}
+
+   
 	
 }

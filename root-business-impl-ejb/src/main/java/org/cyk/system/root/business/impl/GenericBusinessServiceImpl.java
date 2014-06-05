@@ -3,6 +3,8 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -38,10 +40,26 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 		return dao.delete(anObject);
 	}
 
+	@TransactionAttribute(TransactionAttributeType.NEVER)
 	@Override
 	public AbstractGenericBusinessService<AbstractIdentifiable, Long> use(Class<? extends AbstractIdentifiable> aClass) {
 		dao.use(aClass);
 		return this;
+	}
+	
+	@Override
+	public AbstractIdentifiable save(AbstractIdentifiable identifiable) {
+	    if(identifiable.getIdentifier()==null)
+	        return dao.create(identifiable);
+	    else
+	        return dao.update(identifiable);
+	}
+	
+	@Override
+	public AbstractIdentifiable refresh(AbstractIdentifiable identifiable) {
+	    if(identifiable.getIdentifier()==null)
+	        return identifiable;
+	    return dao.refresh(identifiable);
 	}
 
 }

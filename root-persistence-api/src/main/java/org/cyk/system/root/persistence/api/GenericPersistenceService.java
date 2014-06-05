@@ -6,7 +6,7 @@ public interface GenericPersistenceService<IDENTIFIABLE extends Identifiable<IDE
 
 	/* ------------------------ Static methods ---------------------------- */
 	
-	
+    IDENTIFIABLE refresh(IDENTIFIABLE identifiable);
 	
 	/* ------------------------ Dynamic methods ---------------------------- */
 	
