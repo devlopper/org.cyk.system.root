@@ -21,11 +21,14 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 
 	private static final long serialVersionUID = 6437552355933877400L;
 	
+	// TODO How to resolve circular dependency AbstractBusinessService -> ValidationPolicy -> LanguageBusiness which inherits of AbstractBusinessService
+	//@Inject protected ValidationPolicy validationPolicy;
+	
 	@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
 	
 	protected abstract PersistenceService<IDENTIFIABLE, Long> getPersistenceService();
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BusinessService<IDENTIFIABLE, Long> find() {
 		getPersistenceService().select();
 		return this;
@@ -36,25 +39,25 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	    return getPersistenceService().read(identifier);
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BusinessService<IDENTIFIABLE, Long> find(Function function) {
 		getPersistenceService().select(function);
 		return this;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BusinessService<IDENTIFIABLE, Long> where(LogicalOperator aLogicalOperator, String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
 		getPersistenceService().where(aLogicalOperator, anAttributeName, aValue, anArithmeticOperator);
 		return this;
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BusinessService<IDENTIFIABLE, Long> where(String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
 		getPersistenceService().where(anAttributeName, aValue, anArithmeticOperator);
 		return this;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BusinessService<IDENTIFIABLE, Long> where(String anAttributeName,Object aValue) {
 		return where(anAttributeName, aValue, ArithmeticOperator.EQ);
 	}

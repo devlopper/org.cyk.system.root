@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.AbstractGenericBusinessService;
+import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -18,6 +19,9 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	
 	private static final long serialVersionUID = -1042342183332719272L;
 
+	// TODO to be removed if circular dependency resolved
+	@Inject private ValidationPolicy validationPolicy;
+	
 	@Inject private GenericDao dao;
 	
 	@Override
@@ -27,16 +31,19 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	
 	@Override
 	public AbstractIdentifiable create(AbstractIdentifiable anObject) {
+	    validationPolicy.validateCreate(anObject);
 		return dao.create(anObject);
 	}
 
 	@Override
 	public AbstractIdentifiable update(AbstractIdentifiable anObject) {
+	    validationPolicy.validateUpdate(anObject);
 		return dao.update(anObject);
 	}
 
 	@Override
 	public AbstractIdentifiable delete(AbstractIdentifiable anObject) {
+	    validationPolicy.validateDelete(anObject);
 		return dao.delete(anObject);
 	}
 
@@ -50,9 +57,9 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	@Override
 	public AbstractIdentifiable save(AbstractIdentifiable identifiable) {
 	    if(identifiable.getIdentifier()==null)
-	        return dao.create(identifiable);
+	        return create(identifiable);
 	    else
-	        return dao.update(identifiable);
+	        return update(identifiable);
 	}
 	
 	@Override

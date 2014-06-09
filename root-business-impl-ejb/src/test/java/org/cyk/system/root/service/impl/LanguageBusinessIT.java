@@ -69,14 +69,14 @@ public class LanguageBusinessIT extends AbstractBusinessIT {
 	
 	@Test
 	public void noFetch() {
-	    assertTrue("bonjour".equals(languageBusiness.findText("good.morning", Locale.FRENCH)));
-        assertTrue("good morning".equals(languageBusiness.findText("good.morning", Locale.ENGLISH)));
+	    assertTrue("bonjour".equals(languageBusiness.findText( Locale.FRENCH,"good.morning")));
+        assertTrue("good morning".equals(languageBusiness.findText(Locale.ENGLISH,"good.morning")));
 	}
 	
 	@Test
     public void fetchFromPropertiesFile() {
-	    assertTrue("##hello##".equals(languageBusiness.findText("hello", Locale.FRENCH)));
-        assertTrue("##hello##".equals(languageBusiness.findText("hello", Locale.ENGLISH)));
+	    assertTrue("##hello##".equals(languageBusiness.findText( Locale.FRENCH,"hello")));
+        assertTrue("##hello##".equals(languageBusiness.findText(Locale.ENGLISH,"hello")));
     }
 	
 	/*

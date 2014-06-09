@@ -20,7 +20,7 @@ import org.cyk.utility.common.validation.Client;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 /*mapping-jpa*/
 @MappedSuperclass @ModelBean(crudStrategy=CrudStrategy.ENUMERATION)
-public abstract class AbstractEnumeration  extends AbstractIdentifiable  implements Serializable {
+public abstract class AbstractEnumeration  extends AbstractIdentifiable  implements Serializable,Comparable<AbstractEnumeration> {
 
 	private static final long serialVersionUID = -8639942019354737162L;
 	
@@ -40,7 +40,21 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	@UIField(textArea=true,tableColumnIgnore=true)
 	@Column(length=10 * 1024)
 	protected String description;
-		
+	
+	@Override
+	public int compareTo(AbstractEnumeration o) {
+	    if(code==null)
+	        if(o.code==null)
+	            return 0;
+	        else
+	            return -1;
+	    else
+	        if(o.code==null)
+                return 1;
+            else
+                return code.compareTo(o.code);
+	}
+	
 	@Override
 	public String toString() {
 		return name;

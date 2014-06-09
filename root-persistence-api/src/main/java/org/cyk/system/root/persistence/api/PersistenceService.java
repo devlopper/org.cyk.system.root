@@ -18,6 +18,7 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
     
     /* Delete */    IDENTIFIABLE delete(IDENTIFIABLE object);
     
+    /* Delete */    Boolean exist(IDENTIFIABLE anIdentifiable);
     
     
 	/* select */		PersistenceService<IDENTIFIABLE,IDENTIFIER> select(Function function);

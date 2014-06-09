@@ -51,6 +51,8 @@ public class GenericIT extends AbstractPersistenceIT {
 	@Override
 	protected void read() {
 		Assert.assertTrue("Read", getGenericDao().use(Person.class).read(pid)!=null);
+		//Assert.assertTrue("Exist 1", getGenericDao().exist(pid));
+		//Assert.assertTrue("Exist 2", getGenericDao().exist(123456l));
 	}
 
 	@Override

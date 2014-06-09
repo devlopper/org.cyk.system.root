@@ -50,6 +50,8 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	@Inject protected QueryStringBuilder queryStringBuilder;
 	protected Map<String, Object> parameters;
 	protected Function selectFunction;
+	
+	//private String readByIdentifier,countByIdentifier;
 	  
 	@Override 
 	protected void beforeInitialisation() {
@@ -71,7 +73,9 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		namedQueriesInitialisation();
 	}
 	
-	protected void namedQueriesInitialisation(){}
+	protected void namedQueriesInitialisation(){
+	    //registerNamedQuery(readByIdentifier, _select().where("identifier"));
+	}
 	
 	@Override
     public IDENTIFIABLE create(IDENTIFIABLE object) {
@@ -93,6 +97,11 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
     public IDENTIFIABLE delete(IDENTIFIABLE object) {
         entityManager.remove(entityManager.merge(object));
         return object;
+    }
+    
+    @Override
+    public Boolean exist(IDENTIFIABLE anIdentifiable) {
+        return entityManager.find(anIdentifiable.getClass(), anIdentifiable.getIdentifier())!=null; //countNamedQuery(countByIdentifier).parameter("identifier", anIdentifier).resultOne()==1;
     }
 	 
 	@Override
