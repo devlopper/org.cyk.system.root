@@ -13,7 +13,7 @@ import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.language.LanguageEntry;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
+import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.PersistenceManager;
@@ -28,7 +28,7 @@ public class BusinessManagerIT extends AbstractBusinessIT {
 	@Deployment
 	public static Archive<?> createDeployment() {
 		return deployment(new Class<?>[]{Language.class,LanguageEntry.class,Locality.class,LocalityType.class,
-		        NestedSet.class,NestedSetNode.class,AbstractEnumeration.class,AbstractDataTreeNode.class,AbstractDataTreeType.class,AbstractDataTree.class,
+		        NestedSet.class,NestedSetNode.class,AbstractEnumeration.class,AbstractDataTreeNode.class,DataTreeType.class,AbstractDataTree.class,
 		        BusinessManager.class,BusinessManagerImpl.class,PersistenceManager.class,PersistenceManagerImpl.class,
 		        LanguageBusiness.class,LanguageBusinessImpl.class}).getArchive();
 	}

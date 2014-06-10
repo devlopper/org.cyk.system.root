@@ -14,6 +14,8 @@ import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.persistence.impl.AbstractEnumerationDaoImpl;
+import org.cyk.system.root.persistence.impl.QueryStringBuilder;
+import org.cyk.utility.common.computation.ArithmeticOperator;
 
 public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDataTreeNode> extends AbstractEnumerationDaoImpl<ENUMERATION> 
 	implements AbstractDataTreeNodeDao<ENUMERATION>,Serializable {
@@ -25,12 +27,13 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 	/* 
 	 *Named Queries Identifiers Declaration 
 	 */
-	private String readByParent,countByParent; 
+	private String readByParent,countByParent,readRoots,countRoots; 
 	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByParent, _select().where("node.set", "nestedSet").and("node.leftIndex","leftIndex",GT).and("node.leftIndex","rightIndex",LT));
+		registerNamedQuery(readRoots, _select().where(null,"node.set.root", QueryStringBuilder.VAR+".node",ArithmeticOperator.EQ,false));
 	}
 		
 	@Override
@@ -46,6 +49,16 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
         return countNamedQuery(countByParent).parameter("nestedSet", n.getSet()).parameter("leftIndex", n.getLeftIndex()).parameter("rightIndex", n.getRightIndex())
                 .resultOne();
 	}
+	
+	@Override
+    public Collection<ENUMERATION> readRoots() {
+        return namedQuery(readRoots).resultMany();
+    }
+    
+    @Override
+    public Long countRoots() {
+        return countNamedQuery(countRoots).resultOne();
+    }
 	
 	/*
 	 * CRUD specialization

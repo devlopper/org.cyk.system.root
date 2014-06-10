@@ -7,12 +7,12 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
+import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeDao;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 
-public abstract class AbstractDataTreeDaoImpl<ENUMERATION extends AbstractDataTree<TYPE>,TYPE extends AbstractDataTreeType> extends AbstractDataTreeNodeDaoImpl<ENUMERATION>
+public abstract class AbstractDataTreeDaoImpl<ENUMERATION extends AbstractDataTree<TYPE>,TYPE extends DataTreeType> extends AbstractDataTreeNodeDaoImpl<ENUMERATION>
 	implements AbstractDataTreeDao<ENUMERATION,TYPE>,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;

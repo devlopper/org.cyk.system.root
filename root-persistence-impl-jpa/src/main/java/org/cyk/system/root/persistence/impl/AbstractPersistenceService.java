@@ -79,7 +79,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	@Override
     public IDENTIFIABLE create(IDENTIFIABLE object) {
-        entityManager.persist(object);
+	    entityManager.persist(object);
         return object;
     }
     

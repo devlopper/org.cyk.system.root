@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
+import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
@@ -17,6 +18,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 
     @Inject private LocalityBusiness localityBusiness;  
     @Inject private LocalityTypeBusiness localityTypeBusiness;
+    
+    @Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
     
     @Override
     public void createInitialData() {

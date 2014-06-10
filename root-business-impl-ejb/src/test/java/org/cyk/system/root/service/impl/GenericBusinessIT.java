@@ -8,7 +8,7 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
+import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -21,7 +21,7 @@ public class GenericBusinessIT extends AbstractBusinessIT {
 	@Deployment
 	public static Archive<?> createDeployment() {
 		return deployment(new Class<?>[]{Locality.class,LocalityType.class,NestedSet.class,NestedSetNode.class,AbstractEnumeration.class,AbstractDataTreeNode.class,
-		        AbstractDataTreeType.class,AbstractDataTree.class,Person.class}).getArchive();
+		        DataTreeType.class,AbstractDataTree.class,Person.class}).getArchive();
 	}
 		 
 	@Override

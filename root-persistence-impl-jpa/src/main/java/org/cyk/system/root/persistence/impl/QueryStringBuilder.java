@@ -26,7 +26,7 @@ public class QueryStringBuilder implements Serializable {
 	public static final String VAR = "r";
 	private static final String SELECT_FORMAT = "SELECT %1$s FROM %2$s %1$s";
 	private static final String FUNCTION_FORMAT = "SELECT %1$s(%2$s.%3$s) FROM %4$s %2$s";
-	private static final String WHERE_FORMAT = "%1$s.%2$s %3$s :%4$s";
+	private static final String WHERE_FORMAT = "%1$s.%2$s %3$s %4$s";
 	
 	private StringBuilder __value__;
 	private String from;
@@ -65,13 +65,18 @@ public class QueryStringBuilder implements Serializable {
 			return select(function, "identifier");
 	}
 	
-	public QueryStringBuilder where(LogicalOperator aLogicalOperator,String anAttributeName,String aVarName,ArithmeticOperator anArithmeticOperator) {
+	public QueryStringBuilder where(LogicalOperator aLogicalOperator,String anAttributeName,String aVarName,ArithmeticOperator anArithmeticOperator,Boolean varOutside) {
 		if(Boolean.TRUE.equals(where) && aLogicalOperator==null)
 			throw new IllegalArgumentException("Use one of this operator in where clause of the query : "+StringUtils.join(LogicalOperator.values()," ")+
 					" *** "+__value__);
-		__value__.append(" "+(aLogicalOperator==null?KW_JPQL_WHERE:aLogicalOperator)+" "+String.format(WHERE_FORMAT,VAR,anAttributeName,anArithmeticOperator.getSymbol(),aVarName));
+		__value__.append(" "+(aLogicalOperator==null?KW_JPQL_WHERE:aLogicalOperator)+" "+
+					String.format(WHERE_FORMAT,VAR,anAttributeName,anArithmeticOperator.getSymbol(),(Boolean.TRUE.equals(varOutside)?":":"")+aVarName));
 		where = true;
 		return this;
+	}
+	
+	public QueryStringBuilder where(LogicalOperator aLogicalOperator,String anAttributeName,String aVarName,ArithmeticOperator anArithmeticOperator) {
+	    return where(aLogicalOperator, anAttributeName, aVarName, anArithmeticOperator, true);
 	}
 	
 	public QueryStringBuilder where(String anAttributeName,String aVarName,ArithmeticOperator anArithmeticOperator) {

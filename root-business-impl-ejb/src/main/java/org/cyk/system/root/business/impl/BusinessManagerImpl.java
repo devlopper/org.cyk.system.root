@@ -37,7 +37,7 @@ public class BusinessManagerImpl extends AbstractStartupBean implements Business
                 businessLayers.add((BusinessLayer) object);
     }
     
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void createData() {
         for(BusinessLayer layer : businessLayers)
             layer.createInitialData();
