@@ -119,11 +119,11 @@ public class QueryStringBuilder implements Serializable {
 	}
 	
 	public QueryStringBuilder or(String anAttributeName,ArithmeticOperator anArithmeticOperator){
-		return and(anAttributeName, anAttributeName, anArithmeticOperator);
+		return or(anAttributeName, anAttributeName, anArithmeticOperator);
 	}
 	
 	public QueryStringBuilder or(String anAttributeName){
-		return and(anAttributeName, ArithmeticOperator.EQ);
+		return or(anAttributeName, ArithmeticOperator.EQ);
 	}
 	
 	public QueryStringBuilder orderBy(String...fieldNames) {

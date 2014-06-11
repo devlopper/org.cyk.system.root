@@ -7,10 +7,12 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.AbstractGenericBusinessService;
+import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 
@@ -21,6 +23,7 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 
 	// TODO to be removed if circular dependency resolved
 	@Inject private ValidationPolicy validationPolicy;
+	@Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
 	
 	@Inject private GenericDao dao;
 	
@@ -30,9 +33,12 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	}
 	
 	@Override
-	public AbstractIdentifiable create(AbstractIdentifiable anObject) {
-	    validationPolicy.validateCreate(anObject);
-		return dao.create(anObject);
+	public AbstractIdentifiable create(AbstractIdentifiable anIdentifiable) {
+	    validationPolicy.validateCreate(anIdentifiable);
+	    if(anIdentifiable instanceof DataTreeType)
+            return dataTreeTypeBusiness.create((DataTreeType) anIdentifiable);
+        else
+            return dao.create(anIdentifiable);
 	}
 
 	@Override
@@ -58,7 +64,7 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	public AbstractIdentifiable save(AbstractIdentifiable identifiable) {
 	    if(identifiable.getIdentifier()==null)
 	        return create(identifiable);
-	    else
+	    else 
 	        return update(identifiable);
 	}
 	
