@@ -13,8 +13,13 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void initialisation() {
-		clazz = (Class<IDENTIFIABLE>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		clazz = (Class<IDENTIFIABLE>) parameterizedClass();
+		//(Class<IDENTIFIABLE>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		super.initialisation();
+	}
+	
+	protected Class<?> parameterizedClass(){
+	    return (Class<?>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 		
 	/**/

@@ -12,6 +12,7 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
 import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -32,12 +33,16 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	    return dao;
 	}
 	
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public AbstractIdentifiable create(AbstractIdentifiable anIdentifiable) {
 	    validationPolicy.validateCreate(anIdentifiable);
 	    if(anIdentifiable instanceof DataTreeType)
             return dataTreeTypeBusiness.create((DataTreeType) anIdentifiable);
-        else
+	    else if(anIdentifiable instanceof AbstractDataTree){
+	        AbstractDataTree<DataTreeType> dataTree =(AbstractDataTree<DataTreeType>) anIdentifiable;
+            return dataTreeBusinessBean(dataTree).create(dataTree);
+	    }else
             return dao.create(anIdentifiable);
 	}
 

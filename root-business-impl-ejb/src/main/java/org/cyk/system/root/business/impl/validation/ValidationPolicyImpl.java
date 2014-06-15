@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractEnumeration;
@@ -19,7 +18,8 @@ import org.cyk.utility.common.computation.Function;
 public class ValidationPolicyImpl extends AbstractBean implements ValidationPolicy, Serializable {
 
     @Inject protected GenericDao genericDao;
-    @Inject protected LanguageBusiness languageBusiness;    
+    @Inject protected LanguageBusiness languageBusiness; 
+    protected ExceptionUtils exceptionUtils = ExceptionUtils.getInstance();
    
     @Override 
     public void validateCreate(Identifiable<?> anIdentifiable) {
@@ -50,7 +50,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         if(anIdentifiable instanceof AbstractIdentifiable){
             AbstractIdentifiable identifiable = (AbstractIdentifiable) anIdentifiable;
             //TODO better to look for all field with system in groups
-            exception(identifiable.getIdentifier()!=null,"exception.value.set.system",new Object[]{"identifier"});
+            exceptionUtils.exception(identifiable.getIdentifier()!=null,"exception.value.set.system",new Object[]{"identifier"});
         }
     }
     
@@ -58,13 +58,24 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         if(anIdentifiable instanceof AbstractEnumeration) {
             AbstractEnumeration enumeration = (AbstractEnumeration) anIdentifiable;
             //TODO look for field with @UniqueConstraint
-            exception(genericDao.use(enumeration.getClass()).select(Function.COUNT).where("code", enumeration.getCode()).oneLong()>0,
-                    "exception.value.duplicate",new Object[]{"Code",enumeration.getCode()});
+            //Code
+            if(enumeration.getIdentifier()==null){
+                exceptionUtils.exception(genericDao.use(enumeration.getClass()).select(Function.COUNT).where("code", enumeration.getCode()).oneLong()>0,
+                        "exception.value.duplicate",new Object[]{"Code",enumeration.getCode()});
+            }else{
+                AbstractEnumeration inDB = (AbstractEnumeration) genericDao.use(enumeration.getClass()).read(enumeration.getIdentifier());
+                if(!inDB.getCode().equals(enumeration.getCode()))
+                    //Code has changed
+                    exceptionUtils.exception(genericDao.use(enumeration.getClass()).select(Function.COUNT).where("code", enumeration.getCode()).oneLong()>0,
+                        "exception.value.duplicate",new Object[]{"Code",enumeration.getCode()});
+            }
+            
+            
         }
     }
     
     /**/
-    
+    /*
     protected void exception(Boolean condition,String messageId,Object[] parameters){
         if(Boolean.TRUE.equals(condition))
             throw new BusinessException(languageBusiness.findText(messageId,parameters));
@@ -72,7 +83,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     
     protected void exception(Boolean condition,String messageId){
         exception(condition, messageId, null);
-    }
+    }*/
 
     
     

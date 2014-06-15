@@ -15,14 +15,13 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.annotation.ModelBean;
-import org.cyk.utility.common.annotation.UIField;
-import org.cyk.utility.common.annotation.ModelBean.CrudInheritanceStrategy;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.UIField;
 
 @Getter @Setter @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @AllArgsConstructor @NoArgsConstructor 
-@ModelBean(crudStrategy=CrudStrategy.ENUMERATION,crudInheritanceStrategy=CrudInheritanceStrategy.CHILDREN_ONLY)
+@ModelBean(crudStrategy=CrudStrategy.BUSINESS)
 public class Contact extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 8675998527199168142L;

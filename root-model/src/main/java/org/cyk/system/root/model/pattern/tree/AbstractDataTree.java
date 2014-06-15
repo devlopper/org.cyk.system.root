@@ -10,8 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+//@Entity
 @Getter @Setter @NoArgsConstructor @MappedSuperclass
-public abstract class AbstractDataTree<TYPE extends DataTreeType> extends AbstractDataTreeNode implements Serializable {
+public class AbstractDataTree<TYPE extends DataTreeType> extends AbstractDataTreeNode implements Serializable {
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	

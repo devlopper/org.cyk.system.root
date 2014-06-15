@@ -1,25 +1,24 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
-import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
-import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
+import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
+import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
 @Deployment(initialisationType=InitialisationType.EAGER)
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
-
-    @Inject private LocalityBusiness localityBusiness;  
-    @Inject private LocalityTypeBusiness localityTypeBusiness;
-    
-    @Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
+ 
+    @Inject private LocalityBusiness localityBusiness;
     
     @Override
     public void createInitialData() {
@@ -29,26 +28,33 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private void geography(){
         LocalityType continent=new LocalityType(null, "CONTINENT", "Continent");
-        localityTypeBusiness.create(continent);
+        create(continent);
         LocalityType country=new LocalityType(continent, "COUNTRY", "Country");
-        localityTypeBusiness.create(country);
+        create(country);
         LocalityType city=new LocalityType(country, "CITY", "City");
-        localityTypeBusiness.create(city);
+        create(city);
         
         Locality afrique;
         
-        localityBusiness.create(afrique = new Locality(null, continent, "Afrique"));
-        localityBusiness.create(new Locality(null, continent, "Amerique"));
-        localityBusiness.create(new Locality(null, continent, "Europe"));
+        create(afrique = new Locality(null, continent, "Afrique"));
+        create(new Locality(null, continent, "Amerique"));
+        create(new Locality(null, continent, "Europe"));
         
-        localityBusiness.create(new Locality(afrique, continent, "Cote d'Ivoire"));
-        localityBusiness.create(new Locality(afrique, continent, "Benin"));
+        create(new Locality(afrique, continent, "Cote d'Ivoire"));
+        create(new Locality(afrique, continent, "Benin"));
         
         create(new PhoneNumberType("FIXE", "Fixe"));
         create(new PhoneNumberType("MOBILE", "Mobile"));
     }
     
     private void language(){
+         
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public void registerDataTreeBusinessBean(Map<Class<AbstractDataTree<DataTreeType>>, AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType>> beansMap) {
+        beansMap.put((Class)Locality.class, (AbstractDataTreeBusiness)localityBusiness);
         
     }
 

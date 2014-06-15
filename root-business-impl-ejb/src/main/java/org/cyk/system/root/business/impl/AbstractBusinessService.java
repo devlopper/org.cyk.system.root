@@ -9,7 +9,11 @@ import javax.ejb.TransactionAttributeType;
 import lombok.Getter;
 
 import org.cyk.system.root.business.api.BusinessService;
+import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
+import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
+import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
@@ -25,6 +29,7 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	//@Inject protected ValidationPolicy validationPolicy;
 	
 	@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
+	protected ExceptionUtils exceptionUtils = ExceptionUtils.getInstance();
 	
 	protected abstract PersistenceService<IDENTIFIABLE, Long> getPersistenceService();
 	
@@ -82,6 +87,16 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 		return getPersistenceService().oneLong();
 	}
 
-    
+	/**
+	 * Utilities methods
+	 */
+	
+	protected AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType> dataTreeBusinessBean(Class<AbstractDataTree<DataTreeType>> beanClass){
+	    return AbstractBusinessLayer.findDataTreeBusinessBean(beanClass);
+	}
+	
+	protected AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType> dataTreeBusinessBean(AbstractDataTree<DataTreeType> bean){
+	    return AbstractBusinessLayer.findDataTreeBusinessBean(bean);
+	}
 	
 }
