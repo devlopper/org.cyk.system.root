@@ -2,10 +2,12 @@ package org.cyk.system.root.persistence.impl;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 
 import lombok.Getter;
 
@@ -27,7 +29,10 @@ public class QueryWrapper<T> implements Serializable {
 	}  
 	
 	public QueryWrapper<T> parameter(String name,Object value){
-		query.setParameter(name, value);
+		if(value instanceof Date)
+		    query.setParameter(name, (Date)value,TemporalType.TIMESTAMP);
+		else
+		    query.setParameter(name, value);
 		return this;
 	}
 	

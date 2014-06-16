@@ -13,6 +13,10 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.geography.ContactManager;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.UIField.OneRelationshipInputType;
 
 /**
  * Something that happens
@@ -28,14 +32,17 @@ public class Event extends AbstractIdentifiable implements Serializable  {
 	/**
 	 * Type
 	 */
+	@UIField
 	@ManyToOne private EventType type;
 	/**
 	 * Title. Rich text
 	 */
+	@UIField(textArea=true)
 	private String title;
 	/**
 	 * Description. Rich text
 	 */
+	@UIField(textArea=true)
 	@Column(length=1024 * 1) private String description;
 	/**
 	 * Contacts
@@ -44,7 +51,8 @@ public class Event extends AbstractIdentifiable implements Serializable  {
 	/**
 	 * Schedule
 	 */
-	@OneToOne(cascade=CascadeType.ALL) private Schedule schedule;
+	@UIField(oneRelationshipInputType=OneRelationshipInputType.FIELDS)
+	@OneToOne(cascade=CascadeType.ALL) private Schedule schedule = new Schedule();
 	/**
 	 * Alarm
 	 */
