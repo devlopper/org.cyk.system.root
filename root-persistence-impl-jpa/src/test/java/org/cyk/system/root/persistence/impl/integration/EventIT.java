@@ -48,7 +48,7 @@ public class EventIT extends AbstractPersistenceIT {
 	
 	private Event event(Date fromDate,Date toDate){
 	    Event event = new Event();
-	    event.getSchedule().setPeriod(new Period(fromDate, toDate));
+	    event.setPeriod(new Period(fromDate, toDate));
 	    return event;
 	}
 					
@@ -68,9 +68,9 @@ public class EventIT extends AbstractPersistenceIT {
 	@Override
 	protected void update() {
 	    Date newDate = new Date();
-	    event.getSchedule().getPeriod().setFromDate(newDate);
+	    event.getPeriod().setFromDate(newDate);
 	    eventDao.update(event);
-	    Assert.assertEquals(newDate, eventDao.read(event.getIdentifier()).getSchedule().getPeriod().getFromDate());
+	    Assert.assertEquals(newDate, eventDao.read(event.getIdentifier()).getPeriod().getFromDate());
 	}
 
 	@Override

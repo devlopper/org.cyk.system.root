@@ -23,9 +23,9 @@ public class EventDaoImpl extends AbstractTypedDao<Event> implements EventDao,Se
 	@Override
 	protected void namedQueriesInitialisation() {
 	    super.namedQueriesInitialisation();
-	    registerNamedQuery(readWhereFromDateGreaterThanByDate, _select().where("schedule.period.fromDate", "fromDate",GT));
-	    registerNamedQuery(readWhereFromDateBetweenByStartDateByEndDate, _select().where("schedule.period.fromDate", "startDate",GTE)
-	            .where(AND,"schedule.period.fromDate", "endDate",LTE));
+	    registerNamedQuery(readWhereFromDateGreaterThanByDate, _select().where("period.fromDate", "fromDate",GT));
+	    registerNamedQuery(readWhereFromDateBetweenByStartDateByEndDate, _select().where("period.fromDate", "startDate",GTE)
+	            .where(AND,"period.fromDate", "endDate",LTE));
 	}
 	
     @Override

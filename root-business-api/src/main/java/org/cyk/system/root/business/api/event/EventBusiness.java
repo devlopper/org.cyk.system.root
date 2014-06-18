@@ -5,7 +5,6 @@ import java.util.Date;
 
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.event.ScheduleEvent;
 
 public interface EventBusiness extends TypedBusiness<Event> {
     
@@ -16,8 +15,6 @@ public interface EventBusiness extends TypedBusiness<Event> {
     Collection<Event> findWhereFromDateGreaterThanByDate(Date date);
     
     Long countWhereFromDateGreaterThanByDate(Date date);
-    
-    Collection<ScheduleEvent> process(Event event);
     
     void programAlarm(Collection<Event> events);
     

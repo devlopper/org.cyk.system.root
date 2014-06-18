@@ -1,8 +1,6 @@
 package org.cyk.system.root.business.impl.event;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -11,7 +9,6 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.event.ScheduleEvent;
 import org.cyk.system.root.persistence.api.event.EventDao;
 
 public class EventBusinessImpl extends AbstractTypedBusinessService<Event, EventDao> implements EventBusiness,Serializable {
@@ -48,16 +45,6 @@ public class EventBusinessImpl extends AbstractTypedBusinessService<Event, Event
         // TODO Auto-generated method stub
         
     }
-
-    @Override
-    public Collection<ScheduleEvent> process(Event event) {
-        if(event.getSchedule().getDay()==null)
-            return Arrays.asList(new ScheduleEvent(event, event.getSchedule().getPeriod()));
-        Collection<ScheduleEvent> collection = new ArrayList<>();
-        
-        return collection;
-    }
-
     
 	
 }

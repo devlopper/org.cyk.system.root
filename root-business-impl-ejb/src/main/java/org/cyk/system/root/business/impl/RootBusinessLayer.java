@@ -1,12 +1,17 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
+import org.cyk.system.root.model.event.Event;
+import org.cyk.system.root.model.event.EventType;
+import org.cyk.system.root.model.event.Period;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
@@ -45,6 +50,16 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         create(new PhoneNumberType("FIXE", "Fixe"));
         create(new PhoneNumberType("MOBILE", "Mobile"));
+        
+        EventType eventType1=create(new EventType("RDV", "Rendez vous", null)),
+                eventType2=create(new EventType("REU", "Reunion", null));
+        
+        Date date = new Date();
+        create(new Event(eventType1,"Voir le docteur","Conseils et suivi",new Period(date, DateUtils.addMinutes(date, 15))));
+        date = DateUtils.addMonths(new Date(), -1);
+        create(new Event(eventType2,"Cours maths","Discussion",new Period(date,DateUtils.addHours(date, 1) )));
+        date = DateUtils.addMonths(new Date(), 1);
+        create(new Event(eventType1,"Bilan AG","Explications",new Period(date, DateUtils.addHours(date, 2))));
     }
     
     private void language(){
