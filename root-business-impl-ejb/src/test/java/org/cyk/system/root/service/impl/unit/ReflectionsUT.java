@@ -1,4 +1,4 @@
-package org.cyk.system.root.service.impl;
+package org.cyk.system.root.service.impl.unit;
 
 import java.util.Set;
 

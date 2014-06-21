@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.api;
+package org.cyk.system.root.business.api.file;
 import java.util.Map;
 
 import org.cyk.system.root.model.file.File;

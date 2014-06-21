@@ -1,10 +1,12 @@
-package org.cyk.system.root.service.impl;
+package org.cyk.system.root.service.impl.integration;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.utility.common.test.AbstractIntegrationTestJpaBased;
 import org.cyk.utility.common.test.ArchiveBuilder;
@@ -19,7 +21,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	
 	@Inject protected ExceptionUtils exceptionUtils;
 	private @Inject GenericDaoImpl g;
-	//protected @Inject GenericBusiness genericBusiness;
+	protected @Inject GenericBusiness genericBusiness;
     
     @Override
     public EntityManager getEntityManager() {
@@ -46,4 +48,13 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
         return (T) genericBusiness.create(anObject);
     }*/
 	
+	/* Shortcut */
+    
+    protected void create(AbstractIdentifiable object){
+        genericBusiness.create(object);
+    }
+    
+    protected void update(AbstractIdentifiable object){
+        genericBusiness.update(object);
+    }
 }

@@ -1,4 +1,4 @@
-package org.cyk.system.root.service.impl;
+package org.cyk.system.root.service.impl.integration;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -6,9 +6,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.TemplateEngineBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.impl.FreeMarkerTemplateEngineImpl;
+import org.cyk.system.root.business.api.file.TemplateEngineBusiness;
+import org.cyk.system.root.business.impl.file.FreeMarkerTemplateEngineImpl;
 import org.cyk.system.root.model.file.File;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;

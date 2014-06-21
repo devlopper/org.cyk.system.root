@@ -1,10 +1,9 @@
-package org.cyk.system.root.service.impl;
+package org.cyk.system.root.service.impl.integration;
 
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
-import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;

@@ -1,4 +1,4 @@
-package org.cyk.system.root.service.impl;
+package org.cyk.system.root.service.impl.integration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

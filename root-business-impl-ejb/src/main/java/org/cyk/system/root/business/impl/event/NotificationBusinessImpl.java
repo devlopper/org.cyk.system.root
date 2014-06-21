@@ -8,8 +8,8 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.cyk.system.root.business.api.TemplateEngineBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
+import org.cyk.system.root.business.api.file.TemplateEngineBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.NotificationTemplate;

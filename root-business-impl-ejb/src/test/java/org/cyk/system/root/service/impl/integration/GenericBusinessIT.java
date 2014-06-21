@@ -1,4 +1,4 @@
-package org.cyk.system.root.service.impl;
+package org.cyk.system.root.service.impl.integration;
 
 import javax.inject.Inject;
 
@@ -11,6 +11,7 @@ import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
+import org.cyk.system.root.service.impl.data.Person;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 

@@ -12,6 +12,7 @@ import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventType;
 import org.cyk.system.root.model.event.Period;
+import org.cyk.system.root.model.event.Schedule;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
@@ -60,6 +61,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         create(new Event(eventType2,"Cours maths","Discussion",new Period(date,DateUtils.addHours(date, 1) )));
         date = DateUtils.addMonths(new Date(), 1);
         create(new Event(eventType1,"Bilan AG","Explications",new Period(date, DateUtils.addHours(date, 2))));
+        
+        create(new Schedule(eventType1, "Cours", "Geo", (byte)2, (byte)10, (byte)30, (byte)12, (byte)45, new Period(DateUtils.addDays(new Date(), -5), DateUtils.addDays(new Date(), 5))));
     }
     
     private void language(){

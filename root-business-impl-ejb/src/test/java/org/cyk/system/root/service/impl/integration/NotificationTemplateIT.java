@@ -1,4 +1,4 @@
-package org.cyk.system.root.service.impl;
+package org.cyk.system.root.service.impl.integration;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -7,37 +7,35 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.TemplateEngineBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.message.MailBusiness;
-import org.cyk.system.root.business.impl.FreeMarkerTemplateEngineImpl;
+import org.cyk.system.root.business.api.file.TemplateEngineBusiness;
 import org.cyk.system.root.business.impl.event.NotificationBusinessImpl;
-import org.cyk.system.root.business.impl.message.MailBusinessImpl;
-import org.cyk.system.root.model.event.Notification;
+import org.cyk.system.root.business.impl.file.FreeMarkerTemplateEngineImpl;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.service.impl.data.Data;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
-public class NotificationMailIT extends AbstractBusinessIT {
+public class NotificationTemplateIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
 
     @Deployment
     public static Archive<?> createDeployment() {
         return deployment(new Class<?>[]{File.class,TemplateEngineBusiness.class,FreeMarkerTemplateEngineImpl.class,NotificationTemplate.class,
-                NotificationBusiness.class,NotificationBusinessImpl.class,MailBusiness.class,MailBusinessImpl.class}).getArchive();
+                NotificationBusiness.class,NotificationBusinessImpl.class}).getArchive();
     }
     
     @Inject private FileBusiness fileBusiness;
     @Inject private GenericBusiness genericBusiness;
     @Inject private NotificationBusiness notificationBusiness;
-    @Inject private MailBusiness mailBusiness;
     private NotificationTemplate notificationTemplate1,notificationTemplate2;
     
     @Override
     protected void populate() {
+        System.out.println(exceptionUtils);
         notificationTemplate1 = new NotificationTemplate();
         notificationTemplate1.setCode("NTC1");
         notificationTemplate1.setName("NTN1");
@@ -51,7 +49,7 @@ public class NotificationMailIT extends AbstractBusinessIT {
         notificationTemplate2.setTitle(fileBusiness.process("Second Temp , Hello ${name}".getBytes(), "template1.txt"));
         notificationTemplate2.setMessage(new File());
         try {
-            notificationTemplate2.getMessage().setUri(NotificationMailIT.class.getResource("template.html").toURI()); 
+            notificationTemplate2.getMessage().setUri(Data.class.getResource("template.html").toURI()); 
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -64,8 +62,8 @@ public class NotificationMailIT extends AbstractBusinessIT {
        
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", "Drogba didier");
-        Notification notification = notificationBusiness.process(notificationTemplate2, params);
-        mailBusiness.send(notification, "kycdev@gmail.com");
+        System.out.println(notificationBusiness.process(notificationTemplate2, params));
+
     }
 
     @Override

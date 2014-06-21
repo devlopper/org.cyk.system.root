@@ -2,16 +2,14 @@ package org.cyk.system.root.model.event;
 
 import java.io.Serializable;
 
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.geography.ContactManager;
 import org.cyk.utility.common.annotation.UIField;
-import org.cyk.utility.common.annotation.UIField.OneRelationshipInputType;
 
 /**
  * To Plan a thing to occur at or during a particular time or period
@@ -20,7 +18,7 @@ import org.cyk.utility.common.annotation.UIField.OneRelationshipInputType;
  */
 @Entity
 @Getter @Setter @NoArgsConstructor
-public class Schedule extends AbstractIdentifiable implements Serializable{
+public class Schedule extends AbstractEvent implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,10 +47,17 @@ public class Schedule extends AbstractIdentifiable implements Serializable{
 	 */
 	@UIField
 	protected Byte endMinute;
-	/**
-	 * The period
-	 */
-	@UIField(oneRelationshipInputType=OneRelationshipInputType.FIELDS)
-	@Embedded protected Period period = new Period();
+	
+	
+    public Schedule(EventType type, String title, String description, Byte day, Byte startHour, Byte startMinute,Byte endHour, Byte endMinute, Period period) {
+        super(type, title, description,period, new ContactManager(), null);
+        this.day = day;
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+    }
+	
+	
 
 }

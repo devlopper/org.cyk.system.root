@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Sun Jun 15 20:02:32 UTC 2014:
-Amorçage de Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872) : instance a816c00e-0146-a11f-c58f-000003323fd8 
-dans le répertoire de base de données H:\Repositories\source code\git\org\cyk\system\root\root-business-impl-ejb\target\databases\derby  avec le chargeur de classe sun.misc.Launcher$AppClassLoader@1d6535bf
+Fri Jun 20 11:16:16 UTC 2014:
+Amorçage de Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872) : instance a816c00e-0146-b8fd-c25b-00000add49e0 
+dans le répertoire de base de données H:\Repositories\source code\git\org\cyk\system\root\root-business-impl-ejb\target\databases\derby  avec le chargeur de classe sun.misc.Launcher$AppClassLoader@714a8f44
 
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_45-b18

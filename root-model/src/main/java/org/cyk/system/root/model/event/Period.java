@@ -27,6 +27,8 @@ public class Period implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
+	//private String timeZone;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull
 	@Column(nullable=false)
