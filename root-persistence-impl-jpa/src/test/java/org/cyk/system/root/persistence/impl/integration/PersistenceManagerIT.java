@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.cyk.system.root.persistence.api.PersistenceManager;
 import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
 import org.cyk.system.root.persistence.impl.PersistenceManagerImpl;
-import org.cyk.system.root.persistence.impl.data.Person;
+import org.cyk.system.root.persistence.impl.data.PersonTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
@@ -18,7 +18,7 @@ public class PersistenceManagerIT extends AbstractPersistenceIT {
 	
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return deployment(new Class<?>[]{Person.class,PersistenceManager.class,PersistenceManagerImpl.class}).getArchive();
+		return deployment(new Class<?>[]{PersonTest.class,PersistenceManager.class,PersistenceManagerImpl.class}).getArchive();
 	} 
 		
 	@Override

@@ -7,27 +7,19 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.Period;
-import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.geography.ContactManager;
-import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.persistence.api.event.EventDao;
 import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
-import org.cyk.system.root.persistence.impl.event.EventDaoImpl;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
-public class EventIT extends AbstractPersistenceIT {
+public class EventPersistenceIT extends AbstractPersistenceIT {
 	
 	private static final long serialVersionUID = 5955832118708678179L;
 
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return deployment(new Class<?>[]{Event.class,EventDao.class,EventDaoImpl.class}).getArchive().
-		        addPackage(Event.class.getPackage()).
-		        addPackage(File.class.getPackage()).
-		        addPackage(ContactManager.class.getPackage()).
-		        addPackage(NestedSet.class.getPackage());
+	    return createRootDeployment();
 	} 
 	
 	@Inject private EventDao eventDao;

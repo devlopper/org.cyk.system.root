@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.geography.ContactManager;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.utility.common.validation.Client;
 
 @Getter @Setter 
@@ -27,6 +27,6 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	protected String firstName;
 	
 	@OneToOne(cascade=CascadeType.PERSIST)
-	private ContactManager contactManager = new ContactManager();
+	private ContactCollection contactManager = new ContactCollection();
 	
 }

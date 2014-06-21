@@ -1,4 +1,4 @@
-package org.cyk.system.root.service.impl.data;
+package org.cyk.system.root.persistence.impl.data;
 
 import java.io.Serializable;
 
@@ -13,15 +13,15 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractIdentifiable;
 
 @Getter @Setter @Entity @AllArgsConstructor @NoArgsConstructor
-public class Person extends AbstractIdentifiable implements Serializable {
+public class PersonTest extends AbstractIdentifiable implements Serializable {
 
 	/**
 	 * 
-	 */ 
+	 */  
 	
 	private static final long serialVersionUID = -7061794989292809428L;
 	@Column(unique=true)
-	private String matricule;
+	private String matricule; 
 	
 	private String name;
 	

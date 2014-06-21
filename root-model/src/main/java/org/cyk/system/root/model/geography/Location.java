@@ -23,7 +23,7 @@ public class Location extends Contact implements Serializable{
     
 	public Location() {}
 	
-	public Location(ContactManager manager,Locality locality ,String comment) {
+	public Location(ContactCollection manager,Locality locality ,String comment) {
 		super(manager, null);
 		this.locality = locality;
 		this.comment = comment;

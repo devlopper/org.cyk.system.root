@@ -26,7 +26,7 @@ public class Contact extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 8675998527199168142L;
 		
-	@ManyToOne @NotNull private ContactManager manager;
+	@ManyToOne @NotNull private ContactCollection manager;
 	
 	@UIField(label="order") @NotNull
 	private Byte orderIndex;

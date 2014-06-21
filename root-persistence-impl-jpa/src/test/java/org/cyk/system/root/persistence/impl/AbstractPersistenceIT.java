@@ -10,6 +10,7 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.test.AbstractIntegrationTestJpaBased;
 import org.cyk.utility.common.test.ArchiveBuilder;
 import org.cyk.utility.common.test.TestMethod;
+import org.jboss.shrinkwrap.api.Archive;
 
 /**
  * Persistence integration test (IT)
@@ -58,5 +59,9 @@ public abstract class AbstractPersistenceIT extends AbstractIntegrationTestJpaBa
 	protected void update(AbstractIdentifiable object){
 		genericDao.update(object);
 	}
+	
+	public static Archive<?> createRootDeployment() {
+        return _deploymentOfPackage("org.cyk.system.root").getArchive();
+    } 
 	
 }

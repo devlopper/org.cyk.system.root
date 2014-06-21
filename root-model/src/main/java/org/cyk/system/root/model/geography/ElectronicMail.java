@@ -23,7 +23,7 @@ public class ElectronicMail extends Contact implements Serializable {
 	
 	public ElectronicMail() {}
 
-	public ElectronicMail(ContactManager manager,String address) {
+	public ElectronicMail(ContactCollection manager,String address) {
 		super(manager,null);
 		this.address = address;
 	}

@@ -10,6 +10,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.utility.common.test.AbstractIntegrationTestJpaBased;
 import org.cyk.utility.common.test.ArchiveBuilder;
+import org.jboss.shrinkwrap.api.Archive;
 
 public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased {
 
@@ -57,4 +58,8 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     protected void update(AbstractIdentifiable object){
         genericBusiness.update(object);
     }
+    
+    public static Archive<?> createRootDeployment() {
+        return _deploymentOfPackage("org.cyk.system.root").getArchive().addClass(ExceptionUtils.class);
+    } 
 }
