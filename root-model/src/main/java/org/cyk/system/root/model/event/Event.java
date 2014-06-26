@@ -37,12 +37,12 @@ public class Event extends AbstractIdentifiable implements Serializable  {
     @UIField
     @ManyToOne protected EventType type;
     /**
-     * Title. Rich text
+     * Title
      */
     @UIField(textArea=true)
     protected String title;
     /**
-     * Description. Rich text
+     * Description
      */
     @UIField(textArea=true)
     @Column(length=1024 * 1) protected String description;
@@ -56,7 +56,7 @@ public class Event extends AbstractIdentifiable implements Serializable  {
     /**
      * Contacts
      */
-    @OneToOne(cascade=CascadeType.ALL) protected ContactCollection contactManager = new ContactCollection();
+    @OneToOne(cascade=CascadeType.ALL) protected ContactCollection contactCollection = new ContactCollection();
     
     private String colorHexadecimal;
     
