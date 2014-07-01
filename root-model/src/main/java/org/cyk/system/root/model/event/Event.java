@@ -2,7 +2,6 @@ package org.cyk.system.root.model.event;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -56,7 +55,8 @@ public class Event extends AbstractIdentifiable implements Serializable  {
     /**
      * Contacts
      */
-    @OneToOne(cascade=CascadeType.ALL) protected ContactCollection contactCollection = new ContactCollection();
+    @UIField(oneRelationshipInputType=OneRelationshipInputType.FIELDS)
+    @OneToOne protected ContactCollection contactCollection = new ContactCollection();
     
     private String colorHexadecimal;
     

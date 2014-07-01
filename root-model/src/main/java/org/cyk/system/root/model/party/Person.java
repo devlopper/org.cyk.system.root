@@ -3,21 +3,21 @@ package org.cyk.system.root.model.party;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.geography.Locality;
-import org.cyk.utility.common.validation.Client;
+import org.cyk.system.root.model.geography.Location;
+import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.UIField.OneRelationshipInputType;
 
 @Getter @Setter 
 @Entity
@@ -25,26 +25,28 @@ public class Person  extends Party  implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	@UIField
 	private String lastName;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@NotNull(groups=Client.class)
-	private Date birthDate;
+	@UIField
+	@Temporal(TemporalType.TIMESTAMP) private Date birthDate;
 	
-	@Enumerated(EnumType.ORDINAL)
-	@NotNull(groups=Client.class)
-	@Column(nullable=false)
-	private Sexe sex;
+	@UIField(oneRelationshipInputType=OneRelationshipInputType.FORM)
+    @OneToOne(cascade=CascadeType.ALL) private Location birthLocation = new Location();
 	
-	@ManyToOne
-	private MaritalStatus maritalStatus;
+	@UIField
+	@ManyToOne private Sex sex;
 	
-	@ManyToOne
-	@NotNull(groups=Client.class)
-	private Locality nationality;
+	@UIField
+	@ManyToOne private MaritalStatus maritalStatus;
+	
+	@UIField
+	@ManyToOne private Locality nationality;
+	
+	//TODO info to add : Job (Profession,Function)
 	
 	public String getNames(){
-		return firstName+(StringUtils.isEmpty(lastName)?"":(" "+lastName));
+		return name+(StringUtils.isEmpty(lastName)?"":(" "+lastName));
 	}
 
 

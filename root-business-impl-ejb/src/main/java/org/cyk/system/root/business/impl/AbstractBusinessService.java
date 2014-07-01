@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import lombok.Getter;
 
 import org.cyk.system.root.business.api.BusinessService;
+import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -98,5 +99,9 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	protected AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType> dataTreeBusinessBean(AbstractDataTree<DataTreeType> bean){
 	    return AbstractBusinessLayer.findDataTreeBusinessBean(bean);
 	}
+	
+	protected TypedBusiness<AbstractIdentifiable> typedBusinessBean(Class<AbstractIdentifiable> beanClass){
+        return AbstractBusinessLayer.findTypedBusinessBean(beanClass);
+    }
 	
 }

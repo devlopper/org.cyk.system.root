@@ -87,13 +87,12 @@ public class MailBusinessImpl extends AbstractBean implements MailBusiness , Ser
 
     @Override
     public void send(Notification notification, Party aReceiverId) {
-        // TODO Auto-generated method stub
+        
         
     }
 
     @Override
     public void sendParty(Notification notification, Collection<Party> theReceiverIds) {
-        // TODO Auto-generated method stub
         
     }
 

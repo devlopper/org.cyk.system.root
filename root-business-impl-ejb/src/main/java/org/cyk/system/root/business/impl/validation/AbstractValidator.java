@@ -24,7 +24,7 @@ import org.cyk.utility.common.validation.Client;
 
 /**
  * Ensemble de methodes automatiquement appele par le conteneur pour la validation de contraintes.<br/>
- * La signature doit avoir le format suivant : isValidXXX ou XXX est le nom de l'attribut ou de la contrainte. ex : isValidDateNaissance , 
+ * La signature doit avoir le format suivant : isValidX ou X est le nom de l'attribut ou de la contrainte. ex : isValidDateNaissance , 
  * is ValidMajorite , isValidDistance  , etc.
  * 
  * @author Komenan Y .Christian

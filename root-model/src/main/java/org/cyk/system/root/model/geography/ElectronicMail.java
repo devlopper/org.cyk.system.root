@@ -6,11 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
-import org.cyk.utility.common.annotation.UIField;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import org.cyk.utility.common.annotation.UIField;
 
 @Getter @Setter @Entity
 @AllArgsConstructor

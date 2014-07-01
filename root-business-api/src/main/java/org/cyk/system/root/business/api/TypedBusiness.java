@@ -4,6 +4,6 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 
 public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extends BusinessService<IDENTIFIABLE, Long> {
 
-
+    IDENTIFIABLE load(Long identifier);
 	
 }

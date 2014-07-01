@@ -2,32 +2,31 @@ package org.cyk.system.root.model.geography;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-
-import org.cyk.utility.common.annotation.UIField;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.cyk.utility.common.annotation.UIField;
 
 @Getter @Setter @Entity @NoArgsConstructor
 public class PhoneNumber extends Contact implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne @UIField @NotNull
+	@ManyToOne @UIField @NotNull @JoinColumn(nullable=false)
 	private PhoneNumberType type;
 	
-	@ManyToOne @UIField @NotNull
+	@ManyToOne @UIField @NotNull @JoinColumn(nullable=false)
 	private Locality country;
 	
-	@UIField(label="phone.number") @NotNull
+	@UIField(label="phone.number-short") @NotNull @Column(nullable=false)
 	private String number;
-	
-	@ManyToOne @UIField(label="location") @NotNull
-	private LocationType locationType;
 	
 	@Override
 	public String toString() {

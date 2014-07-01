@@ -98,7 +98,6 @@ public class LanguageBusinessIT extends AbstractBusinessIT {
 
     @Override
     protected void businesses() {
-        // TODO Auto-generated method stub
         
     }
 

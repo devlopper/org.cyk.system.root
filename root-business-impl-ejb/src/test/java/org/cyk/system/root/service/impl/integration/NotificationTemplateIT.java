@@ -68,25 +68,22 @@ public class NotificationTemplateIT extends AbstractBusinessIT {
 
     @Override
     protected void finds() {
-        // TODO Auto-generated method stub
+        
         
     }
 
     @Override
     protected void businesses() {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     protected void create() {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     protected void delete() {
-        // TODO Auto-generated method stub
         
     }
 
@@ -94,13 +91,11 @@ public class NotificationTemplateIT extends AbstractBusinessIT {
 
     @Override
     protected void read() {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     protected void update() {
-        // TODO Auto-generated method stub
         
     }
 

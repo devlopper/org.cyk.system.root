@@ -2,8 +2,13 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 
@@ -12,6 +17,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	private static final long serialVersionUID = 6437552355933877400L;
 
+	@Inject protected GenericDao genericDao;
 	protected TYPED_DAO dao;
 
 	public AbstractTypedBusinessService(TYPED_DAO dao) {
@@ -37,6 +43,11 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override
 	public IDENTIFIABLE delete(IDENTIFIABLE object) {
 		return dao.delete(object);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public IDENTIFIABLE load(Long identifier) {
+	    return find(identifier);
 	}
 
 

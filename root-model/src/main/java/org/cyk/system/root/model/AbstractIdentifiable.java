@@ -29,7 +29,7 @@ public abstract class AbstractIdentifiable implements Identifiable<Long>, Serial
 	
 	private String __identifier__(){
 		if(__id__==null)
-			__id__ = getIdentifier()==null?null:getClass().getSimpleName()+"/"+identifier;
+			__id__ = getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);
 		return __id__;
 	}
 	

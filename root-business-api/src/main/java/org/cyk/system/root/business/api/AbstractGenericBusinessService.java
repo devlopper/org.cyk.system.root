@@ -13,6 +13,8 @@ public interface AbstractGenericBusinessService<IDENTIFIABLE extends Identifiabl
 	 */
     IDENTIFIABLE save(IDENTIFIABLE identifiable);
     
+    <T extends IDENTIFIABLE> T load(Class<T> aClass,IDENTIFIER identifier);
+    
     IDENTIFIABLE refresh(IDENTIFIABLE identifiable);
     
 	/* ------------------------ Dynamic methods ---------------------------- */

@@ -9,9 +9,12 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.AbstractGenericBusinessService;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
 import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.persistence.api.GenericDao;
@@ -25,6 +28,7 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	// TODO to be removed if circular dependency resolved
 	@Inject private ValidationPolicy validationPolicy;
 	@Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
+	@Inject private EventBusiness eventBusiness;
 	
 	@Inject private GenericDao dao;
 	
@@ -42,13 +46,17 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	    else if(anIdentifiable instanceof AbstractDataTree){
 	        AbstractDataTree<DataTreeType> dataTree =(AbstractDataTree<DataTreeType>) anIdentifiable;
             return dataTreeBusinessBean(dataTree).create(dataTree);
-	    }else
+	    }else if(anIdentifiable instanceof Event)
+	        return eventBusiness.create((Event) anIdentifiable);
+	    else
             return dao.create(anIdentifiable);
 	}
 
 	@Override
 	public AbstractIdentifiable update(AbstractIdentifiable anObject) {
 	    validationPolicy.validateUpdate(anObject);
+	    if(anObject instanceof Event)
+	        return eventBusiness.update((Event) anObject);
 		return dao.update(anObject);
 	}
 
@@ -71,6 +79,16 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	        return create(identifiable);
 	    else 
 	        return update(identifiable);
+	}
+	
+	@SuppressWarnings("unchecked")
+    @Override
+	public <T extends AbstractIdentifiable> T load(Class<T> aClass, Long identifier) {
+	    TypedBusiness<T> businessBean = (TypedBusiness<T>) typedBusinessBean((Class<AbstractIdentifiable>) aClass);
+	    if(businessBean==null)
+	        return (T) use(aClass).find(identifier);
+	    else
+	        return businessBean.load(identifier);
 	}
 	
 	@Override

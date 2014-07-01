@@ -10,6 +10,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.event.EventBusiness;
+import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.persistence.api.event.EventDao;
@@ -18,6 +19,8 @@ import org.cyk.system.root.persistence.api.event.EventDao;
 public class EventBusinessImpl extends AbstractTypedBusinessService<Event, EventDao> implements EventBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
+	
+	@Inject private ContactCollectionBusiness contactCollectionBusiness;
 
 	@Inject
 	public EventBusinessImpl(EventDao dao) {
@@ -50,10 +53,23 @@ public class EventBusinessImpl extends AbstractTypedBusinessService<Event, Event
     }
     
     @Override
+    public Event create(Event event) {
+        contactCollectionBusiness.create(event.getContactCollection());
+        super.create(event);
+        return event;
+    }
+    
+    @Override
     public void create(Collection<Event> events) {
         for(Event event : events)
             //create(event);
             dao.create(event);
     }
 	
+    @Override
+    public Event load(Long identifier) {
+        Event event = super.load(identifier);
+        contactCollectionBusiness.load(event.getContactCollection());
+        return event;
+    }
 }
