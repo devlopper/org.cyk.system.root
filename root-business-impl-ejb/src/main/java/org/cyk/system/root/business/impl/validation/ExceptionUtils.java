@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,7 +28,15 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
         INSTANCE = this;
         super.initialisation();
     }
-        
+    
+    public void exception(Set<String> messages){
+        throw new BusinessException(messages);
+    }
+    
+    public void exception(AbstractValidator<?> validator){
+        throw new BusinessException(validator.getMessages());
+    }
+    
     public void exception(Boolean condition,String messageId,Object[] parameters){
         if(Boolean.TRUE.equals(condition))
             throw new BusinessException(languageBusiness.findText(messageId,parameters));

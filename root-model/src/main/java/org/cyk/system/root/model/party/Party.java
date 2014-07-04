@@ -9,6 +9,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	
 	@UIField
 	@NotNull(groups=Client.class)
+	@Pattern(regexp="(\\w)+",groups=Client.class)
 	@Column(nullable=false)
 	protected String name;
 	

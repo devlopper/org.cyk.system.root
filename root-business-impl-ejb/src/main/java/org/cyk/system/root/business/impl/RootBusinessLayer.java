@@ -8,7 +8,9 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
-import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
+import org.cyk.system.root.business.api.party.PersonBusiness;
+import org.cyk.system.root.business.impl.party.PersonValidator;
+import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventType;
@@ -16,9 +18,8 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.party.MaritalStatus;
+import org.cyk.system.root.model.party.Person;
 import org.cyk.system.root.model.party.Sex;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
@@ -27,6 +28,17 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
  
     @Inject private LocalityBusiness localityBusiness;
     @Inject private EventBusiness eventBusiness;
+    @Inject private PersonBusiness personBusiness;
+    
+    /* Validators */
+    @Inject private PersonValidator personValidator;
+    
+    @Override
+    protected void initialisation() {
+        // TODO Auto-generated method stub
+        super.initialisation();
+        AbstractValidator.registerValidator(Person.class, personValidator);
+    }
     
     @Override
     public void createInitialData() {
@@ -60,8 +72,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         create(new MaritalStatus("B", "Celibataire"));
         create(new MaritalStatus("M", "Marie"));
         
-        EventType eventType1=create(new EventType("RDV", "Rendez vous", null)),
-                eventType2=create(new EventType("REU", "Reunion", null));
+        create(new EventType("RDV", "Rendez vous", null));
+        create(new EventType("REU", "Reunion", null));
         
         /*
         Date date = new Date();
@@ -76,18 +88,21 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     private void language(){
          
     }
-    
+    /*
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void registerDataTreeBusinessBean(Map<Class<AbstractDataTree<DataTreeType>>, AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType>> beansMap) {
         beansMap.put((Class)Locality.class, (AbstractDataTreeBusiness)localityBusiness);
         
     }
+    */
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void registerTypedBusinessBean(Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> beansMap) {
         beansMap.put((Class)Event.class, (TypedBusiness)eventBusiness);
+        beansMap.put((Class)Person.class, (TypedBusiness)personBusiness);
+        beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
     }
 
 }

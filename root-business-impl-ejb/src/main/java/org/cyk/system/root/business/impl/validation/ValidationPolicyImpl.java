@@ -19,10 +19,12 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
 
     @Inject protected GenericDao genericDao;
     @Inject protected LanguageBusiness languageBusiness; 
+    @Inject protected DefaultValidator defaultValidator;
     protected ExceptionUtils exceptionUtils = ExceptionUtils.getInstance();
    
     @Override 
     public void validateCreate(Identifiable<?> anIdentifiable) {
+        defaultValidator.validate(anIdentifiable);
         checkValueSetConstraints(anIdentifiable);
         checkUniqueConstraints(anIdentifiable);
     }
@@ -73,18 +75,5 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             
         }
     }
-    
-    /**/
-    /*
-    protected void exception(Boolean condition,String messageId,Object[] parameters){
-        if(Boolean.TRUE.equals(condition))
-            throw new BusinessException(languageBusiness.findText(messageId,parameters));
-    }
-    
-    protected void exception(Boolean condition,String messageId){
-        exception(condition, messageId, null);
-    }*/
-
-    
     
 }

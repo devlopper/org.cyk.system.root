@@ -25,13 +25,15 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 
 	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new HashMap<>();
 	
+	private static LanguageBusiness INSTANCE;
+	
 	@Setter private Locale locale = Locale.FRENCH;
 	 
 	@Inject
 	public LanguageBusinessImpl(LanguageDao dao) {
 		super(dao); 
+		INSTANCE = this;
 	} 
-	
 	
 	@Override
 	protected void initialisation() {
@@ -43,6 +45,10 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		registerResourceBundle("org.cyk.system.root.business.impl.language.ui",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.business.impl.language.exception",getClass().getClassLoader());
 	}
+	
+	public static LanguageBusiness getInstance() {
+        return INSTANCE;
+    }
 
 	@Override
 	public String findText(String code,Object[] parameters) {
@@ -83,4 +89,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		RESOURCE_BUNDLE_MAP.put(id,aClassLoader);
 	}
 	
+	@Override
+	public Locale findCurrentLocale() {
+	    return locale;
+	}
 }

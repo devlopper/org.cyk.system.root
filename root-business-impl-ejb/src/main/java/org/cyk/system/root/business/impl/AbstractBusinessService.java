@@ -10,11 +10,8 @@ import lombok.Getter;
 
 import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
@@ -91,17 +88,22 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	/**
 	 * Utilities methods
 	 */
-	
+	/*
 	protected AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType> dataTreeBusinessBean(Class<AbstractDataTree<DataTreeType>> beanClass){
 	    return AbstractBusinessLayer.findDataTreeBusinessBean(beanClass);
 	}
 	
 	protected AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType> dataTreeBusinessBean(AbstractDataTree<DataTreeType> bean){
 	    return AbstractBusinessLayer.findDataTreeBusinessBean(bean);
-	}
+	}*/
 	
 	protected TypedBusiness<AbstractIdentifiable> typedBusinessBean(Class<AbstractIdentifiable> beanClass){
         return AbstractBusinessLayer.findTypedBusinessBean(beanClass);
     }
+	
+	@SuppressWarnings("unchecked")
+    protected TypedBusiness<AbstractIdentifiable> typedBusinessBean(AbstractIdentifiable bean){
+	    return typedBusinessBean((Class<AbstractIdentifiable>) bean.getClass());
+	}
 	
 }

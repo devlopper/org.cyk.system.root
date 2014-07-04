@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractEnumeration;
-import org.cyk.utility.common.validation.Client;
+import org.cyk.utility.common.validation.System;
 
 @Getter @Setter @NoArgsConstructor @MappedSuperclass
 public abstract class AbstractDataTreeNode extends AbstractEnumeration implements Serializable {
@@ -21,7 +21,7 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 	private static final long serialVersionUID = 4388503557071277363L;
 	
 	@ManyToOne
-	@NotNull(groups=Client.class)
+	@NotNull(groups=System.class)
 	protected NestedSetNode node;
 	
 	@Transient private Collection<AbstractDataTreeNode> children;

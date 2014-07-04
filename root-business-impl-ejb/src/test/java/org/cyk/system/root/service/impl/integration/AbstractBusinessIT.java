@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
+import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
@@ -51,15 +52,15 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	
 	/* Shortcut */
     
-    protected void create(AbstractIdentifiable object){
-        genericBusiness.create(object);
+    protected AbstractIdentifiable create(AbstractIdentifiable object){
+        return genericBusiness.create(object);
     }
     
-    protected void update(AbstractIdentifiable object){
-        genericBusiness.update(object);
+    protected AbstractIdentifiable update(AbstractIdentifiable object){
+        return genericBusiness.update(object);
     }
     
     public static Archive<?> createRootDeployment() {
-        return _deploymentOfPackage("org.cyk.system.root").getArchive().addClass(ExceptionUtils.class);
+        return _deploymentOfPackage("org.cyk.system.root").getArchive().addPackage(ExceptionUtils.class.getPackage());
     } 
 }

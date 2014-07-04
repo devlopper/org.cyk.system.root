@@ -2,12 +2,10 @@ package org.cyk.system.root.model.geography;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,10 +23,14 @@ import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 public class Contact extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 8675998527199168142L;
-		
-	@ManyToOne @NotNull private ContactCollection collection;
 	
-	@NotNull @Column(nullable=false)
+	/*
+	 * a contact can compose another model bean. 
+	 * In that case , it might not belongs to a collection , not have an order index 
+	 */
+	
+	@ManyToOne private ContactCollection collection;
+	
 	private Byte orderIndex;
 	
 }

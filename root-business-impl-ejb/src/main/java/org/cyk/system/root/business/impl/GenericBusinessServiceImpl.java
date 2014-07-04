@@ -29,7 +29,7 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	@Inject private ValidationPolicy validationPolicy;
 	@Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
 	@Inject private EventBusiness eventBusiness;
-	
+	 
 	@Inject private GenericDao dao;
 	
 	@Override
@@ -41,15 +41,22 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
     @Override
 	public AbstractIdentifiable create(AbstractIdentifiable anIdentifiable) {
 	    validationPolicy.validateCreate(anIdentifiable);
+	    //TODO logic has to be merged : Find associated typed business bean and do the job 
 	    if(anIdentifiable instanceof DataTreeType)
             return dataTreeTypeBusiness.create((DataTreeType) anIdentifiable);
 	    else if(anIdentifiable instanceof AbstractDataTree){
 	        AbstractDataTree<DataTreeType> dataTree =(AbstractDataTree<DataTreeType>) anIdentifiable;
-            return dataTreeBusinessBean(dataTree).create(dataTree);
+            //return typedBusinessBean(dataTree).create(dataTree);
+	        return typedBusinessBean((Class<AbstractIdentifiable>) anIdentifiable.getClass()).create(dataTree);
 	    }else if(anIdentifiable instanceof Event)
 	        return eventBusiness.create((Event) anIdentifiable);
-	    else
-            return dao.create(anIdentifiable);
+	    else{
+	        TypedBusiness<AbstractIdentifiable> typedBusiness = typedBusinessBean(anIdentifiable);
+	        if(typedBusiness==null)
+	            return dao.create(anIdentifiable);
+	        else
+	            return typedBusiness.create(anIdentifiable);
+	    }
 	}
 
 	@Override

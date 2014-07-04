@@ -2,9 +2,11 @@ package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -16,9 +18,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.BusinessException;
-import org.cyk.system.root.business.api.BusinessExceptionNoRollBack;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.validation.Client;
 
 
@@ -31,10 +32,10 @@ import org.cyk.utility.common.validation.Client;
  *
  * @param <OBJECT>
  */
-public abstract class AbstractValidator<OBJECT> implements Serializable {
+public abstract class AbstractValidator<OBJECT> extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = -261860698364195138L;
-	
+	public static final Map<Class<Object>, AbstractValidator<Object>> MAP = new HashMap<>();   
 	protected static final String MESSAGE_NOT_VALID_FORMAT = "%s n'est pas valide";
 	
 	@Inject protected LanguageBusiness languageBusiness;	
@@ -81,12 +82,14 @@ public abstract class AbstractValidator<OBJECT> implements Serializable {
 	}*/
 	
 	public AbstractValidator<OBJECT> validate(OBJECT object){
-		this.object=object;
+	    this.object=object;
 		if(Boolean.TRUE.equals(autoClearMessages))
 			messages = new LinkedHashSet<>();
 		/* processing */
 		process(objectClass, object);
 		process(validatorClass, this);
+		if(!Boolean.TRUE.equals(isSucces()))
+		    ExceptionUtils.getInstance().exception(this);
 		return this;
 	}
 	
@@ -122,7 +125,7 @@ public abstract class AbstractValidator<OBJECT> implements Serializable {
 	}
 	
 	/**/
-	
+	/*
 	protected void exception(String messageId){
 		exception(messageId, Boolean.TRUE);
 	}
@@ -132,5 +135,16 @@ public abstract class AbstractValidator<OBJECT> implements Serializable {
 			throw new BusinessException(languageBusiness.findText(messageId));
 		throw new BusinessExceptionNoRollBack(languageBusiness.findText(messageId));
 	}
+	*/
+	/**/
 	
+	@SuppressWarnings("unchecked")
+    public static <T> AbstractValidator<T> validatorOf(Class<T> objectClass){
+        return (AbstractValidator<T>) MAP.get(objectClass);
+    }
+	
+	@SuppressWarnings("unchecked")
+    public static <T> void registerValidator(Class<T> clazz,AbstractValidator<T> validator){
+	    MAP.put((Class<Object>) clazz, (AbstractValidator<Object>) validator);
+    }
 }

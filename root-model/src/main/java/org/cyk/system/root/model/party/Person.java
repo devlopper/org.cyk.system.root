@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +30,11 @@ public class Person  extends Party  implements Serializable{
 	private String lastName;
 	
 	@UIField
-	@Temporal(TemporalType.TIMESTAMP) private Date birthDate;
+	@Temporal(TemporalType.DATE) private Date birthDate;
 	
 	@UIField(oneRelationshipInputType=OneRelationshipInputType.FORM)
-    @OneToOne(cascade=CascadeType.ALL) private Location birthLocation = new Location();
+	@Valid
+    @OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;// = new Location();
 	
 	@UIField
 	@ManyToOne private Sex sex;

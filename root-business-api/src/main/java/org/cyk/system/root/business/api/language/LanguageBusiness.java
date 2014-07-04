@@ -17,6 +17,8 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	
 	void setLocale(Locale locale);
 	
+	Locale findCurrentLocale();
+	
 	void registerResourceBundle(String id,ClassLoader aClassLoader);
 	
 }
