@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,8 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.impl.validation.AbstractValidator;
+import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.cdi.AbstractLayer;
 
@@ -36,6 +39,14 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusine
     @SuppressWarnings("unchecked")
     protected <T extends AbstractIdentifiable> T create(T anObject){
         return (T) genericBusiness.create(anObject);
+    }
+    
+    protected <T> void registerValidator(Class<T> clazz,AbstractValidator<T> validator){
+        AbstractValidator.registerValidator(clazz, validator);
+    }
+    
+    protected void registerFieldValidator(Field field,FieldValidatorMethod method){
+        AbstractValidator.registerFieldValidator(field, method);
     }
     
     /*

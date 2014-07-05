@@ -5,12 +5,13 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.party.PersonBusiness;
 import org.cyk.system.root.business.impl.party.PersonValidator;
-import org.cyk.system.root.business.impl.validation.AbstractValidator;
+import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventType;
@@ -35,9 +36,19 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     @Override
     protected void initialisation() {
-        // TODO Auto-generated method stub
         super.initialisation();
-        AbstractValidator.registerValidator(Person.class, personValidator);
+        //registerValidator(Person.class, personValidator);
+        
+        registerFieldValidator(commonUtils.getFieldFromClass(Person.class, "name"), new FieldValidatorMethod() {
+            @Override
+            protected Void __execute__(Object[] parameter) {
+                String name = (String) parameter[0];
+                if(!"cj".equals(name))
+                    throw new BusinessException("Method exception oohhh");
+                return null;
+            }
+        });
+        
     }
     
     @Override

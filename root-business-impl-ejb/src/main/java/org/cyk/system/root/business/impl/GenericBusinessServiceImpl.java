@@ -12,7 +12,6 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
-import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
@@ -25,8 +24,6 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	
 	private static final long serialVersionUID = -1042342183332719272L;
 
-	// TODO to be removed if circular dependency resolved
-	@Inject private ValidationPolicy validationPolicy;
 	@Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
 	@Inject private EventBusiness eventBusiness;
 	 
@@ -40,7 +37,6 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	@SuppressWarnings("unchecked")
     @Override
 	public AbstractIdentifiable create(AbstractIdentifiable anIdentifiable) {
-	    validationPolicy.validateCreate(anIdentifiable);
 	    //TODO logic has to be merged : Find associated typed business bean and do the job 
 	    if(anIdentifiable instanceof DataTreeType)
             return dataTreeTypeBusiness.create((DataTreeType) anIdentifiable);
@@ -52,9 +48,10 @@ public class GenericBusinessServiceImpl extends AbstractBusinessService<Abstract
 	        return eventBusiness.create((Event) anIdentifiable);
 	    else{
 	        TypedBusiness<AbstractIdentifiable> typedBusiness = typedBusinessBean(anIdentifiable);
-	        if(typedBusiness==null)
+	        if(typedBusiness==null){
+	            validationPolicy.validateCreate(anIdentifiable);
 	            return dao.create(anIdentifiable);
-	        else
+	        }else
 	            return typedBusiness.create(anIdentifiable);
 	    }
 	}

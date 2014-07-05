@@ -12,5 +12,7 @@ public interface Identifiable<IDENTIFIER> {
      * @return Identifier of the object.
      */
     IDENTIFIER getIdentifier();
+    
+    void setIdentifier(IDENTIFIER anIdentifier);
 
 }

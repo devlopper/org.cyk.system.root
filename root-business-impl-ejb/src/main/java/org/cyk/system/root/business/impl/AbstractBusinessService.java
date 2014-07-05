@@ -5,11 +5,13 @@ import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
 import lombok.Getter;
 
 import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -23,11 +25,12 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 
 	private static final long serialVersionUID = 6437552355933877400L;
 	
-	// TODO How to resolve circular dependency AbstractBusinessService -> ValidationPolicy -> LanguageBusiness which inherits of AbstractBusinessService
-	//@Inject protected ValidationPolicy validationPolicy;
+	//How to resolve circular dependency AbstractBusinessService -> ValidationPolicy -> LanguageBusiness which inherits of AbstractBusinessService
+	//Singleton has been use to solve previous issue
+	@Inject protected ValidationPolicy validationPolicy;
 	
 	@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
-	protected ExceptionUtils exceptionUtils = ExceptionUtils.getInstance();
+	//protected ExceptionUtils exceptionUtils = ExceptionUtils.getInstance();
 	
 	protected abstract PersistenceService<IDENTIFIABLE, Long> getPersistenceService();
 	
@@ -88,6 +91,11 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	/**
 	 * Utilities methods
 	 */
+	//load only when needed to avoid null pointer
+	protected ExceptionUtils exceptionUtils(){
+	    return ExceptionUtils.getInstance();
+	}
+	
 	/*
 	protected AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType> dataTreeBusinessBean(Class<AbstractDataTree<DataTreeType>> beanClass){
 	    return AbstractBusinessLayer.findDataTreeBusinessBean(beanClass);
@@ -105,5 +113,7 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
     protected TypedBusiness<AbstractIdentifiable> typedBusinessBean(AbstractIdentifiable bean){
 	    return typedBusinessBean((Class<AbstractIdentifiable>) bean.getClass());
 	}
+	
+	
 	
 }

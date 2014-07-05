@@ -11,9 +11,10 @@ import org.cyk.utility.common.validation.Client;
 
 public class PersonValidator extends AbstractValidator<Person> implements Serializable {
 
-    @AssertTrue(message="PROBLEME de NOM oh",groups=Client.class)
+    private static final long serialVersionUID = -3799482462496328200L;
+    
+    @AssertTrue(message="{validation.person.name}",groups=Client.class)
     public boolean isValidName(){
-        System.out.println("RootPersonValidator.isValidName()");
         return StringUtils.startsWith("bc", object.getName());
     }
     

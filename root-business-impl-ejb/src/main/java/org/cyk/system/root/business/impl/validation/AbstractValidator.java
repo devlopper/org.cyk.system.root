@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -16,6 +17,7 @@ import javax.validation.Validator;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
@@ -32,11 +34,13 @@ import org.cyk.utility.common.validation.Client;
  *
  * @param <OBJECT>
  */
+@Log
 public abstract class AbstractValidator<OBJECT> extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = -261860698364195138L;
-	public static final Map<Class<Object>, AbstractValidator<Object>> MAP = new HashMap<>();   
-	protected static final String MESSAGE_NOT_VALID_FORMAT = "%s n'est pas valide";
+	
+	private static final Map<Class<Object>, AbstractValidator<Object>> CLASS_MAP = new HashMap<>();   
+	private static final Map<Field, FieldValidatorMethod> FIELD_MAP = new HashMap<>();   
 	
 	@Inject protected LanguageBusiness languageBusiness;	
 	
@@ -108,8 +112,8 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 	}
 	
 	protected String formatMessage(ConstraintViolation<?> constraintViolation){
-		return constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage();
-		//return constraintViolation.getMessage();
+		//return constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage();
+		return constraintViolation.getMessage();
 	}
 	
 	public Boolean isSucces(){
@@ -120,31 +124,26 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 		return messages==null?"":StringUtils.join(messages, "\r\n");
 	}
 	
-	protected static String messageNotValid(String constraint){
-		return String.format(MESSAGE_NOT_VALID_FORMAT, constraint);
-	}
-	
-	/**/
-	/*
-	protected void exception(String messageId){
-		exception(messageId, Boolean.TRUE);
-	}
-	
-	protected void exception(String messageId,Boolean rollback){
-		if(Boolean.TRUE.equals(rollback))
-			throw new BusinessException(languageBusiness.findText(messageId));
-		throw new BusinessExceptionNoRollBack(languageBusiness.findText(messageId));
-	}
-	*/
 	/**/
 	
 	@SuppressWarnings("unchecked")
     public static <T> AbstractValidator<T> validatorOf(Class<T> objectClass){
-        return (AbstractValidator<T>) MAP.get(objectClass);
+        return (AbstractValidator<T>) CLASS_MAP.get(objectClass);
     }
 	
 	@SuppressWarnings("unchecked")
     public static <T> void registerValidator(Class<T> clazz,AbstractValidator<T> validator){
-	    MAP.put((Class<Object>) clazz, (AbstractValidator<Object>) validator);
+	    CLASS_MAP.put((Class<Object>) clazz, (AbstractValidator<Object>) validator);
+	    log.info(clazz.getName()+" validated by "+validator.getClass().getName());
     }
+	
+	public static void registerFieldValidator(Field field,FieldValidatorMethod method){
+	    FIELD_MAP.put(field, method);
+	    log.info(field+" validated by "+method);
+	}
+	
+	public static FieldValidatorMethod validatorOfField(Field field){
+	    return FIELD_MAP.get(field);
+	}
+	
 }

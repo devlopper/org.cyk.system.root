@@ -18,6 +18,8 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     private static ExceptionUtils INSTANCE;
     
     public static ExceptionUtils getInstance() {
+        //if(INSTANCE==null)
+        //    INSTANCE = new ExceptionUtils();
         return INSTANCE;
     }
     

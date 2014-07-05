@@ -6,11 +6,11 @@ import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.party.PersonBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
 import org.cyk.system.root.business.impl.party.PersonValidator;
+import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.Person;
-import org.cyk.utility.common.CommonUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -20,8 +20,6 @@ public class PersonBusinessIT extends AbstractBusinessIT {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        for(Class<?> c : CommonUtils.getInstance().getPackageClasses("org.cyk.system.root", Object.class))
-            System.out.println(c);
         return createRootDeployment(); 
     } 
     
@@ -36,7 +34,8 @@ public class PersonBusinessIT extends AbstractBusinessIT {
         LocalityType t = (LocalityType) dataTreeTypeBusiness.create(new LocalityType(null, "LT1", "Pays"));
         locality = new Locality(null, t, "L1");
         locality.setName("Name");
-        localityBusiness.create(locality);     
+        localityBusiness.create(locality);
+        AbstractValidator.registerValidator(Person.class, personValidator);
     }
    
     @Override
@@ -45,12 +44,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
         Person person = new Person();
         person.setName(null);
         person.setBirthLocation(new Location(null,locality,"Pres de la pharmacie"));
-        try{personValidator.validate(person);}
-        catch(Exception e){
-            e.printStackTrace();
+        //validate(person);
+        try {
+            personBusiness.create(person);
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        System.out.println(personValidator.getMessages());
-        //personBusiness.create(person);
     }
 
     @Override

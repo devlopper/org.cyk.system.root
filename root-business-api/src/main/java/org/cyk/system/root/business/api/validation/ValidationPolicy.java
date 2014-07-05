@@ -1,5 +1,7 @@
 package org.cyk.system.root.business.api.validation;
 
+import java.lang.reflect.Field;
+
 import org.cyk.system.root.model.Identifiable;
 
 public interface ValidationPolicy {
@@ -12,4 +14,5 @@ public interface ValidationPolicy {
     
     void validateDelete(Identifiable<?> anIdentifiable);
     
+    void validateField(Field field,Object value,Object...crossValues);
 }

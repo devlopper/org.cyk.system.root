@@ -32,7 +32,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE create(IDENTIFIABLE object) {
-		return dao.create(object);
+	    validationPolicy.validateCreate(object);
+        return dao.create(object);
 	}
 
 	@Override

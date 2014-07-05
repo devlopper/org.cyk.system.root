@@ -20,7 +20,7 @@ public abstract class AbstractBusinessException extends RuntimeException impleme
     
     public AbstractBusinessException(Set<String> messages) {
         super(StringUtils.join(messages,"\r\n"));
-        messages.addAll(messages);
+        this.messages.addAll(messages);
     }
 
 }

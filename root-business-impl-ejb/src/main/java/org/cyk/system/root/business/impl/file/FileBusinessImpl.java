@@ -56,17 +56,17 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     public InputStream findInputStream(File file) {
         if(file.getBytes()==null)
             if(file.getUri()==null)
-                exceptionUtils.exception("exception.file.nocontentnouri");
+                exceptionUtils().exception("exception.file.nocontentnouri");
             else
                 if("file".equals(file.getUri().getScheme()))
                     try {
                         return new FileInputStream(StringUtils.substring(file.getUri().getPath(), 1));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
-                        exceptionUtils.resourceNotFound();
+                        exceptionUtils().resourceNotFound();
                     }
                 else
-                    exceptionUtils.exception("exception.file.urinothandled");
+                    exceptionUtils().exception("exception.file.urinothandled");
         else
             return new ByteArrayInputStream(file.getBytes());
         return null;

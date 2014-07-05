@@ -17,8 +17,10 @@ import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
+import org.cyk.utility.common.annotation.Deployment;
+import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
-@Singleton
+@Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -44,6 +46,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		
 		registerResourceBundle("org.cyk.system.root.business.impl.language.ui",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.business.impl.language.exception",getClass().getClassLoader());
+		registerResourceBundle("org.cyk.system.root.business.impl.language.validation",getClass().getClassLoader());
 	}
 	
 	public static LanguageBusiness getInstance() {
