@@ -2,18 +2,9 @@ package org.cyk.system.root.service.impl.integration;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
-import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
-import org.cyk.system.root.model.pattern.tree.NestedSet;
-import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-import org.cyk.system.root.persistence.api.pattern.tree.DataTreeDao;
-import org.cyk.system.root.persistence.impl.pattern.tree.DataTreeDaoImpl;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
@@ -22,12 +13,10 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
 	   
 	@Inject private LocalityBusiness localityBusiness;  
 	//@Inject private LocalityTypeBusiness localityTypeBusiness;
-	protected @Inject GenericBusiness genericBusiness;
 	
 	@Deployment 
 	public static Archive<?> createDeployment() {
-		return deployment(new Class<?>[]{Locality.class,LocalityType.class,NestedSet.class,NestedSetNode.class,AbstractEnumeration.class,AbstractDataTreeNode.class,
-		        DataTreeType.class,AbstractDataTree.class,DataTreeDao.class,DataTreeDaoImpl.class}).getArchive();
+	    return createRootDeployment();
 	}
 		 
 	@Override

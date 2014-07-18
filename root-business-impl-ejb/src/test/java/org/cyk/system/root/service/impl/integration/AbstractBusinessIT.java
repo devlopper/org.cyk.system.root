@@ -5,9 +5,10 @@ import javax.persistence.EntityManager;
 
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
-import org.cyk.system.root.business.impl.party.PersonValidator;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
+import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
+import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.utility.common.test.AbstractIntegrationTestJpaBased;
@@ -16,16 +17,19 @@ import org.jboss.shrinkwrap.api.Archive;
 
 public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased {
 
+    /*
 	public static ArchiveBuilder deployment(Class<?>[] classes){
 		ArchiveBuilder builder = new ArchiveBuilder();
 		builder.create().addClasses(BusinessIntegrationTestHelper.BASE_CLASSES).business(classes);
 		return builder;
-	}
+	}*/
 	
 	@Inject protected ExceptionUtils exceptionUtils;
-	private @Inject GenericDaoImpl g;
-	protected @Inject GenericBusiness genericBusiness;
-	//@Inject protected DefaultValidator defaultValidator;
+	@Inject protected DefaultValidator defaultValidator;
+	@Inject private GenericDaoImpl g;
+	@Inject protected GenericBusiness genericBusiness;
+	
+	@Inject protected ValidatorMap validatorMap;// = ValidatorMap.getInstance();
     
     @Override
     public EntityManager getEntityManager() {
@@ -66,7 +70,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
         if(object==null)
             return;
         @SuppressWarnings("unchecked")
-        AbstractValidator<Object> validator = (AbstractValidator<Object>) AbstractValidator.validatorOf(object.getClass());
+        AbstractValidator<Object> validator = (AbstractValidator<Object>) validatorMap.validatorOf(object.getClass());
         if(validator==null){
             //log.warning("No validator has been found. The default one will be used");
             //validator = defaultValidator;
@@ -82,10 +86,16 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     }
     
     public static Archive<?> createRootDeployment() {
-        return _deploymentOfPackage("org.cyk.system.root").getArchive()
-              //FIXME those classes are ignored. WHY 
-                .addPackage(ExceptionUtils.class.getPackage())
-                .addPackage(PersonValidator.class.getPackage())
+        return  
+                new ArchiveBuilder().create().getArchive().
+                    addClasses(BusinessIntegrationTestHelper.classes()).
+                    addPackages(Boolean.FALSE, BusinessIntegrationTestHelper.packages()) 
+                //_deploymentOfPackages("org.cyk.system.root").getArchive()
+              
+                //.addPackages(Boolean.FALSE,BusinessIntegrationTestHelper.PACKAGES)
+                //.addClasses(BusinessIntegrationTestHelper.CLASSES)
+                //.addPackage(ExceptionUtils.class.getPackage())
+                //.addPackage(PersonValidator.class.getPackage())
                 ;
     } 
 }

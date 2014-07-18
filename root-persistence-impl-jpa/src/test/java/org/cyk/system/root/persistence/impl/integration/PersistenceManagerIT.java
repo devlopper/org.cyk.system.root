@@ -3,7 +3,6 @@ package org.cyk.system.root.persistence.impl.integration;
 import javax.inject.Inject;
 
 import org.cyk.system.root.persistence.api.PersistenceManager;
-import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
 import org.cyk.system.root.persistence.impl.PersistenceManagerImpl;
 import org.cyk.system.root.persistence.impl.data.PersonTest;
 import org.jboss.arquillian.container.test.api.Deployment;

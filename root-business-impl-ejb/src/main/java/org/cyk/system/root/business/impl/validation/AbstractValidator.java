@@ -1,13 +1,10 @@
 package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -17,7 +14,6 @@ import javax.validation.Validator;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.java.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
@@ -34,13 +30,9 @@ import org.cyk.utility.common.validation.Client;
  *
  * @param <OBJECT>
  */
-@Log
 public abstract class AbstractValidator<OBJECT> extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = -261860698364195138L;
-	
-	private static final Map<Class<Object>, AbstractValidator<Object>> CLASS_MAP = new HashMap<>();   
-	private static final Map<Field, FieldValidatorMethod> FIELD_MAP = new HashMap<>();   
 	
 	@Inject protected LanguageBusiness languageBusiness;	
 	
@@ -125,25 +117,5 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 	}
 	
 	/**/
-	
-	@SuppressWarnings("unchecked")
-    public static <T> AbstractValidator<T> validatorOf(Class<T> objectClass){
-        return (AbstractValidator<T>) CLASS_MAP.get(objectClass);
-    }
-	
-	@SuppressWarnings("unchecked")
-    public static <T> void registerValidator(Class<T> clazz,AbstractValidator<T> validator){
-	    CLASS_MAP.put((Class<Object>) clazz, (AbstractValidator<Object>) validator);
-	    log.info(clazz.getName()+" validated by "+validator.getClass().getName());
-    }
-	
-	public static void registerFieldValidator(Field field,FieldValidatorMethod method){
-	    FIELD_MAP.put(field, method);
-	    log.info(field+" validated by "+method);
-	}
-	
-	public static FieldValidatorMethod validatorOfField(Field field){
-	    return FIELD_MAP.get(field);
-	}
 	
 }

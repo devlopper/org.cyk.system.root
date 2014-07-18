@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.TemplateEngineBusiness;
-import org.cyk.system.root.business.impl.file.FreeMarkerTemplateEngineImpl;
 import org.cyk.system.root.model.file.File;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -20,7 +19,7 @@ public class FreeMarkerIT extends AbstractBusinessIT {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        return deployment(new Class<?>[]{File.class,TemplateEngineBusiness.class,FreeMarkerTemplateEngineImpl.class}).getArchive();
+        return createRootDeployment();
     }
     
     @Inject private FileBusiness fileBusiness;

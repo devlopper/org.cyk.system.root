@@ -8,7 +8,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
-import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;

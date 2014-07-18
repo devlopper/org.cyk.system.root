@@ -3,21 +3,6 @@ package org.cyk.system.root.service.impl.integration;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.BusinessManager;
-import org.cyk.system.root.business.api.language.LanguageBusiness;
-import org.cyk.system.root.business.impl.BusinessManagerImpl;
-import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
-import org.cyk.system.root.model.AbstractEnumeration;
-import org.cyk.system.root.model.geography.Locality;
-import org.cyk.system.root.model.geography.LocalityType;
-import org.cyk.system.root.model.language.Language;
-import org.cyk.system.root.model.language.LanguageEntry;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
-import org.cyk.system.root.model.pattern.tree.NestedSet;
-import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-import org.cyk.system.root.persistence.api.PersistenceManager;
-import org.cyk.system.root.persistence.impl.PersistenceManagerImpl;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -27,10 +12,7 @@ public class BusinessManagerIT extends AbstractBusinessIT {
  
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return deployment(new Class<?>[]{Language.class,LanguageEntry.class,Locality.class,LocalityType.class,
-		        NestedSet.class,NestedSetNode.class,AbstractEnumeration.class,AbstractDataTreeNode.class,DataTreeType.class,AbstractDataTree.class,
-		        BusinessManager.class,BusinessManagerImpl.class,PersistenceManager.class,PersistenceManagerImpl.class,
-		        LanguageBusiness.class,LanguageBusinessImpl.class}).getArchive();
+	    return createRootDeployment();
 	}
 		
 	@Override

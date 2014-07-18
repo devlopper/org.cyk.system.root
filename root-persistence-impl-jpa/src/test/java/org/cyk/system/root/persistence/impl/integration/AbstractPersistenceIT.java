@@ -1,4 +1,4 @@
-package org.cyk.system.root.persistence.impl;
+package org.cyk.system.root.persistence.impl.integration;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -7,6 +7,8 @@ import lombok.Getter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.GenericDao;
+import org.cyk.system.root.persistence.impl.AbstractPersistenceService;
+import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.utility.common.test.AbstractIntegrationTestJpaBased;
 import org.cyk.utility.common.test.ArchiveBuilder;
 import org.cyk.utility.common.test.TestMethod;
@@ -61,7 +63,7 @@ public abstract class AbstractPersistenceIT extends AbstractIntegrationTestJpaBa
 	}
 	
 	public static Archive<?> createRootDeployment() {
-        return _deploymentOfPackage("org.cyk.system.root").getArchive();
+        return _deploymentOfPackages("org.cyk.system.root").getArchive();
     } 
 	
 }

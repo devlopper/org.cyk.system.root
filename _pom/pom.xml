@@ -23,6 +23,7 @@
 		<module>../root-persistence-impl-jpa</module>
 		<module>../root-business-api</module>
 		<module>../root-business-impl-ejb</module>
+		<module>../root-ui-web-primefaces-api</module>
 		<module>../root-ui-web-primefaces</module>
 		<module>../root-application-resources</module>
 		<module>../application</module>

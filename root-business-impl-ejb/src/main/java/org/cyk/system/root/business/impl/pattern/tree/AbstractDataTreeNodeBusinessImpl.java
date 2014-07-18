@@ -26,6 +26,7 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
     
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public Collection<NODE> findHierarchies() {
+        //logStackTrace();
         Collection<NODE> hierarchy = dao.readRoots();
         for(NODE type : hierarchy)
             loadChildren(type);
@@ -33,19 +34,20 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
     }
     
     private void loadChildren(NODE parent){
-        buildHierarchy(parent,new ArrayList<>(dao.readByParent(parent)));
+       buildHierarchy(parent,new ArrayList<>(dao.readByParent(parent)));
     }
     
     @SuppressWarnings("unchecked")
     private void buildHierarchy(NODE parent,List<NODE> children){
-        for(int i=0;i<children.size();)
+        for(int i=0;i<children.size();){
+            
             if(children.get(i).getNode().getParent().equals(parent.getNode())){
                 if(parent.getChildren()==null)
                     parent.setChildren(new ArrayList<AbstractDataTreeNode>());
                 parent.getChildren().add(children.remove(i));
             }else
                 i++;
-        if(parent.getChildren()!=null)
+        }if(parent.getChildren()!=null)
             for(AbstractDataTreeNode child : parent.getChildren())
                 buildHierarchy((NODE) child, children);
     }

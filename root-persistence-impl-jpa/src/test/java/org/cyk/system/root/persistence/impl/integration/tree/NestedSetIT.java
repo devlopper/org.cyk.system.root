@@ -9,7 +9,7 @@ import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
-import org.cyk.system.root.persistence.impl.AbstractPersistenceIT;
+import org.cyk.system.root.persistence.impl.integration.AbstractPersistenceIT;
 import org.cyk.utility.common.test.TestMethod;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;

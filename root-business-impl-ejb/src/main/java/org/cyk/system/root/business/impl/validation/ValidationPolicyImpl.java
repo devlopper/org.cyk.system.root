@@ -21,7 +21,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
 
     @Inject protected GenericDao genericDao;
     protected LanguageBusiness languageBusiness = LanguageBusinessImpl.getInstance(); 
-   
+    
     @Override 
     public void validateCreate(Identifiable<?> anIdentifiable) {
         anIdentifiable.setIdentifier(null);
@@ -51,7 +51,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     
     protected void applyValidatorObject(Identifiable<?> anIdentifiable){
         @SuppressWarnings("unchecked")
-        AbstractValidator<Identifiable<?>> validator = (AbstractValidator<Identifiable<?>>) AbstractValidator.validatorOf(anIdentifiable.getClass());
+        AbstractValidator<Identifiable<?>> validator = (AbstractValidator<Identifiable<?>>) ValidatorMap.getInstance().validatorOf(anIdentifiable.getClass());
         if(validator==null)
             DefaultValidator.getInstance().validate(anIdentifiable);
         else
@@ -88,7 +88,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     
     @Override
     public void validateField(Field field,Object value,Object...crossValues) {
-        FieldValidatorMethod method = AbstractValidator.validatorOfField(field);
+        FieldValidatorMethod method = ValidatorMap.getInstance().validatorOfField(field);
         if(method==null)
             return;
         //System.out.println("ValidationPolicyImpl.validateField() : "+field);

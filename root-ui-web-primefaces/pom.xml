@@ -12,7 +12,7 @@
 
 	<name>Web UI based on Primefaces</name>
 
-	<groupId>org.cyk.system.root.ui.web.jsf</groupId>
+	<groupId>org.cyk.system.root.ui.web.jsf.primefaces</groupId>
 	<artifactId>root-ui-web-primefaces</artifactId>
 	<packaging>war</packaging>
 
@@ -33,6 +33,7 @@
 				<configuration>
 					<warSourceDirectory>src/main/web</warSourceDirectory>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<warName>root</warName>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -40,14 +41,19 @@
 
 	<dependencies>
 
-		<!--dependency> <groupId>org.cyk.system.root.service</groupId> <artifactId>service-api</artifactId> 
-			<version>0.0.1</version> <scope>provided</scope> </dependency -->
 		<dependency>
-			<groupId>org.cyk.ui.web</groupId>
-			<artifactId>web-primefaces-api</artifactId>
+			<groupId>org.cyk.system.root.ui.web.jsf.primefaces</groupId>
+			<artifactId>root-web-primefaces-api</artifactId>
 			<version>0.0.1</version>
-			
 		</dependency>
+		
+		<dependency>
+            <groupId>org.cyk.system.root.business</groupId>
+            <artifactId>root-business-impl-ejb</artifactId>
+            <version>0.0.1</version>
+            <type>ejb</type>
+        </dependency>
+		
 	</dependencies>
 
 </project>

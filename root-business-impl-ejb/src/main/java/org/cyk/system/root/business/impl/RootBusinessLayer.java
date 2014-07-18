@@ -10,7 +10,6 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.party.PersonBusiness;
-import org.cyk.system.root.business.impl.party.PersonValidator;
 import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Event;
@@ -32,7 +31,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private PersonBusiness personBusiness;
     
     /* Validators */
-    @Inject private PersonValidator personValidator;
+   // @Inject private PersonValidator personValidator;
     
     @Override
     protected void initialisation() {
@@ -99,14 +98,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     private void language(){
          
     }
-    /*
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public void registerDataTreeBusinessBean(Map<Class<AbstractDataTree<DataTreeType>>, AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType>> beansMap) {
-        beansMap.put((Class)Locality.class, (AbstractDataTreeBusiness)localityBusiness);
-        
-    }
-    */
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override

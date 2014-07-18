@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.model.language.Language;
-import org.cyk.system.root.model.language.LanguageEntry;
 import org.cyk.utility.common.computation.Function;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -24,7 +23,7 @@ public class LanguageBusinessIT extends AbstractBusinessIT {
  
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return deployment(new Class<?>[]{Language.class,LanguageEntry.class}).getArchive();
+	    return createRootDeployment();
 	}
 		
 	@Override

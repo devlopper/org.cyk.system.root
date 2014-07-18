@@ -1,28 +1,14 @@
 package org.cyk.system.root.service.impl.integration;
 
-import javax.inject.Inject;
-
-import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.model.AbstractEnumeration;
-import org.cyk.system.root.model.geography.Locality;
-import org.cyk.system.root.model.geography.LocalityType;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
-import org.cyk.system.root.model.pattern.tree.NestedSet;
-import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-import org.cyk.system.root.service.impl.data.PersonTest;
+import org.cyk.system.root.service.impl.data.PersonTestEntity;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
 public class GenericBusinessIT extends AbstractBusinessIT {
 	   
-	@Inject private GenericBusiness genericBusiness;  
-	  
 	@Deployment
 	public static Archive<?> createDeployment() {
-		return deployment(new Class<?>[]{Locality.class,LocalityType.class,NestedSet.class,NestedSetNode.class,AbstractEnumeration.class,AbstractDataTreeNode.class,
-		        DataTreeType.class,AbstractDataTree.class,PersonTest.class}).getArchive();
+	    return createRootDeployment();
 	}
 		 
 	@Override
@@ -32,9 +18,9 @@ public class GenericBusinessIT extends AbstractBusinessIT {
 	
     @Override
     protected void create() {
-        genericBusiness.create(new PersonTest("M01","Tata","pion"));
-        genericBusiness.create(new PersonTest("M02","Toto","paon"));
-        genericBusiness.create(new PersonTest("M03","Tutu","poon"));
+        genericBusiness.create(new PersonTestEntity("M01","Tata","pion"));
+        genericBusiness.create(new PersonTestEntity("M02","Toto","paon"));
+        genericBusiness.create(new PersonTestEntity("M03","Tutu","poon"));
     }
 
     @Override

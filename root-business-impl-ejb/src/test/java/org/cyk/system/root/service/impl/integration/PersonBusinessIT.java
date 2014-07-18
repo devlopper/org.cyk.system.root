@@ -6,7 +6,6 @@ import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.party.PersonBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
 import org.cyk.system.root.business.impl.party.PersonValidator;
-import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.Location;
@@ -35,7 +34,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
         locality = new Locality(null, t, "L1");
         locality.setName("Name");
         localityBusiness.create(locality);
-        AbstractValidator.registerValidator(Person.class, personValidator);
+        validatorMap.registerValidator(Person.class, personValidator);
     }
    
     @Override

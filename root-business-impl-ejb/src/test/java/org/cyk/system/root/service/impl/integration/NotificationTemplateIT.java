@@ -9,9 +9,6 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.file.TemplateEngineBusiness;
-import org.cyk.system.root.business.impl.event.NotificationBusinessImpl;
-import org.cyk.system.root.business.impl.file.FreeMarkerTemplateEngineImpl;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.service.impl.data.Data;
@@ -24,8 +21,7 @@ public class NotificationTemplateIT extends AbstractBusinessIT {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        return deployment(new Class<?>[]{File.class,TemplateEngineBusiness.class,FreeMarkerTemplateEngineImpl.class,NotificationTemplate.class,
-                NotificationBusiness.class,NotificationBusinessImpl.class}).getArchive();
+        return createRootDeployment();
     }
     
     @Inject private FileBusiness fileBusiness;

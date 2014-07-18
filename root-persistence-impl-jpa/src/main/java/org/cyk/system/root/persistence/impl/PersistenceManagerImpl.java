@@ -15,13 +15,13 @@ import org.cyk.utility.common.cdi.AbstractBean;
 public class PersistenceManagerImpl extends AbstractBean implements PersistenceManager, Serializable {
 
     @PersistenceUnit
+    //@Inject 
     private EntityManagerFactory entityManagerFactory;
     
     @SuppressWarnings("unchecked")
     @Override
     public Collection<Class<? extends Identifiable<?>>> findEntities() {
         Collection<Class<? extends Identifiable<?>>> l = new HashSet<>();
-        
         for(EntityType<?> entityType : entityManagerFactory.getMetamodel().getEntities())
             l.add((Class<? extends Identifiable<?>>) entityType.getJavaType());
         return l;

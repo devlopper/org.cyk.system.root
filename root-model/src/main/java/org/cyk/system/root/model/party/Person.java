@@ -18,10 +18,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.UIFieldOrder;
+import org.cyk.utility.common.annotation.UIFieldOrders;
 import org.cyk.utility.common.annotation.UIField.OneRelationshipInputType;
 
 @Getter @Setter 
 @Entity
+@UIFieldOrders(values={
+        @UIFieldOrder(fieldName="contactCollection",underFieldName="nationality")
+})
 public class Person  extends Party  implements Serializable{
 
 	private static final long serialVersionUID = 1L;

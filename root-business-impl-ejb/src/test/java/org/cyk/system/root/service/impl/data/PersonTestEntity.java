@@ -13,7 +13,7 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractIdentifiable;
 
 @Getter @Setter @Entity @AllArgsConstructor @NoArgsConstructor
-public class PersonTest extends AbstractIdentifiable implements Serializable {
+public class PersonTestEntity extends AbstractIdentifiable implements Serializable {
 
 	/**
 	 * 
