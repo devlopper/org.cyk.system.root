@@ -11,7 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 public abstract class AbstractBusinessException extends RuntimeException implements Serializable {
 
-    protected Set<String> messages = new LinkedHashSet<>();
+
+	private static final long serialVersionUID = 108726134018949961L;
+	protected Set<String> messages = new LinkedHashSet<>();
     
     public AbstractBusinessException(String message) {
         super(message);

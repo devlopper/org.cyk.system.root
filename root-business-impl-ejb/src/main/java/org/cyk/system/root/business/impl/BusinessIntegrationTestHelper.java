@@ -27,7 +27,7 @@ public class BusinessIntegrationTestHelper {
     
     
     //FIXME those classes are ignored. WHY 
-    private static Class<?>[] CLASSES = {ExceptionUtils.class,PersonValidator.class};
+    private static Class<?>[] CLASSES = {ExceptionUtils.class,PersonValidator.class,BusinessLocator.class};
     
     public static Package[] packages(){
         return PACKAGES;

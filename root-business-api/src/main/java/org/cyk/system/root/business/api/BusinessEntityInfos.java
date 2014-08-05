@@ -7,8 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.utility.common.CommonUtils;
@@ -19,16 +17,31 @@ import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 @EqualsAndHashCode(of="clazz")
 public class BusinessEntityInfos implements Serializable {
     
-    @Getter @Setter private Class<? extends Identifiable<?>> clazz;
-    private ModelBean modelBeanAnnotation;
-    @Getter @Setter private String uiLabelId,identifier;
+	private static final long serialVersionUID = -8725167267186070601L;
+	@Getter @Setter private Class<? extends Identifiable<?>> clazz;
+	@Getter  private ModelBean modelBeanAnnotation;
+    
+    @Getter @Setter private String varName,uiLabelId,uiLabel,identifier,uiIconName,uiIconExtension;
+    @Getter @Setter private String uiConsultViewId;
     
     public BusinessEntityInfos(Class<? extends Identifiable<?>> clazz,LanguageBusiness languageBusiness) {
         super();
         this.clazz = clazz;
         this.identifier=clazz.getSimpleName();
+        this.varName = Introspector.decapitalize(clazz.getSimpleName());
         modelBeanAnnotation = CommonUtils.getInstance().getAnnotation(clazz,ModelBean.class);
-        uiLabelId = "model.entity."+Introspector.decapitalize(clazz.getSimpleName());
+        /*for(Field field : CommonUtils.getInstance().getAllFields(clazz)){
+        	UIField uiField = field.getAnnotation(UIField.class);
+        	if(uiField!=null){
+        		if(Boolean.TRUE.equals(uiField.useValueAsLabel()))
+        			valueAsLabelField = field;
+        	}
+        }*/
+        uiLabelId = "model.entity."+varName;
+        uiLabel = languageBusiness.findText(uiLabelId);
+        if(modelBeanAnnotation!=null){
+        	uiIconName = modelBeanAnnotation.uiIconName();
+        }
     }
 
     public CrudStrategy getCrudStrategy() {
@@ -44,9 +57,11 @@ public class BusinessEntityInfos implements Serializable {
     
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE)
+        /*return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE)
                 +"\r\nCrud Strategy : "+getCrudStrategy()+"\r\n"
                 ;
+        */
+        return super.toString();
     }
     
     

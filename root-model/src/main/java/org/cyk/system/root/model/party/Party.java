@@ -28,7 +28,6 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@UIField
 	@NotNull(groups=Client.class)
 	//@Pattern(regexp="(\\w)+",groups=Client.class)
 	@Column(nullable=false)
@@ -43,4 +42,8 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	@UIField
 	@OneToOne protected ContactCollection contactCollection = new ContactCollection();
 	
+	@Override
+	public String getUiString() {
+		return name;
+	}
 }

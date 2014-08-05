@@ -16,4 +16,6 @@ public interface BusinessManager {
     Collection<BusinessEntityInfos> findEntitiesInfos(CrudStrategy crudStrategy);
     
     Collection<BusinessLayer> findBusinessLayers();
+    
+    String findSystemName();
 }

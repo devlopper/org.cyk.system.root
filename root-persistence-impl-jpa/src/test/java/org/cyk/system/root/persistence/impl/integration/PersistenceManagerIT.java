@@ -14,7 +14,7 @@ public class PersistenceManagerIT extends AbstractPersistenceIT {
 	private static final long serialVersionUID = 5955832118708678179L;
 
 	@Inject private PersistenceManager persistenceManager;
-	
+	 
 	@Deployment
 	public static Archive<?> createDeployment() {
 		return deployment(new Class<?>[]{PersonTest.class,PersistenceManager.class,PersistenceManagerImpl.class}).getArchive();

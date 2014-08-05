@@ -14,7 +14,11 @@ import org.cyk.utility.common.cdi.AbstractBean;
 
 public class PersistenceManagerImpl extends AbstractBean implements PersistenceManager, Serializable {
 
-    @PersistenceUnit
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@PersistenceUnit 
     //@Inject 
     private EntityManagerFactory entityManagerFactory;
     

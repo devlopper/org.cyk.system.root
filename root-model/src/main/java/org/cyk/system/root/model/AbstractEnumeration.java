@@ -34,12 +34,26 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	@NotNull(groups=Client.class)
 	protected String name;
 	
+	private String nameI18nId;
+	
 	@UIField
 	protected String abbreviation;
+	
+	private String abbreviationI18nId;
 	
 	@UIField(textArea=true,tableColumnIgnore=true)
 	@Column(length=10 * 1024)
 	protected String description;
+	
+	private String descriptionI18nId;
+	
+	public AbstractEnumeration(String code, String name, String abbreviation, String description) {
+        super();
+        this.code = code;
+        this.name = name;
+        this.abbreviation = abbreviation;
+        this.description = description;
+    }
 	
 	@Override
 	public int compareTo(AbstractEnumeration o) {
@@ -59,6 +73,8 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	public String toString() {
 		return name;
 	}
+
+    
 
 	
 }

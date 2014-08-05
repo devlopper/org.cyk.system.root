@@ -8,5 +8,5 @@ public class UnTypedPlaceDao extends AbstractDataTreeNodeDaoImpl<UnTypedPlace> i
 
 	private static final long serialVersionUID = 648413095251700591L;
 	 
-}
+} 
  

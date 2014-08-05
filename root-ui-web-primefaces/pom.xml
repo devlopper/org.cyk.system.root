@@ -13,7 +13,7 @@
 	<name>Web UI based on Primefaces</name>
 
 	<groupId>org.cyk.system.root.ui.web.jsf.primefaces</groupId>
-	<artifactId>root-ui-web-primefaces</artifactId>
+	<artifactId>root-web-primefaces</artifactId>
 	<packaging>war</packaging>
 
 	<repositories>

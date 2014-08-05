@@ -22,8 +22,14 @@ import org.cyk.utility.common.cdi.AbstractStartupBean;
 @Stateless @TransactionAttribute(TransactionAttributeType.NEVER)
 public class BusinessManagerImpl extends AbstractStartupBean implements BusinessManager,Serializable {
 
-    private Collection<BusinessEntityInfos> entitiesInfos;
-    
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6180427700636598680L;
+
+	private static Collection<BusinessEntityInfos> entitiesInfos;
+    public static String SYSTEM_NAME = "CYK Systems";
+	
     @Inject private PersistenceManager persistenceManager;
     @Inject private LanguageBusiness languageBusiness;
     
@@ -47,12 +53,13 @@ public class BusinessManagerImpl extends AbstractStartupBean implements Business
     @Override
     public Collection<BusinessEntityInfos> findEntitiesInfos() {
         if(entitiesInfos==null){
-            entitiesInfos = new HashSet<>();
+        	entitiesInfos = new HashSet<>();
             for(Class<? extends Identifiable<?>> clazz : persistenceManager.findEntities()){
                 BusinessEntityInfos b = new BusinessEntityInfos(clazz, languageBusiness);
                 
                 entitiesInfos.add(b);
             }
+            //System.out.println("BusinessManagerImpl.findEntitiesInfos() : "+entitiesInfos);
         }
         return entitiesInfos;
     }
@@ -70,6 +77,11 @@ public class BusinessManagerImpl extends AbstractStartupBean implements Business
     @Override
     public Collection<BusinessLayer> findBusinessLayers() {
        return businessLayers;
+    }
+    
+    @Override
+    public String findSystemName() {
+    	return SYSTEM_NAME;
     }
 
 }

@@ -18,7 +18,7 @@ public class QueryWrapper<T> implements Serializable {
 
 	private static final long serialVersionUID = 5699283157667217854L;
 
-	private Query query;
+	private Query query;  
 	private DataReadConfig readConfig;
 	private Collection<Class<? extends Throwable>> ignoreThrowables = new HashSet<>();
 

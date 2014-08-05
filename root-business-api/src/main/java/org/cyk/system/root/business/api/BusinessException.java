@@ -7,7 +7,9 @@ import javax.ejb.ApplicationException;
 @ApplicationException(rollback=true)
 public class BusinessException extends AbstractBusinessException {
 
-    public BusinessException(String message) {
+	private static final long serialVersionUID = -2839733742847798770L;
+
+	public BusinessException(String message) {
         super(message);
     }
 

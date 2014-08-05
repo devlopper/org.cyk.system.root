@@ -15,6 +15,7 @@ import lombok.Setter;
 
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.EnumHelper;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
 import org.cyk.utility.common.annotation.Deployment;
@@ -47,6 +48,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		registerResourceBundle("org.cyk.system.root.business.impl.language.ui",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.business.impl.language.exception",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.business.impl.language.validation",getClass().getClassLoader());
+		
+		
 	}
 	
 	public static LanguageBusiness getInstance() {
@@ -96,4 +99,29 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	public Locale findCurrentLocale() {
 	    return locale;
 	}
+
+    @Override
+    public String findText(Enum<?> anEnum, Object[] parameters) {
+        return findText(findCurrentLocale(), anEnum, parameters);
+    }
+
+    @Override
+    public String findText(Enum<?> anEnum) {
+        return findText(findCurrentLocale(), anEnum, null);
+    }
+
+    @Override
+    public String findText(Locale locale, Enum<?> anEnum, Object[] parameters) {
+        return EnumHelper.getInstance().text(locale, anEnum);
+    }
+
+    @Override
+    public String findText(Locale locale, Enum<?> anEnum) {
+        return findText(locale, anEnum, null);
+    }
+    
+    @Override
+    public String findText(Locale locale, Locale aLocale) {
+    	return findText(locale,"locale."+aLocale.toString());
+    }
 }

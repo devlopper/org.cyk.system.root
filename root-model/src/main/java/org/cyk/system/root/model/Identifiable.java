@@ -15,4 +15,5 @@ public interface Identifiable<IDENTIFIER> {
     
     void setIdentifier(IDENTIFIER anIdentifier);
 
+    String getUiString();
 }

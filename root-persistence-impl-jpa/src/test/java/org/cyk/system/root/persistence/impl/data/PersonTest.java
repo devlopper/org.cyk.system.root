@@ -15,8 +15,8 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 @Getter @Setter @Entity @AllArgsConstructor @NoArgsConstructor
 public class PersonTest extends AbstractIdentifiable implements Serializable {
 
-	/**
-	 * 
+	/** 
+	 *  
 	 */  
 	
 	private static final long serialVersionUID = -7061794989292809428L;

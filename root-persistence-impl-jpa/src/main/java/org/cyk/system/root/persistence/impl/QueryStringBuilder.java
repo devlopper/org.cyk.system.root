@@ -10,6 +10,7 @@ import org.cyk.utility.common.computation.LogicalOperator;
 
 public class QueryStringBuilder implements Serializable {
 
+	private static final long serialVersionUID = 1814682900660172098L;
 	/* JPQL */
 	public static final String KW_JPQL_SELECT = "SELECT";
 	public static final String KW_JPQL_FROM = "FROM";
@@ -19,10 +20,10 @@ public class QueryStringBuilder implements Serializable {
 	public static final String KW_JPQL_AND = "AND";
 	public static final String KW_JPQL_OR = "OR";
 	 
-	/* Named Queries */ 
+	/* Named Queries */  
 	public static final String KW_NQ_READ = "read";
 	public static final String KW_NQ_COUNT = "count";
-	
+	 
 	public static final String VAR = "r";
 	private static final String SELECT_FORMAT = "SELECT %1$s FROM %2$s %1$s";
 	private static final String FUNCTION_FORMAT = "SELECT %1$s(%2$s.%3$s) FROM %4$s %2$s";

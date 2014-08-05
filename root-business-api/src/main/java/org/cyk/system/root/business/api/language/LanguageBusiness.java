@@ -15,6 +15,16 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	
 	String findText(Locale locale,String code);
 	
+	String findText(Enum<?> anEnum,Object[] parameters);
+    
+    String findText(Enum<?> anEnum);
+    
+    String findText(Locale locale,Enum<?> anEnum,Object[] parameters);
+    
+    String findText(Locale locale,Enum<?> anEnum);
+	
+    String findText(Locale locale,Locale aLocale);
+	
 	void setLocale(Locale locale);
 	
 	Locale findCurrentLocale();

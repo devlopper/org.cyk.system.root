@@ -23,7 +23,9 @@ public abstract class AbstractIdentifiable implements Identifiable<Long>, Serial
 	@Getter @Setter
 	@Id @GeneratedValue
 	protected Long identifier;
-	 
+	
+	//TODO any object can have its description or more extended by a collection of additional (external) informations 
+	
 	@Transient
 	private String __id__;
 	
@@ -52,6 +54,11 @@ public abstract class AbstractIdentifiable implements Identifiable<Long>, Serial
 	@Override
 	public String toString() {
 		return __identifier__();
+	}
+	
+	@Override
+	public String getUiString() {
+		return "?? NO UI STRING SPECIFIED ??";
 	}
  
 }

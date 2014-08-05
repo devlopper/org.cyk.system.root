@@ -13,8 +13,10 @@ import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 @Getter @Setter @Entity @NoArgsConstructor
 public class UnTypedPlace extends AbstractDataTreeNode implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	public UnTypedPlace(AbstractDataTreeNode parent, String code) {
 		super(parent, code);
 	}
-	
+	 
 }

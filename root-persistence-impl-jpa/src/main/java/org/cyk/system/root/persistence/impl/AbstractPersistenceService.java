@@ -232,17 +232,17 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 			ids.add(identifiable.getIdentifier());
 		return ids;
 	}
-	
+	 
 	protected String entityName(){
 		return clazz.getSimpleName();
 	}   
 	
-	protected QueryStringBuilder select(String variableName){
+	protected QueryStringBuilder _select(String variableName){
 		return queryStringBuilder.init().from(clazz).select();
-	}
+	} 
 	
 	protected QueryStringBuilder _select(){
-		return select(QueryStringBuilder.VAR);
+		return _select(QueryStringBuilder.VAR);
 	}
 
 }
