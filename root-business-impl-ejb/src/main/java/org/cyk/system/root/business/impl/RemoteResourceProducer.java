@@ -9,7 +9,11 @@ import org.cyk.system.root.business.api.GenericBusiness;
 @Getter
 public class RemoteResourceProducer implements Serializable {
 
-    //@EJB @Produces @Business
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8479552983912061281L;
+	//@EJB @Produces @Business
     private GenericBusiness genericBusiness;
     
 }

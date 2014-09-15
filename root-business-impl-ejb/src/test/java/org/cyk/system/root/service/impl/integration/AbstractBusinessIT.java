@@ -24,6 +24,10 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 		return builder;
 	}*/
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7531234257367131255L;
 	@Inject protected ExceptionUtils exceptionUtils;
 	@Inject protected DefaultValidator defaultValidator;
 	@Inject private GenericDaoImpl g;

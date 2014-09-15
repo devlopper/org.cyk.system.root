@@ -75,6 +75,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	protected void namedQueriesInitialisation(){
 	    //registerNamedQuery(readByIdentifier, _select().where("identifier"));
+		
 	}
 	
 	@Override
@@ -158,6 +159,8 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	public Long oneLong() {
 		return one(Long.class);
 	}
+	
+
 	
 	@Override
 	public String getQueryString() {

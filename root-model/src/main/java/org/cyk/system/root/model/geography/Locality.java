@@ -14,6 +14,11 @@ import org.cyk.utility.common.annotation.UIField;
 @Getter @Setter @NoArgsConstructor @Entity 
 public class Locality extends AbstractDataTree<LocalityType> implements Serializable  {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6128937819261060725L;
+
 	public Locality(AbstractDataTree<LocalityType> parent, LocalityType type, String code) {
 		super(parent, type, code);
 	}

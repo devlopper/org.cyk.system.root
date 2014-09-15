@@ -22,7 +22,7 @@ public class BusinessEntityInfos implements Serializable {
 	@Getter  private ModelBean modelBeanAnnotation;
     
     @Getter @Setter private String varName,uiLabelId,uiLabel,identifier,uiIconName,uiIconExtension;
-    @Getter @Setter private String uiConsultViewId;
+    @Getter @Setter private String uiConsultViewId,uiListViewId,uiEditViewId;
     
     public BusinessEntityInfos(Class<? extends Identifiable<?>> clazz,LanguageBusiness languageBusiness) {
         super();

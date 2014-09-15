@@ -8,6 +8,10 @@ import org.jboss.shrinkwrap.api.Archive;
 
 public class BusinessManagerIT extends AbstractBusinessIT {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1957148189138455114L;
 	@Inject private BusinessManager businessManager;
  
 	@Deployment

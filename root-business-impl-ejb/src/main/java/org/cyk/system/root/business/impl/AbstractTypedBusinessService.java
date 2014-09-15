@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -11,6 +12,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.utility.common.computation.DataReadConfig;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractBusinessService<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -51,8 +53,21 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    return find(identifier);
 	}
 
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findAll() {
+		applyDataReadConfigToDao(getDataReadConfig());
+		return dao.readAll();
+	}
 
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countAll() {
+		return dao.countAll();
+	}
 
+	protected void applyDataReadConfigToDao(DataReadConfig dataReadConfig){
+		dao.getDataReadConfig().setFirstResultIndex(dataReadConfig.getFirstResultIndex());
+		dao.getDataReadConfig().setMaximumResultCount(dataReadConfig.getMaximumResultCount());
+	}
 
 
 }

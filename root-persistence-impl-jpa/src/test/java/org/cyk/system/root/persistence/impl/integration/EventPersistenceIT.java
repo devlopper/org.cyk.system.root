@@ -8,6 +8,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
+import org.cyk.utility.common.computation.Function;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
@@ -39,6 +40,7 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	
 	private Event event(Date fromDate,Date toDate){
 	    Event event = new Event();
+	    event.setContactCollection(null);
 	    event.setPeriod(new Period(fromDate, toDate));
 	    return event;
 	}
@@ -75,6 +77,12 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	    /*for(Event event : eventDao.select().all()){
 	        debug(event.getSchedule().getPeriod());
 	    }*/
+		Assert.assertEquals(4,eventDao.select().all().size());
+		Assert.assertEquals(4,eventDao.select(Function.COUNT).oneLong().intValue());
+		
+		Assert.assertEquals(4,eventDao.readAll().size());
+		Assert.assertEquals(4,eventDao.countAll().intValue());
+		
 		Assert.assertEquals(2,eventDao.readWhereFromDateGreaterThanByDate(now).size());
 		Assert.assertEquals(2,eventDao.countWhereFromDateGreaterThanByDate(now).intValue());
 		

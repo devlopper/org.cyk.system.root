@@ -8,15 +8,19 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
+import org.cyk.system.root.business.api.file.TagBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
+import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.party.PersonBusiness;
 import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventType;
+import org.cyk.system.root.model.file.Tag;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
+import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.party.MaritalStatus;
 import org.cyk.system.root.model.party.Person;
 import org.cyk.system.root.model.party.Sex;
@@ -26,7 +30,13 @@ import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 @Deployment(initialisationType=InitialisationType.EAGER)
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
  
-    @Inject private LocalityBusiness localityBusiness;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4576531258594638L;
+	@Inject private LocalityBusiness localityBusiness;
+	@Inject private LocalityTypeBusiness localityTypeBusiness;
+	@Inject private TagBusiness tagBusiness;
     @Inject private EventBusiness eventBusiness;
     @Inject private PersonBusiness personBusiness;
     
@@ -39,7 +49,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         //registerValidator(Person.class, personValidator);
         
         registerFieldValidator(commonUtils.getFieldFromClass(Person.class, "name"), new FieldValidatorMethod() {
-            @Override
+            
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected Void __execute__(Object[] parameter) {
                 String name = (String) parameter[0];
                 if(!"cj".equals(name))
@@ -85,14 +98,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         create(new EventType("RDV", "Rendez vous", null));
         create(new EventType("REU", "Reunion", null));
         
-        /*
-        Date date = new Date();
-        create(new Event(null,eventType1,"Voir le docteur","Conseils et suivi",new Period(date, DateUtils.addMinutes(date, 15))));
-        date = DateUtils.addMonths(new Date(), -1);
-        create(new Event(null,eventType2,"Cours maths","Discussion",new Period(date,DateUtils.addHours(date, 1) )));
-        date = DateUtils.addMonths(new Date(), 1);
-        create(new Event(null,eventType1,"Bilan AG","Explications",new Period(date, DateUtils.addHours(date, 2))));
-        */
+        create(new Language("fr","Francais"));
+        create(new Language("en","Anglais"));
+        create(new Language("es","Espagnol"));
     }
     
     private void language(){
@@ -105,6 +113,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)Event.class, (TypedBusiness)eventBusiness);
         beansMap.put((Class)Person.class, (TypedBusiness)personBusiness);
         beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
+        beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
+        beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);
     }
 
 }

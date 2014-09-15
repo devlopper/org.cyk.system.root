@@ -15,7 +15,12 @@ import org.cyk.utility.common.annotation.ModelLayer;
 @ModelLayer @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class RootModelLayer extends AbstractModelLayer implements Serializable {
 
-    private static RootModelLayer INSTANCE;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8195499735930926991L;
+
+	private static RootModelLayer INSTANCE;
     
     private AbstractMethod<String, Object[]> i18nMethod;
     

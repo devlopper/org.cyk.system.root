@@ -16,6 +16,11 @@ import org.junit.Assert;
 
 public class UnTypedPlaceIT extends AbstractPersistenceIT {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6101699089075252954L;
+
 	@Deployment
 	public static Archive<?> createDeployment() {
 		return deployment(new Class<?>[]{NestedSet.class,NestedSetNode.class,UnTypedPlace.class,UnTypedPlaceDao.class,AbstractDataTreeNode.class})
@@ -87,7 +92,12 @@ public class UnTypedPlaceIT extends AbstractPersistenceIT {
 	private void cascadeDelete(final UnTypedPlace tree){
 		long allCount = dao.select(Function.COUNT).oneLong();
 		long deletedCount = dao.countByParent(tree)+1;
-		transaction(new TestMethod() { @Override protected void test() {dao.delete(tree);} }); 
+		transaction(new TestMethod() { /**
+			 * 
+			 */
+			private static final long serialVersionUID = 8863779797690301607L;
+
+		@Override protected void test() {dao.delete(tree);} }); 
 		long remainingCount = dao.select(Function.COUNT).oneLong();
 		Assert.assertEquals("Cascade delete",allCount-deletedCount,remainingCount);
 		System.out.println("All : "+dao.select().all()+" / "+dao.select(Function.COUNT).oneLong());

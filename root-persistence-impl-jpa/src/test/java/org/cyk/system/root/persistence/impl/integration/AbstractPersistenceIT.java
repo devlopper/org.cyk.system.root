@@ -25,7 +25,7 @@ public abstract class AbstractPersistenceIT extends AbstractIntegrationTestJpaBa
 
 	public static ArchiveBuilder deployment(Class<?>[] classes){
 		ArchiveBuilder builder = new ArchiveBuilder();
-		builder.create().addClasses(PersistenceIntegrationTestHelper.BASE_CLASSES)
+		builder.create().addClasses(PersistenceIntegrationTestHelper.classes())
 		.persistence(classes);
 		return builder;
 	}

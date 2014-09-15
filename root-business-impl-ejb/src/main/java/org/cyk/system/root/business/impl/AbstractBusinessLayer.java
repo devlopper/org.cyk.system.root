@@ -15,7 +15,11 @@ import org.cyk.utility.common.cdi.AbstractLayer;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusinessService<?>> implements BusinessLayer, Serializable {
     
-    @Inject protected GenericBusiness genericBusiness;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4484371129296972868L;
+	@Inject protected GenericBusiness genericBusiness;
     @Inject protected BusinessLocator businessLocator;
     protected ValidatorMap validatorMap = ValidatorMap.getInstance();
     

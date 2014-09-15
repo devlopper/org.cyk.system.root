@@ -19,7 +19,11 @@ import org.cyk.utility.common.computation.Function;
 @Singleton
 public class ValidationPolicyImpl extends AbstractBean implements ValidationPolicy, Serializable {
 
-    @Inject protected GenericDao genericDao;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2342883118003657110L;
+	@Inject protected GenericDao genericDao;
     protected LanguageBusiness languageBusiness = LanguageBusinessImpl.getInstance(); 
     
     @Override 

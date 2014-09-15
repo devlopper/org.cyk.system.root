@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 public class PredicateBuilder implements Serializable {
     
-    public PredicateBuilder or(){
+	private static final long serialVersionUID = -5010360136012992645L;
+
+	public PredicateBuilder or(){
         
         return this;
     }

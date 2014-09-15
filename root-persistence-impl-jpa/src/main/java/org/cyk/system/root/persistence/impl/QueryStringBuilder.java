@@ -141,4 +141,8 @@ public class QueryStringBuilder implements Serializable {
 		return __value__.toString();
 	}
 	
+	@Override
+	public String toString() {
+		return getValue();
+	}
 }

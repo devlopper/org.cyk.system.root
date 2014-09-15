@@ -8,7 +8,12 @@ import org.cyk.system.root.persistence.api.pattern.tree.DataTreeTypeDao;
 
 public class DataTreeTypeBusinessImpl extends AbstractDataTreeTypeBusinessImpl<DataTreeType,DataTreeTypeDao> implements DataTreeTypeBusiness {
 
-    @Inject
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1313235130025226125L;
+
+	@Inject
     public DataTreeTypeBusinessImpl(DataTreeTypeDao dao) {
         super(dao);
     } 

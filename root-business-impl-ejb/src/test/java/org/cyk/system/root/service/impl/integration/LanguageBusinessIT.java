@@ -1,6 +1,5 @@
 package org.cyk.system.root.service.impl.integration;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -19,6 +18,10 @@ import org.junit.Test;
 
 public class LanguageBusinessIT extends AbstractBusinessIT {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -348335622740544991L;
 	@Inject private LanguageBusiness languageBusiness;
  
 	@Deployment

@@ -18,7 +18,12 @@ import org.cyk.utility.common.cdi.AbstractBean;
 @Getter @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-2)
 public class ValidatorMap extends AbstractBean implements Serializable {
     
-    private static ValidatorMap INSTANCE;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7455512591778471384L;
+
+	private static ValidatorMap INSTANCE;
     
     private final Map<Class<Object>, AbstractValidator<Object>> classMap = new HashMap<>();   
     private final Map<Field, FieldValidatorMethod> fieldMap = new HashMap<>();   

@@ -18,7 +18,7 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
     
     /* Delete */    IDENTIFIABLE delete(IDENTIFIABLE object);
     
-    /* Delete */    Boolean exist(IDENTIFIABLE anIdentifiable);
+    /* exists */    Boolean exist(IDENTIFIABLE anIdentifiable);
     
     
 	/* select */		PersistenceService<IDENTIFIABLE,IDENTIFIER> select(Function function);
@@ -44,6 +44,6 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	/* query */			String getQueryString();
 	
 	                    DataReadConfig getDataReadConfig();
-	
-	
+	                    
+	                    
 }

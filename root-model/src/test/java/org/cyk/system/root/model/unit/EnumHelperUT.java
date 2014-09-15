@@ -9,6 +9,11 @@ import org.cyk.utility.common.test.AbstractUnitTest;
 public class EnumHelperUT extends AbstractUnitTest {
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1066827346943955468L;
+
 	@Override
 	protected void _execute_() {
 		super._execute_();

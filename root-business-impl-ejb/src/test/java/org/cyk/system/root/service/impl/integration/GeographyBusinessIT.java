@@ -11,6 +11,10 @@ import org.junit.Assert;
 
 public class GeographyBusinessIT extends AbstractBusinessIT {
 	   
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8691254326402622637L;
 	@Inject private LocalityBusiness localityBusiness;  
 	//@Inject private LocalityTypeBusiness localityTypeBusiness;
 	

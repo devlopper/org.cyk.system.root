@@ -12,7 +12,7 @@ import org.cyk.system.root.model.pattern.tree.DataTreeType;
 
 @Getter @Setter @Entity @NoArgsConstructor
 public class PlaceType extends DataTreeType implements Serializable {
-	
+	 
 	/**
 	 * 
 	 */

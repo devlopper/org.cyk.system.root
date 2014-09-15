@@ -16,7 +16,7 @@ import org.cyk.system.root.persistence.api.PersistenceService;
 @Stateless 
 //@Remote 
 //@Business
-public class GenericBusinessServiceImpl extends AbstractBusinessService<AbstractIdentifiable> implements GenericBusiness,Serializable {
+public class GenericBusinessImpl extends AbstractBusinessService<AbstractIdentifiable> implements GenericBusiness,Serializable {
 	
 	private static final long serialVersionUID = -1042342183332719272L;
  

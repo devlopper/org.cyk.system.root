@@ -11,7 +11,12 @@ import org.cyk.system.root.business.api.RemoteConnectivityChecker;
 @Stateless(mappedName="RemoteConnectivityChecker") @Remote
 public class RemoteConnectivityCheckerImpl implements RemoteConnectivityChecker ,Serializable {
 
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4219622996262337807L;
+
+	@Override
     public void echo(String message) {
         System.out.println("Echo : "+message);
     }

@@ -7,7 +7,12 @@ import org.cyk.system.root.persistence.api.AbstractEnumerationDao;
 public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends AbstractEnumeration,DAO extends AbstractEnumerationDao<ENUMERATION>> 
     extends AbstractTypedBusinessService<ENUMERATION, DAO> implements AbstractEnumerationBusiness<ENUMERATION> {
 
-    public AbstractEnumerationBusinessImpl(DAO dao) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2383681421917333298L;
+
+	public AbstractEnumerationBusinessImpl(DAO dao) {
         super(dao);
     }
     

@@ -17,12 +17,10 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.utility.common.annotation.ModelBean;
-import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.UIField;
 import org.cyk.utility.common.validation.Client;
 
-@Getter @Setter @ModelBean(crudStrategy=CrudStrategy.ENUMERATION)
+@Getter @Setter //@ModelBean(crudStrategy=CrudStrategy.ENUMERATION)
 @Entity @NoArgsConstructor @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS) 
 public class Party extends AbstractIdentifiable  implements Serializable{
 
@@ -32,7 +30,7 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	//@Pattern(regexp="(\\w)+",groups=Client.class)
 	@Column(nullable=false)
 	protected String name;
-	
+	 
 	/**
 	 * This is an image which visually represent this party
 	 */

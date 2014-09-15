@@ -32,7 +32,8 @@ import freemarker.template.Version;
 @Singleton
 public class FreeMarkerTemplateEngineImpl extends AbstractBean implements TemplateEngineBusiness {
 
-    @Inject private FileBusiness fileBusiness;
+	private static final long serialVersionUID = 3246660523691208345L;
+	@Inject private FileBusiness fileBusiness;
 	private Configuration configuration;
 
 	@Override
@@ -63,7 +64,9 @@ public class FreeMarkerTemplateEngineImpl extends AbstractBean implements Templa
 	
 	private class FileTemplateLoader implements TemplateLoader ,Serializable {
 
-	    @Override
+		private static final long serialVersionUID = 1589849417249108L;
+
+		@Override
         public Object findTemplateSource(String identifier) throws IOException {
             return StringUtils.substring(identifier, 0, StringUtils.lastIndexOf(identifier, "_"));
         }

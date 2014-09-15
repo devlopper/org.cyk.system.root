@@ -10,7 +10,11 @@ import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class DefaultValidator extends AbstractValidator<Object> implements Serializable {
 
-    private static DefaultValidator INSTANCE;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2481347537667487474L;
+	private static DefaultValidator INSTANCE;
     
     @Override
     protected void initialisation() {

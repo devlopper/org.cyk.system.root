@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -13,6 +14,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.business.api.file.MediaBusiness;
+import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.persistence.api.file.FileDao;
@@ -21,6 +24,8 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 
 	private static final long serialVersionUID = -3799482462496328200L;
 
+	@Inject private MediaBusiness mediaBusiness;
+	
 	@Inject
 	public FileBusinessImpl(FileDao dao) {
 		super(dao); 
@@ -71,5 +76,15 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
             return new ByteArrayInputStream(file.getBytes());
         return null;
     }
+
+	@Override
+	public URI findThumbnailUri(File file,ThumnailSize size) {
+		return mediaBusiness.findThumbnailUri(file.getUri(), size);
+	}
+
+	@Override
+	public URI findEmbeddedUri(File file) {
+		return mediaBusiness.findEmbeddedUri(file.getUri());
+	}
 	
 }

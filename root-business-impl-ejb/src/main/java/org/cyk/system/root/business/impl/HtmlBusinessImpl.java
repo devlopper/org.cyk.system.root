@@ -9,7 +9,11 @@ import org.cyk.utility.common.cdi.AbstractBean;
 
 public class HtmlBusinessImpl extends AbstractBean implements HtmlBusiness,Serializable {
 
-    private static final String ATTRIBUTE_FORMAT = "%s=\"%s\"";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7387144022390774064L;
+	private static final String ATTRIBUTE_FORMAT = "%s=\"%s\"";
     private static final String FORMAT = "<%1$s %3$s>%2$s</%1$s>";
     
     @Override

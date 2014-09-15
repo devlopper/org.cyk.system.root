@@ -17,7 +17,8 @@ import org.cyk.system.root.model.party.Party;
 
 public class NotificationBusinessImpl implements NotificationBusiness,Serializable {
     
-    @Inject private TemplateEngineBusiness templateEngineBusiness;
+	private static final long serialVersionUID = -7831396456120834486L;
+	@Inject private TemplateEngineBusiness templateEngineBusiness;
     @Inject private MailBusiness mailBusiness;
     @Inject private Event<Notification> uiNotificationBusiness;
 

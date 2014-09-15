@@ -15,7 +15,11 @@ import org.cyk.utility.common.cdi.AbstractBean;
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class ExceptionUtils extends AbstractBean implements Serializable {
 
-    private static ExceptionUtils INSTANCE;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5111826049865487656L;
+	private static ExceptionUtils INSTANCE;
     
     public static ExceptionUtils getInstance() {
         //if(INSTANCE==null)

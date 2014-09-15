@@ -17,6 +17,11 @@ import org.junit.Assert;
 
 public class NestedSetIT extends AbstractPersistenceIT {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5561034357231097748L;
+
 	@Deployment
 	public static Archive<?> createDeployment() {
 		return deployment(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractDataTreeNode.class}).getArchive();
@@ -94,7 +99,12 @@ public class NestedSetIT extends AbstractPersistenceIT {
 	private void deleteCascade(final NestedSetNode node){
 		long allCount = nestedSetNodeDao.countBySet(node.getSet());
 		long deletedCount = nestedSetNodeDao.countByParent(node)+1;
-		transaction(new TestMethod() { @Override protected void test() {nestedSetNodeDao.delete(node);} }); 
+		transaction(new TestMethod() { /**
+			 * 
+			 */
+			private static final long serialVersionUID = 9044556157930560303L;
+
+		@Override protected void test() {nestedSetNodeDao.delete(node);} }); 
 		long remainingCount = nestedSetNodeDao.countBySet(node.getSet());
 		Assert.assertEquals("Cascade delete",allCount-deletedCount,remainingCount);
 		
