@@ -9,12 +9,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import org.cyk.utility.common.annotation.UIField;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputCalendar;
 
 /**
  * A period is a time interval from a start date to an end date
@@ -32,13 +33,15 @@ public class Period implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull
 	@Column(nullable=false)
-	@UIField
+	@Input
+	@InputCalendar
 	protected Date fromDate;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull
 	@Column(nullable=false)
-	@UIField
+	@Input
+	@InputCalendar
 	protected Date toDate;
 
 }

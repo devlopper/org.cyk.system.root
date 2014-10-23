@@ -3,13 +3,30 @@ package org.cyk.system.root.persistence.impl.party;
 import java.io.Serializable;
 
 import org.cyk.system.root.model.party.Person;
+import org.cyk.system.root.model.party.PersonSearchCriteria;
 import org.cyk.system.root.persistence.api.party.PersonDao;
 
-public class PersonDaoImpl extends AbstractPartyDaoImpl<Person> implements PersonDao,Serializable {
+public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,PersonSearchCriteria> implements PersonDao,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
+	private static final String READ_BY_CRITERIA_FORMAT = "SELECT person FROM Person person WHERE "
+    		+ "    ( LOCATE(LOWER(:name),LOWER(person.name))                > 0 )"
+    		+ " OR ( LOCATE(LOWER(:name),LOWER(person.lastName))            > 0 )"
+    		;
+	
+	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_FORMAT+" "+ORDER_BY_FORMAT;
 
+	@Override
+    protected void namedQueriesInitialisation() {
+        
+    	super.namedQueriesInitialisation();
+    	registerNamedQuery(readByCriteria,READ_BY_CRITERIA_FORMAT);
+        
+        registerNamedQuery(readByCriteriaNameAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "person.name ASC") );
+        registerNamedQuery(readByCriteriaNameDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "person.name DESC") );
+        
+    }
 
 }
  

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.user.interfaces.FieldOverride;
 
-@Getter @Setter @NoArgsConstructor @Entity 
+@Getter @Setter @NoArgsConstructor @Entity @FieldOverride(name="type",type=LocalityType.class)
 public class Locality extends AbstractDataTree<LocalityType> implements Serializable  {
 
 	/**
@@ -22,10 +22,4 @@ public class Locality extends AbstractDataTree<LocalityType> implements Serializ
 	public Locality(AbstractDataTree<LocalityType> parent, LocalityType type, String code) {
 		super(parent, type, code);
 	}
-
-	@Override @UIField
-	public LocalityType getType() {
-	    return super.getType();
-	}
-	
 }

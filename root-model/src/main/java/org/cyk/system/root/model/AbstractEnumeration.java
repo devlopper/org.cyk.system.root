@@ -13,7 +13,9 @@ import lombok.Setter;
 
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
-import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
+import org.cyk.utility.common.annotation.user.interfaces.InputTextarea;
 import org.cyk.utility.common.validation.Client;
 
 /*lombok*/
@@ -24,24 +26,28 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 
 	private static final long serialVersionUID = -8639942019354737162L;
 	
-	@UIField
+	@Input
+	@InputText
 	@Column(nullable=false,unique=true)
 	@NotNull(groups=Client.class)
 	protected String code;
 	
-	@UIField
+	@Input
+	@InputText
 	@Column(nullable=false)
 	@NotNull(groups=Client.class)
 	protected String name;
 	
 	private String nameI18nId;
 	
-	@UIField
+	@Input
+	@InputText
 	protected String abbreviation;
 	
 	private String abbreviationI18nId;
 	
-	@UIField(textArea=true,tableColumnIgnore=true)
+	@Input
+	@InputTextarea
 	@Column(length=10 * 1024)
 	protected String description;
 	
@@ -74,7 +80,10 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 		return name;
 	}
 
-    
+    @Override
+    public String getUiString() {
+    	return name;
+    }
 
 	
 }

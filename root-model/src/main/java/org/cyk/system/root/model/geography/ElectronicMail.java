@@ -10,7 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 @Getter @Setter @Entity
 @AllArgsConstructor
@@ -18,7 +19,7 @@ public class ElectronicMail extends Contact implements Serializable {
 
 	private static final long serialVersionUID = 923076998880521464L;
 
-	@UIField @NotNull @Column(nullable=false)
+	@Input @InputText @NotNull @Column(nullable=false)
 	private String address;
 	
 	public ElectronicMail() {}

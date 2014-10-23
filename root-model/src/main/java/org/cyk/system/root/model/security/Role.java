@@ -15,4 +15,9 @@ public class Role extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = 5908328682512231058L;
 
+	public Role(String code, String name) {
+		super(code, name, null, null);
+	}
+
+	
 }

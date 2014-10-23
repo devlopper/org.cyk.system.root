@@ -6,6 +6,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputChoice;
+import org.cyk.utility.common.annotation.user.interfaces.InputOneChoice;
+import org.cyk.utility.common.annotation.user.interfaces.InputOneCombo;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +21,12 @@ public class AbstractDataTree<TYPE extends DataTreeType> extends AbstractDataTre
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	
-	@ManyToOne @NotNull protected TYPE type;
+	@Input
+	@InputChoice
+	@InputOneChoice
+	@InputOneCombo
+	@ManyToOne @NotNull
+	protected TYPE type;
 	
 	//@Transient protected Class<TYPE> __typeClass__;
 	

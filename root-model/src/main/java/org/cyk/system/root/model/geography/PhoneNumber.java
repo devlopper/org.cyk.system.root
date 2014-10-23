@@ -12,20 +12,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.Text;
 
 @Getter @Setter @Entity @NoArgsConstructor
 public class PhoneNumber extends Contact implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne @UIField @NotNull @JoinColumn(nullable=false)
+	@ManyToOne @Input @NotNull @JoinColumn(nullable=false)
 	private PhoneNumberType type;
 	
-	@ManyToOne @UIField @NotNull @JoinColumn(nullable=false)
+	@ManyToOne @Input @NotNull @JoinColumn(nullable=false)
 	private Locality country;
 	
-	@UIField(label="phone.number-short") @NotNull @Column(nullable=false)
+	@Input(label=@Text(value="phone.number-short")) @NotNull @Column(nullable=false)
 	private String number;
 	
 	@Override

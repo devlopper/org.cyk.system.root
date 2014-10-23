@@ -24,6 +24,9 @@ import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.party.MaritalStatus;
 import org.cyk.system.root.model.party.Person;
 import org.cyk.system.root.model.party.Sex;
+import org.cyk.system.root.model.security.Credentials;
+import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
@@ -39,6 +42,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject private TagBusiness tagBusiness;
     @Inject private EventBusiness eventBusiness;
     @Inject private PersonBusiness personBusiness;
+    
+    private Person personAdmin,personGuest;
     
     /* Validators */
    // @Inject private PersonValidator personValidator;
@@ -67,6 +72,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     public void createInitialData() {
         geography();
         language();
+        party();
+        security();
     }
     
     private void geography(){
@@ -89,11 +96,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         create(new PhoneNumberType("FIXE", "Fixe"));
         create(new PhoneNumberType("MOBILE", "Mobile"));
         
-        create(new Sex("M", "Masculin"));
-        create(new Sex("F", "Feminin"));
         
-        create(new MaritalStatus("B", "Celibataire"));
-        create(new MaritalStatus("M", "Marie"));
         
         create(new EventType("RDV", "Rendez vous", null));
         create(new EventType("REU", "Reunion", null));
@@ -105,6 +108,23 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private void language(){
          
+    }
+    
+    private void party(){
+    	create(new Sex("M", "Masculin"));
+        create(new Sex("F", "Feminin"));
+        
+        create(new MaritalStatus("B", "Celibataire"));
+        create(new MaritalStatus("M", "Marie"));
+        
+        personAdmin = create(new Person("CYK","System"));
+        personGuest = create(new Person("Any","One"));
+    }
+    
+    private void security(){
+        Role adminRole =create( new Role("ADMIN","Administrator")),guestRole = create(new Role("GUEST","Guest")); 
+        create(new UserAccount(personAdmin,new Credentials("admin","123"),adminRole));
+        create(new UserAccount(personGuest,new Credentials("guest","123"),guestRole));
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -12,7 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 @Getter @Setter @Entity
 @AllArgsConstructor @NoArgsConstructor
@@ -20,7 +21,9 @@ public class Website extends Contact implements Serializable {
 
 	private static final long serialVersionUID = 923076998880521464L;
 
-	@UIField @NotNull
+	@Input
+	@InputText
+	@NotNull
 	private URL url;
 	
 	public Website(String url) throws MalformedURLException {

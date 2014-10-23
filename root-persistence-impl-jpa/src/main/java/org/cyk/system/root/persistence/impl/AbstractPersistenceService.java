@@ -39,7 +39,9 @@ import org.cyk.utility.common.computation.LogicalOperator;
 public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements Serializable,PersistenceService<IDENTIFIABLE, Long> {
 
 	private static final long serialVersionUID = -8198334103295401293L;
-	   
+	
+	protected static final String ORDER_BY_FORMAT = "ORDER BY %s";
+	
 	private QueryWrapper<?> __queryWrapper__;
 	@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
 	

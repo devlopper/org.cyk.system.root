@@ -16,7 +16,8 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
-import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.INTERNAL)
 public class Language extends AbstractEnumeration implements Serializable {
@@ -26,7 +27,8 @@ public class Language extends AbstractEnumeration implements Serializable {
 	/**
 	 * iso code (fr,en,...)
 	 */
-	@UIField
+	@Input
+	@InputText
 	private String isoCode;
 	
 	public Language(String code, String libelle) {

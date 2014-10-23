@@ -10,7 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.utility.common.annotation.UIField;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.Text;
 
 @Getter @Setter @Entity
 @AllArgsConstructor @NoArgsConstructor
@@ -21,7 +22,7 @@ public class PostalBox extends Contact implements Serializable {
 	 */
 	private static final long serialVersionUID = 923076998880521464L;
 	
-	@UIField(label="postal.box") @NotNull
+	@Input(label=@Text(value="postal.box")) @NotNull
 	private String value;
 
 
