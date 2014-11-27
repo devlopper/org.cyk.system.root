@@ -31,7 +31,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	@Override
 	public UserAccount connect(Credentials credentials) {
 		UserAccount account = findByCredentials(credentials);
-		exceptionUtils().exception(account==null, "connect.unknow.account");
+		exceptionUtils().exception(account==null, "exception.useraccount.unknown");
 		return account;
 	}
 

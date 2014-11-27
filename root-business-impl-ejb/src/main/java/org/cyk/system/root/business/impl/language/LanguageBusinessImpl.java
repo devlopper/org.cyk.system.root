@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.language;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Locale;
@@ -13,6 +14,7 @@ import javax.inject.Singleton;
 
 import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.EnumHelper;
@@ -20,6 +22,10 @@ import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.Text;
+import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
@@ -44,6 +50,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		registerResourceBundle("org.cyk.system.root.model.language.i18n",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.model.language.word",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.model.language.entity",getClass().getClassLoader());
+		registerResourceBundle("org.cyk.system.root.model.language.field",getClass().getClassLoader());
 		
 		registerResourceBundle("org.cyk.system.root.business.impl.language.ui",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.business.impl.language.exception",getClass().getClassLoader());
@@ -124,4 +131,43 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
     public String findText(Locale locale, Locale aLocale) {
     	return findText(locale,"locale."+aLocale.toString());
     }
+    
+    /**/
+    
+    @Override
+	public String findAnnotationText(Field field,Text text) {
+		ValueType type ;
+		String specifiedValue = null;
+		if(text==null)
+			type = ValueType.VALUE; 
+		else{
+			specifiedValue = text.value();
+			type = ValueType.AUTO.equals(text.type())?ValueType.ID:text.type();
+		}
+		if(ValueType.VALUE.equals(type) && StringUtils.isNotBlank(specifiedValue))
+			return specifiedValue;
+		String labelId = null;
+		if(ValueType.ID.equals(type))
+			if(StringUtils.isNotBlank(specifiedValue))
+				labelId = specifiedValue;
+			else{
+				StringBuilder s =new StringBuilder("field.");
+				for(int i=0;i<field.getName().length();i++){
+					if(Character.isUpperCase(field.getName().charAt(i)))
+						s.append('.');
+					s.append(Character.toLowerCase(field.getName().charAt(i)));
+				}
+				labelId = s.toString();
+			}
+		return findText(labelId);
+	}
+	
+    @Override
+	public String findFieldLabelText(Field field) {
+		if(field.getAnnotation(Input.class)!=null)
+			return findAnnotationText(field,field.getAnnotation(Input.class).label());
+		if(field.getAnnotation(IncludeInputs.class)!=null)
+			return findAnnotationText(field,field.getAnnotation(IncludeInputs.class).label());
+		return null;
+	}
 }

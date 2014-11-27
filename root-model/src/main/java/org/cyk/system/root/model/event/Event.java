@@ -14,8 +14,7 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.utility.common.annotation.UIField;
-import org.cyk.utility.common.annotation.UIField.OneRelationshipInputType;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.annotation.user.interfaces.InputTextarea;
@@ -55,15 +54,13 @@ public class Event extends AbstractIdentifiable implements Serializable  {
      * The period
      */
 	@Input
-    @UIField(oneRelationshipInputType=OneRelationshipInputType.FIELDS)
+    @IncludeInputs
     @Embedded protected Period period = new Period();
     
     /**
      * Contacts
      */
-	@Input
-    @UIField(oneRelationshipInputType=OneRelationshipInputType.FIELDS)
-    @OneToOne protected ContactCollection contactCollection = new ContactCollection();
+	@OneToOne protected ContactCollection contactCollection = new ContactCollection();
     
     private String colorHexadecimal;
     

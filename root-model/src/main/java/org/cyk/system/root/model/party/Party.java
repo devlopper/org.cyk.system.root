@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.party;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -44,6 +47,14 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	//TODO input to be handled
 	//@Input
 	@OneToOne protected ContactCollection contactCollection = new ContactCollection();
+	
+	/**
+	 * The date it has entered in the system
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable=false)
+	@NotNull(groups={org.cyk.utility.common.validation.System.class})
+	protected Date creationDate;
 	
 	public Party(String name) {
 		super();

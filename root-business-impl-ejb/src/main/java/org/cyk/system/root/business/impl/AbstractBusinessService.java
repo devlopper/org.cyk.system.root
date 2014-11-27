@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -94,6 +95,10 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	//load only when needed to avoid null pointer
 	protected ExceptionUtils exceptionUtils(){
 	    return ExceptionUtils.getInstance();
+	}
+	
+	protected Date universalTimeCoordinated(){
+		return commonUtils.getUniversalTimeCoordinated();
 	}
 	
 }

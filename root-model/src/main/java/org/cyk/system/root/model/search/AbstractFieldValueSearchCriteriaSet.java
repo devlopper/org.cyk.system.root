@@ -16,5 +16,9 @@ public abstract class AbstractFieldValueSearchCriteriaSet implements Serializabl
 
 	protected Collection<AbstractFieldValueSearchCriteria<?>> criterias = new ArrayList<>();
 	
+	protected void setStringSearchCriteria(StringSearchCriteria stringSearchCriteria,String value){
+		stringSearchCriteria.setValue(value);
+		criterias.add(stringSearchCriteria);
+	}
 	
 }

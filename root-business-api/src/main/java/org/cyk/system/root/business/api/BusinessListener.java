@@ -11,6 +11,8 @@ public interface BusinessListener {
 	
 	<T extends AbstractIdentifiable> Long count(Class<T> dataClass,Map<String, Object> filters);
 	
+	<T extends AbstractIdentifiable> Collection<T> find(Class<T> dataClass,Integer first, Integer pageSize,String sortField, Boolean ascendingOrder,String filter);
+	
 	<T extends AbstractIdentifiable> Long count(Class<T> dataClass,String filter);
 	
 }

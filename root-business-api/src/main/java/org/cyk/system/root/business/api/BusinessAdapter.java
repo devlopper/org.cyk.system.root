@@ -30,4 +30,11 @@ public class BusinessAdapter implements BusinessListener,Serializable {
 		return null;
 	}
 
+	@Override
+	public <T extends AbstractIdentifiable> Collection<T> find(
+			Class<T> dataClass, Integer first, Integer pageSize,
+			String sortField, Boolean ascendingOrder, String filter) {
+		return null;
+	}
+
 }

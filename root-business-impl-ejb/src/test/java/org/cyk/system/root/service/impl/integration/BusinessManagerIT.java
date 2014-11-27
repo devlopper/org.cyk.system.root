@@ -1,8 +1,5 @@
 package org.cyk.system.root.service.impl.integration;
 
-import javax.inject.Inject;
-
-import org.cyk.system.root.business.api.BusinessManager;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -12,7 +9,7 @@ public class BusinessManagerIT extends AbstractBusinessIT {
 	 * 
 	 */
 	private static final long serialVersionUID = 1957148189138455114L;
-	@Inject private BusinessManager businessManager;
+	//@Inject private BusinessManager businessManager;
  
 	@Deployment
 	public static Archive<?> createDeployment() {
@@ -44,7 +41,7 @@ public class BusinessManagerIT extends AbstractBusinessIT {
         //System.out.println(businessManager.findEntitiesInfos());
         //System.out.println(businessManager.findEntitiesInfos(CrudStrategy.ENUMERATION));
         //Assert.assertEquals(2, businessManager.findEntitiesInfos().size());
-        businessManager.createData();
+        //businessManager.createData();
        
     }
 

@@ -7,6 +7,7 @@ import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
 
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
 
@@ -46,6 +47,15 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	public Long countAll() {
 		return namedQuery(countAll,Long.class).resultOne();
+	}
+	
+	/**/
+	
+	protected String criteriaSearchQueryId(AbstractFieldValueSearchCriteria<?> searchCriteria,String ascendingOrderQueryId,String descendingOrderQueryId){
+		if(searchCriteria.getAscendingOrdered()!=null)
+			return Boolean.TRUE.equals(searchCriteria.getAscendingOrdered())?ascendingOrderQueryId:descendingOrderQueryId;
+		else
+			return ascendingOrderQueryId;
 	}
 	
 }

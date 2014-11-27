@@ -28,6 +28,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	
 	@Override
     public PARTY create(PARTY party) {
+		party.setCreationDate(universalTimeCoordinated());
 	    contactCollectionBusiness.create(party.getContactCollection());
         super.create(party);
         return party;

@@ -1,9 +1,11 @@
 package org.cyk.system.root.business.api.language;
 
+import java.lang.reflect.Field;
 import java.util.Locale;
 
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.language.Language;
+import org.cyk.utility.common.annotation.user.interfaces.Text;
 
 public interface LanguageBusiness extends TypedBusiness<Language> {
 
@@ -25,6 +27,10 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	
     String findText(Locale locale,Locale aLocale);
 	
+    String findAnnotationText(Field field,Text text);
+    
+    String findFieldLabelText(Field field);
+    
 	void setLocale(Locale locale);
 	
 	Locale findCurrentLocale();

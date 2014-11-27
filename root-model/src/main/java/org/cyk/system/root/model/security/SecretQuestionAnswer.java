@@ -17,6 +17,7 @@ import org.cyk.utility.common.validation.Client;
 @Getter @Setter @NoArgsConstructor
 public class SecretQuestionAnswer extends AbstractIdentifiable implements Serializable {
 
+	
 	private static final long serialVersionUID = -1426919647717880937L;
 	
 	@ManyToOne 

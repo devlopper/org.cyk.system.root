@@ -23,7 +23,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 		builder.create().addClasses(BusinessIntegrationTestHelper.BASE_CLASSES).business(classes);
 		return builder;
 	}*/
-	
+	 
 	/**
 	 * 
 	 */

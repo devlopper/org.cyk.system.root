@@ -20,8 +20,7 @@ public class PersonSearchCriteria extends PartySearchCriteria implements Seriali
 	
 	public PersonSearchCriteria(String name) {
 		super(name);
-		lastNameSearchCriteria.setValue(name);
-		criterias.add(lastNameSearchCriteria);
+		setStringSearchCriteria(lastNameSearchCriteria, name);
 		
 	}
 	

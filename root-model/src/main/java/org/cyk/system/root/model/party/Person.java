@@ -50,20 +50,29 @@ public class Person  extends Party  implements Serializable{
 	@Valid
     @OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;// = new Location();
 	
+	@Input
 	@InputChoice
 	@InputOneChoice
 	@InputOneCombo
 	@ManyToOne private Sex sex;
 	
+	@Input
 	@InputChoice
 	@InputOneChoice
 	@InputOneCombo
 	@ManyToOne private MaritalStatus maritalStatus;
 	
+	@Input
 	@InputChoice
 	@InputOneChoice
 	@InputOneCombo
 	@ManyToOne private Locality nationality;
+	
+	@Input
+	@InputChoice
+	@InputOneChoice
+	@InputOneCombo
+	@OneToOne(cascade=CascadeType.ALL) private PersonCredentials credentials;
 	
 	//TODO info to add : Job (Profession,Function)
 	

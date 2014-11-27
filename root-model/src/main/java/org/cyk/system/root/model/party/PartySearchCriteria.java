@@ -20,9 +20,7 @@ public class PartySearchCriteria extends AbstractFieldValueSearchCriteriaSet imp
 	}
 	
 	public PartySearchCriteria(String name) {
-		nameSearchCriteria.setValue(name);
-		
-		criterias.add(nameSearchCriteria);
+		setStringSearchCriteria(nameSearchCriteria, name);
 		
 	}
 	

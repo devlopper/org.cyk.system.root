@@ -22,4 +22,5 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 		super();
 		this.value = value;
 	}
+	
 }

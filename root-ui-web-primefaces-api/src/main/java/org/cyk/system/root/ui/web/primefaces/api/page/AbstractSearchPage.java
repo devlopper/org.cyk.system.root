@@ -15,8 +15,8 @@ import org.cyk.ui.api.command.CommandAdapter;
 import org.cyk.ui.api.command.UICommand;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.UICommandable.IconType;
-import org.cyk.ui.web.primefaces.AbstractPrimefacesPage;
 import org.cyk.ui.web.primefaces.Commandable;
+import org.cyk.ui.web.primefaces.page.AbstractPrimefacesPage;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 

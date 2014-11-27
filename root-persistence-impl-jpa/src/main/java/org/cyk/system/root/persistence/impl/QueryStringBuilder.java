@@ -128,7 +128,9 @@ public class QueryStringBuilder implements Serializable {
 	}
 	
 	public QueryStringBuilder orderBy(String...fieldNames) {
-		__value__.append(KW_JPQL_ORDER_BY+" "+StringUtils.join(fieldNames," "));
+		__value__.append(" "+KW_JPQL_ORDER_BY);
+		for(int i=0;i<fieldNames.length;i++)
+			__value__.append((i>0?",":" ")+fieldNames[i]+" ASC");
 		return this;
 	}
 	

@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /*mapping - jpa*/
 @MappedSuperclass
-public abstract class AbstractIdentifiable implements Identifiable<Long>, Serializable{
+public abstract class AbstractIdentifiable extends AbstractModelElement implements Identifiable<Long>, Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
