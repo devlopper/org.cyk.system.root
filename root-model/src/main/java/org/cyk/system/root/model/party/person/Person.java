@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.party;
+package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +18,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.party.Party;
 import org.cyk.utility.common.annotation.UIFieldOrder;
 import org.cyk.utility.common.annotation.UIFieldOrders;
 import org.cyk.utility.common.annotation.user.interfaces.Input;

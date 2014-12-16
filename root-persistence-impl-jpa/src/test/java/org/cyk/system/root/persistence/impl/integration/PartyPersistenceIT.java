@@ -2,8 +2,8 @@ package org.cyk.system.root.persistence.impl.integration;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.model.party.Person;
-import org.cyk.system.root.model.party.PersonSearchCriteria;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.persistence.api.party.PersonDao;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;

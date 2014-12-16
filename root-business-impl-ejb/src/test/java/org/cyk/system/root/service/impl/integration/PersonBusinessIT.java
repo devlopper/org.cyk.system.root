@@ -9,7 +9,7 @@ import org.cyk.system.root.business.impl.party.PersonValidator;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.Location;
-import org.cyk.system.root.model.party.Person;
+import org.cyk.system.root.model.party.person.Person;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 

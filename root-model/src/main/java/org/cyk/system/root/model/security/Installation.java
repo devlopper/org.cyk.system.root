@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.party.Application;
-import org.cyk.system.root.model.party.Person;
+import org.cyk.system.root.model.party.person.Person;
 
 @Getter @Setter
 public class Installation extends AbstractModelElement implements Serializable {

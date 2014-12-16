@@ -1,10 +1,11 @@
-package org.cyk.system.root.model.party;
+package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import org.cyk.system.root.model.party.PartySearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 
 @Getter @Setter

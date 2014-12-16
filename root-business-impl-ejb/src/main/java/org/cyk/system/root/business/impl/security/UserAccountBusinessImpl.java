@@ -10,7 +10,9 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.security.Credentials;
+import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
+import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.system.root.persistence.api.security.UserAccountDao;
 
 @Stateless
@@ -18,11 +20,19 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
+	@Inject private RoleDao roleDao;
+	
 	@Inject
 	public UserAccountBusinessImpl(UserAccountDao dao) {
 		super(dao); 
 	}  
 
+	@Override
+	public UserAccount create(UserAccount userAccount) {
+		userAccount.getRoles().add(roleDao.read(Role.BUSINESS_ACTOR));
+		return super.create(userAccount); 
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public UserAccount findByCredentials(Credentials credentials) {
 		return dao.readByCredentials(credentials);

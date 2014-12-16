@@ -25,10 +25,9 @@ import org.cyk.system.root.business.impl.security.DefaultShiroConfigurator;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.PartySearchCriteria;
-import org.cyk.system.root.model.security.Administrator;
 import org.cyk.system.root.model.security.ApplicationAccount;
 import org.cyk.system.root.model.security.Installation;
-import org.cyk.system.root.model.security.Manager;
+import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.PersistenceManager;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
@@ -91,15 +90,16 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		ApplicationAccount administratorAccount = new ApplicationAccount();
 		administratorAccount.setUser(installation.getApplication());
 		administratorAccount.setCredentials(installation.getAdministratorCredentials());
-		administratorAccount.getRoles().add(roleDao.readByClass(Administrator.class));
+		administratorAccount.getRoles().add(roleDao.read(Role.ADMINISTRATOR));
 		userAccountBusiness.create(administratorAccount);
+		administratorAccount.getRoles().remove(roleDao.read(Role.BUSINESS_ACTOR));
 		
 		__writeInfo__("Creating manager account");
 		personBusiness.create(installation.getManager());
 		UserAccount managerAccount = new UserAccount();
 		managerAccount.setUser(installation.getManager());
 		managerAccount.setCredentials(installation.getManagerCredentials());
-		managerAccount.getRoles().add(roleDao.readByClass(Manager.class));
+		managerAccount.getRoles().add(roleDao.read(Role.MANAGER));
 		userAccountBusiness.create(managerAccount);
 		
 	}

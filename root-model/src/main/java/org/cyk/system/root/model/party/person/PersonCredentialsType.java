@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.party;
+package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
 
@@ -11,11 +11,11 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractEnumeration;
 
 @Getter @Setter @NoArgsConstructor @Entity
-public class Sex extends AbstractEnumeration implements Serializable {
+public class PersonCredentialsType extends AbstractEnumeration implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	public Sex(String code, String libelle) {
+	public PersonCredentialsType(String code, String libelle) {
 		super(code, libelle,null, null);
 	}
 	

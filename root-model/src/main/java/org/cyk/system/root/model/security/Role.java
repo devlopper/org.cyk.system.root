@@ -13,18 +13,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
-@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.INTERNAL)
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.INTERNAL) 
 public class Role extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = 5908328682512231058L;
 
 	public static final String ADMINISTRATOR = "ADMINISTRATOR";
 	public static final String MANAGER = "MANAGER";
-	public static final String REGISTERED = "REGISTERED";
+	public static final String BUSINESS_ACTOR = "BUSINESS_ACTOR";
 	
 	@ManyToMany
     @JoinTable(name="RolePermissions",joinColumns = { @JoinColumn(name = "roleid") } ,inverseJoinColumns={ @JoinColumn(name = "permissionid") })
@@ -34,5 +35,13 @@ public class Role extends AbstractEnumeration implements Serializable {
 		super(code, name, null, null);
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		return (object instanceof Role) && ((Role)object).code.equals(code);
+	}
 	
+	@Override
+	public int hashCode() {
+		return StringUtils.isBlank(code)?31:code.hashCode();
+	}
 }

@@ -6,7 +6,7 @@ import javax.validation.constraints.AssertTrue;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
-import org.cyk.system.root.model.party.Person;
+import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.validation.Client;
 
 public class PersonValidator extends AbstractValidator<Person> implements Serializable {

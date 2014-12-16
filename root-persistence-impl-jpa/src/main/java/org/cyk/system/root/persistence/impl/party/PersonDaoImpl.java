@@ -2,8 +2,8 @@ package org.cyk.system.root.persistence.impl.party;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.model.party.Person;
-import org.cyk.system.root.model.party.PersonSearchCriteria;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.persistence.api.party.PersonDao;
 
 public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,PersonSearchCriteria> implements PersonDao,Serializable {

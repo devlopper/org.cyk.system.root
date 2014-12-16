@@ -23,12 +23,10 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.language.Language;
-import org.cyk.system.root.model.party.MaritalStatus;
-import org.cyk.system.root.model.party.Person;
-import org.cyk.system.root.model.party.Sex;
-import org.cyk.system.root.model.security.Administrator;
+import org.cyk.system.root.model.party.person.MaritalStatus;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.License;
-import org.cyk.system.root.model.security.Manager;
 import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.utility.common.annotation.Deployment;
@@ -129,9 +127,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	create(licenceRead = new Permission(permissionBusiness.computeCode(License.class, Crud.READ)));
     	
-    	createRole(new Administrator(), licenceRead);
-    	createRole(new Manager(), licenceRead);
-        create(new Role(Role.REGISTERED, "Registered"));
+    	createRole(new Role(Role.ADMINISTRATOR, "Administrator"), licenceRead);
+    	createRole(new Role(Role.MANAGER, "Manager"), licenceRead);
+        create(new Role(Role.BUSINESS_ACTOR, "Business actor"));
     }
     
     private void createRole(Role role,Permission...permissions){

@@ -18,8 +18,4 @@ public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, Role
 		super(dao); 
 	}  
 
-	@Override
-	public <ROLE extends Role> ROLE findByClass(Class<ROLE> aClass) {
-		return dao.readByClass(aClass);
-	}
 }

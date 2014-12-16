@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.model.party.Person;
+import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;

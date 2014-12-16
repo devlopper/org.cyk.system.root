@@ -5,7 +5,4 @@ import org.cyk.system.root.model.security.Role;
 
 public interface RoleBusiness extends AbstractEnumerationBusiness<Role> {
     
-	<ROLE extends Role> ROLE findByClass(Class<ROLE> aClass);
-
-	
 }

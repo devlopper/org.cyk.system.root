@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.party;
+package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
 import java.util.Date;
