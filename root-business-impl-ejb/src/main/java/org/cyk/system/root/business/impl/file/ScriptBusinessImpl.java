@@ -20,9 +20,9 @@ import org.cyk.system.root.persistence.api.file.ScriptDao;
 
 public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, ScriptDao> implements ScriptBusiness, Serializable {
 
-	@Inject
-	private FileBusiness fileBusiness;
+	@Inject private FileBusiness fileBusiness;
   
+	@Inject
 	public ScriptBusinessImpl(ScriptDao dao) { 
 		super(dao);
 	} 
