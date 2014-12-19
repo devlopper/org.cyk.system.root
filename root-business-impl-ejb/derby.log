@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Mon Jul 14 20:59:14 UTC 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-0147-36ac-1b72-000002341790 
-on database directory H:\Repositories\source code\git\org\cyk\system\root\root-business-impl-ejb\target\databases\derby  with class loader sun.misc.Launcher$AppClassLoader@61f52b85 
+Fri Dec 19 14:03:45 UTC 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-014a-62dc-8013-000014978ad8 
+on database directory H:\Repositories\source code\git\org\cyk\system\root\root-business-impl-ejb\target\databases\derby  with class loader sun.misc.Launcher$AppClassLoader@464cdac8 
 Loaded from file:/H:/Repositories/artifacts/maven/org/glassfish/main/extras/glassfish-embedded-all/4.0/glassfish-embedded-all-4.0.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_15-b03

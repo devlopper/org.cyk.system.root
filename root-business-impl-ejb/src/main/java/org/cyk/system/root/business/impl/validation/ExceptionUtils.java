@@ -55,6 +55,10 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     public void exception(String messageId){
         exception(Boolean.TRUE, messageId);
     }
+    
+    public void exception(Exception exception){
+        exception("exception.internal");
+    }
 
     public void resourceNotFound(){
         exception("exception.resource.notfound");

@@ -33,7 +33,7 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 
 	@Override
 	public Map<String, Object> evaluate(Script script,Map<String, Object> inputs) {
-		Map<String, Object> results = new HashMap<String, Object>();
+		Map<String, Object> variablesValue = new HashMap<String, Object>();
 		ScriptEngineManager manager = new ScriptEngineManager();
 		ScriptEngine engine = manager.getEngineByName(engineName(script));
 
@@ -47,11 +47,12 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		try {
 			engine.eval(IOUtils.toString(fileBusiness.findInputStream(script.getFile())), bindings);
 		} catch (Exception e) {
-			exceptionUtils().exception("script.evaluate");
+			exceptionUtils().exception(e);
 		}
-		for (String result : script.getResults())
-			results.put(result, bindings.get(result));
-		return results;
+		
+		for (String variable : script.getVariables())
+			variablesValue.put(variable, bindings.get(variable));
+		return variablesValue;
 	}
 
 	private String engineName(Script script) {

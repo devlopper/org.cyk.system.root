@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
@@ -24,7 +23,6 @@ public class Script extends AbstractIdentifiable implements Serializable{
 	@OneToOne(cascade=CascadeType.ALL)
 	private File file;
 	
-	@ElementCollection
-	private Set<String> results = new HashSet<String>();
+	private Set<String> variables = new HashSet<String>();
 
 }

@@ -2,8 +2,10 @@ package org.cyk.system.root.model.mathematics;
 
 import java.math.BigDecimal;
 
-public interface Rankable extends Comparable<Rankable>{
+public interface Rankable {
 	
-	public BigDecimal getValue();
+	BigDecimal getValue();
+	
+	Rank getRank();
 	
 }
