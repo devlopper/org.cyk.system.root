@@ -16,7 +16,10 @@ public interface EventBusiness extends TypedBusiness<Event> {
     
     Long countWhereFromDateGreaterThanByDate(Date date);
     
-    void programAlarm(Collection<Event> events);    
+    //TODO instead of using thread living in memory we can use Scaaning the database and notify. Yes it might not be accurate....
+    void programAlarm(Collection<Event> events);
+    
+    Long findDuration(Collection<Event> events);
     
     /*
      * Transactions

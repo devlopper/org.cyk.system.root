@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.event.FlexiblePeriod;
+import org.cyk.system.root.model.time.FlexiblePeriod;
 
 @Getter @Setter @Entity 
 public class CurriculumVitaeSectionDetails extends AbstractIdentifiable implements Serializable {

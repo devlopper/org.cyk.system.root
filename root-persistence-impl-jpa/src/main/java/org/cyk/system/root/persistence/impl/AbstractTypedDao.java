@@ -14,13 +14,21 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	private static final long serialVersionUID = -2964204372097468908L;
 
 	protected String readAll,countAll;
-	
+	/*
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void initialisation() {
 		clazz = (Class<IDENTIFIABLE>) parameterizedClass();
 		//(Class<IDENTIFIABLE>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		super.initialisation();
+	}*/
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void beforeInitialisation() {
+		clazz = (Class<IDENTIFIABLE>) parameterizedClass();
+		//(Class<IDENTIFIABLE>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		super.beforeInitialisation();
 	}
 	
 	protected Class<?> parameterizedClass(){

@@ -17,14 +17,18 @@ public class QueryStringBuilder implements Serializable {
 	public static final String KW_JPQL_ORDER_BY = "ORDER BY";
 	public static final String KW_JPQL_WHERE = "WHERE";
 	public static final String KW_JPQL_COUNT = "COUNT";
+	public static final String KW_JPQL_SUM = "SUM";
 	public static final String KW_JPQL_AND = "AND";
 	public static final String KW_JPQL_OR = "OR";
 	 
 	/* Named Queries */  
 	public static final String KW_NQ_READ = "read";
 	public static final String KW_NQ_COUNT = "count";
-	 
+	public static final String KW_NQ_SUM = "sum";
+	
+	public static final String ATTRIBUTE_IDENTIFIER = "identifier";
 	public static final String VAR = "r";
+	public static final String VAR_IDENTIFIERS = "identifiers";
 	private static final String SELECT_FORMAT = "SELECT %1$s FROM %2$s %1$s";
 	private static final String FUNCTION_FORMAT = "SELECT %1$s(%2$s.%3$s) FROM %4$s %2$s";
 	private static final String WHERE_FORMAT = "%1$s.%2$s %3$s %4$s";
@@ -96,10 +100,16 @@ public class QueryStringBuilder implements Serializable {
 		return where(anAttributeName,anAttributeName,ArithmeticOperator.EQ);
 	}
 	
+	public QueryStringBuilder whereIdentifierIn(String anAttributeName) {
+		return where(anAttributeName+"."+ATTRIBUTE_IDENTIFIER,VAR_IDENTIFIERS,ArithmeticOperator.IN);
+	}
+	
 	public QueryStringBuilder operator(String operator) {
 		__value__.append(" "+operator+" ");
 		return this;
 	}
+	
+	/**/
 	
 	public QueryStringBuilder and(String anAttributeName,String aVarName,ArithmeticOperator anArithmeticOperator){
 		where(LogicalOperator.AND, anAttributeName, aVarName, anArithmeticOperator);
@@ -126,6 +136,28 @@ public class QueryStringBuilder implements Serializable {
 	public QueryStringBuilder or(String anAttributeName){
 		return or(anAttributeName, ArithmeticOperator.EQ);
 	}
+	
+	/**/
+	
+	public QueryStringBuilder in(LogicalOperator aLogicalOperator,String anAttributeName,String aVarName){
+		where(aLogicalOperator, anAttributeName, aVarName, ArithmeticOperator.IN);
+		return this;
+	}
+	
+	public QueryStringBuilder in(LogicalOperator aLogicalOperator,String anAttributeName){
+		return in(aLogicalOperator, anAttributeName+"."+ATTRIBUTE_IDENTIFIER, VAR_IDENTIFIERS);
+	}
+	
+	public QueryStringBuilder in(String anAttributeName,String aVarName){
+		where(null, anAttributeName, aVarName, ArithmeticOperator.IN);
+		return this;
+	}
+	
+	public QueryStringBuilder in(String anAttributeName){
+		return in(null, anAttributeName+"."+ATTRIBUTE_IDENTIFIER, VAR_IDENTIFIERS);
+	}
+	
+	
 	
 	public QueryStringBuilder orderBy(String...fieldNames) {
 		__value__.append(" "+KW_JPQL_ORDER_BY);

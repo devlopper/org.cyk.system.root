@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.event;
+package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
 

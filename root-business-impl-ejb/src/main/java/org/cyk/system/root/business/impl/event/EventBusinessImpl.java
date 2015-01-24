@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.event;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -13,6 +14,7 @@ import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.event.Event;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
 
 @Stateless
@@ -50,6 +52,14 @@ public class EventBusinessImpl extends AbstractTypedBusinessService<Event, Event
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public void programAlarm(Collection<Event> events) {
         // TODO Auto-generated method stub
+    }
+    
+    @Override
+    public Long findDuration(Collection<Event> events) {
+    	Collection<Period> periods = new ArrayList<>();
+    	for(Event event : events)
+    		periods.add(event.getPeriod());
+    	return timeBusiness.findDuration(periods);
     }
     
     @Override

@@ -1,6 +1,8 @@
 package org.cyk.system.root.business.impl.file;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -10,20 +12,30 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXmlExporter;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 
+import org.apache.commons.io.FileUtils;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.ReportBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.impl.validation.ExceptionUtils;
+import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.Column;
 import org.cyk.system.root.model.file.report.Report;
+import org.cyk.system.root.model.file.report.ReportTable;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.ReportColumn;
@@ -43,22 +55,25 @@ public class JasperReportBusinessImpl implements ReportBusiness<Style> , Seriali
 
 	private static final long serialVersionUID = -3596293198479369047L;
 
-	@Inject private LanguageBusiness languageBusiness;
-	
+	@Inject protected FileBusiness fileBusiness;
+	@Inject protected LanguageBusiness languageBusiness;
+		
 	@Override
-	public Collection<Column> findColumns(Class<?> aClass) {
-		Collection<Column> columns = new ArrayList<>();
-		Collection<Class<? extends Annotation>> filters = new ArrayList<>();
-    	filters.add(Input.class);
-    	filters.add(ReportColumn.class);
-    	for(Field field : CommonUtils.getInstance().getAllFields(aClass, filters)){
-    		columns.add(new Column(field.getName(),field.getType(),languageBusiness.findFieldLabelText(field)) );
-    	}
-		return columns;
+	public void build(Report<?> aReport, Boolean print) {
+		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(aReport.getDataSource());
+		InputStream inputStream = fileBusiness.findInputStream(aReport.getTemplateFile());
+		try {
+			JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
+			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanColDataSource);
+			__build__(aReport, jasperPrint, print);
+		} catch (JRException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
-	public void build(Report<?> aReport,Boolean print) {
+	public void buildTable(ReportTable<?> aReport,Boolean print) {
 		
 		DynamicReportBuilder report=new DynamicReportBuilder();
         for(Column column : aReport.getColumns()){
@@ -83,6 +98,65 @@ public class JasperReportBusinessImpl implements ReportBusiness<Style> , Seriali
 		
 		try {
 			JasperPrint jasperPrint = DynamicJasperHelper.generateJasperPrint(report.build(), new ClassicLayoutManager(),new JRBeanCollectionDataSource(aReport.getDataSource()));
+			__build__(aReport, jasperPrint, print);
+		} catch (JRException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	public void write(java.io.File directory,AbstractReport<?> aReport) {
+		try {
+			FileUtils.writeByteArrayToFile(new java.io.File(directory,aReport.getFileName()+"."+aReport.getFileExtension()), aReport.getBytes());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**/
+	
+	@Override
+	public Collection<Column> findColumns(Class<?> aClass) {
+		Collection<Column> columns = new ArrayList<>();
+		Collection<Class<? extends Annotation>> filters = new ArrayList<>();
+    	filters.add(Input.class);
+    	filters.add(ReportColumn.class);
+    	for(Field field : CommonUtils.getInstance().getAllFields(aClass, filters)){
+    		columns.add(new Column(field.getName(),field.getType(),languageBusiness.findFieldLabelText(field)) );
+    	}
+		return columns;
+	}
+	
+	@Override
+	public Style buildStyle(org.cyk.system.root.model.userinterface.style.Style style) {
+		StyleBuilder styleBuilder=new StyleBuilder(true);
+		Font font;
+		switch (style.getFont().getName()) {
+		case VERDANA:
+			switch(style.getFont().getStyle()){
+			case BOLD:font = Font.VERDANA_MEDIUM_BOLD;break;
+			default:font = Font.VERDANA_MEDIUM_BOLD;
+			}
+			break;
+		default:font = Font.VERDANA_MEDIUM_BOLD;break;
+		}
+		styleBuilder.setFont(font);
+		
+		Border border;
+		switch (style.getBorder().getStyle()) {
+		case DOTTED:border = Border.DOTTED();break;
+		case SOLID:border = Border.PEN_1_POINT();break;
+		default:border = Border.PEN_1_POINT();break;
+		}
+		styleBuilder.setBorder(border);
+		
+        return styleBuilder.build();
+	}
+
+	/**/
+	
+	private void __build__(AbstractReport<?> aReport, JasperPrint jasperPrint,Boolean print) {
+		try {
 			if(aReport.getFileExtension()==null)
 				aReport.setFileExtension("xml");
 			
@@ -119,7 +193,8 @@ public class JasperReportBusinessImpl implements ReportBusiness<Style> , Seriali
 				JRXmlExporter xmlExporter = new JRXmlExporter();
 				
 				xmlExporter.exportReport();
-			}
+			}else
+				ExceptionUtils.getInstance().exception("report.extension.missing");
 			
 			aReport.setBytes(baos.toByteArray());
 		} catch (JRException e) {
@@ -127,88 +202,4 @@ public class JasperReportBusinessImpl implements ReportBusiness<Style> , Seriali
 		}
 	}
 	
-	@Override
-	public Style buildStyle(org.cyk.system.root.model.userinterface.style.Style style) {
-		StyleBuilder styleBuilder=new StyleBuilder(true);
-		Font font;
-		switch (style.getFont().getName()) {
-		case VERDANA:
-			switch(style.getFont().getStyle()){
-			case BOLD:font = Font.VERDANA_MEDIUM_BOLD;break;
-			default:font = Font.VERDANA_MEDIUM_BOLD;
-			}
-			break;
-		default:font = Font.VERDANA_MEDIUM_BOLD;break;
-		}
-		styleBuilder.setFont(font);
-		
-		Border border;
-		switch (style.getBorder().getStyle()) {
-		case DOTTED:border = Border.DOTTED();break;
-		case SOLID:border = Border.PEN_1_POINT();break;
-		default:border = Border.PEN_1_POINT();break;
-		}
-		styleBuilder.setBorder(border);
-		
-		//styleBuilder.setBorderBottom(Border.PEN_2_POINT());
-		/*
-		styleBuilder.setBorderColor(Color.BLACK);
-		styleBuilder.setBackgroundColor(Color.ORANGE);
-		styleBuilder.setTextColor(Color.BLACK);
-		styleBuilder.setHorizontalAlign(HorizontalAlign.CENTER);
-		styleBuilder.setVerticalAlign(VerticalAlign.MIDDLE);
-		styleBuilder.setTransparency(Transparency.OPAQUE);       
-		*/ 
-        return styleBuilder.build();
-	}
-/*
-	public JasperPrint build1(Report<?, ?> aReport) throws ColumnBuilderException, JRException, ClassNotFoundException {
-        Style headerStyle = createHeaderStyle();
-        Style detailTextStyle = createDetailTextStyle();        
-        Style detailNumberStyle = createDetailNumberStyle();        
-        DynamicReport dynaReport = build(aReport,headerStyle, detailTextStyle,detailNumberStyle);
-        JasperPrint jasperPrint = DynamicJasperHelper.generateJasperPrint(dynaReport, new ClassicLayoutManager(), new JRBeanCollectionDataSource(aReport.getDataSource()));
-        return jasperPrint;
-    }
-  */
-	/*
-    private Style createHeaderStyle() {        
-        StyleBuilder sb=new StyleBuilder(true);
-        sb.setFont(Font.VERDANA_MEDIUM_BOLD);
-        sb.setBorder(Border.THIN());
-        sb.setBorderBottom(Border.PEN_2_POINT());
-        sb.setBorderColor(Color.BLACK);
-        sb.setBackgroundColor(Color.ORANGE);
-        sb.setTextColor(Color.BLACK);
-        sb.setHorizontalAlign(HorizontalAlign.CENTER);
-        sb.setVerticalAlign(VerticalAlign.MIDDLE);
-        sb.setTransparency(Transparency.OPAQUE);        
-        return sb.build();
-    }
-    
-    private Style createDetailTextStyle(){
-        StyleBuilder sb=new StyleBuilder(true);
-        sb.setFont(Font.VERDANA_MEDIUM);
-        sb.setBorder(Border.DOTTED());        
-        sb.setBorderColor(Color.BLACK);        
-        sb.setTextColor(Color.BLACK);
-        sb.setHorizontalAlign(HorizontalAlign.LEFT);
-        sb.setVerticalAlign(VerticalAlign.MIDDLE);
-        sb.setPaddingLeft(5);        
-        return sb.build();
-    }
-    
-    private Style createDetailNumberStyle(){
-        StyleBuilder sb=new StyleBuilder(true);
-        sb.setFont(Font.VERDANA_MEDIUM);
-        sb.setBorder(Border.DOTTED());        
-        sb.setBorderColor(Color.BLACK);        
-        sb.setTextColor(Color.BLACK);
-        sb.setHorizontalAlign(HorizontalAlign.RIGHT);
-        sb.setVerticalAlign(VerticalAlign.MIDDLE);
-        sb.setPaddingRight(5);        
-        return sb.build();
-    }
-    */
-    
 }

@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.event;
+package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.apache.commons.lang3.time.DateUtils;
+import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputCalendar;
 
@@ -24,7 +26,7 @@ import org.cyk.utility.common.annotation.user.interfaces.InputCalendar;
  */
 @Embeddable
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Period implements Serializable{
+public class Period extends AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -43,5 +45,19 @@ public class Period implements Serializable{
 	@Input
 	@InputCalendar
 	protected Date toDate;
+	
+	public Long getDuration(){
+    	return toDate.getTime() - fromDate.getTime();
+    }
+	
+	@Override
+	public String getUiString() {
+		return toString();
+	}
+	
+	@Override
+	public String toString() {
+		return fromDate+" "+toDate+" , "+(getDuration()/DateUtils.MILLIS_PER_MINUTE)+" min";
+	}
 
 }

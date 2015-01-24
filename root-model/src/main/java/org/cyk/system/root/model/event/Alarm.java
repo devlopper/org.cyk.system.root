@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
+import org.cyk.system.root.model.time.Period;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

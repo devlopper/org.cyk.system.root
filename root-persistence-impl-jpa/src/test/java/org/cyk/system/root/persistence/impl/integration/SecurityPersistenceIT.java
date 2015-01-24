@@ -112,7 +112,7 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 	private void createAccount(String personName,String username,String password,Role...roles){
 		Person person = new Person(personName, null);
 		person.setContactCollection(null);
-		person.setCreationDate(new Date());
+		person.setRegistrationDate(new Date());
 		create(person);
 	    UserAccount userAccount = new UserAccount(person, new Credentials(username, password), roles);
 	    create(userAccount);

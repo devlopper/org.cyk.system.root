@@ -86,7 +86,10 @@ public class Person  extends Party  implements Serializable{
 		return name+(StringUtils.isEmpty(lastName)?"":(" "+lastName));
 	}
 
-	
+	@Override
+	public String toString() {
+		return getNames();
+	}
 
 
 

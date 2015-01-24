@@ -1,6 +1,7 @@
 package org.cyk.system.root.persistence.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -11,6 +12,7 @@ import javax.persistence.TemporalType;
 
 import lombok.Getter;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.computation.DataReadConfig;
 
 @Getter
@@ -21,7 +23,14 @@ public class QueryWrapper<T> implements Serializable {
 	private Query query;  
 	private DataReadConfig readConfig;
 	private Collection<Class<? extends Throwable>> ignoreThrowables = new HashSet<>();
-
+	private T resultOneNullValue;
+	private Collection<T> resultManyNullValue=new ArrayList<T>();
+	
+	/*
+	 * To avoid java.sql.SQLSyntaxErrorException: unexpected token: ) when one of the parameter is a collection and is empty
+	 */
+	private Boolean returnPredefinedNullValue,returnPredefinedNullValueIfOneParameterCollectionIsEmpty=Boolean.TRUE;
+	
 	public QueryWrapper(Query query,DataReadConfig readConfig) {
 		super();
 		this.query = query;
@@ -29,10 +38,21 @@ public class QueryWrapper<T> implements Serializable {
 	}  
 	
 	public QueryWrapper<T> parameter(String name,Object value){
+		if(Boolean.TRUE.equals(returnPredefinedNullValueIfOneParameterCollectionIsEmpty) && !Boolean.TRUE.equals(returnPredefinedNullValue)){
+			if(value instanceof Collection<?> && ((Collection<?>)value).isEmpty())
+				returnPredefinedNullValue = Boolean.TRUE;
+		}
+		
 		if(value instanceof Date)
 		    query.setParameter(name, (Date)value,TemporalType.TIMESTAMP);
 		else
 		    query.setParameter(name, value);
+		
+		return this;
+	}
+	
+	public QueryWrapper<T> parameterIdentifiers(Collection<? extends AbstractIdentifiable> identifiables){
+		parameter(QueryStringBuilder.VAR_IDENTIFIERS, Utils.ids(identifiables));
 		return this;
 	}
 	
@@ -44,17 +64,42 @@ public class QueryWrapper<T> implements Serializable {
 	public QueryWrapper<T> nullable(){
         return ignoreThrowable(NoResultException.class);
     }
+	
+	public QueryWrapper<T> nullValue(T nullValue){
+		this.resultOneNullValue = nullValue;
+		return this;
+	}
+	
+	public QueryWrapper<T> nullValue(Collection<T> nullValue){
+		this.resultManyNullValue = nullValue;
+		return this;
+	}
+	
+	public QueryWrapper<T> returnPredefinedNullValueIfOneParameterCollectionIsEmpty(Boolean value){
+		this.returnPredefinedNullValueIfOneParameterCollectionIsEmpty = value;
+		return this;
+	}
 
 	@SuppressWarnings("unchecked")
 	public Collection<T> resultMany() {
+		if(Boolean.TRUE.equals(returnPredefinedNullValue))
+			return resultManyNullValue;
+		
 	    applyReadConfig(query,readConfig);
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	public T resultOne() {
+		if(Boolean.TRUE.equals(returnPredefinedNullValue))
+			return resultOneNullValue;
+		
 		try {
-            return (T) query.getSingleResult();
+            T value = (T) query.getSingleResult();
+            if(value==null){
+            	return resultOneNullValue;
+            }
+            return value;
         } catch (Exception e) {
             if(ignoreThrowables.contains(e.getClass()))
                 return null;

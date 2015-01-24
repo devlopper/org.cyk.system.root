@@ -6,6 +6,7 @@ import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_OR
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_SELECT;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COUNT;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_READ;
+import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_SUM;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.inject.Inject;
@@ -40,6 +42,8 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 
 	private static final long serialVersionUID = -8198334103295401293L;
 	
+	private final static Set<Class<?>> NAMED_QUERIES_INITIALIZED = new HashSet<>();
+	
 	protected static final String ORDER_BY_FORMAT = "ORDER BY %s";
 	
 	private QueryWrapper<?> __queryWrapper__;
@@ -61,7 +65,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		Collection<Field> namedQueriesFields = commonUtils.getAllFields(getClass());
 		//Named queries name initialisation
 		for(Field field : namedQueriesFields)
-			if(field.getName().startsWith(KW_NQ_READ) || field.getName().startsWith(KW_NQ_COUNT))
+			if(field.getName().startsWith(KW_NQ_READ) || field.getName().startsWith(KW_NQ_COUNT) || field.getName().startsWith(KW_NQ_SUM))
 				try {
 					FieldUtils.writeField(field, this, addPrefix(field.getName()), true);
 				} catch (IllegalAccessException e) {
@@ -70,9 +74,14 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	}
 		
 	@Override
-	protected void initialisation() {
+	protected final void initialisation() {
 		super.initialisation();
-		namedQueriesInitialisation();
+		if(NAMED_QUERIES_INITIALIZED.contains(getClass()))
+			;
+		else{
+			namedQueriesInitialisation();
+			NAMED_QUERIES_INITIALIZED.add(getClass());
+		}
 	}
 	
 	protected void namedQueriesInitialisation(){
@@ -207,7 +216,10 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		return namedQuery(value, clazz);
 	}
 	protected QueryWrapper<Long> countNamedQuery(String value){
-        return namedQuery(value, Long.class);
+        return namedQuery(value, Long.class).nullValue(0l);
+    }
+	protected QueryWrapper<Long> sumNamedQuery(String value){
+        return namedQuery(value, Long.class).nullValue(0l);
     }
 	
 	protected void registerNamedQuery(String name,String query,Class<?> aResultClass){
@@ -232,10 +244,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	}
 	
 	protected Collection<Long> ids(Collection<? extends AbstractIdentifiable> identifiables){
-		Collection<Long> ids = new HashSet<>();
-		for(AbstractIdentifiable identifiable : identifiables)
-			ids.add(identifiable.getIdentifier());
-		return ids;
+		return Utils.ids(identifiables);
 	}
 	 
 	protected String entityName(){

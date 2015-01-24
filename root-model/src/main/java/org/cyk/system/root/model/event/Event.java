@@ -14,6 +14,7 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
@@ -68,7 +69,8 @@ public class Event extends AbstractIdentifiable implements Serializable  {
      * Alarm
      */
     @Embedded protected Alarm alarm = new Alarm();
-
+    
+   
     public Event(EventCollection collection,EventType type, String title, String description, Period period) {
         super();
         this.collection = collection;
@@ -77,7 +79,10 @@ public class Event extends AbstractIdentifiable implements Serializable  {
         this.description = description;
         this.period = period;
     }
-
     
-	
+    @Override
+    public String toString() {
+    	return title+" "+period;
+    }
+
 }

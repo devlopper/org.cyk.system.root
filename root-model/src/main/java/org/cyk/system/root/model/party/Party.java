@@ -48,13 +48,15 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	//@Input
 	@OneToOne protected ContactCollection contactCollection = new ContactCollection();
 	
-	/**
-	 * The date it has entered in the system
-	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable=false)
 	@NotNull(groups={org.cyk.utility.common.validation.System.class})
-	protected Date creationDate;
+	protected Date registrationDate;
+	
+	@Input
+	@InputText
+	//@NotNull(groups=Client.class)
+	protected String registrationNumber;
 	
 	public Party(String name) {
 		super();

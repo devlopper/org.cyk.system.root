@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import lombok.Getter;
 
 import org.cyk.system.root.business.api.BusinessService;
+import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -32,6 +34,7 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
 	
 	@Inject protected GenericDao genericDao;
+	@Inject protected TimeBusiness timeBusiness;
 
 	protected abstract PersistenceService<IDENTIFIABLE, Long> getPersistenceService();
 	
@@ -97,8 +100,12 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	    return ExceptionUtils.getInstance();
 	}
 	
+	//TODO should be moved to time business
 	protected Date universalTimeCoordinated(){
 		return commonUtils.getUniversalTimeCoordinated();
 	}
+		
+	protected static final SimpleDateFormat DATE_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+	protected static final SimpleDateFormat DATE_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy");
 	
 }

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.event.Period;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 
 @Entity

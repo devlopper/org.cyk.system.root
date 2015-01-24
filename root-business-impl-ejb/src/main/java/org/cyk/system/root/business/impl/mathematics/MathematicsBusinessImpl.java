@@ -2,8 +2,8 @@ package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -14,18 +14,20 @@ import javax.inject.Inject;
 
 import org.apache.commons.collections.ComparatorUtils;
 import org.cyk.system.root.business.api.file.ScriptBusiness;
+import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
+import org.cyk.system.root.business.api.mathematics.Rankable;
+import org.cyk.system.root.business.api.mathematics.WeightedValue;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.Average;
-import org.cyk.system.root.model.mathematics.Rankable;
-import org.cyk.system.root.model.mathematics.Weightable;
+import org.cyk.system.root.model.mathematics.Rank;
 
 public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable {
 
 	private static final long serialVersionUID = 216333383963637261L;
 	
 	private static final NumberComputationListener NUMBER_COMPUTATION_LISTENER = new NumberComputationListener() {
-
+ 
 		@Override
 		public Integer scale(BigDecimal number) {
 			return 2;
@@ -33,7 +35,7 @@ public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable
 		
 		@Override
 		public RoundingMode roundingMode(BigDecimal number) {
-			return RoundingMode.HALF_DOWN;
+			return RoundingMode.DOWN;
 		}
 	};
 	
@@ -57,15 +59,21 @@ public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable
 	
 	@Inject private ScriptBusiness scriptBusiness;
 	
+	@Inject private LanguageBusiness languageBusiness;
+	
 	@Override
-	public Average average(Average average,AverageComputationListener computationListener,Script script) {
+	public Average average(Collection<WeightedValue> weightedValues,AverageComputationListener computationListener,Script script) {
+		Average average = new Average();
 		average.setDividend(BigDecimal.ZERO);
 		average.setDivisor(BigDecimal.ZERO);
 		average.setValue(null);
 		
-		for(Weightable weightable : average.getWeightables()){
-			average.setDividend(average.getDividend().add(weightable.getValue() /*weightable.getValue().multiply(weightable.getWeight())*/));
-			average.setDivisor(average.getDivisor().add(weightable.getWeight()));
+		for(WeightedValue weightedValue : weightedValues){
+			if(weightedValue.getWeightApplied()==null || Boolean.TRUE.equals(weightedValue.getWeightApplied()))
+				average.setDividend(average.getDividend().add(weightedValue.getValue()));
+			else
+				average.setDividend(average.getDividend().add(weightedValue.getValue().multiply(weightedValue.getWeight())));
+			average.setDivisor(average.getDivisor().add(weightedValue.getWeight()));
 		}
 		
 		if(script==null){	
@@ -74,10 +82,10 @@ public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable
 			}else{
 				if(computationListener==null)
 					computationListener = AVERAGE_COMPUTATION_LISTENER;
-				average.setDividend(new BigDecimal(average.getDividend().doubleValue(), new MathContext(computationListener.getDividendComputationListener().scale(null), 
-						computationListener.getDividendComputationListener().roundingMode(null))));
-				average.setDivisor(new BigDecimal(average.getDivisor().doubleValue(), new MathContext(computationListener.getDivisorComputationListener().scale(null),
-						computationListener.getDivisorComputationListener().roundingMode(null))));
+				average.setDividend(average.getDividend().setScale(computationListener.getDividendComputationListener().scale(null), 
+						computationListener.getDividendComputationListener().roundingMode(null)));
+				average.setDivisor(average.getDivisor().setScale(computationListener.getDivisorComputationListener().scale(null),
+						computationListener.getDivisorComputationListener().roundingMode(null)));
 				
 				average.setValue(average.getDividend().divide(average.getDivisor(),computationListener.getValueComputationListener().scale(null),
 						computationListener.getValueComputationListener().roundingMode(null)));
@@ -127,6 +135,11 @@ public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable
 			}
 			i++;
 		}
+	}
+	
+	@Override
+	public String format(Rank rank) {
+		return rank.getValue()+ (Boolean.TRUE.equals(rank.getExaequo())?languageBusiness.findText("rank.exaequo"):"");
 	}
 
 }

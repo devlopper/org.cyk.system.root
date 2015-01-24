@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.information;
+package org.cyk.system.root.model.mathematics;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 
 @Getter @Setter
 @Entity 
-public class IntervalManager  extends AbstractIdentifiable implements Serializable {
+public class IntervalCollection  extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
 

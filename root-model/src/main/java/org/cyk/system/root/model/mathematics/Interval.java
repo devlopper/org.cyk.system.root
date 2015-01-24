@@ -1,9 +1,7 @@
-package org.cyk.system.root.model.information;
+package org.cyk.system.root.model.mathematics;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +19,7 @@ public class Interval  extends AbstractIdentifiable implements Serializable {
 	private static final long serialVersionUID = -165832578043422718L;
 
 	@ManyToOne
-	private IntervalManager manager;
+	private IntervalCollection collection;
 	
 	private String name;
 	
@@ -30,16 +28,17 @@ public class Interval  extends AbstractIdentifiable implements Serializable {
 	
 	@Column(precision=30,scale=10)
 	private BigDecimal low;
+	
 	@Column(precision=30,scale=10)
 	private BigDecimal high;
 	
-	private boolean excludeLow=false,excludeHigh=false;
+	private Boolean excludeLow=Boolean.FALSE,excludeHigh=Boolean.FALSE;
 	
 	/* color support right now */
 	private String style;
 	
 	public Interval() {}
-	
+	/*
 	public Interval(IntervalManager manager) {
 		this.manager = manager;
 	}
@@ -81,13 +80,13 @@ public class Interval  extends AbstractIdentifiable implements Serializable {
 			return "";
 		return style.substring(colorIndex, comaIndex);
 	}
-	
+	*/
 	/*
 	public String getColorAsHexadecimal(){
 		return String.format("#%06X", (0xFFFFFF & color.getRGB()));
 	}
 	*/
-	
+	/*
 	public boolean contains(BigDecimal value,Integer scale){
 		if(low==null && high==null)
 			return(value==null);
@@ -125,6 +124,7 @@ public class Interval  extends AbstractIdentifiable implements Serializable {
 	public boolean contains(BigDecimal value){
 		return contains(value,null);
 	}
+	*/
 	/*
 	public String format(String format){
 		if(low==null)

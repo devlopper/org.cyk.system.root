@@ -17,7 +17,7 @@ public class EventDaoImpl extends AbstractTypedDao<Event> implements EventDao,Se
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-   private String readWhereFromDateGreaterThanByDate,countWhereFromDateGreaterThanByDate,
+    private String readWhereFromDateGreaterThanByDate,countWhereFromDateGreaterThanByDate,
     readWhereFromDateBetweenByStartDateByEndDate,countWhereFromDateBetweenByStartDateByEndDate;
     
     @Override

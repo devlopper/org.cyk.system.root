@@ -15,6 +15,9 @@ public class Rank extends AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = -2665387343931538712L;
 	
+	@Column(name="rank_sequence_order")
+	private Integer sequenceOrder;
+	
 	@Column(name="rank_value")
 	private Integer value;
 	

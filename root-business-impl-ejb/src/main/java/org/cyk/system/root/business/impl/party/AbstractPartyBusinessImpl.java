@@ -21,14 +21,13 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	
 	@Inject protected ContactCollectionBusiness contactCollectionBusiness;
 
-	@Inject
 	public AbstractPartyBusinessImpl(DAO dao) {
 		super(dao); 
 	}
 	
 	@Override
     public PARTY create(PARTY party) {
-		party.setCreationDate(universalTimeCoordinated());
+		party.setRegistrationDate(universalTimeCoordinated());
 	    contactCollectionBusiness.create(party.getContactCollection());
         super.create(party);
         return party;
