@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.cyk.system.root.business.impl.party.PersonValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.utility.common.CommonUtils;
 
@@ -22,12 +21,12 @@ public class BusinessIntegrationTestHelper {
 	        ValidationPolicy.class,ValidationPolicyImpl.class,ExceptionUtils.class);
 	*/
     
-    private static Package[] PACKAGES = {ExceptionUtils.class.getPackage(),PersonValidator.class.getPackage()};
+    private static Package[] PACKAGES = {ExceptionUtils.class.getPackage()};
 	
     
     
     //FIXME those classes are ignored. WHY 
-    private static Class<?>[] CLASSES = {ExceptionUtils.class,PersonValidator.class,BusinessLocator.class};
+    private static Class<?>[] CLASSES = {ExceptionUtils.class,BusinessLocator.class};
     
     public static Package[] packages(){
         return PACKAGES;

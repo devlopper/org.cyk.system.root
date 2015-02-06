@@ -46,10 +46,8 @@ public class Person  extends Party  implements Serializable{
 	@InputCalendar
 	@Temporal(TemporalType.DATE) private Date birthDate;
 	
-	//@UIField(oneRelationshipInputType=OneRelationshipInputType.FORM)
-	//TODO input to be handled - include all fields
 	@Valid
-    @OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;// = new Location();
+    @OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;
 	
 	@Input
 	@InputChoice

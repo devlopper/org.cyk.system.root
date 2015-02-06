@@ -2,6 +2,7 @@ package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
 
+import javax.persistence.Embedded;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
@@ -17,9 +18,12 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 
 	@ManyToOne
 	protected Person person;
+		
+	@Embedded
+	protected Registration registration = new Registration();
 	
 	@Override
 	public String toString() {
-		return person.toString();
+		return person.toString()+" | "+registration;
 	}
 }

@@ -30,6 +30,18 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Business code
+	 */
+	@NotNull(groups=org.cyk.utility.common.validation.System.class)
+	@Column(nullable=false,unique=true)
+	protected String code;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable=false)
+	@NotNull(groups={org.cyk.utility.common.validation.System.class})
+	protected Date creationDate;
+	
 	@Input
 	@InputText
 	@NotNull(groups=Client.class)
@@ -40,23 +52,10 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	/**
 	 * This is an image which visually represent this party
 	 */
-	//TODO input to be handled
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
     protected File image;
 	
-	//TODO input to be handled
-	//@Input
 	@OneToOne protected ContactCollection contactCollection = new ContactCollection();
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable=false)
-	@NotNull(groups={org.cyk.utility.common.validation.System.class})
-	protected Date registrationDate;
-	
-	@Input
-	@InputText
-	//@NotNull(groups=Client.class)
-	protected String registrationNumber;
 	
 	public Party(String name) {
 		super();

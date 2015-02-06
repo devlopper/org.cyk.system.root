@@ -32,15 +32,12 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	}
 
     @Override
-    public File process(byte[] bytes, String nom) {
+    public File process(byte[] bytes, String name) {
         if(bytes==null || bytes.length==0)
             return null;
         File file = new File();
         file.setBytes(bytes);
-        int i = nom.lastIndexOf('.');
-        if (i > 0) {
-            file.setExtension(nom.substring(i+1));
-        }
+        file.setExtension(findExtension(name));
         if(file.getExtension()!=null){
             file.setExtension(file.getExtension().toLowerCase());//better use lower case because of mime type lookup
         }
@@ -55,7 +52,15 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
             e.printStackTrace();
             return null;
         }
-    } 
+    }
+    
+    @Override
+    public String findExtension(String name) {
+    	int i = name.lastIndexOf('.');
+        if (i > 0)
+            return name.substring(i+1);
+    	return null;
+    }
     
     @Override
     public InputStream findInputStream(File file) {

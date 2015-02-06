@@ -3,9 +3,8 @@ package org.cyk.system.root.service.impl.integration;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
-import org.cyk.system.root.business.api.party.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
-import org.cyk.system.root.business.impl.party.PersonValidator;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.Location;
@@ -25,8 +24,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     @Inject private PersonBusiness personBusiness;
     @Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
     @Inject private LocalityBusiness localityBusiness;
-    @Inject private PersonValidator personValidator;
-    
+   
     private Locality locality;
     @Override
     protected void populate() {
@@ -34,7 +32,6 @@ public class PersonBusinessIT extends AbstractBusinessIT {
         locality = new Locality(null, t, "L1");
         locality.setName("Name");
         localityBusiness.create(locality);
-        validatorMap.registerValidator(Person.class, personValidator);
     }
    
     @Override

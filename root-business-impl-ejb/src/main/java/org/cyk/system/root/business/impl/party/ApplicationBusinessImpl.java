@@ -14,7 +14,7 @@ import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessManager;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
-import org.cyk.system.root.business.api.party.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.ApplicationPropertiesProvider;
 import org.cyk.system.root.business.api.security.LicenseBusiness;
 import org.cyk.system.root.business.api.security.ShiroConfigurator;

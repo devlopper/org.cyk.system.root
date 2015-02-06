@@ -15,6 +15,8 @@ public interface FileBusiness extends TypedBusiness<File> {
      */
     String findMime(String extension);
     
+    String findExtension(String name);
+    
     File process(byte[] bytes, String nom);
     
     InputStream findInputStream(File file);

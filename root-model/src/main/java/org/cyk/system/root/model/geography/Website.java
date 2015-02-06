@@ -21,8 +21,7 @@ public class Website extends Contact implements Serializable {
 
 	private static final long serialVersionUID = 923076998880521464L;
 
-	@Input
-	@InputText
+	@Input @InputText
 	@NotNull
 	private URL url;
 	

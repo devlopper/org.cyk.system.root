@@ -11,18 +11,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.annotation.user.interfaces.Text;
 
 @Getter @Setter @Entity
 @AllArgsConstructor @NoArgsConstructor
 public class PostalBox extends Contact implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 923076998880521464L;
 	
-	@Input(label=@Text(value="postal.box")) @NotNull
+	@Input(label=@Text(value="postal.box")) @InputText
+	@NotNull
 	private String value;
 
 

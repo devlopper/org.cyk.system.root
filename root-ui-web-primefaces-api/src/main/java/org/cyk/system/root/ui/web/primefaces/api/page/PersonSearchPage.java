@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
-import org.cyk.system.root.business.api.party.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.party.person.Person;
 import org.primefaces.model.SortOrder;
 

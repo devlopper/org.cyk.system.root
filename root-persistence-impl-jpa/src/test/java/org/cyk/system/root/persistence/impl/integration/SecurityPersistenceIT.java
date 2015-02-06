@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Permission;
@@ -111,8 +112,9 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 	
 	private void createAccount(String personName,String username,String password,Role...roles){
 		Person person = new Person(personName, null);
+		person.setCode(RandomStringUtils.randomAlphabetic(8));
 		person.setContactCollection(null);
-		person.setRegistrationDate(new Date());
+		person.setCreationDate(new Date());
 		create(person);
 	    UserAccount userAccount = new UserAccount(person, new Credentials(username, password), roles);
 	    create(userAccount);

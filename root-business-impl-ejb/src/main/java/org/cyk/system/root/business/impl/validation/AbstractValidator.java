@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -84,7 +85,8 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 		/* processing */
 		process(objectClass, object);
 		process(validatorClass, this);
-		if(!Boolean.TRUE.equals(isSucces()))
+		manualProcess();
+		if(!Boolean.TRUE.equals(isSuccess()))
 		    ExceptionUtils.getInstance().exception(this);
 		return this;
 	}
@@ -99,16 +101,17 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
         		messages.add(formatMessage(violation));
 	}
 	
-	public void manualProcess(){
-		
-	}
+	protected void manualProcess(){}
 	
 	protected String formatMessage(ConstraintViolation<?> constraintViolation){
 		//return constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage();
-		return constraintViolation.getMessage();
+		Field field = commonUtils.getFieldFromClass(object.getClass(), constraintViolation.getPropertyPath().toString());
+		//Formating should be moved to ValidationMessageInterpolator. But how to get field ???
+		return (field==null?"":(languageBusiness.findFieldLabelText(field)+" "))+constraintViolation.getMessage();
+		//return constraintViolation.getMessage();
 	}
 	
-	public Boolean isSucces(){
+	public Boolean isSuccess(){
 		return messages==null || messages.isEmpty();
 	}
 	

@@ -1,11 +1,12 @@
-package org.cyk.system.root.business.impl.party;
+package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.party.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.persistence.api.party.PersonDao;

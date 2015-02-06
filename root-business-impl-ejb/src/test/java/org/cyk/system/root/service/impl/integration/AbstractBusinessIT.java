@@ -84,7 +84,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
             validator.validate(object);
         } catch (Exception e) {}
         
-        if(!Boolean.TRUE.equals(validator.isSucces()))
+        if(!Boolean.TRUE.equals(validator.isSuccess()))
             System.out.println(validator.getMessagesAsString());
         
     }
@@ -93,6 +93,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
         return  
                 new ArchiveBuilder().create().getArchive().
                     addClasses(BusinessIntegrationTestHelper.classes()).
+                    addClasses(PersonValidator.class,FileValidator.class).
                     addPackages(Boolean.FALSE, BusinessIntegrationTestHelper.packages()) 
                 //_deploymentOfPackages("org.cyk.system.root").getArchive()
               
