@@ -93,7 +93,6 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
         return  
                 new ArchiveBuilder().create().getArchive().
                     addClasses(BusinessIntegrationTestHelper.classes()).
-                    addClasses(PersonValidator.class,FileValidator.class).
                     addPackages(Boolean.FALSE, BusinessIntegrationTestHelper.packages()) 
                 //_deploymentOfPackages("org.cyk.system.root").getArchive()
               

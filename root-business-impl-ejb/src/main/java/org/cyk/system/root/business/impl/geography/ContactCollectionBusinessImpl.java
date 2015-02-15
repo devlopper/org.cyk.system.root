@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
@@ -27,7 +29,7 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
 		super(dao); 
 	}   
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public void load(ContactCollection aCollection) {
         aCollection.setPhoneNumbers(contactDao.readAll(PhoneNumber.class));
         aCollection.setLocations(contactDao.readAll(Location.class));

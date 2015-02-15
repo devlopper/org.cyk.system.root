@@ -30,13 +30,7 @@ public class BusinessEntityInfos implements Serializable {
         this.identifier=clazz.getSimpleName();
         this.varName = Introspector.decapitalize(clazz.getSimpleName());
         modelBeanAnnotation = CommonUtils.getInstance().getAnnotation(clazz,ModelBean.class);
-        /*for(Field field : CommonUtils.getInstance().getAllFields(clazz)){
-        	UIField uiField = field.getAnnotation(UIField.class);
-        	if(uiField!=null){
-        		if(Boolean.TRUE.equals(uiField.useValueAsLabel()))
-        			valueAsLabelField = field;
-        	}
-        }*/
+        
         uiLabelId = "model.entity."+varName;
         uiLabel = languageBusiness.findText(uiLabelId);
         if(modelBeanAnnotation!=null){
@@ -54,16 +48,5 @@ public class BusinessEntityInfos implements Serializable {
         }
         return modelBeanAnnotation.crudStrategy();
     }
-    
-    @Override
-    public String toString() {
-        /*return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE)
-                +"\r\nCrud Strategy : "+getCrudStrategy()+"\r\n"
-                ;
-        */
-        return super.toString();
-    }
-    
-    
 
 }

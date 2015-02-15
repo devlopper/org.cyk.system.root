@@ -22,12 +22,20 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		super(dao); 
 	}
 	
-	@Override
+	/*@Override
 	public void register(ACTOR anActor) {
 		personBusiness.create(anActor.getPerson());
 		anActor.getRegistration().setDate(universalTimeCoordinated()); 
 		anActor.getRegistration().setCode(rootValueGenerator.actorRegistrationCode(anActor));
 		create(anActor);
+	}*/
+	
+	@Override
+	public ACTOR create(ACTOR anActor) {
+		personBusiness.create(anActor.getPerson());
+		anActor.getRegistration().setDate(universalTimeCoordinated()); 
+		anActor.getRegistration().setCode(rootValueGenerator.actorRegistrationCode(anActor));
+		return super.create(anActor);
 	}
 	
 }

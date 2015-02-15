@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.cyk.system.root.business.impl.file.FileValidator;
+import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.utility.common.CommonUtils;
 
@@ -26,7 +28,7 @@ public class BusinessIntegrationTestHelper {
     
     
     //FIXME those classes are ignored. WHY 
-    private static Class<?>[] CLASSES = {ExceptionUtils.class,BusinessLocator.class};
+    private static Class<?>[] CLASSES = {ExceptionUtils.class,BusinessLocator.class,PersonValidator.class,FileValidator.class};
     
     public static Package[] packages(){
         return PACKAGES;

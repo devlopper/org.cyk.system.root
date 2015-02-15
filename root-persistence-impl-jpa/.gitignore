@@ -1,5 +1,4 @@
 /target
-
 /build
 /bin
 /.settings
@@ -7,7 +6,5 @@
 .project
 .classpath
 /Workspaces
-
 /derby.log
-
 rebel.xml

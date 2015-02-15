@@ -5,7 +5,7 @@ import org.cyk.system.root.model.party.person.AbstractActor;
 
 public interface AbstractActorBusiness<ACTOR extends AbstractActor> extends TypedBusiness<ACTOR> {
 
-	void register(ACTOR anActor);
+	//void register(ACTOR anActor);
 	
 	
 }

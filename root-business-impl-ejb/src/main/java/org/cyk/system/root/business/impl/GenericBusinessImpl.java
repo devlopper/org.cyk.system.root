@@ -112,7 +112,7 @@ public class GenericBusinessImpl extends AbstractBusinessService<AbstractIdentif
 	}
 	
 	@SuppressWarnings("unchecked")
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public <T extends AbstractIdentifiable> T load(Class<T> aClass, Long identifier) {
 	    TypedBusiness<T> businessBean = (TypedBusiness<T>) BusinessLocator.getInstance().locate((Class<AbstractIdentifiable>) aClass);
 	    if(businessBean==null)

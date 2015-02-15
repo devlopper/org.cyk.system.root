@@ -29,6 +29,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	
 	@Override
     public PARTY create(PARTY party) {
+		System.out.println(valueGenerator);
 		party.setCode(valueGenerator.partyCode(party));//TODO handle duplicate by using lock write
 		party.setCreationDate(universalTimeCoordinated());
 	    contactCollectionBusiness.create(party.getContactCollection());
@@ -36,7 +37,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
         return party;
     }
 	
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public PARTY load(Long identifier) {
         PARTY party = super.load(identifier);
         contactCollectionBusiness.load(party.getContactCollection());

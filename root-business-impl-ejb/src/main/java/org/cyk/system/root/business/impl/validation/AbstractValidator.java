@@ -3,9 +3,12 @@ package org.cyk.system.root.business.impl.validation;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -17,6 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.RootValueValidator;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.validation.Client;
@@ -35,8 +39,10 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 
 	private static final long serialVersionUID = -261860698364195138L;
 	
-	@Inject protected LanguageBusiness languageBusiness;	
+	@Inject protected RootValueValidator valueValidator;
+	@Inject protected LanguageBusiness languageBusiness;
 	
+	protected Map<Field, AbstractValidator<Object>> fieldValidatorMap = new HashMap<>();
 	protected Class<OBJECT> objectClass;
 	protected Class<AbstractValidator<OBJECT>> validatorClass;
 	//the object to validate
@@ -85,7 +91,7 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 		/* processing */
 		process(objectClass, object);
 		process(validatorClass, this);
-		manualProcess();
+		processMappedFields();
 		if(!Boolean.TRUE.equals(isSuccess()))
 		    ExceptionUtils.getInstance().exception(this);
 		return this;
@@ -101,7 +107,16 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
         		messages.add(formatMessage(violation));
 	}
 	
-	protected void manualProcess(){}
+	protected void processMappedFields(){
+		for(Entry<Field, AbstractValidator<Object>> entry : fieldValidatorMap.entrySet()){
+			AbstractValidator<Object> fieldValidator = entry.getValue();
+			try {
+				fieldValidator.validate(commonUtils.readField(object, entry.getKey(), Boolean.FALSE));
+			} catch (Exception e) {
+				messages.addAll(fieldValidator.getMessages());
+			}
+		}
+	}
 	
 	protected String formatMessage(ConstraintViolation<?> constraintViolation){
 		//return constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage();
@@ -121,4 +136,9 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 	
 	/**/
 	
+	protected void registerFieldValidatorMap(String name,AbstractValidator<?> validator){
+		@SuppressWarnings("unchecked")
+		AbstractValidator<Object> v = (AbstractValidator<Object>) validator;
+		fieldValidatorMap.put(commonUtils.getFieldFromClass(objectClass, name), v);
+	}
 }

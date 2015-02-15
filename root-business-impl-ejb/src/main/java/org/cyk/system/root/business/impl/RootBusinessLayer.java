@@ -14,10 +14,13 @@ import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.PermissionBusiness;
+import org.cyk.system.root.business.impl.file.FileValidator;
+import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventType;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Tag;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
@@ -43,11 +46,18 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private PersonBusiness personBusiness;
     @Inject private PermissionBusiness permissionBusiness;
     
+    @Inject private PersonValidator personValidator;
+    @Inject private FileValidator fileValidator;
+    
     //private Person personAdmin,personGuest;
         
     @Override
     protected void initialisation() {
         super.initialisation();
+        
+        validatorMap.registerValidator(Person.class, personValidator);
+        validatorMap.registerValidator(File.class, fileValidator);
+        
         registerFieldValidator(commonUtils.getFieldFromClass(Person.class, "name"), new FieldValidatorMethod() {
             
 			private static final long serialVersionUID = 1L;

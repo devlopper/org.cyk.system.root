@@ -15,6 +15,9 @@ public class PhoneNumberType extends AbstractEnumeration implements Serializable
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
+	public static String LAND = "LAND";
+	public static String MOBILE = "MOBILE";
+	
 	public PhoneNumberType(String code, String libelle) {
 		super(code, libelle,null, null);
 	}
