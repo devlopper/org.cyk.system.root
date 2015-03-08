@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -30,6 +31,8 @@ public class Period extends AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+	
 	//private String timeZone;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -57,7 +60,7 @@ public class Period extends AbstractModelElement implements Serializable{
 	
 	@Override
 	public String toString() {
-		return fromDate+" "+toDate+" , "+(getDuration()/DateUtils.MILLIS_PER_MINUTE)+" min";
+		return DATE_FORMAT.format(fromDate)+" "+DATE_FORMAT.format(toDate)+" , "+(getDuration()/DateUtils.MILLIS_PER_MINUTE)+" min";
 	}
 
 }

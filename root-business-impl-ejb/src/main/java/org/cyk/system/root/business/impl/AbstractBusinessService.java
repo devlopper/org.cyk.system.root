@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 
 import lombok.Getter;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
@@ -104,8 +106,24 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	protected Date universalTimeCoordinated(){
 		return commonUtils.getUniversalTimeCoordinated();
 	}
-		
+	
+	
+	
 	protected static final SimpleDateFormat DATE_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 	protected static final SimpleDateFormat DATE_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy");
+	protected static final SimpleDateFormat DATE_TIME_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy à HH:mm");
+	protected static final SimpleDateFormat DATE_TIME_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy à HH:mm");
+	
+	protected static Date DATE_MOST_PAST;
+	protected static Date DATE_MOST_FUTURE;
+	
+	static {
+		try {
+			DATE_MOST_PAST = DateUtils.parseDate("01/01/1800", "dd/MM/yyyy");
+			DATE_MOST_FUTURE = DateUtils.parseDate("01/01/9000", "dd/MM/yyyy");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 	
 }

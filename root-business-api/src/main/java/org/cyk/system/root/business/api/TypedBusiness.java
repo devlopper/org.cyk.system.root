@@ -9,7 +9,9 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	/* predefined query  */
 	
     IDENTIFIABLE load(Long identifier);
-	    
+	
+    void load(IDENTIFIABLE identifiable);
+    
     Collection<IDENTIFIABLE> findAll(); 
     
     Long countAll();

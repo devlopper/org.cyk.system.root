@@ -3,6 +3,7 @@ package org.cyk.system.root.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
@@ -37,7 +38,7 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	@NotNull(groups=Client.class)
 	protected String name;
 	
-	private String nameI18nId;
+	protected String nameI18nId;
 	
 	//@Input
 	//@InputText
@@ -50,7 +51,13 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	@Column(length=10 * 1024)
 	protected String description;
 	
-	private String descriptionI18nId;
+	protected String descriptionI18nId;
+	
+	@Embedded
+	protected Rud rud = new Rud();
+	
+	@Column(name="f_constant")
+	protected Boolean constant;
 	
 	public AbstractEnumeration(String code, String name, String abbreviation, String description) {
         super();

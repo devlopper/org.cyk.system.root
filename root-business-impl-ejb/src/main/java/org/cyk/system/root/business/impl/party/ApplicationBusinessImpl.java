@@ -22,6 +22,7 @@ import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.security.DefaultApplicationPropertiesProvider;
 import org.cyk.system.root.business.impl.security.DefaultShiroConfigurator;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.PartySearchCriteria;
@@ -62,7 +63,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	 * 2 - Creates the only one application user having the System role<br/>
 	 * 
 	 */
-	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Override @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void install(Installation installation) {
 		try {
 			__writeInfo__("Installation is running...");
@@ -136,6 +137,14 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
             }
         }
         return BUSINESS_ENTITIES_INFOS;
+    }
+    
+    @Override
+    public BusinessEntityInfos findBusinessEntityInfos(Class<AbstractIdentifiable> aClass) {
+    	for(BusinessEntityInfos b : findBusinessEntitiesInfos())
+    		if(b.getClazz().equals(aClass))
+    			return b;
+    	return null;
     }
 
     @Override

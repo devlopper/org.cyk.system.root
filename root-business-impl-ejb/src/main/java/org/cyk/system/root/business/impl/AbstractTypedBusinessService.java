@@ -50,8 +50,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IDENTIFIABLE load(Long identifier) {
-	    return find(identifier);
+		IDENTIFIABLE identifiable = find(identifier);
+		load(identifiable);
+		return identifiable;
 	}
+	
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void load(IDENTIFIABLE identifiable) {}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findAll() {

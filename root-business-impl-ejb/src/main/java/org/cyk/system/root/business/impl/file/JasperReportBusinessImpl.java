@@ -8,6 +8,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -26,13 +28,20 @@ import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.export.SimpleXmlExporterOutput;
 
 import org.apache.commons.io.FileUtils;
+import org.cyk.system.root.business.api.BusinessEntityInfos;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.ReportBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
+import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.AbstractReport;
+import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.file.report.Column;
 import org.cyk.system.root.model.file.report.Report;
 import org.cyk.system.root.model.file.report.ReportTable;
@@ -55,9 +64,28 @@ public class JasperReportBusinessImpl implements ReportBusiness<Style> , Seriali
 
 	private static final long serialVersionUID = -3596293198479369047L;
 
+	public static final Set<AbstractReportConfiguration<Object, AbstractReport<?>>> REPORTS = new HashSet<>();
+	
 	@Inject protected FileBusiness fileBusiness;
 	@Inject protected LanguageBusiness languageBusiness;
-		
+	@Inject protected ApplicationBusiness applicationBusiness;
+	@Inject protected GenericBusiness genericBusiness;
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <MODEL, REPORT extends AbstractReport<?>> void registerConfiguration(AbstractReportConfiguration<MODEL, REPORT> configuration) {
+		REPORTS.add((AbstractReportConfiguration<Object, AbstractReport<?>>) configuration);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <MODEL, REPORT extends AbstractReport<?>> AbstractReportConfiguration<MODEL, REPORT> findConfiguration(String identifier) {
+		for(AbstractReportConfiguration<?,?> r : REPORTS)
+			if(r.getIdentifier().equals(identifier))
+				return (AbstractReportConfiguration<MODEL, REPORT>) r;
+		return null;
+	}
+	
 	@Override
 	public void build(Report<?> aReport, Boolean print) {
 		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(aReport.getDataSource());
@@ -102,6 +130,37 @@ public class JasperReportBusinessImpl implements ReportBusiness<Style> , Seriali
 		} catch (JRException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <MODEL> ReportTable<MODEL> buildTable(Class<MODEL> aClass,String fileExtension, Boolean print) {
+		Collection<MODEL> datas = new ArrayList<>();
+		if(AbstractEnumeration.class.isAssignableFrom(aClass))
+			for(AbstractIdentifiable identifiable : genericBusiness.use((Class<? extends AbstractIdentifiable>) aClass).find().all())
+				datas.add((MODEL) identifiable);
+		else
+			ExceptionUtils.getInstance().exception("data.collection");
+		return buildTable(aClass,datas,fileExtension, print);
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <MODEL> ReportTable<MODEL> buildTable(Class<MODEL> aClass,Collection<MODEL> datas,String fileExtension,Boolean print) {
+		BusinessEntityInfos businessEntityInfos = applicationBusiness.findBusinessEntityInfos((Class<AbstractIdentifiable>) aClass);
+		ReportTable<MODEL> report = new ReportTable<MODEL>();
+		report.setTitle(languageBusiness.findText("report.datatable.title", new Object[]{businessEntityInfos.getUiLabel()}));
+		report.setFileName(report.getTitle());
+		report.setFileExtension(fileExtension);
+		report.setColumns(findColumns(aClass));
+		//Collection<IDENTIFIABLE> collection = (Collection<IDENTIFIABLE>) genericBusiness.use(aClass).find().all();
+		if(datas==null)
+			;
+		else
+			report.getDataSource().addAll(datas); 
+		buildTable(report,print);
+		return report;
 	}
 	
 	@Override
@@ -190,9 +249,12 @@ public class JasperReportBusinessImpl implements ReportBusiness<Style> , Seriali
 								
 				exporter.exportReport();
 			}else if("xml".equalsIgnoreCase(aReport.getFileExtension())){
-				JRXmlExporter xmlExporter = new JRXmlExporter();
+				JRXmlExporter exporter = new JRXmlExporter();
 				
-				xmlExporter.exportReport();
+				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+				exporter.setExporterOutput(new SimpleXmlExporterOutput(baos));
+				
+				exporter.exportReport();
 			}else
 				ExceptionUtils.getInstance().exception("report.extension.missing");
 			

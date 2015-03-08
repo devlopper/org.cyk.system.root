@@ -3,9 +3,6 @@ package org.cyk.system.root.business.impl.geography;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
@@ -17,7 +14,6 @@ import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.persistence.api.geography.ContactCollectionDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 
-@Stateless
 public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<ContactCollection, ContactCollectionDao> implements ContactCollectionBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -29,7 +25,7 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
 		super(dao); 
 	}   
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override
     public void load(ContactCollection aCollection) {
         aCollection.setPhoneNumbers(contactDao.readAll(PhoneNumber.class));
         aCollection.setLocations(contactDao.readAll(Location.class));

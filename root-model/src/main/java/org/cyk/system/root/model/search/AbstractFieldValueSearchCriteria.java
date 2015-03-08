@@ -23,4 +23,11 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 		this.value = value;
 	}
 	
+	@Override
+	public String toString() {
+		Object o = getPreparedValue();
+		if(o!=null)
+			return o.toString();
+		return super.toString();
+	}
 }

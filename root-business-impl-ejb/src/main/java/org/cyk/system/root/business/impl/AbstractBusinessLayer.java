@@ -14,10 +14,13 @@ import org.cyk.system.root.business.api.datasource.DataSource;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.datasource.JdbcDataSource;
+import org.cyk.system.root.business.impl.file.JasperReportBusinessImpl;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.report.AbstractReport;
+import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.utility.common.cdi.AbstractLayer;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusinessService<?>> implements BusinessLayer, Serializable {
@@ -29,6 +32,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusine
     @Inject protected BusinessLocator businessLocator;
     @Inject protected BusinessManager businessManager;
     @Inject protected LanguageBusiness languageBusiness;
+    @Inject protected JasperReportBusinessImpl reportBusiness;
     
     protected ValidatorMap validatorMap = ValidatorMap.getInstance();
     
@@ -66,6 +70,10 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusine
     protected DataSource createShiroDataSource(){
     	return new JdbcDataSource();
     }
+
+	protected <MODEL, REPORT extends AbstractReport<?>> void registerReportConfiguration(AbstractReportConfiguration<MODEL, REPORT> configuration) {
+		reportBusiness.registerConfiguration(configuration);
+	}
     
     
     

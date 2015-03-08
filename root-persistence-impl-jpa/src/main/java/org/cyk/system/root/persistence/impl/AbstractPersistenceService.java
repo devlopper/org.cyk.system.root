@@ -229,7 +229,11 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		registerNamedQuery(name, query, clazz);
 		Field countField = FieldUtils.getField(getClass(), KW_NQ_COUNT+StringUtils.substringAfter(name, "."+KW_NQ_READ), true);
 		if(countField!=null){
-			String var = StringUtils.substringAfter(StringUtils.substringBefore(query, KW_JPQL_FROM),KW_JPQL_SELECT);
+			String var = StringUtils.substringAfter(StringUtils.substringBefore(query, KW_JPQL_FROM),KW_JPQL_SELECT).trim();
+			if(var.toLowerCase().startsWith("new ")){
+				String afterFrom = StringUtils.substringAfter(query, KW_JPQL_FROM+" ").trim();
+				var = StringUtils.split(afterFrom)[1];
+			}
 			query = KW_JPQL_SELECT+" "+KW_JPQL_COUNT+"(" +var.trim()+")"+" "+KW_JPQL_FROM+" "+
 			(StringUtils.contains(query, KW_JPQL_ORDER_BY)?StringUtils.substringBetween(query, KW_JPQL_FROM,KW_JPQL_ORDER_BY):StringUtils.substringAfter(query, KW_JPQL_FROM));
 			registerNamedQuery(StringUtils.replaceOnce(name, "."+KW_NQ_READ, "."+KW_NQ_COUNT), query, Long.class);
