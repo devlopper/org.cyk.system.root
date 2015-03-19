@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -31,9 +32,19 @@ public class Period extends AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-	
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+	public static Date DATE_LOWEST;
+	public static Date DATE_HIGHEST;
 	//private String timeZone;
+	
+	static{
+		try {
+			DATE_LOWEST = DateUtils.parseDate("1/1/1", "dd/MM/yyy");
+			DATE_HIGHEST = DateUtils.parseDate("1/1/10000", "dd/MM/yyy");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull

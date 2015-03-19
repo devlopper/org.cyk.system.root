@@ -1,7 +1,10 @@
 package org.cyk.system.root.persistence.impl.integration;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.persistence.api.party.PersonDao;
@@ -20,17 +23,20 @@ public class PartyPersistenceIT extends AbstractPersistenceIT {
 	 
 	@Inject private PersonDao personDao;
 	
-	private void person(String firstName,String lastName){
+	private void person(String code,String firstName,String lastName,String email){
 		Person person = new Person(firstName, lastName);
-		person.setContactCollection(null);
+		person.setCode(code);
+		person.setCreationDate(new Date());
+		create(new ElectronicMail(person.getContactCollection(), email));
+		create(person.getContactCollection());
 		create(person);
 	}
 		
 	@Override
 	protected void populate() {
-		person("Paul", "Zadi");
-		person("Komenan", "NDri");
-		person("Zoko", "Fula");
+		person("1","Paul", "Zadi","a@m.com");
+		person("2","Komenan", "NDri","b@m.com");
+		person("3","Zoko", "Fula","a@d.com");
 	}
 	
 	private void assertPersonSearch(int expected,String name){
@@ -47,31 +53,15 @@ public class PartyPersistenceIT extends AbstractPersistenceIT {
 		assertPersonSearch(2, "o");
 		assertPersonSearch(1, "e");
 		assertPersonSearch(2, "i");
-	}
-
-	@Override
-	protected void create() {
-		// TODO Auto-generated method stub
+		
+		Assert.assertEquals("Komenan NDri", personDao.readByEmail("b@m.com").getNames());
 		
 	}
 
-	@Override
-	protected void delete() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void read() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void update() {
-		// TODO Auto-generated method stub
-		
-	}
+	@Override protected void create() {}
+	@Override protected void delete() {}
+	@Override protected void read() {}
+	@Override protected void update() {}
 	
 	
 	

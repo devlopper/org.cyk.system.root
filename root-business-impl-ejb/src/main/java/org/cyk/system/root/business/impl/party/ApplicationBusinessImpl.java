@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.party;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -20,6 +21,7 @@ import org.cyk.system.root.business.api.security.LicenseBusiness;
 import org.cyk.system.root.business.api.security.ShiroConfigurator;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.security.DefaultApplicationPropertiesProvider;
 import org.cyk.system.root.business.impl.security.DefaultShiroConfigurator;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -28,11 +30,9 @@ import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.PartySearchCriteria;
 import org.cyk.system.root.model.security.ApplicationAccount;
 import org.cyk.system.root.model.security.Installation;
-import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.PersistenceManager;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
-import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -45,7 +45,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	private static ShiroConfigurator SHIRO_CONFIGURATOR;
 	private static Collection<BusinessEntityInfos> BUSINESS_ENTITIES_INFOS;
 	
-	@Inject private RoleDao roleDao;
+	//@Inject private RoleDao roleDao;
 	@Inject private BusinessManager businessManager;
 	@Inject private PersistenceManager persistenceManager;
     @Inject private LanguageBusiness languageBusiness;
@@ -91,18 +91,28 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		ApplicationAccount administratorAccount = new ApplicationAccount();
 		administratorAccount.setUser(installation.getApplication());
 		administratorAccount.setCredentials(installation.getAdministratorCredentials());
-		administratorAccount.getRoles().add(roleDao.read(Role.ADMINISTRATOR));
+		administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getAdministratorRole());
 		userAccountBusiness.create(administratorAccount);
-		administratorAccount.getRoles().remove(roleDao.read(Role.BUSINESS_ACTOR));
 		
 		__writeInfo__("Creating manager account");
 		personBusiness.create(installation.getManager());
 		UserAccount managerAccount = new UserAccount();
 		managerAccount.setUser(installation.getManager());
 		managerAccount.setCredentials(installation.getManagerCredentials());
-		managerAccount.getRoles().add(roleDao.read(Role.MANAGER));
+		managerAccount.getRoles().addAll(Arrays.asList(RootBusinessLayer.getInstance().getManagerRole(),RootBusinessLayer.getInstance().getBusinessActorRole()));
 		userAccountBusiness.create(managerAccount);
 		
+		//FIXME to be deleted
+		/*
+		Person person = new Person();
+		person.setName("Managertwo");
+		personBusiness.create(person);
+		UserAccount account = new UserAccount();
+		account.setUser(person);
+		account.setCredentials(new Credentials("manager2", "123"));
+		account.getRoles().addAll(Arrays.asList(RootBusinessLayer.getInstance().getManagerRole(),RootBusinessLayer.getInstance().getBusinessActorRole()));
+		userAccountBusiness.create(account);
+		*/
 	}
 	
 	private void installLicense(Installation installation){

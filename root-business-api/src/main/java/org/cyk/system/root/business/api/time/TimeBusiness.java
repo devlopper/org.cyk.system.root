@@ -14,6 +14,8 @@ public interface TimeBusiness {
 	SimpleDateFormat DATE_TIME_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy à HH:mm");
 	SimpleDateFormat DATE_TIME_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy à HH:mm");
 	
+	Date findUniversalTimeCoordinated();
+	
 	Long findDuration(Period period);
 	
 	Long findDuration(Collection<Period> periods);

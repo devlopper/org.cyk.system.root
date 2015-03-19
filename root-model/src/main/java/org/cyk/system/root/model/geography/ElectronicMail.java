@@ -21,7 +21,7 @@ public class ElectronicMail extends Contact implements Serializable {
 	private static final long serialVersionUID = 923076998880521464L;
 
 	@Input @InputText @Email
-	@NotNull @Column(nullable=false)
+	@NotNull @Column(unique=true,nullable=false)
 	private String address;
 	
 	public ElectronicMail() {}

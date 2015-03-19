@@ -11,4 +11,6 @@ public interface AbstractPartyDao<PARTY extends Party,SEARCH_CRITERIA extends Pa
 	Collection<PARTY> readByCriteria(SEARCH_CRITERIA criteria);
     
 	Long countByCriteria(SEARCH_CRITERIA criteria);
+	
+	PARTY readByEmail(String email);
 }

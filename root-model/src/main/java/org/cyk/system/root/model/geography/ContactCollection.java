@@ -27,6 +27,9 @@ public class ContactCollection extends AbstractIdentifiable implements Serializa
 	@Transient 
     private Collection<PostalBox> postalBoxs;
 	
+	@Transient 
+    private Collection<ElectronicMail> electronicMails;
+	
 	@Override
 	public String toString() {
 	    StringBuilder s = new StringBuilder(super.toString()+"\r\n");

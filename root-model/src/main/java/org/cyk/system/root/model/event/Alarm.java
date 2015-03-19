@@ -8,11 +8,11 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
-import org.cyk.system.root.model.time.Period;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.cyk.system.root.model.time.Period;
 
 /**
  * To warm about something
@@ -24,12 +24,14 @@ import lombok.Setter;
 public class Alarm implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	
+	public static Boolean ENABLED = Boolean.TRUE;
 
 	/**
 	 * Enabled = true means can be executed , no otherwise
 	 */
 	@Column(name="alarm_enabled")
-	private Boolean enabled;
+	private Boolean enabled = ENABLED;
 	
 	/**
 	 * From : The first execution date

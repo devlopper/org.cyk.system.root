@@ -9,8 +9,10 @@ import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.geography.PhoneNumber;
+import org.cyk.system.root.model.geography.PostalBox;
 import org.cyk.system.root.persistence.api.geography.ContactCollectionDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 
@@ -27,8 +29,10 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
 	
 	@Override
     public void load(ContactCollection aCollection) {
-        aCollection.setPhoneNumbers(contactDao.readAll(PhoneNumber.class));
-        aCollection.setLocations(contactDao.readAll(Location.class));
+        aCollection.setPhoneNumbers(contactDao.readAllByCollection(PhoneNumber.class, aCollection));
+        aCollection.setLocations(contactDao.readAllByCollection(Location.class, aCollection));
+        aCollection.setElectronicMails(contactDao.readAllByCollection(ElectronicMail.class, aCollection));
+        aCollection.setPostalBoxs(contactDao.readAllByCollection(PostalBox.class, aCollection));
     }
 
     @Override
@@ -36,7 +40,18 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
         super.create(collection);
         configure(collection.getPhoneNumbers(), collection);
         configure(collection.getLocations(), collection);
+        configure(collection.getElectronicMails(), collection);
+        configure(collection.getPostalBoxs(), collection);
         return collection;
+    }
+    
+    @Override
+    public ContactCollection update(ContactCollection collection) {
+    	update(contactDao.readAllByCollection(PhoneNumber.class, collection), collection.getPhoneNumbers(), collection);
+    	update(contactDao.readAllByCollection(Location.class, collection), collection.getLocations(), collection);
+    	update(contactDao.readAllByCollection(ElectronicMail.class, collection), collection.getElectronicMails(), collection);
+    	update(contactDao.readAllByCollection(PostalBox.class, collection), collection.getPostalBoxs(), collection);
+    	return super.update(collection);
     }
      
     private void configure(Collection<? extends Contact> contacts,ContactCollection collection){
@@ -48,6 +63,23 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
             contact.setOrderIndex(order++);
             contactDao.create(contact);
         }
+    }
+    
+    private void update(Collection<? extends Contact> databaseContacts,Collection<? extends Contact> inputContacts,ContactCollection collection){
+        if(inputContacts==null)
+            return;
+        for(Contact inputContact : inputContacts){
+        	if(inputContact.getIdentifier()==null)
+        		contactDao.create(inputContact);
+        	else
+        		contactDao.update(inputContact);
+        }
+        
+        for(Contact databaseContact : databaseContacts){
+        	if(inputContacts.contains(databaseContact))
+        		contactDao.delete(databaseContact);
+        }
+        
     }
 	
 }

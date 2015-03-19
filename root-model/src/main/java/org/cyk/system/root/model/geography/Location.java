@@ -22,6 +22,10 @@ public class Location extends Contact implements Serializable{
 	
 	@Input @InputChoice @InputOneChoice @InputOneCombo
 	@ManyToOne
+	private LocationType type;
+	
+	@Input @InputChoice @InputOneChoice @InputOneCombo
+	@ManyToOne
 	private Locality locality;
 	
 	@Input

@@ -1,14 +1,13 @@
 package org.cyk.system.root.service.impl.integration;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.service.impl.data.Data;
@@ -55,10 +54,10 @@ public class NotificationTemplateIT extends AbstractBusinessIT {
     @Override
     protected void _execute_() {
         super._execute_();
-       
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("name", "Drogba didier");
-        System.out.println(notificationBusiness.process(notificationTemplate2, params));
+        notificationTemplate2.getMessageParametersMap().put("name", "Drogba didier");
+        Notification n = new Notification();
+        notificationBusiness.fill(n,notificationTemplate2);
+        System.out.println(n.getMessage());
 
     }
 

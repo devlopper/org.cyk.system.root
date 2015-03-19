@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.event.Event;
+import org.cyk.system.root.model.event.EventSearchCriteria;
+import org.cyk.system.root.model.time.Period;
 
 public interface EventBusiness extends TypedBusiness<Event> {
     
@@ -16,15 +18,28 @@ public interface EventBusiness extends TypedBusiness<Event> {
     
     Long countWhereFromDateGreaterThanByDate(Date date);
     
-    //TODO instead of using thread living in memory we can use Scaaning the database and notify. Yes it might not be accurate....
-    void programAlarm(Collection<Event> events);
+    Collection<Event> findToAlarm();
+       
+    Collection<Event> findWhereAlarmFromDateBetween(Period period);
+    
+    Long countWhereAlarmFromDateBetween(Period period);
+    
+    Collection<Event> findWhereDateBetweenAlarmPeriod(Date date);
+    
+    Long countWhereDateBetweenAlarmPeriod(Date date);
     
     Long findDuration(Collection<Event> events);
+    
+    Collection<Event> findByCriteria(EventSearchCriteria criteria);
+    
+    Long countByCriteria(EventSearchCriteria criteria);
     
     /*
      * Transactions
      */
     
     void create(Collection<Event> events);
+    
+    //void disableAlarm(Collection<Event> events);
     
 }

@@ -12,6 +12,7 @@ import org.cyk.system.root.model.event.EventCollection;
 import org.cyk.system.root.model.event.EventMissed;
 import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.EventParticipation;
+import org.cyk.system.root.model.event.EventSearchCriteria;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
 import org.cyk.system.root.persistence.api.event.EventMissedDao;
@@ -38,6 +39,7 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		
 	@Override
 	protected void populate() {
+		
 	    oneHourLater = DateUtils.addHours(now, 1);
 	    oneHourPast = DateUtils.addHours(now, -1);
 		event(null,oneHourLater, DateUtils.addMinutes(oneHourLater, 5));
@@ -77,6 +79,7 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	    event.setCollection(collection);
 	    event.setContactCollection(null);
 	    event.setPeriod(new Period(fromDate, toDate));
+	    event.getAlarm().getPeriod().setFromDate(DateUtils.addMinutes(fromDate, -5));
 	    create(event);
 	    return event;
 	}
@@ -133,6 +136,17 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		Assert.assertEquals(8, eventDao.countWhereFromDateBetweenByStartDateByEndDate(DateUtils.addHours(now, -2), DateUtils.addHours(now, 2)).intValue());
 		Assert.assertEquals(7, eventDao.countWhereFromDateBetweenByStartDateByEndDate(DateUtils.addHours(now, 0), DateUtils.addHours(now, 2)).intValue());
 		Assert.assertEquals(1, eventDao.countWhereFromDateBetweenByStartDateByEndDate(DateUtils.addMinutes(oneHourLater, 6), DateUtils.addHours(now, 2)).intValue());
+		
+		Assert.assertEquals(8, eventDao.countByCriteria(new EventSearchCriteria(DateUtils.addHours(now, -2), DateUtils.addHours(now, 2))).intValue());
+		Assert.assertEquals(7, eventDao.countByCriteria(new EventSearchCriteria(DateUtils.addHours(now, 0), DateUtils.addHours(now, 2))).intValue());
+		Assert.assertEquals(1, eventDao.countByCriteria(new EventSearchCriteria(DateUtils.addMinutes(oneHourLater, 6), DateUtils.addHours(now, 2))).intValue());
+		
+		Assert.assertEquals(8, eventDao.countWhereAlarmFromDateBetween(new Period(DateUtils.addHours(now, -2), DateUtils.addHours(now, 2))).intValue());
+		Assert.assertEquals(4, eventDao.countWhereAlarmFromDateBetween(new Period(DateUtils.addHours(now, -2), now)).intValue());
+		
+		Assert.assertEquals(4, eventDao.countWhereAlarmFromDateBetween(new Period(DateUtils.addHours(now, -2), now)).intValue());
+		
+		//Assert.assertEquals(4, eventDao.countWhereDateBetweenAlarmPeriod(now).intValue());
 		
 		Date toDate = DateUtils.addHours(now, 4);
 		

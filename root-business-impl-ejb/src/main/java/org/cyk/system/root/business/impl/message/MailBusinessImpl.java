@@ -24,15 +24,12 @@ import org.cyk.utility.common.cdi.AbstractBean;
 @Log
 public class MailBusinessImpl extends AbstractBean implements MailBusiness , Serializable {
     
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 4468167686499924200L;
 	@Resource(lookup = "mail/cyk_root")
     private Session session;
 
-    private void send(final Notification notification,final InternetAddress[] addresses) {
-        new Thread(){
+    private void send(final Notification notification,final InternetAddress[] addresses,SendOptions options) {
+    	Thread thread = new Thread(){
             public void run() {
                 MimeMessage message = new MimeMessage(session);
                 try {
@@ -46,7 +43,11 @@ public class MailBusinessImpl extends AbstractBean implements MailBusiness , Ser
                     log.log(Level.SEVERE,e.toString(),e);
                 }
             };
-        }.start();
+        };
+        if(Boolean.TRUE.equals(options.getBlocking()))
+        	thread.run();
+        else
+        	thread.start();
         
     }
     
@@ -70,31 +71,54 @@ public class MailBusinessImpl extends AbstractBean implements MailBusiness , Ser
     }*/
     
     @Override
+    public void send(Notification notification, String[] theReceiverIds,SendOptions options) {
+        send(notification, addresses(theReceiverIds),options);
+    }
+    @Override
     public void send(Notification notification, String[] theReceiverIds) {
-        send(notification, addresses(theReceiverIds));
+        send(notification, addresses(theReceiverIds),new SendOptions());
     }
 
+    @Override
+    public void send(Notification notification, String aReceiverId,SendOptions options) {
+        send(notification, new String[]{aReceiverId},options);
+    }
     @Override
     public void send(Notification notification, String aReceiverId) {
-        send(notification, new String[]{aReceiverId});
+        send(notification, new String[]{aReceiverId},new SendOptions());
     }
 
     @Override
+    public void send(Notification notification, Collection<String> theReceiverIds,SendOptions options) {
+        send(notification, theReceiverIds.toArray(new String[]{}),options);
+    }
+    @Override
     public void send(Notification notification, Collection<String> theReceiverIds) {
-        send(notification, theReceiverIds.toArray(new String[]{}));
+        send(notification, theReceiverIds.toArray(new String[]{}),new SendOptions());
     }
 
+    @Override
+    public void send(Notification notification, Party[] theReceiverIds,SendOptions options) {
+        
+    }
     @Override
     public void send(Notification notification, Party[] theReceiverIds) {
         
     }
 
     @Override
+    public void send(Notification notification, Party aReceiverId,SendOptions options) {
+           
+    }
+    @Override
     public void send(Notification notification, Party aReceiverId) {
-        
-        
+           
     }
 
+    @Override
+    public void sendParty(Notification notification, Collection<Party> theReceiverIds,SendOptions options) {
+        
+    }
     @Override
     public void sendParty(Notification notification, Collection<Party> theReceiverIds) {
         

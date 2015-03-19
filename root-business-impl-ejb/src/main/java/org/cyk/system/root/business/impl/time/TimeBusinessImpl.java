@@ -17,6 +17,11 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	private static final long serialVersionUID = -854697735401050272L;
 
 	@Override
+	public Date findUniversalTimeCoordinated() {
+		return commonUtils.getUniversalTimeCoordinated();
+	}
+	
+	@Override
 	public Long findDuration(Period period) {
 		return period.getToDate().getTime()-period.getFromDate().getTime();
 	}

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Permission;
@@ -54,8 +55,8 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 		create(managerRole);
 		r2id = managerRole.getIdentifier();
 		
-		createAccount("paul", "admin", "123", adminRole);
-		createAccount("zadi", "manager", "123", managerRole);
+		createAccount("paul", "admin", "123","mymail@mail.com", adminRole);
+		createAccount("zadi", "manager", "123","m1@k.net", managerRole);
 		/*
 		Person person = new Person("Paul", "Zadi");
 		person.setContactCollection(null);
@@ -76,6 +77,8 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 		
 		Assert.assertNotNull(userAccountDao.readByCredentials(new Credentials("admin", "123")));
 		Assert.assertNull(userAccountDao.readByCredentials(new Credentials("admin", "1234")));
+		
+		System.out.println(userAccountDao.readByUsername("admin"));
 		
 		System.out.println(permissionDao.readByUserAccount(userAccountDao.readByCredentials(new Credentials("admin", "123"))));
 		System.out.println(permissionDao.readByUserAccount(userAccountDao.readByCredentials(new Credentials("manager", "123"))));
@@ -110,13 +113,20 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 	}
 	
 	
-	private void createAccount(String personName,String username,String password,Role...roles){
+	private void createAccount(String personName,String username,String password,String email,Role...roles){
+		ElectronicMail electronicMail = new ElectronicMail(email);
 		Person person = new Person(personName, null);
 		person.setCode(RandomStringUtils.randomAlphabetic(8));
-		person.setContactCollection(null);
+		//person.setContactCollection(null);
+		//person.getContactCollection().getElectronicMails().add(electronicMail);
 		person.setCreationDate(new Date());
+		electronicMail.setCollection(person.getContactCollection());
+		
+		create(person.getContactCollection());
+		create(electronicMail);
 		create(person);
-	    UserAccount userAccount = new UserAccount(person, new Credentials(username, password), roles);
+	    
+		UserAccount userAccount = new UserAccount(person, new Credentials(username, password),new Date(), roles);
 	    create(userAccount);
 	}
 	

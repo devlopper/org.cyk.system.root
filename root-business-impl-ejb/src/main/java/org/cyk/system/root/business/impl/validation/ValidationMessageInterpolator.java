@@ -16,6 +16,8 @@ public class ValidationMessageInterpolator implements MessageInterpolator {
     private static final String MESSAGE_CUSTOM_START = "{";
     private static final String MESSAGE_CUSTOM_END = "}";
     
+    public static Locale LOCALE = Locale.FRENCH;
+    
     private LanguageBusiness languageBusiness = LanguageBusinessImpl.getInstance();
     private MessageInterpolator defaultInterpolator;
     
@@ -24,7 +26,7 @@ public class ValidationMessageInterpolator implements MessageInterpolator {
     }
     
 	public String interpolate(String message, Context context) {
-		return interpolate(message, context, languageBusiness.findCurrentLocale());
+		return interpolate(message, context, /*languageBusiness.findCurrentLocale()*/LOCALE);
 	}
 
 	public String interpolate(String message, Context context, Locale locale) {

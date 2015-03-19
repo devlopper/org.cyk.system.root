@@ -1,7 +1,6 @@
 package org.cyk.system.root.service.impl.unit;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -16,7 +15,7 @@ public class TimeUT extends AbstractUnitTest {
 
     private static final long serialVersionUID = -6691092648665798471L;
 
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyy HH:mm:ss.SSS");
+    //private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyy HH:mm:ss.SSS");
     
     private TimeBusinessImpl timeBusiness = new TimeBusinessImpl();
     
@@ -55,11 +54,7 @@ public class TimeUT extends AbstractUnitTest {
     private Date createDate(int d,int m,int y,int h,int mm){
     	return createDate(d, m, y, h, mm, 0, 0);
     }
-    
-    private Date createDate(int d,int m,int y,int h,int mm,int ss){
-    	return createDate(d, m, y, h, mm, ss, 0);
-    }
-    
+     
     private Date createDate(int d,int m,int y,int h,int mm,int ss,int t){
 		try {
 			return DateUtils.parseDate(d+"/"+m+"/"+y+" "+h+":"+mm+":"+ss+"."+t, "dd/MM/yyyy HH:mm:ss.SSS");
