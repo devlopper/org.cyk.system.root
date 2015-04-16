@@ -14,15 +14,13 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractModelElement;
 
 @Getter @Setter @Embeddable @NoArgsConstructor @AllArgsConstructor
-public class SortDetails extends AbstractModelElement implements Serializable {
+public class Sort extends AbstractModelElement implements Serializable {
 
 	private static final long serialVersionUID = -971774360718770716L;
 
 	@Embedded private Average average = new Average();
 	@Embedded private Rank rank = new Rank();
-	
-	@Column(length=1024)
-	private String comments;
+	@Column(length=1024) private String comments;
 	
 	@Override
 	public String getUiString() {
