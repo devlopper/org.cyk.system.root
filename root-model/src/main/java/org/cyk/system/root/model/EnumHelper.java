@@ -12,9 +12,6 @@ import org.cyk.utility.common.AbstractMethod;
 @Setter
 public class EnumHelper implements Serializable {
     
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 4330959923308332561L;
 
 	private static EnumHelper INSTANCE = new EnumHelper();

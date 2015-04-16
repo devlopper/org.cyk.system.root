@@ -37,15 +37,33 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    validationPolicy.validateCreate(object);
         return dao.create(object);
 	}
+	
+	@Override
+	public void create(Collection<IDENTIFIABLE> identifiables) {
+	    for(IDENTIFIABLE identifiable : identifiables)
+	    	create(identifiable);
+	}
 
 	@Override
 	public IDENTIFIABLE update(IDENTIFIABLE object) {
 		return dao.update(object);
 	}
+	
+	@Override
+	public void update(Collection<IDENTIFIABLE> identifiables) {
+	    for(IDENTIFIABLE identifiable : identifiables)
+	    	update(identifiable);
+	}
 
 	@Override
 	public IDENTIFIABLE delete(IDENTIFIABLE object) {
 		return dao.delete(object);
+	}
+	
+	@Override
+	public void delete(Collection<IDENTIFIABLE> identifiables) {
+	    for(IDENTIFIABLE identifiable : identifiables)
+	    	delete(identifiable);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -68,6 +86,17 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Long countAll() {
 		return dao.countAll();
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findAllExclude(Collection<IDENTIFIABLE> identifiables) {
+		applyDataReadConfigToDao(getDataReadConfig());
+		return dao.readAllExclude(identifiables);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countAllExclude(Collection<IDENTIFIABLE> identifiables) {
+		return dao.countAllExclude(identifiables); 
 	}
 
 	protected void applyDataReadConfigToDao(DataReadConfig dataReadConfig){

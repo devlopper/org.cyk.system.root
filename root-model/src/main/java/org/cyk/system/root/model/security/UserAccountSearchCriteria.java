@@ -1,6 +1,8 @@
 package org.cyk.system.root.model.security;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +18,8 @@ public class UserAccountSearchCriteria extends AbstractFieldValueSearchCriteriaS
 
 	private DateSearchCriteria creationDateSearchCriteria;
 	private StringSearchCriteria usernameSearchCriteria;
+	private Collection<UserAccount> userAccountExcluded = new ArrayList<>();
+	private Collection<Role> roleExcluded = new ArrayList<>();
 	
 	public UserAccountSearchCriteria(String username){
 		usernameSearchCriteria = new StringSearchCriteria();

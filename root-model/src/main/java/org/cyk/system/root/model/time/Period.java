@@ -71,7 +71,7 @@ public class Period extends AbstractModelElement implements Serializable{
 	
 	@Override
 	public String toString() {
-		return DATE_FORMAT.format(fromDate)+" "+DATE_FORMAT.format(toDate)+" , "+(getDuration()/DateUtils.MILLIS_PER_MINUTE)+" min";
+		return DATE_FORMAT.format(fromDate)+" "+DATE_FORMAT.format(toDate);//+" , "+(getDuration()/DateUtils.MILLIS_PER_MINUTE)+" min";
 	}
 
 }

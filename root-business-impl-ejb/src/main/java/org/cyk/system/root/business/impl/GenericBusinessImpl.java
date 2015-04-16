@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -75,6 +76,12 @@ public class GenericBusinessImpl extends AbstractBusinessService<AbstractIdentif
         }else
             return businessBean.create(anIdentifiable);   
 	}
+	
+	@Override
+	public void create(Collection<AbstractIdentifiable> identifiables) {
+		for(AbstractIdentifiable identifiable : identifiables)
+			create(identifiable);
+	}
 
 	@Override
 	public AbstractIdentifiable update(AbstractIdentifiable anObject) {
@@ -85,6 +92,12 @@ public class GenericBusinessImpl extends AbstractBusinessService<AbstractIdentif
         }else
             return businessBean.update(anObject);   
 	}
+	
+	@Override
+	public void update(Collection<AbstractIdentifiable> identifiables) {
+		for(AbstractIdentifiable identifiable : identifiables)
+			update(identifiable);
+	}
 
 	@Override
 	public AbstractIdentifiable delete(AbstractIdentifiable anObject) {
@@ -94,6 +107,12 @@ public class GenericBusinessImpl extends AbstractBusinessService<AbstractIdentif
             return genericDao.delete(anObject);
         }else
             return businessBean.delete(anObject);   
+	}
+	
+	@Override
+	public void delete(Collection<AbstractIdentifiable> identifiables) {
+		for(AbstractIdentifiable identifiable : identifiables)
+			delete(identifiable);
 	}
 
 	@TransactionAttribute(TransactionAttributeType.NEVER)

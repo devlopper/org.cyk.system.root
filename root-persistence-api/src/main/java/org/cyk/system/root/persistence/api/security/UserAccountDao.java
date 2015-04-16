@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.security.Credentials;
+import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.security.UserAccountSearchCriteria;
 import org.cyk.system.root.persistence.api.TypedDao;
@@ -19,5 +20,9 @@ public interface UserAccountDao extends TypedDao<UserAccount> {
     Collection<UserAccount> readByCriteria(UserAccountSearchCriteria searchCriteria);
     
     Long countByCriteria(UserAccountSearchCriteria searchCriteria);
+    
+    Collection<UserAccount> readAllExcludeRoles(Collection<Role> roles);
+    
+    Long countAllExcludeRoles(Collection<Role> roles);
     
 }

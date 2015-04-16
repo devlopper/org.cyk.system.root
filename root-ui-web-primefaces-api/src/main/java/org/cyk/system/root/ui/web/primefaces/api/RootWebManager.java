@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.inject.Singleton;
 
+import org.cyk.system.root.model.event.EventType;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.UICommandable;
@@ -30,6 +31,10 @@ public class RootWebManager extends AbstractWebManager implements Serializable {
 		SystemMenu systemMenu = new SystemMenu();
 		UICommandable group = uiProvider.createCommandable("contacts", null);
 		group.addChild(menuManager.crudMany(Locality.class, null));
+		systemMenu.getReferenceEntities().add(group);
+		
+		group = uiProvider.createCommandable("event", null);
+		group.addChild(menuManager.crudMany(EventType.class, null));
 		systemMenu.getReferenceEntities().add(group);
 		
 		return systemMenu;

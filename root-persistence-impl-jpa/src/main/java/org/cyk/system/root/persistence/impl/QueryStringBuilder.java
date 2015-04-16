@@ -20,6 +20,8 @@ public class QueryStringBuilder implements Serializable {
 	public static final String KW_JPQL_SUM = "SUM";
 	public static final String KW_JPQL_AND = "AND";
 	public static final String KW_JPQL_OR = "OR";
+	public static final String KW_JPQL_ASC = "ASC";
+	public static final String KW_JPQL_DESC = "DESC";
 	 
 	/* Named Queries */  
 	public static final String KW_NQ_READ = "read";
@@ -157,12 +159,20 @@ public class QueryStringBuilder implements Serializable {
 		return in(null, anAttributeName+"."+ATTRIBUTE_IDENTIFIER, VAR_IDENTIFIERS);
 	}
 	
-	
-	
 	public QueryStringBuilder orderBy(String...fieldNames) {
 		__value__.append(" "+KW_JPQL_ORDER_BY);
 		for(int i=0;i<fieldNames.length;i++)
 			__value__.append((i>0?",":" ")+fieldNames[i]+" ASC");
+		return this;
+	}
+	
+	public QueryStringBuilder orderBy(String fieldName,Boolean ascending) {
+		if(StringUtils.contains(__value__, KW_JPQL_ORDER_BY)){
+			__value__.append(",");
+		}else{
+			__value__.append(" "+KW_JPQL_ORDER_BY+" ");
+		}
+		__value__.append(VAR+"."+fieldName+" "+((ascending==null || Boolean.TRUE.equals(ascending))?KW_JPQL_ASC:KW_JPQL_DESC));
 		return this;
 	}
 	

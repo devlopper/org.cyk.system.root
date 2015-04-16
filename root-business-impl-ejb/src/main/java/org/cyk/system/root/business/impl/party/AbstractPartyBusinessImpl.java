@@ -31,7 +31,8 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     public PARTY create(PARTY party) {
 		party.setCode(valueGenerator.partyCode(party));//TODO handle duplicate by using lock write
 		party.setCreationDate(universalTimeCoordinated());
-	    contactCollectionBusiness.create(party.getContactCollection());
+		if(party.getContactCollection()!=null)
+			contactCollectionBusiness.create(party.getContactCollection());
         super.create(party);
         return party;
     }

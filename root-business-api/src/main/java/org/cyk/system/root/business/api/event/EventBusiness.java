@@ -1,45 +1,29 @@
 package org.cyk.system.root.business.api.event;
 
 import java.util.Collection;
-import java.util.Date;
 
-import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.event.Event;
+import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.event.EventSearchCriteria;
+import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
 
-public interface EventBusiness extends TypedBusiness<Event> {
+public interface EventBusiness extends AbstractIdentifiablePeriodBusiness<Event> {
     
-    Collection<Event> findWhereFromDateBetweenByStartDateByEndDate(Date startDate,Date endDate);
-    
-    Long countWhereFromDateBetweenByStartDateByEndDate(Date startDate,Date endDate);
-    
-    Collection<Event> findWhereFromDateGreaterThanByDate(Date date);
-    
-    Long countWhereFromDateGreaterThanByDate(Date date);
-    
-    Collection<Event> findToAlarm();
-       
-    Collection<Event> findWhereAlarmFromDateBetween(Period period);
-    
-    Long countWhereAlarmFromDateBetween(Period period);
-    
-    Collection<Event> findWhereDateBetweenAlarmPeriod(Date date);
-    
-    Long countWhereDateBetweenAlarmPeriod(Date date);
-    
-    Long findDuration(Collection<Event> events);
+    Collection<Event> findWhereFromDateBetweenPeriodByParties(Period period,Collection<Party> parties);
+    Long countWhereFromDateBetweenPeriodByParties(Period period,Collection<Party> parties);
     
     Collection<Event> findByCriteria(EventSearchCriteria criteria);
-    
     Long countByCriteria(EventSearchCriteria criteria);
     
-    /*
-     * Transactions
-     */
+    void create(Event event,Collection<EventReminder> eventReminders);
     
-    void create(Collection<Event> events);
+    Collection<Event> findPasts(Collection<Party> parties);
+    Long countPasts(Collection<Party> parties);
     
-    //void disableAlarm(Collection<Event> events);
+    Collection<Event> findCurrents(Collection<Party> parties);
+    Long countCurrents(Collection<Party> parties);
     
+    Collection<Event> findOnComings(Collection<Party> parties);
+    Long countOnComings(Collection<Party> parties);
 }

@@ -89,6 +89,10 @@ public class Person  extends Party  implements Serializable{
 		return getNames();
 	}
 
+	@Override
+	public String getUiString() {
+		return getNames();
+	}
 
 
 

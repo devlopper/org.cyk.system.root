@@ -1,11 +1,13 @@
 package org.cyk.system.root.model.security;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -29,6 +31,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
 
 @Getter @Setter @Entity @NoArgsConstructor
@@ -36,7 +39,8 @@ public class UserAccount extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -23914558440705885L;
 
-	@ManyToOne private Party user;
+	@ManyToOne @NotNull 
+	private Party user;
 	
 	@OneToOne(cascade=CascadeType.ALL) private Credentials credentials = new Credentials();
 	
@@ -57,7 +61,9 @@ public class UserAccount extends AbstractIdentifiable implements Serializable {
 	/**/
 	
 	@Transient private String status;
-	
+	@Transient private final List<Notification> sessionNotifications = new ArrayList<>();
+	@Transient private final List<Notification> sessionNotificationsDeleted = new ArrayList<>();
+	@Transient private Integer connectionAttemptCount = 0;
 	/**/
 	
 	public UserAccount(Party user, Credentials credentials,Date creationDate,Role...roles) {

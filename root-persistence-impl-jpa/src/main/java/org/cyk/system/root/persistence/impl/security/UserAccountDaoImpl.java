@@ -9,31 +9,35 @@ import javax.persistence.NoResultException;
 
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.security.Credentials;
+import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.security.UserAccountSearchCriteria;
 import org.cyk.system.root.persistence.api.security.UserAccountDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
+import org.cyk.system.root.persistence.impl.Utils;
 import org.cyk.utility.common.computation.LogicalOperator;
 
 public class UserAccountDaoImpl extends AbstractTypedDao<UserAccount> implements UserAccountDao,Serializable {
 
 	private static final String READ_BY_CRITERIA_SELECT_FORMAT = "SELECT userAccount FROM UserAccount userAccount ";
 	private static final String READ_BY_CRITERIA_WHERE_FORMAT = "WHERE userAccount.credentials.username = :username ";
+	private static final String WHERE_EXCLUDE_ROLE = "NOT EXISTS (SELECT role FROM Role role WHERE role MEMBER OF userAccount.roles AND role.identifier IN :identifiers) ";
 	
-	private static final String READ_BY_CRITERIA_NOTORDERED_FORMAT = READ_BY_CRITERIA_SELECT_FORMAT+READ_BY_CRITERIA_WHERE_FORMAT;
-	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_SELECT_FORMAT+READ_BY_CRITERIA_WHERE_FORMAT+ORDER_BY_FORMAT;
+	private static final String READ_BY_CRITERIA_NOTORDERED_FORMAT = READ_BY_CRITERIA_SELECT_FORMAT+READ_BY_CRITERIA_WHERE_FORMAT+" AND "+WHERE_EXCLUDE_ROLE;
+	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_NOTORDERED_FORMAT+ORDER_BY_FORMAT;
 	
 	private static final long serialVersionUID = 6306356272165070761L;
 	
 	private String readByCredentials,readAllSortedByDate,readByCriteria,countByCriteria,readByCriteriaCreationDateAscendingOrder,readByCriteriaCreationDateDescendingOrder
-		,readByParties,readByUsername;
+		,readByParties,readByUsername,readAllExcludeRoles,countAllExcludeRoles;
     
     @Override
     protected void namedQueriesInitialisation() {
         super.namedQueriesInitialisation();
         registerNamedQuery(readByCredentials, _select().where("credentials.username","username",EQ).where(LogicalOperator.AND,"credentials.password","password",EQ));
         registerNamedQuery(readAllSortedByDate,READ_BY_CRITERIA_SELECT_FORMAT+" ORDER BY userAccount.creationDate DESC");
+        registerNamedQuery(readAllExcludeRoles,READ_BY_CRITERIA_SELECT_FORMAT+" WHERE "+WHERE_EXCLUDE_ROLE);
         registerNamedQuery(readByCriteria,READ_BY_CRITERIA_NOTORDERED_FORMAT);
         registerNamedQuery(readByCriteriaCreationDateAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "userAccount.creationDate ASC") );
         registerNamedQuery(readByCriteriaCreationDateDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "userAccount.creationDate DESC") );
@@ -84,6 +88,17 @@ public class UserAccountDaoImpl extends AbstractTypedDao<UserAccount> implements
 	
 	protected void applyCriteriaParameters(QueryWrapper<?> queryWrapper,UserAccountSearchCriteria searchCriteria){
 		queryWrapper.parameter("username",searchCriteria.getUsernameSearchCriteria().getPreparedValue());
+		queryWrapper.parameter("identifiers", Utils.ids(searchCriteria.getRoleExcluded()));
+	}
+
+	@Override
+	public Collection<UserAccount> readAllExcludeRoles(Collection<Role> roles) {
+		return namedQuery(readAllExcludeRoles).parameterIdentifiers(roles).resultMany();
+	}
+
+	@Override
+	public Long countAllExcludeRoles(Collection<Role> roles) {
+		return countNamedQuery(countAllExcludeRoles).parameterIdentifiers(roles).resultOne();
 	}
 
 }

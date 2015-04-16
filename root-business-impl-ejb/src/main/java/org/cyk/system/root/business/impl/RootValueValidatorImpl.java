@@ -23,6 +23,9 @@ public class RootValueValidatorImpl implements RootValueValidator,Serializable {
     public static Long SIZE_MINIMUM = 1l;
     public static Long SIZE_MAXIMUM = 1024l * 1024 * 10; //10M
     
+    public static Long PASSWORD_MINIMUM_LENGHT = 6l;
+    public static Long PASSWORD_MAXIMUM_LENGHT = null; //Unlimited
+    
     /**/
 	
 	@Override
@@ -48,6 +51,11 @@ public class RootValueValidatorImpl implements RootValueValidator,Serializable {
 	@Override
 	public Boolean isValidFileSize(Long size, Long minimumSize, Long maximumSize) {
 		return minimumSize <= size && size <= maximumSize;
+	}
+
+	@Override
+	public Boolean isValidUserAccountPassword(String password) {
+		return Boolean.TRUE;
 	}
 
 }

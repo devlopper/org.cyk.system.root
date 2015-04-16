@@ -15,4 +15,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     Collection<IDENTIFIABLE> findAll(); 
     
     Long countAll();
+    
+    Collection<IDENTIFIABLE> findAllExclude(Collection<IDENTIFIABLE> identifiables); 
+    
+    Long countAllExclude(Collection<IDENTIFIABLE> identifiables); 
 }

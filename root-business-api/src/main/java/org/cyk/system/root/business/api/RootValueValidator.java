@@ -19,4 +19,7 @@ public interface RootValueValidator {
 	
 	Boolean isValidFileSize(Long size,Long minimumSize,Long maximumSize);
 	
+	/* UserAccount */
+	
+	Boolean isValidUserAccountPassword(String password);
 }

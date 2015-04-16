@@ -21,6 +21,7 @@ import org.cyk.system.root.model.time.Period;
  */
 @Embeddable
 @Getter @Setter @NoArgsConstructor
+@Deprecated
 public class Alarm implements Serializable{
 
 	private static final long serialVersionUID = 1L;

@@ -15,9 +15,6 @@ import org.cyk.utility.common.cdi.AbstractBean;
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class ExceptionUtils extends AbstractBean implements Serializable {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -5111826049865487656L;
 	private static ExceptionUtils INSTANCE;
     
@@ -43,25 +40,37 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
         throw new BusinessException(validator.getMessages());
     }
     
+    public void exception(Boolean condition,String identifier,String messageId,Object[] parameters){
+        if(Boolean.TRUE.equals(condition)){
+            BusinessException exception = new BusinessException(languageBusiness.findText(messageId,parameters));
+            exception.setIdentifier(identifier);
+            throw exception;
+        }
+    }
     public void exception(Boolean condition,String messageId,Object[] parameters){
-        if(Boolean.TRUE.equals(condition))
-            throw new BusinessException(languageBusiness.findText(messageId,parameters));
+    	exception(condition,null,messageId,parameters);
     }
     
+    public void exception(Boolean condition,String identifier,String messageId){
+        exception(condition, identifier,messageId, null);
+    }
     public void exception(Boolean condition,String messageId){
-        exception(condition, messageId, null);
+    	exception(condition,null,messageId);
     }
     
+    public void exception(String identifier,String messageId){
+        exception(Boolean.TRUE,identifier, messageId);
+    }
     public void exception(String messageId){
-        exception(Boolean.TRUE, messageId);
+    	exception("",messageId);
     }
     
     public void exception(Exception exception){
-        exception("exception.internal");
+        exception("","exception.internal");
     }
 
     public void resourceNotFound(){
-        exception("exception.resource.notfound");
+        exception("","exception.resource.notfound");
     }
     
 }

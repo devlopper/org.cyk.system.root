@@ -1,18 +1,47 @@
 package org.cyk.system.root.business.api.time;
 
-import java.text.SimpleDateFormat;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
 
 public interface TimeBusiness {
 
+	/*
 	SimpleDateFormat DATE_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 	SimpleDateFormat DATE_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy");
 	SimpleDateFormat DATE_TIME_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy à HH:mm");
 	SimpleDateFormat DATE_TIME_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy à HH:mm");
+	*/
+	String DATE_SHORT_PATTERN = "dd/MM/yyyy";
+	String DATE_LONG_PATTERN = "EEEE , dd/MM/yyyy";
+	String DATE_TIME_SHORT_PATTERN = "dd/MM/yyyy à HH:mm";
+	String DATE_TIME_LONG_PATTERN = "EEEE , dd/MM/yyyy à HH:mm";
+	String TIME_SHORT_PATTERN = "HH:mm";
+	
+	String formatDate(Date date,String pattern,Locale locale);
+	String formatDate(Date fromDate,Date toDate,String pattern,Locale locale);
+	
+	String formatDate(Date date,String pattern);
+	String formatDate(Date fromDate,Date toDate,String pattern);
+	String formatDate(Date date,Locale locale);
+	String formatDate(Date fromDate,Date toDate,Locale locale);
+	
+	String formatDate(Date date);
+	String formatDate(Date fromDate,Date toDate);
+	
+	String formatDateTime(Date date,Locale locale);
+	String formatDateTime(Date fromDate,Date toDate,Locale locale);
+	String formatDateTime(Date date);
+	String formatDateTime(Date fromDate,Date toDate);
+	
+	String formatTime(Date time,Locale locale);
+	String formatTime(Date time);
+	
+	String findFormatPattern(Field field);
 	
 	Date findUniversalTimeCoordinated();
 	

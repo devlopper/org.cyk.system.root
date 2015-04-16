@@ -33,6 +33,7 @@ import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.PersistenceManager;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
+import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -45,7 +46,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	private static ShiroConfigurator SHIRO_CONFIGURATOR;
 	private static Collection<BusinessEntityInfos> BUSINESS_ENTITIES_INFOS;
 	
-	//@Inject private RoleDao roleDao;
+	@Inject private RoleDao roleDao;
 	@Inject private BusinessManager businessManager;
 	@Inject private PersistenceManager persistenceManager;
     @Inject private LanguageBusiness languageBusiness;
@@ -72,7 +73,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 			installLicense(installation);
 			__writeInfo__("Installation done!");
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			exceptionUtils().exception(Boolean.TRUE,"exception.install",new Object[]{e});
 		}
 	}
@@ -91,6 +92,8 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		ApplicationAccount administratorAccount = new ApplicationAccount();
 		administratorAccount.setUser(installation.getApplication());
 		administratorAccount.setCredentials(installation.getAdministratorCredentials());
+		//Installer : The one who delivers the system
+		administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
 		administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getAdministratorRole());
 		userAccountBusiness.create(administratorAccount);
 		
@@ -99,20 +102,14 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		UserAccount managerAccount = new UserAccount();
 		managerAccount.setUser(installation.getManager());
 		managerAccount.setCredentials(installation.getManagerCredentials());
-		managerAccount.getRoles().addAll(Arrays.asList(RootBusinessLayer.getInstance().getManagerRole(),RootBusinessLayer.getInstance().getBusinessActorRole()));
+		//Super User : The one who use the system
+		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole())));
+		managerAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
+		//System.out.println("ApplicationBusinessImpl.installAccounts()");
+		//System.out.println(managerAccount.getRoles());
+		
 		userAccountBusiness.create(managerAccount);
 		
-		//FIXME to be deleted
-		/*
-		Person person = new Person();
-		person.setName("Managertwo");
-		personBusiness.create(person);
-		UserAccount account = new UserAccount();
-		account.setUser(person);
-		account.setCredentials(new Credentials("manager2", "123"));
-		account.getRoles().addAll(Arrays.asList(RootBusinessLayer.getInstance().getManagerRole(),RootBusinessLayer.getInstance().getBusinessActorRole()));
-		userAccountBusiness.create(account);
-		*/
 	}
 	
 	private void installLicense(Installation installation){

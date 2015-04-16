@@ -1,10 +1,6 @@
 package org.cyk.system.root.service.impl.integration;
 
-import javax.inject.Inject;
-
-import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.model.security.Installation;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -17,18 +13,9 @@ public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
         return createRootDeployment();
     } 
     
-    @Inject private ApplicationBusiness applicationBusiness;
-    
-    private Installation installation;
-    
-    @Override
-    protected void populate() {
-    	installation = RootBusinessLayer.fakeInstallation();
-    }
-    
     @Override
     protected void businesses() {
-    	applicationBusiness.install(installation);
+    	applicationBusiness.install(RootBusinessLayer.fakeInstallation());
     }
     
     @Override protected void finds() {}

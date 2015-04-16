@@ -13,7 +13,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 
 	private static final long serialVersionUID = -2964204372097468908L;
 
-	protected String readAll,countAll;
+	protected String readAll,countAll,readAllExclude,countAllExclude;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -39,6 +39,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readAll, _select()+(StringUtils.isEmpty(readAllOrderByString())?"":" "+readAllOrderByString()));
+		registerNamedQuery(readAllExclude, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.identifier NOT IN :identifiers");
 	}
 	
 	protected String readAllOrderByString(){
@@ -55,6 +56,16 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	public Long countAll() {
 		return namedQuery(countAll,Long.class).resultOne();
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readAllExclude(Collection<IDENTIFIABLE> identifiables) {
+		return namedQuery(readAllExclude).parameterIdentifiers(identifiables).resultMany();
+	}
+	
+	@Override
+	public Long countAllExclude(Collection<IDENTIFIABLE> identifiables) {
+		return namedQuery(countAllExclude,Long.class).parameterIdentifiers(identifiables).resultOne();
 	}
 	
 	/**/

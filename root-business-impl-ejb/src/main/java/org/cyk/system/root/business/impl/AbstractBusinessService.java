@@ -14,6 +14,7 @@ import lombok.Getter;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.BusinessService;
+import org.cyk.system.root.business.api.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
@@ -37,6 +38,7 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	
 	@Inject protected GenericDao genericDao;
 	@Inject protected TimeBusiness timeBusiness;
+	@Inject protected NumberBusiness numberBusiness;
 
 	protected abstract PersistenceService<IDENTIFIABLE, Long> getPersistenceService();
 	

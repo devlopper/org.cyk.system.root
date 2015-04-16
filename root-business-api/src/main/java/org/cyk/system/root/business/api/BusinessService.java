@@ -12,13 +12,16 @@ public interface BusinessService <IDENTIFIABLE extends Identifiable<IDENTIFIER>,
 	
     /* ------------------------ Static methods ---------------------------- */
     
-    /* Create */    IDENTIFIABLE create(IDENTIFIABLE object);
+    /* Create */    IDENTIFIABLE create(IDENTIFIABLE identifiable);
+    				void create(Collection<IDENTIFIABLE> identifiables);
     
     /* Read */      //IDENTIFIABLE read(IDENTIFIER identifier);
     
-    /* Update */    IDENTIFIABLE update(IDENTIFIABLE object);
+    /* Update */    IDENTIFIABLE update(IDENTIFIABLE identifiable);
+    				void update(Collection<IDENTIFIABLE> identifiables);
     
-    /* Delete */    IDENTIFIABLE delete(IDENTIFIABLE object);   
+    /* Delete */    IDENTIFIABLE delete(IDENTIFIABLE identifiable);
+    				void delete(Collection<IDENTIFIABLE> identifiables);
     
     /* ------------------------ Dynamic methods ---------------------------- */
     

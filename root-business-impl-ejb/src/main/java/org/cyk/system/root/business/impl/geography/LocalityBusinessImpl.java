@@ -10,9 +10,6 @@ import org.cyk.system.root.persistence.api.geography.LocalityDao;
 
 public class LocalityBusinessImpl extends AbstractDataTreeBusinessImpl<Locality,LocalityDao,LocalityType> implements LocalityBusiness {
  
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 2801588592108008404L;
 
 	@Inject

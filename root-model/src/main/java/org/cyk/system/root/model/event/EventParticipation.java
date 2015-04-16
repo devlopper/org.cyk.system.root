@@ -27,6 +27,8 @@ public class EventParticipation extends AbstractIdentifiable implements Serializ
 	@ManyToOne private Party party;
 	
 	@ManyToOne private Event event;
+	
+	private Boolean alertParty = Boolean.TRUE;
 
 	public EventParticipation(Party party, Event event) {
 		super();

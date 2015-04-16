@@ -2,17 +2,21 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessManager;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.datasource.DataSource;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
+import org.cyk.system.root.business.api.security.PermissionBusiness;
 import org.cyk.system.root.business.impl.datasource.JdbcDataSource;
 import org.cyk.system.root.business.impl.file.JasperReportBusinessImpl;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
@@ -21,6 +25,8 @@ import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
+import org.cyk.system.root.model.security.Permission;
+import org.cyk.system.root.model.security.Role;
 import org.cyk.utility.common.cdi.AbstractLayer;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusinessService<?>> implements BusinessLayer, Serializable {
@@ -33,6 +39,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusine
     @Inject protected BusinessManager businessManager;
     @Inject protected LanguageBusiness languageBusiness;
     @Inject protected JasperReportBusinessImpl reportBusiness;
+    @Inject protected PermissionBusiness permissionBusiness;
     
     protected ValidatorMap validatorMap = ValidatorMap.getInstance();
     
@@ -74,7 +81,33 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusine
 	protected <MODEL, REPORT extends AbstractReport<?>> void registerReportConfiguration(AbstractReportConfiguration<MODEL, REPORT> configuration) {
 		reportBusiness.registerConfiguration(configuration);
 	}
+	
+	protected Permission createPermission(String code){
+		return create(new Permission(code));
+	}
     
+	protected void createRole(Role role,Permission...permissions){
+   	 if(permissions!=null)
+   		 for(Permission permission : permissions)
+   			 role.getPermissions().add(permission);
+   	 create(role);
+   }
     
-    
+	protected void createRole(String code,String name,String...permissionCodes){
+		Role role = new Role(code, name);
+		Collection<Permission> permissions = new ArrayList<>();
+		if(permissionCodes!=null)
+			for(String permissionCode : permissionCodes){
+				Permission permission = createPermission(permissionCode);
+				permissions.add(permission);
+			}
+		createRole(role, permissions.toArray(new Permission[]{}));
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected void createRole(String code,String name,Object[][] entityCruds){
+		String[] permissions = new String[entityCruds.length];
+		for(int i=0;i<permissions.length;i++)
+			permissions[i] = permissionBusiness.computeCode((Class<AbstractIdentifiable>)entityCruds[i][0], (Crud)entityCruds[i][1]);
+	}
 }

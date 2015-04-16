@@ -107,6 +107,9 @@ public class QueryWrapper<T> implements Serializable {
         }
 	}
 	
+	public void update(){
+		query.executeUpdate();
+	}
 	
 	public static void applyReadConfig(Query query,DataReadConfig readConfig){
 	    if(readConfig.getFirstResultIndex()!=null && readConfig.getFirstResultIndex()>0)

@@ -1,11 +1,19 @@
 package org.cyk.system.root.business.impl.time;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
+import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.utility.common.cdi.AbstractBean;
@@ -16,6 +24,54 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 
 	private static final long serialVersionUID = -854697735401050272L;
 
+	private LanguageBusiness languageBusiness = LanguageBusinessImpl.getInstance();
+	
+	@Override
+	public String formatDate(Date date,String pattern,Locale locale) {
+		return new SimpleDateFormat(pattern, locale).format(date);
+	}
+	@Override
+	public String formatDate(Date date, String pattern) {
+		return formatDate(date, pattern, languageBusiness.findCurrentLocale());
+	}
+	@Override
+	public String formatDate(Date date, Locale locale) {
+		return formatDate(date, TimeBusiness.DATE_SHORT_PATTERN,locale);
+	}
+	@Override
+	public String formatDate(Date date) {
+		return formatDate(date, languageBusiness.findCurrentLocale());
+	}
+	
+	@Override
+	public String formatDateTime(Date date, Locale locale) {
+		return formatDate(date, TimeBusiness.DATE_TIME_SHORT_PATTERN,locale);
+	}
+	@Override
+	public String formatDateTime(Date date) {
+		return formatDateTime(date,languageBusiness.findCurrentLocale());
+	}
+	
+	@Override
+	public String formatTime(Date time, Locale locale) {
+		return formatDate(time, TimeBusiness.TIME_SHORT_PATTERN,locale);
+	}
+	@Override
+	public String formatTime(Date time) {
+		return formatTime(time,languageBusiness.findCurrentLocale());
+	}
+	
+	@Override
+	public String findFormatPattern(Field field) {
+		Temporal temporal = field.getAnnotation(Temporal.class);
+		if(temporal==null || TemporalType.DATE.equals(temporal.value()))
+			return TimeBusiness.DATE_SHORT_PATTERN;
+		else if(TemporalType.TIME.equals(temporal.value()))
+			return TimeBusiness.TIME_SHORT_PATTERN;
+		else
+			return TimeBusiness.DATE_TIME_SHORT_PATTERN;
+	}
+	
 	@Override
 	public Date findUniversalTimeCoordinated() {
 		return commonUtils.getUniversalTimeCoordinated();
@@ -128,7 +184,7 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	@Override
 	public String formatPeriod(Period period, TimeDivisionType timeDivisionType) {
 		switch(timeDivisionType.getCode()){
-		case TimeDivisionType.DAY:return DATE_SHORT_FORMAT.format(period.getFromDate());
+		case TimeDivisionType.DAY:return formatDate(period.getFromDate(),TimeBusiness.DATE_SHORT_PATTERN);
 		}
 		return null;
 	}
@@ -177,6 +233,34 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	@Override
 	public Integer findMillisecondOfDay(Date date) {
 		return new DateTime(date).getMillisOfDay();
+	}
+	
+	@Override
+	public String formatDate(Date fromDate, Date toDate, String pattern,Locale locale) {
+		if(findDayOfYear(fromDate)==findDayOfYear(toDate)){
+			return formatDate(fromDate, DATE_SHORT_PATTERN, locale)+" , "+formatTime(fromDate, locale)+" - "+formatTime(toDate, locale);
+		}else
+			return formatDate(fromDate, pattern, locale)+" - "+formatDate(toDate, pattern, locale);
+	}
+	@Override
+	public String formatDate(Date fromDate, Date toDate, String pattern) {
+		return formatDate(fromDate,toDate,pattern,languageBusiness.findCurrentLocale());
+	}
+	@Override
+	public String formatDate(Date fromDate, Date toDate, Locale locale) {
+		return formatDate(fromDate,toDate,DATE_SHORT_PATTERN,locale);
+	}
+	@Override
+	public String formatDate(Date fromDate, Date toDate) {
+		return formatDate(fromDate,toDate,DATE_SHORT_PATTERN);
+	}
+	@Override
+	public String formatDateTime(Date fromDate, Date toDate, Locale locale) {
+		return formatDate(fromDate, toDate, DATE_TIME_SHORT_PATTERN, locale);
+	}
+	@Override
+	public String formatDateTime(Date fromDate, Date toDate) {
+		return formatDateTime(fromDate, toDate, languageBusiness.findCurrentLocale());
 	}
 
 }

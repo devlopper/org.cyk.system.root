@@ -26,4 +26,9 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 	public String toString() {
 		return person.toString()+" | "+registration;
 	}
+	
+	@Override
+	public String getUiString() {
+		return registration+" - "+person.getUiString();
+	}
 }

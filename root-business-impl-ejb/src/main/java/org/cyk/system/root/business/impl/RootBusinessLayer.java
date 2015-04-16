@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -17,7 +16,6 @@ import lombok.extern.java.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
@@ -27,17 +25,14 @@ import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
-import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendOptions;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
-import org.cyk.system.root.business.api.security.PermissionBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
+import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.event.EventParticipation;
 import org.cyk.system.root.model.event.EventType;
-import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
@@ -50,25 +45,24 @@ import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.party.Application;
-import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.License;
-import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
-import org.cyk.system.root.persistence.api.event.EventParticipationDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
-@Deployment(initialisationType=InitialisationType.EAGER) @Log
+@Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Log
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
  
+	public static final int DEPLOYMENT_ORDER = 0;
 	private static final long serialVersionUID = 4576531258594638L;
 	
 	private static RootBusinessLayer INSTANCE;
@@ -79,8 +73,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	@Getter private PhoneNumberType landPhoneNumberType,mobilePhoneNumberType;
 	@Getter private LocationType homeLocationType,officeLocationType;
+	@Getter private LocalityType countryLocalityType,cityLocalityType,continentLocalityType;
 	@Getter private Locality countryCoteDivoire;
-	@Getter private Role administratorRole,managerRole,businessActorRole;
+	@Getter private Role administratorRole,managerRole,businessActorRole,settingManagerRole,securityManagerRole,userRole;
 	
 	@Inject private PhoneNumberTypeBusiness phoneNumberTypeBusiness;
 	@Inject private LocationTypeBusiness locationTypeBusiness;
@@ -90,11 +85,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private EventBusiness eventBusiness;
     @Inject private PersonBusiness personBusiness;
     @Inject private RoleBusiness roleBusiness;
-    @Inject private PermissionBusiness permissionBusiness;
+    @Inject private UserAccountBusiness userAccountBusiness;
+    
     @Inject private FileBusiness fileBusiness;
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
-    @Inject private EventParticipationDao eventParticipationDao;
+    //@Inject private EventParticipationDao eventParticipationDao;
     
     @Inject private PersonValidator personValidator;
     @Inject private FileValidator fileValidator;
@@ -144,7 +140,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     @Override
     public void createInitialData() {
-        geography();
+    	geography();
         event();
         time();
         language();
@@ -156,11 +152,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void geography(){
-        LocalityType continent=new LocalityType(null, "CONTINENT", "Continent");
+        LocalityType continent=new LocalityType(null, LocalityType.CONTINENT, "Continent");
         create(continent);
-        LocalityType country=new LocalityType(continent, "COUNTRY", "Country");
+        LocalityType country=new LocalityType(continent, LocalityType.COUNTRY, "Country");
         create(country);
-        LocalityType city=new LocalityType(country, "CITY", "City");
+        LocalityType city=new LocalityType(country, LocalityType.CITY, "City");
         create(city);
         
         Locality afrique;
@@ -169,8 +165,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         create(new Locality(null, continent, "Amerique"));
         create(new Locality(null, continent, "Europe"));
         
-        create(new Locality(afrique, continent,Locality.COUNTRY_COTE_DIVOIRE, "Cote d'Ivoire"));
-        create(new Locality(afrique, continent, "Benin"));
+        create(countryCoteDivoire = new Locality(afrique, country,Locality.COUNTRY_COTE_DIVOIRE, "Cote d'Ivoire"));
+        create(new Locality(afrique, country, "Benin"));
         
         create(new PhoneNumberType(PhoneNumberType.LAND, "Fixe"));
         create(new PhoneNumberType(PhoneNumberType.MOBILE, "Mobile"));
@@ -221,20 +217,19 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     
     private void security(){ 
-    	Permission licenceRead;
+    	//Permission licenceRead = createPermission(permissionBusiness.computeCode(License.class, Crud.READ));
     	
-    	create(licenceRead = new Permission(permissionBusiness.computeCode(License.class, Crud.READ)));
+    	createRole(new Role(Role.ADMINISTRATOR, "Administrator"));
     	
-    	createRole(new Role(Role.ADMINISTRATOR, "Administrator"), licenceRead);
-    	createRole(new Role(Role.MANAGER, "Manager"), licenceRead);
-        create(new Role(Role.BUSINESS_ACTOR, "Business actor"));
-    }
-    
-    private void createRole(Role role,Permission...permissions){
-    	 if(permissions!=null)
-    		 for(Permission permission : permissions)
-    			 role.getPermissions().add(permission);
-    	 create(role);
+    	createRole(new Role(Role.MANAGER, "Manager"));
+        
+    	createRole(new Role(Role.BUSINESS_ACTOR, "Business actor"));
+        
+        createRole(Role.SETTING_MANAGER, "Setting Manager");
+        
+        createRole(Role.SECURITY_MANAGER, "Security Manager");
+        
+        createRole(Role.USER, "Member");
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -245,6 +240,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
         beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
         beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);
+        beansMap.put((Class)UserAccount.class, (TypedBusiness)userAccountBusiness);
     }
     
     private void constants(){
@@ -255,10 +251,16 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	officeLocationType = locationTypeBusiness.find(LocationType.OFFICE);
     	
     	countryCoteDivoire = localityBusiness.find(Locality.COUNTRY_COTE_DIVOIRE);
+    	countryLocalityType = localityTypeBusiness.find(LocalityType.COUNTRY);
+    	continentLocalityType = localityTypeBusiness.find(LocalityType.CONTINENT);
+    	cityLocalityType = localityTypeBusiness.find(LocalityType.CITY);
     	
     	administratorRole = roleBusiness.find(Role.ADMINISTRATOR);
     	managerRole = roleBusiness.find(Role.MANAGER);
+    	settingManagerRole = roleBusiness.find(Role.SETTING_MANAGER);
+    	securityManagerRole = roleBusiness.find(Role.SECURITY_MANAGER);
     	businessActorRole = roleBusiness.find(Role.BUSINESS_ACTOR);
+    	userRole = roleBusiness.find(Role.USER);
     	
     	RemoteEndPoint.USER_INTERFACE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_USER_INTERFACE);
     }
@@ -275,6 +277,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	alarmTimer.schedule(new TimerTask() {
 			@Override
 			public void run() {
+				notificationBusiness.run(remoteEndPoints);
+				/*
 				Collection<Event> events = eventBusiness.findToAlarm();
 				//System.out.println("Alarms : "+events.size());
 				Collection<EventParticipation> eventParticipations = eventParticipationDao.readByEvents(events);
@@ -286,7 +290,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 							Set<Party> parties = new HashSet<>();
 							for(EventParticipation eventParticipation : eventParticipations)
 								if(eventParticipation.getEvent().equals(event))
-									parties.add(eventParticipation.getParty());
+									if(Boolean.TRUE.equals(eventParticipation.getAlertParty()))
+										parties.add(eventParticipation.getParty());
 							
 							Notification notification = new Notification();
 							notification.setRemoteEndPoint(remoteEndPoint);
@@ -300,6 +305,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 						}
 					}
 				}
+				*/
 			}
 		}, delay, period);
     	log.info("Event Alarm Scanning Enabled");
