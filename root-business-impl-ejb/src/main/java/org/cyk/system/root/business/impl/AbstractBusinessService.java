@@ -14,7 +14,7 @@ import lombok.Getter;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.BusinessService;
-import org.cyk.system.root.business.api.NumberBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;

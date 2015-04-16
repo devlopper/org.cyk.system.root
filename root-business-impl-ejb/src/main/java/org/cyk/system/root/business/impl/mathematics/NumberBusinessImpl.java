@@ -1,11 +1,11 @@
-package org.cyk.system.root.business.impl;
+package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import org.cyk.system.root.business.api.NumberBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 
 public class NumberBusinessImpl implements NumberBusiness,Serializable {

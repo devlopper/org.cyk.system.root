@@ -25,6 +25,6 @@ public class Sort extends AbstractModelElement implements Serializable {
 	@Override
 	public String getUiString() {
 		return average+" "+rank+" "+comments;
-	}
+	} 
 	
 }
