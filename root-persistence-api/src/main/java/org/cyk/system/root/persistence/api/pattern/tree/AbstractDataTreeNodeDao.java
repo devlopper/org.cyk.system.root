@@ -9,12 +9,10 @@ import org.cyk.system.root.persistence.api.TypedDao;
 public interface AbstractDataTreeNodeDao<ENUMERATION extends AbstractDataTreeNode> extends TypedDao<ENUMERATION>,AbstractEnumerationDao<ENUMERATION> {
 
     Collection<ENUMERATION> readRoots();
-    
     Long countRoots();
     
 	Collection<ENUMERATION> readByParent(ENUMERATION parent);
-	
 	Long countByParent(ENUMERATION parent);
 	
-	
+	ENUMERATION readParent(ENUMERATION node);
 }

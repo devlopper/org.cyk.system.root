@@ -3,7 +3,7 @@ package org.cyk.system.root.service.impl.unit;
 import java.util.Set;
 
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
-import org.cyk.utility.common.test.AbstractUnitTest;
+import org.cyk.utility.test.AbstractUnitTest;
 import org.junit.Assert;
 import org.reflections.Reflections;
 

@@ -4,14 +4,10 @@ package org.cyk.system.root.model.unit;
 import java.util.Locale;
 
 import org.cyk.system.root.model.EnumHelper;
-import org.cyk.utility.common.test.AbstractUnitTest;
+import org.cyk.utility.test.AbstractUnitTest;
 
 public class EnumHelperUT extends AbstractUnitTest {
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1066827346943955468L;
 
 	@Override

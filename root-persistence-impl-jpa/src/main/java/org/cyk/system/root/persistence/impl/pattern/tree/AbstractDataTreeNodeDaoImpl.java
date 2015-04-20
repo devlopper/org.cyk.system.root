@@ -27,13 +27,24 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 	/* 
 	 *Named Queries Identifiers Declaration 
 	 */
-	private String readByParent,countByParent,readRoots,countRoots; 
+	private String readByParent,countByParent,readRoots,countRoots,readByLeftIndexByRightIndex; 
 	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
+		registerNamedQuery(readByLeftIndexByRightIndex, _select().where("node.set", "nestedSet")
+				.and("node.leftIndex","leftIndex",ArithmeticOperator.EQ).and("node.leftIndex","rightIndex",ArithmeticOperator.EQ));
 		registerNamedQuery(readByParent, _select().where("node.set", "nestedSet").and("node.leftIndex","leftIndex",GT).and("node.leftIndex","rightIndex",LT));
 		registerNamedQuery(readRoots, _select().where(null,"node.set.root", QueryStringBuilder.VAR+".node",ArithmeticOperator.EQ,false));
+	}
+	
+	@Override
+	public ENUMERATION readParent(ENUMERATION child) {
+		NestedSetNode parentNode = child.getNode().getParent();
+		if(parentNode==null)
+			return null;
+		return namedQuery(readByLeftIndexByRightIndex).parameter("nestedSet", parentNode.getSet()).parameter("leftIndex", parentNode.getLeftIndex())
+				.parameter("rightIndex", parentNode.getLeftIndex()).resultOne();
 	}
 		
 	@Override

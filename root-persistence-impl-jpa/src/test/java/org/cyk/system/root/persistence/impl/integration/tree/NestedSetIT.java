@@ -10,16 +10,13 @@ import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.persistence.impl.integration.AbstractPersistenceIT;
-import org.cyk.utility.common.test.TestMethod;
+import org.cyk.utility.test.TestMethod;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
 public class NestedSetIT extends AbstractPersistenceIT {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5561034357231097748L;
 
 	@Deployment
@@ -87,7 +84,7 @@ public class NestedSetIT extends AbstractPersistenceIT {
 		Assert.assertEquals("Count all of parent",allParentCount,allParentNodes.size());
 		
 		deleteCascade(a12);
-		deleteCascade(a1);
+		deleteCascade(a1); 
 	}
 	
 	/**/

@@ -13,7 +13,10 @@ import lombok.Getter;
 
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
-import org.cyk.system.root.business.api.mathematics.Rankable;
+import org.cyk.system.root.business.api.mathematics.MathematicsBusiness.SortOptions;
+import org.cyk.system.root.business.api.mathematics.Sortable;
+import org.cyk.system.root.business.api.mathematics.ValueComparator;
+import org.cyk.system.root.business.api.mathematics.ValueComparator.ValueReader;
 import org.cyk.system.root.business.api.mathematics.WeightedValue;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Script;
@@ -31,7 +34,7 @@ public class MathematicsBusinessIT extends AbstractBusinessIT {
 
     @Deployment
     public static Archive<?> createDeployment() { 
-        return createRootDeployment();
+        return createRootDeployment(); 
     }  
      
     @Inject private MathematicsBusiness mathematicsBusiness;
@@ -145,39 +148,46 @@ public class MathematicsBusinessIT extends AbstractBusinessIT {
         assertInterval(intervalCollection2, new BigDecimal("17"), 2, new BigDecimal("10"),new BigDecimal("20"));
         assertIntervalNull(intervalCollection2, new BigDecimal("-1"), 2);
         assertIntervalNull(intervalCollection2, new BigDecimal("20.01"), 2);
-    }
-
-    @Override
-    protected void finds() {
         
-    }
-
-    @Override
-    protected void businesses() {
+        studentExams = new ArrayList<StudentExam>();
+        studentExams.add(new StudentExam(new Student("a","a"), new BigDecimal("5")));
+        studentExams.add(new StudentExam(new Student("b","b"), new BigDecimal("3")));
+        studentExams.add(new StudentExam(new Student("c","c"), new BigDecimal("4")));
+        studentExams.add(new StudentExam(new Student("d","d"), new BigDecimal("9")));
+        SortOptions<StudentExam> so = new SortOptions<StudentExam>();
+        so.setComparator(new ValueComparator<StudentExam>(new ValueReader<StudentExam>() {
+        	@Override
+        	public Object read(StudentExam entity, Integer level) {
+        		return entity.getAverage();
+        	}
+		}));
         
-    }
-
-    @Override
-    protected void create() {
+        mathematicsBusiness.sort(studentExams,so);
+        System.out.println(studentExams);
         
-    }
-
-    @Override
-    protected void delete() {
+        studentExams = new ArrayList<StudentExam>();
+        studentExams.add(new StudentExam(new Student("a","a"), new BigDecimal("5")));
+        studentExams.add(new StudentExam(new Student("b","b"), new BigDecimal("3")));
+        studentExams.add(new StudentExam(new Student("c","c"), new BigDecimal("4")));
+        studentExams.add(new StudentExam(new Student("d","d"), new BigDecimal("9")));
+        so = new SortOptions<StudentExam>();
+        so.setComparator(new ValueComparator<StudentExam>(new ValueReader<StudentExam>() {
+        	@Override
+        	public Object read(StudentExam entity, Integer level) {
+        		return entity.getAverage();
+        	}
+		},Boolean.FALSE));
         
+        mathematicsBusiness.sort(studentExams,so);
+        System.out.println(studentExams);
     }
 
-    
-
-    @Override
-    protected void read() {
-        
-    }
-
-    @Override
-    protected void update() {
-        
-    }
+    @Override protected void finds() {}
+    @Override protected void businesses() {}
+    @Override protected void create() {}
+    @Override protected void delete() {}
+    @Override protected void read() {}
+    @Override protected void update() {}
     
     /**/
     
@@ -231,7 +241,7 @@ public class MathematicsBusinessIT extends AbstractBusinessIT {
     }*/
     
     @Getter
-    private class StudentExam implements Rankable {
+    private class StudentExam implements Sortable {
     	private Student student;
     	private BigDecimal average;
     	private Rank rank = new Rank();

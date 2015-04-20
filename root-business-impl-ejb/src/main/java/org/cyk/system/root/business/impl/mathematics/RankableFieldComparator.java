@@ -5,9 +5,9 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.cyk.system.root.business.api.mathematics.Rankable;
+import org.cyk.system.root.business.api.mathematics.Sortable;
 
-public class RankableFieldComparator<RANKABLE extends Rankable> implements Comparator<RANKABLE> {
+public class RankableFieldComparator<RANKABLE extends Sortable> implements Comparator<RANKABLE> {
 
 	protected LinkedHashSet<String> fieldNames = new LinkedHashSet<>();
 	

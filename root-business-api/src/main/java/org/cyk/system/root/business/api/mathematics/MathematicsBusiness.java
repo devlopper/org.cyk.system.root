@@ -1,10 +1,14 @@
 package org.cyk.system.root.business.api.mathematics;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.Average;
@@ -18,13 +22,13 @@ public interface MathematicsBusiness {
 	
 	Average average(Collection<WeightedValue> weightedValues,AverageComputationListener computationListener,Script script);
 	
-	<RANKABLE extends Rankable> void rank(Class<RANKABLE> aClass,RankType type,List<RANKABLE> rankables,Comparator<RANKABLE> comparator,Script compareScript);
+	<SORTABLE extends Sortable> void sort(List<SORTABLE> sortables,SortOptions<SORTABLE> options);
+	
+	<SORTABLE extends Sortable> void rank(/*Class<SORTABLE> aClass,*/List<SORTABLE> sortables,RankOptions<SORTABLE> options);
 	
 	String format(Rank rank);
 	
 	/**/
-	
-	enum RankType {SEQUENCE,EXAEQUO}
 	
 	interface NumberComputationListener{
 		Integer scale(BigDecimal number);
@@ -35,6 +39,21 @@ public interface MathematicsBusiness {
 		NumberComputationListener getDividendComputationListener();
 		NumberComputationListener getDivisorComputationListener();
 		NumberComputationListener getValueComputationListener();
+	}
+	
+	@Getter @Setter
+	public static class SortOptions<SORTABLE extends Sortable> implements Serializable {
+		private static final long serialVersionUID = -6280959516917831703L;
+		private Comparator<SORTABLE> comparator;
+		private Script compareScript;
+	}
+	
+	@Getter @Setter
+	public static class RankOptions<SORTABLE extends Sortable> implements Serializable {
+		private static final long serialVersionUID = -7252122787940322411L;
+		public static enum RankType {SEQUENCE,EXAEQUO}
+		private RankType type;
+		private SortOptions<SORTABLE> sortOptions = new SortOptions<SORTABLE>();
 	}
 	
 }

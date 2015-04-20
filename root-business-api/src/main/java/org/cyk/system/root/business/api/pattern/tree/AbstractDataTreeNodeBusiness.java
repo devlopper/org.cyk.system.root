@@ -10,5 +10,7 @@ public interface AbstractDataTreeNodeBusiness<ENUMERATION extends AbstractEnumer
     void findHierarchy(ENUMERATION anEnumeration);
     
     Collection<ENUMERATION> findHierarchies();
+    
+    ENUMERATION findParent(ENUMERATION child);
 
 }

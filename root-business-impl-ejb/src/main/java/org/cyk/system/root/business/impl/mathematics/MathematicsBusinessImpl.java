@@ -5,18 +5,17 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.ComparatorUtils;
 import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
-import org.cyk.system.root.business.api.mathematics.Rankable;
+import org.cyk.system.root.business.api.mathematics.MathematicsBusiness.RankOptions.RankType;
+import org.cyk.system.root.business.api.mathematics.Sortable;
 import org.cyk.system.root.business.api.mathematics.WeightedValue;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.Average;
@@ -108,30 +107,38 @@ public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable
 		return average;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <RANKABLE extends Rankable> void rank(Class<RANKABLE> aClass,RankType type,List<RANKABLE> rankables,Comparator<RANKABLE> comparator,Script compareScript) {
-		if(rankables==null)
+	public <SORTABLE extends Sortable> void sort(List<SORTABLE> sortables,SortOptions<SORTABLE> options) {
+		if(sortables==null || sortables.isEmpty())
 			return;
-		Collections.sort(rankables,ComparatorUtils.reversedComparator(comparator));
+		Collections.sort(sortables,options.getComparator());
+	}
+	
+	@Override
+	public <SORTABLE extends Sortable> void rank(/*Class<SORTABLE> aClass,*/List<SORTABLE> sortables,RankOptions<SORTABLE> options) {
+		if(sortables==null || sortables.isEmpty())
+			return;
+		//Collections.sort(sortables,ComparatorUtils.reversedComparator(comparator));
+		sort(sortables, options.getSortOptions());
+		RankType type = options.getType();
 		if(type==null)
 			type = RankType.SEQUENCE;
 		int value = 1,i=0,j=0;	
-		for(RANKABLE rankable : rankables){
-			rankable.getRank().setValue(null);
-			rankable.getRank().setExaequo(null);
-			if(rankable.getValue()==null){
+		for(SORTABLE sortable : sortables){
+			sortable.getRank().setValue(null);
+			sortable.getRank().setExaequo(null);
+			if(sortable.getValue()==null){
 				
 			}else{
 				if(++j>1)
 					if(RankType.EXAEQUO.equals(type))
-						if(rankable.getValue().equals(rankables.get(i-1).getValue()))
-							rankable.getRank().setExaequo(Boolean.TRUE);
+						if(sortable.getValue().equals(sortables.get(i-1).getValue()))
+							sortable.getRank().setExaequo(Boolean.TRUE);
 						else 
 							value = j;
 					else if(RankType.SEQUENCE.equals(type))
 						value = j;
-				rankable.getRank().setValue(value);
+				sortable.getRank().setValue(value);
 			}
 			i++;
 		}

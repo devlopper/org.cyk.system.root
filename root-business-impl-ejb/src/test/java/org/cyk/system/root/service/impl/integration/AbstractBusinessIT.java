@@ -12,8 +12,8 @@ import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
-import org.cyk.utility.common.test.AbstractIntegrationTestJpaBased;
-import org.cyk.utility.common.test.ArchiveBuilder;
+import org.cyk.utility.test.AbstractIntegrationTestJpaBased;
+import org.cyk.utility.test.ArchiveBuilder;
 import org.jboss.shrinkwrap.api.Archive;
 
 public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased {
@@ -26,7 +26,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	}*/
 	 
 	/**
-	 * 
+	 *  
 	 */
 	private static final long serialVersionUID = 7531234257367131255L;
 	@Inject protected ExceptionUtils exceptionUtils;

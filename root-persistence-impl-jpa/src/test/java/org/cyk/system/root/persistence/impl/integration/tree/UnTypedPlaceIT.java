@@ -9,16 +9,13 @@ import org.cyk.system.root.persistence.impl.data.UnTypedPlace;
 import org.cyk.system.root.persistence.impl.data.UnTypedPlaceDao;
 import org.cyk.system.root.persistence.impl.integration.AbstractPersistenceIT;
 import org.cyk.utility.common.computation.Function;
-import org.cyk.utility.common.test.TestMethod;
+import org.cyk.utility.test.TestMethod;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
 public class UnTypedPlaceIT extends AbstractPersistenceIT {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6101699089075252954L;
 
 	@Deployment

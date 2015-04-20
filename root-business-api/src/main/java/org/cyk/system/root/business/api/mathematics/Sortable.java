@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.cyk.system.root.model.mathematics.Rank;
 
-public interface Rankable {
+public interface Sortable {
 	
 	BigDecimal getValue();
 	

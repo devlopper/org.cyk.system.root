@@ -11,16 +11,13 @@ import org.cyk.system.root.persistence.impl.data.TypedPlace;
 import org.cyk.system.root.persistence.impl.data.TypedPlaceDao;
 import org.cyk.system.root.persistence.impl.integration.AbstractPersistenceIT;
 import org.cyk.utility.common.computation.Function;
-import org.cyk.utility.common.test.TestMethod;
+import org.cyk.utility.test.TestMethod;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
 public class TypedPlaceIT extends AbstractPersistenceIT {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8181770992537567870L;
 
 	@Deployment
@@ -95,6 +92,19 @@ public class TypedPlaceIT extends AbstractPersistenceIT {
 		showByParentByType(europe, country);
 		showByParentByType(europe, city);
 		
+		System.out.println("----------------------------------------");
+		showParent(afriqueCIAbidjan);
+		showParent(afriqueCIBouake);
+		showParent(afriqueCI);
+		showParent(afriqueGH);
+		showParent(afriqueGHAccra);
+		showParent(afriqueGHNoe);
+		showParent(afrique);
+		showParent(europeFR);
+		showParent(europeFRLyon);
+		showParent(europeFRParis);
+		showParent(europe);
+		
 		cascadeDelete(afrique);
 	
 	}
@@ -109,6 +119,10 @@ public class TypedPlaceIT extends AbstractPersistenceIT {
 	
 	private void showByParentByType(TypedPlace parent,PlaceType type){
 		System.out.println("All "+type+" of "+parent+": "+dao.readByParentByType(parent,type)+" / "+dao.countByParentByType(parent, type));
+	}
+	
+	private void showParent(TypedPlace child){
+		System.out.println("Parent of "+child+" "+" / "+dao.readParent(child));
 	}
 	
 	private void cascadeDelete(final TypedPlace tree){

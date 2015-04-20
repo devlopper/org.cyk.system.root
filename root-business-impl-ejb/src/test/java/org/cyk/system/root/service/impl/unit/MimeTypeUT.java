@@ -9,7 +9,7 @@ import java.util.Set;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import org.cyk.utility.common.test.AbstractUnitTest;
+import org.cyk.utility.test.AbstractUnitTest;
 import org.junit.Test;
 
 public class MimeTypeUT extends AbstractUnitTest {

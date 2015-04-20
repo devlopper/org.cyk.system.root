@@ -1,7 +1,7 @@
 package org.cyk.system.root.service.impl.unit;
 
 import org.cyk.system.root.business.impl.RootValueValidatorImpl;
-import org.cyk.utility.common.test.AbstractUnitTest;
+import org.cyk.utility.test.AbstractUnitTest;
 import org.junit.Test;
 
 public class ValidatorUT extends AbstractUnitTest {

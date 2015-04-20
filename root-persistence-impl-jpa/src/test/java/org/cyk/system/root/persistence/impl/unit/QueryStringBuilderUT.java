@@ -2,13 +2,10 @@ package org.cyk.system.root.persistence.impl.unit;
 
 import org.cyk.system.root.persistence.impl.QueryStringBuilder;
 import org.cyk.utility.common.computation.Function;
-import org.cyk.utility.common.test.AbstractUnitTest;
+import org.cyk.utility.test.AbstractUnitTest;
 
 public class QueryStringBuilderUT extends AbstractUnitTest {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3681555921786058917L;
 	QueryStringBuilder builder = new QueryStringBuilder();
 	

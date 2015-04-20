@@ -7,7 +7,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.impl.time.TimeBusinessImpl;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
-import org.cyk.utility.common.test.AbstractUnitTest;
+import org.cyk.utility.test.AbstractUnitTest;
 import org.joda.time.DateTimeConstants;
 import org.junit.Assert;
 

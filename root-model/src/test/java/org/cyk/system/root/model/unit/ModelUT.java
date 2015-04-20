@@ -1,14 +1,10 @@
 package org.cyk.system.root.model.unit;
 
 
-import org.cyk.utility.common.test.AbstractUnitTest;
+import org.cyk.utility.test.AbstractUnitTest;
 
 public class ModelUT extends AbstractUnitTest {
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8008545189557409317L;
 
 	@Override
