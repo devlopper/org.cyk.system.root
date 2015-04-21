@@ -188,6 +188,9 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 			for(Entry<String, Object> parameter : parameters.entrySet())
 				query.setParameter(parameter.getKey(), parameter.getValue());
 		QueryWrapper.applyReadConfig(query, getDataReadConfig());
+		//System.out.println(getClass().getSimpleName()+".createQuery() : ");
+		//debug(dataReadConfig);
+		//dataReadConfig = new DataReadConfig();//A new one for the next coming request
 		return query;
 	}
 	
@@ -206,6 +209,8 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		case NAMED_JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createNamedQuery(value, aResultClass),getDataReadConfig());break;
 		default:__queryWrapper__ = null;log.severe("Query <"+value+"> cannot be built for "+type);break;
 		}
+		__queryWrapper__.getReadConfig().setFirstResultIndex(null);
+		__queryWrapper__.getReadConfig().setMaximumResultCount(null);
 		return (QueryWrapper<RESULT_CLASS>) __queryWrapper__;
 	}
 	
