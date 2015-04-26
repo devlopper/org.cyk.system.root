@@ -17,6 +17,8 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.EnumHelper;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
@@ -170,4 +172,20 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			return findAnnotationText(field,field.getAnnotation(IncludeInputs.class).label());
 		return null;
 	}
+    
+    @Override
+    public String findClassLabelText(Class<?> aClass) {
+    	if(AbstractModelElement.class.isAssignableFrom(aClass))
+    		return findText("model.entity."+StringUtils.uncapitalize(aClass.getSimpleName()));
+    	return findText(aClass.getName());
+    }
+    
+    @Override
+    public String findObjectLabelText(Object object) {
+    	if(object==null)
+    		return "##NULL FOUND##";
+    	if(object instanceof AbstractIdentifiable)
+			return ((AbstractIdentifiable)object).getUiString();
+		return object.toString();
+    }
 }

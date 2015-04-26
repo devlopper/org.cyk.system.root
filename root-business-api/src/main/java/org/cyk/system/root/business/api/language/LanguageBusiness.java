@@ -31,6 +31,10 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
     
     String findFieldLabelText(Field field);
     
+    String findClassLabelText(Class<?> aClass);
+    
+    String findObjectLabelText(Object object);
+    
 	void setLocale(Locale locale);
 	
 	Locale findCurrentLocale();

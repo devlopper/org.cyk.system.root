@@ -149,12 +149,16 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 			
 	@Override
 	public Collection<IDENTIFIABLE> all() {
-		return createQuery().getResultList();
+		Collection<IDENTIFIABLE> result = createQuery().getResultList();
+		clear();
+		return result;
 	}
 
 	@Override
 	public <RESULT_TYPE> RESULT_TYPE one(Class<RESULT_TYPE> aClass) {
-		return createQuery(aClass).getSingleResult();
+		RESULT_TYPE result = createQuery(aClass).getSingleResult();
+		clear();
+		return result;
 	}
 	
 	@Override
@@ -170,9 +174,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	public Long oneLong() {
 		return one(Long.class);
 	}
-	
-
-	
+		
 	@Override
 	public String getQueryString() {
 		return queryStringBuilder.getValue();
@@ -209,8 +211,10 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		case NAMED_JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createNamedQuery(value, aResultClass),getDataReadConfig());break;
 		default:__queryWrapper__ = null;log.severe("Query <"+value+"> cannot be built for "+type);break;
 		}
+		/*
 		__queryWrapper__.getReadConfig().setFirstResultIndex(null);
 		__queryWrapper__.getReadConfig().setMaximumResultCount(null);
+		*/
 		return (QueryWrapper<RESULT_CLASS>) __queryWrapper__;
 	}
 	
@@ -268,4 +272,9 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		return _select(QueryStringBuilder.VAR);
 	}
 
+	@Override
+	public void clear() {
+		if(Boolean.TRUE.equals(getDataReadConfig().getAutoClear()))
+			getDataReadConfig().clear();
+	}
 }

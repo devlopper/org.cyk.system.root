@@ -82,29 +82,37 @@ public class QueryWrapper<T> implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	public Collection<T> resultMany() {
+		Collection<T> result = null;
 		if(Boolean.TRUE.equals(returnPredefinedNullValue))
-			return resultManyNullValue;
-		
-	    applyReadConfig(query,readConfig);
-		return query.getResultList();
+			result = resultManyNullValue;
+		else{
+		    applyReadConfig(query,readConfig);
+		    result = query.getResultList();
+		}
+		clear();
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T resultOne() {
+		T result;
 		if(Boolean.TRUE.equals(returnPredefinedNullValue))
-			return resultOneNullValue;
-		
-		try {
-            T value = (T) query.getSingleResult();
-            if(value==null){
-            	return resultOneNullValue;
-            }
-            return value;
-        } catch (Exception e) {
-            if(ignoreThrowables.contains(e.getClass()))
-                return null;
-            throw e;
-        }
+			result = resultOneNullValue;
+		else
+			try {
+	            T value = (T) query.getSingleResult();
+	            if(value==null)
+	            	result = resultOneNullValue;
+	            else
+	            	result = value;
+	        } catch (Exception e) {
+	            if(ignoreThrowables.contains(e.getClass()))
+	            	result = null;
+	            else
+	            	throw e;
+	        }
+		clear();
+		return result;
 	}
 	
 	public void update(){
@@ -112,11 +120,15 @@ public class QueryWrapper<T> implements Serializable {
 	}
 	
 	public static void applyReadConfig(Query query,DataReadConfig readConfig){
-	    if(readConfig.getFirstResultIndex()!=null && readConfig.getFirstResultIndex()>0)
+	    if(readConfig.getFirstResultIndex()!=null && readConfig.getFirstResultIndex()>=0)
 	        query.setFirstResult(readConfig.getFirstResultIndex().intValue());
 	    if(readConfig.getMaximumResultCount()!=null && readConfig.getMaximumResultCount()>0)
             query.setMaxResults(readConfig.getMaximumResultCount().intValue());
+	    //new RuntimeException().printStackTrace();
 	}
 	
-	
+	private void clear(){
+		if(Boolean.TRUE.equals(readConfig.getAutoClear()))
+	    	readConfig.clear();
+	}
 }

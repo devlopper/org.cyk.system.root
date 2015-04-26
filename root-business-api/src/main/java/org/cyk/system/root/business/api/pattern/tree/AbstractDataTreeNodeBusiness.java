@@ -12,5 +12,8 @@ public interface AbstractDataTreeNodeBusiness<ENUMERATION extends AbstractEnumer
     Collection<ENUMERATION> findHierarchies();
     
     ENUMERATION findParent(ENUMERATION child);
+    
+    Boolean isAncestorOf(ENUMERATION ancestor,ENUMERATION child);
+    Boolean isAtLeastOneAncestorOf(Collection<ENUMERATION> ancestors,ENUMERATION child);
 
 }

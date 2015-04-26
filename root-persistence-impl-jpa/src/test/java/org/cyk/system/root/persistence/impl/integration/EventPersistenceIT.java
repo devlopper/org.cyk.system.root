@@ -166,6 +166,27 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		Assert.assertEquals(4,eventDao.readWhereFromDateGreaterThanByDate(now).size());
 		Assert.assertEquals(4,eventDao.countWhereFromDateGreaterThanByDate(now).intValue());
 		
+		eventDao.getDataReadConfig().setMaximumResultCount(2l);
+		Assert.assertEquals(2,eventDao.select().all().size());
+		Assert.assertEquals(8,eventDao.select().all().size());
+		
+		eventDao.getDataReadConfig().setMaximumResultCount(2l);
+		Assert.assertEquals(2,eventDao.readWhereFromDateGreaterThanByDate(now).size());
+		Assert.assertEquals(4,eventDao.readWhereFromDateGreaterThanByDate(now).size());
+		
+		eventDao.getDataReadConfig().setMaximumResultCount(2l);
+		eventDao.getDataReadConfig().setAutoClear(Boolean.FALSE);
+		Assert.assertEquals(2,eventDao.readWhereFromDateGreaterThanByDate(now).size());
+		Assert.assertEquals(2,eventDao.readWhereFromDateGreaterThanByDate(now).size());
+		
+		eventDao.getDataReadConfig().clear();
+		eventDao.getDataReadConfig().setAutoClear(Boolean.TRUE);
+		Assert.assertEquals(4,eventDao.readWhereFromDateGreaterThanByDate(now).size());
+		Assert.assertEquals(4,eventDao.readWhereFromDateGreaterThanByDate(now).size());
+		
+		Assert.assertEquals(4,eventDao.countWhereFromDateGreaterThanByDate(now).intValue());
+		
+		//eventDao.getDataReadConfig().clear();
 		Assert.assertEquals(8, eventDao.countWhereFromDateBetweenPeriod(new Period(DateUtils.addHours(now, -2), DateUtils.addHours(now, 2))).intValue());
 		Assert.assertEquals(7, eventDao.countWhereFromDateBetweenPeriod(new Period(DateUtils.addHours(now, 0), DateUtils.addHours(now, 2))).intValue());
 		Assert.assertEquals(1, eventDao.countWhereFromDateBetweenPeriod(new Period(DateUtils.addMinutes(oneHourLater, 6), DateUtils.addHours(now, 2))).intValue());

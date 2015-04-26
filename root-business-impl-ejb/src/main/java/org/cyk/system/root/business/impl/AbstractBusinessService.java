@@ -2,15 +2,12 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-
-import lombok.Getter;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.BusinessService;
@@ -23,7 +20,6 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
-import org.cyk.utility.common.computation.DataReadConfig;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 
@@ -34,13 +30,18 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	//How to resolve circular dependency AbstractBusinessService -> ValidationPolicy -> LanguageBusiness which inherits of AbstractBusinessService
 	//Singleton has been use to solve previous issue
 	@Inject protected ValidationPolicy validationPolicy;	
-	@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
+	//@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
 	
 	@Inject protected GenericDao genericDao;
 	@Inject protected TimeBusiness timeBusiness;
 	@Inject protected NumberBusiness numberBusiness;
 
 	protected abstract PersistenceService<IDENTIFIABLE, Long> getPersistenceService();
+	/*
+	public DataReadConfig getDataReadConfig(){
+		return getPersistenceService().getDataReadConfig();
+	}
+	*/
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BusinessService<IDENTIFIABLE, Long> find() {
@@ -104,18 +105,15 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	    return ExceptionUtils.getInstance();
 	}
 	
-	//TODO should be moved to time business
 	protected Date universalTimeCoordinated(){
-		return commonUtils.getUniversalTimeCoordinated();
+		return timeBusiness.findUniversalTimeCoordinated();
 	}
-	
-	
-	
+	/*
 	protected static final SimpleDateFormat DATE_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 	protected static final SimpleDateFormat DATE_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy");
 	protected static final SimpleDateFormat DATE_TIME_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy à HH:mm");
 	protected static final SimpleDateFormat DATE_TIME_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy à HH:mm");
-	
+	*/
 	protected static Date DATE_MOST_PAST;
 	protected static Date DATE_MOST_FUTURE;
 	

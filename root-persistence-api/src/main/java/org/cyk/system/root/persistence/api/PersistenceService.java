@@ -45,5 +45,7 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	
 	                    DataReadConfig getDataReadConfig();
 	                    
+	                    void clear();
+	                    
 	                    
 }

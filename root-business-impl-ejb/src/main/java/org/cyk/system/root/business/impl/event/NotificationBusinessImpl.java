@@ -35,8 +35,7 @@ public class NotificationBusinessImpl implements NotificationBusiness,Serializab
     
 	private static final long serialVersionUID = -7831396456120834486L;
 	@Inject private TemplateEngineBusiness templateEngineBusiness;
-    //@Inject 
-    private MailBusiness mailBusiness;
+    @Inject private MailBusiness mailBusiness;
     @Inject private Event<Notification> bus;
     @Inject private EventReminderBusiness eventReminderBusiness;
     @Inject private UserAccountDao userAccountDao;

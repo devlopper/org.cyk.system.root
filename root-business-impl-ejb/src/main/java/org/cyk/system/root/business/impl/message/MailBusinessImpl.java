@@ -25,6 +25,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
 public class MailBusinessImpl extends AbstractBean implements MailBusiness , Serializable {
     
 	private static final long serialVersionUID = 4468167686499924200L;
+	
 	@Resource(lookup = "mail/cyk_root")
     private Session session;
 

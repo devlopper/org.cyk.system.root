@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.time;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,11 +12,13 @@ import java.util.Locale;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
+import org.cyk.utility.common.annotation.user.interfaces.InputCalendar;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -25,6 +28,10 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	private static final long serialVersionUID = -854697735401050272L;
 
 	private LanguageBusiness languageBusiness = LanguageBusinessImpl.getInstance();
+	
+	public String format(Field field,Date date){
+		return new SimpleDateFormat(findFormatPattern(field)).format(date);
+	}
 	
 	@Override
 	public String formatDate(Date date,String pattern,Locale locale) {
@@ -63,13 +70,23 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	
 	@Override
 	public String findFormatPattern(Field field) {
-		Temporal temporal = field.getAnnotation(Temporal.class);
-		if(temporal==null || TemporalType.DATE.equals(temporal.value()))
-			return TimeBusiness.DATE_SHORT_PATTERN;
-		else if(TemporalType.TIME.equals(temporal.value()))
-			return TimeBusiness.TIME_SHORT_PATTERN;
-		else
-			return TimeBusiness.DATE_TIME_SHORT_PATTERN;
+		InputCalendar inputCalendar = field.getAnnotation(InputCalendar.class);
+		if(inputCalendar==null || InputCalendar.Format.AUTO.equals(inputCalendar.format())){
+			Temporal temporal = field.getAnnotation(Temporal.class);
+			if(temporal==null || TemporalType.DATE.equals(temporal.value()))
+				return TimeBusiness.DATE_SHORT_PATTERN;
+			else if(TemporalType.TIME.equals(temporal.value()))
+				return TimeBusiness.TIME_SHORT_PATTERN;
+			else
+				return TimeBusiness.DATE_TIME_SHORT_PATTERN;
+		}else
+			switch(inputCalendar.format()){
+			case DATE_SHORT:return TimeBusiness.DATE_SHORT_PATTERN;
+			case DATE_LONG:return TimeBusiness.DATE_LONG_PATTERN;
+			case DATETIME_SHORT:return TimeBusiness.DATE_TIME_SHORT_PATTERN;
+			case DATETIME_LONG:return TimeBusiness.DATE_TIME_LONG_PATTERN;
+			default:return null;
+			}
 	}
 	
 	@Override
@@ -144,6 +161,27 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 					//dayIndex++;
 				}
 				*/
+			}else if(timeDivisionType.getCode().equals(TimeDivisionType.MONTH)){
+				Date begin = period.getFromDate(),end=null,index=begin;
+				Integer beginMonth,endMonth = findMonth(period.getToDate());
+				Boolean stop = Boolean.FALSE;
+				do{
+					beginMonth = findMonth(index);
+					while(beginMonth==findMonth(index) && beginMonth!= endMonth)
+						index = DateUtils.addDays(index, 1);
+					
+					if(beginMonth==endMonth){
+						end = period.getToDate();
+						stop = Boolean.TRUE;
+					}else{
+						index = DateUtils.addDays(index, -1);
+						end = new DateTime(findYear(begin),beginMonth, findDayOfMonth(index), 23, 59, 59,999).toDate();
+					}
+
+					periods.add(new Period(begin, end));
+					index = begin = DateUtils.addMilliseconds(end, 1);
+					
+				}while(!Boolean.TRUE.equals(stop));
 			}
 			
 			if(firstPeriod!=null) periods.add(firstPeriod);
@@ -185,8 +223,21 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	public String formatPeriod(Period period, TimeDivisionType timeDivisionType) {
 		switch(timeDivisionType.getCode()){
 		case TimeDivisionType.DAY:return formatDate(period.getFromDate(),TimeBusiness.DATE_SHORT_PATTERN);
+		case TimeDivisionType.MONTH:return new DateFormatSymbols(languageBusiness.findCurrentLocale()).getMonths()[findMonth(period.getFromDate())-1]
+				/*+formatDate(period.getFromDate(),TimeBusiness.DATE_SHORT_PATTERN)*/;
 		}
 		return null;
+	}
+	
+	@Override
+	public String formatPeriodFromTo(Period period, String pattern) {
+		return languageBusiness.findText("field.from.date")+" "+formatDate(period.getFromDate(),pattern)+" "
+				+languageBusiness.findText("field.to.date")+"  "+formatDate(period.getToDate(),pattern);
+	}
+	
+	@Override
+	public String formatPeriodFromTo(Period period) {
+		return formatPeriodFromTo(period, DATE_SHORT_PATTERN);
 	}
 	
 	@Override

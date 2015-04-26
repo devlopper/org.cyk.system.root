@@ -186,6 +186,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	create(new EventType("RDV", "Rendez vous", null));
         create(new EventType("REU", "Reunion", null));
         
+        notificationTemplate(NotificationTemplate.ALARM_USER_INTERFACE,"Alarm User Interface Notification Template","alarmUITitle.txt","alarmUIMessage.html");
+        notificationTemplate(NotificationTemplate.ALARM_EMAIL,"Alarm Email Notification Template","alarmEmailTitle.txt","alarmEmailMessage.html");
+        notificationTemplate(NotificationTemplate.ALARM_SMS,"Alarm Sms Notification Template","alarmSmsTitle.txt","alarmSmsMessage.html");
+        /*
         NotificationTemplate notificationTemplate = new NotificationTemplate();
         notificationTemplate.setCode(NotificationTemplate.ALARM_USER_INTERFACE);
         notificationTemplate.setName("Alarm User Interface Notification Template");
@@ -196,6 +200,35 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			e.printStackTrace();
 		}
         create(notificationTemplate);
+        
+        notificationTemplate = new NotificationTemplate();
+        notificationTemplate.setCode(NotificationTemplate.ALARM_EMAIL);
+        notificationTemplate.setName("Alarm Electronic Mail Notification Template");
+        try {
+        	notificationTemplate.setTitle(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream("template/alarmUITitle.txt")), "alarmUITitle.txt"));
+        	notificationTemplate.setMessage(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream("template/alarmUIMessage.html")), "alarmUIMessage.html"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        create(notificationTemplate);
+        */
+    }
+    
+    private void notificationTemplate(String code,String name,String titleFileFolder,String titleFileName,String bodyFileFolder,String bodyFileName){
+    	NotificationTemplate notificationTemplate = new NotificationTemplate();
+        notificationTemplate.setCode(code);
+        notificationTemplate.setName(name);
+        try {
+        	notificationTemplate.setTitle(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream(titleFileFolder+"/"+titleFileName)), titleFileName));
+        	notificationTemplate.setMessage(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream(bodyFileFolder+"/"+bodyFileName)), bodyFileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        create(notificationTemplate);
+    }
+    
+    private void notificationTemplate(String code,String name,String titleFileName,String bodyFileName){
+    	notificationTemplate(code, name, "template", titleFileName, "template", bodyFileName);
     }
     
     private void time(){ 
@@ -263,6 +296,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	userRole = roleBusiness.find(Role.USER);
     	
     	RemoteEndPoint.USER_INTERFACE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_USER_INTERFACE);
+    	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_EMAIL);
+    	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_SMS);
     }
     
     public static RootBusinessLayer getInstance() {

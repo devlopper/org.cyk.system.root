@@ -79,7 +79,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findAll() {
-		applyDataReadConfigToDao(getDataReadConfig());
+		//FIXME find how to handle pagination
+		//applyDataReadConfigToDao(getDataReadConfig());
 		return dao.readAll();
 	}
 
@@ -90,7 +91,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findAllExclude(Collection<IDENTIFIABLE> identifiables) {
-		applyDataReadConfigToDao(getDataReadConfig());
+		//FIXME find how to handle pagination
+		//applyDataReadConfigToDao(getDataReadConfig());
 		return dao.readAllExclude(identifiables);
 	}
 

@@ -49,6 +49,14 @@ public class TimeUT extends AbstractUnitTest {
 		    	,new Date[]{createDate(5, 1, 2000, 0, 0),createDate(5, 1, 2000, 2, 30)}
     			);
     	
+    	for(Period period : timeBusiness.findPeriods(new Period(createDate(15, 1, 2015, 10, 00, 23, 0), createDate(21, 1, 2015, 17, 30, 0,0)), 
+    			new TimeDivisionType(TimeDivisionType.MONTH, null, (long)DateTimeConstants.MILLIS_PER_DAY, null), Boolean.TRUE))
+    		System.out.println(period);
+    	
+    	for(Period period : timeBusiness.findPeriods(new Period(createDate(15, 1, 2015, 10, 00, 23, 0), createDate(3, 4, 2015, 17, 30, 0,0)), 
+    			new TimeDivisionType(TimeDivisionType.MONTH, null, (long)DateTimeConstants.MILLIS_PER_DAY, null), Boolean.TRUE))
+    		System.out.println(period);
+    	
     }
     
     private Date createDate(int d,int m,int y,int h,int mm){

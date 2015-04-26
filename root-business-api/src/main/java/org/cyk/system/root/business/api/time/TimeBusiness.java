@@ -22,6 +22,8 @@ public interface TimeBusiness {
 	String DATE_TIME_LONG_PATTERN = "EEEE , dd/MM/yyyy à HH:mm";
 	String TIME_SHORT_PATTERN = "HH:mm";
 	
+	String format(Field field,Date date);
+	
 	String formatDate(Date date,String pattern,Locale locale);
 	String formatDate(Date fromDate,Date toDate,String pattern,Locale locale);
 	
@@ -58,6 +60,8 @@ public interface TimeBusiness {
 	Boolean between(Period period,Date date,Boolean excludeFromDate,Boolean excludeToDate);
 	
 	String formatPeriod(Period period,TimeDivisionType timeDivisionType);
+	String formatPeriodFromTo(Period period,String pattern);
+	String formatPeriodFromTo(Period period);
 
 	Integer findNumberOfDaysIn(Period period, Boolean partial);
 	
@@ -73,4 +77,5 @@ public interface TimeBusiness {
 	Integer findMinuteOfHour(Date date);
 	
 	Integer findMillisecondOfDay(Date date);
+	
 }

@@ -21,10 +21,32 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
         super(dao);
     }
 	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public NODE findParent(NODE child){
 		return dao.readParent(child);
 	}
     
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Boolean isAncestorOf(NODE ancestor,NODE child){
+		NODE parent;
+		while((parent=findParent(child))!=null)
+			if(parent.equals(ancestor))
+				return Boolean.TRUE;
+			else
+				child = parent;
+		return Boolean.FALSE;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Boolean isAtLeastOneAncestorOf(Collection<NODE> ancestors,NODE child){
+		if(ancestors==null)
+			return Boolean.FALSE;
+		for(NODE node : ancestors)
+			if(isAncestorOf(node, child))
+				return Boolean.TRUE;
+		return Boolean.FALSE;
+	}
+	
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public void findHierarchy(NODE anEnumeration) {
         loadChildren(anEnumeration);

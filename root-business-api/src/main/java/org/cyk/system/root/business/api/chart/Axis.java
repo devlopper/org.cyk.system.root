@@ -13,4 +13,5 @@ public class Axis implements Serializable {
 
 	private String label;
 	private BigDecimal minimum=BigDecimal.ZERO,maximum;
+	private Integer tickAngle,tickCount;
 }
