@@ -1,11 +1,6 @@
 package org.cyk.system.root.persistence.impl.integration;
 
-import javax.inject.Inject;
-
 import org.cyk.system.root.model.geography.ElectronicMail;
-import org.cyk.system.root.persistence.api.geography.ContactCollectionDao;
-import org.cyk.system.root.persistence.api.geography.ContactDao;
-import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -17,11 +12,11 @@ public class GeographyPersistenceIT extends AbstractPersistenceIT {
 	public static Archive<?> createDeployment() {
 	    return createRootDeployment();
 	} 
-	 
+	/* 
 	@Inject private ContactDao contactDao;
 	@Inject private ContactCollectionDao contactCollectionDao;
 	@Inject private ElectronicMailDao electronicMailDao;
-		
+		*/
 	@Override
 	protected void populate() {
 		create(new ElectronicMail("a@mail.com"));

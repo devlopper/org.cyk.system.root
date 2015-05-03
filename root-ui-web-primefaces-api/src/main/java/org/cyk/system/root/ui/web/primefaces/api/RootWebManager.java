@@ -9,12 +9,12 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.SystemMenu;
-import org.cyk.ui.web.api.AbstractWebManager;
+import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
-public class RootWebManager extends AbstractWebManager implements Serializable {
+public class RootWebManager extends AbstractPrimefacesManager implements Serializable {
 
 	private static final long serialVersionUID = 5478269349061504239L;
 
@@ -24,6 +24,7 @@ public class RootWebManager extends AbstractWebManager implements Serializable {
 	protected void initialisation() {
 		INSTANCE = this;
 		super.initialisation();
+		identifier = "root";
 	}
 	
 	@Override

@@ -28,6 +28,7 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
     
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isAncestorOf(NODE ancestor,NODE child){
+		/*
 		NODE parent;
 		while((parent=findParent(child))!=null)
 			if(parent.equals(ancestor))
@@ -35,6 +36,8 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 			else
 				child = parent;
 		return Boolean.FALSE;
+		*/
+		return ancestor.getNode().getLeftIndex() < child.getNode().getLeftIndex() && ancestor.getNode().getRightIndex() > child.getNode().getRightIndex();
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

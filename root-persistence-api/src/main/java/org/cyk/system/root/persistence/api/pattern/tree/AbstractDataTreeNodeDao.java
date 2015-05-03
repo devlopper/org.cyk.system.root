@@ -15,4 +15,9 @@ public interface AbstractDataTreeNodeDao<ENUMERATION extends AbstractDataTreeNod
 	Long countByParent(ENUMERATION parent);
 	
 	ENUMERATION readParent(ENUMERATION node);
+	
+	/*
+	Boolean isAncestorOf(ENUMERATION parent,ENUMERATION child);
+	Boolean isAtLeastOneAncestorOf(Collection<ENUMERATION> ancestors,ENUMERATION child);
+	*/
 }
