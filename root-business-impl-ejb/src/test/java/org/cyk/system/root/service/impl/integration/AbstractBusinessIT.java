@@ -44,7 +44,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     
     @Override
     protected void populate() {}
-	
+	 
     @Override
     protected void _execute_() {
         super._execute_();

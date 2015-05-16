@@ -10,9 +10,20 @@ public class Border implements Serializable {
 
 	private static final long serialVersionUID = 3136155998010403919L;
 
-	public enum Style{SOLID,DOTTED}
+	private Side left,top,right,bottom,all;
 	
-	private Style style = Style.SOLID;
-	private Color color = new Color();
-	private Integer size = 1;
+	/**/
+	
+	@Getter @Setter
+	public static class Side implements Serializable {
+
+		private static final long serialVersionUID = 3136155998010403919L;
+
+		public enum Style{NONE,SOLID,DOTTED}
+		
+		private Style style = Style.NONE;
+		private Color color = new Color();
+		private Integer size = 1;
+	}
+
 }

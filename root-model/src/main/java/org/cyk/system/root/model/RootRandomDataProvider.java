@@ -30,7 +30,8 @@ public class RootRandomDataProvider extends RandomDataProvider implements Serial
 		person.setBirthDate( /*randomDate(new Date(DateUtils.MILLIS_PER_DAY*365*30), new Date(DateUtils.MILLIS_PER_DAY*365*10))*/ new Date() );
 		File photo = new File();
 		photo.setBytes(Boolean.TRUE.equals(male)?getMale().photo():getFemale().photo());
-		person.setImage(photo);
+		photo.setExtension("png");
+		//person.setImage(photo);
 		
 		return person;
 	}

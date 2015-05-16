@@ -12,7 +12,7 @@ public class RootValueValidatorImpl implements RootValueValidator,Serializable {
 
 	private static final long serialVersionUID = -4852641723010830142L;
 
-	public static Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z]+$");
+	public static Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z]+$");//FIXME name can have accent and so on
 	
 	public static Set<String> EXTENSIONS = new HashSet<>();
     static{
@@ -30,7 +30,7 @@ public class RootValueValidatorImpl implements RootValueValidator,Serializable {
 	
 	@Override
 	public Boolean isValidPersonName(String name) {
-		return NAME_PATTERN.matcher(name).find();		
+		return Boolean.TRUE;//TODO enable after pattern fixed //NAME_PATTERN.matcher(name).find();		
 	}
 
 	@Override

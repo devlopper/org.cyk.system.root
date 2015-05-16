@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Report<MODEL> extends AbstractReport<MODEL> {
+public class ReportBasedOnTemplateFile<MODEL> extends AbstractReport<MODEL> {
 	
 	private File templateFile;
 	

@@ -25,14 +25,6 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		super(dao); 
 	}
 	
-	/*@Override
-	public void register(ACTOR anActor) {
-		personBusiness.create(anActor.getPerson());
-		anActor.getRegistration().setDate(universalTimeCoordinated()); 
-		anActor.getRegistration().setCode(rootValueGenerator.actorRegistrationCode(anActor));
-		create(anActor);
-	}*/
-	
 	@Override
 	public ACTOR create(ACTOR anActor) {
 		personBusiness.create(anActor.getPerson());
@@ -41,9 +33,20 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return super.create(anActor);
 	}
 	
+	@Override
+	public ACTOR update(ACTOR anActor) {
+		personBusiness.update(anActor.getPerson());
+		return super.update(anActor);
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public ACTOR findByPerson(Person person) {
 		return dao.readByPerson(person);
 	}
+	
+	protected void __load__(ACTOR actor){
+		personBusiness.load(actor.getPerson());
+	}
+	
 	
 }

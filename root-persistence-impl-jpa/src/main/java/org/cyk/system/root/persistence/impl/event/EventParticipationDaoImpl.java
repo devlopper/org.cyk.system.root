@@ -15,13 +15,14 @@ public class EventParticipationDaoImpl extends AbstractTypedDao<EventParticipati
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-    private String readByEvents,readByEventByParty;
+    private String readByEvents,readByEventByParty,readByEvent;
     
     @Override
     protected void namedQueriesInitialisation() {
     	super.namedQueriesInitialisation();
         registerNamedQuery(readByEvents, "SELECT participation FROM EventParticipation participation WHERE participation.event.identifier IN :identifiers");
         registerNamedQuery(readByEventByParty, _select().where("event").and("party"));
+        registerNamedQuery(readByEvent, _select().where("event"));
     }
      
 	@Override
@@ -40,6 +41,13 @@ public class EventParticipationDaoImpl extends AbstractTypedDao<EventParticipati
 	@Override
 	public Collection<EventParticipation> readByParty(Party party) {
 		return null;
+	}
+
+	@Override
+	public Collection<EventParticipation> readByEvent(Event event) {
+		return namedQuery(readByEvent).parameter("event", event)
+				.ignoreThrowable(NoResultException.class)
+                .resultMany();
 	}
 
 }

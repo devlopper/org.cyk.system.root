@@ -37,13 +37,13 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
         return party;
     }
 	
-    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
-    public PARTY load(Long identifier) {
-        PARTY party = super.load(identifier);
-        contactCollectionBusiness.load(party.getContactCollection());
-        return party;
+	@Override
+    public PARTY update(PARTY party) {
+		if(party.getContactCollection()!=null)
+			contactCollectionBusiness.update(party.getContactCollection());
+        return super.update(party);
     }
-    
+	
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public Collection<PARTY> findByCriteria(SEARCH_CRITERIA criteria) {
     	if(StringUtils.isBlank(criteria.getNameSearchCriteria().getValue()))
@@ -56,5 +56,11 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     	if(StringUtils.isBlank(criteria.getNameSearchCriteria().getValue()))
     		return countAll();
     	return dao.countByCriteria(criteria);
+    }
+    
+    /**/
+        
+    protected void __load__(PARTY party) {
+    	contactCollectionBusiness.load(party.getContactCollection());
     }
 }

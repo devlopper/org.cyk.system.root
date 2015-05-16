@@ -11,6 +11,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     IDENTIFIABLE load(Long identifier);
 	
     void load(IDENTIFIABLE identifiable);
+    void load(Collection<IDENTIFIABLE> identifiables);
     
     Collection<IDENTIFIABLE> findAll(); 
     

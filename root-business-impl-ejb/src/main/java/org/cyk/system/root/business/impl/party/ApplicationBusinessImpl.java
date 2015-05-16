@@ -68,7 +68,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	public void install(Installation installation) {
 		try {
 			__writeInfo__("Installation is running...");
-			installData();
+			installData(installation);
 			installAccounts(installation);
 			installLicense(installation);
 			__writeInfo__("Installation done!");
@@ -78,11 +78,11 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		}
 	}
 	
-	private void installData(){
+	private void installData(Installation installation){
 		__writeInfo__("Creating data");
 		for(BusinessLayer layer : businessManager.findBusinessLayers()){
 			__writeInfo__("Layer : "+ ((AbstractBusinessLayer)layer).getId());
-            layer.createInitialData();
+            layer.createInitialData(installation.getFaked());
 		}
 	}
 	

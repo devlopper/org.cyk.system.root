@@ -12,7 +12,8 @@ public class Style implements Serializable {
 	public enum Align{LEFT,MIDDLE,RIGHT}
 	
 	private Font font = new Font();
-	private Border border = new Border();                
+	private Border border = new Border();  
+	private Background background = new Background();  
     private Text text = new Text();
     private Align horizontal = Align.LEFT;
     private Align vertical = Align.MIDDLE;

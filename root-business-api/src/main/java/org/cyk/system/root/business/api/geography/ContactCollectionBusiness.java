@@ -5,6 +5,6 @@ import org.cyk.system.root.model.geography.ContactCollection;
 
 public interface ContactCollectionBusiness extends TypedBusiness<ContactCollection> {
     
-    //void load(ContactCollection aCollection);
+    //void load(Collection<ContactCollection> aCollections);
     
 }

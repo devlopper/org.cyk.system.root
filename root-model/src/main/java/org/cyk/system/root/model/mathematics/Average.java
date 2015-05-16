@@ -18,9 +18,9 @@ public class Average extends AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = -4640228506073441626L;
 
-	@Column(precision=20,scale=FLOAT_SCALE) private BigDecimal dividend;
-	@Column(precision=20,scale=FLOAT_SCALE) private BigDecimal divisor;
-	@Column(precision=20,scale=FLOAT_SCALE) private BigDecimal value;
+	@Column(name="average_dividend",precision=20,scale=FLOAT_SCALE) private BigDecimal dividend;
+	@Column(name="average_divisor",precision=20,scale=FLOAT_SCALE) private BigDecimal divisor;
+	@Column(name="average_value",precision=20,scale=FLOAT_SCALE) private BigDecimal value;
 	
 	@Override
 	public String toString() {

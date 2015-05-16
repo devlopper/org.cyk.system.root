@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.file.report;
 
 import java.util.Collection;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,6 +13,6 @@ public abstract class AbstractReportConfiguration<MODEL,REPORT extends AbstractR
 
 	protected String identifier;
 	
-	public abstract REPORT build(Class<MODEL> aClass,Collection<MODEL> models,String fileExtension,Boolean print);
+	public abstract REPORT build(Class<MODEL> aClass,Collection<MODEL> models,String fileExtension,Boolean print,Map<String,String[]> parameters);
 	
 }

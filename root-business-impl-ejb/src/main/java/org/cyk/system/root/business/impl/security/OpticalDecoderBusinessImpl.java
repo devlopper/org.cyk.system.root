@@ -65,6 +65,8 @@ public class OpticalDecoderBusinessImpl extends AbstractDecoderBusinessImpl<byte
 			hints = new HashMap<>();
 			hints.put(DecodeHintType.POSSIBLE_FORMATS, Arrays.asList(barcodeFormat(options.getFormat())));
 			hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE.equals(options.getTryHarder()));
+			if(StringUtils.isNotBlank(options.getCharacterSet()))
+				hints.put(DecodeHintType.CHARACTER_SET, options.getCharacterSet());
 			//hints.put(DecodeHintType.PURE_BARCODE, Boolean.TRUE.equals(options.getPureBarCode()));
 
 			result = fetch(bufferedImage,region, hints, options);

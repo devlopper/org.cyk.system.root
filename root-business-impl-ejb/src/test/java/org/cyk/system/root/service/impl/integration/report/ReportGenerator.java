@@ -5,9 +5,9 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
-import org.cyk.system.root.business.impl.file.JasperReportBusinessImpl;
+import org.cyk.system.root.business.impl.file.report.jasper.JasperReportBusinessImpl;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.report.Report;
+import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.service.impl.integration.AbstractBusinessIT;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -45,7 +45,7 @@ public class ReportGenerator extends AbstractBusinessIT {
     @Override
     protected void _execute_() {
         super._execute_();
-        Report<Object> report = new Report<>();
+        ReportBasedOnTemplateFile<Object> report = new ReportBasedOnTemplateFile<>();
         report.getDataSource().add(new Object());
         report.getDataSource().add(new Object());
         report.setFileExtension("pdf");

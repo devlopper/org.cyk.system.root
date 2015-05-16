@@ -72,10 +72,19 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		load(identifiable);
 		return identifiable;
 	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void load(IDENTIFIABLE identifiable) {
+		__load__(identifiable);
+	}
 	
+	protected void __load__(IDENTIFIABLE identifiable) {}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public void load(IDENTIFIABLE identifiable) {}
+	public void load(Collection<IDENTIFIABLE> identifiables) {
+		for(IDENTIFIABLE identifiable : identifiables)
+			load(identifiable);
+	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findAll() {

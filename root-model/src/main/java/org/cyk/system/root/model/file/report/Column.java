@@ -15,11 +15,12 @@ public class Column implements Serializable {
 
 	private String fieldName;
 	private Class<?> type;
-	private String title;
-	private Integer width = 40;
+	private String title,footer;
+	private Integer width /*= 40*/;
 	
 	private Style headerStyle = new Style();
 	private Style detailStyle = new Style();
+	private Style footerStyle = new Style();
 	
 	public Column(String fieldName, Class<?> type, String title) {
 		super();

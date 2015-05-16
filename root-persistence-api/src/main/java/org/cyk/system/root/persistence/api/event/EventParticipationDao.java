@@ -14,5 +14,7 @@ public interface EventParticipationDao extends TypedDao<EventParticipation> {
 	EventParticipation readByEventByParty(Event event, Party party);
 
 	Collection<EventParticipation> readByParty(Party party);
+
+	Collection<EventParticipation> readByEvent(Event event);
     
 }

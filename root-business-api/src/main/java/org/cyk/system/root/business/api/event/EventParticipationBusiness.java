@@ -12,5 +12,7 @@ public interface EventParticipationBusiness extends TypedBusiness<EventParticipa
 	EventParticipation findByEventByParty(Event event,Party party);
 	
 	Collection<EventParticipation> findByParty(Party party);
+
+	Collection<EventParticipation> findByEvent(Event event);
 	
 }

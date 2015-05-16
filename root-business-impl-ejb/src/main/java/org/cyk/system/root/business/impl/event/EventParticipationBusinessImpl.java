@@ -34,5 +34,10 @@ public class EventParticipationBusinessImpl extends AbstractTypedBusinessService
 	public Collection<EventParticipation> findByParty(Party party) {
 		return dao.readByParty(party);
 	}
+	
+	@Override
+	public Collection<EventParticipation> findByEvent(Event event) {
+		return dao.readByEvent(event);
+	}
 
 }

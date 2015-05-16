@@ -1,15 +1,14 @@
-package org.cyk.system.root.model.file.report;
+/*package org.cyk.system.root.model.file.report;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class ReportTable<MODEL> extends AbstractReport<MODEL> {
+public class ReportTable<MODEL> extends ReportBasedOnDynamicBuilder<MODEL> implements Serializable {
 	
-	private String title,subTitle;
-	private Collection<Column> columns = new ArrayList<>();
+	private static final long serialVersionUID = -6269733939974607163L;
 	
 }
+*/

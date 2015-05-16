@@ -28,6 +28,7 @@ import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
+import org.cyk.system.root.business.api.time.TimeDivisionTypeBusiness;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -37,8 +38,8 @@ import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Tag;
-import org.cyk.system.root.model.file.report.ReportTable;
-import org.cyk.system.root.model.file.report.ReportTableConfiguration;
+import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilder;
+import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfiguration;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
@@ -76,6 +77,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Getter private LocalityType countryLocalityType,cityLocalityType,continentLocalityType;
 	@Getter private Locality countryCoteDivoire;
 	@Getter private Role administratorRole,managerRole,businessActorRole,settingManagerRole,securityManagerRole,userRole;
+	@Getter private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester;
 	
 	@Inject private PhoneNumberTypeBusiness phoneNumberTypeBusiness;
 	@Inject private LocationTypeBusiness locationTypeBusiness;
@@ -86,6 +88,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private PersonBusiness personBusiness;
     @Inject private RoleBusiness roleBusiness;
     @Inject private UserAccountBusiness userAccountBusiness;
+    @Inject private TimeDivisionTypeBusiness timeDivisionTypeBusiness;
     
     @Inject private FileBusiness fileBusiness;
     @Inject private NotificationTemplateDao notificationTemplateDao;
@@ -119,36 +122,28 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         });
         */
         
-        registerReportConfiguration(new ReportTableConfiguration<Object, ReportTable<Object>>(parameterGenericObjectReportTable) {
+        registerReportConfiguration(new ReportBasedOnDynamicBuilderConfiguration<Object, ReportBasedOnDynamicBuilder<Object>>(parameterGenericObjectReportTable) {
 
 			@Override
-			public ReportTable<Object> build(Class<Object> aClass,Collection<Object> models,String fileExtension,Boolean print) {
-				return reportBusiness.buildTable(aClass,models, fileExtension, print);
+			public ReportBasedOnDynamicBuilder<Object> build(Class<Object> aClass,Collection<Object> models,String fileExtension,Boolean print,Map<String,String[]> parameters) {
+				return null;//reportBusiness.build(aClass,models, fileExtension, print);
 			}
 
 			@Override
-			public ReportTable<Object> build(Class<Object> aClass,String fileExtension, Boolean print) {
-				return reportBusiness.buildTable(aClass, fileExtension, print);
+			public ReportBasedOnDynamicBuilder<Object> build(Class<Object> aClass,String fileExtension, Boolean print,Map<String,String[]> parameters) {
+				return null;//reportBusiness.build(aClass, fileExtension, print);
 			}
 		});
-        
-        //RemoteEndPoint.MAIL_SERVER.setTemplate(template);
-        
-        //load constants
-        constants();
     }
     
     @Override
-    public void createInitialData() {
+    protected void persistData() {
     	geography();
         event();
         time();
         language();
         party();
         security();
-        
-        //reload constants
-        constants();
     }
     
     private void geography(){
@@ -276,7 +271,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)UserAccount.class, (TypedBusiness)userAccountBusiness);
     }
     
-    private void constants(){
+    @Override
+    protected void setConstants(){
     	landPhoneNumberType = phoneNumberTypeBusiness.find(PhoneNumberType.LAND);
     	mobilePhoneNumberType = phoneNumberTypeBusiness.find(PhoneNumberType.MOBILE);
     	
@@ -295,9 +291,18 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	businessActorRole = roleBusiness.find(Role.BUSINESS_ACTOR);
     	userRole = roleBusiness.find(Role.USER);
     	
+    	timeDivisionTypeTrimester = timeDivisionTypeBusiness.find(TimeDivisionType.TRIMESTER);
+    	timeDivisionTypeSemester = timeDivisionTypeBusiness.find(TimeDivisionType.SEMESTER);
+    	timeDivisionTypeYear = timeDivisionTypeBusiness.find(TimeDivisionType.YEAR);
+    	
     	RemoteEndPoint.USER_INTERFACE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_USER_INTERFACE);
     	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_EMAIL);
     	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_SMS);
+    }
+    
+    @Override
+    protected void fakeTransactions() {
+    	
     }
     
     public static RootBusinessLayer getInstance() {
@@ -313,34 +318,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			@Override
 			public void run() {
 				notificationBusiness.run(remoteEndPoints);
-				/*
-				Collection<Event> events = eventBusiness.findToAlarm();
-				//System.out.println("Alarms : "+events.size());
-				Collection<EventParticipation> eventParticipations = eventParticipationDao.readByEvents(events);
-				for(Event event : events){
-					for(RemoteEndPoint remoteEndPoint : remoteEndPoints){
-						if(remoteEndPoint.alarmTemplate==null){
-							log.severe("No alarm template found");
-						}else{
-							Set<Party> parties = new HashSet<>();
-							for(EventParticipation eventParticipation : eventParticipations)
-								if(eventParticipation.getEvent().equals(event))
-									if(Boolean.TRUE.equals(eventParticipation.getAlertParty()))
-										parties.add(eventParticipation.getParty());
-							
-							Notification notification = new Notification();
-							notification.setRemoteEndPoint(remoteEndPoint);
-							NotificationTemplate template = remoteEndPoint.alarmTemplate;
-							template.getTitleParametersMap().put("title", event.getType().getName());
-							template.getMessageParametersMap().put("body", event.getObject());
-							notificationBusiness.fill(notification, template);
-							SendOptions sendOptions = new SendOptions();
-							
-							notificationBusiness.notify(notification, parties, sendOptions);
-						}
-					}
-				}
-				*/
 			}
 		}, delay, period);
     	log.info("Event Alarm Scanning Enabled");
@@ -351,7 +328,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     		alarmTimer.cancel();
     		log.info("Event Alarm Scanning disabled");
     	}
-    	
     }
     
     /**/
@@ -365,6 +341,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	installation.getLicense().setPeriod(new Period(new Date(), new Date()));
     	installation.setManager(new Person("fn","ln"));
     	installation.setManagerCredentials(new Credentials("man", "123"));
+    	installation.setFaked(Boolean.TRUE);
     	return installation;
     }
     

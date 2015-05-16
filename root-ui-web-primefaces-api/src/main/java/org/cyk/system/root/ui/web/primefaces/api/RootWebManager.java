@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.inject.Singleton;
 
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.event.EventType;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.ui.api.AbstractUserSession;
@@ -13,9 +14,10 @@ import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
-@Singleton @Deployment(initialisationType=InitialisationType.EAGER)
+@Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=RootWebManager.DEPLOYMENT_ORDER)
 public class RootWebManager extends AbstractPrimefacesManager implements Serializable {
 
+	public static final int DEPLOYMENT_ORDER = RootBusinessLayer.DEPLOYMENT_ORDER+1;
 	private static final long serialVersionUID = 5478269349061504239L;
 
 	private static RootWebManager INSTANCE;

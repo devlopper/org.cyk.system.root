@@ -1,10 +1,9 @@
 package org.cyk.system.root.service.impl.unit.jasper.samplereport;
 
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.ReportColumn;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import org.cyk.utility.common.annotation.user.interfaces.Input;
 
 @Getter @Setter
 public class Employee {
@@ -18,7 +17,7 @@ public class Employee {
 	@Input 
 	private Integer salary;
     
-	@ReportColumn
+	@Input
 	private Float commission;
  
     public Employee() {

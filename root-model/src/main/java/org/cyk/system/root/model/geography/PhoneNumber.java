@@ -40,6 +40,6 @@ public class PhoneNumber extends Contact implements Serializable{
 	public String toString() {
 		if(number==null || number.isEmpty())
 			return null;
-		return (country==null?"":("+"+country.getCode()+" "))+number+(type==null?"":" ("+type.getName()+")");
+		return /*(country==null?"":("+"+country.getCode()+" "))+*/number/*+(type==null?"":" ("+type.getName()+")")*/;//TODO move to Business
 	}
 }

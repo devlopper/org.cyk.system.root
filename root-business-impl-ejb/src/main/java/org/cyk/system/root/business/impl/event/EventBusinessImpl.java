@@ -99,8 +99,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 		return dao.countByCriteria(criteria);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public void load(Event event) {
+	protected void __load__(Event event) {
 		event.setEventParticipations(eventParticipationDao.readByEvents(Arrays.asList(event)));
 	}
 

@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.geography;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -27,8 +28,7 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
 		super(dao); 
 	}   
 	
-	@Override
-    public void load(ContactCollection aCollection) {
+	protected void __load__(ContactCollection aCollection) {
         aCollection.setPhoneNumbers(contactDao.readAllByCollection(PhoneNumber.class, aCollection));
         aCollection.setLocations(contactDao.readAllByCollection(Location.class, aCollection));
         aCollection.setElectronicMails(contactDao.readAllByCollection(ElectronicMail.class, aCollection));
@@ -69,16 +69,23 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
         if(inputContacts==null)
             return;
         for(Contact inputContact : inputContacts){
-        	if(inputContact.getIdentifier()==null)
+        	inputContact.setCollection(collection);
+        	if(inputContact.getIdentifier()==null){
         		contactDao.create(inputContact);
-        	else
+        	}else{
         		contactDao.update(inputContact);
+        	}
         }
         
+        Collection<Contact> deletes = new ArrayList<>();
+        
         for(Contact databaseContact : databaseContacts){
-        	if(inputContacts.contains(databaseContact))
-        		contactDao.delete(databaseContact);
+        	if(!inputContacts.contains(databaseContact))
+        		deletes.add(databaseContact);	
         }
+        
+        for(Contact contact : deletes)
+        	contactDao.delete(contact);
         
     }
 	

@@ -22,6 +22,8 @@ public class Installation extends AbstractModelElement implements Serializable {
 	
 	private License license;
 	
+	private Boolean faked = Boolean.FALSE;
+	
 	@Override
 	public String getUiString() {
 		return application.getUiString();
