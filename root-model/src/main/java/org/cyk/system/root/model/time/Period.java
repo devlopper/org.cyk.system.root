@@ -64,6 +64,10 @@ public class Period extends AbstractModelElement implements Serializable{
     	return toDate.getTime() - fromDate.getTime();
     }
 	
+	public Boolean contains(Date date){
+		return fromDate.getTime()<= date.getTime() && date.getTime() <= toDate.getTime();
+	}
+	
 	@Override
 	public String getUiString() {
 		return toString();

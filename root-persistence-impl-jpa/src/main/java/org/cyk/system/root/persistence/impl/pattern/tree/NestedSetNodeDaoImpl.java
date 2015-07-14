@@ -85,9 +85,7 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 			node.setLeftIndex(parentRightIndex);
 			node.setRightIndex(node.getLeftIndex()+1);
 			for(NestedSetNode n : readBySetByLeftOrRightGreaterThanOrEqualTo(parent.getSet(), parentRightIndex)){
-				//System.out.print("Updating "+n+" to ");
 				n.updateBoundariesGreaterThanOrEqualTo(true, parentRightIndex);
-				//System.out.println(n);
 				entityManager.merge(n);
 			}
 			entityManager.persist(node);
@@ -100,14 +98,10 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 		List<NestedSetNode> tree = new ArrayList<>(readByParent(node));
 		Collections.reverse(tree);
 		tree.add(node);
-		//System.out.println("To delete : "+tree);
 		int step = tree.size()*2;
 		Integer rightIndex = node.getRightIndex();
 		for(NestedSetNode n : readBySetByLeftOrRightGreaterThanOrEqualTo(node.getSet(), rightIndex+1) ){
-			//those are node to be updated
-			//System.out.print(n+" -> ");
 			n.updateBoundaries(-step, n.getLeftIndex()>rightIndex?null:false);//both bounds or right only
-			//System.out.print(n+" | ");
 			entityManager.merge(n);
 		}
 		

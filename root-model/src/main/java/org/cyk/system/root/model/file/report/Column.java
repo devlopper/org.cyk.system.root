@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.file.report;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,15 +18,17 @@ public class Column implements Serializable {
 	private Class<?> type;
 	private String title,footer;
 	private Integer width /*= 40*/;
+	private Field field;
 	
 	private Style headerStyle = new Style();
 	private Style detailStyle = new Style();
 	private Style footerStyle = new Style();
 	
-	public Column(String fieldName, Class<?> type, String title) {
+	public Column(Field field, String title) {
 		super();
-		this.fieldName = fieldName;
-		this.type = type;
+		this.field = field;
+		this.fieldName = field.getName();
+		this.type = field.getType();
 		this.title = title;
 	}
 	

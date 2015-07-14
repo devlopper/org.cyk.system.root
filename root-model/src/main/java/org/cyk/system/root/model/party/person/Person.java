@@ -16,64 +16,33 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.model.event.RepeatedEvent;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputCalendar;
-import org.cyk.utility.common.annotation.user.interfaces.InputChoice;
-import org.cyk.utility.common.annotation.user.interfaces.InputOneChoice;
-import org.cyk.utility.common.annotation.user.interfaces.InputOneCombo;
-import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
-@Getter @Setter 
-@Entity
-/*
-@UIFieldOrders(values={
-        @UIFieldOrder(fieldName="contactCollection",underFieldName="nationality")
-})
-*/
-@NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS)
+@Getter @Setter  @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS)
 public class Person  extends Party  implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@Input
-	@InputText
 	private String lastName;
 	
-	@Input
-	@InputCalendar
 	@Temporal(TemporalType.DATE) private Date birthDate;
 	
-	@Valid
-    @OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;
+	@Valid @OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;
 	
-	@Input
-	@InputChoice
-	@InputOneChoice
-	@InputOneCombo
 	@ManyToOne private Sex sex;
 	
-	@Input
-	@InputChoice
-	@InputOneChoice
-	@InputOneCombo
 	@ManyToOne private MaritalStatus maritalStatus;
 	
-	@Input
-	@InputChoice
-	@InputOneChoice
-	@InputOneCombo
 	@ManyToOne private Locality nationality;
 	
-	@Input
-	@InputChoice
-	@InputOneChoice
-	@InputOneCombo
 	@OneToOne(cascade=CascadeType.ALL) private PersonCredentials credentials;
+	
+	@OneToOne(cascade=CascadeType.ALL) private RepeatedEvent birthDateAnniversary;
 	
 	//TODO info to add : Job (Profession,Function)
 	

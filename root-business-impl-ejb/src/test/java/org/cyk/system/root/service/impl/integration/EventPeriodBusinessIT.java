@@ -58,7 +58,7 @@ public class EventPeriodBusinessIT extends AbstractBusinessIT {
         event.setPeriod(new Period(fromDate, toDate));
         event.setContactCollection(null);
         eventBusiness.create(event);
-        create(new EventParticipation(person, event));
+        create(new EventParticipation(person));
         return event;
     }
 

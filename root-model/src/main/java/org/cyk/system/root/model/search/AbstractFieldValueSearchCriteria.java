@@ -11,11 +11,11 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 
 	private static final long serialVersionUID = 2055293289197179106L;
 
-	protected VALUE_TYPE value;
+	protected VALUE_TYPE value,nullValue;
 	protected Boolean ascendingOrdered=Boolean.FALSE;
 	
 	public VALUE_TYPE getPreparedValue(){
-		return value;
+		return value==null?nullValue:value;
 	}
 
 	public AbstractFieldValueSearchCriteria(VALUE_TYPE value) {

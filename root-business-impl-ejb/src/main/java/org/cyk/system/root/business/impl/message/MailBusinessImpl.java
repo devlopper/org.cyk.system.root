@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.logging.Level;
 
 import javax.annotation.Resource;
 import javax.mail.Message;
@@ -14,15 +13,12 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import lombok.extern.java.Log;
-
 import org.cyk.system.root.business.api.message.MailBusiness;
+import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.utility.common.cdi.AbstractBean;
 
-@Log
-public class MailBusinessImpl extends AbstractBean implements MailBusiness , Serializable {
+public class MailBusinessImpl extends AbstractBusinessServiceImpl implements MailBusiness , Serializable {
     
 	private static final long serialVersionUID = 4468167686499924200L;
 	
@@ -41,7 +37,7 @@ public class MailBusinessImpl extends AbstractBean implements MailBusiness , Ser
                     message.setContent(notification.getMessage(), "text/html; charset=utf-8");
                     Transport.send(message);
                 } catch (Exception e) {
-                    log.log(Level.SEVERE,e.toString(),e);
+                    __logger__().error(e.toString(),e);
                 }
             };
         };

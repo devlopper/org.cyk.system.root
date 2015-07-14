@@ -1,7 +1,5 @@
 package org.cyk.system.root.model.file.report;
 
-import java.util.Map;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +10,6 @@ public abstract class ReportBasedOnDynamicBuilderConfiguration<MODEL,REPORT exte
 		super(identifier);
 	}
 	
-	public abstract REPORT build(Class<MODEL> aClass,String fileExtension,Boolean print,Map<String,String[]> parameters);
-
+	public abstract REPORT build(ReportBasedOnDynamicBuilderParameters<MODEL> parameters);
+	
 }

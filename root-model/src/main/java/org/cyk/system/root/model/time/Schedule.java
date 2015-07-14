@@ -22,7 +22,7 @@ public class Schedule extends AbstractIdentifiable implements Serializable {
 	
 	private Byte weekDayIndex;
 	
-	@Embedded private FlexibleTime startingTime;
+	@Embedded private FlexibleTime startingTime = new FlexibleTime();
 	
 	/**
 	 * Duration in millisecond

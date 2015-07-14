@@ -8,6 +8,8 @@ import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.utility.common.CommonUtils;
+import org.cyk.utility.common.generator.RandomDataProvider;
+import org.slf4j.Logger;
 
 
 public class BusinessIntegrationTestHelper {
@@ -28,7 +30,8 @@ public class BusinessIntegrationTestHelper {
     
     
     //FIXME those classes are ignored. WHY 
-    private static Class<?>[] CLASSES = {ExceptionUtils.class,BusinessLocator.class,PersonValidator.class,FileValidator.class};
+    private static Class<?>[] CLASSES = {ExceptionUtils.class,BusinessLocator.class,PersonValidator.class,FileValidator.class,
+    	RandomDataProvider.class,RootRandomDataProvider.class,ResourceProducer.class,Logger.class};
     
     public static Package[] packages(){
         return PACKAGES;

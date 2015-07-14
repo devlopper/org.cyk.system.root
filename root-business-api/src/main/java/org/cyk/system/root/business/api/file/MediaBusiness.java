@@ -2,7 +2,9 @@ package org.cyk.system.root.business.api.file;
 
 import java.net.URI;
 
-public interface MediaBusiness {
+import org.cyk.system.root.business.api.BusinessService;
+
+public interface MediaBusiness extends BusinessService {
     
 	public enum ThumnailSize {_1,_2,_3,_4,_5}
 	

@@ -15,8 +15,7 @@ public class Style implements Serializable {
 	private Border border = new Border();  
 	private Background background = new Background();  
     private Text text = new Text();
-    private Align horizontal = Align.LEFT;
-    private Align vertical = Align.MIDDLE;
+    private Alignment alignment = new Alignment();
     private Padding padding = new Padding();       
 	
 }

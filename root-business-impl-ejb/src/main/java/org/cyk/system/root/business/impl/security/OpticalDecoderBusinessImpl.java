@@ -143,8 +143,7 @@ public class OpticalDecoderBusinessImpl extends AbstractDecoderBusinessImpl<byte
 					        return result;
 						}
 					} catch (Exception e) {
-						//System.out.println(e);
-						//e.printStackTrace();
+						__logger__().trace(e.toString(), e);
 					}  
 				}
 			}

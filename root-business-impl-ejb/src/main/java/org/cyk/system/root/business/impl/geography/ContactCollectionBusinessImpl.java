@@ -46,6 +46,15 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
     }
     
     @Override
+    public ContactCollection delete(ContactCollection collection) {
+    	delete(collection.getPhoneNumbers(), collection);
+    	delete(collection.getLocations(), collection);
+    	delete(collection.getElectronicMails(), collection);
+    	delete(collection.getPostalBoxs(), collection);
+    	return super.delete(collection);
+    }
+    
+    @Override
     public ContactCollection update(ContactCollection collection) {
     	update(contactDao.readAllByCollection(PhoneNumber.class, collection), collection.getPhoneNumbers(), collection);
     	update(contactDao.readAllByCollection(Location.class, collection), collection.getLocations(), collection);
@@ -87,6 +96,13 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
         for(Contact contact : deletes)
         	contactDao.delete(contact);
         
+    }
+    
+    private void delete(Collection<? extends Contact> contacts,ContactCollection collection){
+        if(contacts==null)
+            return;
+        for(Contact contact : contacts)
+            contactDao.delete(contact);
     }
 	
 }

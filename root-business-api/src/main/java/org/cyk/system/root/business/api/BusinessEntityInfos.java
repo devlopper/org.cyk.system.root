@@ -13,6 +13,7 @@ import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudInheritanceStrategy;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 @EqualsAndHashCode(of="clazz")
 public class BusinessEntityInfos implements Serializable {
@@ -20,6 +21,7 @@ public class BusinessEntityInfos implements Serializable {
 	private static final long serialVersionUID = -8725167267186070601L;
 	@Getter @Setter private Class<? extends Identifiable<?>> clazz;
 	@Getter  private ModelBean modelBeanAnnotation;
+	@Getter @Setter private Boolean male;
     
     @Getter @Setter private String varName,uiLabelId,uiLabel,identifier,uiIconName,uiIconExtension;
     @Getter @Setter private String uiConsultViewId,uiListViewId,uiEditViewId;
@@ -47,6 +49,12 @@ public class BusinessEntityInfos implements Serializable {
             return modelBeanAnnotation.crudStrategy();
         }
         return modelBeanAnnotation.crudStrategy();
+    }
+    
+    public GenderType getGenderType(){
+    	if(modelBeanAnnotation==null)
+            return null;
+    	return modelBeanAnnotation.genderType();
     }
 
 }

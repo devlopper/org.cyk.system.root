@@ -3,10 +3,11 @@ package org.cyk.system.root.business.impl.security;
 import java.io.Serializable;
 
 import org.cyk.system.root.business.api.security.AbstractEncoderDecoderBusiness;
+import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 
 import com.google.zxing.BarcodeFormat;
 
-public abstract class AbstractEncoderDecoderBusinessImpl<SOURCE,DESTINATION,OPTIONS> implements AbstractEncoderDecoderBusiness<SOURCE,DESTINATION,OPTIONS>,Serializable {
+public abstract class AbstractEncoderDecoderBusinessImpl<SOURCE,DESTINATION,OPTIONS> extends AbstractBusinessServiceImpl implements AbstractEncoderDecoderBusiness<SOURCE,DESTINATION,OPTIONS>,Serializable {
 
 	private static final long serialVersionUID = -4553708311085832491L;
 

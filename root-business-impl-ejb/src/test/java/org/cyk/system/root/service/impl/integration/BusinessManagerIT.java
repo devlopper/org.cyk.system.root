@@ -38,10 +38,7 @@ public class BusinessManagerIT extends AbstractBusinessIT {
 
     @Override
     protected void finds() {
-        //System.out.println(businessManager.findEntitiesInfos());
-        //System.out.println(businessManager.findEntitiesInfos(CrudStrategy.ENUMERATION));
-        //Assert.assertEquals(2, businessManager.findEntitiesInfos().size());
-        //businessManager.createData();
+        
        
     }
 

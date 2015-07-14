@@ -14,7 +14,7 @@ import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.utility.common.computation.DataReadConfig;
 
-public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractBusinessService<IDENTIFIABLE> implements
+public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
 
 	private static final long serialVersionUID = 6437552355933877400L;
@@ -66,27 +66,27 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    	delete(identifiable);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IDENTIFIABLE load(Long identifier) {
 		IDENTIFIABLE identifiable = find(identifier);
 		load(identifiable);
 		return identifiable;
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(IDENTIFIABLE identifiable) {
 		__load__(identifiable);
 	}
 	
 	protected void __load__(IDENTIFIABLE identifiable) {}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(Collection<IDENTIFIABLE> identifiables) {
 		for(IDENTIFIABLE identifiable : identifiables)
 			load(identifiable);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<IDENTIFIABLE> findAll() {
 		//FIXME find how to handle pagination
 		//applyDataReadConfigToDao(getDataReadConfig());

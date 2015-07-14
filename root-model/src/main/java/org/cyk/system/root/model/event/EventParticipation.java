@@ -30,6 +30,11 @@ public class EventParticipation extends AbstractIdentifiable implements Serializ
 	
 	private Boolean alertParty = Boolean.TRUE;
 
+	public EventParticipation(Party party) {
+		super();
+		this.party = party;
+	}
+	
 	public EventParticipation(Party party, Event event) {
 		super();
 		this.party = party;
@@ -40,4 +45,8 @@ public class EventParticipation extends AbstractIdentifiable implements Serializ
 	public String toString() {
 		return party+" - "+event;
 	}
+
+
+
+	
 }

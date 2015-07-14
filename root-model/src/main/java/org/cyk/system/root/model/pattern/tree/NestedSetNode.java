@@ -65,7 +65,6 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	}
 	
 	public void updateBoundariesGreaterThanOrEqualTo(boolean increase,int index){
-		//System.out.println("Index : "+index+" - "+leftIndex+" - "+rightIndex);
 		int sign = increase?+1:-1;
 		if(leftIndex>=index)
 			leftIndex=leftIndex+sign*2;

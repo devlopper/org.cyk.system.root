@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
+import org.cyk.system.root.business.impl.RootTestHelper;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
@@ -34,6 +35,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	@Inject private GenericDaoImpl g;
 	@Inject protected GenericBusiness genericBusiness;
 	@Inject protected ApplicationBusiness applicationBusiness;
+	@Inject protected RootTestHelper rootTestHelper;
 	
 	@Inject protected ValidatorMap validatorMap;// = ValidatorMap.getInstance();
     
@@ -89,8 +91,8 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
             validator.validate(object);
         } catch (Exception e) {}
         
-        if(!Boolean.TRUE.equals(validator.isSuccess()))
-            System.out.println(validator.getMessagesAsString());
+        //if(!Boolean.TRUE.equals(validator.isSuccess()))
+         //   ystem.out.println(validator.getMessagesAsString());
         
     }
     

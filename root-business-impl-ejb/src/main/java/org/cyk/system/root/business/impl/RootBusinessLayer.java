@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -12,12 +13,13 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 
 import lombok.Getter;
-import lombok.extern.java.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
+import org.cyk.system.root.business.api.event.EventTypeBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.TagBusiness;
@@ -25,11 +27,18 @@ import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
+import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
+import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.api.time.TimeDivisionTypeBusiness;
+import org.cyk.system.root.business.api.userinterface.GraphicBusiness;
 import org.cyk.system.root.business.impl.file.FileValidator;
+import org.cyk.system.root.business.impl.file.report.DefaultReportBasedOnDynamicBuilder;
+import org.cyk.system.root.business.impl.file.report.jasper.DefaultJasperReportBasedOnDynamicBuilder;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Event;
@@ -40,12 +49,19 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Tag;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilder;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfiguration;
+import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderIdentifiableConfiguration;
+import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderListener;
+import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
+import org.cyk.system.root.model.generator.StringValueGenerator;
+import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.party.Application;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Sex;
@@ -60,7 +76,7 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
-@Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Log
+@Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER)
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
  
 	public static final int DEPLOYMENT_ORDER = 0;
@@ -70,15 +86,25 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private Timer alarmTimer;
 	
-	@Getter private final String parameterGenericObjectReportTable = "gortb"; 
+	@Getter private final String parameterGenericReportBasedOnDynamicBuilder = "grbodb"; 
+	@Getter private final String parameterGenericDashBoardReport = "gdbr"; 
+	@Getter private final String parameterFromDate = "fd"; 
+	@Getter private final String parameterToDate = "td"; 
 	
 	@Getter private PhoneNumberType landPhoneNumberType,mobilePhoneNumberType;
 	@Getter private LocationType homeLocationType,officeLocationType;
 	@Getter private LocalityType countryLocalityType,cityLocalityType,continentLocalityType;
 	@Getter private Locality countryCoteDivoire;
 	@Getter private Role administratorRole,managerRole,businessActorRole,settingManagerRole,securityManagerRole,userRole;
-	@Getter private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester;
+	@Getter private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
+	@Getter private EventType anniversaryEventType,reminderEventType;
 	
+	@Inject @Getter private LanguageBusiness languageBusiness;
+	@Inject @Getter private TimeBusiness timeBusiness;
+	@Inject @Getter private NumberBusiness numberBusiness;
+	@Inject @Getter private GraphicBusiness graphicBusiness;
+	@Inject @Getter private ApplicationBusiness applicationBusiness;
+	@Inject @Getter private GenericBusiness genericBusiness;
 	@Inject private PhoneNumberTypeBusiness phoneNumberTypeBusiness;
 	@Inject private LocationTypeBusiness locationTypeBusiness;
 	@Inject private LocalityBusiness localityBusiness;
@@ -89,8 +115,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private RoleBusiness roleBusiness;
     @Inject private UserAccountBusiness userAccountBusiness;
     @Inject private TimeDivisionTypeBusiness timeDivisionTypeBusiness;
+    @Inject private EventTypeBusiness eventTypeBusiness;
     
-    @Inject private FileBusiness fileBusiness;
+    @Inject @Getter private FileBusiness fileBusiness;
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
     //@Inject private EventParticipationDao eventParticipationDao;
@@ -98,12 +125,22 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private PersonValidator personValidator;
     @Inject private FileValidator fileValidator;
     
+    @Inject private RootTestHelper rootTestHelper;
+    
     //private Person personAdmin,personGuest;
         
     @Override
     protected void initialisation() {
     	INSTANCE = this;
         super.initialisation();
+       
+        rootTestHelper.setReportBusiness(reportBusiness);
+        rootTestHelper.setRootBusinessLayer(this); 
+        
+        applicationBusiness.registerValueGenerator((ValueGenerator<?, ?>) new StringValueGenerator<Party>(
+        		ValueGenerator.PARTY_CODE_IDENTIFIER,ValueGenerator.PARTY_CODE_DESCRIPTION, Party.class));
+        applicationBusiness.registerValueGenerator((ValueGenerator<?, ?>) new StringValueGenerator<AbstractActor>(
+        		ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER,ValueGenerator.ACTOR_REGISTRATION_CODE_DESCRIPTION, AbstractActor.class));
         
         registerValidator(Person.class, personValidator);
         registerValidator(File.class, fileValidator);
@@ -122,18 +159,79 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         });
         */
         
-        registerReportConfiguration(new ReportBasedOnDynamicBuilderConfiguration<Object, ReportBasedOnDynamicBuilder<Object>>(parameterGenericObjectReportTable) {
-
+        registerReportConfiguration(new ReportBasedOnDynamicBuilderConfiguration<Object, ReportBasedOnDynamicBuilder<Object>>(parameterGenericReportBasedOnDynamicBuilder) {        	
+			@SuppressWarnings("unchecked")
 			@Override
-			public ReportBasedOnDynamicBuilder<Object> build(Class<Object> aClass,Collection<Object> models,String fileExtension,Boolean print,Map<String,String[]> parameters) {
-				return null;//reportBusiness.build(aClass,models, fileExtension, print);
-			}
-
-			@Override
-			public ReportBasedOnDynamicBuilder<Object> build(Class<Object> aClass,String fileExtension, Boolean print,Map<String,String[]> parameters) {
-				return null;//reportBusiness.build(aClass, fileExtension, print);
+			public ReportBasedOnDynamicBuilder<Object> build(ReportBasedOnDynamicBuilderParameters<Object> parameters) {
+				parameters.setDatas(new ArrayList<Object>());
+				if(parameters.getIdentifiableClass()==null){
+					
+				}else{
+					ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> identifiableConfiguration = null;
+					for(ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> ic : ReportBasedOnDynamicBuilderListener.IDENTIFIABLE_CONFIGURATIONS)
+						if(parameterGenericReportBasedOnDynamicBuilder.equals(ic.getReportBasedOnDynamicBuilderIdentifier()) 
+								&& ic.getIdentifiableClass().equals(parameters.getIdentifiableClass())
+								//&& ic.getModelClass().equals(parameters.getModelClass())
+								){
+							identifiableConfiguration = ic;
+							if(parameters.getModelClass()==null)
+								parameters.setModelClass((Class<Object>) ic.getModelClass());
+							break;
+						}
+					Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+					
+					if(identifiableConfiguration==null || !Boolean.TRUE.equals(identifiableConfiguration.useCustomIdentifiableCollection()))
+						identifiables.addAll(genericBusiness.use(parameters.getIdentifiableClass()).find().all());
+					else
+						identifiables.addAll(identifiableConfiguration.identifiables(parameters));	
+						
+					for(AbstractIdentifiable identifiable : identifiables){
+			        	Object value = identifiableConfiguration == null ? identifiable:identifiableConfiguration.model(identifiable);
+						parameters.getDatas().add(value);	
+					}
+					
+				}
+		        parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultReportBasedOnDynamicBuilder());
+		        parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultJasperReportBasedOnDynamicBuilder());
+				return (ReportBasedOnDynamicBuilder<Object>) reportBusiness.build(parameters);
 			}
 		});
+        /*
+        registerReportConfiguration(new ReportBasedOnDynamicBuilderConfiguration<Object, ReportBasedOnDynamicBuilder<Object>>(parameterGenericDashBoardReport) {        	
+			@SuppressWarnings("unchecked")
+			@Override
+			public ReportBasedOnDynamicBuilder<Object> build(ReportBasedOnDynamicBuilderParameters<Object> parameters) {
+				parameters.setDatas(new ArrayList<Object>());
+				if(parameters.getIdentifiableClass()==null){
+					
+				}else{
+					ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> identifiableConfiguration = null;
+					for(ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> ic : ReportBasedOnDynamicBuilderListener.IDENTIFIABLE_CONFIGURATIONS)
+						if(parameterGenericObjectReportTable.equals(ic.getReportBasedOnDynamicBuilderIdentifier()) && ic.getIdentifiableClass().equals(parameters.getIdentifiableClass())){
+							identifiableConfiguration = ic;
+							if(parameters.getModelClass()==null)
+								parameters.setModelClass((Class<Object>) ic.getModelClass());
+							break;
+						}
+					Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+					
+					if(identifiableConfiguration==null || !Boolean.TRUE.equals(identifiableConfiguration.useCustomIdentifiableCollection()))
+						identifiables.addAll(genericBusiness.use(parameters.getIdentifiableClass()).find().all());
+					else
+						identifiables.addAll(identifiableConfiguration.identifiables(parameters));	
+						
+					for(AbstractIdentifiable identifiable : identifiables){
+			        	Object value = identifiableConfiguration == null ? identifiable:identifiableConfiguration.model(identifiable);
+						parameters.getDatas().add(value);	
+					}
+					
+				}
+		        parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultReportBasedOnDynamicBuilder());
+		        parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultJasperReportBasedOnDynamicBuilder());
+				return (ReportBasedOnDynamicBuilder<Object>) reportBusiness.build(parameters);
+			}
+		});
+		*/
     }
     
     @Override
@@ -178,35 +276,15 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void event(){ 
-    	create(new EventType("RDV", "Rendez vous", null));
-        create(new EventType("REU", "Reunion", null));
+    	create(new EventType(EventType.ANNIVERSARY, "Anniversaire", null));
+    	create(new EventType(EventType.APPOINTMENT, "Rendez vous", null));
+        create(new EventType(EventType.MEETING, "Reunion", null));
+        create(new EventType(EventType.REMINDER, "Rappel", null));
         
         notificationTemplate(NotificationTemplate.ALARM_USER_INTERFACE,"Alarm User Interface Notification Template","alarmUITitle.txt","alarmUIMessage.html");
         notificationTemplate(NotificationTemplate.ALARM_EMAIL,"Alarm Email Notification Template","alarmEmailTitle.txt","alarmEmailMessage.html");
         notificationTemplate(NotificationTemplate.ALARM_SMS,"Alarm Sms Notification Template","alarmSmsTitle.txt","alarmSmsMessage.html");
-        /*
-        NotificationTemplate notificationTemplate = new NotificationTemplate();
-        notificationTemplate.setCode(NotificationTemplate.ALARM_USER_INTERFACE);
-        notificationTemplate.setName("Alarm User Interface Notification Template");
-        try {
-        	notificationTemplate.setTitle(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream("template/alarmUITitle.txt")), "alarmUITitle.txt"));
-        	notificationTemplate.setMessage(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream("template/alarmUIMessage.html")), "alarmUIMessage.html"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        create(notificationTemplate);
         
-        notificationTemplate = new NotificationTemplate();
-        notificationTemplate.setCode(NotificationTemplate.ALARM_EMAIL);
-        notificationTemplate.setName("Alarm Electronic Mail Notification Template");
-        try {
-        	notificationTemplate.setTitle(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream("template/alarmUITitle.txt")), "alarmUITitle.txt"));
-        	notificationTemplate.setMessage(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream("template/alarmUIMessage.html")), "alarmUIMessage.html"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        create(notificationTemplate);
-        */
     }
     
     private void notificationTemplate(String code,String name,String titleFileFolder,String titleFileName,String bodyFileFolder,String bodyFileName){
@@ -242,7 +320,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         create(new MaritalStatus("B", "Celibataire"));
         create(new MaritalStatus("M", "Marie"));
     }
-    
     
     private void security(){ 
     	//Permission licenceRead = createPermission(permissionBusiness.computeCode(License.class, Crud.READ));
@@ -291,13 +368,18 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	businessActorRole = roleBusiness.find(Role.BUSINESS_ACTOR);
     	userRole = roleBusiness.find(Role.USER);
     	
+    	timeDivisionTypeDay = timeDivisionTypeBusiness.find(TimeDivisionType.DAY);
     	timeDivisionTypeTrimester = timeDivisionTypeBusiness.find(TimeDivisionType.TRIMESTER);
     	timeDivisionTypeSemester = timeDivisionTypeBusiness.find(TimeDivisionType.SEMESTER);
     	timeDivisionTypeYear = timeDivisionTypeBusiness.find(TimeDivisionType.YEAR);
     	
+    	anniversaryEventType = eventTypeBusiness.find(EventType.ANNIVERSARY);
+    	reminderEventType = eventTypeBusiness.find(EventType.REMINDER);
+    	
     	RemoteEndPoint.USER_INTERFACE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_USER_INTERFACE);
     	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_EMAIL);
     	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_SMS);
+    	
     }
     
     @Override
@@ -320,13 +402,13 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				notificationBusiness.run(remoteEndPoints);
 			}
 		}, delay, period);
-    	log.info("Event Alarm Scanning Enabled");
+    	logInfo("Event Alarm Scanning Enabled");
     }
     
     public void disableAlarmScanning() {
     	if(alarmTimer!=null){
     		alarmTimer.cancel();
-    		log.info("Event Alarm Scanning disabled");
+    		logInfo("Event Alarm Scanning disabled");
     	}
     }
     

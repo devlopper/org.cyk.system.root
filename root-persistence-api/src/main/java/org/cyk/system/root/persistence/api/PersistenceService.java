@@ -47,5 +47,12 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	                    
 	                    void clear();
 	                    
+	                    Long readOneIdentifierRandomly();
+	                    Collection<Long> readManyIdentifiersRandomly(Integer count);
+	                    Collection<Long> readAllIdentifiers();
+	                    
+	                    IDENTIFIABLE readOneRandomly();
+	                    Collection<IDENTIFIABLE> readManyRandomly(Integer count);
+	                    
 	                    
 }

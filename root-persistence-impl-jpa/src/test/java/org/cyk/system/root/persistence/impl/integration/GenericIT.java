@@ -82,6 +82,28 @@ public class GenericIT extends AbstractPersistenceIT {
 		
 		getGenericDao().getDataReadConfig().setMaximumResultCount(2l);
 		Assert.assertEquals(2,getGenericDao().use(PersonTest.class).select().all().size());
+		
+		System.out.println(getGenericDao().readAllIdentifiers());
+		
+		System.out.println("Random Identifier");
+		System.out.println(getGenericDao().readOneIdentifierRandomly());
+		System.out.println(getGenericDao().readOneIdentifierRandomly());
+		System.out.println(getGenericDao().readOneIdentifierRandomly());
+		
+		System.out.println("Random identifiers");
+		System.out.println(getGenericDao().readManyIdentifiersRandomly(3));
+		System.out.println(getGenericDao().readManyIdentifiersRandomly(3));
+		System.out.println(getGenericDao().readManyIdentifiersRandomly(3));
+		
+		System.out.println("Random Object");
+		System.out.println(getGenericDao().readOneRandomly());
+		System.out.println(getGenericDao().readOneRandomly());
+		System.out.println(getGenericDao().readOneRandomly());
+		
+		System.out.println("Random Objects");
+		System.out.println(getGenericDao().readManyRandomly(2));
+		System.out.println(getGenericDao().readManyRandomly(2));
+		System.out.println(getGenericDao().readManyRandomly(2));
 	}
 	
 	

@@ -48,6 +48,11 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	public UserAccount findByCredentials(Credentials credentials) {
 		return dao.readByCredentials(credentials);
 	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public UserAccount findByUsername(String username) {
+		return dao.readByUsername(username);
+	}
 
 	@Override
 	public UserAccount connect(Credentials credentials) {

@@ -17,7 +17,6 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.datasource.DataSource;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
-import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.security.PermissionBusiness;
 import org.cyk.system.root.business.impl.datasource.JdbcDataSource;
 import org.cyk.system.root.business.impl.file.report.jasper.JasperReportBusinessImpl;
@@ -25,17 +24,17 @@ import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.RootRandomDataProvider;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
-import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.cdi.AbstractLayer;
 
-public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusinessService<?>> implements BusinessLayer, Serializable {
+public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
 	private static final long serialVersionUID = -4484371129296972868L;
 	
@@ -133,27 +132,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusine
 			permissions[i] = permissionBusiness.computeCode((Class<AbstractIdentifiable>)entityCruds[i][0], (Crud)entityCruds[i][1]);
 	}
 	
-    protected <T extends AbstractActor> T actor(AbstractActorBusiness<T> business,Class<T> aClass,String name,String lastName,Boolean male){
-    	T actor = null;
-		try {
-			actor = aClass.newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    	actor.setPerson(RootRandomDataProvider.getInstance().person(male));
-    	/*
-    	if(name==null)
-    		actor.getPerson().setName(name);
-    	if(lastName!=null)
-    		actor.getPerson().setLastName(lastName);
-    	*/
-    	business.create(actor);
-    	return actor;
-    }
     
-    protected <T extends AbstractActor> T actor(AbstractActorBusiness<T> business,Class<T> aClass,Boolean male){
-    	return actor(business, aClass, null, null, male);
-    }
     
     protected IntervalCollection intervalCollection(String...values){
     	IntervalCollection intervalCollection = new IntervalCollection();
@@ -167,5 +146,19 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractBusine
     		create(interval);
     	}
     	return intervalCollection;
+    }
+    
+    protected Metric createMetric(String code,String name){
+    	Metric metric = new Metric();
+    	metric.setCode(code);
+    	metric.setName(name);
+    	return create(metric);
+    }
+    
+    protected InputName inputName(String code,String name){
+    	InputName inputName = new InputName();
+    	inputName.setCode(code);
+    	inputName.setName(name);
+    	return create(inputName);
     }
 }

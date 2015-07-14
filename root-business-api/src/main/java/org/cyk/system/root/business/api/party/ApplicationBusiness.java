@@ -6,6 +6,7 @@ import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.security.ApplicationPropertiesProvider;
 import org.cyk.system.root.business.api.security.ShiroConfigurator;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.PartySearchCriteria;
 import org.cyk.system.root.model.security.Installation;
@@ -21,7 +22,7 @@ public interface ApplicationBusiness extends AbstractPartyBusiness<Application,P
     
     Collection<BusinessEntityInfos> findBusinessEntitiesInfos();
     
-    BusinessEntityInfos findBusinessEntityInfos(Class<AbstractIdentifiable> aClass);
+    BusinessEntityInfos findBusinessEntityInfos(Class<? extends AbstractIdentifiable> aClass);
     
     Collection<BusinessEntityInfos> findBusinessEntitiesInfos(CrudStrategy crudStrategy);
     
@@ -34,5 +35,11 @@ public interface ApplicationBusiness extends AbstractPartyBusiness<Application,P
     void setShiroConfigurator(ShiroConfigurator aShiroConfigurator);
     
     void configureShiro();
+    
+    void registerValueGenerator(ValueGenerator<?, ?> valueGenerator);
+    ValueGenerator<?, ?> findValueGenerator(String identifier);
+    
+    <INPUT,OUTPUT> OUTPUT generateValue(String identifier,Class<INPUT> inputClass,Class<OUTPUT> outputClass,INPUT input);
+    String generateStringValue(String identifier,Object input);
     
 }

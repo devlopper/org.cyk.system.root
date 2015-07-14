@@ -26,4 +26,8 @@ public interface EventBusiness extends AbstractIdentifiablePeriodBusiness<Event>
     
     Collection<Event> findOnComings(Collection<Party> parties);
     Long countOnComings(Collection<Party> parties);
+    /*
+    Collection<Event> findPersonBirthDateAnniversariesByPeriod(Period period);
+    Long countPersonBirthDateAnniversariesByPeriod(Period period);
+    */
 }

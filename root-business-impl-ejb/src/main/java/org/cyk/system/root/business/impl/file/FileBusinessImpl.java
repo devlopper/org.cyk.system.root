@@ -3,15 +3,18 @@ package org.cyk.system.root.business.impl.file;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness;
@@ -80,6 +83,29 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
         else
             return new ByteArrayInputStream(file.getBytes());
         return null;
+    }
+    
+    @Override
+    public Path findSystemPath(File file, Boolean createTemporaryIfNotExist) {
+    	if(file.getUri()==null){
+    		try {
+				Path temporaryFilePath = Files.createTempFile(null, null);
+				IOUtils.write(file.getBytes(), new FileOutputStream(temporaryFilePath.toFile()));
+				return temporaryFilePath;
+			} catch (IOException e) {
+				e.printStackTrace();
+				exceptionUtils().exception("exception.file.temporaryfilenotcreated");
+			}
+    		
+    	}else{
+    		logError("Uri to file system path not yet handled");
+    	}
+    	return null;
+    }
+    
+    @Override
+    public Path findSystemPath(File file) {
+    	return findSystemPath(file,Boolean.TRUE);
     }
 
 	@Override

@@ -92,8 +92,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         FieldValidatorMethod method = ValidatorMap.getInstance().validatorOfField(field);
         if(method==null)
             return;
-        //System.out.println("ValidationPolicyImpl.validateField() : "+field);
-        //System.out.println("Validation Method : "+method);
+        logTrace("Validating field {} with method {}", field,method);
         method.execute(new Object[]{value});
     }
     

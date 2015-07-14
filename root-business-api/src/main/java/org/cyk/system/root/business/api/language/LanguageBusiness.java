@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Locale;
 
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.utility.common.annotation.user.interfaces.Text;
 
@@ -35,10 +36,20 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
     
     String findObjectLabelText(Object object);
     
+    String findListOfText(Class<?> aClass);
+    
 	void setLocale(Locale locale);
 	
 	Locale findCurrentLocale();
 	
 	void registerResourceBundle(String id,ClassLoader aClassLoader);
+
+	String findDeterminantText(Boolean male, Boolean one,Boolean global);
+
+	String findDoActionText(String actionId,Class<? extends AbstractIdentifiable> aClass, Boolean one,Boolean global);
+
+	String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass,Boolean one, Boolean global);
+	
+	String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass);
 	
 }

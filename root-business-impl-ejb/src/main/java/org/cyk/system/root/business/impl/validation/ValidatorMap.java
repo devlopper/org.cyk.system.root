@@ -8,13 +8,11 @@ import java.util.Map;
 import javax.inject.Singleton;
 
 import lombok.Getter;
-import lombok.extern.java.Log;
 
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 
-@Log
 @Getter @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-2)
 public class ValidatorMap extends AbstractBean implements Serializable {
     
@@ -39,12 +37,12 @@ public class ValidatorMap extends AbstractBean implements Serializable {
     @SuppressWarnings("unchecked")
     public <T> void registerValidator(Class<T> clazz,AbstractValidator<T> validator){
         classMap.put((Class<Object>) clazz, (AbstractValidator<Object>) validator);
-        log.info(clazz.getName()+" validated by "+validator.getClass().getName());
+        logInfo("Class {} validated by {}",clazz.getName(),validator.getClass().getName());
     }
     
     public void registerFieldValidator(Field field,FieldValidatorMethod method){
         fieldMap.put(field, method);
-        log.info(field+" validated by "+method);
+        logInfo("Field {} validated by {}",field.getName(),method);
     }
     
     public FieldValidatorMethod validatorOfField(Field field){

@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 
-public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extends BusinessService<IDENTIFIABLE, Long> {
+public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extends IdentifiableBusinessService<IDENTIFIABLE, Long> {
 
 	/* predefined query  */
 	

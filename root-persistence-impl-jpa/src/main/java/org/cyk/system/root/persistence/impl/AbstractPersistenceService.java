@@ -13,10 +13,10 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -25,24 +25,26 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import lombok.Getter;
-import lombok.extern.java.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.search.AbstractPeriodSearchCriteria;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfig;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+import org.cyk.utility.common.generator.RandomDataProvider;
 
-@Log
 public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements Serializable,PersistenceService<IDENTIFIABLE, Long> {
 
 	private static final long serialVersionUID = -8198334103295401293L;
 	
 	private final static Set<Class<?>> NAMED_QUERIES_INITIALIZED = new HashSet<>();
+	private final static String SELECT_IDENTIFIER_FORMAT = "SELECT record.identifier FROM %s record";
+	//private final static String SELECT_BYIDENTIFIER_FORMAT = "SELECT record FROM %s record WHERE record.identifier IN :identifiers";
 	
 	protected static final String ORDER_BY_FORMAT = "ORDER BY %s";
 	
@@ -69,7 +71,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 				try {
 					FieldUtils.writeField(field, this, addPrefix(field.getName()), true);
 				} catch (IllegalAccessException e) {
-					log.log(Level.SEVERE, e.toString(), e);
+					__logger__().error(e.toString(), e);
 				}
 	}
 		
@@ -190,7 +192,6 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 			for(Entry<String, Object> parameter : parameters.entrySet())
 				query.setParameter(parameter.getKey(), parameter.getValue());
 		QueryWrapper.applyReadConfig(query, getDataReadConfig());
-		//System.out.println(getClass().getSimpleName()+".createQuery() : ");
 		//debug(dataReadConfig);
 		//dataReadConfig = new DataReadConfig();//A new one for the next coming request
 		return query;
@@ -209,7 +210,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		switch(type){
 		case JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createQuery(value, aResultClass),getDataReadConfig());break;
 		case NAMED_JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createNamedQuery(value, aResultClass),getDataReadConfig());break;
-		default:__queryWrapper__ = null;log.severe("Query <"+value+"> cannot be built for "+type);break;
+		default:__queryWrapper__ = null;logError("Query <{}> cannot be built for {}",value,type);break;
 		}
 		/*
 		__queryWrapper__.getReadConfig().setFirstResultIndex(null);
@@ -277,4 +278,51 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		if(Boolean.TRUE.equals(getDataReadConfig().getAutoClear()))
 			getDataReadConfig().clear();
 	}
+	
+	@Override
+	public Collection<Long> readAllIdentifiers() {
+		List<Long> identifiers = entityManager.createQuery(String.format(SELECT_IDENTIFIER_FORMAT, entityName()),Long.class).getResultList();
+		return identifiers;
+	}
+	
+	@Override
+	public Collection<Long> readManyIdentifiersRandomly(Integer count) {
+		Integer numberOfRows = select(Function.COUNT).oneLong().intValue();
+		if(count>numberOfRows)
+			count = numberOfRows;
+		
+		return entityManager.createQuery(String.format(SELECT_IDENTIFIER_FORMAT, entityName()),Long.class)
+				.setFirstResult(RandomDataProvider.getInstance().randomInt(0, numberOfRows - count))
+				.setMaxResults(count)
+				.getResultList();
+	}
+	
+	@Override
+	public Long readOneIdentifierRandomly() {
+		Collection<Long> collection = readManyIdentifiersRandomly(1);
+		return collection.isEmpty()?null:collection.iterator().next();
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readManyRandomly(Integer count) {
+		return entityManager.createQuery(_select().in(null).getValue(),clazz)
+				.setParameter(QueryStringBuilder.VAR_IDENTIFIERS, readManyIdentifiersRandomly(count))
+				.setMaxResults(count)
+				.getResultList();
+	}
+	
+	@Override
+	public IDENTIFIABLE readOneRandomly() {
+		Collection<IDENTIFIABLE> collection = readManyRandomly(1);
+		return collection.isEmpty()?null:collection.iterator().next();
+	}
+	
+	/**/
+	
+	protected void applyPeriodSearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractPeriodSearchCriteria searchCriteria){
+		queryWrapper.parameter("fromDate",searchCriteria.getFromDateSearchCriteria().getPreparedValue());
+		queryWrapper.parameter("toDate",searchCriteria.getToDateSearchCriteria().getPreparedValue());
+	}
+	
+	
 }

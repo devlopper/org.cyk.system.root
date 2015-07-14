@@ -19,8 +19,6 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
 	private static ExceptionUtils INSTANCE;
     
     public static ExceptionUtils getInstance() {
-        //if(INSTANCE==null)
-        //    INSTANCE = new ExceptionUtils();
         return INSTANCE;
     }
     
@@ -42,7 +40,8 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     
     public void exception(Boolean condition,String identifier,String messageId,Object[] parameters){
         if(Boolean.TRUE.equals(condition)){
-            BusinessException exception = new BusinessException(languageBusiness.findText(messageId,parameters));
+        	String message = languageBusiness.findText(messageId,parameters);
+            BusinessException exception = new BusinessException(message);
             exception.setIdentifier(identifier);
             throw exception;
         }

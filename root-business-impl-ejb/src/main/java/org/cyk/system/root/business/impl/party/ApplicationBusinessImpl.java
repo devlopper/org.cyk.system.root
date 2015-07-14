@@ -3,7 +3,9 @@ package org.cyk.system.root.business.impl.party;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -26,6 +28,7 @@ import org.cyk.system.root.business.impl.security.DefaultApplicationPropertiesPr
 import org.cyk.system.root.business.impl.security.DefaultShiroConfigurator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
+import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.PartySearchCriteria;
 import org.cyk.system.root.model.security.ApplicationAccount;
@@ -44,7 +47,8 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	private static Application INSTANCE;
 	private static ApplicationPropertiesProvider PROPERTIES_PROVIDER;
 	private static ShiroConfigurator SHIRO_CONFIGURATOR;
-	private static Collection<BusinessEntityInfos> BUSINESS_ENTITIES_INFOS;
+	public static Collection<BusinessEntityInfos> BUSINESS_ENTITIES_INFOS;
+	private static Map<String, ValueGenerator<?, ?>> VALUE_GENERATOR_MAP = new HashMap<String, ValueGenerator<?,?>>();
 	
 	@Inject private RoleDao roleDao;
 	@Inject private BusinessManager businessManager;
@@ -66,28 +70,29 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	 */
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void install(Installation installation) {
+		logInfo("Installation starts.");
 		try {
-			__writeInfo__("Installation is running...");
 			installData(installation);
 			installAccounts(installation);
 			installLicense(installation);
-			__writeInfo__("Installation done!");
+			logInfo("Installation done.");
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			exceptionUtils().exception(Boolean.TRUE,"exception.install",new Object[]{e});
 		}
 	}
 	
 	private void installData(Installation installation){
-		__writeInfo__("Creating data");
+		logInfo("Creating data");
 		for(BusinessLayer layer : businessManager.findBusinessLayers()){
-			__writeInfo__("Layer : "+ ((AbstractBusinessLayer)layer).getId());
-            layer.createInitialData(installation.getFaked());
+			logInfo("Layer : "+ ((AbstractBusinessLayer)layer).getId());
+			layer.createInitialData(installation.getFaked());
 		}
 	}
 	
 	private void installAccounts(Installation installation){
-		__writeInfo__("Creating administrator account");
+		logInfo("Creating administrator account");
+		//installation.getAdministratorCredentials().setUsername(null);
 		create(installation.getApplication());
 		ApplicationAccount administratorAccount = new ApplicationAccount();
 		administratorAccount.setUser(installation.getApplication());
@@ -97,23 +102,24 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getAdministratorRole());
 		userAccountBusiness.create(administratorAccount);
 		
-		__writeInfo__("Creating manager account");
+		logInfo("Creating manager account");
 		personBusiness.create(installation.getManager());
 		UserAccount managerAccount = new UserAccount();
 		managerAccount.setUser(installation.getManager());
 		managerAccount.setCredentials(installation.getManagerCredentials());
+		
 		//Super User : The one who use the system
+		
+		
 		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole())));
 		managerAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
-		//System.out.println("ApplicationBusinessImpl.installAccounts()");
-		//System.out.println(managerAccount.getRoles());
 		
 		userAccountBusiness.create(managerAccount);
 		
 	}
 	
 	private void installLicense(Installation installation){
-		__writeInfo__("Creating license");
+		logInfo("Creating license");
 		installation.getApplication().setLicense(installation.getLicense());
 		licenseBusiness.create(installation.getLicense());	
 	}
@@ -147,7 +153,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
     }
     
     @Override
-    public BusinessEntityInfos findBusinessEntityInfos(Class<AbstractIdentifiable> aClass) {
+    public BusinessEntityInfos findBusinessEntityInfos(Class<? extends AbstractIdentifiable> aClass) {
     	for(BusinessEntityInfos b : findBusinessEntitiesInfos())
     		if(b.getClazz().equals(aClass))
     			return b;
@@ -192,6 +198,34 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
     public void configureShiro() {
     	 findShiroConfigurator().configure(findPropertiesProvider());
     }
+
+	@Override
+	public void registerValueGenerator(ValueGenerator<?, ?> valueGenerator) {
+		ValueGenerator<?, ?> current = findValueGenerator(valueGenerator.getIdentifier());
+		VALUE_GENERATOR_MAP.put(valueGenerator.getIdentifier(), valueGenerator);
+		logInfo("Value generator {}. identifier={} , description={}",current==null?"registered":"updated", valueGenerator.getIdentifier(),valueGenerator.getDescription());
+	}
+
+	@Override
+	public ValueGenerator<?, ?> findValueGenerator(String identifier) {
+		return VALUE_GENERATOR_MAP.get(identifier);
+	}
+	
+	@Override
+	public <INPUT, OUTPUT> OUTPUT generateValue(String identifier,Class<INPUT> inputClass,Class<OUTPUT> outputClass, INPUT input) {
+		@SuppressWarnings("unchecked")
+		ValueGenerator<INPUT, OUTPUT> valueGenerator = (ValueGenerator<INPUT, OUTPUT>) findValueGenerator(identifier);
+		if(valueGenerator==null){
+			logError("No value generator found for {} , input class={} , output class={}",identifier,inputClass,outputClass);
+			return null;
+		}
+		return valueGenerator.generate(input);
+	}
+	
+	@Override
+	public String generateStringValue(String identifier, Object input) {
+		return generateValue(identifier, Object.class, String.class, input);
+	}
      
 }
  

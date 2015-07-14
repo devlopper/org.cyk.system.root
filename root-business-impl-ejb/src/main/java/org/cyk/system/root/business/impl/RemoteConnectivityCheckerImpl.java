@@ -9,16 +9,13 @@ import javax.ejb.Stateless;
 import org.cyk.system.root.business.api.RemoteConnectivityChecker;
 
 @Stateless(mappedName="RemoteConnectivityChecker") @Remote
-public class RemoteConnectivityCheckerImpl implements RemoteConnectivityChecker ,Serializable {
+public class RemoteConnectivityCheckerImpl extends AbstractBusinessServiceImpl implements RemoteConnectivityChecker ,Serializable {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -4219622996262337807L;
 
 	@Override
     public void echo(String message) {
-        System.out.println("Echo : "+message);
+		logInfo("Echo to server {}", message);
     }
 
     @Override

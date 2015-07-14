@@ -8,12 +8,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import lombok.extern.java.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -28,7 +25,6 @@ import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
 
-@Log
 @Singleton
 public class FreeMarkerTemplateEngineImpl extends AbstractBean implements TemplateEngineBusiness {
 
@@ -57,7 +53,7 @@ public class FreeMarkerTemplateEngineImpl extends AbstractBean implements Templa
 			template.setOutputEncoding("UTF-8");
 			template.process(parameters, contentWriter);
 		} catch (Exception e) {
-			log.log(Level.SEVERE, e.toString(), e);
+			__logger__().error(e.toString(), e);
 		}
 		return contentWriter.toString();
 	}

@@ -11,9 +11,9 @@ public class StringSearchCriteria extends AbstractFieldValueSearchCriteria<Strin
 
 	private static final long serialVersionUID = -1648133246443265214L;
 
-	public enum LocationType{START,INSIDE,END}
+	public enum LocationType{START,INSIDE,END,EXACT}
 	
-	private LocationType locationType;
+	private LocationType locationType = LocationType.EXACT;
 	
 	public StringSearchCriteria(String value,LocationType locationType) {
 		super(value);
@@ -22,7 +22,7 @@ public class StringSearchCriteria extends AbstractFieldValueSearchCriteria<Strin
 	
 	@Override
 	public String getPreparedValue() {
-		return value==null?"":value;
+		return value==null?nullValue:value;
 	}
 
 }

@@ -1,9 +1,9 @@
-package org.cyk.system.root.business.impl;
+package org.cyk.system.root.business.impl.userinterface;
 
 import java.io.Serializable;
 import java.util.Map.Entry;
 
-import org.cyk.system.root.business.api.HtmlBusiness;
+import org.cyk.system.root.business.api.userinterface.HtmlBusiness;
 import org.cyk.system.root.model.html.HtmlTag;
 import org.cyk.utility.common.cdi.AbstractBean;
 

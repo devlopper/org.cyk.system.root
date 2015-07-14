@@ -12,6 +12,7 @@ import org.cyk.system.root.model.security.UserAccountSearchCriteria;
 public interface UserAccountBusiness extends TypedBusiness<UserAccount> {
     
 	UserAccount findByCredentials(Credentials credentials);
+	UserAccount findByUsername(String username);
     
 	Collection<UserAccount> findByCriteria(UserAccountSearchCriteria criteria);
 	Long countByCriteria(UserAccountSearchCriteria criteria);

@@ -2,7 +2,7 @@ package org.cyk.system.root.business.api;
 
 import org.cyk.system.root.model.Identifiable;
 
-public interface AbstractGenericBusinessService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends BusinessService<IDENTIFIABLE,IDENTIFIER> {
+public interface AbstractGenericBusinessService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends IdentifiableBusinessService<IDENTIFIABLE,IDENTIFIER> {
 
 	/* ------------------------ Static methods ---------------------------- */
 	/**

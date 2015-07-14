@@ -2,13 +2,14 @@ package org.cyk.system.root.business.api.event;
 
 import java.util.Set;
 
+import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendOptions;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.party.Party;
 
-public interface NotificationBusiness {
+public interface NotificationBusiness extends BusinessService {
 	
 	void fill(Notification notification,NotificationTemplate template);
 	
@@ -18,10 +19,4 @@ public interface NotificationBusiness {
 
 	void run(Set<RemoteEndPoint> remoteEndPoints);
 	
-	/**/
-	
-	/*
-	interface UserAccountFinder{
-		Collection<UserAccount> find(String[]);
-	}*/
 }

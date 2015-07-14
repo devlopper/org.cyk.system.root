@@ -57,6 +57,8 @@ public class TimeUT extends AbstractUnitTest {
     			new TimeDivisionType(TimeDivisionType.MONTH, null, (long)DateTimeConstants.MILLIS_PER_DAY, null), Boolean.TRUE))
     		System.out.println(period);
     	
+    	System.out.println("Start of day : "+timeBusiness.findWithTimeAtStartOfTheDay(new Date()));
+    	System.out.println("End of day   : "+timeBusiness.findWithTimeAtEndOfTheDay(new Date()));
     }
     
     private Date createDate(int d,int m,int y,int h,int mm){

@@ -13,6 +13,6 @@ public enum ContentType {
 	
 	private String newLineMarker,spaceMarker;
 
-	
+	public static ContentType DEFAULT = TEXT;
 	
 }	

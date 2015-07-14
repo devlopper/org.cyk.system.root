@@ -5,10 +5,11 @@ import java.util.Collection;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
 
-public interface MessageSendingBusiness {
+public interface MessageSendingBusiness extends BusinessService {
 	
 	void send(Notification notification,String[] theReceiverIds,SendOptions options);
 	void send(Notification notification,String[] theReceiverIds);

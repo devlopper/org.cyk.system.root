@@ -7,7 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -189,6 +191,9 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 			if(lastPeriod!=null) periods.add(lastPeriod);
 			
 			return periods;
+		}else if(timeDivisionType.getCode().equals(TimeDivisionType.YEAR)){
+			//TODO year periods
+			return null;
 		}else{
 			return findPeriods(period.getFromDate().getTime(), period.getToDate().getTime(), period.getDuration());
 		}
@@ -231,8 +236,8 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	
 	@Override
 	public String formatPeriodFromTo(Period period, String pattern) {
-		return languageBusiness.findText("field.from.date")+" "+formatDate(period.getFromDate(),pattern)+" "
-				+languageBusiness.findText("field.to.date")+"  "+formatDate(period.getToDate(),pattern);
+		return languageBusiness.findText("from.date")+" "+formatDate(period.getFromDate(),pattern)+" "
+				+languageBusiness.findText("to.date")+"  "+formatDate(period.getToDate(),pattern);
 	}
 	
 	@Override
@@ -312,6 +317,27 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	@Override
 	public String formatDateTime(Date fromDate, Date toDate) {
 		return formatDateTime(fromDate, toDate, languageBusiness.findCurrentLocale());
+	}
+
+	@Override
+	public Date findWithTimeAtStartOfTheDay(Date date) {
+		return new DateTime(date).withTimeAtStartOfDay().toDate();
+	}
+
+	@Override
+	public Date findWithTimeAtEndOfTheDay(Date date) {
+		return new DateTime(date).withTime(23, 59, 59, 999).toDate();
+	}
+
+	@Override
+	public Set<Integer> findMonthIndexes(Period period) {
+		Set<Integer> indexes = new LinkedHashSet<>();
+		Integer index=findMonth(period.getFromDate()),endIndex=findMonth(period.getToDate());
+		do{
+			indexes.add(index);
+			index++;
+		}while(index!=endIndex);
+		return indexes;
 	}
 
 }

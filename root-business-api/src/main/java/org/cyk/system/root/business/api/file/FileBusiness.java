@@ -2,6 +2,7 @@ package org.cyk.system.root.business.api.file;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Path;
 
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
@@ -20,6 +21,10 @@ public interface FileBusiness extends TypedBusiness<File> {
     File process(byte[] bytes, String nom);
     
     InputStream findInputStream(File file);
+    
+    Path findSystemPath(File file,Boolean createTemporaryIfNotExist);
+    
+    Path findSystemPath(File file);
     
     /* Media Stuff */
     

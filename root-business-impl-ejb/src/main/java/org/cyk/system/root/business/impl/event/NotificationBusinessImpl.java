@@ -9,14 +9,13 @@ import java.util.Set;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
-import lombok.extern.java.Log;
-
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.event.EventReminderBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.TemplateEngineBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendOptions;
-import org.cyk.system.root.business.api.time.TimeBusiness;
+import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 import org.cyk.system.root.model.event.EventParticipation;
 import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.event.Notification;
@@ -30,8 +29,7 @@ import org.cyk.system.root.persistence.api.event.EventParticipationDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.security.UserAccountDao;
 
-@Log
-public class NotificationBusinessImpl implements NotificationBusiness,Serializable {
+public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implements NotificationBusiness,Serializable {
     
 	private static final long serialVersionUID = -7831396456120834486L;
 	@Inject private TemplateEngineBusiness templateEngineBusiness;
@@ -41,7 +39,6 @@ public class NotificationBusinessImpl implements NotificationBusiness,Serializab
     @Inject private UserAccountDao userAccountDao;
     @Inject private EventParticipationDao eventParticipationDao;
     @Inject private ContactDao contactDao;
-    @Inject private TimeBusiness timeBusiness;
 
     @Override
     public void fill(Notification notification,NotificationTemplate aNotificationTemplate) {
@@ -50,6 +47,7 @@ public class NotificationBusinessImpl implements NotificationBusiness,Serializab
     }
     
     private void notify(Notification notification, String[] theReceiverIds,SendOptions sendOptions) {
+    	logTrace("Notification to be send to {} to end point {}", StringUtils.join(theReceiverIds,","),notification.getRemoteEndPoint());
     	notification.setDate(timeBusiness.findUniversalTimeCoordinated());
         if(RemoteEndPoint.MAIL_SERVER.equals(notification.getRemoteEndPoint())){
             mailBusiness.send(notification, theReceiverIds,sendOptions);
@@ -97,12 +95,12 @@ public class NotificationBusinessImpl implements NotificationBusiness,Serializab
     	Collection<org.cyk.system.root.model.event.Event> events = new ArrayList<org.cyk.system.root.model.event.Event>();
     	for(EventReminder eventReminder : eventReminders)
     		events.add(eventReminder.getEvent());
-		//System.out.println("Alarms : "+events.size());
+		logTrace("{} events to notify found", events.size());
 		Collection<EventParticipation> eventParticipations = eventParticipationDao.readByEvents(events);
 		for(org.cyk.system.root.model.event.Event event : events){
 			for(RemoteEndPoint remoteEndPoint : remoteEndPoints){
 				if(remoteEndPoint.alarmTemplate==null){
-					log.severe("No alarm template found");
+					logError("No alarm template found");
 				}else{
 					Set<Party> parties = new HashSet<>();
 					for(EventParticipation eventParticipation : eventParticipations)

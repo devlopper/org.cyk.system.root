@@ -96,10 +96,10 @@ public class YoutubeMediaBusinessImpl implements YoutubeMediaBusiness , Serializ
 		String url = "https://www.youtube.com/watch?v=3svPkthjWcM";
 		Matcher matcher = p.matcher(url);
 		
-		System.out.println(matcher.find());
-		System.out.println(matcher.group(1));
+		//ystem.out.println(matcher.find());
+		//ystem.out.println(matcher.group(1));
 		
-		//System.out.println(youtube.findVideoId(URI.create("http://www.youtube.com/watch?v=3svPkthjWcM")));
+		//ystem.out.println(youtube.findVideoId(URI.create("http://www.youtube.com/watch?v=3svPkthjWcM")));
 	}
 	
 	

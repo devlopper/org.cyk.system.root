@@ -35,6 +35,10 @@ public class QueryStringBuilder implements Serializable {
 	private static final String FUNCTION_FORMAT = "SELECT %1$s(%2$s.%3$s) FROM %4$s %2$s";
 	private static final String WHERE_FORMAT = "%1$s.%2$s %3$s %4$s";
 	
+	public static final String CRITERIA_SELECT_FORMAT = "SELECT %1$s FROM %2$s %1$s ";
+	public static final String CRITERIA_DATE_BETWEEN_WHERE_FORMAT = "WHERE %1$s BETWEEN :fromDate AND :toDate ";
+	public static final String CRITERIA_DATE_ORDER_FORMAT = " ORDER BY %1$s %2$s ";
+	
 	private StringBuilder __value__;
 	private String from;
 	private Boolean where;
@@ -156,7 +160,7 @@ public class QueryStringBuilder implements Serializable {
 	}
 	
 	public QueryStringBuilder in(String anAttributeName){
-		return in(null, anAttributeName+"."+ATTRIBUTE_IDENTIFIER, VAR_IDENTIFIERS);
+		return in(null, (StringUtils.isNotBlank(anAttributeName)?anAttributeName+".":"")+ATTRIBUTE_IDENTIFIER, VAR_IDENTIFIERS);
 	}
 	
 	public QueryStringBuilder orderBy(String...fieldNames) {

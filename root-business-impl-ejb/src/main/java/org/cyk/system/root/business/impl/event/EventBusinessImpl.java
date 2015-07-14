@@ -15,6 +15,7 @@ import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventParticipation;
 import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.event.EventSearchCriteria;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
@@ -29,7 +30,8 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 	@Inject private ContactCollectionBusiness contactCollectionBusiness;
 	@Inject private EventParticipationDao eventParticipationDao;
 	@Inject private EventReminderDao eventReminderDao;
-
+	//@Inject private RepeatedEventBusiness repeatedEventBusiness;
+	
 	@Inject
 	public EventBusinessImpl(EventDao dao) {
 		super(dao); 
@@ -49,18 +51,28 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     	if(event.getContactCollection()!=null)
     		contactCollectionBusiness.create(event.getContactCollection());
         super.create(event);
-        for(EventParticipation eventParticipation : event.getEventParticipations())
+        for(EventParticipation eventParticipation : event.getEventParticipations()){
+        	eventParticipation.setEvent(event);
         	eventParticipationDao.create(eventParticipation);
+        }
         return event;
     }
     
     @Override
-    public void create(Collection<Event> events) {
-        for(Event event : events)
-            //create(event);
-            dao.create(event);
+    public Event delete(Event event) {
+    	if(event.getContactCollection()!=null){
+    		ContactCollection contactCollection = event.getContactCollection();
+    		event.setContactCollection(null);
+    		event = dao.update(event);
+    		contactCollectionBusiness.delete(contactCollection);
+    	}
+    	for(EventParticipation eventParticipation : eventParticipationDao.readByEvent(event))
+        	eventParticipationDao.delete(eventParticipation);
+    	for(EventReminder eventReminder : eventReminderDao.readByEvent(event))
+    		eventReminderDao.delete(eventReminder);
+    	return super.delete(event);
     }
-    
+
     @Override
     public void create(Event event, Collection<EventReminder> eventReminders) {
     	create(event);
@@ -70,6 +82,13 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     		eventReminderDao.create(eventReminder);
     	}
     }
+    /*
+    @Override
+    public Event update(Event event) {
+    	
+    	return super.update(event);
+    }
+    */
 	
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public Event load(Long identifier) {
@@ -132,4 +151,18 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 	public Long countOnComings(Collection<Party> parties) {
 		return dao.countWhereFromDateGreaterThanByDateByParties(universalTimeCoordinated(),parties);
 	}
+
+	/*
+	@Override
+	public Collection<Event> findPersonBirthDateAnniversariesByPeriod(Period period) {
+		return dao.readPersonBirthDateByMonthIndexes(timeBusiness.findMonthIndexes(period));
+	}
+
+	@Override
+	public Long countPersonBirthDateAnniversariesByPeriod(Period period) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	*/
+
 }

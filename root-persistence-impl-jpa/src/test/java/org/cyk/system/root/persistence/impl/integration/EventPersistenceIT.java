@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -15,6 +17,7 @@ import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.EventParticipation;
 import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.event.EventSearchCriteria;
+import org.cyk.system.root.model.event.RepeatedEvent;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
@@ -22,6 +25,7 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
 import org.cyk.system.root.persistence.api.event.EventMissedDao;
 import org.cyk.system.root.persistence.api.event.EventReminderDao;
+import org.cyk.system.root.persistence.api.event.RepeatedEventDao;
 import org.cyk.utility.common.computation.Function;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -39,6 +43,7 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	@Inject private EventDao eventDao;
 	@Inject private EventMissedDao eventMissedDao,eventMissedDao1,eventMissedDao2,eventMissedDao3;
 	@Inject private EventReminderDao eventReminderDao;
+	@Inject private RepeatedEventDao repeatedEventDao;
 	
 	private Event event,e1,e2,e3,e4;
 	private EventCollection eventCollection1,eventCollection2;
@@ -54,11 +59,11 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		
 	    oneHourLater = DateUtils.addHours(now, 1);
 	    oneHourPast = DateUtils.addHours(now, -1);
-		event(null,oneHourLater, DateUtils.addMinutes(oneHourLater, 5),new Party[]{person1});
-		event(null,DateUtils.addMinutes(oneHourLater, 10), DateUtils.addMinutes(oneHourLater, 13),new Party[]{person2,person3});
-		event(null,now, DateUtils.addMinutes(now, 3),new Party[]{person3});
+		event(null,oneHourLater, DateUtils.addMinutes(oneHourLater, 5),new Party[]{person1},10,1);
+		event(null,DateUtils.addMinutes(oneHourLater, 10), DateUtils.addMinutes(oneHourLater, 13),new Party[]{person2,person3},10,1);
+		event(null,now, DateUtils.addMinutes(now, 3),new Party[]{person3},4,3);
 	
-		event(null,oneHourPast, DateUtils.addMinutes(oneHourPast, 7),new Party[]{person2,person1,person3});
+		event(null,oneHourPast, DateUtils.addMinutes(oneHourPast, 7),new Party[]{person2,person1,person3},5,10);
 		
 		eventMissedReason1 = new EventMissedReason("MALADIE", "Maladie", null);
 		create(eventMissedReason1);
@@ -69,8 +74,8 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		
 		eventCollection1 = new EventCollection();
 		create(eventCollection1);
-		e1 = event(eventCollection1, now, oneHourLater);
-		e2 = event(eventCollection1, oneHourLater, DateUtils.addHours(now, 3));
+		e1 = event(eventCollection1, now, oneHourLater,6,6);
+		e2 = event(eventCollection1, oneHourLater, DateUtils.addHours(now, 3),12,7);
 		
 		eventMissed(e1, DateUtils.MILLIS_PER_MINUTE*15, eventMissedReason2);
 		eventMissed(e1, DateUtils.MILLIS_PER_MINUTE*60, eventMissedReason1);
@@ -78,15 +83,15 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		
 		eventCollection2 = new EventCollection();
 		create(eventCollection2);
-		e3 = event(eventCollection2, now, oneHourLater);
-		e4 = event(eventCollection2, oneHourLater, DateUtils.addHours(now, 3));
+		e3 = event(eventCollection2, now, oneHourLater,19,8);
+		e4 = event(eventCollection2, oneHourLater, DateUtils.addHours(now, 3),29,8);
 		
 		eventMissed(e3, DateUtils.MILLIS_PER_MINUTE*25, eventMissedReason2);
 		eventMissed(e4, DateUtils.MILLIS_PER_MINUTE*120, eventMissedReason1);
 		eventMissed(e4, DateUtils.MILLIS_PER_MINUTE*60, eventMissedReason2);
 	}
 	
-	private Event event(EventCollection collection,Date fromDate,Date toDate,Party[] parties){
+	private Event event(EventCollection collection,Date fromDate,Date toDate,Party[] parties,Integer repeatDay,Integer repeatMonth){
 	    Event event = new Event();
 	    event.setCollection(collection);
 	    event.setContactCollection(null);
@@ -100,11 +105,18 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	    if(parties!=null)
 	    	for(Party party : parties)
 	    		create(new EventParticipation(party, event));
+	    if(repeatMonth!=null || repeatDay!=null){
+		    RepeatedEvent repeatedEvent = new RepeatedEvent();
+		    repeatedEvent.setEvent(event);
+		    repeatedEvent.getDate().setMonth(repeatMonth);
+		    repeatedEvent.getDate().setDay(repeatDay);
+		    repeatedEventDao.create(repeatedEvent);
+		}
 	    //System.out.println("EventPersistenceIT.event() : "+eventReminder.getEvent().getIdentifier()+" / "+event.getPeriod()+" | "+eventReminder.getPeriod());
 	    return event;
 	}
-	private Event event(EventCollection collection,Date fromDate,Date toDate){
-		return event(collection, fromDate, toDate, null);
+	private Event event(EventCollection collection,Date fromDate,Date toDate,Integer repeatDay,Integer repeatMonth){
+		return event(collection, fromDate, toDate, null,repeatDay,repeatMonth);
 	}
 	
 	private EventMissed eventMissed(Event event,Long durationInMillisecond,EventMissedReason reason){
@@ -131,7 +143,7 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	
 	@Override
 	protected void create() {
-	    eventDao.create(event = event(null,now, DateUtils.addMinutes(now, 3)));
+	    eventDao.create(event = event(null,now, DateUtils.addMinutes(now, 3),null,null));
 	    Assert.assertNotNull(event.getIdentifier());
 	}
 
@@ -253,6 +265,35 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		Assert.assertEquals(180l * DateUtils.MILLIS_PER_MINUTE, eventMissedDao.sumDuration(Arrays.asList(e1,e2,e3,e4), Boolean.TRUE).longValue());
 		
 		Assert.assertEquals(0l, eventMissedDao.sumDuration(new ArrayList<Event>(), Boolean.TRUE).longValue());
+		
+		assertRepeatedMonths();
+		
+		Assert.assertEquals(1l, repeatedEventDao.countByDayOfMonthByMonth(19, 8).longValue());
+		Assert.assertEquals(2l, repeatedEventDao.countByDayOfMonthByMonth(10,1).longValue());
+		Assert.assertEquals(0l, repeatedEventDao.countByDayOfMonthByMonth(30,12).longValue());
+		
+		Set<Integer> allMonths = new HashSet<>();
+		for(int i=1;i<=12;i++)
+			allMonths.add(i);
+		Assert.assertEquals("ALL",8l, repeatedEventDao.countByMonths(allMonths).longValue());
 	}
+	
+	private void assertRepeatedMonths(){
+		Assert.assertEquals("Jan",2l, repeatedEventDao.countByMonth(1).longValue());
+		Assert.assertEquals("Feb",0l, repeatedEventDao.countByMonth(2).longValue());
+		Assert.assertEquals("Mar",1l, repeatedEventDao.countByMonth(3).longValue());
+		Assert.assertEquals("Apr",0l, repeatedEventDao.countByMonth(4).longValue());
+		Assert.assertEquals("May",0l, repeatedEventDao.countByMonth(5).longValue());
+		Assert.assertEquals("Jun",1l, repeatedEventDao.countByMonth(6).longValue());
+		Assert.assertEquals("Jul",1l, repeatedEventDao.countByMonth(7).longValue());
+		Assert.assertEquals("Aug",2l, repeatedEventDao.countByMonth(8).longValue());
+		Assert.assertEquals("Sep",0l, repeatedEventDao.countByMonth(9).longValue());
+		Assert.assertEquals("Oct",1l, repeatedEventDao.countByMonth(10).longValue());
+		Assert.assertEquals("Nov",0l, repeatedEventDao.countByMonth(11).longValue());
+		Assert.assertEquals("Dec",0l, repeatedEventDao.countByMonth(12).longValue());
+		
+	}
+	
+	
 	
 }

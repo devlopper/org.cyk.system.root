@@ -1,10 +1,13 @@
-package org.cyk.system.root.persistence.impl.party;
+package org.cyk.system.root.persistence.impl.party.person;
 
 import java.io.Serializable;
+import java.util.Collection;
 
+import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.persistence.api.party.PersonDao;
+import org.cyk.system.root.persistence.impl.party.AbstractPartyDaoImpl;
 
 public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,PersonSearchCriteria> implements PersonDao,Serializable {
 
@@ -27,6 +30,12 @@ public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,PersonSearchCrite
         registerNamedQuery(readByCriteriaNameDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "person.name DESC") );
         
     }
+
+	@Override
+	public Collection<Event> readBirthDateDayOfYearBetween(Integer fromDayOfYear, Integer toDayOfYear) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
  

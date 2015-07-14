@@ -3,6 +3,7 @@ package org.cyk.system.root.model.file.report;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,8 @@ public class ReportBasedOnDynamicBuilder<MODEL> extends AbstractReport<MODEL> im
 	
 	private static final long serialVersionUID = -6269733939974607163L;
 	
-	protected String title,subTitle,companyName,companyContacts,companyLogoPath,creationDate,createdBy;
-	protected Collection<Column> columns = new ArrayList<>();
+	private Locale locale = Locale.FRENCH;
+	private String title,subTitle,ownerName,ownerContacts,ownerLogoPath,ownerNameImagePath,creationDate,createdBy;
+	private Collection<Column> columns = new ArrayList<>();
 	
 }

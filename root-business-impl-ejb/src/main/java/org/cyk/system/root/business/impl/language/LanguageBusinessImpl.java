@@ -3,11 +3,16 @@ package org.cyk.system.root.business.impl.language;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,8 +20,10 @@ import javax.inject.Singleton;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.EnumHelper;
@@ -24,6 +31,7 @@ import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.Text;
@@ -32,6 +40,13 @@ import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
 
+	private static final String UNKNOWN_MARKER_START = "##";
+	private static final String UNKNOWN_MARKER_END = "##";
+	private static final String FIELD_MARKER_START = "field.";
+	private static final String FIELD_OF_FORMAT = "%s.of";
+	
+	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid"));
+	
 	private static final long serialVersionUID = -3799482462496328200L;
 
 	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new HashMap<>();
@@ -55,6 +70,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		registerResourceBundle("org.cyk.system.root.model.language.field",getClass().getClassLoader());
 		
 		registerResourceBundle("org.cyk.system.root.business.impl.language.ui",getClass().getClassLoader());
+		registerResourceBundle("org.cyk.system.root.business.impl.language.misc",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.business.impl.language.exception",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.business.impl.language.validation",getClass().getClassLoader());
 		
@@ -91,7 +107,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		}
 		
 		//3 - default
-		return "##"+code+"##";
+		return UNKNOWN_MARKER_START+code+UNKNOWN_MARKER_END;
 	}	
 	
 	@Override
@@ -148,21 +164,63 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		}
 		if(ValueType.VALUE.equals(type) && StringUtils.isNotBlank(specifiedValue))
 			return specifiedValue;
-		String labelId = null;
+		Collection<String> values = new ArrayList<>();
 		if(ValueType.ID.equals(type))
 			if(StringUtils.isNotBlank(specifiedValue))
-				labelId = specifiedValue;
+				values.add(findText(specifiedValue));
 			else{
-				StringBuilder s =new StringBuilder("field.");
+				StringBuilder labelId =new StringBuilder(FIELD_MARKER_START);
 				for(int i=0;i<field.getName().length();i++){
 					if(Character.isUpperCase(field.getName().charAt(i)))
-						s.append('.');
-					s.append(Character.toLowerCase(field.getName().charAt(i)));
+						labelId.append('.');
+					labelId.append(Character.toLowerCase(field.getName().charAt(i)));
 				}
-				labelId = s.toString();
+				String value = findText(labelId.toString());
+				if(unknown(value)){
+					for(String fieldMarker : FIELD_TYPE_MARKERS){
+						if(fieldMarker(labelId.toString(), value, fieldMarker, values))
+							break;
+					}
+					if(values.isEmpty())
+						values.add(value);
+					/*
+					if(StringUtils.endsWith(labelId, FIELD_MARKER_QUANTITY)){
+						values.add(findText("quantity"));
+						String newLabelId = StringUtils.substringBefore(labelId.toString(), FIELD_MARKER_QUANTITY);
+						value = findText(newLabelId);
+						if(unknown(value)){
+							newLabelId = StringUtils.substringAfter(newLabelId.toString(), FIELD_MARKER_START);
+							values.add(findText(newLabelId));
+						}else
+							values.add(value);
+					}else
+						values.add(value);
+						*/
+				}else
+					values.add(value);
+					
 			}
-		return findText(labelId);
+		return StringUtils.join(values," ");
 	}
+    
+    private Boolean fieldMarker(String labelId,String value,String fieldMarker,Collection<String> values){
+    	if(StringUtils.endsWith(labelId, fieldMarker)){
+			String newLabelId = StringUtils.substringBefore(labelId, fieldMarker);
+			value = findText(newLabelId);
+			if(unknown(value)){
+				newLabelId = StringUtils.substringAfter(newLabelId, FIELD_MARKER_START);
+				value = findText(newLabelId);
+			}else
+				;
+			values.add(findText(String.format(FIELD_OF_FORMAT, fieldMarker.substring(1)),new Object[]{value}));
+			return Boolean.TRUE;
+		}else
+			return Boolean.FALSE;
+    }
+    
+    private Boolean unknown(String value){
+    	return StringUtils.startsWith(value,UNKNOWN_MARKER_START) && StringUtils.endsWith(value,UNKNOWN_MARKER_END);
+    }
 	
     @Override
 	public String findFieldLabelText(Field field) {
@@ -188,4 +246,40 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			return ((AbstractIdentifiable)object).getUiString();
 		return object.toString();
     }
+
+	@Override
+	public String findListOfText(Class<?> aClass) {
+		return findText("listofsomething", new Object[]{findClassLabelText(aClass)});
+	}
+	
+	@Override
+	public String findDeterminantText(Boolean male,Boolean one,Boolean global) {
+		String smale = Boolean.TRUE.equals(male)?"male":"female";
+		String sone = Boolean.TRUE.equals(one)?"one":"many";
+		String sglobal = Boolean.TRUE.equals(global)?"global":"notglobal";
+		return findText("determinant."+smale+"."+sone+"."+sglobal);
+	}
+	
+	@Override
+	public String findDoActionText(String actionId,Class<? extends AbstractIdentifiable> aClass,Boolean one,Boolean global) {
+		BusinessEntityInfos businessEntityInfos = null;
+		for(BusinessEntityInfos b : ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS)
+    		if(b.getClazz().equals(aClass)){
+    			businessEntityInfos = b;
+    			break;
+    		}
+		
+		String determinant = findDeterminantText(GenderType.MALE.equals(businessEntityInfos.getGenderType()), one,global);
+		return findText("doactionformat", new Object[]{findText(actionId),determinant,findClassLabelText(aClass)});
+	}
+	
+	@Override
+	public String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass,Boolean one,Boolean global) {
+		return findDoActionText("dofunctionality", aClass, one, global);
+	}
+
+	@Override
+	public String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass) {
+		return findDoFunctionnalityText(aClass, Boolean.TRUE, Boolean.FALSE);
+	}
 }

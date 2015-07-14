@@ -20,7 +20,9 @@ public class JdbcDataSource extends AbstractDataSource implements Serializable {
 		permissionsQuery = "SELECT permissionid FROM rolepermissions WHERE roleid = "
 				+ "("+userRolesQuery+")";
 		
-		//System.out.println("JdbcDataSource.JdbcDataSource() : "+permissionsQuery);
+		logTrace("Authentication Query : {}",authenticationQuery);
+		logTrace("User roles Query : {}",userRolesQuery);
+		logTrace("Permissions Query : {}",permissionsQuery);
 	}
 	
 	public String getUrl(){

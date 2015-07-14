@@ -1,29 +1,23 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.Collection;
-import java.util.Date;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.time.DateUtils;
-import org.cyk.system.root.business.api.BusinessService;
-import org.cyk.system.root.business.api.mathematics.NumberBusiness;
-import org.cyk.system.root.business.api.time.TimeBusiness;
+import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
-import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
-import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 
-public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements BusinessService<IDENTIFIABLE, Long>, Serializable {
+public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
 	private static final long serialVersionUID = 6437552355933877400L;
 	
@@ -33,9 +27,7 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	//@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
 	
 	@Inject protected GenericDao genericDao;
-	@Inject protected TimeBusiness timeBusiness;
-	@Inject protected NumberBusiness numberBusiness;
-
+	
 	protected abstract PersistenceService<IDENTIFIABLE, Long> getPersistenceService();
 	/*
 	public DataReadConfig getDataReadConfig(){
@@ -44,7 +36,7 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	*/
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public BusinessService<IDENTIFIABLE, Long> find() {
+	public IdentifiableBusinessService<IDENTIFIABLE, Long> find() {
 		getPersistenceService().select();
 		return this;
 	}
@@ -55,25 +47,25 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public BusinessService<IDENTIFIABLE, Long> find(Function function) {
+	public IdentifiableBusinessService<IDENTIFIABLE, Long> find(Function function) {
 		getPersistenceService().select(function);
 		return this;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public BusinessService<IDENTIFIABLE, Long> where(LogicalOperator aLogicalOperator, String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
+	public IdentifiableBusinessService<IDENTIFIABLE, Long> where(LogicalOperator aLogicalOperator, String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
 		getPersistenceService().where(aLogicalOperator, anAttributeName, aValue, anArithmeticOperator);
 		return this;
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public BusinessService<IDENTIFIABLE, Long> where(String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
+	public IdentifiableBusinessService<IDENTIFIABLE, Long> where(String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
 		getPersistenceService().where(anAttributeName, aValue, anArithmeticOperator);
 		return this;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public BusinessService<IDENTIFIABLE, Long> where(String anAttributeName,Object aValue) {
+	public IdentifiableBusinessService<IDENTIFIABLE, Long> where(String anAttributeName,Object aValue) {
 		return where(anAttributeName, aValue, ArithmeticOperator.EQ);
 	}
 
@@ -96,34 +88,33 @@ public abstract class AbstractBusinessService<IDENTIFIABLE extends AbstractIdent
 	public Long oneLong() {
 		return getPersistenceService().oneLong();
 	}
-
+	
+	@Override
+	public Long findOneIdentifierRandomly() {
+		return getPersistenceService().readOneIdentifierRandomly();
+	}
+	@Override
+	public Collection<Long> findManyIdentifiersRandomly(Integer count) {
+		return getPersistenceService().readManyIdentifiersRandomly(count);
+	}
+	@Override
+	public Collection<Long> findAllIdentifiers() {
+		return getPersistenceService().readAllIdentifiers();
+	}
+	@Override
+	public IDENTIFIABLE findOneRandomly() {
+		return getPersistenceService().readOneRandomly();
+	}
+	@Override
+	public Collection<IDENTIFIABLE> findManyRandomly(Integer count) {
+		return getPersistenceService().readManyRandomly(count);
+	}
 	/**
 	 * Utilities methods
 	 */
-	//load only when needed to avoid null pointer
-	protected ExceptionUtils exceptionUtils(){
-	    return ExceptionUtils.getInstance();
-	}
 	
-	protected Date universalTimeCoordinated(){
-		return timeBusiness.findUniversalTimeCoordinated();
-	}
-	/*
-	protected static final SimpleDateFormat DATE_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-	protected static final SimpleDateFormat DATE_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy");
-	protected static final SimpleDateFormat DATE_TIME_SHORT_FORMAT = new SimpleDateFormat("dd/MM/yyyy à HH:mm");
-	protected static final SimpleDateFormat DATE_TIME_LONG_FORMAT = new SimpleDateFormat("EEEE , dd/MM/yyyy à HH:mm");
-	*/
-	protected static Date DATE_MOST_PAST;
-	protected static Date DATE_MOST_FUTURE;
-	
-	static {
-		try {
-			DATE_MOST_PAST = DateUtils.parseDate("01/01/1800", "dd/MM/yyyy");
-			DATE_MOST_FUTURE = DateUtils.parseDate("01/01/9000", "dd/MM/yyyy");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
+		getPersistenceService().getDataReadConfig().set(searchCriteria.getReadConfig());
 	}
 	
 }

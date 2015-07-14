@@ -48,6 +48,8 @@ public class EventDaoImpl extends AbstractIdentifiablePeriodDaoImpl<Event> imple
     	registerNamedQuery(readByCriteria,READ_BY_CRITERIA_NOTORDERED_FORMAT);
         registerNamedQuery(readByCriteriaDateAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "event.period.fromDate ASC") );
         registerNamedQuery(readByCriteriaDateDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "event.period.fromDate DESC") );
+        
+      
     }
     
     @Override
