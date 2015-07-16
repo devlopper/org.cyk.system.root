@@ -45,7 +45,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	private static final String FIELD_MARKER_START = "field.";
 	private static final String FIELD_OF_FORMAT = "%s.of";
 	
-	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid"));
+	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid","count"));
 	
 	private static final long serialVersionUID = -3799482462496328200L;
 

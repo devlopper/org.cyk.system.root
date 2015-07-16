@@ -8,4 +8,6 @@ public interface AbstractActorDao<ACTOR extends AbstractActor> extends TypedDao<
 
 	ACTOR readByPerson(Person person);
 	
+	ACTOR readByRegistrationCode(String registrationCode);
+	
 }

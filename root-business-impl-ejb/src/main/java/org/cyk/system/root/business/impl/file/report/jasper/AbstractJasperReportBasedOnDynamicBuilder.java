@@ -2,6 +2,8 @@ package org.cyk.system.root.business.impl.file.report.jasper;
 
 import java.awt.Color;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Set;
 
 import org.cyk.system.root.business.api.file.report.JasperReportBasedOnDynamicBuilderListener;
 import org.cyk.system.root.model.userinterface.style.Border.Side;
@@ -98,6 +100,14 @@ public abstract class AbstractJasperReportBasedOnDynamicBuilder implements Jaspe
 		}
 	}
 
+	@Override
+	public Boolean ignoreField(Field field) {
+		return null;
+	}
 	
+	@Override
+	public Set<String> fieldToIgnore() {
+		return null;
+	}
 
 }

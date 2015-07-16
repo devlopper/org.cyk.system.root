@@ -57,7 +57,7 @@ public abstract class AbstractReportBusinessImpl implements ReportBusiness , Ser
 		if(parameters.getReport()==null){
 			parameters.setReport(report = new ReportBasedOnDynamicBuilder<MODEL>());
 			
-			report.setColumns(findColumns(parameters.getModelClass()==null?parameters.getIdentifiableClass():parameters.getModelClass()));
+			report.setColumns(findColumns(parameters.getModelClass()==null?parameters.getIdentifiableClass():parameters.getModelClass(),parameters));
 			if(parameters.getDatas()==null)
 				;
 			else
@@ -83,12 +83,28 @@ public abstract class AbstractReportBusinessImpl implements ReportBusiness , Ser
 	/**/
 	
 	@Override
-	public Collection<Column> findColumns(Class<?> aClass) {
+	public Collection<Column> findColumns(Class<?> aClass,ReportBasedOnDynamicBuilderParameters<?> parameters) {
 		Collection<Column> columns = new ArrayList<>();
 		Collection<Class<? extends Annotation>> filters = new ArrayList<>();
     	filters.add(Input.class);
     	filters.add(ReportColumn.class);
-    	Collection<Field> fields = CommonUtils.getInstance().getAllFields(aClass, filters);
+    	Collection<Field> candidateFields = CommonUtils.getInstance().getAllFields(aClass, filters);
+    	Collection<Field> fields = new ArrayList<>();
+    	for(Field field : candidateFields){
+    		Boolean dontIgnore = Boolean.TRUE;
+    		for(ReportBasedOnDynamicBuilderListener listener : parameters.getReportBasedOnDynamicBuilderListeners()){
+    			Boolean value = listener.ignoreField(field);
+    			if(value==null){
+    				//Set<String> fieldToIgnoreSet = listener.fieldToIgnore();
+    				//if(fieldToIgnoreSet!=null)
+    				//	ignore = fieldToIgnoreSet.contains(field.getName());
+    				value = Boolean.FALSE;
+    			}
+    			dontIgnore = Boolean.FALSE.equals(value) && dontIgnore;
+    		}
+    		if(Boolean.TRUE.equals(dontIgnore))	
+    			fields.add(field);
+    	}
     	
     	for(Field field : fields){
     		columns.add(new Column(field,languageBusiness.findFieldLabelText(field)) );

@@ -44,9 +44,16 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return dao.readByPerson(person);
 	}
 	
+	@Override
+	public ACTOR findByRegistrationCode(String registrationCode) {
+		return dao.readByRegistrationCode(registrationCode);
+	}
+	
 	protected void __load__(ACTOR actor){
 		personBusiness.load(actor.getPerson());
 	}
+
+	
 	
 	
 }

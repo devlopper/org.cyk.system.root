@@ -10,4 +10,6 @@ public interface AbstractActorBusiness<ACTOR extends AbstractActor> extends Type
 	
 	ACTOR findByPerson(Person person);
 	
+	ACTOR findByRegistrationCode(String registrationCode);
+	
 }

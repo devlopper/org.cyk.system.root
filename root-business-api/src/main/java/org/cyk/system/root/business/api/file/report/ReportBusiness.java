@@ -19,6 +19,6 @@ public interface ReportBusiness {
 	
 	void write(java.io.File directory,AbstractReport<?> aReport);
 	
-	Collection<Column> findColumns(Class<?> aClass);
+	Collection<Column> findColumns(Class<?> aClass,ReportBasedOnDynamicBuilderParameters<?> parameters);
 		
 }
