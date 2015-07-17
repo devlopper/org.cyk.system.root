@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,20 +41,21 @@ import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
 
+	private static final long serialVersionUID = -3799482462496328200L;
+	
 	private static final String UNKNOWN_MARKER_START = "##";
 	private static final String UNKNOWN_MARKER_END = "##";
 	private static final String FIELD_MARKER_START = "field.";
 	private static final String FIELD_OF_FORMAT = "%s.of";
 	
-	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid","count"));
-	
-	private static final long serialVersionUID = -3799482462496328200L;
-
+	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid",".count"));
 	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new HashMap<>();
 	
 	private static LanguageBusiness INSTANCE;
 	
 	@Setter private Locale locale = Locale.FRENCH;
+	@Getter @Setter private Boolean cachingEnabled = Boolean.FALSE;
+	@Getter @Setter private CachingStrategy cachingStrategy = CachingStrategy.NONE;
 	 
 	@Inject
 	public LanguageBusinessImpl(LanguageDao dao) {
@@ -93,23 +95,37 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 
 	@Override
 	public String findText(Locale locale,String code,Object[] parameters) {
-		// 1 - Lookup in database
-		
-		// 2 - Lookup in bundles
-		
-		for(Entry<String, ClassLoader> entry : RESOURCE_BUNDLE_MAP.entrySet()){
-			try {
-				ResourceBundle resourceBundle = ResourceBundle.getBundle(entry.getKey(), locale, entry.getValue());
-				/*if(!locale.equals(resourceBundle.getLocale()))
-					throw new RuntimeException("Locale has changed! No same locale : "+locale+" <> "+resourceBundle.getLocale());*/
-				return parameters==null?resourceBundle.getString(code):MessageFormat.format(resourceBundle.getString(code),parameters);
-			} catch (Exception e) {}
+		logTrace("Text lookup id={} , locale={}",code,locale);
+		// 1 - Lookup in cache
+		if(Boolean.TRUE.equals(cachingEnabled)){
+			logTrace("Lookup in cache");
+			CachingStrategy cachingStrategy = getCachingStrategy();
+			if(!CachingStrategy.NONE.equals(cachingStrategy)){
+				
+				return null;
+			}
+			return null;
+		}else{
+			// 2 - Lookup in database
+			
+			// 3 - Lookup in bundles
+			logTrace("Lookup in bundles");
+			for(Entry<String, ClassLoader> entry : RESOURCE_BUNDLE_MAP.entrySet()){
+				try {
+					ResourceBundle resourceBundle = ResourceBundle.getBundle(entry.getKey(), locale, entry.getValue());
+					//logDebug("Bunble={}, Locale={}, Key={}",entry.getKey(),locale, code);
+					/*if(!locale.equals(resourceBundle.getLocale()))
+						throw new RuntimeException("Locale has changed! No same locale : "+locale+" <> "+resourceBundle.getLocale());*/
+					return parameters==null?resourceBundle.getString(code):MessageFormat.format(resourceBundle.getString(code),parameters);
+				} catch (Exception e) {}
+			}
+			
+			// 4 - default
+			logDebug("No match found for {}", code);
+			return UNKNOWN_MARKER_START+code+UNKNOWN_MARKER_END;
 		}
-		
-		//3 - default
-		return UNKNOWN_MARKER_START+code+UNKNOWN_MARKER_END;
-	}	
-	
+	}
+
 	@Override
     public String findText(Locale locale,String code) {
 	    return findText(locale,code,null);
@@ -118,6 +134,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	@Override
 	public void registerResourceBundle(String id,ClassLoader aClassLoader) {
 		RESOURCE_BUNDLE_MAP.put(id,aClassLoader);
+		logTrace("Resource bundle {} registered", id);
 	}
 	
 	@Override
@@ -162,27 +179,42 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			specifiedValue = text.value();
 			type = ValueType.AUTO.equals(text.type())?ValueType.ID:text.type();
 		}
-		if(ValueType.VALUE.equals(type) && StringUtils.isNotBlank(specifiedValue))
-			return specifiedValue;
+		
+		if(StringUtils.isNotBlank(specifiedValue)){
+			logDebug("Value {} is of type {}", specifiedValue,type);	
+			if(ValueType.VALUE.equals(type))
+				return specifiedValue;
+		}
+		
 		Collection<String> values = new ArrayList<>();
 		if(ValueType.ID.equals(type))
 			if(StringUtils.isNotBlank(specifiedValue))
 				values.add(findText(specifiedValue));
 			else{
+				// 1 - build the id = field.xxx.xxx.xxx.xxx....
 				StringBuilder labelId =new StringBuilder(FIELD_MARKER_START);
 				for(int i=0;i<field.getName().length();i++){
 					if(Character.isUpperCase(field.getName().charAt(i)))
 						labelId.append('.');
 					labelId.append(Character.toLowerCase(field.getName().charAt(i)));
 				}
+				logDebug("Build id from field {} is {}",field.getName(),labelId);
+				// 2 - Try to match the built id
 				String value = findText(labelId.toString());
 				if(unknown(value)){
+					// 1 - Attempt removing suffix
 					for(String fieldMarker : FIELD_TYPE_MARKERS){
 						if(fieldMarker(labelId.toString(), value, fieldMarker, values))
 							break;
 					}
-					if(values.isEmpty())
-						values.add(value);
+					//2 - Attempt removing field.
+					if(values.isEmpty()){
+						String nvalue = findText(StringUtils.substringAfter(labelId.toString(),FIELD_MARKER_START));
+						if(unknown(nvalue)){
+							values.add(value);
+						}else
+							values.add(nvalue);
+					}
 					/*
 					if(StringUtils.endsWith(labelId, FIELD_MARKER_QUANTITY)){
 						values.add(findText("quantity"));
@@ -196,8 +228,9 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 					}else
 						values.add(value);
 						*/
-				}else
+				}else{
 					values.add(value);
+				}
 					
 			}
 		return StringUtils.join(values," ");

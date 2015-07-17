@@ -15,9 +15,6 @@ import org.junit.Test;
 
 public class LanguageBusinessIT extends AbstractBusinessIT {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -348335622740544991L;
 	@Inject private LanguageBusiness languageBusiness;
  
@@ -74,10 +71,11 @@ public class LanguageBusinessIT extends AbstractBusinessIT {
 	
 	@Test
     public void fieldText() {
-	    assertEquals("##field.user##",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyUIClass.class, "user", Boolean.TRUE))); 
-	    assertEquals("Quantite de ##user##",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyUIClass.class, "userQuantity", Boolean.TRUE))); 
-	    assertEquals("Prix de ##user##",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyUIClass.class, "userPrice", Boolean.TRUE))); 
-	    assertEquals("Prix unitaire de ##user##",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyUIClass.class, "userUnitPrice", Boolean.TRUE))); 
+	    assertEquals("Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyUIClass.class, "user", Boolean.TRUE))); 
+	    assertEquals("Quantite de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyUIClass.class, "userQuantity", Boolean.TRUE))); 
+	    assertEquals("Prix de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyUIClass.class, "userPrice", Boolean.TRUE))); 
+	    assertEquals("Prix unitaire de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyUIClass.class, "userUnitPrice", Boolean.TRUE))); 
+	    assertEquals("Nombre de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyUIClass.class, "userCount", Boolean.TRUE))); 
     }
 	
 	/*
@@ -118,6 +116,7 @@ public class LanguageBusinessIT extends AbstractBusinessIT {
     	@Input private String userQuantity;
     	@Input private String userPrice;
     	@Input private String userUnitPrice;
+    	@Input private String userCount;
     	
     }
 

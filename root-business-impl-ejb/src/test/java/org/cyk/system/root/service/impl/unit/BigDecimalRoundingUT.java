@@ -3,7 +3,7 @@ package org.cyk.system.root.service.impl.unit;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import org.cyk.utility.test.AbstractUnitTest;
+import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Assert;
 import org.junit.Test;
 

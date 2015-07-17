@@ -4,7 +4,7 @@ package org.cyk.system.root.model.unit;
 import java.util.Locale;
 
 import org.cyk.system.root.model.EnumHelper;
-import org.cyk.utility.test.AbstractUnitTest;
+import org.cyk.utility.test.unit.AbstractUnitTest;
 
 public class EnumHelperUT extends AbstractUnitTest {
 

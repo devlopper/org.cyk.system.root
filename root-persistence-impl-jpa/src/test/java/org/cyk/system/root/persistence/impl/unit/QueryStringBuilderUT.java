@@ -2,7 +2,7 @@ package org.cyk.system.root.persistence.impl.unit;
 
 import org.cyk.system.root.persistence.impl.QueryStringBuilder;
 import org.cyk.utility.common.computation.Function;
-import org.cyk.utility.test.AbstractUnitTest;
+import org.cyk.utility.test.unit.AbstractUnitTest;
 
 public class QueryStringBuilderUT extends AbstractUnitTest {
 

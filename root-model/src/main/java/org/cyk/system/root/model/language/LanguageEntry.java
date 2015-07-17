@@ -3,6 +3,8 @@ package org.cyk.system.root.model.language;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,9 @@ public class LanguageEntry extends AbstractEnumeration implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	public LanguageEntry(String code, String libelle, String description) {
+	@ManyToOne @NotNull private Language language;
+	
+	public LanguageEntry(Language language,String code, String libelle, String description) {
 		super(code, libelle,null, description);
 	}
 	

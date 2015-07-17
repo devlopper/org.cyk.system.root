@@ -52,4 +52,12 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	
 	String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass);
 	
+	void setCachingEnabled(Boolean aValue);
+	Boolean getCachingEnabled();
+	
+	public enum CachingStrategy{NONE,AUTO}
+	
+	void setCachingStrategy(CachingStrategy aValue);
+	CachingStrategy getCachingStrategy();
+	
 }

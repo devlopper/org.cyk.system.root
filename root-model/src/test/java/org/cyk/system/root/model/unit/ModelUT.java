@@ -1,7 +1,7 @@
 package org.cyk.system.root.model.unit;
 
 
-import org.cyk.utility.test.AbstractUnitTest;
+import org.cyk.utility.test.unit.AbstractUnitTest;
 
 public class ModelUT extends AbstractUnitTest {
 

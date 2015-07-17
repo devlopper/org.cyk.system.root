@@ -91,11 +91,11 @@ public class YoutubeMediaBusinessImpl implements YoutubeMediaBusiness , Serializ
 		//YoutubeMediaBusinessImpl youtube = new YoutubeMediaBusinessImpl();
 		//String ps = "http[sS]://www\\.youtube\\.com/v/.{11}, http[sS]://www\\.youtube\\.com/embed/.{11}, http[sS]://www\\.youtube\\.com/watch\\?v=(.{11})";
 		//String ps = "http[sS]://www\\.youtube\\.com/watch\\?v=(.{11})";
-		String ps = "http[s]?://www\\.youtube\\.com/watch\\?v=(.{11})";
+		/*String ps = "http[s]?://www\\.youtube\\.com/watch\\?v=(.{11})";
 		Pattern p = Pattern.compile(ps);
 		String url = "https://www.youtube.com/watch?v=3svPkthjWcM";
 		Matcher matcher = p.matcher(url);
-		
+		*/
 		//ystem.out.println(matcher.find());
 		//ystem.out.println(matcher.group(1));
 		

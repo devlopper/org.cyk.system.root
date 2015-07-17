@@ -2,11 +2,12 @@ package org.cyk.system.root.business.impl.file.report.jasper;
 
 import java.awt.Color;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.Set;
 
 import org.cyk.system.root.business.api.file.report.JasperReportBasedOnDynamicBuilderListener;
+import org.cyk.system.root.business.impl.file.report.AbstractReportBasedOnDynamicBuilder;
 import org.cyk.system.root.model.userinterface.style.Border.Side;
+import org.cyk.utility.common.annotation.user.interfaces.style.Alignment.Horizontal;
+import org.cyk.utility.common.annotation.user.interfaces.style.Alignment.Vertical;
 
 import ar.com.fdvs.dj.domain.Style;
 import ar.com.fdvs.dj.domain.builders.StyleBuilder;
@@ -16,7 +17,7 @@ import ar.com.fdvs.dj.domain.constants.HorizontalAlign;
 import ar.com.fdvs.dj.domain.constants.Transparency;
 import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 
-public abstract class AbstractJasperReportBasedOnDynamicBuilder implements JasperReportBasedOnDynamicBuilderListener,Serializable {
+public abstract class AbstractJasperReportBasedOnDynamicBuilder extends AbstractReportBasedOnDynamicBuilder implements JasperReportBasedOnDynamicBuilderListener,Serializable {
 
 	private static final long serialVersionUID = -6397313866653430863L;
 	
@@ -58,20 +59,27 @@ public abstract class AbstractJasperReportBasedOnDynamicBuilder implements Jaspe
 		}
 		
 		styleBuilder.setTextColor(style.getText().getColor().systemColor());
-		switch(style.getText().getAlignment().getHorizontal()){
+		Horizontal horizontal = style.getText().getAlignment().getHorizontal();
+		if(Horizontal.AUTO.equals(horizontal))
+			horizontal = Horizontal.LEFT;
+		switch(horizontal){
 		case LEFT:styleBuilder.setHorizontalAlign(HorizontalAlign.LEFT);break;
 		case MIDDLE:styleBuilder.setHorizontalAlign(HorizontalAlign.CENTER);break;
 		case RIGHT:styleBuilder.setHorizontalAlign(HorizontalAlign.RIGHT);break;
 		case JUSTIFY:styleBuilder.setHorizontalAlign(HorizontalAlign.JUSTIFY);break;
+		default:break;
 		}
-		switch(style.getText().getAlignment().getVertical()){
+		
+		Vertical vertical = style.getText().getAlignment().getVertical();
+		if(Vertical.AUTO.equals(vertical))
+			vertical = Vertical.TOP;
+		switch(vertical){
 		case TOP:styleBuilder.setVerticalAlign(VerticalAlign.TOP);break;
 		case MIDDLE:styleBuilder.setVerticalAlign(VerticalAlign.MIDDLE);break;
 		case BOTTOM:styleBuilder.setVerticalAlign(VerticalAlign.BOTTOM);break;
 		case JUSTIFY:styleBuilder.setVerticalAlign(VerticalAlign.JUSTIFIED);break;
+		default:break;
 		}
-		
-		//styleBuilder.setHorizontalAlign(HorizontalAlign.LEFT);
 		
         return styleBuilder.build();
 	}
@@ -98,16 +106,6 @@ public abstract class AbstractJasperReportBasedOnDynamicBuilder implements Jaspe
 			else if(index==3)
 				styleBuilder.setBorderBottom(border);
 		}
-	}
-
-	@Override
-	public Boolean ignoreField(Field field) {
-		return null;
-	}
-	
-	@Override
-	public Set<String> fieldToIgnore() {
-		return null;
 	}
 
 }

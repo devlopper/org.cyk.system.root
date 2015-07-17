@@ -12,7 +12,7 @@ import org.cyk.system.root.business.api.security.OpticalEncoderBusiness;
 import org.cyk.system.root.business.api.security.OpticalEncoderOptions;
 import org.cyk.system.root.business.impl.security.OpticalDecoderBusinessImpl;
 import org.cyk.system.root.business.impl.security.OpticalEncoderBusinessImpl;
-import org.cyk.utility.test.AbstractUnitTest;
+import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Assert;
 import org.junit.Test;
 
