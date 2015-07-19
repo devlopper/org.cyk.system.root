@@ -324,17 +324,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     private void security(){ 
     	//Permission licenceRead = createPermission(permissionBusiness.computeCode(License.class, Crud.READ));
     	
-    	createRole(new Role(Role.ADMINISTRATOR, "Administrator"));
-    	
-    	createRole(new Role(Role.MANAGER, "Manager"));
-        
-    	createRole(new Role(Role.BUSINESS_ACTOR, "Business actor"));
-        
+    	createRole(Role.ADMINISTRATOR, "Administrator");
+    	createRole(Role.MANAGER, "Manager");
+    	createRole(Role.BUSINESS_ACTOR, "Business actor");
         createRole(Role.SETTING_MANAGER, "Setting Manager");
-        
         createRole(Role.SECURITY_MANAGER, "Security Manager");
-        
-        createRole(Role.USER, "Member");
+        createRole(Role.USER, "User",SHIRO_PRIVATE_FOLDER);
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -16,9 +17,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import lombok.Getter;
-import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
@@ -38,6 +36,9 @@ import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.Text;
 import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
 
@@ -49,12 +50,14 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	private static final String FIELD_OF_FORMAT = "%s.of";
 	
 	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid",".count"));
-	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new HashMap<>();
+	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new LinkedHashMap<>();
+	
+	private static final Map<String,String> RESOURCE_BUNDLE_VALUE_CACHE = new HashMap<>();
 	
 	private static LanguageBusiness INSTANCE;
 	
 	@Setter private Locale locale = Locale.FRENCH;
-	@Getter @Setter private Boolean cachingEnabled = Boolean.FALSE;
+	@Getter @Setter private Boolean cachingEnabled = Boolean.TRUE;
 	@Getter @Setter private CachingStrategy cachingStrategy = CachingStrategy.NONE;
 	 
 	@Inject
@@ -75,8 +78,6 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		registerResourceBundle("org.cyk.system.root.business.impl.language.misc",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.business.impl.language.exception",getClass().getClassLoader());
 		registerResourceBundle("org.cyk.system.root.business.impl.language.validation",getClass().getClassLoader());
-		
-		
 	}
 	
 	public static LanguageBusiness getInstance() {
@@ -96,34 +97,50 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	@Override
 	public String findText(Locale locale,String code,Object[] parameters) {
 		logTrace("Text lookup id={} , locale={}",code,locale);
+		String value = null,cacheId=null;
 		// 1 - Lookup in cache
 		if(Boolean.TRUE.equals(cachingEnabled)){
-			logTrace("Lookup in cache");
+			cacheId = locale+"_"+code+StringUtils.join(parameters);
+			logTrace("Lookup in cache firstly");
+			/*
 			CachingStrategy cachingStrategy = getCachingStrategy();
 			if(!CachingStrategy.NONE.equals(cachingStrategy)){
 				
 				return null;
 			}
-			return null;
-		}else{
+			*/
+			value = RESOURCE_BUNDLE_VALUE_CACHE.get(cacheId);
+		}
+		if(value==null){
 			// 2 - Lookup in database
 			
-			// 3 - Lookup in bundles
-			logTrace("Lookup in bundles");
-			for(Entry<String, ClassLoader> entry : RESOURCE_BUNDLE_MAP.entrySet()){
-				try {
-					ResourceBundle resourceBundle = ResourceBundle.getBundle(entry.getKey(), locale, entry.getValue());
-					//logDebug("Bunble={}, Locale={}, Key={}",entry.getKey(),locale, code);
-					/*if(!locale.equals(resourceBundle.getLocale()))
-						throw new RuntimeException("Locale has changed! No same locale : "+locale+" <> "+resourceBundle.getLocale());*/
-					return parameters==null?resourceBundle.getString(code):MessageFormat.format(resourceBundle.getString(code),parameters);
-				} catch (Exception e) {}
+			if(value==null){
+				// 3 - Lookup in bundles
+				logTrace("Lookup in bundles");
+				for(Entry<String, ClassLoader> entry : RESOURCE_BUNDLE_MAP.entrySet()){
+					try {
+						ResourceBundle resourceBundle = ResourceBundle.getBundle(entry.getKey(), locale, entry.getValue());
+						//logDebug("Bunble={}, Locale={}, Key={}",entry.getKey(),locale, code);
+						/*if(!locale.equals(resourceBundle.getLocale()))
+							throw new RuntimeException("Locale has changed! No same locale : "+locale+" <> "+resourceBundle.getLocale());*/
+						value = parameters==null?resourceBundle.getString(code):MessageFormat.format(resourceBundle.getString(code),parameters);
+						if(Boolean.TRUE.equals(cachingEnabled)){
+							RESOURCE_BUNDLE_VALUE_CACHE.put(cacheId, value);
+						}
+						break;
+					} catch (Exception e) {
+						//It is not in that bundle. Let try the next one
+					}
+				}
 			}
-			
+		}
+		if(value==null){
 			// 4 - default
 			logDebug("No match found for {}", code);
 			return UNKNOWN_MARKER_START+code+UNKNOWN_MARKER_END;
-		}
+		}else
+			return value;
+		
 	}
 
 	@Override

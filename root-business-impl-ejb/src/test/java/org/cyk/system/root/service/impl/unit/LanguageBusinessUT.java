@@ -17,11 +17,13 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 	private static final long serialVersionUID = 124355073578123984L;
 
 	@InjectMocks private LanguageBusinessImpl languageBusiness;
+	private Long performanceMaximumNumberOfCall = 100000l;
 	
 	@Override
 	protected void registerBeans(Collection<Object> collection) {
 		super.registerBeans(collection);
 		collection.add(languageBusiness);
+		languageBusiness.setCachingEnabled(Boolean.FALSE);
 	}
 	
 	@Test
@@ -56,6 +58,21 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     	assertEquals("Les", languageBusiness.findDeterminantText(Boolean.FALSE, Boolean.FALSE, Boolean.TRUE));
     	assertEquals("Des", languageBusiness.findDeterminantText(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE));
     }
+	
+	@Test
+	public void performanceNoCache(){
+		for(long i=0;i<performanceMaximumNumberOfCall;i++)
+			languageBusiness.findText(Locale.FRENCH, "myperformancephrase", new Object[]{"This","is","you"});
+		
+	}
+	
+	@Test
+	public void performanceWithCache(){
+		languageBusiness.setCachingEnabled(Boolean.TRUE);
+		for(long i=0;i<performanceMaximumNumberOfCall;i++)
+			languageBusiness.findText(Locale.FRENCH, "myperformancephrase", new Object[]{"This","is","you"});
+		
+	}
 
     /**/
     

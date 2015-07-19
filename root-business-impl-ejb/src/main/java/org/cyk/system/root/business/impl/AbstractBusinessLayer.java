@@ -9,15 +9,16 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessManager;
-import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.datasource.DataSource;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.security.PermissionBusiness;
+import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
 import org.cyk.system.root.business.impl.datasource.JdbcDataSource;
 import org.cyk.system.root.business.impl.file.report.jasper.JasperReportBusinessImpl;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
@@ -31,12 +32,21 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.cdi.AbstractLayer;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
 	private static final long serialVersionUID = -4484371129296972868L;
+	
+	protected static final String PRIVATE_FOLDER_NAME = "private";
+	protected static final String PRIVATE_ROLE_FOLDER_NAME = "private/__role__";
+	
+	protected static final String SHIRO_PRIVATE_FOLDER_FORMAT = "/%s/**";
+	protected static final String SHIRO_PRIVATE_FOLDER = String.format(SHIRO_PRIVATE_FOLDER_FORMAT, PRIVATE_FOLDER_NAME);
+	
+	protected static final String SHIRO_ROLE_FOLDER_FORMAT = "/"+PRIVATE_ROLE_FOLDER_NAME+"/__%s__/**";
 	
 	@Inject protected ApplicationBusiness applicationBusiness;
 	@Inject protected GenericBusiness genericBusiness;
@@ -45,6 +55,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     @Inject protected LanguageBusiness languageBusiness;
     @Inject protected JasperReportBusinessImpl reportBusiness;
     @Inject protected PermissionBusiness permissionBusiness;
+    @Inject protected RoleSecuredViewBusiness roleSecuredViewBusiness;
     
     protected ValidatorMap validatorMap = ValidatorMap.getInstance();
     
@@ -107,14 +118,15 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		return create(new Permission(code));
 	}
     
-	protected void createRole(Role role,Permission...permissions){
+	protected void createRole(Role role,String workspaceId,Permission...permissions){
    	 if(permissions!=null)
    		 for(Permission permission : permissions)
    			 role.getPermissions().add(permission);
    	 create(role);
+   	createRoleSecuredView(role.getCode(),role,workspaceId);
    }
     
-	protected void createRole(String code,String name,String...permissionCodes){
+	protected void createRole(String code,String name,String workspaceId,String...permissionCodes){
 		Role role = new Role(code, name);
 		Collection<Permission> permissions = new ArrayList<>();
 		if(permissionCodes!=null)
@@ -122,16 +134,27 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 				Permission permission = createPermission(permissionCode);
 				permissions.add(permission);
 			}
-		createRole(role, permissions.toArray(new Permission[]{}));
+		createRole(role,workspaceId, permissions.toArray(new Permission[]{}));
 	}
 	
+	protected void createRole(String code,String name){
+		createRole(code, name, String.format(SHIRO_ROLE_FOLDER_FORMAT, StringUtils.lowerCase(StringUtils.remove(code, "_"))));
+	}
+	
+	protected void createRoleSecuredView(String code,Role role,String viewId){
+		roleSecuredViewBusiness.create(new RoleSecuredView(role, viewId, code, code));
+	}
+	
+	
+	
+	/*
 	@SuppressWarnings("unchecked")
 	protected void createRole(String code,String name,Object[][] entityCruds){
 		String[] permissions = new String[entityCruds.length];
 		for(int i=0;i<permissions.length;i++)
 			permissions[i] = permissionBusiness.computeCode((Class<AbstractIdentifiable>)entityCruds[i][0], (Crud)entityCruds[i][1]);
 	}
-	
+	*/
     
     
     protected IntervalCollection intervalCollection(String...values){
