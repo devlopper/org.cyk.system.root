@@ -8,7 +8,6 @@ import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
@@ -38,7 +37,7 @@ public class NotificationMailIT extends AbstractBusinessIT {
     
     @Override
     protected void populate() {
-    	installation = RootBusinessLayer.fakeInstallation();
+    	installApplication();
         notificationTemplate1 = new NotificationTemplate();
         notificationTemplate1.setCode("NTC1");
         notificationTemplate1.setName("NTN1");

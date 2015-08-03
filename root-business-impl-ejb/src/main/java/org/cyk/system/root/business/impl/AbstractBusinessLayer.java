@@ -1,16 +1,22 @@
 package org.cyk.system.root.business.impl;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
+import org.cyk.system.root.business.api.BusinessLayerListener;
 import org.cyk.system.root.business.api.BusinessManager;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -30,11 +36,19 @@ import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
+import org.cyk.system.root.model.party.Application;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.security.Credentials;
+import org.cyk.system.root.model.security.Installation;
+import org.cyk.system.root.model.security.License;
 import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleSecuredView;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.cdi.AbstractLayer;
+
+import lombok.Getter;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -58,6 +72,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     @Inject protected RoleSecuredViewBusiness roleSecuredViewBusiness;
     
     protected ValidatorMap validatorMap = ValidatorMap.getInstance();
+    @Getter protected Collection<BusinessLayerListener> businessLayerListeners = new ArrayList<>();
     
     @Override
     protected void initialisation() {
@@ -112,6 +127,60 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 
 	protected <MODEL, REPORT extends AbstractReport<?>> void registerReportConfiguration(AbstractReportConfiguration<MODEL, REPORT> configuration) {
 		reportBusiness.registerConfiguration(configuration);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Installation buildInstallation() {
+		Installation installation = new Installation();
+    	installation.setAdministratorCredentials(new Credentials("admin", "123"));
+    	installation.setApplication(new Application());
+    	installation.getApplication().setName("Application");
+    	installation.setLicense(new License());
+    	installation.getLicense().setPeriod(new Period(new Date(), new Date()));
+    	installation.setManager(new Person("ManagerFirstName","ManagerLastName"));
+    	installation.setManagerCredentials(new Credentials("man", "123"));
+    	return installation;
+	}
+	
+	@Override
+	public void installApplication(Installation installation) {
+		for(BusinessLayerListener listener : businessLayerListeners)
+			listener.beforeInstall(this, installation);
+		applicationBusiness.install(installation);
+		for(BusinessLayerListener listener : businessLayerListeners)
+			listener.afterInstall(this, installation);
+	}
+	
+	@Override
+	public void installApplication() {
+		installApplication(buildInstallation());	
+	}
+	
+	@Override
+	public void installApplication(Boolean fake) {
+		Installation installation = buildInstallation();
+		installation.setFaked(fake);
+		installApplication(installation);
+	}
+	
+	protected void handleObjectToInstall(Object object){
+		for(BusinessLayerListener listener : businessLayerListeners)
+			listener.handleObjectToInstall(this, object);
+	}
+	
+	protected <T extends AbstractIdentifiable> void installObject(Integer identifier,String message,TypedBusiness<T> business,T object){
+		handleObjectToInstall(object);
+		business.create(object);
+		logDebug(message);
+	}
+	protected void installObject(Integer identifier,String message,AbstractIdentifiable object){
+		installObject(identifier,message, businessLocator.locate(object),object);
+	}
+	protected <T extends AbstractIdentifiable> void installObject(Integer identifier,TypedBusiness<T> business,T object){
+		installObject(identifier,"Instance of "+object.getClass().getSimpleName()+" created", business, object);
+	}
+	protected <T extends AbstractIdentifiable> void installObject(Integer identifier,AbstractIdentifiable object){
+		installObject(identifier,businessLocator.locate(object),object);
 	}
 	
 	protected Permission createPermission(String code){
@@ -183,5 +252,16 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	inputName.setCode(code);
     	inputName.setName(name);
     	return create(inputName);
+    }
+    
+    protected byte[] getResourceAsBytes(String relativePath){
+    	String path = "/"+StringUtils.replace(this.getClass().getPackage().getName(), ".", "/")+"/";
+    	try {
+    		logDebug("Getting resource as bytes {}", path+relativePath);
+    		return IOUtils.toByteArray(this.getClass().getResourceAsStream(path+relativePath));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
     }
 }

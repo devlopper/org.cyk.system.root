@@ -60,5 +60,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public String getUiString() {
 		return "?? NO UI STRING SPECIFIED ??";
 	}
+	
+	public static final String FIELD_IDENTIFIER = "identifier";
  
 }

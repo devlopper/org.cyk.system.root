@@ -320,9 +320,10 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	/**/
 	
 	protected void applyPeriodSearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractPeriodSearchCriteria searchCriteria){
-		queryWrapper.parameter("fromDate",searchCriteria.getFromDateSearchCriteria().getPreparedValue());
-		queryWrapper.parameter("toDate",searchCriteria.getToDateSearchCriteria().getPreparedValue());
+		queryWrapper.parameterBetween(searchCriteria.getFromDateSearchCriteria().getPreparedValue(), 
+				searchCriteria.getToDateSearchCriteria().getPreparedValue());
+		//queryWrapper.parameter(QueryStringBuilder.VAR_BETWEEN_FROM,searchCriteria.getFromDateSearchCriteria().getPreparedValue());
+		//queryWrapper.parameter(QueryStringBuilder.VAR_BETWEEN_TO,searchCriteria.getToDateSearchCriteria().getPreparedValue());
 	}
-	
-	
+
 }

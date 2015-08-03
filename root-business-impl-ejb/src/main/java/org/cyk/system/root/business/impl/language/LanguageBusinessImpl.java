@@ -6,9 +6,11 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -51,6 +53,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid",".count"));
 	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new LinkedHashMap<>();
+	private static List<Entry<String, ClassLoader>> RESOURCE_BUNDLE_ENTRIES = new ArrayList<>();
 	
 	private static final Map<String,String> RESOURCE_BUNDLE_VALUE_CACHE = new HashMap<>();
 	
@@ -117,7 +120,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			if(value==null){
 				// 3 - Lookup in bundles
 				logTrace("Lookup in bundles");
-				for(Entry<String, ClassLoader> entry : RESOURCE_BUNDLE_MAP.entrySet()){
+				for(Entry<String, ClassLoader> entry : RESOURCE_BUNDLE_ENTRIES){
 					try {
 						ResourceBundle resourceBundle = ResourceBundle.getBundle(entry.getKey(), locale, entry.getValue());
 						//logDebug("Bunble={}, Locale={}, Key={}",entry.getKey(),locale, code);
@@ -150,7 +153,10 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	@Override
 	public void registerResourceBundle(String id,ClassLoader aClassLoader) {
-		RESOURCE_BUNDLE_MAP.put(id,aClassLoader);
+		RESOURCE_BUNDLE_MAP.put(id,aClassLoader);//First in First Top
+		RESOURCE_BUNDLE_ENTRIES = new ArrayList<>(RESOURCE_BUNDLE_MAP.entrySet());
+		//Should be Last in first Top
+		Collections.reverse(RESOURCE_BUNDLE_ENTRIES);
 		logTrace("Resource bundle {} registered", id);
 	}
 	

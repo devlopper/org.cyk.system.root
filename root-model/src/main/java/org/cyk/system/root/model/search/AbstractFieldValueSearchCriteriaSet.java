@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.utility.common.computation.DataReadConfig;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public abstract class AbstractFieldValueSearchCriteriaSet implements Serializable {
+public abstract class AbstractFieldValueSearchCriteriaSet extends AbstractModelElement implements Serializable {
 
 	private static final long serialVersionUID = 2055293289197179106L;
 
@@ -22,6 +23,11 @@ public abstract class AbstractFieldValueSearchCriteriaSet implements Serializabl
 	protected void setStringSearchCriteria(StringSearchCriteria stringSearchCriteria,String value){
 		stringSearchCriteria.setValue(value);
 		criterias.add(stringSearchCriteria);
+	}
+	
+	@Override
+	public String getUiString() {
+		return toString();
 	}
 	
 }

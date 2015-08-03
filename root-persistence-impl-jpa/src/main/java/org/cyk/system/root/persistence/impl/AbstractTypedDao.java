@@ -2,18 +2,20 @@ package org.cyk.system.root.persistence.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
+import org.cyk.system.root.persistence.api.TypedDao;
 
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
 
 	private static final long serialVersionUID = -2964204372097468908L;
 
-	protected String readAll,countAll,readAllExclude,countAllExclude;
+	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
+		,readAllInclude,countAllInclude;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -39,7 +41,19 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readAll, _select()+(StringUtils.isEmpty(readAllOrderByString())?"":" "+readAllOrderByString()));
+		//registerNamedQuery(readAllExclude, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.identifier NOT IN :identifiers");
+		
+		registerNamedQuery(readAllInclude, _select().whereIdentifierIn());
 		registerNamedQuery(readAllExclude, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.identifier NOT IN :identifiers");
+		
+		if(Boolean.TRUE.equals(readByClassEnabled())){
+			registerNamedQuery(readByClasses, _select().whereClassIn());
+			registerNamedQuery(readByNotClasses, _select().whereClassNotIn());
+		}
+	}
+	
+	protected Boolean readByClassEnabled(){
+		return Boolean.FALSE;
 	}
 	
 	protected String readAllOrderByString(){
@@ -66,6 +80,50 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	public Long countAllExclude(Collection<IDENTIFIABLE> identifiables) {
 		return namedQuery(countAllExclude,Long.class).parameterIdentifiers(identifiables).resultOne();
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readByClasses(Collection<Class<?>> classes) {
+		return namedQuery(readByClasses).parameterClasses(classes).resultMany();
+	}
+	@Override
+	public Long countByClasses(Collection<Class<?>> classes) {
+		return countNamedQuery(countByClasses).parameterClasses(classes).resultOne();
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readByNotClasses(Collection<Class<?>> classes) {
+		return namedQuery(readByNotClasses).parameterClasses(classes).resultMany();
+	}
+	@Override
+	public Long countByNotClasses(Collection<Class<?>> classes) {
+		return countNamedQuery(countByNotClasses).parameterClasses(classes).resultOne();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IDENTIFIABLE> Collection<T> readByClass(Class<T> aClass) {
+		Collection<Class<?>> classes = new ArrayList<>();
+		classes.add(aClass);
+		return (Collection<T>) readByClasses(classes);
+	}
+	@Override
+	public Long countByClass(Class<?> aClass) {
+		Collection<Class<?>> classes = new ArrayList<>();
+		classes.add(aClass);
+		return countByClasses(classes);
+	} 
+	@Override
+	public Collection<IDENTIFIABLE> readByNotClass(Class<?> aClass) {
+		Collection<Class<?>> classes = new ArrayList<>();
+		classes.add(aClass);
+		return readByNotClasses(classes);
+	}
+	@Override
+	public Long countByNotClass(Class<?> aClass) {
+		Collection<Class<?>> classes = new ArrayList<>();
+		classes.add(aClass);
+		return countByNotClasses(classes);
 	}
 	
 	/**/

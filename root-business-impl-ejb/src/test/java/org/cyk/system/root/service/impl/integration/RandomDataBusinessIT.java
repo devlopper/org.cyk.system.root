@@ -3,7 +3,6 @@ package org.cyk.system.root.service.impl.integration;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -22,7 +21,7 @@ public class RandomDataBusinessIT extends AbstractBusinessIT {
     
     @Override
     protected void businesses() {
-    	applicationBusiness.install(RootBusinessLayer.fakeInstallation());
+    	installApplication();
     	rootRandomDataProvider.createPerson(3);
     	personBusiness.create(rootRandomDataProvider.person());
     	

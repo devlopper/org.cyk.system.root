@@ -1,6 +1,5 @@
 package org.cyk.system.root.service.impl.integration;
 
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -11,11 +10,11 @@ public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
     @Deployment
     public static Archive<?> createDeployment() {
         return createRootDeployment();
-    } 
+    }
     
     @Override
     protected void businesses() {
-    	applicationBusiness.install(RootBusinessLayer.fakeInstallation());
+    	installApplication();
     }
     
     @Override protected void finds() {}
@@ -23,5 +22,6 @@ public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
     @Override protected void delete() {}
     @Override protected void read() {}
     @Override protected void update() {}
+    
     
 }

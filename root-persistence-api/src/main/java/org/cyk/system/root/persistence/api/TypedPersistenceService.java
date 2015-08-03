@@ -9,7 +9,19 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
 	/* predefined query  */
     
     Collection<IDENTIFIABLE> readAll(); 
-    
     Long countAll();
-	
+    
+    Collection<IDENTIFIABLE> readByClasses(Collection<Class<?>> classes);
+    Long countByClasses(Collection<Class<?>> classes);
+    
+    Collection<IDENTIFIABLE> readByNotClasses(Collection<Class<?>> classes);
+    Long countByNotClasses(Collection<Class<?>> classes);
+    
+    /**/
+    
+    <T extends IDENTIFIABLE> Collection<T> readByClass(Class<T> aClass);
+    Long countByClass(Class<?> aClass);
+    
+    Collection<IDENTIFIABLE> readByNotClass(Class<?> aClass);
+    Long countByNotClass(Class<?> aClass);
 }

@@ -15,6 +15,10 @@ public class DefaultQueryFormModel implements Serializable {
 
 	private static final long serialVersionUID = -3328823824725030136L;
 
+	public static final String FIELD_IDENTIFIER = "identifier";
+	public static final String FIELD_FROM_DATE = "fromDate";
+	public static final String FIELD_TO_DATE = "toDate";
+	
 	@Input @InputText
 	private String identifier;
 	

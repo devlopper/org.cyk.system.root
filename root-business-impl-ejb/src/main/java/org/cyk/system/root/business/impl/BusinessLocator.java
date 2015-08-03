@@ -48,7 +48,7 @@ public class BusinessLocator extends AbstractBean implements Serializable {
                 ;
             }
         }
-        
+        logDebug("Business service of bean {} is {}", beanClass.getName(),businessBean==null?"NULL":businessBean.getClass().getName());
         return businessBean;
     }
     

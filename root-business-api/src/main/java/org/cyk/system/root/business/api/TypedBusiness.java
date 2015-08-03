@@ -20,4 +20,18 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     Collection<IDENTIFIABLE> findAllExclude(Collection<IDENTIFIABLE> identifiables); 
     
     Long countAllExclude(Collection<IDENTIFIABLE> identifiables); 
+    
+    Collection<IDENTIFIABLE> findByClasses(Collection<Class<?>> classes);
+    Long countByClasses(Collection<Class<?>> classes);
+    
+    Collection<IDENTIFIABLE> findByNotClasses(Collection<Class<?>> classes);
+    Long countByNotClasses(Collection<Class<?>> classes);
+    
+    /**/
+    
+    <T extends IDENTIFIABLE> Collection<T> findByClass(Class<T> aClass);
+    Long countByClass(Class<?> aClass);
+    
+    Collection<IDENTIFIABLE> findByNotClass(Class<?> aClass);
+    Long countByNotClass(Class<?> aClass);
 }

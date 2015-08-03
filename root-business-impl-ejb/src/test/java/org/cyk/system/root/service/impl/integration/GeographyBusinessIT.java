@@ -12,9 +12,6 @@ import org.junit.Assert;
 
 public class GeographyBusinessIT extends AbstractBusinessIT {
 	   
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8691254326402622637L;
 	@Inject private LocalityBusiness localityBusiness;  
 	@Inject private LocalityTypeBusiness localityTypeBusiness;
@@ -64,7 +61,7 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
 
     @Override
     protected void businesses() {
-    	applicationBusiness.install(RootBusinessLayer.fakeInstallation());
+    	installApplication();
     	Assert.assertNotNull(localityTypeBusiness.find(LocalityType.COUNTRY));
     	System.out.println(localityBusiness.findByType(RootBusinessLayer.getInstance().getCountryLocalityType()));
     }

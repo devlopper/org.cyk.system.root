@@ -109,6 +109,46 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public Long countAllExclude(Collection<IDENTIFIABLE> identifiables) {
 		return dao.countAllExclude(identifiables); 
 	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findByClasses(Collection<Class<?>> classes) {
+		return dao.readByClasses(classes);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countByClasses(Collection<Class<?>> classes) {
+		return dao.countByClasses(classes);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findByNotClasses(Collection<Class<?>> classes) {
+		return dao.readByNotClasses(classes);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countByNotClasses(Collection<Class<?>> classes) {
+		return dao.countByNotClasses(classes);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public <T extends IDENTIFIABLE> Collection<T> findByClass(Class<T> aClass) {
+		return dao.readByClass(aClass);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countByClass(Class<?> aClass) {
+		return dao.countByClass(aClass);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findByNotClass(Class<?> aClass) {
+		return dao.readByNotClass(aClass);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countByNotClass(Class<?> aClass) {
+		return dao.countByNotClass(aClass);
+	}
 
 	protected void applyDataReadConfigToDao(DataReadConfig dataReadConfig){
 		dao.getDataReadConfig().setFirstResultIndex(dataReadConfig.getFirstResultIndex());

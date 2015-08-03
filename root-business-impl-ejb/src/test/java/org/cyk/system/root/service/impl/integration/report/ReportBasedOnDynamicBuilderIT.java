@@ -53,7 +53,7 @@ public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
 
     @Override
     protected void businesses() {
-    	applicationBusiness.install(RootBusinessLayer.fakeInstallation());
+    	installApplication();
         final Party owner = new Party();
         owner.setName("Effi-Dis");
         owner.setImage(fileBusiness.process(RandomDataProvider.getInstance().companyLogo(), "image.png"));

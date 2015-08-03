@@ -76,7 +76,7 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
     	Set<String> theReceiverIds = new HashSet<>();
     	
     	if(RemoteEndPoint.MAIL_SERVER.equals(notification.getRemoteEndPoint())){
-    		for(ElectronicMail electronicMail : contactDao.readAllByCollections(ElectronicMail.class, contactCollections))
+    		for(ElectronicMail electronicMail : contactDao.readByCollectionsByClass(contactCollections,ElectronicMail.class))
     			theReceiverIds.add(electronicMail.getAddress());
     	}
     	

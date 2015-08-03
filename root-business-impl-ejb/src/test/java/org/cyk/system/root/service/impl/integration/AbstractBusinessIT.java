@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootTestHelper;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.DefaultValidator;
@@ -38,7 +39,8 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	@Inject protected RootTestHelper rootTestHelper;
 	
 	@Inject protected ValidatorMap validatorMap;// = ValidatorMap.getInstance();
-    
+	@Inject protected RootBusinessLayer rootBusinessLayer;
+	
     @Override
     public EntityManager getEntityManager() {
         return g.getEntityManager();
@@ -96,11 +98,16 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
         
     }
     
+    protected void installApplication(){
+    	RootBusinessLayer.getInstance().installApplication();
+    }
+    
     public static Archive<?> createRootDeployment() {
         return  
                 new ArchiveBuilder().create().getArchive().
                     addClasses(BusinessIntegrationTestHelper.classes()).
-                    addPackages(Boolean.FALSE, BusinessIntegrationTestHelper.packages()) 
+                    addPackages(Boolean.FALSE, BusinessIntegrationTestHelper.packages())
+                    .addClass(RootBusinessLayer.class)
                 //_deploymentOfPackages("org.cyk.system.root").getArchive()
               
                 //.addPackages(Boolean.FALSE,BusinessIntegrationTestHelper.PACKAGES)

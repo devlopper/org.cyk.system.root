@@ -33,4 +33,9 @@ public class Contact extends AbstractIdentifiable implements Serializable{
 	
 	private Byte orderIndex;
 	
+	/**/
+	
+	public static final String FIELD_COLLECTION = "collection";
+	public static final String FIELD_ORDER_INDEX = "orderIndex";
+	
 }

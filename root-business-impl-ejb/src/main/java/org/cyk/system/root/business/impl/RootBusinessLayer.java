@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -12,11 +11,11 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
-import lombok.Getter;
-
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.RootBusinessLayerListener;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.event.EventTypeBusiness;
@@ -30,6 +29,7 @@ import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
+import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
@@ -54,27 +54,25 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderListener
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
+import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.language.Language;
-import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Sex;
-import org.cyk.system.root.model.security.Credentials;
-import org.cyk.system.root.model.security.Installation;
-import org.cyk.system.root.model.security.License;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
-import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+
+import lombok.Getter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER)
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -128,7 +126,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private RootTestHelper rootTestHelper;
     
     //private Person personAdmin,personGuest;
-        
+    
+    private static final Collection<RootBusinessLayerListener> ROOT_BUSINESS_LAYER_LISTENERS = new ArrayList<>();
+    
     @Override
     protected void initialisation() {
     	INSTANCE = this;
@@ -158,6 +158,50 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
             }
         });
         */
+        
+        @SuppressWarnings("unchecked")
+		ValueGenerator<AbstractActor,String> actorRegistrationCodeGenerator = (ValueGenerator<AbstractActor, String>) 
+				RootBusinessLayer.getInstance().getApplicationBusiness().findValueGenerator(ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER);
+		
+		actorRegistrationCodeGenerator.setMethod(new GenerateMethod<AbstractActor, String>() {
+				@Override
+				public String execute(AbstractActor actor) {
+					String generatedCode = null;
+					for(RootBusinessLayerListener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+						String value = listener.generateActorRegistrationCode(actor,null);
+						if(value!=null)
+							generatedCode = value;
+					}
+					if(generatedCode==null)
+						generatedCode = RandomStringUtils.randomAlphabetic(6);
+					else{
+						do{
+							AbstractActorBusiness<AbstractActor> business =  null;
+							for(RootBusinessLayerListener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+								AbstractActorBusiness<AbstractActor> value = listener.findActorBusiness(actor);
+								if(value!=null)
+									business = value;
+							}
+							if(business==null)
+								break;
+							AbstractActor existingActor = business.findByRegistrationCode(generatedCode);
+							
+							if(existingActor==null)
+								break;
+							else{
+								String previousGeneratedCode = generatedCode;
+								for(RootBusinessLayerListener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+									String value = listener.generateActorRegistrationCode(actor,previousGeneratedCode);
+									if(value!=null)
+										generatedCode = value;
+								}
+							}
+						}while(true);
+					}
+					
+					return generatedCode;
+				}
+			});
         
         registerReportConfiguration(new ReportBasedOnDynamicBuilderConfiguration<Object, ReportBasedOnDynamicBuilder<Object>>(parameterGenericReportBasedOnDynamicBuilder) {        	
 			@SuppressWarnings("unchecked")
@@ -407,19 +451,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	}
     }
     
-    /**/
-    
-    public static Installation fakeInstallation() {
-    	Installation installation = new Installation();
-    	installation.setAdministratorCredentials(new Credentials("admin", "123"));
-    	installation.setApplication(new Application());
-    	installation.getApplication().setName("app");
-    	installation.setLicense(new License());
-    	installation.getLicense().setPeriod(new Period(new Date(), new Date()));
-    	installation.setManager(new Person("fn","ln"));
-    	installation.setManagerCredentials(new Credentials("man", "123"));
-    	installation.setFaked(Boolean.TRUE);
-    	return installation;
-    }
-    
+    public Collection<RootBusinessLayerListener> getRootBusinessLayerListeners() {
+		return ROOT_BUSINESS_LAYER_LISTENERS;
+	}
 }

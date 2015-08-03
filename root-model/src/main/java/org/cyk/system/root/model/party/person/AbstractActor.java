@@ -24,13 +24,11 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 	
 	@Override
 	public String toString() {
-		//return person.toString()+" | "+registration;
-		return person.toString();
+		return getUiString();
 	}
 	
 	@Override
 	public String getUiString() {
-		//return registration+" - "+person.getUiString();
-		return person.getUiString();
+		return registration.getCode()+" "+person.getUiString();
 	}
 }

@@ -10,10 +10,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
-import lombok.Getter;
-
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.computation.DataReadConfig;
+
+import lombok.Getter;
 
 @Getter
 public class QueryWrapper<T> implements Serializable {
@@ -54,6 +55,26 @@ public class QueryWrapper<T> implements Serializable {
 	public QueryWrapper<T> parameterIdentifiers(Collection<? extends AbstractIdentifiable> identifiables){
 		parameter(QueryStringBuilder.VAR_IDENTIFIERS, Utils.ids(identifiables));
 		return this;
+	}
+	
+	public QueryWrapper<T> parameterClasses(Collection<Class<?>> classes){
+		parameter(QueryStringBuilder.VAR_CLASS, classes);
+		return this;
+	}
+	public QueryWrapper<T> parameterClass(Class<?> aClass){
+		Collection<Class<?>> classes = new ArrayList<>();
+		classes.add(aClass);
+		return parameterClasses(classes);
+	}
+	
+	public QueryWrapper<T> parameterLike(String name,String value){
+		parameter(name, StringUtils.isBlank(value)?QueryStringBuilder.PERCENTAGE:value);
+		return this;
+	}
+	
+	protected void parameterBetween(Object fromValue,Object toValue){
+		parameter(QueryStringBuilder.VAR_BETWEEN_FROM,fromValue);
+		parameter(QueryStringBuilder.VAR_BETWEEN_TO,toValue);
 	}
 	
 	public QueryWrapper<T> ignoreThrowable(Class<? extends Throwable> throwableClass){

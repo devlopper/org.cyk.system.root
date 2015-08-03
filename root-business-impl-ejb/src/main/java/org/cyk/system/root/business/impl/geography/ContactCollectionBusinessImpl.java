@@ -29,10 +29,10 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
 	}   
 	
 	protected void __load__(ContactCollection aCollection) {
-        aCollection.setPhoneNumbers(contactDao.readAllByCollection(PhoneNumber.class, aCollection));
-        aCollection.setLocations(contactDao.readAllByCollection(Location.class, aCollection));
-        aCollection.setElectronicMails(contactDao.readAllByCollection(ElectronicMail.class, aCollection));
-        aCollection.setPostalBoxs(contactDao.readAllByCollection(PostalBox.class, aCollection));
+        aCollection.setPhoneNumbers(contactDao.readByCollectionByClass(aCollection,PhoneNumber.class));
+        aCollection.setLocations(contactDao.readByCollectionByClass(aCollection,Location.class));
+        aCollection.setElectronicMails(contactDao.readByCollectionByClass(aCollection,ElectronicMail.class));
+        aCollection.setPostalBoxs(contactDao.readByCollectionByClass(aCollection,PostalBox.class));
     }
 
     @Override
@@ -56,10 +56,10 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
     
     @Override
     public ContactCollection update(ContactCollection collection) {
-    	update(contactDao.readAllByCollection(PhoneNumber.class, collection), collection.getPhoneNumbers(), collection);
-    	update(contactDao.readAllByCollection(Location.class, collection), collection.getLocations(), collection);
-    	update(contactDao.readAllByCollection(ElectronicMail.class, collection), collection.getElectronicMails(), collection);
-    	update(contactDao.readAllByCollection(PostalBox.class, collection), collection.getPostalBoxs(), collection);
+    	update(contactDao.readByCollectionByClass(collection,PhoneNumber.class), collection.getPhoneNumbers(), collection);
+    	update(contactDao.readByCollectionByClass(collection,Location.class), collection.getLocations(), collection);
+    	update(contactDao.readByCollectionByClass(collection,ElectronicMail.class), collection.getElectronicMails(), collection);
+    	update(contactDao.readByCollectionByClass(collection,PostalBox.class), collection.getPostalBoxs(), collection);
     	return super.update(collection);
     }
      

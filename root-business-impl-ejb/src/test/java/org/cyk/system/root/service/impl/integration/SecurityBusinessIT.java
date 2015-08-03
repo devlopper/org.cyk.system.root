@@ -44,7 +44,7 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
 
     @Override
     protected void businesses() {
-    	applicationBusiness.install(RootBusinessLayer.fakeInstallation());
+    	installApplication();
     	UserAccountSearchCriteria criteria = new UserAccountSearchCriteria(null);
     	//System.out.println(RootBusinessLayer.getInstance().getAdministratorRole());
     	criteria.getRoleExcluded().add(RootBusinessLayer.getInstance().getAdministratorRole());

@@ -54,8 +54,9 @@ public abstract class AbstractPersistenceIT extends AbstractIntegrationTestJpaBa
 	
 	/* Shortcut */
 	
-	protected void create(AbstractIdentifiable object){
-		genericDao.create(object);
+	@SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> T create(T object){
+		return (T) genericDao.create(object);
 	}
 	
 	protected void update(AbstractIdentifiable object){
@@ -63,7 +64,9 @@ public abstract class AbstractPersistenceIT extends AbstractIntegrationTestJpaBa
 	}
 	
 	public static Archive<?> createRootDeployment() {
-        return _deploymentOfPackages("org.cyk.system.root").getArchive();
+        return _deploymentOfPackages("org.cyk.system.root").getArchive()
+        		
+        		.addClasses(PersistenceIntegrationTestHelper.classes());
     } 
 	
 }

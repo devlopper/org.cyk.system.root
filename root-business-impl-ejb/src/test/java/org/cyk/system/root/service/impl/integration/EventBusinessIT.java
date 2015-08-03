@@ -68,7 +68,7 @@ public class EventBusinessIT extends AbstractBusinessIT {
 
     @Override
     protected void businesses() {
-    	applicationBusiness.install(RootBusinessLayer.fakeInstallation());
+    	installApplication();
     	
     	oneHourLater = DateUtils.addHours(now, 1);
         oneHourPast = DateUtils.addHours(now, -1);
