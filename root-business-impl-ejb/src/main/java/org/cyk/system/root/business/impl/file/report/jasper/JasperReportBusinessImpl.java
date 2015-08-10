@@ -58,6 +58,11 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 			JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
 			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanColDataSource);
+		
+			if(aReport.getWidth()!=null)
+				jasperPrint.setPageWidth(aReport.getWidth());
+			if(aReport.getHeight()!=null)
+				jasperPrint.setPageHeight(aReport.getHeight());
 			__build__(aReport, jasperPrint, print);
 		} catch (JRException e) {
 			throw new RuntimeException(e);

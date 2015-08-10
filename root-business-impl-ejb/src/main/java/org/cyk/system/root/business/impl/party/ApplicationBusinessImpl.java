@@ -110,7 +110,6 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		
 		//Super User : The one who use the system
 		
-		
 		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole())));
 		managerAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
 		

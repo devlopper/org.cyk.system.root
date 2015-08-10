@@ -35,4 +35,6 @@ public class ElectronicMail extends Contact implements Serializable {
 	public String toString() {
 		return address;
 	}
+	
+	public static final String FIELD_ADDRESS = "address";
 }

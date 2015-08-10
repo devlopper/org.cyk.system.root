@@ -14,8 +14,8 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.ElectronicMail;
-import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.party.person.AbstractActor;
@@ -44,7 +44,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		return (IDENTIFIABLE) BusinessLocator.getInstance().locate(identifiableClass).findOneRandomly();
 	}
 	
-	public Person person(Boolean male,Locality country,PhoneNumberType type){
+	public Person person(Boolean male,Country country,PhoneNumberType type){
 		Person person = new Person();
 		person.setName(Boolean.TRUE.equals(male)?randomDataProvider.getMale().firstName():randomDataProvider.getFemale().firstName());
 		person.setLastName(Boolean.TRUE.equals(male)?randomDataProvider.getMale().lastName():randomDataProvider.getFemale().lastName());
@@ -69,7 +69,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		genericBusiness.create(collection);
 	}
 	
-	public ContactCollection contactCollection(Locality country,PhoneNumberType type){
+	public ContactCollection contactCollection(Country country,PhoneNumberType type){
 		ContactCollection contactCollection = new ContactCollection();
 		contactCollection.setPhoneNumbers(new ArrayList<PhoneNumber>());
 		phoneNumber(contactCollection, country,type);
@@ -78,7 +78,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		return contactCollection;
 	}
 	
-	public PhoneNumber phoneNumber(ContactCollection contactCollection,Locality country,PhoneNumberType type){
+	public PhoneNumber phoneNumber(ContactCollection contactCollection,Country country,PhoneNumberType type){
 		PhoneNumber phoneNumber = new PhoneNumber();
 		phoneNumber.setCollection(contactCollection);
 		phoneNumber.setCountry(country);
@@ -99,7 +99,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		electronicMail.setAddress(RandomDataProvider.getInstance().randomWord(RandomDataProvider.WORD_EMAIL, 5, 10));
 		if(contactCollection!=null)
 			contactCollection.getElectronicMails().add(electronicMail);
-		return electronicMail;
+		return electronicMail; 
 	}
 	
 	public <ACTOR extends AbstractActor> ACTOR actor(Class<ACTOR> actorClass){

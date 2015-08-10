@@ -129,6 +129,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 						value = parameters==null?resourceBundle.getString(code):MessageFormat.format(resourceBundle.getString(code),parameters);
 						if(Boolean.TRUE.equals(cachingEnabled)){
 							RESOURCE_BUNDLE_VALUE_CACHE.put(cacheId, value);
+							logDebug("value of {} is {}",code,value);
 						}
 						break;
 					} catch (Exception e) {
@@ -214,50 +215,80 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			if(StringUtils.isNotBlank(specifiedValue))
 				values.add(findText(specifiedValue));
 			else{
-				// 1 - build the id = field.xxx.xxx.xxx.xxx....
-				StringBuilder labelId =new StringBuilder(FIELD_MARKER_START);
-				for(int i=0;i<field.getName().length();i++){
-					if(Character.isUpperCase(field.getName().charAt(i)))
-						labelId.append('.');
-					labelId.append(Character.toLowerCase(field.getName().charAt(i)));
-				}
-				logDebug("Build id from field {} is {}",field.getName(),labelId);
-				// 2 - Try to match the built id
-				String value = findText(labelId.toString());
-				if(unknown(value)){
-					// 1 - Attempt removing suffix
-					for(String fieldMarker : FIELD_TYPE_MARKERS){
-						if(fieldMarker(labelId.toString(), value, fieldMarker, values))
-							break;
+				try {
+					buildFromCompleteFieldName(field, values);
+				} catch (NoMatchFoundException e) {
+					// 1 - build the id = field.xxx.xxx.xxx.xxx....
+					StringBuilder labelId =new StringBuilder(FIELD_MARKER_START);
+					for(int i=0;i<field.getName().length();i++){
+						if(Character.isUpperCase(field.getName().charAt(i)))
+							labelId.append('.');
+						labelId.append(Character.toLowerCase(field.getName().charAt(i)));
 					}
-					//2 - Attempt removing field.
-					if(values.isEmpty()){
-						String nvalue = findText(StringUtils.substringAfter(labelId.toString(),FIELD_MARKER_START));
-						if(unknown(nvalue)){
-							values.add(value);
+					logDebug("Build id from field {} is {}",field.getName(),labelId);
+					// 2 - Try to match the built id
+					String value = findText(labelId.toString());
+					if(unknown(value)){
+						// 1 - Attempt removing suffix
+						for(String fieldMarker : FIELD_TYPE_MARKERS){
+							if(fieldMarker(labelId.toString(), value, fieldMarker, values))
+								break;
+						}
+						//2 - Attempt removing field.
+						if(values.isEmpty()){
+							String nvalue = findText(StringUtils.substringAfter(labelId.toString(),FIELD_MARKER_START));
+							if(unknown(nvalue)){
+								values.add(value);
+							}else
+								values.add(nvalue);
+						}
+						/*
+						if(StringUtils.endsWith(labelId, FIELD_MARKER_QUANTITY)){
+							values.add(findText("quantity"));
+							String newLabelId = StringUtils.substringBefore(labelId.toString(), FIELD_MARKER_QUANTITY);
+							value = findText(newLabelId);
+							if(unknown(value)){
+								newLabelId = StringUtils.substringAfter(newLabelId.toString(), FIELD_MARKER_START);
+								values.add(findText(newLabelId));
+							}else
+								values.add(value);
 						}else
-							values.add(nvalue);
-					}
-					/*
-					if(StringUtils.endsWith(labelId, FIELD_MARKER_QUANTITY)){
-						values.add(findText("quantity"));
-						String newLabelId = StringUtils.substringBefore(labelId.toString(), FIELD_MARKER_QUANTITY);
-						value = findText(newLabelId);
-						if(unknown(value)){
-							newLabelId = StringUtils.substringAfter(newLabelId.toString(), FIELD_MARKER_START);
-							values.add(findText(newLabelId));
-						}else
 							values.add(value);
-					}else
+							*/
+					}else{
 						values.add(value);
-						*/
-				}else{
-					values.add(value);
+					}					
 				}
+
 					
 			}
 		return StringUtils.join(values," ");
 	}
+    
+    private String buildFromCompleteFieldName(Field field,Collection<String> values) throws NoMatchFoundException{
+    	String id = field.getDeclaringClass().getName()+"."+field.getName();
+    	logTrace("Path : Build id from field {} is {}",field.getName(),id);
+    	return fetch(id, values);
+    }
+    
+    private String buildFromFieldPrefix(Field field,Collection<String> values) throws NoMatchFoundException{
+    	StringBuilder labelId =new StringBuilder(FIELD_MARKER_START);
+		for(int i=0;i<field.getName().length();i++){
+			if(Character.isUpperCase(field.getName().charAt(i)))
+				labelId.append('.');
+			labelId.append(Character.toLowerCase(field.getName().charAt(i)));
+		}
+		logTrace("Custom : Build id from field {} is {}",field.getName(),labelId);
+		return fetch(labelId.toString(), values);
+    }
+    
+    private String fetch(String id,Collection<String> values) throws NoMatchFoundException {
+    	String result = findText(id);
+    	if(unknown(result))
+    		throw new NoMatchFoundException(id,result);
+    	values.add(result);
+    	return result;
+    }
     
     private Boolean fieldMarker(String labelId,String value,String fieldMarker,Collection<String> values){
     	if(StringUtils.endsWith(labelId, fieldMarker)){
@@ -338,4 +369,20 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	public String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass) {
 		return findDoFunctionnalityText(aClass, Boolean.TRUE, Boolean.FALSE);
 	}
+
+	/**/
+	
+	@Getter @Setter
+	private class NoMatchFoundException extends Exception implements Serializable{
+		private static final long serialVersionUID = -3217343065549408057L;
+		private String id,result;
+		public NoMatchFoundException(String id, String result) {
+			super();
+			this.id = id;
+			this.result = result;
+			//logDebug("No match found for {}",id);
+		}
+		
+	}
+	
 }

@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-
 import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
@@ -18,10 +16,16 @@ import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class BusinessLocator extends AbstractBean implements Serializable {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(BusinessLocator.class);
+	
 	private static final long serialVersionUID = -6705685474869857841L;
 	private static BusinessLocator INSTANCE;
     @Getter private final Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> typedBusinessBeanMap = new HashMap<>(); 
@@ -43,7 +47,7 @@ public class BusinessLocator extends AbstractBean implements Serializable {
         TypedBusiness<AbstractIdentifiable> businessBean = typedBusinessBeanMap.get(beanClass);
         if(businessBean==null){
             if(DataTreeType.class.isAssignableFrom(beanClass)){
-                return (AbstractEnumerationBusiness)dataTreeTypeBusiness;
+            	businessBean = (AbstractEnumerationBusiness)dataTreeTypeBusiness;
             }else if(AbstractDataTree.class.isAssignableFrom(beanClass)){
                 ;
             }
@@ -60,5 +64,10 @@ public class BusinessLocator extends AbstractBean implements Serializable {
     public static BusinessLocator getInstance() {
         return INSTANCE;
     }
+    
+    @Override
+	protected Logger __logger__() {
+		return LOGGER;
+	}
     
 }

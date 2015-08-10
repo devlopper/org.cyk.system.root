@@ -1,21 +1,28 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilder;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfiguration;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
+import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
+import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.test.TestEnvironmentListener;
+import org.hamcrest.Matcher;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +40,15 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 	protected RootBusinessLayer rootBusinessLayer;
 	protected ReportBusiness reportBusiness;
 	
+	public <T extends AbstractIdentifiable> void reportBasedOnTemplateFile(Class<T> aClass,Collection<T> collection,Map<String, String[]> map,String reportIdentifier){
+        AbstractReportConfiguration<T, ReportBasedOnTemplateFile<T>> c = reportBusiness.findConfiguration(reportIdentifier);
+        ReportBasedOnTemplateFile<T> r = ((ReportBasedOnTemplateFileConfiguration<T, ReportBasedOnTemplateFile<T>>)c)
+        		.build(aClass,collection,"pdf",Boolean.FALSE,map);
+        
+        reportBusiness.build(r,Boolean.FALSE);
+		
+        reportBusiness.write(new File(reportFolder),r);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public void reportBasedOnDynamicBuilderParameters(ReportBasedOnDynamicBuilderParameters<?> aParameters,String reportIdentifier){
@@ -84,6 +100,52 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 		assertBigDecimalEquals(message,new BigDecimal(expected),actual);
 	}
 	
+	protected static void assertThat(String reason,Boolean assertion){
+		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+			listener.assertThat(reason, assertion);
+	}
+	
+	protected static <T> void assertThat(T actual,Matcher<? super T> matcher){
+		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+			listener.assertThat(actual, matcher);
+	}
+	
+	protected  <T> void assertThat(String reason,T actual,Matcher<? super T> matcher){
+		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+			listener.assertThat(reason, actual, matcher);
+	}
+	
+	protected static void hasProperty(Object object,String name,Object value){
+		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+			listener.hasProperty(object, name, value);
+	}
+	
+	protected static void hasProperties(Object object,Object...entries){
+		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+			listener.hasProperties(object, entries);
+	}
+	
+	protected static <T> void contains(Class<T> aClass,Collection<T> list,Object[] names,Object[][] values){
+		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+			listener.contains(aClass, list, names, values);
+	}
+	
 	/**/
+	
+	protected void writeReport(AbstractReport<?> report){
+    	try {
+			IOUtils.write(report.getBytes(), new FileOutputStream( System.getProperty("user.dir")+"/"+reportFolder+"/"+report.getFileName()+System.currentTimeMillis()+"."+report.getFileExtension()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+	
+	protected void writeReport(org.cyk.system.root.model.file.File file,String name,String extension){
+    	try {
+			IOUtils.write(file.getBytes(), new FileOutputStream( System.getProperty("user.dir")+"/"+reportFolder+"/"+name+"."+extension));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 	
 }

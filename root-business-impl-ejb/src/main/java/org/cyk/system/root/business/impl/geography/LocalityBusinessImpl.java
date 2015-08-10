@@ -16,5 +16,5 @@ public class LocalityBusinessImpl extends AbstractDataTreeBusinessImpl<Locality,
     public LocalityBusinessImpl(LocalityDao dao) {
         super(dao);
     }
- 
+	
 }

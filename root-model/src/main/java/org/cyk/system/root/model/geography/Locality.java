@@ -16,8 +16,6 @@ public class Locality extends AbstractDataTree<LocalityType> implements Serializ
 
 	private static final long serialVersionUID = -6128937819261060725L;
 
-	public static final String COUNTRY_COTE_DIVOIRE = "CIV";
-	
 	public Locality(AbstractDataTree<LocalityType> parent, LocalityType type, String code,String name) {
 		super(parent, type, code);
 		this.name = name;

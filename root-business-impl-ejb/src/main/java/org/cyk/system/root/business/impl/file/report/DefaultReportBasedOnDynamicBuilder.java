@@ -5,10 +5,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
-import org.cyk.system.root.business.api.language.LanguageBusiness;
-import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.Column;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilder;
@@ -29,8 +26,8 @@ public class DefaultReportBasedOnDynamicBuilder extends AbstractReportBasedOnDyn
 	public void report(ReportBasedOnDynamicBuilder<?> report,ReportBasedOnDynamicBuilderParameters<?> parameters) {
 		if(StringUtils.isBlank(report.getTitle()))
 			if(StringUtils.isBlank(parameters.getTitle())){
-				LanguageBusiness languageBusiness = RootBusinessLayer.getInstance().getLanguageBusiness();
-				ApplicationBusiness applicationBusiness = RootBusinessLayer.getInstance().getApplicationBusiness();
+				//LanguageBusiness languageBusiness = RootBusinessLayer.getInstance().getLanguageBusiness();
+				//ApplicationBusiness applicationBusiness = RootBusinessLayer.getInstance().getApplicationBusiness();
 				BusinessEntityInfos businessEntityInfos = null;
 				if(parameters.getIdentifiableClass()!=null)
 					businessEntityInfos = applicationBusiness.findBusinessEntityInfos((Class<AbstractIdentifiable>) parameters.getIdentifiableClass());
@@ -39,18 +36,18 @@ public class DefaultReportBasedOnDynamicBuilder extends AbstractReportBasedOnDyn
 				if(parameters.getExtendedParameterMap()!=null){
 					String[] paramValues = null;
 					Date fromDate = null;
-					paramValues = parameters.getExtendedParameterMap().get(RootBusinessLayer.getInstance().getParameterFromDate());
+					paramValues = parameters.getExtendedParameterMap().get(rootBusinessLayer.getParameterFromDate());
 					if(paramValues!= null && StringUtils.isNotBlank(paramValues[0]))
 						fromDate = new Date(Long.parseLong(paramValues[0]));
 					
 					Date toDate = null;
-					paramValues = parameters.getExtendedParameterMap().get(RootBusinessLayer.getInstance().getParameterToDate());
+					paramValues = parameters.getExtendedParameterMap().get(rootBusinessLayer.getParameterToDate());
 					if(paramValues!= null && StringUtils.isNotBlank(paramValues[0]))
 						toDate = new Date(Long.parseLong(paramValues[0]));
 					
 					if(fromDate!=null){
 						String pattern = TimeBusiness.DATE_SHORT_PATTERN;
-						titleBuilder.append(" "+RootBusinessLayer.getInstance().getTimeBusiness().formatPeriodFromTo(new Period(fromDate, toDate), pattern));
+						titleBuilder.append(" "+rootBusinessLayer.getTimeBusiness().formatPeriodFromTo(new Period(fromDate, toDate), pattern));
 					}
 				}
 				
@@ -68,7 +65,7 @@ public class DefaultReportBasedOnDynamicBuilder extends AbstractReportBasedOnDyn
 		
 		if(StringUtils.isBlank(report.getCreationDate()))
 			if(StringUtils.isBlank(parameters.getCreationDate())){
-				report.setCreationDate(RootBusinessLayer.getInstance().getTimeBusiness().formatDateTime(new Date()));
+				;
 			}else
 				report.setCreationDate(parameters.getCreationDate());
 		
@@ -78,16 +75,20 @@ public class DefaultReportBasedOnDynamicBuilder extends AbstractReportBasedOnDyn
 		if(parameters.getOwner()!=null){
 			report.setOwnerName(parameters.getOwner().getName());
 			if(parameters.getOwner().getImage()!=null)
-				report.setOwnerLogoPath(RootBusinessLayer.getInstance().getFileBusiness().findSystemPath(parameters.getOwner().getImage()).toString());
+				report.setOwnerLogoPath(rootBusinessLayer.getFileBusiness().findSystemPath(parameters.getOwner().getImage()).toString());
 		}
-		//File ownerNameImageFile = RootBusinessLayer.getInstance().getFileBusiness()
-		//		.process(RootBusinessLayer.getInstance().getGraphicBusiness().createFromText(report.getOwnerName()), "name.png");
-		//report.setOwnerNameImagePath(RootBusinessLayer.getInstance().getFileBusiness().findSystemPath(ownerNameImageFile).toString());
+		
+		//File ownerNameImageFile = rootBusinessLayer.getFileBusiness()
+		//		.process(rootBusinessLayer.getGraphicBusiness().createFromText(report.getOwnerName()), "name.png");
+		//report.setOwnerNameImagePath(rootBusinessLayer.getFileBusiness().findSystemPath(ownerNameImageFile).toString());
 		//report.setOwnerContacts(parameters.getOwner().getContactCollection().getUiString());
-		report.setFileName((StringUtils.isNotBlank(report.getOwnerName())?report.getOwnerName()+" - ":"")+report.getTitle()+" - "+StringUtils.replace(report.getCreationDate(),":","H")+" - "+report.getCreatedBy());
-		report.setFileName(StringUtils.remove(report.getFileName(), '/'));
-		report.setFileName(StringUtils.remove(report.getFileName(), ':'));
+		
+		//report.setFileName(rootBusinessLayer.buildReportFileName(report));
+		//report.setFileName((StringUtils.isNotBlank(report.getOwnerName())?report.getOwnerName()+" - ":"")+report.getTitle()+" - "+StringUtils.replace(report.getCreationDate(),":","H")+" - "+report.getCreatedBy());
+		
 		report.setFileExtension(parameters.getFileExtension());
+		
+		rootBusinessLayer.prepareReport(report);
 	}
 
 	@Override

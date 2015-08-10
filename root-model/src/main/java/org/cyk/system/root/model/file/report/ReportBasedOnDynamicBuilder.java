@@ -14,7 +14,7 @@ public class ReportBasedOnDynamicBuilder<MODEL> extends AbstractReport<MODEL> im
 	private static final long serialVersionUID = -6269733939974607163L;
 	
 	private Locale locale = Locale.FRENCH;
-	private String title,subTitle,ownerName,ownerContacts,ownerLogoPath,ownerNameImagePath,creationDate,createdBy;
+	private String subTitle,ownerContacts,ownerLogoPath,ownerNameImagePath;
 	private Collection<Column> columns = new ArrayList<>();
 	
 }

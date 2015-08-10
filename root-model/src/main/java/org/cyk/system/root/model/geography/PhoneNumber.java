@@ -30,7 +30,7 @@ public class PhoneNumber extends Contact implements Serializable{
 	
 	@Input @InputChoice @InputOneChoice @InputOneCombo
 	@ManyToOne @NotNull @JoinColumn(nullable=false)
-	private Locality country;
+	private Country country;
 	
 	@Input(label=@Text(value="phone.number-short")) @InputText
 	@NotNull @Column(nullable=false)
@@ -40,6 +40,10 @@ public class PhoneNumber extends Contact implements Serializable{
 	public String toString() {
 		if(number==null || number.isEmpty())
 			return null;
-		return /*(country==null?"":("+"+country.getCode()+" "))+*/number/*+(type==null?"":" ("+type.getName()+")")*/;//TODO move to Business
+		return (country==null?"":("+"+country.getPhoneNumberCode()+" "))+number/*+(type==null?"":" ("+type.getName()+")")*/;
 	}
+	
+	/**/
+	
+	public static final String FIELD_NUMBER = "number";
 }

@@ -14,8 +14,11 @@ public abstract class AbstractReport<MODEL> {
 	
 	protected Collection<MODEL> dataSource = new ArrayList<>();
 	
+	protected String title,ownerName,creationDate,createdBy;
 	protected String fileName;
 	protected String fileExtension;
+	
+	protected Integer width,height;
 	
 	//outputs
 	protected byte[] bytes;

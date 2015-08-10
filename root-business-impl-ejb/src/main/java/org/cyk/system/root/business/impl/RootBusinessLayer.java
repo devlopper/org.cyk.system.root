@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.RootBusinessLayerListener;
@@ -22,6 +24,8 @@ import org.cyk.system.root.business.api.event.EventTypeBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.TagBusiness;
+import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
+import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
@@ -47,6 +51,7 @@ import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Tag;
+import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilder;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfiguration;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderIdentifiableConfiguration;
@@ -55,6 +60,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParamete
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
+import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
@@ -69,6 +75,7 @@ import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
@@ -84,6 +91,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private Timer alarmTimer;
 	
+	private final String reportFileNameFormat = "%s - %s - %s - %s";
+	
 	@Getter private final String parameterGenericReportBasedOnDynamicBuilder = "grbodb"; 
 	@Getter private final String parameterGenericDashBoardReport = "gdbr"; 
 	@Getter private final String parameterFromDate = "fd"; 
@@ -92,7 +101,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Getter private PhoneNumberType landPhoneNumberType,mobilePhoneNumberType;
 	@Getter private LocationType homeLocationType,officeLocationType;
 	@Getter private LocalityType countryLocalityType,cityLocalityType,continentLocalityType;
-	@Getter private Locality countryCoteDivoire;
+	@Getter private Country countryCoteDivoire;
 	@Getter private Role administratorRole,managerRole,businessActorRole,settingManagerRole,securityManagerRole,userRole;
 	@Getter private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
 	@Getter private EventType anniversaryEventType,reminderEventType;
@@ -103,10 +112,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject @Getter private GraphicBusiness graphicBusiness;
 	@Inject @Getter private ApplicationBusiness applicationBusiness;
 	@Inject @Getter private GenericBusiness genericBusiness;
+	@Inject @Getter private ContactCollectionBusiness contactCollectionBusiness;
 	@Inject private PhoneNumberTypeBusiness phoneNumberTypeBusiness;
 	@Inject private LocationTypeBusiness locationTypeBusiness;
 	@Inject private LocalityBusiness localityBusiness;
 	@Inject private LocalityTypeBusiness localityTypeBusiness;
+	@Inject private CountryBusiness countryBusiness;
 	@Inject private TagBusiness tagBusiness;
     @Inject private EventBusiness eventBusiness;
     @Inject private PersonBusiness personBusiness;
@@ -302,7 +313,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         create(new Locality(null, continent, "Amerique"));
         create(new Locality(null, continent, "Europe"));
         
-        create(countryCoteDivoire = new Locality(afrique, country,Locality.COUNTRY_COTE_DIVOIRE, "Cote d'Ivoire"));
+        create(countryCoteDivoire = new Country(new Locality(afrique, country,Country.COTE_DIVOIRE, "Cote d'Ivoire"),225));
         create(new Locality(afrique, country, "Benin"));
         
         create(new PhoneNumberType(PhoneNumberType.LAND, "Fixe"));
@@ -382,6 +393,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)Event.class, (TypedBusiness)eventBusiness);
         beansMap.put((Class)Person.class, (TypedBusiness)personBusiness);
         beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
+        beansMap.put((Class)Country.class, (TypedBusiness)countryBusiness);
         beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
         beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);
         beansMap.put((Class)UserAccount.class, (TypedBusiness)userAccountBusiness);
@@ -395,7 +407,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	homeLocationType = locationTypeBusiness.find(LocationType.HOME);
     	officeLocationType = locationTypeBusiness.find(LocationType.OFFICE);
     	
-    	countryCoteDivoire = localityBusiness.find(Locality.COUNTRY_COTE_DIVOIRE);
+    	countryCoteDivoire = countryBusiness.findByCode(Country.COTE_DIVOIRE);
     	countryLocalityType = localityTypeBusiness.find(LocalityType.COUNTRY);
     	continentLocalityType = localityTypeBusiness.find(LocalityType.CONTINENT);
     	cityLocalityType = localityTypeBusiness.find(LocalityType.CITY);
@@ -419,6 +431,28 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_EMAIL);
     	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_SMS);
     	
+    }
+    
+    public String buildReportFileName(AbstractReport<?> report){
+    	StringBuilder s = new StringBuilder(String.format(reportFileNameFormat,StringUtils.isNotBlank(report.getOwnerName())?report.getOwnerName():applicationBusiness.findCurrentInstance().getName(),
+				report.getTitle(),StringUtils.replace(report.getCreationDate(),Constant.CHARACTER_COLON.toString(),Constant.CHARACTER_H.toString()),report.getCreatedBy()));
+    	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_SLASH.charValue()));
+    	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_BACK_SLASH.charValue()));
+    	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_COLON.charValue()));
+		return s.toString();
+    }
+    
+    public void prepareReport(AbstractReport<?> report){
+    	if(StringUtils.isBlank(report.getOwnerName()))
+    		report.setOwnerName(applicationBusiness.findCurrentInstance().getName());
+    	
+    	if(StringUtils.isBlank(report.getCreationDate()))
+			report.setCreationDate(timeBusiness.formatDateTime(new Date()));
+		
+		if(StringUtils.isBlank(report.getCreatedBy()))
+			report.setCreatedBy("ANONYMOUS");
+		
+		report.setFileName(buildReportFileName(report));
     }
     
     @Override

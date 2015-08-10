@@ -24,9 +24,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import lombok.Getter;
-
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractPeriodSearchCriteria;
@@ -37,10 +37,16 @@ import org.cyk.utility.common.computation.DataReadConfig;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import lombok.Getter;
 
 public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements Serializable,PersistenceService<IDENTIFIABLE, Long> {
 
 	private static final long serialVersionUID = -8198334103295401293L;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistenceService.class);
 	
 	private final static Set<Class<?>> NAMED_QUERIES_INITIALIZED = new HashSet<>();
 	private final static String SELECT_IDENTIFIER_FORMAT = "SELECT record.identifier FROM %s record";
@@ -94,6 +100,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	@Override
     public IDENTIFIABLE create(IDENTIFIABLE object) {
 	    entityManager.persist(object);
+	    logTrace("{} persisted. {}",object.getClass().getSimpleName(),ToStringBuilder.reflectionToString(object, ToStringStyle.SHORT_PREFIX_STYLE));
         return object;
     }
     
@@ -324,6 +331,11 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 				searchCriteria.getToDateSearchCriteria().getPreparedValue());
 		//queryWrapper.parameter(QueryStringBuilder.VAR_BETWEEN_FROM,searchCriteria.getFromDateSearchCriteria().getPreparedValue());
 		//queryWrapper.parameter(QueryStringBuilder.VAR_BETWEEN_TO,searchCriteria.getToDateSearchCriteria().getPreparedValue());
+	}
+	
+	@Override
+	protected Logger __logger__() {
+		return LOGGER;
 	}
 
 }

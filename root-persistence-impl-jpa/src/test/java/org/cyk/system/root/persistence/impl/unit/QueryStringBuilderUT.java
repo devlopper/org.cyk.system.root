@@ -3,7 +3,9 @@ package org.cyk.system.root.persistence.impl.unit;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.impl.QueryStringBuilder;
+import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
+import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 
 public class QueryStringBuilderUT extends AbstractUnitTest {
@@ -14,6 +16,7 @@ public class QueryStringBuilderUT extends AbstractUnitTest {
 	@Override
 	protected void _execute_() {
 		super._execute_();
+		
 		queryStringEquals("select r from table r",builder().from("table").select());
 		queryStringEquals("select r from table r where r.age = :age",builder().from("table").select().where("age"));
 		queryStringEquals("select r from table r where r.age = :age and r.name = :name",builder().from("table").select().where("age").and("name"));
@@ -50,8 +53,15 @@ public class QueryStringBuilderUT extends AbstractUnitTest {
 		queryStringEquals("select r from person r where exists(select sr from locality sr where sr = r and sr.person = r)",
 				builder().from(Person.class).select().where()
 					.exists().openSubQueryStringBuilder(Locality.class).and("person", "r", Boolean.FALSE).closeSubQueryStringBuilder());
-		
-		
+			
+	    queryStringEquals("SELECT r FROM SaleStockInput r WHERE r.externalIdentifier LIKE :externalIdentifier AND "
+			+ "r.sale.date BETWEEN :fromvalue AND :tovalue AND r.sale.done = :saleDone AND r.remainingNumberOfGoods >= :minimumRemainingGoods "
+			+ "AND ABS(r.tangibleProductStockMovement.quantity) >= :minimumQuantity ORDER BY r.sale.date ASC", builder().from("SaleStockInput").select()
+				.where("externalIdentifier",ArithmeticOperator.LIKE)
+				.and().between("sale.date")
+				.and("sale.done","saleDone",ArithmeticOperator.EQ)
+				.and("remainingNumberOfGoods", "minimumRemainingGoods", ArithmeticOperator.GTE)
+				.and().whereString("ABS(r.tangibleProductStockMovement.quantity) >= :minimumQuantity").orderBy("sale.date", Boolean.TRUE));
 	}
 	
 	private QueryStringBuilder builder(String root){

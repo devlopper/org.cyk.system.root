@@ -13,8 +13,8 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 1814682900660172098L;
 	
-	private static final String EXCEPTION_OPERATOR_MISSING_FORMAT = "Use one of this operator in where clause of the query : "
-			+StringUtils.join(LogicalOperator.values(),",")+". Query = %s";
+	//private static final String EXCEPTION_OPERATOR_MISSING_FORMAT = "Use one of this operator in where clause of the query : "
+	//		+StringUtils.join(LogicalOperator.values(),",")+". Query = %s";
 	private static final String SPACE = " ";
 	private static final String SEMI_COLON = ":";
 	private static final String PARENTHESIS_OPEN = "(";
@@ -132,14 +132,13 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 			predicate = String.format(PREDICATE_FORMAT,rootEntityVariableName,anArithmeticOperator.getSymbol(),value(aVarName, varOutside));
 		else
 			predicate = String.format(WHERE_VAR_FORMAT,rootEntityVariableName,anAttributeName,anArithmeticOperator.getSymbol(),value(aVarName, varOutside));
-		
+		//System.out.println("QueryStringBuilder.where() "+anAttributeName+" , "+logicalOperator+" / "+currentLogicalOperator);
 		if(logicalOperator==null){
 			;
 		}else if(currentLogicalOperator==null){
 			appendSpace();
 			__append__(logicalOperator.name());
 		}
-		
 		currentLogicalOperator=null;
 		return whereString(predicate);
 	}
@@ -257,7 +256,7 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	}
 	
 	public QueryStringBuilder operator(LogicalOperator operator) {
-		currentLogicalOperator = operator;
+		//currentLogicalOperator = operator;
 		return operator(operator.name());
 	}
 	
@@ -291,7 +290,7 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	public QueryStringBuilder or(String anAttributeName,String aVarName,ArithmeticOperator anArithmeticOperator){
 		where(LogicalOperator.OR, anAttributeName, aVarName, anArithmeticOperator);
 		return this;
-	}
+	} 
 	
 	public QueryStringBuilder or(String anAttributeName,ArithmeticOperator anArithmeticOperator){
 		return or(anAttributeName, anAttributeName, anArithmeticOperator);

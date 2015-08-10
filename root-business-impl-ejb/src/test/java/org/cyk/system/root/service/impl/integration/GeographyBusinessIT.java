@@ -2,9 +2,12 @@ package org.cyk.system.root.service.impl.integration;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.model.geography.Country;
+import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -15,6 +18,7 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
 	private static final long serialVersionUID = 8691254326402622637L;
 	@Inject private LocalityBusiness localityBusiness;  
 	@Inject private LocalityTypeBusiness localityTypeBusiness;
+	@Inject private CountryBusiness countryBusiness;
 	
 	@Deployment 
 	public static Archive<?> createDeployment() {
@@ -62,6 +66,7 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
     @Override
     protected void businesses() {
     	installApplication();
+    	create(new Country(new Locality(null, RootBusinessLayer.getInstance().getCountryLocalityType(), "MyCountry", "TheCountry"),225));
     	Assert.assertNotNull(localityTypeBusiness.find(LocalityType.COUNTRY));
     	System.out.println(localityBusiness.findByType(RootBusinessLayer.getInstance().getCountryLocalityType()));
     }
