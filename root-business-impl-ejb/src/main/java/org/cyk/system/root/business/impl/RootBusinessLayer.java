@@ -41,8 +41,7 @@ import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.api.time.TimeDivisionTypeBusiness;
 import org.cyk.system.root.business.api.userinterface.GraphicBusiness;
 import org.cyk.system.root.business.impl.file.FileValidator;
-import org.cyk.system.root.business.impl.file.report.DefaultReportBasedOnDynamicBuilder;
-import org.cyk.system.root.business.impl.file.report.jasper.DefaultJasperReportBasedOnDynamicBuilder;
+import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Event;
@@ -52,11 +51,6 @@ import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Tag;
 import org.cyk.system.root.model.file.report.AbstractReport;
-import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilder;
-import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfiguration;
-import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderIdentifiableConfiguration;
-import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderListener;
-import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
@@ -133,6 +127,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     @Inject private PersonValidator personValidator;
     @Inject private FileValidator fileValidator;
+    @Inject private RootReportRepository reportRepository;
     
     @Inject private RootTestHelper rootTestHelper;
     
@@ -213,80 +208,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 					return generatedCode;
 				}
 			});
-        
-        registerReportConfiguration(new ReportBasedOnDynamicBuilderConfiguration<Object, ReportBasedOnDynamicBuilder<Object>>(parameterGenericReportBasedOnDynamicBuilder) {        	
-			@SuppressWarnings("unchecked")
-			@Override
-			public ReportBasedOnDynamicBuilder<Object> build(ReportBasedOnDynamicBuilderParameters<Object> parameters) {
-				parameters.setDatas(new ArrayList<Object>());
-				if(parameters.getIdentifiableClass()==null){
-					
-				}else{
-					ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> identifiableConfiguration = null;
-					for(ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> ic : ReportBasedOnDynamicBuilderListener.IDENTIFIABLE_CONFIGURATIONS)
-						if(parameterGenericReportBasedOnDynamicBuilder.equals(ic.getReportBasedOnDynamicBuilderIdentifier()) 
-								&& ic.getIdentifiableClass().equals(parameters.getIdentifiableClass())
-								//&& ic.getModelClass().equals(parameters.getModelClass())
-								){
-							identifiableConfiguration = ic;
-							if(parameters.getModelClass()==null)
-								parameters.setModelClass((Class<Object>) ic.getModelClass());
-							break;
-						}
-					Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
-					
-					if(identifiableConfiguration==null || !Boolean.TRUE.equals(identifiableConfiguration.useCustomIdentifiableCollection()))
-						identifiables.addAll(genericBusiness.use(parameters.getIdentifiableClass()).find().all());
-					else
-						identifiables.addAll(identifiableConfiguration.identifiables(parameters));	
-						
-					for(AbstractIdentifiable identifiable : identifiables){
-			        	Object value = identifiableConfiguration == null ? identifiable:identifiableConfiguration.model(identifiable);
-						parameters.getDatas().add(value);	
-					}
-					
-				}
-		        parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultReportBasedOnDynamicBuilder());
-		        parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultJasperReportBasedOnDynamicBuilder());
-				return (ReportBasedOnDynamicBuilder<Object>) reportBusiness.build(parameters);
-			}
-		});
-        /*
-        registerReportConfiguration(new ReportBasedOnDynamicBuilderConfiguration<Object, ReportBasedOnDynamicBuilder<Object>>(parameterGenericDashBoardReport) {        	
-			@SuppressWarnings("unchecked")
-			@Override
-			public ReportBasedOnDynamicBuilder<Object> build(ReportBasedOnDynamicBuilderParameters<Object> parameters) {
-				parameters.setDatas(new ArrayList<Object>());
-				if(parameters.getIdentifiableClass()==null){
-					
-				}else{
-					ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> identifiableConfiguration = null;
-					for(ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> ic : ReportBasedOnDynamicBuilderListener.IDENTIFIABLE_CONFIGURATIONS)
-						if(parameterGenericObjectReportTable.equals(ic.getReportBasedOnDynamicBuilderIdentifier()) && ic.getIdentifiableClass().equals(parameters.getIdentifiableClass())){
-							identifiableConfiguration = ic;
-							if(parameters.getModelClass()==null)
-								parameters.setModelClass((Class<Object>) ic.getModelClass());
-							break;
-						}
-					Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
-					
-					if(identifiableConfiguration==null || !Boolean.TRUE.equals(identifiableConfiguration.useCustomIdentifiableCollection()))
-						identifiables.addAll(genericBusiness.use(parameters.getIdentifiableClass()).find().all());
-					else
-						identifiables.addAll(identifiableConfiguration.identifiables(parameters));	
-						
-					for(AbstractIdentifiable identifiable : identifiables){
-			        	Object value = identifiableConfiguration == null ? identifiable:identifiableConfiguration.model(identifiable);
-						parameters.getDatas().add(value);	
-					}
-					
-				}
-		        parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultReportBasedOnDynamicBuilder());
-		        parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultJasperReportBasedOnDynamicBuilder());
-				return (ReportBasedOnDynamicBuilder<Object>) reportBusiness.build(parameters);
-			}
-		});
-		*/
+		
+		//reportRepository.build();
+		
+    }
+    
+    @Override
+    protected AbstractReportRepository getReportRepository() {
+    	return reportRepository;
     }
     
     @Override

@@ -26,7 +26,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		//languageBusiness.setCachingEnabled(Boolean.FALSE);
 	}
 	
-	//@Test
+	@Test
 	public void findText() {
 	    assertTrue("bonjour".equals(languageBusiness.findText( Locale.FRENCH,"good.morning")));
         assertTrue("good morning".equals(languageBusiness.findText(Locale.ENGLISH,"good.morning")));
@@ -38,15 +38,15 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 	@Test
     public void findFieldLabelText() {
 		assertEquals("Nombre de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userCount", Boolean.TRUE)));
-	    /*assertEquals("Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "user", Boolean.TRUE))); 
+	    assertEquals("Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "user", Boolean.TRUE))); 
 	    assertEquals("Quantite de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userQuantity", Boolean.TRUE))); 
 	    assertEquals("Prix de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userPrice", Boolean.TRUE))); 
 	    assertEquals("Prix unitaire de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userUnitPrice", Boolean.TRUE))); 
-	    assertEquals("Couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color", Boolean.TRUE)));*/
-	    
+	    assertEquals("Couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color", Boolean.TRUE)));
+	    assertEquals("Une autre couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color2", Boolean.TRUE)));
     }
 	
-	//@Test
+	@Test
     public void findDeterminantText() {
     	assertEquals("Le", languageBusiness.findDeterminantText(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE));
     	assertEquals("Un", languageBusiness.findDeterminantText(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE));
@@ -66,7 +66,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		
 	}
 	
-	//@Test
+	@Test
 	public void performanceWithCache(){
 		languageBusiness.setCachingEnabled(Boolean.TRUE);
 		for(long i=0;i<performanceMaximumNumberOfCall;i++)
@@ -84,6 +84,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     	@Input private String userUnitPrice;
     	@Input private String userCount;
     	@Input private String color;
+    	@Input private String color2;
     	
     }
 

@@ -127,7 +127,7 @@ public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
         parameters2.setIdentifiableClass(Employee.class);
         parameters2.setModelClass(EmployeeLineReport.class);
         
-        rootTestHelper.reportBasedOnDynamicBuilderParameters(parameters2);
+        //rootTestHelper.reportBasedOnDynamicBuilderParameters(parameters2);
         
     }
 

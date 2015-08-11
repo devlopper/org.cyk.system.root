@@ -258,9 +258,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 					}else{
 						values.add(value);
 					}					
-				}
-
-					
+				}					
 			}
 		return StringUtils.join(values," ");
 	}

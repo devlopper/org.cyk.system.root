@@ -27,4 +27,6 @@ public abstract class ReportBasedOnDynamicBuilderIdentifiableConfiguration<IDENT
 	}
 	public abstract MODEL model(IDENTIFIABLE identifiable);
 	
+	public void beforeBuild(ReportBasedOnDynamicBuilderParameters<MODEL> parameters){}
+	
 }

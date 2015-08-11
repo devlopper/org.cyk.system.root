@@ -11,27 +11,13 @@ import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.slf4j.Logger;
 
-
 public class BusinessIntegrationTestHelper {
 
-    /*
-	@SuppressWarnings("unchecked")
-    public static Class<?>[] BASE_CLASSES = ArrayUtils.addAll(PersistenceIntegrationTestHelper.BASE_CLASSES,
-	        BusinessService.class,AbstractBusinessService.class,GenericBusiness.class,GenericBusinessServiceImpl.class,ValidationPolicy.class,ValidationPolicyImpl.class,
-	        LanguageBusiness.class,LanguageBusinessImpl.class,LanguageDao.class,LanguageDaoImpl.class,
-	        NestedSet.class,NestedSetNode.class,AbstractEnumeration.class,AbstractDataTreeNode.class,NestedSetNodeDao.class,NestedSetNodeDaoImpl.class,
-	        DataTreeType.class,AbstractDataTree.class,DataTreeDao.class,DataTreeDaoImpl.class,DataTreeTypeBusiness.class,DataTreeTypeBusinessImpl.class,
-	        DataTreeTypeDao.class,DataTreeTypeDaoImpl.class,
-	        ValidationPolicy.class,ValidationPolicyImpl.class,ExceptionUtils.class);
-	*/
-    
     private static Package[] PACKAGES = {ExceptionUtils.class.getPackage()};
-	
-    
-    
+
     //FIXME those classes are ignored. WHY 
     private static Class<?>[] CLASSES = {ExceptionUtils.class,BusinessLocator.class,PersonValidator.class,FileValidator.class,
-    	RandomDataProvider.class,RootRandomDataProvider.class,ResourceProducer.class,Logger.class};
+    	RandomDataProvider.class,RootRandomDataProvider.class,ResourceProducer.class,Logger.class,RootReportRepository.class};
     
     public static Package[] packages(){
         return PACKAGES;

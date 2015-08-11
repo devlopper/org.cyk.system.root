@@ -26,6 +26,7 @@ import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.security.PermissionBusiness;
 import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
 import org.cyk.system.root.business.impl.datasource.JdbcDataSource;
+import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
 import org.cyk.system.root.business.impl.file.report.jasper.JasperReportBusinessImpl;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
@@ -79,12 +80,14 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
         super.initialisation();
         id = this.getClass().getName();
         registerTypedBusinessBean(businessLocator.getTypedBusinessBeanMap());
+       
     }
     
     @Override
     protected void afterInitialisation() {
     	super.afterInitialisation();
     	setConstants();
+    	getReportRepository().build();
     }
     
     @Override
@@ -128,6 +131,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	protected <MODEL, REPORT extends AbstractReport<?>> void registerReportConfiguration(AbstractReportConfiguration<MODEL, REPORT> configuration) {
 		reportBusiness.registerConfiguration(configuration);
 	}
+	
+	protected abstract AbstractReportRepository getReportRepository(); 
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Installation buildInstallation() {
