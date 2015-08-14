@@ -33,7 +33,10 @@ public interface MessageSendingBusiness extends BusinessService {
 	
 	@Getter @Setter
 	public static class SendOptions{
-		private Boolean blocking=Boolean.FALSE;
+		
+		public static Boolean BLOCKING = Boolean.FALSE;
+		
+		private Boolean blocking=BLOCKING;
 	}
 	
 }

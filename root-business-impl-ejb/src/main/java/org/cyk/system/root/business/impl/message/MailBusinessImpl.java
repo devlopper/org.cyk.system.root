@@ -4,15 +4,19 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Properties;
 
-import javax.annotation.Resource;
+import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 import org.cyk.system.root.model.event.Notification;
@@ -22,22 +26,59 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
     
 	private static final long serialVersionUID = 4468167686499924200L;
 	
-	@Resource(lookup = "mail/cyk_root")
+	public static final String PROPERTY_FORMAT = "mail.smtp.%s";
+	
+	public static final String PROPERTY_USER = String.format(PROPERTY_FORMAT, "user");
+	public static final String PROPERTY_PASSWORD = String.format(PROPERTY_FORMAT, "password");
+	
+	private static final Properties PROPERTIES = new Properties();
+	static{
+		/*
+		PROPERTIES.put(String.format(PROPERTY_FORMAT, "host"), "smtp.gmail.com");
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "from"), "kycdev@gmail.com");
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "user"), "kycdev@gmail.com");
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "password"), "p@ssw0rd*");
+    	*/
+    	//setProperties("smtp.gmail.com", "kycdev@gmail.com", "kycdev@gmail.com", "p@ssw0rd*");
+    	
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "socketFactory.port"), "465");
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "port"), "465");
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "socketFactory.fallback"), "false");
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "auth"), "true");
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "socketFactory.class"), "javax.net.ssl.SSLSocketFactory");
+	}
+	
+	//@Resource(name="java:app/mail/cyk_root" /*lookup = "mail/cyk_root"*/ )
     private Session session;
 
-    private void send(final Notification notification,final InternetAddress[] addresses,SendOptions options) {
+    private void send(final Notification notification,final InternetAddress[] addresses,final SendOptions options) {
+    	
+    	session = Session.getInstance(PROPERTIES,new Authenticator() {
+    		@Override
+    		protected PasswordAuthentication getPasswordAuthentication() {
+    			return new PasswordAuthentication(PROPERTIES.getProperty(PROPERTY_USER), PROPERTIES.getProperty(PROPERTY_PASSWORD));
+    		}
+		});
+    	
     	Thread thread = new Thread(){
             public void run() {
                 MimeMessage message = new MimeMessage(session);
                 try {
-                    message.setFrom(new InternetAddress(session.getProperty("mail.from")));
+                    //message.setFrom(new InternetAddress(session.getProperty("mail.from")));
+                	message.setFrom(new InternetAddress("kycdev@gmail.com"));
                     message.setRecipients(Message.RecipientType.TO, addresses);
                     message.setSubject(notification.getTitle());
                     message.setSentDate(new Date());
                     message.setContent(notification.getMessage(), "text/html; charset=utf-8");
+                    logDebug("Sending mail to {}", StringUtils.join(addresses));
+                    logTrace("From {} , Recipients {} , Subject {} , Date {} , Blocking {}",message.getFrom(),message.getRecipients(Message.RecipientType.TO),
+                    		message.getSubject(),message.getSentDate(),options.getBlocking());
+                    logTrace("Content = {}", message.getContent());
                     Transport.send(message);
+                    logDebug("Mail sent to {}", StringUtils.join(addresses));
                 } catch (Exception e) {
-                    __logger__().error(e.toString(),e);
+                	e.printStackTrace();
+                    logThrowable(e);
                 }
             };
         };
@@ -120,5 +161,25 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
     public void sendParty(Notification notification, Collection<Party> theReceiverIds) {
         
     }
+    
+    /**/
+    
+	@Override
+	public Properties getConnectionProperties() {
+		return PROPERTIES;
+	}
+
+	@Override
+	public void setConnectionProperties(Properties properties) {
+		throw new BusinessException("Not Yet implemented");
+	}
+
+	@Override
+	public void setConnectionProperties(String host, String from,String username, String password) {
+		PROPERTIES.put(String.format(PROPERTY_FORMAT, "host"), host);
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "from"), from);
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "user"), username);
+    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "password"), password);
+	}
 
 }

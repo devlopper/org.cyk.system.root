@@ -7,11 +7,10 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
-import org.cyk.system.root.business.api.party.ApplicationBusiness;
+import org.cyk.system.root.business.api.message.MessageSendingBusiness;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.service.impl.data.Data;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -30,14 +29,18 @@ public class NotificationMailIT extends AbstractBusinessIT {
     @Inject private NotificationBusiness notificationBusiness;
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private MailBusiness mailBusiness;
-    @Inject private ApplicationBusiness applicationBusiness;
     
-    private Installation installation;
     private NotificationTemplate notificationTemplate1,notificationTemplate2;
     
     @Override
     protected void populate() {
-    	installApplication();
+    	
+    }
+    
+    @Override
+    protected void _execute_() {
+        super._execute_();
+        installApplication();
         notificationTemplate1 = new NotificationTemplate();
         notificationTemplate1.setCode("NTC1");
         notificationTemplate1.setName("NTN1");
@@ -56,12 +59,6 @@ public class NotificationMailIT extends AbstractBusinessIT {
             e.printStackTrace();
         }
         genericBusiness.create(notificationTemplate2);
-    }
-    
-    @Override
-    protected void _execute_() {
-        super._execute_();
-        applicationBusiness.install(installation);
         
         NotificationTemplate nt = notificationTemplateDao.read(NotificationTemplate.ALARM_USER_INTERFACE);
         nt.getTitleParametersMap().put("title", "Drogba didier");
@@ -69,6 +66,12 @@ public class NotificationMailIT extends AbstractBusinessIT {
         
         Notification notification = new Notification();
         notificationBusiness.fill(notification,nt);
+        
+        //System.setProperty("socksProxyHost", "10.100.100.151");
+        //System.setProperty("socksProxyPort", "3128");
+        //System.out.println(System.getProperty("http.proxyHost"));
+        //System.out.println(System.getProperty("http.proxyPort"));
+        MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
         mailBusiness.send(notification, "kycdev@gmail.com");
     }
 

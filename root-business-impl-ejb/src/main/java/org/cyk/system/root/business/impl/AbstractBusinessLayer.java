@@ -87,7 +87,9 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     protected void afterInitialisation() {
     	super.afterInitialisation();
     	setConstants();
-    	getReportRepository().build();
+    	AbstractReportRepository reportRepository = getReportRepository();
+    	if(reportRepository!=null)
+    		reportRepository.build();
     }
     
     @Override
@@ -132,7 +134,9 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		reportBusiness.registerConfiguration(configuration);
 	}
 	
-	protected abstract AbstractReportRepository getReportRepository(); 
+	protected AbstractReportRepository getReportRepository(){
+		return null;
+	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Installation buildInstallation() {
