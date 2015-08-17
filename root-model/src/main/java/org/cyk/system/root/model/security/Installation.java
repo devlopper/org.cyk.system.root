@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.person.Person;
 
@@ -21,6 +22,8 @@ public class Installation extends AbstractModelElement implements Serializable {
 	private Credentials managerCredentials;
 	
 	private License license;
+	
+	private SmtpProperties smtpProperties;
 	
 	private Boolean faked = Boolean.FALSE;
 	

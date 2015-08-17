@@ -16,6 +16,7 @@ import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessManager;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.message.SmtpPropertiesBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.ApplicationPropertiesProvider;
@@ -57,6 +58,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
     @Inject private PersonBusiness personBusiness;
 	@Inject private UserAccountBusiness userAccountBusiness;
 	@Inject private LicenseBusiness licenseBusiness;
+	@Inject private SmtpPropertiesBusiness smtpPropertiesBusiness;
 	
 	@Inject
 	public ApplicationBusinessImpl(ApplicationDao dao) {
@@ -75,9 +77,16 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 			installData(installation);
 			installAccounts(installation);
 			installLicense(installation);
+			
+			if(installation.getSmtpProperties()!=null){
+				smtpPropertiesBusiness.create(installation.getSmtpProperties());
+				installation.getApplication().setSmtpProperties(installation.getSmtpProperties());
+			}
+			
 			logInfo("Installation done.");
 		} catch (Exception e) {
 			e.printStackTrace();
+			logThrowable(e);
 			exceptionUtils().exception(Boolean.TRUE,"exception.install",new Object[]{e});
 		}
 	}

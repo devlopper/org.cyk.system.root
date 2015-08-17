@@ -2,12 +2,14 @@ package org.cyk.system.root.business.api.message;
 
 import java.util.Properties;
 
+import org.cyk.system.root.model.message.SmtpProperties;
 
 public interface MailBusiness extends MessageSendingBusiness {
+
+	Properties convert(SmtpProperties smtpProperties);
 	
-	Properties getConnectionProperties();
-	void setConnectionProperties(Properties properties);
+	SmtpProperties getSmtpProperties();
 	
-	void setConnectionProperties(String host,String from,String username,String password);
+	void setProperties(String localhost,Integer port,String username,String password);
 	
 }
