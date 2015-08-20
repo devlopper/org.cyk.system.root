@@ -47,7 +47,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public Collection<PARTY> findByCriteria(SEARCH_CRITERIA criteria) {
     	if(StringUtils.isBlank(criteria.getNameSearchCriteria().getValue()))
-    		return findAll();
+    		return findAll(criteria.getReadConfig());
     	return dao.readByCriteria(criteria);
     }
     

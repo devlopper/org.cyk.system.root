@@ -88,13 +88,22 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<IDENTIFIABLE> findAll() {
-		//FIXME find how to handle pagination
-		//applyDataReadConfigToDao(getDataReadConfig());
 		return dao.readAll();
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Long countAll() {
+		return dao.countAll();
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<IDENTIFIABLE> findAll(DataReadConfig dataReadConfig) {
+		dao.getDataReadConfig().set(dataReadConfig);
+		return dao.readAll();
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countAll(DataReadConfig dataReadConfig) {
 		return dao.countAll();
 	}
 	
