@@ -2,7 +2,6 @@ package org.cyk.system.root.service.impl.integration;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
@@ -18,7 +17,6 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
 	private static final long serialVersionUID = 8691254326402622637L;
 	@Inject private LocalityBusiness localityBusiness;  
 	@Inject private LocalityTypeBusiness localityTypeBusiness;
-	@Inject private CountryBusiness countryBusiness;
 	
 	@Deployment 
 	public static Archive<?> createDeployment() {

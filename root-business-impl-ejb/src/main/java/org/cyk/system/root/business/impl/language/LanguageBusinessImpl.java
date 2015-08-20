@@ -268,7 +268,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
     	logTrace("Path : Build id from field {} is {}",field.getName(),id);
     	return fetch(id, values);
     }
-    
+    /*
     private String buildFromFieldPrefix(Field field,Collection<String> values) throws NoMatchFoundException{
     	StringBuilder labelId =new StringBuilder(FIELD_MARKER_START);
 		for(int i=0;i<field.getName().length();i++){
@@ -278,7 +278,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		}
 		logTrace("Custom : Build id from field {} is {}",field.getName(),labelId);
 		return fetch(labelId.toString(), values);
-    }
+    }*/
     
     private String fetch(String id,Collection<String> values) throws NoMatchFoundException {
     	String result = findText(id);

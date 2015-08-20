@@ -1,15 +1,21 @@
 package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.persistence.api.party.PersonDao;
+import org.cyk.utility.common.Constant;
 
 @Stateless
 public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao,PersonSearchCriteria> implements PersonBusiness,Serializable {
@@ -35,6 +41,22 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		Person p = super.update(person);
 		//repeatedEventBusiness.updateAnniversary(person.getBirthDateAnniversary(),person.getBirthDate(), person.getName());
 		return p;
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public String findNames(Person person,FindNamesOptions options) {
+		List<String> blocks = new ArrayList<>();
+		if(StringUtils.isNotBlank(person.getName()))
+			blocks.add(person.getName());
+		if(StringUtils.isNotBlank(person.getLastName()))
+			blocks.add(person.getLastName());
+		
+		return StringUtils.join(blocks,Constant.CHARACTER_SPACE);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public String findNames(Person person) {
+		return findNames(person, new FindNamesOptions());
 	}
 	
 }
