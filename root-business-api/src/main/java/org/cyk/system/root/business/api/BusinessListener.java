@@ -1,18 +1,14 @@
 package org.cyk.system.root.business.api;
 
 import java.util.Collection;
-import java.util.Map;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public interface BusinessListener {
 
-	<T extends AbstractIdentifiable> Collection<T> find(Class<T> dataClass,Integer first, Integer pageSize,String sortField, Boolean ascendingOrder,Map<String, Object> filters);
+	<T extends AbstractIdentifiable> Collection<T> find(Class<T> dataClass,DataReadConfiguration configuration);
 	
-	<T extends AbstractIdentifiable> Long count(Class<T> dataClass,Map<String, Object> filters);
-	
-	<T extends AbstractIdentifiable> Collection<T> find(Class<T> dataClass,Integer first, Integer pageSize,String sortField, Boolean ascendingOrder,String filter);
-	
-	<T extends AbstractIdentifiable> Long count(Class<T> dataClass,String filter);
+	<T extends AbstractIdentifiable> Long count(Class<T> dataClass, DataReadConfiguration configuration);
 	
 }

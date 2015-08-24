@@ -33,7 +33,7 @@ import org.cyk.system.root.model.search.AbstractPeriodSearchCriteria;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
-import org.cyk.utility.common.computation.DataReadConfig;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.generator.RandomDataProvider;
@@ -55,7 +55,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	protected static final String ORDER_BY_FORMAT = "ORDER BY %s";
 	
 	private QueryWrapper<?> __queryWrapper__;
-	@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
+	@Getter private DataReadConfiguration dataReadConfig = new DataReadConfiguration();
 	
 	@PersistenceContext @Getter
 	protected EntityManager entityManager;

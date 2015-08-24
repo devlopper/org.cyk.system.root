@@ -12,7 +12,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
-import org.cyk.utility.common.computation.DataReadConfig;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -97,13 +97,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Collection<IDENTIFIABLE> findAll(DataReadConfig dataReadConfig) {
+	public Collection<IDENTIFIABLE> findAll(DataReadConfiguration dataReadConfig) {
 		dao.getDataReadConfig().set(dataReadConfig);
 		return dao.readAll();
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Long countAll(DataReadConfig dataReadConfig) {
+	public Long countAll(DataReadConfiguration dataReadConfig) {
 		return dao.countAll();
 	}
 	
@@ -159,7 +159,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return dao.countByNotClass(aClass);
 	}
 
-	protected void applyDataReadConfigToDao(DataReadConfig dataReadConfig){
+	protected void applyDataReadConfigToDao(DataReadConfiguration dataReadConfig){
 		dao.getDataReadConfig().setFirstResultIndex(dataReadConfig.getFirstResultIndex());
 		dao.getDataReadConfig().setMaximumResultCount(dataReadConfig.getMaximumResultCount());
 	}

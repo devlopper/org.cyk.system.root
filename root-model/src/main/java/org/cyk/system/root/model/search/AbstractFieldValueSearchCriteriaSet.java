@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.utility.common.computation.DataReadConfig;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public abstract class AbstractFieldValueSearchCriteriaSet extends AbstractModelE
 
 	private static final long serialVersionUID = 2055293289197179106L;
 
-	protected DataReadConfig readConfig = new DataReadConfig();
+	protected DataReadConfiguration readConfig = new DataReadConfiguration();
 	protected Collection<AbstractFieldValueSearchCriteria<?>> criterias = new ArrayList<>();
 	
 	protected void setStringSearchCriteria(StringSearchCriteria stringSearchCriteria,String value){

@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.RootRandomDataProvider;
-import org.cyk.utility.common.computation.DataReadConfig;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -30,15 +30,15 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	for(int i=0;i<20;i++)
     		create(RootRandomDataProvider.getInstance().person());
     	
-    	DataReadConfig dataReadConfig = new DataReadConfig();
+    	DataReadConfiguration dataReadConfig = new DataReadConfiguration();
     	dataReadConfig.setMaximumResultCount(3l);
     	assertEquals("Count", 3, personBusiness.findAll(dataReadConfig).size());
     	
-    	dataReadConfig = new DataReadConfig();
+    	dataReadConfig = new DataReadConfiguration();
     	dataReadConfig.setMaximumResultCount(4l);
     	assertEquals("Count", 4, personBusiness.findAll(dataReadConfig).size());
     	
-    	dataReadConfig = new DataReadConfig();
+    	dataReadConfig = new DataReadConfiguration();
     	assertEquals("Count", 21, personBusiness.findAll(dataReadConfig).size());
     }
 

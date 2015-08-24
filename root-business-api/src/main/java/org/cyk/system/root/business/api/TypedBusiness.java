@@ -3,7 +3,7 @@ package org.cyk.system.root.business.api;
 import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.utility.common.computation.DataReadConfig;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extends IdentifiableBusinessService<IDENTIFIABLE, Long> {
 
@@ -17,8 +17,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     Collection<IDENTIFIABLE> findAll(); 
     Long countAll();
     
-    Collection<IDENTIFIABLE> findAll(DataReadConfig dataReadConfig); 
-    Long countAll(DataReadConfig dataReadConfig);
+    Collection<IDENTIFIABLE> findAll(DataReadConfiguration configuration); 
+    Long countAll(DataReadConfiguration configuration);
     
     Collection<IDENTIFIABLE> findAllExclude(Collection<IDENTIFIABLE> identifiables); 
     

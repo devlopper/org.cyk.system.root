@@ -12,7 +12,7 @@ import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.utility.common.computation.DataReadConfig;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
 import lombok.Getter;
 
@@ -22,7 +22,7 @@ public class QueryWrapper<T> implements Serializable {
 	private static final long serialVersionUID = 5699283157667217854L;
 
 	private Query query;  
-	private DataReadConfig readConfig;
+	private DataReadConfiguration readConfig;
 	private Collection<Class<? extends Throwable>> ignoreThrowables = new HashSet<>();
 	private T resultOneNullValue;
 	private Collection<T> resultManyNullValue=new ArrayList<T>();
@@ -32,7 +32,7 @@ public class QueryWrapper<T> implements Serializable {
 	 */
 	private Boolean returnPredefinedNullValue,returnPredefinedNullValueIfOneParameterCollectionIsEmpty=Boolean.TRUE;
 	
-	public QueryWrapper(Query query,DataReadConfig readConfig) {
+	public QueryWrapper(Query query,DataReadConfiguration readConfig) {
 		super();
 		this.query = query;
 		this.readConfig = readConfig;
@@ -140,7 +140,7 @@ public class QueryWrapper<T> implements Serializable {
 		query.executeUpdate();
 	}
 	
-	public static void applyReadConfig(Query query,DataReadConfig readConfig){
+	public static void applyReadConfig(Query query,DataReadConfiguration readConfig){
 	    if(readConfig.getFirstResultIndex()!=null && readConfig.getFirstResultIndex()>=0)
 	        query.setFirstResult(readConfig.getFirstResultIndex().intValue());
 	    if(readConfig.getMaximumResultCount()!=null && readConfig.getMaximumResultCount()>0)

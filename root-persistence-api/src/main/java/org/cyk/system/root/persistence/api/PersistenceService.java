@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.utility.common.computation.ArithmeticOperator;
-import org.cyk.utility.common.computation.DataReadConfig;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 
@@ -43,7 +43,7 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	
 	/* query */			String getQueryString();
 	
-	                    DataReadConfig getDataReadConfig();
+	                    DataReadConfiguration getDataReadConfig();
 	                    
 	                    void clear();
 	                    
