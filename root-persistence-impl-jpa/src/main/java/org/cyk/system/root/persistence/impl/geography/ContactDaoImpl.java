@@ -19,8 +19,8 @@ public class ContactDaoImpl extends AbstractTypedDao<Contact> implements Contact
     @Override
     protected void namedQueriesInitialisation() {
         super.namedQueriesInitialisation();
-        registerNamedQuery(readByCollections, _select().whereIdentifierIn(Contact.FIELD_COLLECTION));
-        registerNamedQuery(readByCollectionsByClasses, _select().whereIdentifierIn(Contact.FIELD_COLLECTION).and().whereClassIn());
+        registerNamedQuery(readByCollections, _select().whereIdentifierIn(Contact.FIELD_COLLECTION).orderBy("identifier", Boolean.TRUE));
+        registerNamedQuery(readByCollectionsByClasses, _select().whereIdentifierIn(Contact.FIELD_COLLECTION).and().whereClassIn().orderBy("identifier", Boolean.TRUE));
     }
     
     @Override

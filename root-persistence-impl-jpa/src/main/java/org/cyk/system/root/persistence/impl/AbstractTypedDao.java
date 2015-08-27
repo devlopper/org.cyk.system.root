@@ -47,7 +47,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		registerNamedQuery(readAllExclude, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.identifier NOT IN :identifiers");
 		
 		if(Boolean.TRUE.equals(readByClassEnabled())){
-			registerNamedQuery(readByClasses, _select().whereClassIn());
+			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy("identifier",Boolean.TRUE));
 			registerNamedQuery(readByNotClasses, _select().whereClassNotIn());
 		}
 	}

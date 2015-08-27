@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.geography.Contact;
@@ -17,6 +19,7 @@ import org.cyk.system.root.model.geography.PostalBox;
 import org.cyk.system.root.persistence.api.geography.ContactCollectionDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 
+@Stateless
 public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<ContactCollection, ContactCollectionDao> implements ContactCollectionBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -77,24 +80,31 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
     private void update(Collection<? extends Contact> databaseContacts,Collection<? extends Contact> inputContacts,ContactCollection collection){
         if(inputContacts==null)
             return;
+        logDebug("Contacts inputed {}",StringUtils.join(inputContacts,","));
         for(Contact inputContact : inputContacts){
         	inputContact.setCollection(collection);
         	if(inputContact.getIdentifier()==null){
         		contactDao.create(inputContact);
+        		logDebug("Contact inputed created {}",inputContact);
         	}else{
         		contactDao.update(inputContact);
+        		logDebug("Contact inputed updated {}",inputContact);
         	}
         }
         
         Collection<Contact> deletes = new ArrayList<>();
         
         for(Contact databaseContact : databaseContacts){
-        	if(!inputContacts.contains(databaseContact))
-        		deletes.add(databaseContact);	
+        	if(!inputContacts.contains(databaseContact)){
+        		deletes.add(databaseContact);
+        		logDebug("Database contact will be deleted {}",databaseContact);
+        	}
         }
         
-        for(Contact contact : deletes)
+        for(Contact contact : deletes){
         	contactDao.delete(contact);
+        	logDebug("Contact deleted {}",contact);
+        }
         
     }
     
