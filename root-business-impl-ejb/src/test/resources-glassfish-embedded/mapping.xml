@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="1.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemalocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<entity name="PersonTestEntity"
+		class="org.cyk.system.root.service.impl.data.PersonTestEntity" access="FIELD">
+		<attributes>
+			<id name="identifier">
+				<generated-value strategy="TABLE" generator="EMP_SEQ" />
+				<table-generator name="EMP_SEQ" table="SEQUENCE_TABLE"
+					pk-column-name="SEQ_NAME" value-column-name="SEQ_COUNT"
+					pk-column-value="EMP_SEQ" />
+			</id>
+		</attributes>
+	</entity>
+
+</entity-mappings>

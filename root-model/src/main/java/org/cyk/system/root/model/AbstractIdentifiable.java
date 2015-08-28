@@ -1,10 +1,18 @@
 package org.cyk.system.root.model;
 
 import java.io.Serializable;
+import java.util.Map.Entry;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
+import javax.persistence.PostRemove;
+import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 
 import lombok.Getter;
@@ -21,8 +29,10 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private static final long serialVersionUID = 1L;
 	
 	@Getter @Setter
-	@Id @GeneratedValue
+	@Id @GeneratedValue // Generation is customizable using mapping file
 	protected Long identifier;
+	
+	//private Long index;
 	
 	//TODO any object can have its description or more extended by a collection of additional (external) informations 
 	
@@ -60,6 +70,73 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public String getUiString() {
 		return "?? NO UI STRING SPECIFIED ??";
 	}
+	
+	/**/
+	
+	@PrePersist
+	private void onPrePersist() {
+		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
+			if(entry.getKey().equals(getClass())){
+				entry.getValue().onPrePersist(this);
+			}
+		}
+	}
+
+	@PostPersist
+	private void onPostPersist() {
+		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
+			if(entry.getKey().equals(getClass())){
+				entry.getValue().onPrePersist(this);
+			}
+		}
+	}
+
+	@PostLoad
+	private void onPostLoad() {
+		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
+			if(entry.getKey().equals(getClass())){
+				entry.getValue().onPrePersist(this);
+			}
+		}
+	}
+
+	@PreUpdate
+	private void onPreUpdate() {
+		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
+			if(entry.getKey().equals(getClass())){
+				entry.getValue().onPrePersist(this);
+			}
+		}
+	}
+
+	@PostUpdate
+	private void onPostUpdate() {
+		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
+			if(entry.getKey().equals(getClass())){
+				entry.getValue().onPrePersist(this);
+			}
+		}
+	}
+
+	@PreRemove
+	private void onPreRemove() {
+		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
+			if(entry.getKey().equals(getClass())){
+				entry.getValue().onPrePersist(this);
+			}
+		}
+	}
+
+	@PostRemove
+	private void onPostRemove() {
+		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
+			if(entry.getKey().equals(getClass())){
+				entry.getValue().onPrePersist(this);
+			}
+		}
+	}
+	
+	/**/
 	
 	public static final String FIELD_IDENTIFIER = "identifier";
  

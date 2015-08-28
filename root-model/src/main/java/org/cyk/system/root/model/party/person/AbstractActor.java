@@ -10,8 +10,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
-@Getter @Setter @MappedSuperclass
+@Getter @Setter @MappedSuperclass @ModelBean(crudStrategy=CrudStrategy.BUSINESS)
 public abstract class AbstractActor extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = 2742833783679362737L;
