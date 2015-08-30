@@ -19,6 +19,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*lombok*/
 
@@ -77,6 +79,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private void onPrePersist() {
 		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
+				getLogger().trace("Pre persist called for {}",this);
 				entry.getValue().onPrePersist(this);
 			}
 		}
@@ -86,6 +89,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private void onPostPersist() {
 		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
+				getLogger().trace("Post persist called for {}",this);
 				entry.getValue().onPrePersist(this);
 			}
 		}
@@ -139,5 +143,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	/**/
 	
 	public static final String FIELD_IDENTIFIER = "identifier";
+	
+	protected Logger getLogger(){
+		return LoggerFactory.getLogger(getClass());
+	}
  
 }

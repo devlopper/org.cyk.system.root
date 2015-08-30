@@ -227,7 +227,9 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 			logError("No value generator found for {} , input class={} , output class={}",identifier,inputClass,outputClass);
 			return null;
 		}
-		return valueGenerator.generate(input);
+		OUTPUT output = valueGenerator.generate(input);
+		logDebug("Generator id={} input={} output={}", identifier,input,output);
+		return output;
 	}
 	
 	@Override
