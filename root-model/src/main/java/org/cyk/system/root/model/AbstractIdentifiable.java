@@ -90,7 +90,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
 				getLogger().trace("Post persist called for {}",this);
-				entry.getValue().onPrePersist(this);
+				entry.getValue().onPostPersist(this);
 			}
 		}
 	}
@@ -99,7 +99,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private void onPostLoad() {
 		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
-				entry.getValue().onPrePersist(this);
+				entry.getValue().onPostLoad(this);
 			}
 		}
 	}
@@ -108,7 +108,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private void onPreUpdate() {
 		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
-				entry.getValue().onPrePersist(this);
+				entry.getValue().onPreUpdate(this);
 			}
 		}
 	}
@@ -117,7 +117,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private void onPostUpdate() {
 		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
-				entry.getValue().onPrePersist(this);
+				entry.getValue().onPostUpdate(this);
 			}
 		}
 	}
@@ -126,7 +126,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private void onPreRemove() {
 		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
-				entry.getValue().onPrePersist(this);
+				entry.getValue().onPreRemove(this);
 			}
 		}
 	}
@@ -135,7 +135,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private void onPostRemove() {
 		for(Entry<Class<? extends AbstractIdentifiable>, AbstractIdentifiableLifeCyleEventListener> entry : AbstractIdentifiableLifeCyleEventListener.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
-				entry.getValue().onPrePersist(this);
+				entry.getValue().onPostRemove(this);
 			}
 		}
 	}

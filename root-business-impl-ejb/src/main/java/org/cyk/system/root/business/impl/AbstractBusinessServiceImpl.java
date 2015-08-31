@@ -26,5 +26,8 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		return timeBusiness.findUniversalTimeCoordinated();
 	}
 
+	protected String generateStringValue(String generatorIdentifier,Object input){
+		return RootBusinessLayer.getInstance().getApplicationBusiness().generateStringValue(generatorIdentifier, input);
+	}
 	
 }

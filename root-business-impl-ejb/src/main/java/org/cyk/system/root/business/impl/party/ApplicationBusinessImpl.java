@@ -229,6 +229,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		}
 		OUTPUT output = valueGenerator.generate(input);
 		logDebug("Generator id={} input={} output={}", identifier,input,output);
+		//logStackTraceAsString("org.cyk.");
 		return output;
 	}
 	
