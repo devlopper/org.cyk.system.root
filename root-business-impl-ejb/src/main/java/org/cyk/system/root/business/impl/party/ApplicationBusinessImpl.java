@@ -233,10 +233,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		return output;
 	}
 	
-	@Override
-	public String generateStringValue(String identifier, Object input) {
-		return generateValue(identifier, Object.class, String.class, input);
-	}
-     
+	
+
 }
  

@@ -12,6 +12,8 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +24,8 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.event.EventTypeBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
-import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.TagBusiness;
+import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
@@ -51,6 +53,7 @@ import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Tag;
 import org.cyk.system.root.model.file.report.AbstractReport;
+import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
@@ -72,8 +75,6 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
-
-import lombok.Getter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER)
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -119,8 +120,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private UserAccountBusiness userAccountBusiness;
     @Inject private TimeDivisionTypeBusiness timeDivisionTypeBusiness;
     @Inject private EventTypeBusiness eventTypeBusiness;
+    @Inject @Getter private StringGeneratorBusiness stringGeneratorBusiness;
     
-    @Inject @Getter private FileBusiness fileBusiness;
+    
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
     //@Inject private EventParticipationDao eventParticipationDao;
@@ -326,6 +328,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
         beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);
         beansMap.put((Class)UserAccount.class, (TypedBusiness)userAccountBusiness);
+        beansMap.put((Class)StringGenerator.class, (TypedBusiness)stringGeneratorBusiness);
     }
     
     @Override
@@ -417,4 +420,5 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     public Collection<RootBusinessLayerListener> getRootBusinessLayerListeners() {
 		return ROOT_BUSINESS_LAYER_LISTENERS;
 	}
+    
 }

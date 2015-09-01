@@ -13,6 +13,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import lombok.Getter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
@@ -21,6 +23,7 @@ import org.cyk.system.root.business.api.BusinessManager;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.datasource.DataSource;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.security.PermissionBusiness;
@@ -32,8 +35,11 @@ import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
+import org.cyk.system.root.model.generator.StringGenerator;
+import org.cyk.system.root.model.generator.StringValueGeneratorConfiguration;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
@@ -48,8 +54,6 @@ import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.cdi.AbstractLayer;
-
-import lombok.Getter;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -71,6 +75,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     @Inject protected JasperReportBusinessImpl reportBusiness;
     @Inject protected PermissionBusiness permissionBusiness;
     @Inject protected RoleSecuredViewBusiness roleSecuredViewBusiness;
+    @Inject @Getter protected FileBusiness fileBusiness;
     
     protected ValidatorMap validatorMap = ValidatorMap.getInstance();
     @Getter protected Collection<BusinessLayerListener> businessLayerListeners = new ArrayList<>();
@@ -272,5 +277,31 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 			e.printStackTrace();
 			return null;
 		}
+    }
+    
+    protected StringGenerator stringGenerator(String leftPattern,Long leftLenght,String rightPattern,Long rightLenght,Long lenght){
+    	StringGenerator stringGenerator = new StringGenerator();
+    	stringGenerator.setConfiguration(new StringValueGeneratorConfiguration());
+    	stringGenerator.getConfiguration().getLeftPadding().setPattern(leftPattern);
+    	stringGenerator.getConfiguration().getLeftPadding().setLenght(leftLenght);
+    	
+    	stringGenerator.getConfiguration().getRightPadding().setPattern(rightPattern);
+    	stringGenerator.getConfiguration().getRightPadding().setLenght(rightLenght);
+    	
+    	stringGenerator.getConfiguration().setLenght(lenght);
+    	
+    	return stringGenerator;
+    }
+    
+    protected StringGenerator stringGenerator(String script,String name){
+    	StringGenerator stringGenerator = new StringGenerator();
+    	stringGenerator.setScript(script(script, script));
+    	return stringGenerator;
+    }
+    
+    protected Script script(String text,String name){
+    	Script script = new Script();
+    	script.setFile(fileBusiness.process(text.getBytes(), name+".txt"));
+    	return script;
     }
 }

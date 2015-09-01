@@ -9,6 +9,8 @@ import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.utility.common.cdi.AbstractBean;
 
 public abstract class AbstractBusinessServiceImpl extends AbstractBean implements BusinessService, Serializable {
@@ -27,7 +29,11 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 	}
 
 	protected String generateStringValue(String generatorIdentifier,Object input){
-		return RootBusinessLayer.getInstance().getApplicationBusiness().generateStringValue(generatorIdentifier, input);
+		return RootBusinessLayer.getInstance().getStringGeneratorBusiness().generate(generatorIdentifier, input);
+	}
+	
+	protected String generateIdentifier(AbstractIdentifiable identifiable,String runtimeGeneratorIdentifier,StringGenerator databaseGenerator){
+		return RootBusinessLayer.getInstance().getStringGeneratorBusiness().generateIdentifier(identifiable, runtimeGeneratorIdentifier, databaseGenerator);
 	}
 	
 }

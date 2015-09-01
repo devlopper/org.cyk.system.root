@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
@@ -20,7 +19,7 @@ public class Script extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 129506142716551683L;
 	
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne
 	private File file;
 	
 	private Set<String> variables = new HashSet<String>();
