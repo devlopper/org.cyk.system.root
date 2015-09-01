@@ -2,6 +2,9 @@ package org.cyk.system.root.persistence.impl;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.cdi.AbstractBean;
@@ -59,7 +62,7 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	public static final String CRITERIA_DATE_BETWEEN_WHERE_FORMAT = "WHERE %1$s BETWEEN :fromDate AND :toDate ";
 	public static final String CRITERIA_DATE_ORDER_FORMAT = " ORDER BY %1$s %2$s ";
 	
-	private String rootEntityVariableName = VAR;
+	@Getter @Setter private String rootEntityVariableName = VAR;
 	private StringBuilder __value__;
 	private String from;
 	private Boolean where;
@@ -86,6 +89,11 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	
 	public QueryStringBuilder from(String from){
 		this.from = from;
+		return this;
+	}
+	
+	public QueryStringBuilder selectString(String string){
+		__value__ = new StringBuilder(String.format("SELECT %s FROM %s %s", string,from,rootEntityVariableName));
 		return this;
 	}
 	

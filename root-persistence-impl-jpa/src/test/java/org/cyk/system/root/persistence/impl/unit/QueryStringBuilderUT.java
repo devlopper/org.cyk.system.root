@@ -61,6 +61,8 @@ public class QueryStringBuilderUT extends AbstractUnitTest {
 				.and("sale.done","saleDone",ArithmeticOperator.EQ)
 				.and("remainingNumberOfGoods", "minimumRemainingGoods", ArithmeticOperator.GTE)
 				.and().whereString("ABS(r.tangibleProductStockMovement.quantity) >= :minimumQuantity").orderBy("sale.date", Boolean.TRUE));
+	    
+	   // queryStringEquals("select sum(r.f1) from table r",builder().from("table").selectString(builder.a));
 	}
 	
 	private QueryStringBuilder builder(String root){

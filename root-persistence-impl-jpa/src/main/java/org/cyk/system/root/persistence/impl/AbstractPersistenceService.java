@@ -10,6 +10,7 @@ import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_SUM;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,6 +25,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import lombok.Getter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -31,6 +34,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractPeriodSearchCriteria;
 import org.cyk.system.root.persistence.api.PersistenceService;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -39,8 +43,6 @@ import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import lombok.Getter;
 
 public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements Serializable,PersistenceService<IDENTIFIABLE, Long> {
 
@@ -271,6 +273,21 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	protected String entityName(){
 		return clazz.getSimpleName();
 	}   
+	
+	protected String attribute(String name){
+		return queryStringBuilder.getRootEntityVariableName()+Constant.CHARACTER_DOT+name;
+	}
+	
+	protected String sumAttributes(String...names){
+		List<String> r = new ArrayList<>();
+		for(String name : names)
+			r.add("SUM("+attribute(name)+")");
+		return StringUtils.join(r,Constant.CHARACTER_COMA);
+	}
+	
+	protected QueryStringBuilder _selectString(String string){
+		return queryStringBuilder.init().from(clazz).selectString(string);
+	} 
 	
 	protected QueryStringBuilder _select(String variableName){
 		return queryStringBuilder.init().from(clazz).select();

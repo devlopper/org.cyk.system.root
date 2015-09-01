@@ -60,6 +60,7 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 			logError("String value configuration is null");
 			return null;
 		}
+		
 		String value = getPaddingString(configuration.getLeftPadding())+input+getPaddingString(configuration.getRightPadding());
 		if(configuration.getLenght()==null)
 			return value;
@@ -67,7 +68,7 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 	}
     
 	private String getPaddingString(StringValueGeneratorPadding padding){
-		if(padding.getLenght()==null)
+		if(padding==null || padding.getLenght()==null)
 			return Constant.EMPTY_STRING;
 		return StringUtils.repeat(padding.getPattern(), padding.getLenght().intValue());
 	}
