@@ -7,6 +7,7 @@ import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_SE
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COUNT;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_READ;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_SUM;
+import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COMPUTE;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -73,9 +74,11 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	protected void beforeInitialisation() {
 		super.beforeInitialisation();
 		Collection<Field> namedQueriesFields = commonUtils.getAllFields(getClass());
-		//Named queries name initialisation
+		//Named queries name initialization
 		for(Field field : namedQueriesFields)
-			if(field.getName().startsWith(KW_NQ_READ) || field.getName().startsWith(KW_NQ_COUNT) || field.getName().startsWith(KW_NQ_SUM))
+			//TODO use an array to hold those values
+			if(field.getName().startsWith(KW_NQ_READ) || field.getName().startsWith(KW_NQ_COUNT) 
+					|| field.getName().startsWith(KW_NQ_SUM) || field.getName().startsWith(KW_NQ_COMPUTE))
 				try {
 					FieldUtils.writeField(field, this, addPrefix(field.getName()), true);
 				} catch (IllegalAccessException e) {
@@ -216,6 +219,9 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	@SuppressWarnings("unchecked")
 	protected <RESULT_CLASS> QueryWrapper<RESULT_CLASS> query(String value,QueryType type,Class<RESULT_CLASS> aResultClass){
+		if(StringUtils.isBlank(value)){
+			throw new IllegalArgumentException("Value cannot be blank <<"+value+">>");
+		}
 		switch(type){
 		case JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createQuery(value, aResultClass),getDataReadConfig());break;
 		case NAMED_JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createNamedQuery(value, aResultClass),getDataReadConfig());break;
@@ -275,7 +281,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	}   
 	
 	protected String attribute(String name){
-		return queryStringBuilder.getRootEntityVariableName()+Constant.CHARACTER_DOT+name;
+		return commonUtils.attributePath(queryStringBuilder.getRootEntityVariableName(), name);
 	}
 	
 	protected String sumAttributes(String...names){

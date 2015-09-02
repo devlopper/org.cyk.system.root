@@ -42,6 +42,7 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	public static final String KW_NQ_READ = "read";
 	public static final String KW_NQ_COUNT = "count";
 	public static final String KW_NQ_SUM = "sum";
+	public static final String KW_NQ_COMPUTE = "compute";
 	
 	public static final String VAR = "r";
 	public static final String VAR_SUBQUERY = "sr";

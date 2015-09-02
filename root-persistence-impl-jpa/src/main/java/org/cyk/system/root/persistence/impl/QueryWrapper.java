@@ -12,12 +12,13 @@ import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
 import lombok.Getter;
 
 @Getter
-public class QueryWrapper<T> implements Serializable {
+public class QueryWrapper<T> extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 5699283157667217854L;
 
@@ -43,7 +44,7 @@ public class QueryWrapper<T> implements Serializable {
 			if(value instanceof Collection<?> && ((Collection<?>)value).isEmpty())
 				returnPredefinedNullValue = Boolean.TRUE;
 		}
-		
+		logTrace("Setting query parameter {} to {}", name,value);
 		if(value instanceof Date)
 		    query.setParameter(name, (Date)value,TemporalType.TIMESTAMP);
 		else
