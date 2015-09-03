@@ -23,6 +23,13 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 		this.value = value;
 	}
 	
+	public AbstractFieldValueSearchCriteria(AbstractFieldValueSearchCriteria<VALUE_TYPE> criteria) {
+		super();
+		this.value = criteria.value;
+		this.nullValue = criteria.nullValue;
+		this.ascendingOrdered = criteria.ascendingOrdered;
+	}
+	
 	@Override
 	public String toString() {
 		Object o = getPreparedValue();

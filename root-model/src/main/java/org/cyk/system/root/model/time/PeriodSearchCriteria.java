@@ -25,6 +25,11 @@ public class PeriodSearchCriteria extends AbstractFieldValueSearchCriteriaSet im
 		this.toDateSearchCriteria = new DateSearchCriteria(toDate);
 	}
 	
+	public PeriodSearchCriteria(PeriodSearchCriteria criteria) {
+		this.fromDateSearchCriteria = new DateSearchCriteria(criteria.fromDateSearchCriteria);
+		this.toDateSearchCriteria = new DateSearchCriteria(criteria.toDateSearchCriteria);
+	}
+	
 	public Period getPeriod(){
 		if(fromDateSearchCriteria.getPreparedValue()==null)
 			if(toDateSearchCriteria.getPreparedValue()==null)

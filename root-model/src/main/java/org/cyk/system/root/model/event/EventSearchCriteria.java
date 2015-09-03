@@ -20,6 +20,10 @@ public class EventSearchCriteria extends AbstractFieldValueSearchCriteriaSet imp
 		this(null,null);
 	}
 	
+	public EventSearchCriteria(EventSearchCriteria criteria){
+		this.periodSearchCriteria = new PeriodSearchCriteria(criteria.periodSearchCriteria);
+	}
+	
 	public EventSearchCriteria(Date fromDate,Date toDate){
 		periodSearchCriteria = new PeriodSearchCriteria(fromDate,toDate);
 	}

@@ -25,6 +25,11 @@ public abstract class AbstractFieldValueSearchCriteriaSet extends AbstractModelE
 		criterias.add(stringSearchCriteria);
 	}
 	
+	public AbstractFieldValueSearchCriteriaSet(AbstractFieldValueSearchCriteriaSet criteriaSet){
+		readConfig = new DataReadConfiguration(criteriaSet.readConfig);
+		criterias.addAll(criteriaSet.criterias);
+	}
+	
 	@Override
 	public String getUiString() {
 		return toString();

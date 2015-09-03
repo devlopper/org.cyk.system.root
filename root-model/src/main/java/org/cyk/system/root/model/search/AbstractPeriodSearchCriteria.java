@@ -25,5 +25,10 @@ public abstract class AbstractPeriodSearchCriteria extends AbstractFieldValueSea
 		this.toDateSearchCriteria = new DateSearchCriteria(toDate);
 		this.toDateSearchCriteria.setNullValue(DateSearchCriteria.DATE_MOST_FUTURE);
 	}
+	
+	public AbstractPeriodSearchCriteria(AbstractPeriodSearchCriteria periodSearchCriteria){
+		fromDateSearchCriteria = new DateSearchCriteria(periodSearchCriteria.fromDateSearchCriteria);
+		toDateSearchCriteria = new DateSearchCriteria(periodSearchCriteria.toDateSearchCriteria);
+	}
 		
 }

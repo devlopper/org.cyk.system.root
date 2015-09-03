@@ -36,6 +36,11 @@ public class DateSearchCriteria extends AbstractFieldValueSearchCriteria<Date> i
 		super(value);
 		//this.locationType = locationType;
 	}
+	
+	public DateSearchCriteria(DateSearchCriteria criteria) {
+		super(criteria);
+	}
+	
 	/*
 	@Override
 	public String getPreparedValue() {

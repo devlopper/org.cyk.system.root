@@ -20,4 +20,8 @@ public class DefaultSearchCriteria extends AbstractPeriodSearchCriteria implemen
 		super(fromDate,toDate);
 	}
 	
+	public DefaultSearchCriteria(DefaultSearchCriteria criteria) {
+		super(criteria);
+		identifierStringSearchCriteria = new StringSearchCriteria(criteria.identifierStringSearchCriteria);
+	}
 }

@@ -20,6 +20,11 @@ public class StringSearchCriteria extends AbstractFieldValueSearchCriteria<Strin
 		this.locationType = locationType;
 	}
 	
+	public StringSearchCriteria(StringSearchCriteria criteria) {
+		super(criteria);
+		this.locationType = criteria.locationType;
+	}
+	
 	@Override
 	public String getPreparedValue() {
 		return value==null?nullValue:value;
