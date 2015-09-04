@@ -20,8 +20,6 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.validation.Client;
 
 @Getter @Setter //@ModelBean(crudStrategy=CrudStrategy.ENUMERATION)
@@ -42,8 +40,6 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	@NotNull(groups={org.cyk.utility.common.validation.System.class})
 	protected Date creationDate;
 	
-	@Input
-	@InputText
 	@NotNull(groups=Client.class)
 	//@Pattern(regexp="(\\w)+",groups=Client.class)
 	@Column(nullable=false)
@@ -55,7 +51,7 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
     protected File image;
 	
-	@OneToOne protected ContactCollection contactCollection = new ContactCollection();
+	@OneToOne protected ContactCollection contactCollection;// = new ContactCollection();
 	
 	public Party(String name) {
 		super();

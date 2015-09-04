@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import org.apache.commons.io.FileUtils;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.impl.AbstractFieldSorter.FieldSorter;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.file.report.Column;
@@ -89,7 +91,7 @@ public abstract class AbstractReportBusinessImpl implements ReportBusiness , Ser
     	filters.add(Input.class);
     	filters.add(ReportColumn.class);
     	Collection<Field> candidateFields = CommonUtils.getInstance().getAllFields(aClass, filters);
-    	Collection<Field> fields = new ArrayList<>();
+    	List<Field> fields = new ArrayList<>();
     	for(Field field : candidateFields){
     		Boolean dontIgnore = Boolean.TRUE;
     		for(ReportBasedOnDynamicBuilderListener listener : parameters.getReportBasedOnDynamicBuilderListeners()){
@@ -102,9 +104,11 @@ public abstract class AbstractReportBusinessImpl implements ReportBusiness , Ser
     			}
     			dontIgnore = Boolean.FALSE.equals(value) && dontIgnore;
     		}
-    		if(Boolean.TRUE.equals(dontIgnore))	
+    		if(Boolean.TRUE.equals(dontIgnore) && !parameters.getColumnNamesToExclude().contains(field.getName()))	
     			fields.add(field);
     	}
+    	
+    	new FieldSorter(fields,aClass).sort();
     	
     	for(Field field : fields){
     		columns.add(new Column(field,languageBusiness.findFieldLabelText(field)) );

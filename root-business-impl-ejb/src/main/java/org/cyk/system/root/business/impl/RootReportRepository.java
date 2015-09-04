@@ -35,13 +35,16 @@ public class RootReportRepository extends AbstractReportRepository implements Se
 			@SuppressWarnings("unchecked")
 			@Override
 			public ReportBasedOnDynamicBuilder<Object> build(ReportBasedOnDynamicBuilderParameters<Object> parameters) {
+				logTrace("Building report based on dynamic builder for Identifier={} IdentifiableClass={}",parameterGenericReportBasedOnDynamicBuilder,parameters.getIdentifiableClass());
 				parameters.setDatas(new ArrayList<Object>());
 				if(parameters.getDatas()==null || parameters.getDatas().isEmpty()){
 					if(parameters.getIdentifiableClass()==null){
-						
+						logError("Identifiable class is null");
 					}else{
+						logTrace("Looping through identifiable configurations. count is {}",ReportBasedOnDynamicBuilderListener.IDENTIFIABLE_CONFIGURATIONS.size());
 						ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> identifiableConfiguration = null;
-						for(ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> ic : ReportBasedOnDynamicBuilderListener.IDENTIFIABLE_CONFIGURATIONS)
+						for(ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object> ic : ReportBasedOnDynamicBuilderListener.IDENTIFIABLE_CONFIGURATIONS){
+							logTrace("Comparing with {} , {}", ic.getReportBasedOnDynamicBuilderIdentifier(),ic.getIdentifiableClass());
 							if(parameterGenericReportBasedOnDynamicBuilder.equals(ic.getReportBasedOnDynamicBuilderIdentifier()) 
 									&& ic.getIdentifiableClass().equals(parameters.getIdentifiableClass())
 									//&& ic.getModelClass().equals(parameters.getModelClass())
@@ -49,15 +52,18 @@ public class RootReportRepository extends AbstractReportRepository implements Se
 								identifiableConfiguration = ic;
 								if(parameters.getModelClass()==null)
 									parameters.setModelClass((Class<Object>) ic.getModelClass());
+								logTrace("Identifiable configuration found. {}",identifiableConfiguration);
 								break;
 							}
+						}
 						Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
 						
-						if(identifiableConfiguration==null || !Boolean.TRUE.equals(identifiableConfiguration.useCustomIdentifiableCollection()))
+						if(identifiableConfiguration==null || !Boolean.TRUE.equals(identifiableConfiguration.useCustomIdentifiableCollection())){
 							identifiables.addAll(genericBusiness.use(parameters.getIdentifiableClass()).find().all());
-						else
+						}else{
 							identifiables.addAll(identifiableConfiguration.identifiables(parameters));	
-							
+						}
+						logTrace("Data count is {}",identifiables.size());
 						for(AbstractIdentifiable identifiable : identifiables){
 				        	Object value = identifiableConfiguration == null ? identifiable:identifiableConfiguration.model(identifiable);
 							parameters.getDatas().add(value);	

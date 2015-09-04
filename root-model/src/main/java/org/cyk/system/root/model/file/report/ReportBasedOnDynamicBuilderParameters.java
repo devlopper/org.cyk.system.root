@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +32,7 @@ public class ReportBasedOnDynamicBuilderParameters<MODEL> implements Serializabl
 	private String fileExtension = "pdf";
 	private Boolean print;
 	private Map<String,String[]> extendedParameterMap = new HashMap<>();
+	private Set<String> columnNamesToExclude = new HashSet<>();
 	private Collection<ReportBasedOnDynamicBuilderListener> reportBasedOnDynamicBuilderListeners = new ArrayList<>();
 	
 	public void addParameter(String name,Object value){
