@@ -56,21 +56,30 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 
 	@Override
 	public String generate(StringValueGeneratorConfiguration configuration, Object input) {
+		logTrace("Generating string. input={}", input);
 		if(configuration==null){
 			logError("String value configuration is null");
 			return null;
 		}
-		
-		String value = getPaddingString(configuration.getLeftPadding())+input+getPaddingString(configuration.getRightPadding());
+		StringBuilder stringBuilder = new StringBuilder(getPaddingString(configuration.getLeftPadding())+input+getPaddingString(configuration.getRightPadding()));
+		logTrace("With padding = {} , {} character(s)", stringBuilder,stringBuilder.length());
 		if(configuration.getLenght()==null)
-			return value;
-		return StringUtils.right(value, configuration.getLenght().intValue());
+			return stringBuilder.toString();
+		String a = StringUtils.right(stringBuilder.toString(), configuration.getLenght().intValue());
+		logTrace("Max lenght = {} , Adjusted lenght = {} , {} character(s)",configuration.getLenght(), a,a.length());
+		String s = StringUtils.defaultString(configuration.getLeftPadding().getPrefix())+StringUtils.defaultString(configuration.getLeftPadding().getSuffix())
+				+a
+				+StringUtils.defaultString(configuration.getRightPadding().getPrefix())+StringUtils.defaultString(configuration.getLeftPadding().getSuffix());
+		logTrace("With prefixes and suffixes = {} , {} character(s)", s,s.length());
+		return s;
 	}
     
 	private String getPaddingString(StringValueGeneratorPadding padding){
 		if(padding==null || padding.getLenght()==null)
 			return Constant.EMPTY_STRING;
-		return StringUtils.repeat(padding.getPattern(), padding.getLenght().intValue());
+		String s = StringUtils.repeat(padding.getPattern(), padding.getLenght().intValue());
+		logTrace("Padding string : {} , {} charater(s)", s,s.length());
+		return s;
 	}
 	
 	public String generateIdentifier(AbstractIdentifiable identifiable,String runtimeGeneratorIdentifier,StringGenerator databaseGenerator){

@@ -279,9 +279,10 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		}
     }
     
-    protected StringGenerator stringGenerator(String leftPattern,Long leftLenght,String rightPattern,Long rightLenght,Long lenght){
+    protected StringGenerator stringGenerator(String leftPrefix,String leftPattern,Long leftLenght,String rightPattern,Long rightLenght,Long lenght){
     	StringGenerator stringGenerator = new StringGenerator();
     	stringGenerator.setConfiguration(new StringValueGeneratorConfiguration());
+    	stringGenerator.getConfiguration().getLeftPadding().setPrefix(leftPrefix);
     	stringGenerator.getConfiguration().getLeftPadding().setPattern(leftPattern);
     	stringGenerator.getConfiguration().getLeftPadding().setLenght(leftLenght);
     	

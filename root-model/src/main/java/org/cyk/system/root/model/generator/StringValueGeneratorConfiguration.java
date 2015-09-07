@@ -21,12 +21,16 @@ public class StringValueGeneratorConfiguration extends AbstractModelElement impl
 	@Embedded @AttributeOverrides(value={
 			@AttributeOverride(name=StringValueGeneratorPadding.FIELD_PATTERN,column=@Column(name=COLUMN_LEFT_PATTERN))
 			,@AttributeOverride(name=StringValueGeneratorPadding.FIELD_LENGHT,column=@Column(name=COLUMN_LEFT_LENGHT))
+			,@AttributeOverride(name=StringValueGeneratorPadding.FIELD_PREFIX,column=@Column(name=COLUMN_LEFT_PREFIX))
+			,@AttributeOverride(name=StringValueGeneratorPadding.FIELD_SUFFIX,column=@Column(name=COLUMN_LEFT_SUFFIX))
 	})
 	private StringValueGeneratorPadding leftPadding = new StringValueGeneratorPadding();
 	
 	@Embedded @AttributeOverrides(value={
 			@AttributeOverride(name=StringValueGeneratorPadding.FIELD_PATTERN,column=@Column(name=COLUMN_RIGHT_PATTERN))
 			,@AttributeOverride(name=StringValueGeneratorPadding.FIELD_LENGHT,column=@Column(name=COLUMN_RIGHT_LENGHT))
+			,@AttributeOverride(name=StringValueGeneratorPadding.FIELD_PREFIX,column=@Column(name=COLUMN_RIGHT_PREFIX))
+			,@AttributeOverride(name=StringValueGeneratorPadding.FIELD_SUFFIX,column=@Column(name=COLUMN_RIGHT_SUFFIX))
 	})
 	private StringValueGeneratorPadding rightPadding = new StringValueGeneratorPadding();
 	
@@ -43,6 +47,11 @@ public class StringValueGeneratorConfiguration extends AbstractModelElement impl
 	
 	public static final String COLUMN_LEFT_PATTERN = "left_"+StringValueGeneratorPadding.FIELD_PATTERN;
 	public static final String COLUMN_LEFT_LENGHT = "left_"+StringValueGeneratorPadding.FIELD_LENGHT;
+	public static final String COLUMN_LEFT_PREFIX = "left_"+StringValueGeneratorPadding.FIELD_PREFIX;
+	public static final String COLUMN_LEFT_SUFFIX = "left_"+StringValueGeneratorPadding.FIELD_SUFFIX;
+	
 	public static final String COLUMN_RIGHT_PATTERN = "right_"+StringValueGeneratorPadding.FIELD_PATTERN;
 	public static final String COLUMN_RIGHT_LENGHT = "right_"+StringValueGeneratorPadding.FIELD_LENGHT;
+	public static final String COLUMN_RIGHT_PREFIX = "right_"+StringValueGeneratorPadding.FIELD_PREFIX;
+	public static final String COLUMN_RIGHT_SUFFIX = "right_"+StringValueGeneratorPadding.FIELD_SUFFIX;
 }
