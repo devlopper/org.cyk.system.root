@@ -83,4 +83,37 @@ public abstract class AbstractReportRepository extends AbstractBean implements S
 	protected String format(BigDecimal value){
 		return RootBusinessLayer.getInstance().getNumberBusiness().format(value);
 	}
+	
+	/**/
+	
+	protected void set(BigDecimal[][] totals,Integer i,Integer j,BigDecimal value){
+		totals[i][j] = value;
+	}
+	protected void setTotal(BigDecimal[][] totals,Integer i,BigDecimal value){
+		set(totals, i, 0, value);
+		set(totals, i, 1, value);
+	}
+	protected void increment(BigDecimal[][] totals,Integer i,Integer j,BigDecimal value){
+		totals[i][j] = totals[i][j].add(value);
+	}
+	protected void incrementTotal(BigDecimal[][] totals,Integer i,BigDecimal value){
+		increment(totals, i, 0, value);
+		increment(totals, i, 1, value);
+	}
+	
+	protected void set(BigDecimal[][] totals,BigDecimal value){
+		for(BigDecimal[] total : totals)
+			for(int i=0;i<total.length;i++)
+				total[i] = value;
+	}
+	
+	protected BigDecimal get(BigDecimal[][] totals,Integer i,Integer j){
+		return totals[i][j];
+	}
+	protected String getTotal(BigDecimal[][] totals,Integer i){
+		return RootBusinessLayer.getInstance().getNumberBusiness().format(get(totals, i,0));
+	}
+	protected String getTotalOfTotals(BigDecimal[][] totals,Integer i){
+		return RootBusinessLayer.getInstance().getNumberBusiness().format(get(totals, i,1));
+	}
 }
