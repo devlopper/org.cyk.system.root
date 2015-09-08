@@ -14,6 +14,8 @@ public class LabelValue extends AbstractModelElement implements Serializable {
 
 	private static final long serialVersionUID = 9095448953171778448L;
 
+	private String labelId; 
+	
 	private String label; 
 	
 	private String value;

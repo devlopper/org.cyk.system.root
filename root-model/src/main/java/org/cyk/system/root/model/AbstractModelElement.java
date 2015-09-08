@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.utility.common.CommonUtils;
 
 /*lombok*/
 
@@ -21,4 +22,8 @@ public abstract class AbstractModelElement implements Serializable{
 	
 	public abstract String getUiString();
  
+	public String getLogMessage(){
+		return CommonUtils.getInstance().getFieldsValues(this, AbstractModelElement.class);
+	}
+	
 }

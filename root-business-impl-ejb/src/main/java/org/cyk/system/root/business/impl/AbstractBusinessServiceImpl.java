@@ -36,4 +36,6 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		return RootBusinessLayer.getInstance().getStringGeneratorBusiness().generateIdentifier(identifiable, runtimeGeneratorIdentifier, databaseGenerator);
 	}
 	
+	/**/
+	
 }

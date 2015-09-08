@@ -54,5 +54,9 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     
                     IDENTIFIABLE findOneRandomly();
                     Collection<IDENTIFIABLE> findManyRandomly(Integer count);
+                    
+                    /**/
+                    
+                    Class<IDENTIFIABLE> getClazz();
 
 }

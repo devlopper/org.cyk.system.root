@@ -1,7 +1,5 @@
 package org.cyk.system.root.service.impl.unit;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.Collection;
 
 import org.cyk.system.root.business.impl.generator.StringGeneratorBusinessImpl;
@@ -45,10 +43,6 @@ public class StringGeneratorBusinessUT extends AbstractUnitTest {
 		padding.setLenght(lenght);
 		padding.setSuffix(suffix);
 		return padding;
-	}
-	
-	private void configuration(){
-		
 	}
 	
 }

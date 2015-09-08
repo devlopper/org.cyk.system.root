@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
@@ -29,6 +30,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	//@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
 	
 	@Inject protected GenericDao genericDao;
+	protected Class<IDENTIFIABLE>  clazz;
 	
 	protected abstract PersistenceService<IDENTIFIABLE, Long> getPersistenceService();
 	/*
@@ -36,6 +38,21 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return getPersistenceService().getDataReadConfig();
 	}
 	*/
+		
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void beforeInitialisation() {
+		clazz = (Class<IDENTIFIABLE>) parameterizedClass();
+		super.beforeInitialisation();
+	}
+	protected Class<?> parameterizedClass(){
+	    return (Class<?>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Class<IDENTIFIABLE> getClazz(){
+		return clazz;
+	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IdentifiableBusinessService<IDENTIFIABLE, Long> find() {
@@ -122,6 +139,20 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	protected void notifyCrudDone(Crud crud,AbstractIdentifiable identifiable){
 		for(BusinessServiceListener listener : BusinessServiceListener.COLLECTION)
 			listener.crudDone(crud, identifiable);
+	}
+	
+	/**/
+	
+	protected void logInstanciate(){
+		logDebug("Instanciate {}",getClazz().getSimpleName());
+	}
+	
+	protected void logInstanceCreated(IDENTIFIABLE identifiable){
+		logDebug("Instance of {} created. {}", identifiable.getClass().getSimpleName(),identifiable.getLogMessage());
+	}
+	 
+	protected void logIdentifiable(String message,IDENTIFIABLE identifiable){
+		logDebug("{} : {}",message,identifiable.getLogMessage());
 	}
 	
 }
