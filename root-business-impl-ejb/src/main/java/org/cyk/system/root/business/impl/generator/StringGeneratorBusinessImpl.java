@@ -56,20 +56,19 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 
 	@Override
 	public String generate(StringValueGeneratorConfiguration configuration, Object input) {
-		logTrace("Generating string. input={}", input);
 		if(configuration==null){
 			logError("String value configuration is null");
 			return null;
 		}
+		logTrace("Generating string. configuration={} , input={}",configuration.getLogMessage(), input);
 		StringBuilder stringBuilder = new StringBuilder(getPaddingString(configuration.getLeftPadding())+input+getPaddingString(configuration.getRightPadding()));
 		logTrace("With padding = {} , {} character(s)", stringBuilder,stringBuilder.length());
 		if(configuration.getLenght()==null)
 			return stringBuilder.toString();
 		String a = StringUtils.right(stringBuilder.toString(), configuration.getLenght().intValue());
 		logTrace("Max lenght = {} , Adjusted lenght = {} , {} character(s)",configuration.getLenght(), a,a.length());
-		String s = StringUtils.defaultString(configuration.getLeftPadding().getPrefix())+StringUtils.defaultString(configuration.getLeftPadding().getSuffix())
-				+a
-				+StringUtils.defaultString(configuration.getRightPadding().getPrefix())+StringUtils.defaultString(configuration.getLeftPadding().getSuffix());
+		String s = prefix(configuration.getLeftPadding())+suffix(configuration.getLeftPadding())
+				+a+prefix(configuration.getRightPadding())+suffix(configuration.getLeftPadding());
 		logTrace("With prefixes and suffixes = {} , {} character(s)", s,s.length());
 		return s;
 	}
@@ -80,6 +79,18 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 		String s = StringUtils.repeat(padding.getPattern(), padding.getLenght().intValue());
 		logTrace("Padding string : {} , {} charater(s)", s,s.length());
 		return s;
+	}
+	
+	private String prefix(StringValueGeneratorPadding padding){
+		if(padding==null)
+			return Constant.EMPTY_STRING;
+		return StringUtils.defaultString(padding.getPrefix());
+	}
+	
+	private String suffix(StringValueGeneratorPadding padding){
+		if(padding==null)
+			return Constant.EMPTY_STRING;
+		return StringUtils.defaultString(padding.getSuffix());
 	}
 	
 	public String generateIdentifier(AbstractIdentifiable identifiable,String runtimeGeneratorIdentifier,StringGenerator databaseGenerator){

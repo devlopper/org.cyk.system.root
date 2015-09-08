@@ -40,6 +40,17 @@ public class StringValueGeneratorConfiguration extends AbstractModelElement impl
 	public String getUiString() {
 		return toString();
 	}
+	
+	@Override
+	public String getLogMessage() {
+		StringBuilder s = new StringBuilder();
+		if(leftPadding!=null)
+			s.append("Left padding = "+leftPadding.getLogMessage());
+		if(rightPadding!=null)
+			s.append(" Right padding = "+rightPadding.getLogMessage());
+		s.append(" lenght="+lenght);
+		return s.toString();
+	}
 
 	public static final String FIELD_LEFT_PADDING = "leftPadding";
 	public static final String FIELD_RIGHT_PADDING = "rightPadding";
