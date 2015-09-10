@@ -41,7 +41,6 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	protected Date creationDate;
 	
 	@NotNull(groups=Client.class)
-	//@Pattern(regexp="(\\w)+",groups=Client.class)
 	@Column(nullable=false)
 	protected String name;
 	 
@@ -50,6 +49,8 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	 */
 	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
     protected File image;
+	
+	@Temporal(TemporalType.DATE) protected Date birthDate;
 	
 	@OneToOne protected ContactCollection contactCollection;// = new ContactCollection();
 	

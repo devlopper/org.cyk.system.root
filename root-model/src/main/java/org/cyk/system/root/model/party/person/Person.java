@@ -1,50 +1,35 @@
 package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.Valid;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.model.event.RepeatedEvent;
-import org.cyk.system.root.model.geography.Locality;
-import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
 @Getter @Setter  @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS)
-public class Person  extends Party  implements Serializable{
+public class Person extends Party implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
 	private String lastName;
-	
-	@Temporal(TemporalType.DATE) private Date birthDate;
-	
-	@Valid @OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;
-	
 	@ManyToOne private Sex sex;
+	@ManyToOne private Country nationality;
 	
-	@ManyToOne private MaritalStatus maritalStatus;
+	/* Extended informations */
 	
-	@ManyToOne private Locality nationality;
-	
-	@OneToOne(cascade=CascadeType.ALL) private PersonCredentials credentials;
-	
-	@OneToOne(cascade=CascadeType.ALL) private RepeatedEvent birthDateAnniversary;
-	
-	//TODO info to add : Job (Profession,Function)
+	@Transient private PersonExtendedInformations extendedInformations;
+	@Transient private JobInformations jobInformations;
+	@Transient private MedicalInformations medicalInformations;
 	
 	public Person(String firstName,String lastName) {
 		super(firstName);
@@ -64,7 +49,5 @@ public class Person  extends Party  implements Serializable{
 	public String getUiString() {
 		return getNames();
 	}
-
-
 
 }

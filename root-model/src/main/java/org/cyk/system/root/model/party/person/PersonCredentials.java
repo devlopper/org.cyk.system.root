@@ -20,7 +20,7 @@ import org.cyk.utility.common.annotation.user.interfaces.InputOneChoice;
 import org.cyk.utility.common.annotation.user.interfaces.InputOneCombo;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
-@Getter @Setter @Entity
+@Getter @Setter @Entity //TODO to be modeled as a document provided by some authority or something like that
 public class PersonCredentials extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = 96367120888825867L;
