@@ -6,6 +6,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
+import org.cyk.system.root.model.geography.ContactCollection;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,8 +16,12 @@ public class JobInformations extends AbstractPersonExtendedInformations implemen
 
 	private static final long serialVersionUID = 4416245866978363658L;
 
+	private String company;
+	
 	@OneToOne(cascade=CascadeType.ALL) private JobFunction function;
 	
 	@OneToOne(cascade=CascadeType.ALL) private JobTitle title;
+	
+	@OneToOne private ContactCollection contactCollection;
 	
 }
