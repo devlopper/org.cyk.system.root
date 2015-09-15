@@ -23,7 +23,7 @@ public abstract class AbstractPartyExtendedInformationsDaoImpl<INFORMATIONS exte
 	
 	@Override
 	public INFORMATIONS readByParty(PARTY party) {
-		return namedQuery(readByParty).ignoreThrowable(NoResultException.class).resultOne();
+		return namedQuery(readByParty).parameter("party", party).ignoreThrowable(NoResultException.class).resultOne();
 	}
 
 }
