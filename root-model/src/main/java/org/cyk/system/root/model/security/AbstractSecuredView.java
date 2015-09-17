@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor @MappedSuperclass @ModelBean(crudStrategy=CrudStrategy.INTERNAL) 
+@Getter @Setter @NoArgsConstructor @MappedSuperclass @ModelBean(crudStrategy=CrudStrategy.BUSINESS) 
 public abstract class AbstractSecuredView<ACCESSOR> extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = 5908328682512231058L;

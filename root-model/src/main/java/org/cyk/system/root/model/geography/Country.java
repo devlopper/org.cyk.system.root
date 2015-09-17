@@ -34,7 +34,12 @@ public class Country extends AbstractIdentifiable implements Serializable{
 	
 	/**/
 	
+	@Override
+	public String getUiString() {
+		return "(+"+phoneNumberCode+") "+locality.getUiString();
+	}
+	
 	public static final String FIELD_LOCALITY = "locality";
-	public static final String FIELD_ORDER_INDEX = "orderIndex";
+	public static final String FIELD_PHONE_NUMBER_CODE = "phoneNumberCode";
 	
 }

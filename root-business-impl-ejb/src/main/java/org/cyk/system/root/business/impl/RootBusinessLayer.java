@@ -38,6 +38,7 @@ import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
+import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.api.time.TimeDivisionTypeBusiness;
@@ -69,6 +70,7 @@ import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
@@ -117,6 +119,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private EventBusiness eventBusiness;
     @Inject private PersonBusiness personBusiness;
     @Inject private RoleBusiness roleBusiness;
+    @Inject private RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject private UserAccountBusiness userAccountBusiness;
     @Inject private TimeDivisionTypeBusiness timeDivisionTypeBusiness;
     @Inject private EventTypeBusiness eventTypeBusiness;
@@ -329,6 +332,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);
         beansMap.put((Class)UserAccount.class, (TypedBusiness)userAccountBusiness);
         beansMap.put((Class)StringGenerator.class, (TypedBusiness)stringGeneratorBusiness);
+        beansMap.put((Class)RoleSecuredView.class, (TypedBusiness)roleSecuredViewBusiness);
     }
     
     @Override
