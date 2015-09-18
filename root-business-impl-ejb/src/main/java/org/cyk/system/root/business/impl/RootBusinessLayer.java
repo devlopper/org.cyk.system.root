@@ -319,6 +319,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createRole(Role.SETTING_MANAGER, "Setting Manager");
         createRole(Role.SECURITY_MANAGER, "Security Manager");
         createRole(Role.USER, "User",SHIRO_PRIVATE_FOLDER);
+        
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })

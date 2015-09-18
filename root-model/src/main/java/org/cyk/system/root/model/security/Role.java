@@ -23,15 +23,6 @@ public class Role extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = 5908328682512231058L;
 
-	public static final String ADMINISTRATOR = "ADMINISTRATOR";
-	public static final String MANAGER = "MANAGER";
-	public static final String SECURITY_MANAGER = "SECURITY_MANAGER";
-	public static final String SETTING_MANAGER = "SETTING_MANAGER";
-	
-	public static final String BUSINESS_ACTOR = "BUSINESS_ACTOR";
-	
-	public static final String USER = "USER";
-	
 	@ManyToMany
     @JoinTable(name="RolePermissions",joinColumns = { @JoinColumn(name = "roleid") } ,inverseJoinColumns={ @JoinColumn(name = "permissionid") })
 	private Set<Permission> permissions = new HashSet<>();
@@ -49,4 +40,15 @@ public class Role extends AbstractEnumeration implements Serializable {
 	public int hashCode() {
 		return StringUtils.isBlank(code)?31:code.hashCode();
 	}
+	
+	/**/
+	
+	public static final String ADMINISTRATOR = "ADMINISTRATOR";
+	public static final String MANAGER = "MANAGER";
+	public static final String SECURITY_MANAGER = "SECURITY_MANAGER";
+	public static final String SETTING_MANAGER = "SETTING_MANAGER";
+	
+	public static final String BUSINESS_ACTOR = "BUSINESS_ACTOR";
+	
+	public static final String USER = "USER";
 }

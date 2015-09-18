@@ -13,8 +13,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import lombok.Getter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
@@ -55,6 +53,8 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.cdi.AbstractLayer;
 
+import lombok.Getter;
+
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
 	private static final long serialVersionUID = -4484371129296972868L;
@@ -66,6 +66,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	protected static final String SHIRO_PRIVATE_FOLDER = String.format(SHIRO_PRIVATE_FOLDER_FORMAT, PRIVATE_FOLDER_NAME);
 	
 	protected static final String SHIRO_ROLE_FOLDER_FORMAT = "/"+PRIVATE_ROLE_FOLDER_NAME+"/__%s__/**";
+	protected static final String SHIRO_ROLE_FILE_FORMAT = "/"+PRIVATE_ROLE_FOLDER_NAME+"/__%s__/%s";
 	
 	@Inject protected ApplicationBusiness applicationBusiness;
 	@Inject protected GenericBusiness genericBusiness;
@@ -198,16 +199,27 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	}
 	
 	protected Permission createPermission(String code){
-		return create(new Permission(code));
+		return create(createPermissionInstance(code));
+	}
+	
+	protected Permission createPermissionInstance(String code){
+		return new Permission(code);
 	}
     
-	protected void createRole(Role role,String workspaceId,Permission...permissions){
-   	 if(permissions!=null)
-   		 for(Permission permission : permissions)
-   			 role.getPermissions().add(permission);
-   	 create(role);
-   	createRoleSecuredView(role.getCode(),role,workspaceId);
-   }
+	protected void createRole(Role role, String workspaceId, Permission... permissions) {
+		if (permissions != null)
+			for (Permission permission : permissions)
+				role.getPermissions().add(permission);
+		create(role);
+		createRoleSecuredView(role.getCode(), role, workspaceId);
+	}
+	
+	protected void createRole(String code,String name,String[] viewIds) {
+		Role role = new Role(code, name);
+		create(role);
+		for(String viewId : viewIds)
+			createRoleSecuredView(role.getCode(), role, viewId);
+	}
     
 	protected void createRole(String code,String name,String workspaceId,String...permissionCodes){
 		Role role = new Role(code, name);
@@ -228,7 +240,13 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		roleSecuredViewBusiness.create(new RoleSecuredView(role, viewId, code, code));
 	}
 	
-	
+	protected Role createRoleInstance(String code,String name,String...permissionCodes){
+		Role role = new Role(code, name);
+		if(permissionCodes!=null)
+			for(String permissionCode : permissionCodes)
+				role.getPermissions().add(createPermissionInstance(permissionCode));
+		return role;
+	}
 	
 	/*
 	@SuppressWarnings("unchecked")
