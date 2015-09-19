@@ -26,13 +26,14 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.userinterface.UserInterfaceCollection;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter @Setter @Entity @NoArgsConstructor
 public class UserAccount extends AbstractIdentifiable implements Serializable {
@@ -44,8 +45,7 @@ public class UserAccount extends AbstractIdentifiable implements Serializable {
 	
 	@OneToOne(cascade=CascadeType.ALL) private Credentials credentials = new Credentials();
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@NotNull @Column(nullable=false)
+	@Temporal(TemporalType.TIMESTAMP) @NotNull @Column(nullable=false)
 	private Date creationDate;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
@@ -56,6 +56,8 @@ public class UserAccount extends AbstractIdentifiable implements Serializable {
 	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	private Collection<SecretQuestionAnswer> secretQuestionAnswers = new LinkedHashSet<>();
 
+	@OneToOne private BusinessServiceCollection businessServiceCollection;
+	@OneToOne private UserInterfaceCollection userInterfaceCollection;
 	@OneToOne private UserAccountLock currentLock;
 	
 	/**/
