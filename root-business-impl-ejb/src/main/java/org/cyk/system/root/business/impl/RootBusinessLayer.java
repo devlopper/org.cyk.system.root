@@ -155,19 +155,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         registerValidator(Person.class, personValidator);
         registerValidator(File.class, fileValidator);
+        
         /*
-        registerFieldValidator(commonUtils.getFieldFromClass(Person.class, "name"), new FieldValidatorMethod() {
-            
-			private static final long serialVersionUID = 1L;
-
-			@Override
-            protected Void __execute__(Object[] parameter) {
-                String name = (String) parameter[0];
-                if(!"cj".equals(name))
-                    throw new BusinessException("Method exception oohhh");
-                return null;
-            }
-        });
+        String systemName = StringUtils.split(this.getClass().getName(), '.')[3];
+        registerResourceBundle("org.cyk.system."+systemName+".model.resources.entity", getClass().getClassLoader());
+		registerResourceBundle("org.cyk.system."+systemName+".model.resources.message", getClass().getClassLoader());
+		registerResourceBundle("org.cyk.system."+systemName+".business.impl.resources.message", getClass().getClassLoader());
         */
         
         @SuppressWarnings("unchecked")
@@ -213,8 +206,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 					return generatedCode;
 				}
 			});
-		
-		//reportRepository.build();
 		
     }
     

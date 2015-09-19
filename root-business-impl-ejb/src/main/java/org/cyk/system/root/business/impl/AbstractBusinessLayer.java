@@ -68,6 +68,12 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	protected static final String SHIRO_ROLE_FOLDER_FORMAT = "/"+PRIVATE_ROLE_FOLDER_NAME+"/__%s__/**";
 	protected static final String SHIRO_ROLE_FILE_FORMAT = "/"+PRIVATE_ROLE_FOLDER_NAME+"/__%s__/%s";
 	
+	protected static final String[] RESOURCE_BUNDLE_FORMATS = {
+			"org.cyk.system.%s.model.resources.entity",
+			"org.cyk.system.%s.model.resources.message",
+			"org.cyk.system.%s.business.impl.resources.message"
+	}; 
+	
 	@Inject protected ApplicationBusiness applicationBusiness;
 	@Inject protected GenericBusiness genericBusiness;
     @Inject protected BusinessLocator businessLocator;
@@ -85,6 +91,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     protected void initialisation() {
         super.initialisation();
         id = this.getClass().getName();
+        String systemName = StringUtils.split(this.getClass().getName(), '.')[3];
+        registerResourceBundles(systemName);
         registerTypedBusinessBean(businessLocator.getTypedBusinessBeanMap());
        
     }
@@ -109,6 +117,11 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     protected abstract void persistData();
     protected abstract void setConstants();
     protected abstract void fakeTransactions();
+    
+    protected void registerResourceBundles(String systemName){
+    	for(String format : RESOURCE_BUNDLE_FORMATS)
+    		registerResourceBundle(String.format(format, systemName), getClass().getClassLoader());
+    }
     
 	@Override
 	public void registerTypedBusinessBean(Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> arg0) {}
