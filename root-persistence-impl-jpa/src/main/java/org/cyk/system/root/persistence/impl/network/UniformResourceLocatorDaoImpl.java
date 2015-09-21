@@ -1,9 +1,7 @@
-package org.cyk.system.root.persistence.impl.security;
+package org.cyk.system.root.persistence.impl.network;
 
 import java.io.Serializable;
 import java.util.Map;
-
-import javax.persistence.NoResultException;
 
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.persistence.api.network.UniformResourceLocatorDao;
@@ -13,7 +11,7 @@ public class UniformResourceLocatorDaoImpl extends AbstractEnumerationDaoImpl<Un
 
 	private static final long serialVersionUID = 6306356272165070761L;
 
-	private String readByPathByParameters;
+	//private String readByPathByParameters;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -28,8 +26,8 @@ public class UniformResourceLocatorDaoImpl extends AbstractEnumerationDaoImpl<Un
 	
 	@Override
 	public UniformResourceLocator readByPathByParameters(String path, Map<String, String[]> parameters) {
-		return namedQuery(readByPathByParameters).parameter(UniformResourceLocator.FIELD_PATH, path)
-				.parameter(UniformResourceLocator.FIELD_PARAMETERS, parameters).ignoreThrowable(NoResultException.class).resultOne();
+		return null;//namedQuery(readByPathByParameters).parameter(UniformResourceLocator.FIELD_PATH, path)
+				//.parameter(UniformResourceLocator.FIELD_PARAMETERS, parameters).ignoreThrowable(NoResultException.class).resultOne();
 	}
 
 	

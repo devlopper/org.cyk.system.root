@@ -1,8 +1,6 @@
 package org.cyk.system.root.business.impl.party;
 
 import java.io.Serializable;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +12,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessManager;
@@ -33,8 +30,6 @@ import org.cyk.system.root.business.impl.security.DefaultShiroConfigurator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.generator.ValueGenerator;
-import org.cyk.system.root.model.network.UniformResourceLocator;
-import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.PartySearchCriteria;
 import org.cyk.system.root.model.security.ApplicationAccount;
@@ -55,8 +50,6 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	private static ShiroConfigurator SHIRO_CONFIGURATOR;
 	public static Collection<BusinessEntityInfos> BUSINESS_ENTITIES_INFOS;
 	private static Map<String, ValueGenerator<?, ?>> VALUE_GENERATOR_MAP = new HashMap<String, ValueGenerator<?,?>>();
-	private final static Collection<UniformResourceLocator> BLACKLISTED_URLS = new ArrayList<>();
-	private final static Collection<UniformResourceLocator> WHITELISTED_URLS = new ArrayList<>();
 	
 	@Inject private RoleDao roleDao;
 	@Inject private BusinessManager businessManager;
@@ -238,58 +231,6 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		logDebug("Generator id={} input={} output={}", identifier,input,output);
 		//logStackTraceAsString("org.cyk.");
 		return output;
-	}
-
-	@Override
-	public Collection<UniformResourceLocator> getBlackListedUrls() {
-		return BLACKLISTED_URLS;
-	}
-
-	@Override
-	public Collection<UniformResourceLocator> getWhiteListedUrls() {
-		return WHITELISTED_URLS;
-	}
-	
-	@Override
-	public UniformResourceLocator find(Collection<UniformResourceLocator> collection, URL url) {
-		if(collection==null || collection.isEmpty())
-			return null;
-		for(UniformResourceLocator uniformResourceLocator : collection){
-			if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
-				if(StringUtils.equalsIgnoreCase(url.getPath(),uniformResourceLocator.getPath())){
-					if(uniformResourceLocator.getParameters().isEmpty())
-						return uniformResourceLocator;
-					Collection<UniformResourceLocatorParameter> urlParameters = new ArrayList<>();
-					for(String query : StringUtils.split(url.getQuery(),'&')){
-						String[] p = StringUtils.split(query,"=");
-						urlParameters.add(new UniformResourceLocatorParameter(null, p[0], p[1]));
-					}
-					
-					Integer count = 0;
-					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters()){
-						for(UniformResourceLocatorParameter urlParameter : urlParameters){
-							if(parameter.getName().equalsIgnoreCase(urlParameter.getName()) && parameter.getValue().equalsIgnoreCase(urlParameter.getValue()))
-								count++;
-						}
-					}
-					
-					if(uniformResourceLocator.getParameters().size() == count)
-						return uniformResourceLocator;
-				}else
-					return uniformResourceLocator;
-			}
-		}
-		return null;
-	}
-	
-	@Override
-	public UniformResourceLocator find(URL url, Boolean whiteListed) {
-		return find(Boolean.TRUE.equals(whiteListed) ? WHITELISTED_URLS : BLACKLISTED_URLS, url);
-	}
-	
-	@Override
-	public Boolean isAccessible(URL url) {
-		return find(url, Boolean.TRUE)!=null || find(url, Boolean.FALSE)==null;
 	}
 
 }

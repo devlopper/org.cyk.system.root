@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
@@ -26,6 +28,8 @@ public class Role extends AbstractEnumeration implements Serializable {
 	@ManyToMany
     @JoinTable(name="RolePermissions",joinColumns = { @JoinColumn(name = "roleid") } ,inverseJoinColumns={ @JoinColumn(name = "permissionid") })
 	private Set<Permission> permissions = new HashSet<>();
+	
+	@Transient private Set<UniformResourceLocator> uniformResourceLocators = new HashSet<>();
 	
 	public Role(String code, String name) {
 		super(code, name, null, null);
