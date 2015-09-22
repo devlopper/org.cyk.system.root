@@ -19,6 +19,7 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	private static final long serialVersionUID = -4633680454658548588L;
 
 	@Column(nullable=false) private String path;
+	//private Boolean parametersRequired = Boolean.TRUE;
 	
 	@Transient private Collection<UniformResourceLocatorParameter> parameters = new ArrayList<>();
 

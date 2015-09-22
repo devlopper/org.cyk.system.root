@@ -48,7 +48,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 			return null;
 		}
 		for(UniformResourceLocator uniformResourceLocator : uniformResourceLocators){
-			logTrace("Uniform Resource Locator : {}", uniformResourceLocator);
+			logTrace("Uniform Resource Locator : {} parameters : ", uniformResourceLocator,uniformResourceLocator.getParameters());
 			if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
 				if(StringUtils.equalsIgnoreCase(url.getPath(),uniformResourceLocator.getPath())){
 					if(uniformResourceLocator.getParameters().isEmpty())
@@ -64,7 +64,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 					Integer count = 0;
 					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters()){
 						for(UniformResourceLocatorParameter urlParameter : urlParameters){
-							if(parameter.getName().equalsIgnoreCase(urlParameter.getName()) && parameter.getValue().equalsIgnoreCase(urlParameter.getValue()))
+							if(parameter.getName().equalsIgnoreCase(urlParameter.getName()) && (parameter.getValue()==null || parameter.getValue().equalsIgnoreCase(urlParameter.getValue())))
 								count++;
 						}
 					}

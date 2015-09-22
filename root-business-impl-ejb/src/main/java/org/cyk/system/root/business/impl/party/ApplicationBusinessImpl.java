@@ -124,6 +124,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		
 		userAccountBusiness.create(managerAccount);
 		
+		logInfo("Creating others accounts");
 	}
 	
 	private void installLicense(Installation installation){
