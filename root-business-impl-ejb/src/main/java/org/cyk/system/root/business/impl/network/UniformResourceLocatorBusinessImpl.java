@@ -50,10 +50,11 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 					if(uniformResourceLocator.getParameters().isEmpty())
 						return uniformResourceLocator;
 					Collection<UniformResourceLocatorParameter> urlParameters = new ArrayList<>();
-					for(String query : StringUtils.split(url.getQuery(),'&')){
-						String[] p = StringUtils.split(query,"=");
-						urlParameters.add(new UniformResourceLocatorParameter(null, p[0], p[1]));
-					}
+					if(StringUtils.isNotBlank(url.getQuery()))
+						for(String query : StringUtils.split(url.getQuery(),'&')){
+							String[] p = StringUtils.split(query,"=");
+							urlParameters.add(new UniformResourceLocatorParameter(null, p[0], p[1]));
+						}
 					
 					Integer count = 0;
 					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters()){
@@ -92,21 +93,21 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	
 	@Override
 	public Boolean isAccessible(Collection<UniformResourceLocator> uniformResourceLocators, URL url) {
-		return find(uniformResourceLocators, url)!=null;
+		return Boolean.TRUE.equals(filteringEnabled)?find(uniformResourceLocators, url)!=null:Boolean.TRUE;
 	}
 	
 	@Override
 	public Boolean isAccessible(URL url) {
-		return find(url)!=null;
+		return Boolean.TRUE.equals(filteringEnabled)?find(url)!=null:Boolean.TRUE;
 	}
 
 	@Override
 	public Boolean isAccessibleByRoles(Collection<Role> roles, URL url) {
-		return findByRoles(roles, url)!=null;
+		return Boolean.TRUE.equals(filteringEnabled)?findByRoles(roles, url)!=null:Boolean.TRUE;
 	}
 
 	@Override
 	public Boolean isAccessibleByUserAccount(UserAccount userAccount, URL url) {
-		return findByUserAccount(userAccount, url)!=null;
+		return Boolean.TRUE.equals(filteringEnabled)?findByUserAccount(userAccount, url)!=null:Boolean.TRUE;
 	}
 }

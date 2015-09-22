@@ -3,6 +3,8 @@ package org.cyk.system.root.business.impl.security;
 import java.io.Serializable;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.security.LicenseBusiness;
@@ -15,7 +17,7 @@ public class LicenseBusinessImpl extends AbstractTypedBusinessService<License, L
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	//@Inject private ApplicationBusiness applicationBusiness;
+	private static Boolean ENABLED = Boolean.FALSE;
 	
 	@Inject
 	public LicenseBusinessImpl(LicenseDao dao) {
@@ -32,15 +34,16 @@ public class LicenseBusinessImpl extends AbstractTypedBusinessService<License, L
 	public void expand(License license) {
 		license.setExpired(Boolean.FALSE);
 		update(license);
-	}  
-	
-	/*
-	@Override
-	public License create(License object) {
-		License license = super.create(object);
-		applicationBusiness.findCurrentInstance().setLicense(license);
-		return license;
 	}
-	*/
-	
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Boolean getEnabled() {
+		return ENABLED;
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public void setEnabled(Boolean value) {
+		ENABLED = value;
+	}  
+		
 }
