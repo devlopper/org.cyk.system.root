@@ -42,9 +42,13 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	
 	@Override
 	public UniformResourceLocator find(Collection<UniformResourceLocator> uniformResourceLocators,URL url) {
-		if(uniformResourceLocators==null || uniformResourceLocators.isEmpty())
+		logTrace("Database URL : {}",uniformResourceLocators);
+		logTrace("Java URL : {} , Path : {} , Query : {}", url,url.getPath(),url.getQuery());
+		if(uniformResourceLocators==null || uniformResourceLocators.isEmpty()){
 			return null;
+		}
 		for(UniformResourceLocator uniformResourceLocator : uniformResourceLocators){
+			logTrace("Uniform Resource Locator : {}", uniformResourceLocator);
 			if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
 				if(StringUtils.equalsIgnoreCase(url.getPath(),uniformResourceLocator.getPath())){
 					if(uniformResourceLocator.getParameters().isEmpty())
@@ -56,6 +60,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 							urlParameters.add(new UniformResourceLocatorParameter(null, p[0], p[1]));
 						}
 					
+						
 					Integer count = 0;
 					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters()){
 						for(UniformResourceLocatorParameter urlParameter : urlParameters){
@@ -64,7 +69,9 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 						}
 					}
 					
-					if(uniformResourceLocator.getParameters().size() == count)
+					Boolean match = uniformResourceLocator.getParameters().size() == count;
+					logTrace("Try to match query parameters whith {}. {} found , match={}",uniformResourceLocator.getParameters(),count,match);
+					if(Boolean.TRUE.equals(match))
 						return uniformResourceLocator;
 				}else
 					return uniformResourceLocator;
