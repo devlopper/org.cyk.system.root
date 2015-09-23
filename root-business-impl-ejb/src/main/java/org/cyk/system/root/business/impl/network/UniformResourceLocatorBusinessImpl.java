@@ -63,8 +63,10 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 							urlParameters.add(new UniformResourceLocatorParameter(null, p[0], p[1]));
 						}
 					
-					Integer count = 0;
+					Integer count = 0,size=0;
 					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters()){
+						if(parameter.getValue()!=null)
+							size++;
 						for(UniformResourceLocatorParameter urlParameter : urlParameters){
 							if(parameter.getName().equalsIgnoreCase(urlParameter.getName()) && (parameter.getValue()==null || parameter.getValue().equalsIgnoreCase(urlParameter.getValue()))){
 								count++;
@@ -73,7 +75,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 						}
 					}
 					
-					Boolean match = uniformResourceLocator.getParameters().size() == count;
+					Boolean match = size == count;
 					logTrace("Try to match query parameters whith {}. {} found , match={}",uniformResourceLocator.getParameters(),count,match);
 					if(Boolean.TRUE.equals(match))
 						return uniformResourceLocator;
