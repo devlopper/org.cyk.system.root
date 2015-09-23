@@ -48,11 +48,14 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 			return null;
 		}
 		for(UniformResourceLocator uniformResourceLocator : uniformResourceLocators){
-			logTrace("Uniform Resource Locator : {} parameters : ", uniformResourceLocator,uniformResourceLocator.getParameters());
+			logTrace("Uniform Resource Locator : {} parameters : {}", uniformResourceLocator,uniformResourceLocator.getParameters());
 			if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
 				if(StringUtils.equalsIgnoreCase(url.getPath(),uniformResourceLocator.getPath())){
-					if(uniformResourceLocator.getParameters().isEmpty())
+					logTrace("Matchs path");
+					if(uniformResourceLocator.getParameters().isEmpty()){
+						logTrace("No parameters to check");
 						return uniformResourceLocator;
+					}
 					Collection<UniformResourceLocatorParameter> urlParameters = new ArrayList<>();
 					if(StringUtils.isNotBlank(url.getQuery()))
 						for(String query : StringUtils.split(url.getQuery(),'&')){
@@ -60,12 +63,13 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 							urlParameters.add(new UniformResourceLocatorParameter(null, p[0], p[1]));
 						}
 					
-						
 					Integer count = 0;
 					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters()){
 						for(UniformResourceLocatorParameter urlParameter : urlParameters){
-							if(parameter.getName().equalsIgnoreCase(urlParameter.getName()) && (parameter.getValue()==null || parameter.getValue().equalsIgnoreCase(urlParameter.getValue())))
+							if(parameter.getName().equalsIgnoreCase(urlParameter.getName()) && (parameter.getValue()==null || parameter.getValue().equalsIgnoreCase(urlParameter.getValue()))){
 								count++;
+								logTrace("Parameter are equals : URL={} , JavaURL={}",parameter,urlParameter);
+							}
 						}
 					}
 					

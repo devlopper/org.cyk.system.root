@@ -4,6 +4,8 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilder;
+import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.UserAccountSearchCriteria;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -53,6 +55,12 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	System.out.println(userAccountBusiness.findAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole())));
     	System.out.println(userAccountBusiness.findByCriteria(criteria));*/
     	Assert.assertEquals(1l, userAccountBusiness.countByCriteria(criteria).longValue());
+    	
+    	UniformResourceLocatorBuilder uniformResourceLocatorBuilder = new UniformResourceLocatorBuilder();
+    	uniformResourceLocatorBuilder.newUniformResourceLocator();
+    	uniformResourceLocatorBuilder.addParameters("mc",Person.class);
+    	
+    	System.out.println(uniformResourceLocatorBuilder.build());
     }
 
     /**/

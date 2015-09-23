@@ -35,6 +35,9 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	public void addParameter(String name,String value){
 		parameters.add(new UniformResourceLocatorParameter(this, name, value));
 	}
+	public void addParameter(String name){
+		addParameter(name, null);
+	}
 	
 	@Override
 	public String toString() {
