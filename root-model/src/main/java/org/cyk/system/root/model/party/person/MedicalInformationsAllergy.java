@@ -22,4 +22,6 @@ public class MedicalInformationsAllergy extends AbstractEnumeration implements S
 	
 	@ManyToOne @JoinColumn(nullable=false) @NotNull private Allergy allergy;
 	
+	private String reactionType,reactionResponse;
+	
 }

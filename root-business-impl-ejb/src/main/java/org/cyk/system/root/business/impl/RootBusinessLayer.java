@@ -18,6 +18,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.cyk.system.root.business.api.ClazzBusiness;
+import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessAdapter;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.RootBusinessLayerListener;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -47,6 +49,7 @@ import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventType;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
@@ -124,6 +127,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private TimeDivisionTypeBusiness timeDivisionTypeBusiness;
     @Inject private EventTypeBusiness eventTypeBusiness;
     @Inject @Getter private StringGeneratorBusiness stringGeneratorBusiness;
+    @Inject @Getter private ClazzBusiness clazzBusiness;
     
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
@@ -142,9 +146,17 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     @Override
     protected void initialisation() {
-    	INSTANCE = this;
+    	INSTANCE = this; 
         super.initialisation();
-       
+        
+        ClazzBusiness.LISTENERS.add(new ClazzBusinessAdapter() {
+			private static final long serialVersionUID = 4056356640763766384L;
+			@Override
+			public void doSetUiLabel(Clazz clazz) {
+				clazz.setUiLabel(languageBusiness.findText(clazz.getUiLabelId()));
+			}
+		});
+        
         rootTestHelper.setReportBusiness(reportBusiness);
         rootTestHelper.setRootBusinessLayer(this); 
         

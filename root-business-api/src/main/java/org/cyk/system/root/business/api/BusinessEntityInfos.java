@@ -15,7 +15,7 @@ import org.cyk.utility.common.annotation.ModelBean.CrudInheritanceStrategy;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@EqualsAndHashCode(of="clazz")
+@EqualsAndHashCode(of="clazz") //FIXME should be replaced by Clazz //@Deprecated
 public class BusinessEntityInfos implements Serializable {
     
 	private static final long serialVersionUID = -8725167267186070601L;
