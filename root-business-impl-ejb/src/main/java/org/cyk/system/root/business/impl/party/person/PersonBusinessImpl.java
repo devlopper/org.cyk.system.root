@@ -26,7 +26,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	private static final long serialVersionUID = -3799482462496328200L;
 	
 	//@Inject private RepeatedEventBusiness repeatedEventBusiness;
-	
+	 
 	@Inject private PersonExtendedInformationsDao extendedInformationsDao;
 	@Inject private JobInformationsDao jobInformationsDao;
 	@Inject private MedicalInformationsDao medicalInformationsDao;

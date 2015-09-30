@@ -30,6 +30,7 @@ import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.EnumHelper;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -320,7 +321,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
     public String findClassLabelText(Class<?> aClass) {
     	if(AbstractModelElement.class.isAssignableFrom(aClass))
     		return findText("model.entity."+StringUtils.uncapitalize(aClass.getSimpleName()));
-    	return findText(aClass.getName());
+    	return findText(StringUtils.replace(aClass.getName(), Constant.CHARACTER_DOLLAR.toString(), Constant.CHARACTER_DOT.toString()));
     }
     
     @Override
