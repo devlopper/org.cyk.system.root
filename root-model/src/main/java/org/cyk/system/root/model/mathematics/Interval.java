@@ -10,22 +10,17 @@ import javax.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.AbstractEnumeration;
 
 @Getter @Setter
 @Entity 
-public class Interval  extends AbstractIdentifiable implements Serializable {
+public class Interval extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
 
 	@ManyToOne
 	private IntervalCollection collection;
-	
-	private String name;
-	
-	@Column(length=1024 * 2)
-	private String description;
-	
+		
 	@Column(precision=30,scale=10)
 	private BigDecimal low;
 	

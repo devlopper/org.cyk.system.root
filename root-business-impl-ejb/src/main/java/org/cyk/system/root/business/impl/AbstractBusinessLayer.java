@@ -84,6 +84,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     @Inject protected RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject @Getter protected FileBusiness fileBusiness;
     
+    @Inject protected RootDataProducerHelper rootDataProducerHelper;
+    
     protected ValidatorMap validatorMap = ValidatorMap.getInstance();
     @Getter protected Collection<BusinessLayerListener> businessLayerListeners = new ArrayList<>();
     
@@ -94,6 +96,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
         String systemName = StringUtils.split(this.getClass().getName(), '.')[3];
         registerResourceBundles(systemName);
         registerTypedBusinessBean(businessLocator.getTypedBusinessBeanMap());
+        
+        rootDataProducerHelper.setBasePackage(this.getClass().getPackage());
        
     }
     

@@ -21,7 +21,8 @@ public class Person extends Party implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private String lastName;
+	private String lastName;//TODO to be changed to lastnames
+	private String surname;
 	@ManyToOne private Sex sex;
 	@ManyToOne private Country nationality;
 	

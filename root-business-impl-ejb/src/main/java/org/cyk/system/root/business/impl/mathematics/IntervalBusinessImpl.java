@@ -8,12 +8,12 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
-import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 
-public class IntervalBusinessImpl extends AbstractTypedBusinessService<Interval, IntervalDao> implements IntervalBusiness,Serializable {
+public class IntervalBusinessImpl extends AbstractEnumerationBusinessImpl<Interval, IntervalDao> implements IntervalBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
