@@ -91,7 +91,7 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 	
 	/**/
 	
-	protected void assertBooleanEquals(String message,Object expected,Object actual){
+	protected void assertEquals(String message,Object expected,Object actual){
 		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
 			listener.assertEquals(message, expected, actual);
 	}
