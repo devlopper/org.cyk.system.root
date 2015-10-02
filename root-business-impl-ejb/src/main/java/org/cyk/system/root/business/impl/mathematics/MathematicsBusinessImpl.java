@@ -17,11 +17,13 @@ import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness.RankOptions.RankType;
 import org.cyk.system.root.business.api.mathematics.Sortable;
 import org.cyk.system.root.business.api.mathematics.WeightedValue;
+import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.Average;
 import org.cyk.system.root.model.mathematics.Rank;
+import org.cyk.utility.common.cdi.BeanAdapter;
 
-public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable {
+public class MathematicsBusinessImpl extends AbstractBusinessServiceImpl implements MathematicsBusiness,Serializable {
 
 	private static final long serialVersionUID = 216333383963637261L;
 	
@@ -62,6 +64,7 @@ public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable
 	
 	@Override
 	public Average average(Collection<WeightedValue> weightedValues,AverageComputationListener computationListener,Script script) {
+		logTrace("Computing average WeightedValues={} computationListener prodived={} script provided={}", weightedValues.size(),computationListener!=null,script!=null);
 		Average average = new Average();
 		average.setDividend(BigDecimal.ZERO);
 		average.setDivisor(BigDecimal.ZERO);
@@ -103,7 +106,7 @@ public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable
 			if(results.get(AVERAGE)!=null)
 				average.setValue(new BigDecimal(results.get(AVERAGE).toString()));
 		}
-		
+		logTrace("Dividend={} Divisor={} Average={}", average.getDividend(),average.getDivisor(),average.getValue());
 		return average;
 	}
 	
@@ -112,10 +115,12 @@ public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable
 		if(sortables==null || sortables.isEmpty())
 			return;
 		Collections.sort(sortables,options.getComparator());
+		logTrace("{} element(s) sorted", sortables.size());
 	}
 	
 	@Override
 	public <SORTABLE extends Sortable> void rank(/*Class<SORTABLE> aClass,*/List<SORTABLE> sortables,RankOptions<SORTABLE> options) {
+		logTrace("Ranking sort of {} element(s) Options={}", sortables.size(),options);
 		if(sortables==null || sortables.isEmpty())
 			return;
 		//Collections.sort(sortables,ComparatorUtils.reversedComparator(comparator));
@@ -147,6 +152,29 @@ public class MathematicsBusinessImpl implements MathematicsBusiness,Serializable
 	@Override
 	public String format(Rank rank) {
 		return rank.getValue()+ (Boolean.TRUE.equals(rank.getExaequo())?languageBusiness.findText("rank.exaequo"):"");
+	}
+	
+	/**/
+	
+	public static class AverageComputationAdapter extends BeanAdapter implements AverageComputationListener,Serializable{
+
+		private static final long serialVersionUID = 5433049041548830027L;
+
+		@Override
+		public NumberComputationListener getDividendComputationListener() {
+			return null;
+		}
+
+		@Override
+		public NumberComputationListener getDivisorComputationListener() {
+			return null;
+		}
+
+		@Override
+		public NumberComputationListener getValueComputationListener() {
+			return null;
+		}
+		
 	}
 
 }

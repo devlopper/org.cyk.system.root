@@ -50,7 +50,8 @@ public class Attendance extends AbstractModelElement implements Serializable{
 	
 	@Override
 	public String toString() {
-		return (attendedDuration/DateUtils.MILLIS_PER_MINUTE)+" min , "+(missedDuration/DateUtils.MILLIS_PER_MINUTE)+" min , "+(missedDurationJustified/DateUtils.MILLIS_PER_MINUTE)+" min";
+		return ((attendedDuration==null?0l:attendedDuration)/DateUtils.MILLIS_PER_MINUTE)+" min , "
+				+((missedDuration==null?0l:missedDuration)/DateUtils.MILLIS_PER_MINUTE)+" min , "+((missedDurationJustified==null?0l:missedDurationJustified)/DateUtils.MILLIS_PER_MINUTE)+" min";
 	}
 
 }

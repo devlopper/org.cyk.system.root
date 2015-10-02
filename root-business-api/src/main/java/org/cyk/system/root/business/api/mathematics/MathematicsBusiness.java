@@ -10,6 +10,8 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.Average;
 import org.cyk.system.root.model.mathematics.Rank;
@@ -46,6 +48,11 @@ public interface MathematicsBusiness {
 		private static final long serialVersionUID = -6280959516917831703L;
 		private Comparator<SORTABLE> comparator;
 		private Script compareScript;
+		
+		@Override
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_FIELD_NAMES_STYLE);
+		}
 	}
 	
 	@Getter @Setter
@@ -54,6 +61,11 @@ public interface MathematicsBusiness {
 		public static enum RankType {SEQUENCE,EXAEQUO}
 		private RankType type;
 		private SortOptions<SORTABLE> sortOptions = new SortOptions<SORTABLE>();
+		
+		@Override
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_FIELD_NAMES_STYLE);
+		}
 	}
 	
 }

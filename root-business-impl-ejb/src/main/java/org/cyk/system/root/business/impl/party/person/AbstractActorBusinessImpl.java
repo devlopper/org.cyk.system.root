@@ -6,6 +6,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -28,7 +29,8 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	public ACTOR create(ACTOR anActor) {
 		personBusiness.create(anActor.getPerson());
 		anActor.getRegistration().setDate(universalTimeCoordinated()); 
-		anActor.getRegistration().setCode(generateStringValue(ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER, anActor));
+		if(StringUtils.isBlank(anActor.getRegistration().getCode()))
+			anActor.getRegistration().setCode(generateStringValue(ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER, anActor));
 		return super.create(anActor);
 	}
 	
