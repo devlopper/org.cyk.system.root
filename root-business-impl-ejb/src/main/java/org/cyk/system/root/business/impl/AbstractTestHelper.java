@@ -7,9 +7,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.commons.io.IOUtils;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.AbstractReport;
@@ -19,6 +23,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfigur
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
+import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.test.TestEnvironmentListener;
@@ -39,6 +44,7 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 	protected RandomDataProvider randomDataProvider = RandomDataProvider.getInstance();
 	protected RootBusinessLayer rootBusinessLayer;
 	protected ReportBusiness reportBusiness;
+	@Inject protected GenericBusiness genericBusiness;
 	
 	public <T extends AbstractIdentifiable> void reportBasedOnTemplateFile(Class<T> aClass,Collection<T> collection,Map<String, String[]> map,String reportIdentifier){
         AbstractReportConfiguration<T, ReportBasedOnTemplateFile<T>> c = reportBusiness.findConfiguration(reportIdentifier);
@@ -152,5 +158,34 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 			e.printStackTrace();
 		}
     }
+	
+	public <T extends AbstractActor> void assertActorRegistrationCode(Class<T> classActor,List<T> actors,String[] registrationCodes){
+		for(int i=0;i<actors.size();i++){
+			T actor = actors.get(i);
+			assertEquals("Registration code of "+actor.getPerson(), registrationCodes[i], actor.getRegistration().getCode());
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractActor> T registerActor(Class<T> actorClass,String code,String[] names){
+		T actor = RootRandomDataProvider.getInstance().actor(actorClass);
+		actor.getRegistration().setCode(code);
+		if(names!=null){
+			if(names.length>0)
+				actor.getPerson().setName(names[0]);
+			if(names.length>1)
+				actor.getPerson().setLastName(names[1]);
+			if(names.length>2)
+				actor.getPerson().setSurname(names[2]);
+		}
+		return (T) genericBusiness.create(actor);
+	}
+	
+	public <T extends AbstractActor> List<T> registerActors(Class<T> actorClass,String[] codes){
+		List<T> list = new ArrayList<>();
+		for(String code : codes)
+			list.add(registerActor(actorClass,code, null));
+		return list;
+	}
 	
 }
