@@ -17,6 +17,7 @@ public class PartyReport extends AbstractGeneratable<PartyReport> implements Ser
 	protected String code,name;
 	
 	protected InputStream image;
+	protected Boolean generateImage=Boolean.FALSE;
 	
 	protected ContactReport contact = new ContactReport();
 	

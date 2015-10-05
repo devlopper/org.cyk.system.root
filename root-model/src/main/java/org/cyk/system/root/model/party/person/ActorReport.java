@@ -1,7 +1,6 @@
 package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +21,7 @@ public class ActorReport extends AbstractGeneratable<ActorReport> implements Ser
 	public void generate() {
 		person.generate();
 		registrationCode = RandomStringUtils.randomNumeric(8);
-		registrationDate = new Date().toString();
+		registrationDate = "01/01/2014";
 	}
 	
 }

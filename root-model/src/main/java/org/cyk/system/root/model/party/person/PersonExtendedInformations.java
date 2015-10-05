@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.cyk.system.root.model.event.RepeatedEvent;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 
 import lombok.Getter;
@@ -24,5 +25,11 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 	@OneToOne(cascade=CascadeType.ALL) private PersonCredentials credentials;
 	@ManyToOne private MaritalStatus maritalStatus;
 	@OneToOne(cascade=CascadeType.ALL) private PersonTitle title;
+	
+	/**
+	 * This is an image which visually represent the signature
+	 */
+	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
+	private File signatureSpecimen;
 	
 }
