@@ -17,6 +17,7 @@ public class LabelValueCollection extends AbstractModelElement implements Serial
 
 	private static final long serialVersionUID = 9095448953171778448L;
 
+	private String name;
 	private List<LabelValue> collection = new ArrayList<>(); 
 	
 	@Override
