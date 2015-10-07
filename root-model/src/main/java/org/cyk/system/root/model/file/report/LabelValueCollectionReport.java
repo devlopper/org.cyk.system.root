@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.cyk.system.root.model.userinterface.style.Style;
+import org.cyk.system.root.model.userinterface.style.Text;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 
 @Getter @Setter
@@ -17,7 +19,7 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 
 	private String name;
 	private List<LabelValueReport> collection = new ArrayList<>();
-	private Integer labelWidth,labelHeight,valueWidth,valueHeight;
+	private LabelValueItemStyle labelStyle,valueStyle;
 	
 	@Override
 	public void generate() {
@@ -27,6 +29,15 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 			labelValueReport.generate();
 			collection.add(labelValueReport);
 		}
+	}
+	
+	/**/
+	@Getter
+	public static class LabelValueItemStyle implements Serializable{
+		private static final long serialVersionUID = -6678121839387110910L;
+		
+		private Style style = new Style();
+		private Text text = new Text();
 	}
 
 }
