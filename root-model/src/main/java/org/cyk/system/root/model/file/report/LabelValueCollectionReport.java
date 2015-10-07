@@ -31,6 +31,16 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 		}
 	}
 	
+	public void add(String identifier,String label,String value){
+		collection.add(new LabelValueReport(identifier, label, value));
+	}
+	public void add(String label,String value){
+		add(null, label, value);
+	}
+	public void add(String label){
+		add(null, label, null);
+	}
+	
 	/**/
 	@Getter
 	public static class LabelValueItemStyle implements Serializable{
