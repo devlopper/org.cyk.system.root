@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.cyk.system.root.model.AbstractFormatter;
+import org.cyk.system.root.model.ContentType;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.root.model.userinterface.style.Text;
 import org.cyk.utility.common.generator.AbstractGeneratable;
@@ -17,7 +19,7 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 
 	private static final long serialVersionUID = -3815250939177148339L;
 
-	private String name;
+	private String name,html;
 	private List<LabelValueReport> collection = new ArrayList<>();
 	private LabelValueItemStyle labelStyle,valueStyle;
 	
@@ -39,6 +41,52 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 	}
 	public void add(String label){
 		add(null, label, null);
+	}
+	
+	/**/
+	
+	public String getHtml(){
+		if(html==null){
+			StringBuilder htmlBuilder = new StringBuilder("<table>");
+			
+			html = htmlBuilder.toString();
+		}
+		return html;
+	}
+	
+	@Getter @Setter
+	public static class Formatter extends AbstractFormatter<LabelValueCollectionReport> implements Serializable{
+
+		private static final long serialVersionUID = 3557901053791630451L;
+		
+		
+		private String tableClass="lvcTableClass",rowClass="lvcRowClass",labelColumnClass="lvcLabelClass",valueColumnClass="lvcValueClass";
+		
+		@Override
+		public String format(LabelValueCollectionReport labelValueCollectionReport,ContentType contentType) {
+			StringBuilder contentBuilder = new StringBuilder();
+			switch(contentType){
+			case HTML:
+				StringBuilder rowsBuilder = new StringBuilder();
+				for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection()){
+					StringBuilder tdsBuilder = new StringBuilder();
+					appendHtmlTag(tdsBuilder,TD_FORMAT, labelValueReport.getLabel(),labelColumnClass);
+					appendHtmlTag(tdsBuilder,TD_FORMAT, labelValueReport.getValue(),valueColumnClass);
+					
+					appendHtmlTag(rowsBuilder,TR_FORMAT, tdsBuilder.toString(),rowClass);
+				}
+				
+				appendHtmlTag(contentBuilder, TABLE_FORMAT, rowsBuilder.toString(),tableClass);
+				break;
+			default:
+				
+				break;
+			}
+			return contentBuilder.toString();
+		}
+		
+		
+		
 	}
 	
 	/**/
