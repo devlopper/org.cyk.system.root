@@ -15,7 +15,7 @@ public class PersonReport extends PartyReport implements Serializable {
 
 	private static final long serialVersionUID = 4273143271881011482L;
 
-	protected String lastName,surname,birthDate,birthLocation,sex,maritalStatus,nationality,names,title;
+	protected String lastName,surname,birthDate,birthLocation,sex,maritalStatus,nationality,names,title,jobFonction,jobTitle;
 	protected InputStream signatureSpecimen;
 	
 	protected Boolean generateSignatureSpecimen=Boolean.FALSE;
@@ -37,6 +37,8 @@ public class PersonReport extends PartyReport implements Serializable {
 		sex = male ? "M":"F";
 		maritalStatus = provider.randomBoolean() ? "Marie" : "Célibataire";
 		nationality = provider.randomWord(10, 20);
+		jobFonction = provider.randomWord(10, 20);
+		jobTitle = provider.randomWord(10, 20);
 		if(Boolean.TRUE.equals(generateSignatureSpecimen))
 			signatureSpecimen = inputStream(provider.signatureSpecimen());
 	}
