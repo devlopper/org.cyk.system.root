@@ -57,6 +57,7 @@ import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Tag;
 import org.cyk.system.root.model.file.report.AbstractReport;
+import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
@@ -395,6 +396,35 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		report.setFileName(buildReportFileName(report));
     }
     
+    public <T> ReportBasedOnTemplateFile<T> createReport(String name,File file,T reportModel,File template,String fileExtension){
+		ReportBasedOnTemplateFile<T> builtReport = new ReportBasedOnTemplateFile<T>();
+		builtReport.setTitle(name);
+		builtReport.setFileExtension(StringUtils.isBlank(fileExtension)?"pdf":fileExtension);
+		//report.setFileName(RootBusinessLayer.getInstance().buildReportFileName(report) /*pointOfSaleReportName*/);
+		prepareReport(builtReport);
+		
+		if(reportModel==null){
+			builtReport.setBytes(file.getBytes());
+		}else{
+			builtReport.getDataSource().add(reportModel);
+			builtReport.setTemplateFile(template);
+			reportBusiness.build(builtReport, Boolean.FALSE);
+		}
+		return builtReport;
+	}
+    
+    public void persistReport(File file,AbstractReport<?> report){
+		file.setBytes(report.getBytes());
+		file.setExtension(report.getFileExtension());
+		if(file.getIdentifier()==null){
+			fileBusiness.create(file);
+			//logDebug("Report created");
+		}else{
+			fileBusiness.update(file);
+			//logDebug("Report updated");
+		}
+	}
+    
     @Override
     protected void fakeTransactions() {
     	
@@ -429,16 +459,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		return ROOT_BUSINESS_LAYER_LISTENERS;
 	}
     
-    public void persistReport(File file,AbstractReport<?> report){
-		file.setBytes(report.getBytes());
-		file.setExtension(report.getFileExtension());
-		if(file.getIdentifier()==null){
-			fileBusiness.create(file);
-			//logDebug("Report created");
-		}else{
-			fileBusiness.update(file);
-			//logDebug("Report updated");
-		}
-	}
+    
     
 }
