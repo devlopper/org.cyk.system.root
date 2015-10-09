@@ -429,4 +429,16 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		return ROOT_BUSINESS_LAYER_LISTENERS;
 	}
     
+    public void persistReport(File file,AbstractReport<?> report){
+		file.setBytes(report.getBytes());
+		file.setExtension(report.getFileExtension());
+		if(file.getIdentifier()==null){
+			fileBusiness.create(file);
+			//logDebug("Report created");
+		}else{
+			fileBusiness.update(file);
+			//logDebug("Report updated");
+		}
+	}
+    
 }
