@@ -374,6 +374,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     }
     
+    /**
+     * build a valid system file name
+     * @param report
+     * @return
+     */
     public String buildReportFileName(AbstractReport<?> report){
     	StringBuilder s = new StringBuilder(String.format(reportFileNameFormat,StringUtils.isNotBlank(report.getOwnerName())?report.getOwnerName():applicationBusiness.findCurrentInstance().getName(),
 				report.getTitle(),StringUtils.replace(report.getCreationDate(),Constant.CHARACTER_COLON.toString(),Constant.CHARACTER_H.toString()),report.getCreatedBy()));
@@ -383,7 +388,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		return s.toString();
     }
     
+    /**
+     * Set if not not set informations like owner name , creation date , created by , file name
+     * @param report
+     */
     public void prepareReport(AbstractReport<?> report){
+    	logTrace("Prepare report {}", report);
     	if(StringUtils.isBlank(report.getOwnerName()))
     		report.setOwnerName(applicationBusiness.findCurrentInstance().getName());
     	
@@ -394,34 +404,54 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			report.setCreatedBy("ANONYMOUS");
 		
 		report.setFileName(buildReportFileName(report));
+		logTrace("Report prepared : {}", report);
     }
     
+    /**
+     * Creates the report binary content based on the provided informations
+     * @param name
+     * @param file
+     * @param reportModel
+     * @param template
+     * @param fileExtension
+     * @return
+     */
     public <T> ReportBasedOnTemplateFile<T> createReport(String name,File file,T reportModel,File template,String fileExtension){
-		ReportBasedOnTemplateFile<T> builtReport = new ReportBasedOnTemplateFile<T>();
+		logTrace("Create report binary content. Report model={} , name={} , file={} , template={} , file extension={}",reportModel,name,file,template,fileExtension);
+    	ReportBasedOnTemplateFile<T> builtReport = new ReportBasedOnTemplateFile<T>();
 		builtReport.setTitle(name);
 		builtReport.setFileExtension(StringUtils.isBlank(fileExtension)?"pdf":fileExtension);
 		//report.setFileName(RootBusinessLayer.getInstance().buildReportFileName(report) /*pointOfSaleReportName*/);
 		prepareReport(builtReport);
 		
 		if(reportModel==null){
+			logTrace("No report model provided. binary content will be taken from file {}", file);
 			builtReport.setBytes(file.getBytes());
 		}else{
+			logTrace("Report binary content will be built based on template file {}", template);
 			builtReport.getDataSource().add(reportModel);
 			builtReport.setTemplateFile(template);
 			reportBusiness.build(builtReport, Boolean.FALSE);
 		}
+		logTrace("Report binary content created. Size in bytes = {}",builtReport.getBytes().length);
 		return builtReport;
 	}
     
+    /**
+     * Persist the report to the specific file
+     * @param file
+     * @param report
+     */
     public void persistReport(File file,AbstractReport<?> report){
+    	logTrace("Persist report {}",report);
 		file.setBytes(report.getBytes());
 		file.setExtension(report.getFileExtension());
 		if(file.getIdentifier()==null){
 			fileBusiness.create(file);
-			//logDebug("Report created");
+			logTrace("Report {} persisted(created)",report);
 		}else{
 			fileBusiness.update(file);
-			//logDebug("Report updated");
+			logTrace("Report {} persisted(updated)",report);
 		}
 	}
     

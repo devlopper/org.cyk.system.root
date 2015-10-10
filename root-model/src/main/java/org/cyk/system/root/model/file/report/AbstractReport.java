@@ -23,4 +23,9 @@ public abstract class AbstractReport<MODEL> {
 	//outputs
 	protected byte[] bytes;
 	
+	@Override
+	public String toString() {
+		return "Model Class : "+(modelClass==null?"":modelClass.getSimpleName())+" , file name = "+fileName;
+	}
+	
 }
