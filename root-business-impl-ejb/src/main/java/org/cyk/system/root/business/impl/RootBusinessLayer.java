@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -11,8 +12,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
-
-import lombok.Getter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -81,6 +80,8 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+
+import lombok.Getter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER)
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -454,6 +455,15 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			logTrace("Report {} persisted(updated)",report);
 		}
 	}
+    
+    public void persistReport(Object object,AbstractReport<?> report,String reportFieldName){
+    	if(reportFieldName==null)
+    		reportFieldName = "report";
+    	Field reportField = commonUtils.getFieldFromClass(object.getClass(), reportFieldName); 
+		File file = (File) commonUtils.readField(object, reportField, Boolean.TRUE,Boolean.TRUE);
+		logTrace("Report field <<{}>> has been read : {}", reportField,file);
+		persistReport(file, report);
+    }
     
     @Override
     protected void fakeTransactions() {
