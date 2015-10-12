@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.ContactCollection;
@@ -20,6 +21,7 @@ import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.generator.RandomDataProvider;
@@ -32,6 +34,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	private static RootRandomDataProvider INSTANCE;
 	
 	@Inject private GenericBusiness genericBusiness;
+	@Inject private PersonBusiness personBusiness;
 	
 	@Override
 	protected void initialisation() {
@@ -44,7 +47,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		return (IDENTIFIABLE) BusinessLocator.getInstance().locate(identifiableClass).findOneRandomly();
 	}
 	
-	public Person person(Boolean male,Country country,PhoneNumberType type){
+	public Person person(Boolean male,Country country,PhoneNumberType type,Boolean genSignature){
 		Person person = new Person();
 		person.setName(Boolean.TRUE.equals(male)?randomDataProvider.getMale().firstName():randomDataProvider.getFemale().firstName());
 		person.setLastName(Boolean.TRUE.equals(male)?randomDataProvider.getMale().lastName():randomDataProvider.getFemale().lastName());
@@ -54,19 +57,31 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		photo.setBytes(Boolean.TRUE.equals(male)?randomDataProvider.getMale().photo():randomDataProvider.getFemale().photo());
 		photo.setExtension("png");
 		person.setImage(photo);
+		
+		if(Boolean.TRUE.equals(genSignature)){
+			if(person.getExtendedInformations()==null){
+				person.setExtendedInformations(new PersonExtendedInformations());
+				person.getExtendedInformations().setParty(person);
+			}
+			File signature = new File();
+			signature.setBytes(randomDataProvider.signatureSpecimen());
+			signature.setExtension("png");
+			person.getExtendedInformations().setSignatureSpecimen(signature);
+			
+		}
 		return person;
 	}
 	
 	public Person person(){
 		return person(randomDataProvider.randomBoolean(), RootBusinessLayer.getInstance().getCountryCoteDivoire(), 
-				RootBusinessLayer.getInstance().getLandPhoneNumberType());
+				RootBusinessLayer.getInstance().getLandPhoneNumberType(),Boolean.TRUE);
 	}
 	
 	public void createPerson(Integer count){
-		Collection<AbstractIdentifiable> collection = new ArrayList<>();
+		Collection<Person> collection = new ArrayList<>();
 		for(int i=0;i<count;i++)
 			collection.add(person());
-		genericBusiness.create(collection);
+		personBusiness.create(collection);
 	}
 	
 	public ContactCollection contactCollection(Country country,PhoneNumberType type){

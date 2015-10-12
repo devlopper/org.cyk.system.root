@@ -33,6 +33,7 @@ import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
@@ -101,6 +102,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Getter private EventType anniversaryEventType,reminderEventType;
 	
 	@Inject @Getter private LanguageBusiness languageBusiness;
+	@Inject @Getter private MathematicsBusiness mathematicsBusiness;
 	@Inject @Getter private TimeBusiness timeBusiness;
 	@Inject @Getter private NumberBusiness numberBusiness;
 	@Inject @Getter private GraphicBusiness graphicBusiness;
