@@ -11,6 +11,8 @@ public abstract class AbstractReportBasedOnDynamicBuilder extends AbstractRootBu
 
 	private static final long serialVersionUID = -6397313866653430863L;
 
+	protected ReportManager reportManager = ReportManager.getInstance();
+	
 	@Override
 	public Boolean ignoreField(Field field) {
 		return Boolean.FALSE;

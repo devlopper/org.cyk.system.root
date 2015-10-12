@@ -145,7 +145,7 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 	
 	protected void writeReport(AbstractReport<?> report){
     	try {
-			IOUtils.write(report.getBytes(), new FileOutputStream( System.getProperty("user.dir")+"/"+reportFolder+"/"+report.getFileName()+System.currentTimeMillis()+"."+report.getFileExtension()));
+			write(report.getBytes(),System.getProperty("user.dir")+"/"+reportFolder+"/"+report.getFileName()+System.currentTimeMillis()+"."+report.getFileExtension());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,7 +153,17 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 	
 	protected void writeReport(org.cyk.system.root.model.file.File file,String name,String extension){
     	try {
-			IOUtils.write(file.getBytes(), new FileOutputStream( System.getProperty("user.dir")+"/"+reportFolder+"/"+name+"."+extension));
+			write(file.getBytes(), System.getProperty("user.dir")+"/"+reportFolder+"/"+name+"."+extension);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+	
+	protected void write(byte[] bytes,String filePath){
+    	try {
+    		File file = new File(filePath);
+    		file.getParentFile().mkdirs();
+			IOUtils.write(bytes, new FileOutputStream(file));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

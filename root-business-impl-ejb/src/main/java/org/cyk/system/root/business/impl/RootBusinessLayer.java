@@ -2,10 +2,8 @@ package org.cyk.system.root.business.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -13,9 +11,10 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessAdapter;
@@ -55,8 +54,6 @@ import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Tag;
-import org.cyk.system.root.model.file.report.AbstractReport;
-import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
@@ -77,11 +74,8 @@ import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
-
-import lombok.Getter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER)
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -92,8 +86,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private static RootBusinessLayer INSTANCE;
 	
 	private Timer alarmTimer;
-	
-	private final String reportFileNameFormat = "%s - %s - %s - %s";
 	
 	@Getter private final String parameterGenericReportBasedOnDynamicBuilder = "grbodb"; 
 	@Getter private final String parameterGenericDashBoardReport = "gdbr"; 
@@ -374,97 +366,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_SMS);
     	
     }
-    
-    /**
-     * build a valid system file name
-     * @param report
-     * @return
-     */
-    public String buildReportFileName(AbstractReport<?> report){
-    	StringBuilder s = new StringBuilder(String.format(reportFileNameFormat,StringUtils.isNotBlank(report.getOwnerName())?report.getOwnerName():applicationBusiness.findCurrentInstance().getName(),
-				report.getTitle(),StringUtils.replace(report.getCreationDate(),Constant.CHARACTER_COLON.toString(),Constant.CHARACTER_H.toString()),report.getCreatedBy()));
-    	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_SLASH.charValue()));
-    	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_BACK_SLASH.charValue()));
-    	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_COLON.charValue()));
-		return s.toString();
-    }
-    
-    /**
-     * Set if not not set informations like owner name , creation date , created by , file name
-     * @param report
-     */
-    public void prepareReport(AbstractReport<?> report){
-    	logTrace("Prepare report {}", report);
-    	if(StringUtils.isBlank(report.getOwnerName()))
-    		report.setOwnerName(applicationBusiness.findCurrentInstance().getName());
-    	
-    	if(StringUtils.isBlank(report.getCreationDate()))
-			report.setCreationDate(timeBusiness.formatDateTime(new Date()));
-		
-		if(StringUtils.isBlank(report.getCreatedBy()))
-			report.setCreatedBy("ANONYMOUS");
-		
-		report.setFileName(buildReportFileName(report));
-		logTrace("Report prepared : {}", report);
-    }
-    
-    /**
-     * Creates the report binary content based on the provided informations
-     * @param name
-     * @param file
-     * @param reportModel
-     * @param template
-     * @param fileExtension
-     * @return
-     */
-    public <T> ReportBasedOnTemplateFile<T> createReport(String name,File file,T reportModel,File template,String fileExtension){
-		logTrace("Create report binary content. Report model={} , name={} , file={} , template={} , file extension={}",reportModel,name,file,template,fileExtension);
-    	ReportBasedOnTemplateFile<T> builtReport = new ReportBasedOnTemplateFile<T>();
-		builtReport.setTitle(name);
-		builtReport.setFileExtension(StringUtils.isBlank(fileExtension)?"pdf":fileExtension);
-		//report.setFileName(RootBusinessLayer.getInstance().buildReportFileName(report) /*pointOfSaleReportName*/);
-		prepareReport(builtReport);
-		
-		if(reportModel==null){
-			logTrace("No report model provided. binary content will be taken from file {}", file);
-			builtReport.setBytes(file.getBytes());
-		}else{
-			logTrace("Report binary content will be built based on template file {}", template);
-			builtReport.getDataSource().add(reportModel);
-			builtReport.setTemplateFile(template);
-			reportBusiness.build(builtReport, Boolean.FALSE);
-		}
-		logTrace("Report binary content created. Size in bytes = {}",builtReport.getBytes().length);
-		return builtReport;
-	}
-    
-    /**
-     * Persist the report to the specific file
-     * @param file
-     * @param report
-     */
-    public void persistReport(File file,AbstractReport<?> report){
-    	logTrace("Persist report {}",report);
-		file.setBytes(report.getBytes());
-		file.setExtension(report.getFileExtension());
-		if(file.getIdentifier()==null){
-			fileBusiness.create(file);
-			logTrace("Report {} persisted(created)",report);
-		}else{
-			fileBusiness.update(file);
-			logTrace("Report {} persisted(updated)",report);
-		}
-	}
-    
-    public void persistReport(Object object,AbstractReport<?> report,String reportFieldName){
-    	if(reportFieldName==null)
-    		reportFieldName = "report";
-    	Field reportField = commonUtils.getFieldFromClass(object.getClass(), reportFieldName); 
-		File file = (File) commonUtils.readField(object, reportField, Boolean.TRUE,Boolean.TRUE);
-		logTrace("Report field <<{}>> has been read : {}", reportField,file);
-		persistReport(file, report);
-    }
-    
+   
     @Override
     protected void fakeTransactions() {
     	

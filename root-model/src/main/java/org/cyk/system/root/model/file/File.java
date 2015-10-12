@@ -51,4 +51,9 @@ public class File extends AbstractIdentifiable implements Serializable{
 	@OneToMany(cascade=CascadeType.ALL)
     private Collection<Tag> tags = new HashSet<>();
 
+	@Override
+	public String toString() {
+		return identifier==null?super.toString():((uri==null?(extension):(uri.toString()))+"("+identifier+")");
+	}
+	
 }
