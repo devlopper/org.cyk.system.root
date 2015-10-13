@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,8 @@ public class Sort extends AbstractModelElement implements Serializable {
 	@Embedded private Average average = new Average();
 	@Embedded private Rank rank = new Rank();
 	@Column(length=1024) private String comments;
+	
+	@Transient private Interval averageInterval;
 	
 	@Override
 	public String getUiString() {

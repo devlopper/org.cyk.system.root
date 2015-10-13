@@ -10,6 +10,8 @@ import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
 import org.cyk.system.root.model.file.report.LabelValueReport;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ContactReport;
+import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.system.root.model.mathematics.IntervalReport;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.ActorReport;
 import org.cyk.system.root.model.party.person.JobInformations;
@@ -108,6 +110,11 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected void set(Person person,ActorReport report){
 		set(person, report.getPerson());
+	}
+	
+	protected void set(Interval interval,IntervalReport report){
+		report.setCode(interval.getCode());
+		report.setName(/*format(interval.getLow())+" - "+format(interval.getHigh())+" "+*/interval.getName());
 	}
 	
 	protected InputStream findInputStream(File file){
