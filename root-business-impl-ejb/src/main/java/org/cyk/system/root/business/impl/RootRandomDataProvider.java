@@ -49,8 +49,12 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	}
 	
 	public Person person(Boolean male,Country country,PhoneNumberType type,Boolean genSignature){
-		Person person = new Person();
 		RandomPerson randomPerson = Boolean.TRUE.equals(male)?randomDataProvider.getMale():randomDataProvider.getFemale();
+		
+		Person person = new Person();
+		person.setExtendedInformations(new PersonExtendedInformations());
+		person.getExtendedInformations().setParty(person);
+		
 		person.setName(randomPerson.firstName());
 		person.setLastName(randomPerson.lastName());
 		person.setSurname(randomPerson.surName());
@@ -60,6 +64,11 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		photo.setBytes(Boolean.TRUE.equals(male)?randomDataProvider.getMale().photo():randomDataProvider.getFemale().photo());
 		photo.setExtension("png");
 		person.setImage(photo);
+		
+		/*if(person.getExtendedInformations()!=null){
+			Location location = new 
+			person.getExtendedInformations().setBirthLocation();
+		}*/
 		
 		if(Boolean.TRUE.equals(genSignature)){
 			if(person.getExtendedInformations()==null){
