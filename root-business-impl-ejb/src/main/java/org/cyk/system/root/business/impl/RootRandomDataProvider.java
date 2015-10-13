@@ -25,6 +25,7 @@ import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER+1)
 public class RootRandomDataProvider extends AbstractRandomDataProvider implements Serializable {
@@ -49,8 +50,10 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	
 	public Person person(Boolean male,Country country,PhoneNumberType type,Boolean genSignature){
 		Person person = new Person();
-		person.setName(Boolean.TRUE.equals(male)?randomDataProvider.getMale().firstName():randomDataProvider.getFemale().firstName());
-		person.setLastName(Boolean.TRUE.equals(male)?randomDataProvider.getMale().lastName():randomDataProvider.getFemale().lastName());
+		RandomPerson randomPerson = Boolean.TRUE.equals(male)?randomDataProvider.getMale():randomDataProvider.getFemale();
+		person.setName(randomPerson.firstName());
+		person.setLastName(randomPerson.lastName());
+		person.setSurname(randomPerson.surName());
 		person.setBirthDate(randomDataProvider.randomDate(DateUtils.addYears(new Date(), -50), DateUtils.addYears(new Date(), -20)) );
 		person.setContactCollection(contactCollection(country,type));
 		File photo = new File();

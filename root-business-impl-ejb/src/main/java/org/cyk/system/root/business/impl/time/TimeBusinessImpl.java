@@ -20,6 +20,7 @@ import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.InputCalendar;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.joda.time.DateTime;
@@ -32,11 +33,15 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	private LanguageBusiness languageBusiness = LanguageBusinessImpl.getInstance();
 	
 	public String format(Field field,Date date){
+		if(date==null)
+			return Constant.EMPTY_STRING;
 		return new SimpleDateFormat(findFormatPattern(field)).format(date);
 	}
 	
 	@Override
 	public String formatDate(Date date,String pattern,Locale locale) {
+		if(date==null)
+			return Constant.EMPTY_STRING;
 		return new SimpleDateFormat(pattern, locale).format(date);
 	}
 	@Override

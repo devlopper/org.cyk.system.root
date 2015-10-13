@@ -16,6 +16,7 @@ import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PostalBox;
+import org.cyk.system.root.model.geography.Website;
 import org.cyk.system.root.persistence.api.geography.ContactCollectionDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 
@@ -36,6 +37,7 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
         aCollection.setLocations(contactDao.readByCollectionByClass(aCollection,Location.class));
         aCollection.setElectronicMails(contactDao.readByCollectionByClass(aCollection,ElectronicMail.class));
         aCollection.setPostalBoxs(contactDao.readByCollectionByClass(aCollection,PostalBox.class));
+        aCollection.setWebsites(contactDao.readByCollectionByClass(aCollection,Website.class));
     }
 
     @Override
@@ -45,6 +47,7 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
         configure(collection.getLocations(), collection);
         configure(collection.getElectronicMails(), collection);
         configure(collection.getPostalBoxs(), collection);
+        configure(collection.getWebsites(), collection);
         return collection;
     }
     
@@ -54,6 +57,7 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
     	delete(collection.getLocations(), collection);
     	delete(collection.getElectronicMails(), collection);
     	delete(collection.getPostalBoxs(), collection);
+    	delete(collection.getWebsites(), collection);
     	return super.delete(collection);
     }
     
@@ -63,6 +67,7 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
     	update(contactDao.readByCollectionByClass(collection,Location.class), collection.getLocations(), collection);
     	update(contactDao.readByCollectionByClass(collection,ElectronicMail.class), collection.getElectronicMails(), collection);
     	update(contactDao.readByCollectionByClass(collection,PostalBox.class), collection.getPostalBoxs(), collection);
+    	update(contactDao.readByCollectionByClass(collection,Website.class), collection.getWebsites(), collection);
     	return super.update(collection);
     }
      

@@ -79,7 +79,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     @Inject protected BusinessLocator businessLocator;
     @Inject protected BusinessManager businessManager;
     @Inject protected LanguageBusiness languageBusiness;
-    @Inject protected JasperReportBusinessImpl reportBusiness;
+    @Inject @Getter protected JasperReportBusinessImpl reportBusiness;
     @Inject protected PermissionBusiness permissionBusiness;
     @Inject protected RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject @Getter protected FileBusiness fileBusiness;

@@ -88,7 +88,7 @@ public class DefaultReportBasedOnDynamicBuilder extends AbstractReportBasedOnDyn
 		
 		report.setFileExtension(parameters.getFileExtension());
 		
-		reportManager.prepare(report);
+		reportBusiness.prepare(report);
 	}
 
 	@Override

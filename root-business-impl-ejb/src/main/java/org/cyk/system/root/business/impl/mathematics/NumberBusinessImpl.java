@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
+import org.cyk.utility.common.Constant;
 
 @Singleton
 public class NumberBusinessImpl implements NumberBusiness,Serializable {
@@ -24,7 +25,7 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 	@Override
 	public String format(Number number, Locale locale) {
 		if(number==null)
-			return null;
+			return Constant.EMPTY_STRING;
 		NumberFormat numberFormatter = NumberFormat.getNumberInstance(locale);
 		return numberFormatter.format(number);
 	}

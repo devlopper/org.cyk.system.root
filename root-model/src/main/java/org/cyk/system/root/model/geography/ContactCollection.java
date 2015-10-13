@@ -23,6 +23,7 @@ public class ContactCollection extends AbstractIdentifiable implements Serializa
 	@Transient private Collection<Location> locations;
 	@Transient private Collection<PostalBox> postalBoxs;
 	@Transient private Collection<ElectronicMail> electronicMails;
+	@Transient private Collection<Website> websites;
 	
 	@Override
 	public String toString() {
@@ -38,7 +39,8 @@ public class ContactCollection extends AbstractIdentifiable implements Serializa
 	    s.append(StringUtils.join(phoneNumbers,",")+ContentType.DEFAULT.getNewLineMarker());
 	    s.append(StringUtils.join(electronicMails,",")+ContentType.DEFAULT.getNewLineMarker());
 	    s.append(StringUtils.join(locations,",")+ContentType.DEFAULT.getNewLineMarker());
-	    s.append(StringUtils.join(postalBoxs,","));
+	    s.append(StringUtils.join(postalBoxs,",")+ContentType.DEFAULT.getNewLineMarker());
+	    s.append(StringUtils.join(websites,","));
 	    return s.toString();
 	}
 	

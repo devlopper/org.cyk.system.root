@@ -18,7 +18,7 @@ import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.utility.common.Constant;
 
-@Singleton
+@Singleton @Deprecated
 public class ReportManager extends AbstractBusinessServiceImpl implements Serializable {
 
 	private static final long serialVersionUID = -5836159182564631958L;

@@ -1,14 +1,8 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.model.party.person.AbstractActor;
 
 import lombok.Getter;
 import lombok.Setter;

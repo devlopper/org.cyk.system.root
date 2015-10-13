@@ -43,6 +43,13 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 		add(null, label, null);
 	}
 	
+	public LabelValueReport getById(String labelId){
+		for(LabelValueReport labelValue : collection)
+			if(labelValue.getIdentifier().equals(labelId))
+				return labelValue;
+		return null;
+	}
+	
 	/**/
 	
 	public String getHtml(){
@@ -83,10 +90,7 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 				break;
 			}
 			return contentBuilder.toString();
-		}
-		
-		
-		
+		}		
 	}
 	
 	/**/
