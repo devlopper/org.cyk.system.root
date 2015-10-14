@@ -65,6 +65,12 @@ public class IntervalBusinessImpl extends AbstractEnumerationBusinessImpl<Interv
 			ok2 = c2 >=0;	
 		
 		return ok1 && ok2;
+	}
+
+	
+	@Override
+	public Collection<Interval> findByCollection(IntervalCollection collection) {
+		return dao.readByCollection(collection);
 	}  
 
     

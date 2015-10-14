@@ -7,11 +7,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.geography.ContactCollection;
 
-@Getter @Setter @Entity 
+@Getter @Setter @Entity @NoArgsConstructor
 public class JobInformations extends AbstractPersonExtendedInformations implements Serializable {
 
 	private static final long serialVersionUID = 4416245866978363658L;
@@ -24,4 +25,7 @@ public class JobInformations extends AbstractPersonExtendedInformations implemen
 	
 	@OneToOne private ContactCollection contactCollection;
 	
+	public JobInformations(Person party) {
+		super(party);
+	}
 }

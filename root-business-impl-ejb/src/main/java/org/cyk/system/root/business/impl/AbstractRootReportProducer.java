@@ -36,21 +36,21 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return currentLabelValueCollection;
 	}
 	
-	protected void labelValue(LabelValueCollectionReport collection,String id,String value,Boolean condition){
+	protected LabelValueReport labelValue(LabelValueCollectionReport collection,String id,String value,Boolean condition){
 		if(!Boolean.TRUE.equals(condition))
-			return;
+			return null;
 		currentLabelValueCollection = collection;
-		currentLabelValueCollection.add(id,languageBusiness.findText(id), value);
+		return currentLabelValueCollection.add(id,languageBusiness.findText(id), value);
 	}
-	protected void labelValue(String labelId,String value,Boolean condition){
-		labelValue(currentLabelValueCollection, labelId, value,condition);
+	protected LabelValueReport labelValue(String labelId,String value,Boolean condition){
+		return labelValue(currentLabelValueCollection, labelId, value,condition);
 	}
 	
-	protected void labelValue(LabelValueCollectionReport collection,String labelId,String value){
-		labelValue(collection, labelId, value,Boolean.TRUE);
+	protected LabelValueReport labelValue(LabelValueCollectionReport collection,String labelId,String value){
+		return labelValue(collection, labelId, value,Boolean.TRUE);
 	}
-	protected void labelValue(String labelId,String value){
-		labelValue(currentLabelValueCollection,labelId, value);
+	protected LabelValueReport labelValue(String labelId,String value){
+		return labelValue(currentLabelValueCollection,labelId, value);
 	}
 	
 	protected LabelValueReport getLabelValue(String id){
@@ -66,6 +66,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	protected void set(Person person,PersonReport report){
+		rootBusinessLayer.getPersonBusiness().load(person);
 		set(person.getContactCollection(), report.getContact());
 		
 		report.setName(person.getName());

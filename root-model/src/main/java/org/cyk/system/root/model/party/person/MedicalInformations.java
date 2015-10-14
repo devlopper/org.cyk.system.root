@@ -10,9 +10,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @Entity 
+@Getter @Setter @Entity @NoArgsConstructor
 public class MedicalInformations extends AbstractPersonExtendedInformations implements Serializable {
 
 	private static final long serialVersionUID = 4416245866978363658L;
@@ -23,4 +24,8 @@ public class MedicalInformations extends AbstractPersonExtendedInformations impl
 	
 	@Transient private Collection<Medication> medications = new ArrayList<>();
 	@Transient private Collection<MedicalInformationsAllergy> medicalInformationsAllergies = new ArrayList<>();
+	
+	public MedicalInformations(Person party) {
+		super(party);
+	}
 }

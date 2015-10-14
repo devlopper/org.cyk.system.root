@@ -12,9 +12,10 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @Entity 
+@Getter @Setter @Entity @NoArgsConstructor
 public class PersonExtendedInformations extends AbstractPersonExtendedInformations implements Serializable {
 
 	private static final long serialVersionUID = 4416245866978363658L;
@@ -31,5 +32,9 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 	 */
 	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
 	private File signatureSpecimen;
+
+	public PersonExtendedInformations(Person party) {
+		super(party);
+	}
 	
 }

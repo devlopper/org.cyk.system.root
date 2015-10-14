@@ -32,15 +32,17 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 			collection.add(labelValueReport);
 		}
 	}
-	
-	public void add(String identifier,String label,String value){
-		collection.add(new LabelValueReport(identifier, label, value));
+
+	public LabelValueReport add(String identifier,String label,String value){
+		LabelValueReport r = null;
+		collection.add(r = new LabelValueReport(this,identifier, label, value));
+		return r;
 	}
-	public void add(String label,String value){
-		add(null, label, value);
+	public LabelValueReport add(String label,String value){
+		return add(null, label, value);
 	}
-	public void add(String label){
-		add(null, label, null);
+	public LabelValueReport add(String label){
+		return add(null, label, null);
 	}
 	
 	public LabelValueReport getById(String labelId){

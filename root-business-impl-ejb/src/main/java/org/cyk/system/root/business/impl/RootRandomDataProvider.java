@@ -22,6 +22,7 @@ import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.JobFunction;
+import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
@@ -56,8 +57,8 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		RandomPerson randomPerson = Boolean.TRUE.equals(male)?randomDataProvider.getMale():randomDataProvider.getFemale();
 		
 		Person person = new Person();
-		person.setExtendedInformations(new PersonExtendedInformations());
-		person.getExtendedInformations().setParty(person);
+		person.setExtendedInformations(new PersonExtendedInformations(person));
+		person.setJobInformations(new JobInformations(person));
 		
 		person.setName(randomPerson.firstName());
 		person.setLastName(randomPerson.lastName());
@@ -71,14 +72,10 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		photo.setExtension(randomFile.getExtension());
 		person.setImage(photo);
 		
-		if(person.getExtendedInformations()!=null){
-			person.getExtendedInformations().setBirthLocation(location(null));
-		}
+		person.getExtendedInformations().setBirthLocation(location(null));
 		
-		if(person.getJobInformations()!=null){
-			person.getJobInformations().setTitle(oneFromDatabase(JobTitle.class));
-			person.getJobInformations().setFunction(oneFromDatabase(JobFunction.class));
-		}
+		person.getJobInformations().setTitle(oneFromDatabase(JobTitle.class));
+		person.getJobInformations().setFunction(oneFromDatabase(JobFunction.class));
 		
 		if(Boolean.TRUE.equals(genSignature)){
 			if(person.getExtendedInformations()==null){
@@ -112,6 +109,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		contactCollection.setPhoneNumbers(new ArrayList<PhoneNumber>());
 		phoneNumber(contactCollection, country,type);
 		contactCollection.setElectronicMails(new ArrayList<ElectronicMail>());
+		contactCollection.setLocations(new ArrayList<Location>());
 		email(contactCollection);
 		location(contactCollection);
 		return contactCollection;

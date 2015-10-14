@@ -52,6 +52,8 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			jobInformationsDao.create(person.getJobInformations());
 		if(person.getMedicalInformations()!=null)
 			medicalInformationsDao.create(person.getMedicalInformations());
+		person = dao.update(person);
+		
 		return person;
 	}
 	
@@ -78,7 +80,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return findNames(person, new FindNamesOptions());
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(Person person) {
 		super.load(person);
 		person.setExtendedInformations(extendedInformationsDao.readByParty(person));

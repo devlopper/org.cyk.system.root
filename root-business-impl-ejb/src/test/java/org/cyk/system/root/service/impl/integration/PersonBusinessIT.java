@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.RootRandomDataProvider;
+import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -27,8 +28,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     @Override
     protected void businesses() {
     	installApplication();
-    	for(int i=0;i<20;i++)
-    		create(RootRandomDataProvider.getInstance().person());
+    	for(int i=0;i<20;i++){
+    		Person person = RootRandomDataProvider.getInstance().person();
+    		//debug(person.getExtendedInformations());
+        	//debug(person.getJobInformations());
+    		create(person);
+    	}
     	
     	DataReadConfiguration dataReadConfig = new DataReadConfiguration();
     	dataReadConfig.setMaximumResultCount(3l);
@@ -40,6 +45,13 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	
     	dataReadConfig = new DataReadConfiguration();
     	assertEquals("Count", 21, personBusiness.findAll(dataReadConfig).size());
+    	
+    	
+    	Person person = RootRandomDataProvider.getInstance().oneFromDatabase(Person.class);
+    	person = personBusiness.load(person.getIdentifier());
+    	//debug(person.getExtendedInformations());
+    	//debug(person.getJobInformations());
+    	
     }
 
     @Override
