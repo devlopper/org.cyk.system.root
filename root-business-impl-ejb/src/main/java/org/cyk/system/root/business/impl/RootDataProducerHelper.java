@@ -68,6 +68,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	public IntervalCollection createIntervalCollection(String[][] values,Boolean create){
 		IntervalCollection collection = new IntervalCollection();
+		collection.setIntervals(new ArrayList<Interval>());
 		for(String[] v : values){
 			Interval interval = new Interval();
 			interval.setCollection(collection);
@@ -75,6 +76,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			interval.setName(v[1]);
 			interval.setLow(new BigDecimal(v[2]));
 			interval.setHigh(new BigDecimal(v[3]));
+			collection.getIntervals().add(interval);
 		}
 		if(Boolean.TRUE.equals(create))
 			return intervalCollectionBusiness.create(collection);
