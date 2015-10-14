@@ -112,6 +112,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     
     @Override
     public void createInitialData(Boolean runFakeTransactions) {
+    	rootDataProducerHelper.setBasePackage(getClass().getPackage());
     	persistData();
     	setConstants();
     	if(Boolean.TRUE.equals(runFakeTransactions))
