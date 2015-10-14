@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.utility.common.cdi.AbstractBean;
 
@@ -33,8 +32,11 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 		return rootDataProducerHelper.createEnumeration(aClass, name);
 	}
 
-	public Interval createInterval(IntervalCollection collection,String code, String name, String low,String high) {
-		return rootDataProducerHelper.createInterval(collection,code, name, low, high);
+	public IntervalCollection createIntervalCollection(String[][] values,Boolean create){
+		return rootDataProducerHelper.createIntervalCollection(values,create);
+	}
+	public IntervalCollection createIntervalCollection(String[][] values){
+		return rootDataProducerHelper.createIntervalCollection(values);
 	}
 
 	public <T extends AbstractIdentifiable> T create(T object) {

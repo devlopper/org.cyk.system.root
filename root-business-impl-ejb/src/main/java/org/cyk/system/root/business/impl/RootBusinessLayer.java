@@ -70,6 +70,7 @@ import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.mathematics.Evaluation;
+import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.JobFunction;
@@ -356,6 +357,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)JobTitle.class, (TypedBusiness)jobTitleBusiness);
         beansMap.put((Class)JobFunction.class, (TypedBusiness)jobFunctionBusiness);
         beansMap.put((Class)Evaluation.class, (TypedBusiness)evaluationBusiness);
+        beansMap.put((Class)IntervalCollection.class, (TypedBusiness)intervalCollectionBusiness);
     }
     
     @Override

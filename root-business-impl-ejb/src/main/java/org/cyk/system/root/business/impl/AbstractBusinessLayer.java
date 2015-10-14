@@ -336,8 +336,11 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		return rootDataProducerHelper.createEnumeration(aClass, name);
 	}
 
-	public Interval createInterval(IntervalCollection collection,String code, String name, String low,String high) {
-		return rootDataProducerHelper.createInterval(collection,code, name, low, high);
+	public IntervalCollection createIntervalCollection(String[][] values){
+		return rootDataProducerHelper.createIntervalCollection(values);
+	}
+	public IntervalCollection createIntervalCollection(String[][] values,Boolean create){
+		return rootDataProducerHelper.createIntervalCollection(values,create);
 	}
 
 	public <T extends AbstractIdentifiable> T create(T object) {

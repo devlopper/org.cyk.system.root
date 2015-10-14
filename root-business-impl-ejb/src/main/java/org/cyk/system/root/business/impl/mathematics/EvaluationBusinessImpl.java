@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.EvaluationBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.mathematics.Evaluation;
 import org.cyk.system.root.model.mathematics.EvaluationItem;
@@ -18,6 +19,7 @@ public class EvaluationBusinessImpl extends AbstractEnumerationBusinessImpl<Eval
 	private static final long serialVersionUID = -3799482462496328200L;
 	
 	@Inject private EvaluationItemDao evaluationItemDao;
+	@Inject private IntervalCollectionBusiness intervalCollectionBusiness;
 	
 	@Inject
 	public EvaluationBusinessImpl(EvaluationDao dao) {
@@ -26,6 +28,8 @@ public class EvaluationBusinessImpl extends AbstractEnumerationBusinessImpl<Eval
 	
 	@Override
 	public Evaluation create(Evaluation evaluation) {
+		if(evaluation.getIntervalCollection()!=null)
+			intervalCollectionBusiness.create(evaluation.getIntervalCollection());
 		evaluation = super.create(evaluation);
 		if(evaluation.getItems()!=null){
 			for(EvaluationItem item : evaluation.getItems()){

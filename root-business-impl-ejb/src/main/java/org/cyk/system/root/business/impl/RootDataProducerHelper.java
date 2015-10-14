@@ -9,14 +9,11 @@ import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
@@ -26,13 +23,16 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
 	
 	private static final long serialVersionUID = 2282674526022995453L;
 	
 	@Inject private GenericBusiness genericBusiness;
-	@Inject private IntervalBusiness intervalBusiness;
+	@Inject private IntervalCollectionBusiness intervalCollectionBusiness;
 	@Inject private FileBusiness fileBusiness;
 	
 	@Inject private GenericDao genericDao;
@@ -66,16 +66,22 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return createEnumeration(aClass, StringUtils.remove(name, Constant.CHARACTER_SPACE), name);
 	}
 	
-	public Interval createInterval(IntervalCollection collection,String code,String name,String low,String high){
-		if(collection!=null && collection.getIdentifier()==null)
-			genericBusiness.create(collection);
-		Interval interval = new Interval();
-		interval.setCollection(collection);
-		interval.setCode(code);
-		interval.setName(name);
-		interval.setLow(new BigDecimal(low));
-		interval.setHigh(new BigDecimal(high));
-		return intervalBusiness.create(interval);
+	public IntervalCollection createIntervalCollection(String[][] values,Boolean create){
+		IntervalCollection collection = new IntervalCollection();
+		for(String[] v : values){
+			Interval interval = new Interval();
+			interval.setCollection(collection);
+			interval.setCode(v[0]);
+			interval.setName(v[1]);
+			interval.setLow(new BigDecimal(v[2]));
+			interval.setHigh(new BigDecimal(v[3]));
+		}
+		if(Boolean.TRUE.equals(create))
+			return intervalCollectionBusiness.create(collection);
+		return collection;
+	}
+	public IntervalCollection createIntervalCollection(String[][] values){
+		return createIntervalCollection(values, Boolean.TRUE);
 	}
 	
 	public File createFile(String relativePath,String name){
