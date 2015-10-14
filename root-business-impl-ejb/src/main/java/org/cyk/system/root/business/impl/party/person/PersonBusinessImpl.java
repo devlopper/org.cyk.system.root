@@ -14,6 +14,7 @@ import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonSearchCriteria;
+import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.party.person.JobInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.MedicalInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
@@ -30,6 +31,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	@Inject private PersonExtendedInformationsDao extendedInformationsDao;
 	@Inject private JobInformationsDao jobInformationsDao;
 	@Inject private MedicalInformationsDao medicalInformationsDao;
+	@Inject private ContactDao contactDao;
 	
 	@Inject
 	public PersonBusinessImpl(PersonDao dao) {
@@ -40,8 +42,12 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	public Person create(Person person) {
 		super.create(person);
 		//person.setBirthDateAnniversary(repeatedEventBusiness.createAnniversary(person.getBirthDate(),person.getNames()));
-		if(person.getExtendedInformations()!=null)
+		if(person.getExtendedInformations()!=null){
+			if(person.getExtendedInformations().getBirthLocation()!=null){
+				contactDao.create(person.getExtendedInformations().getBirthLocation());
+			}
 			extendedInformationsDao.create(person.getExtendedInformations());
+		}
 		if(person.getJobInformations()!=null)
 			jobInformationsDao.create(person.getJobInformations());
 		if(person.getMedicalInformations()!=null)

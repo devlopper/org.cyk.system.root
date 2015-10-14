@@ -2,14 +2,14 @@ package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-
-import org.cyk.system.root.model.geography.ContactCollection;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import org.cyk.system.root.model.geography.ContactCollection;
 
 @Getter @Setter @Entity 
 public class JobInformations extends AbstractPersonExtendedInformations implements Serializable {
@@ -18,9 +18,9 @@ public class JobInformations extends AbstractPersonExtendedInformations implemen
 
 	private String company;
 	
-	@OneToOne(cascade=CascadeType.ALL) private JobFunction function;
+	@ManyToOne private JobFunction function;
 	
-	@OneToOne(cascade=CascadeType.ALL) private JobTitle title;
+	@ManyToOne private JobTitle title;
 	
 	@OneToOne private ContactCollection contactCollection;
 	

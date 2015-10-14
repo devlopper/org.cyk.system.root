@@ -26,7 +26,7 @@ public class PersonReport extends PartyReport implements Serializable {
 		Boolean male = provider.randomBoolean();
 		RandomPerson person = male ? provider.getMale() : provider.getFemale();
 		if(Boolean.TRUE.equals(generateImage))
-			image = inputStream(person.photo());
+			image = inputStream(person.photo().getBytes());
 		name = person.firstName();
 		lastName = person.lastName();
 		title = male ? "Mr":provider.randomBoolean()?"Mlle":"Mme";
@@ -40,7 +40,7 @@ public class PersonReport extends PartyReport implements Serializable {
 		jobFonction = provider.randomWord(10, 20);
 		jobTitle = provider.randomWord(10, 20);
 		if(Boolean.TRUE.equals(generateSignatureSpecimen))
-			signatureSpecimen = inputStream(provider.signatureSpecimen());
+			signatureSpecimen = inputStream(provider.signatureSpecimen().getBytes());
 	}
 	
 }

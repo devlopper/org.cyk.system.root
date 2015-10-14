@@ -1,6 +1,5 @@
 package org.cyk.system.root.business.impl;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -13,7 +12,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.io.IOUtils;
+import lombok.Getter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessLayerListener;
@@ -32,7 +32,9 @@ import org.cyk.system.root.business.impl.file.report.jasper.JasperReportBusiness
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
+import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
@@ -52,8 +54,6 @@ import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.cdi.AbstractLayer;
-
-import lombok.Getter;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -131,15 +131,10 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	public void registerTypedBusinessBean(Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> arg0) {}
     
     /* shortcut methods */
-    
+	 
     protected void registerResourceBundle(String id, ClassLoader aClassLoader) {
 		languageBusiness.registerResourceBundle(id, aClassLoader);
 	}
-
-	@SuppressWarnings("unchecked")
-    protected <T extends AbstractIdentifiable> T create(T anObject){
-        return (T) genericBusiness.create(anObject);
-    }
     
     protected <T> void registerValidator(Class<T> clazz,AbstractValidator<T> validator){
         validatorMap.registerValidator(clazz, validator);
@@ -302,18 +297,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	inputName.setName(name);
     	return create(inputName);
     }
-    
-    protected byte[] getResourceAsBytes(String relativePath){
-    	String path = "/"+StringUtils.replace(this.getClass().getPackage().getName(), ".", "/")+"/";
-    	try {
-    		logDebug("Getting resource as bytes {}", path+relativePath);
-    		return IOUtils.toByteArray(this.getClass().getResourceAsStream(path+relativePath));
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-    }
-    
+        
     protected StringGenerator stringGenerator(String leftPrefix,String leftPattern,Long leftLenght,String rightPattern,Long rightLenght,Long lenght){
     	StringGenerator stringGenerator = new StringGenerator();
     	stringGenerator.setConfiguration(new StringValueGeneratorConfiguration());
@@ -340,4 +324,39 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	script.setFile(fileBusiness.process(text.getBytes(), name+".txt"));
     	return script;
     }
+
+    /* Data creation */
+    
+    public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String code, String name) {
+		return rootDataProducerHelper.createEnumeration(aClass, code, name);
+	}
+
+	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String name) {
+		return rootDataProducerHelper.createEnumeration(aClass, name);
+	}
+
+	public Interval createInterval(IntervalCollection collection,String code, String name, String low,String high) {
+		return rootDataProducerHelper.createInterval(collection,code, name, low, high);
+	}
+
+	public <T extends AbstractIdentifiable> T create(T object) {
+		return rootDataProducerHelper.create(object);
+	}
+
+	public <T extends AbstractIdentifiable> void createMany(@SuppressWarnings("unchecked") T...objects) {
+		rootDataProducerHelper.createMany(objects);
+	}
+
+	public File createFile(String relativePath, String name) {
+		return rootDataProducerHelper.createFile(relativePath, name);
+	}
+
+	public byte[] getResourceAsBytes(String relativePath) {
+		return rootDataProducerHelper.getResourceAsBytes(relativePath);
+	}
+
+	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code) {
+		return rootDataProducerHelper.getEnumeration(aClass, code);
+	}
+
 }

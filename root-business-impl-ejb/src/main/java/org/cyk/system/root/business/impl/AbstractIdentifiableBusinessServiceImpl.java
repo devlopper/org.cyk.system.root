@@ -49,82 +49,82 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	    return (Class<?>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Class<IDENTIFIABLE> getClazz(){
 		return clazz;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IdentifiableBusinessService<IDENTIFIABLE, Long> find() {
 		getPersistenceService().select();
 		return this;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IDENTIFIABLE find(Long identifier) {
 	    return getPersistenceService().read(identifier);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IdentifiableBusinessService<IDENTIFIABLE, Long> find(Function function) {
 		getPersistenceService().select(function);
 		return this;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IdentifiableBusinessService<IDENTIFIABLE, Long> where(LogicalOperator aLogicalOperator, String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
 		getPersistenceService().where(aLogicalOperator, anAttributeName, aValue, anArithmeticOperator);
 		return this;
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IdentifiableBusinessService<IDENTIFIABLE, Long> where(String anAttributeName, Object aValue, ArithmeticOperator anArithmeticOperator) {
 		getPersistenceService().where(anAttributeName, aValue, anArithmeticOperator);
 		return this;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IdentifiableBusinessService<IDENTIFIABLE, Long> where(String anAttributeName,Object aValue) {
 		return where(anAttributeName, aValue, ArithmeticOperator.EQ);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public <RESULT_TYPE> RESULT_TYPE one(Class<RESULT_TYPE> resultType) {
 		return getPersistenceService().one(resultType);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<IDENTIFIABLE> all() {
 		return getPersistenceService().all();
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IDENTIFIABLE one() {
 		return getPersistenceService().one();
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Long oneLong() {
 		return getPersistenceService().oneLong();
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Long findOneIdentifierRandomly() {
 		return getPersistenceService().readOneIdentifierRandomly();
 	}
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<Long> findManyIdentifiersRandomly(Integer count) {
 		return getPersistenceService().readManyIdentifiersRandomly(count);
 	}
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<Long> findAllIdentifiers() {
 		return getPersistenceService().readAllIdentifiers();
 	}
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IDENTIFIABLE findOneRandomly() {
 		return getPersistenceService().readOneRandomly();
 	}
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<IDENTIFIABLE> findManyRandomly(Integer count) {
 		return getPersistenceService().readManyRandomly(count);
 	}

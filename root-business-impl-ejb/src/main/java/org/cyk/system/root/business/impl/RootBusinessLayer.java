@@ -67,6 +67,8 @@ import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.party.person.JobFunction;
+import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Sex;
@@ -100,6 +102,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Getter private Role administratorRole,managerRole,businessActorRole,settingManagerRole,securityManagerRole,userRole;
 	@Getter private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
 	@Getter private EventType anniversaryEventType,reminderEventType;
+	@Getter private Sex sexMale,sexFemale;
 	
 	@Inject @Getter private LanguageBusiness languageBusiness;
 	@Inject @Getter private MathematicsBusiness mathematicsBusiness;
@@ -303,10 +306,18 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void party(){
-    	create(new Sex("M", "Masculin"));
-        create(new Sex("F", "Feminin"));
+    	createEnumeration(Sex.class,Sex.MALE, "Masculin");
+    	createEnumeration(Sex.class,Sex.FEMALE, "Feminin");
         create(new MaritalStatus("B", "Celibataire"));
         create(new MaritalStatus("M", "Marie"));
+        
+        createEnumeration(JobFunction.class,"DJ","Développeur Java");
+        createEnumeration(JobFunction.class,"RV","Responsable des ventes");
+        createEnumeration(JobFunction.class,"CP","Chargé des projets");
+        
+        createEnumeration(JobTitle.class,"Directeur");
+        createEnumeration(JobTitle.class,"Manager");
+        createEnumeration(JobTitle.class,"Conseiller");
     }
     
     private void security(){ 
@@ -362,6 +373,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	anniversaryEventType = eventTypeBusiness.find(EventType.ANNIVERSARY);
     	reminderEventType = eventTypeBusiness.find(EventType.REMINDER);
+    	
+    	sexMale = getEnumeration(Sex.class, Sex.MALE);
+    	sexFemale = getEnumeration(Sex.class, Sex.FEMALE);
     	
     	RemoteEndPoint.USER_INTERFACE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_USER_INTERFACE);
     	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_EMAIL);

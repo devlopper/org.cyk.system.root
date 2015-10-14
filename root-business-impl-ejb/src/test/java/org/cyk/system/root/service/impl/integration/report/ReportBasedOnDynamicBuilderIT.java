@@ -26,6 +26,7 @@ import org.cyk.system.root.service.impl.integration.AbstractBusinessIT;
 import org.cyk.system.root.service.impl.unit.jasper.samplereport.Employee;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
@@ -56,7 +57,8 @@ public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
     	installApplication();
         final Party owner = new Party();
         owner.setName("Effi-Dis");
-        owner.setImage(fileBusiness.process(RandomDataProvider.getInstance().companyLogo(), "image.png"));
+        RandomFile randomFile = RandomDataProvider.getInstance().companyLogo();
+        owner.setImage(fileBusiness.process(randomFile.getBytes(), "image."+randomFile.getExtension()));
         PhoneNumber phoneNumber = new PhoneNumber();
         phoneNumber.setNumber("00112233");
         owner.getContactCollection().setPhoneNumbers(new ArrayList<PhoneNumber>());
