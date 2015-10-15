@@ -1,5 +1,8 @@
 package org.cyk.system.root.business.impl;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.persistence.api.AbstractEnumerationDao;
@@ -16,9 +19,16 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
         super(dao);
     }
     
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public ENUMERATION find(String code){
         return dao.read(code);
+    }
+    
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public ENUMERATION load(String code) {
+    	ENUMERATION enumeration = find(code);
+    	load(enumeration);
+    	return enumeration;
     }
 
 }

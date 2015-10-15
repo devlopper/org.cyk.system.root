@@ -20,8 +20,7 @@ public class MetricValue extends AbstractModelElement implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne @NotNull
-	private Metric metric;
+	@ManyToOne @NotNull private Metric metric;
 	
 	@Column(name="metric_value",precision=20,scale=FLOAT_SCALE) 
 	private BigDecimal value;

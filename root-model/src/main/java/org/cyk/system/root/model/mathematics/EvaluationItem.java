@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @Entity @NoArgsConstructor
+@Getter @Setter @Entity @NoArgsConstructor @Deprecated
 public class EvaluationItem  extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;

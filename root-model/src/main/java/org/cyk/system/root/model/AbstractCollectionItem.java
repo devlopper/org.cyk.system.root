@@ -25,5 +25,10 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 		this.collection = collection;
 	}
 
+	@Override
+	public String toString() {
+		return "("+collection+")"+super.toString();
+	}
 	
+	public static final String FIELD_COLLECTION = "collection";
 }
