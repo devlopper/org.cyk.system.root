@@ -43,6 +43,10 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	public <T extends AbstractIdentifiable> T create(T object){
 		return (T) genericBusiness.create(object);
 	}
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractIdentifiable> T update(T object){
+		return (T) genericBusiness.update(object);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractIdentifiable> void createMany(T...objects){
@@ -68,15 +72,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	public IntervalCollection createIntervalCollection(String[][] values,Boolean create){
 		IntervalCollection collection = new IntervalCollection();
-		collection.setIntervals(new ArrayList<Interval>());
 		for(String[] v : values){
-			Interval interval = new Interval();
-			interval.setCollection(collection);
-			interval.setCode(v[0]);
-			interval.setName(v[1]);
-			interval.setLow(new BigDecimal(v[2]));
-			interval.setHigh(new BigDecimal(v[3]));
-			collection.getIntervals().add(interval);
+			collection.getCollection().add(new Interval(collection,v[0],v[1],new BigDecimal(v[2]),new BigDecimal(v[3])));
 		}
 		if(Boolean.TRUE.equals(create))
 			return intervalCollectionBusiness.create(collection);

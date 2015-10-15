@@ -76,8 +76,8 @@ public class MathematicsBusinessIT extends AbstractBusinessIT {
     		Interval interval = new Interval();
     		interval.setCollection(intervalManager);
     		interval.setName(values[i]);
-    		interval.setLow(new BigDecimal(values[i+1]));
-    		interval.setHigh(new BigDecimal(values[i+2]));
+    		interval.getLow().setValue(new BigDecimal(values[i+1]));
+    		interval.getHigh().setValue(new BigDecimal(values[i+2]));
     		create(interval);
     	}
     	return intervalManager;
@@ -202,8 +202,8 @@ public class MathematicsBusinessIT extends AbstractBusinessIT {
     	Assert.assertNotNull(interval);
     	Assert.assertEquals(expectedLow,interval.getLow());
     	Assert.assertEquals(expectedHigh,interval.getHigh());
-    	Assert.assertTrue(interval.getLow().compareTo(expectedLow)<=0);
-    	Assert.assertTrue(interval.getHigh().compareTo(expectedHigh)>=0);
+    	Assert.assertTrue(interval.getLow().getValue().compareTo(expectedLow)<=0);
+    	Assert.assertTrue(interval.getHigh().getValue().compareTo(expectedHigh)>=0);
     }
     
     private void assertIntervalNull(IntervalCollection collection,BigDecimal value,Integer scale){

@@ -2,7 +2,6 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -40,7 +39,6 @@ import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGeneratorConfiguration;
-import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.party.Application;
@@ -269,22 +267,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 			permissions[i] = permissionBusiness.computeCode((Class<AbstractIdentifiable>)entityCruds[i][0], (Crud)entityCruds[i][1]);
 	}
 	*/
-    
-    
-    protected IntervalCollection intervalCollection(String...values){
-    	IntervalCollection intervalCollection = new IntervalCollection();
-    	create(intervalCollection);
-    	for(int i=0;i<values.length;i=i+3){
-    		Interval interval = new Interval();
-    		interval.setCollection(intervalCollection);
-    		interval.setName(values[i]);
-    		interval.setLow(new BigDecimal(values[i+1]));
-    		interval.setHigh(new BigDecimal(values[i+2]));
-    		create(interval);
-    	}
-    	return intervalCollection;
-    }
-    
+        
     protected Metric createMetric(String code,String name){
     	Metric metric = new Metric();
     	metric.setCode(code);
@@ -345,6 +328,9 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 
 	public <T extends AbstractIdentifiable> T create(T object) {
 		return rootDataProducerHelper.create(object);
+	}
+	public <T extends AbstractIdentifiable> T update(T object) {
+		return rootDataProducerHelper.update(object);
 	}
 
 	public <T extends AbstractIdentifiable> void createMany(@SuppressWarnings("unchecked") T...objects) {

@@ -68,13 +68,15 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     }
     
     protected void checkUniqueConstraints(Identifiable<?> anIdentifiable){
-        if(anIdentifiable instanceof AbstractEnumeration) {
+        logTrace("Check fields unique constraints for an instance of {} , {}",anIdentifiable.getClass().getSimpleName(),anIdentifiable);
+    	if(anIdentifiable instanceof AbstractEnumeration) {
             AbstractEnumeration enumeration = (AbstractEnumeration) anIdentifiable;
             //TODO look for field with @UniqueConstraint
             //Code
             if(enumeration.getIdentifier()==null){
-                exceptionUtils().exception(genericDao.use(enumeration.getClass()).select(Function.COUNT).where("code", enumeration.getCode()).oneLong()>0,
-                        "exception.value.duplicate",new Object[]{"Code",enumeration.getCode()});
+            	Long countInDB = genericDao.use(enumeration.getClass()).select(Function.COUNT).where("code", enumeration.getCode()).oneLong();
+            	logTrace("Check for Create. Count existing = {}",countInDB);
+                exceptionUtils().exception(countInDB>0,"exception.value.duplicate",new Object[]{"Code",enumeration.getCode()});
             }else{
                 AbstractEnumeration inDB = (AbstractEnumeration) genericDao.use(enumeration.getClass()).read(enumeration.getIdentifier());
                 if(!inDB.getCode().equals(enumeration.getCode()))

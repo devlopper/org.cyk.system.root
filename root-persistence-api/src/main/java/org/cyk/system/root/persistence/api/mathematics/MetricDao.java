@@ -4,7 +4,7 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 
-public interface MetricCollectionItemDao extends AbstractCollectionItemDao<Metric,MetricCollection> {
+public interface MetricDao extends AbstractCollectionItemDao<Metric,MetricCollection> {
 
     
 }

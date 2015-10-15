@@ -22,13 +22,17 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		if(collection.getCollection()!=null){
 			for(ITEM item : collection.getCollection()){
 				item.setCollection(collection);
-				getItemDao().create(item);
+				item = createItem(item);
 			}
 		}
 		return collection;
 	}
 	
 	protected abstract ITEM_DAO getItemDao();
+	
+	protected ITEM createItem(ITEM item){
+		return getItemDao().create(item);
+	}
 	
 	protected void __load__(COLLECTION collection) {
 		collection.setCollection(getItemDao().readByCollection(collection));

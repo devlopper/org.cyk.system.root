@@ -33,9 +33,10 @@ import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
-import org.cyk.system.root.business.api.mathematics.EvaluationBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
@@ -69,8 +70,9 @@ import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.language.Language;
-import org.cyk.system.root.model.mathematics.Evaluation;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
+import org.cyk.system.root.model.mathematics.Metric;
+import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.JobFunction;
@@ -127,7 +129,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private EventBusiness eventBusiness;
     @Inject @Getter private PersonBusiness personBusiness;
     @Inject @Getter private IntervalCollectionBusiness intervalCollectionBusiness;
-    @Inject @Getter private EvaluationBusiness evaluationBusiness;
     @Inject private RoleBusiness roleBusiness;
     @Inject private RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject private UserAccountBusiness userAccountBusiness;
@@ -137,6 +138,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject @Getter private ClazzBusiness clazzBusiness;
     @Inject private JobTitleBusiness jobTitleBusiness;
     @Inject private JobFunctionBusiness jobFunctionBusiness;
+    @Inject @Getter private MetricCollectionBusiness metricCollectionBusiness;
+    @Inject @Getter private MetricBusiness metricBusiness;
     
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
@@ -356,8 +359,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)RoleSecuredView.class, (TypedBusiness)roleSecuredViewBusiness);
         beansMap.put((Class)JobTitle.class, (TypedBusiness)jobTitleBusiness);
         beansMap.put((Class)JobFunction.class, (TypedBusiness)jobFunctionBusiness);
-        beansMap.put((Class)Evaluation.class, (TypedBusiness)evaluationBusiness);
         beansMap.put((Class)IntervalCollection.class, (TypedBusiness)intervalCollectionBusiness);
+        beansMap.put((Class)MetricCollection.class, (TypedBusiness)metricCollectionBusiness);
+        beansMap.put((Class)Metric.class, (TypedBusiness)metricBusiness);
     }
     
     @Override

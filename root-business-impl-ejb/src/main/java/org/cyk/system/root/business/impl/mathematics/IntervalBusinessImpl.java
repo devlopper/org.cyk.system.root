@@ -8,12 +8,12 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
-import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
+import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 
-public class IntervalBusinessImpl extends AbstractEnumerationBusinessImpl<Interval, IntervalDao> implements IntervalBusiness,Serializable {
+public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Interval, IntervalDao,IntervalCollection> implements IntervalBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
@@ -32,7 +32,7 @@ public class IntervalBusinessImpl extends AbstractEnumerationBusinessImpl<Interv
 	}  
 	
 	private Boolean contains(Interval interval, BigDecimal value,Integer scale) {		
-		BigDecimal low = interval.getLow(),high = interval.getHigh();
+		BigDecimal low = interval.getLow().getValue(),high = interval.getHigh().getValue();
 		if(low==null && high==null)
 			return(value==null);
 		if(value==null)
@@ -40,13 +40,13 @@ public class IntervalBusinessImpl extends AbstractEnumerationBusinessImpl<Interv
 		
 		BigDecimal correctedScale = scale==null?value:value.setScale(scale,RoundingMode.DOWN);//truncates
 		if(low==null)
-			if(Boolean.TRUE.equals(interval.getExcludeHigh()))
+			if(Boolean.TRUE.equals(interval.getHigh().getExcluded()))
 				return correctedScale.compareTo(high)<0;
 			else
 				return correctedScale.compareTo(high)<=0;
 		
 		if(high==null)
-			if(Boolean.TRUE.equals(interval.getExcludeLow()))
+			if(Boolean.TRUE.equals(interval.getLow().getExcluded()))
 				return correctedScale.compareTo(low)>0;
 			else
 				return correctedScale.compareTo(low)>=0;
@@ -54,12 +54,12 @@ public class IntervalBusinessImpl extends AbstractEnumerationBusinessImpl<Interv
 		int c1 = low.compareTo(correctedScale),c2 = high.compareTo(correctedScale);
 		
 		Boolean ok1,ok2;
-		if(Boolean.TRUE.equals(interval.getExcludeLow()))
+		if(Boolean.TRUE.equals(interval.getLow().getExcluded()))
 			ok1 = c1<0;
 		else
 			ok1 = c1<=0;
 		
-		if(Boolean.TRUE.equals(interval.getExcludeHigh()))
+		if(Boolean.TRUE.equals(interval.getHigh().getExcluded()))
 			ok2 = c2 >0;
 		else
 			ok2 = c2 >=0;	

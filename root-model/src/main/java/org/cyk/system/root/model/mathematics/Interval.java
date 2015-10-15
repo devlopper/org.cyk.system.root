@@ -3,36 +3,52 @@ package org.cyk.system.root.model.mathematics;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.AbstractCollectionItem;
 
-@Getter @Setter
-@Entity 
-public class Interval extends AbstractEnumeration implements Serializable {
+@Getter @Setter @Entity @NoArgsConstructor
+public class Interval extends AbstractCollectionItem<IntervalCollection> implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
-
-	@ManyToOne
-	private IntervalCollection collection;
-		
-	@Column(precision=30,scale=10)
-	private BigDecimal low;
 	
-	@Column(precision=30,scale=10)
-	private BigDecimal high;
+	@Embedded @AttributeOverrides(value={
+			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=FIELD_LOW_VALUE))
+			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=FIELD_LOW_EXCLUDED))
+	})
+	private IntervalExtremity low = new IntervalExtremity();
 	
-	private Boolean excludeLow=Boolean.FALSE,excludeHigh=Boolean.FALSE;
+	@Embedded @AttributeOverrides(value={
+			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=FIELD_HIGH_VALUE))
+			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=FIELD_HIGH_EXCLUDED))
+	})
+	private IntervalExtremity high = new IntervalExtremity();
 	
 	/* color support right now */
 	private String style;
 	
-	public Interval() {}
+	public Interval(IntervalCollection collection, String code, String name,BigDecimal low,BigDecimal high) {
+		super(collection, code, name);
+		this.low = new IntervalExtremity(low);
+		this.high = new IntervalExtremity(high);
+	}
+	
+	private static final String LOW = "low";
+	public static final String FIELD_LOW_VALUE = LOW+"_"+IntervalExtremity.FIELD_VALUE;
+	public static final String FIELD_LOW_EXCLUDED = LOW+"_"+IntervalExtremity.FIELD_EXCLUDED;
+	
+	private static final String HIGH = "high";
+	public static final String FIELD_HIGH_VALUE = HIGH+"_"+IntervalExtremity.FIELD_VALUE;
+	public static final String FIELD_HIGH_EXCLUDED = HIGH+"_"+IntervalExtremity.FIELD_EXCLUDED;
+	
 	/*
 	public Interval(IntervalManager manager) {
 		this.manager = manager;
@@ -147,4 +163,5 @@ public class Interval extends AbstractEnumeration implements Serializable {
 	public String toString() {
 		return name;
 	}
+
 }

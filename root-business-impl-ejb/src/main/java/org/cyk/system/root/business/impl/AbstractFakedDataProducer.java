@@ -42,6 +42,9 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	public <T extends AbstractIdentifiable> T create(T object) {
 		return rootDataProducerHelper.create(object);
 	}
+	public <T extends AbstractIdentifiable> T update(T object) {
+		return rootDataProducerHelper.update(object);
+	}
 
 	public <T extends AbstractIdentifiable> void createMany(@SuppressWarnings("unchecked") T...objects) {
 		rootDataProducerHelper.createMany(objects);

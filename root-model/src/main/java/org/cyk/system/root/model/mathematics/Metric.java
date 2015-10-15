@@ -20,6 +20,10 @@ public class Metric extends AbstractCollectionItem<MetricCollection> implements 
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@OneToOne private IntervalCollection intervalCollection;
-
+	@OneToOne private IntervalCollection valueIntervalCollection;
+	
+	public IntervalCollection getValueIntervalCollection(){
+		return valueIntervalCollection==null?(collection==null?null:collection.getValueIntervalCollection()):valueIntervalCollection;
+	}
+	
 }
