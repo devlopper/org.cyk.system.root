@@ -41,5 +41,10 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 		return metricCollectionItemDao;
 	}
 	
+	@Override
+	protected void __load__(MetricCollection collection) {
+		super.__load__(collection);
+		collection.setValues(values);
+	}
 
 }

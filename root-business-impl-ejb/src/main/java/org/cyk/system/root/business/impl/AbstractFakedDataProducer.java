@@ -32,11 +32,11 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 		return rootDataProducerHelper.createEnumeration(aClass, name);
 	}
 
-	public IntervalCollection createIntervalCollection(String[][] values,Boolean create){
-		return rootDataProducerHelper.createIntervalCollection(values,create);
+	public IntervalCollection createIntervalCollection(String code,String[][] values,Boolean create){
+		return rootDataProducerHelper.createIntervalCollection(code,values,create);
 	}
-	public IntervalCollection createIntervalCollection(String[][] values){
-		return rootDataProducerHelper.createIntervalCollection(values);
+	public IntervalCollection createIntervalCollection(String code,String[][] values){
+		return rootDataProducerHelper.createIntervalCollection(code,values);
 	}
 
 	public <T extends AbstractIdentifiable> T create(T object) {

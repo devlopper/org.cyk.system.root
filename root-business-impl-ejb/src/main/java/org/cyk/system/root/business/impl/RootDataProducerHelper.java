@@ -70,8 +70,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return createEnumeration(aClass, StringUtils.remove(name, Constant.CHARACTER_SPACE), name);
 	}
 	
-	public IntervalCollection createIntervalCollection(String[][] values,Boolean create){
-		IntervalCollection collection = new IntervalCollection();
+	public IntervalCollection createIntervalCollection(String code,String[][] values,Boolean create){
+		IntervalCollection collection = new IntervalCollection(code);
 		for(String[] v : values){
 			collection.getCollection().add(new Interval(collection,v[0],v[1],new BigDecimal(v[2]),new BigDecimal(v[3])));
 		}
@@ -79,8 +79,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			return intervalCollectionBusiness.create(collection);
 		return collection;
 	}
-	public IntervalCollection createIntervalCollection(String[][] values){
-		return createIntervalCollection(values, Boolean.TRUE);
+	public IntervalCollection createIntervalCollection(String code,String[][] values){
+		return createIntervalCollection(code,values, Boolean.TRUE);
 	}
 	
 	public File createFile(String relativePath,String name){
