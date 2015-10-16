@@ -25,7 +25,7 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 	
 	@OneToOne(cascade=CascadeType.ALL) private PersonCredentials credentials;
 	@ManyToOne private MaritalStatus maritalStatus;
-	@OneToOne(cascade=CascadeType.ALL) private PersonTitle title;
+	@ManyToOne private PersonTitle title;
 	
 	/**
 	 * This is an image which visually represent the signature

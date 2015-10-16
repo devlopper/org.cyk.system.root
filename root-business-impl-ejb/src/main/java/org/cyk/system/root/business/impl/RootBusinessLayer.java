@@ -334,11 +334,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createEnumeration(JobTitle.class,"Directeur");
         createEnumeration(JobTitle.class,"Manager");
         createEnumeration(JobTitle.class,"Conseiller");
-        
-        /*createEnumeration(PersonTitle.class,PersonTitle.MISTER, "Mr");
+           
+        //create(new PersonTitle("123", "456"));
+        createEnumeration(PersonTitle.class,PersonTitle.MISTER, "Mr");
         createEnumeration(PersonTitle.class,PersonTitle.MISS, "Ms");
         createEnumeration(PersonTitle.class,PersonTitle.MADAM, "Mme");
-        createEnumeration(PersonTitle.class,PersonTitle.DOCTOR, "Dr");*/
+        createEnumeration(PersonTitle.class,PersonTitle.DOCTOR, "Dr");
     }
     
     private void security(){ 

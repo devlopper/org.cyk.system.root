@@ -43,9 +43,8 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		super.create(person);
 		//person.setBirthDateAnniversary(repeatedEventBusiness.createAnniversary(person.getBirthDate(),person.getNames()));
 		if(person.getExtendedInformations()!=null){
-			if(person.getExtendedInformations().getBirthLocation()!=null){
+			if(person.getExtendedInformations().getBirthLocation()!=null)
 				contactDao.create(person.getExtendedInformations().getBirthLocation());
-			}
 			extendedInformationsDao.create(person.getExtendedInformations());
 		}
 		if(person.getJobInformations()!=null)
