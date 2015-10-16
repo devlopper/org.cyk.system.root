@@ -43,6 +43,7 @@ import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.party.person.JobFunctionBusiness;
 import org.cyk.system.root.business.api.party.person.JobTitleBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonTitleBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
@@ -79,6 +80,7 @@ import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleSecuredView;
@@ -137,6 +139,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject @Getter private StringGeneratorBusiness stringGeneratorBusiness;
     @Inject @Getter private ClazzBusiness clazzBusiness;
     @Inject private JobTitleBusiness jobTitleBusiness;
+    @Inject private PersonTitleBusiness personTitleBusiness;
     @Inject private JobFunctionBusiness jobFunctionBusiness;
     @Inject @Getter private MetricCollectionBusiness metricCollectionBusiness;
     @Inject @Getter private MetricBusiness metricBusiness;
@@ -331,6 +334,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createEnumeration(JobTitle.class,"Directeur");
         createEnumeration(JobTitle.class,"Manager");
         createEnumeration(JobTitle.class,"Conseiller");
+        
+        /*createEnumeration(PersonTitle.class,PersonTitle.MISTER, "Mr");
+        createEnumeration(PersonTitle.class,PersonTitle.MISS, "Ms");
+        createEnumeration(PersonTitle.class,PersonTitle.MADAM, "Mme");
+        createEnumeration(PersonTitle.class,PersonTitle.DOCTOR, "Dr");*/
     }
     
     private void security(){ 
@@ -358,6 +366,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)StringGenerator.class, (TypedBusiness)stringGeneratorBusiness);
         beansMap.put((Class)RoleSecuredView.class, (TypedBusiness)roleSecuredViewBusiness);
         beansMap.put((Class)JobTitle.class, (TypedBusiness)jobTitleBusiness);
+        beansMap.put((Class)PersonTitle.class, (TypedBusiness)personTitleBusiness);
         beansMap.put((Class)JobFunction.class, (TypedBusiness)jobFunctionBusiness);
         beansMap.put((Class)IntervalCollection.class, (TypedBusiness)intervalCollectionBusiness);
         beansMap.put((Class)MetricCollection.class, (TypedBusiness)metricCollectionBusiness);

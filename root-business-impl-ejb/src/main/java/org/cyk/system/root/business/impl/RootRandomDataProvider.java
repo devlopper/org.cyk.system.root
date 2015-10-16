@@ -26,6 +26,7 @@ import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
+import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.generator.RandomDataProvider;
@@ -73,7 +74,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		person.setImage(photo);
 		
 		person.getExtendedInformations().setBirthLocation(location(null));
-		
+		person.getExtendedInformations().setTitle(oneFromDatabase(PersonTitle.class));
 		person.getJobInformations().setTitle(oneFromDatabase(JobTitle.class));
 		person.getJobInformations().setFunction(oneFromDatabase(JobFunction.class));
 		
