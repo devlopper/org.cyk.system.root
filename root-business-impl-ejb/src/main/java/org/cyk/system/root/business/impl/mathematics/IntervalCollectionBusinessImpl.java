@@ -1,8 +1,11 @@
 package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
@@ -27,6 +30,23 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Override
 	protected IntervalDao getItemDao() {
 		return intervalDao;
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public BigDecimal findLowestValue(IntervalCollection intervalCollection) {
+		return dao.readLowestValue(intervalCollection);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public BigDecimal findHighestValue(IntervalCollection intervalCollection) {
+		return dao.readHighestValue(intervalCollection);
+	}
+	
+	@Override
+	protected void __load__(IntervalCollection collection) {
+		super.__load__(collection);
+		collection.setLowestValue(findLowestValue(collection));
+		collection.setHighestValue(findHighestValue(collection));
 	}
 
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,8 @@ public class IntervalCollection extends AbstractCollection<Interval> implements 
 
 	private static final long serialVersionUID = -165832578043422718L;
 
+	@Transient private BigDecimal lowestValue,highestValue;
+	
 	public IntervalCollection(String code) {
 		super(code, code,null,null);
 	}

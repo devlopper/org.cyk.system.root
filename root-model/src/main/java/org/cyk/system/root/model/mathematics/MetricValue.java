@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -13,10 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.AbstractIdentifiable;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Embeddable
-public class MetricValue extends AbstractModelElement implements Serializable {
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Entity
+public class MetricValue extends AbstractIdentifiable implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
@@ -30,9 +30,6 @@ public class MetricValue extends AbstractModelElement implements Serializable {
 		this.metric = metric;
 	}
 
-	@Override
-	public String getUiString() {
-		return metric+"="+value;
-	}
+	
 	
 }

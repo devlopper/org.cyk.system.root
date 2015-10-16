@@ -15,6 +15,8 @@ import javax.inject.Inject;
 import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
@@ -45,6 +47,8 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 	protected RootBusinessLayer rootBusinessLayer;
 	protected ReportBusiness reportBusiness;
 	@Inject protected GenericBusiness genericBusiness;
+	@Inject protected IntervalCollectionBusiness intervalCollectionBusiness;
+	@Inject protected MetricCollectionBusiness metricCollectionBusiness;
 	
 	public <T extends AbstractIdentifiable> void reportBasedOnTemplateFile(Class<T> aClass,Collection<T> collection,Map<String, String[]> map,String reportIdentifier){
         AbstractReportConfiguration<T, ReportBasedOnTemplateFile<T>> c = reportBusiness.findConfiguration(reportIdentifier);
