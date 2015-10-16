@@ -88,6 +88,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			PersonExtendedInformations extendedInformations = person.getExtendedInformations();
 			if(extendedInformations.getBirthLocation()!=null)
 				report.setBirthLocation(extendedInformations.getBirthLocation().getUiString());
+			if(extendedInformations.getTitle()!=null)
+				report.setTitle(extendedInformations.getTitle().getUiString());
 			if(extendedInformations.getSignatureSpecimen()!=null)
 				report.setSignatureSpecimen(findInputStream(extendedInformations.getSignatureSpecimen()));
 			if(extendedInformations.getMaritalStatus()!=null)
