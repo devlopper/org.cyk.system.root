@@ -164,7 +164,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	installation.setLicense(new License());
     	installation.getLicense().setPeriod(new Period(new Date(), new Date()));
     	installation.setManager(new Person("ManagerFirstName","ManagerLastName"));
-    	installation.setManagerCredentials(new Credentials("man", "123"));
+    	installation.setManagerCredentials(new Credentials("manager", "123"));
     	return installation;
 	}
 	
