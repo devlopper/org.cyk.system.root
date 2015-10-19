@@ -60,6 +60,15 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	public Person update(Person person) {
 		Person p = super.update(person);
 		//repeatedEventBusiness.updateAnniversary(person.getBirthDateAnniversary(),person.getBirthDate(), person.getName());
+		if(person.getExtendedInformations()!=null){
+			if(person.getExtendedInformations().getBirthLocation()!=null)
+				contactDao.update(person.getExtendedInformations().getBirthLocation());
+			extendedInformationsDao.update(person.getExtendedInformations());
+		}
+		if(person.getJobInformations()!=null)
+			jobInformationsDao.update(person.getJobInformations());
+		if(person.getMedicalInformations()!=null)
+			medicalInformationsDao.update(person.getMedicalInformations());
 		return p;
 	}
 

@@ -9,27 +9,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputChoice;
-import org.cyk.utility.common.annotation.user.interfaces.InputOneChoice;
-import org.cyk.utility.common.annotation.user.interfaces.InputOneCombo;
-import org.cyk.utility.common.annotation.user.interfaces.InputTextarea;
 
 @Getter @Setter @Entity
 public class Location extends Contact implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@Input @InputChoice @InputOneChoice @InputOneCombo
-	@ManyToOne
-	private LocationType type;
+	//@Input @InputChoice @InputOneChoice @InputOneCombo
+	@ManyToOne private LocationType type;
 	
-	@Input @InputChoice @InputOneChoice @InputOneCombo
-	@ManyToOne
-	private Locality locality;
+	//@Input @InputChoice @InputOneChoice @InputOneCombo
+	@ManyToOne private Locality locality;
 	
-	@Input
-	@InputTextarea
+	//@Input @InputTextarea
 	private String comment;
     
 	public Location() {}
