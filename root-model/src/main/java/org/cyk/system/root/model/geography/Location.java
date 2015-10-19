@@ -37,4 +37,9 @@ public class Location extends Contact implements Serializable{
 		return locality==null?comment:(locality.toString()+(StringUtils.isEmpty(comment)?"":" , "+comment));
 	}
 	
+	@Override
+	public String getUiString() {
+		return locality==null?comment:(locality.getUiString()+(StringUtils.isEmpty(comment)?"":" , "+comment));
+	}
+	
 }
