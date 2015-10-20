@@ -8,6 +8,7 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
 
-@Getter @Setter @Entity @NoArgsConstructor
+@Getter @Setter @Entity @Table(name="TABLE_INTERVAL") @NoArgsConstructor
 public class Interval extends AbstractCollectionItem<IntervalCollection> implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
