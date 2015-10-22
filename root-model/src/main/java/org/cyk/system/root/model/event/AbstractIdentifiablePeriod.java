@@ -26,10 +26,22 @@ public abstract class AbstractIdentifiablePeriod extends AbstractIdentifiable im
      */
     @Embedded protected Period period = new Period();
     
+    /**
+     * The total time of continuous activity
+     */
+    protected Long duration;
+    
+    protected Boolean closed;//should be managed later with workflow system
     
     @Override
     public String toString() {
     	return period.toString();
     }
+    
+    /**/
+    
+    public static final String FIELD_PERIOD = "period";
+    public static final String FIELD_CLOSED = "closed";
+    public static final String FIELD_DURATION = "duration";
 
 }
