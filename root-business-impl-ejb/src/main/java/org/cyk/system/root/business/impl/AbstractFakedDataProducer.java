@@ -62,6 +62,29 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 		return rootDataProducerHelper.getEnumeration(aClass, code);
 	}
 
-	public abstract void produce();
+	public abstract void produce(FakedDataProducerListener listener);
 	
+	protected void flush(FakedDataProducerListener listener,String message){
+		if(listener==null)
+			return;
+		listener.flush();
+		if(message!=null)
+			System.out.println(message);
+	}
+	protected void flush(FakedDataProducerListener listener){
+		flush(listener, null);
+	}
+	
+	/**/
+	
+	public static interface FakedDataProducerListener{
+		void flush();
+	}
+	
+	public static class FakedDataProducerAdapter implements FakedDataProducerListener{
+
+		@Override
+		public void flush() {}
+		
+	}
 }
