@@ -1,9 +1,11 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
@@ -17,6 +19,7 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	@Inject protected RootDataProducerHelper rootDataProducerHelper;
 	@Inject protected RootBusinessLayer rootBusinessLayer;
 	@Inject protected RootRandomDataProvider rootRandomDataProvider;
+	protected FakedDataProducerListener listener;
 	
 	@Override
 	protected void initialisation() {
@@ -64,15 +67,26 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 
 	public abstract void produce(FakedDataProducerListener listener);
 	
-	protected void flush(FakedDataProducerListener listener,String message){
+	protected void flush(String message){
 		if(listener==null)
 			return;
 		listener.flush();
-		if(message!=null)
-			System.out.println(message);
+		System.out.println("Flushing"+(message==null?"":" - "+message));
 	}
-	protected void flush(FakedDataProducerListener listener){
-		flush(listener, null);
+	
+	/**/
+	
+	protected <IDENTIFIABLE extends AbstractIdentifiable> void flush(Class<IDENTIFIABLE> identifiableClass,TypedBusiness<IDENTIFIABLE> business,Collection<IDENTIFIABLE> identifiables,Long minimumSize){
+		if(identifiables.isEmpty() || ( minimumSize!=null && identifiables.size() < minimumSize))
+			return; 
+		System.out.println("Creating "+identifiables.size()+" "+identifiableClass.getSimpleName());
+		business.create(identifiables);
+		flush(identifiableClass.getSimpleName());	
+		identifiables.clear();
+	}
+	
+	protected <IDENTIFIABLE extends AbstractIdentifiable> void flush(Class<IDENTIFIABLE> identifiableClass,TypedBusiness<IDENTIFIABLE> business,Collection<IDENTIFIABLE> identifiables){
+		flush(identifiableClass, business, identifiables, null);
 	}
 	
 	/**/
