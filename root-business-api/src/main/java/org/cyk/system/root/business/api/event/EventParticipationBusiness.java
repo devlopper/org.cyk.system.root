@@ -14,5 +14,7 @@ public interface EventParticipationBusiness extends TypedBusiness<EventParticipa
 	Collection<EventParticipation> findByParty(Party party);
 
 	Collection<EventParticipation> findByEvent(Event event);
+
+	void setMissedEvent(Collection<EventParticipation> eventParticipations);
 	
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,8 @@ public class EventParticipation extends AbstractIdentifiable implements Serializ
 	@ManyToOne private Event event;
 	
 	private Boolean alertParty = Boolean.TRUE;
+	
+	@Transient private EventMissed missed;
 
 	public EventParticipation(Party party) {
 		super();

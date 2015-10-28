@@ -19,6 +19,7 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
+import org.cyk.system.root.persistence.api.event.EventMissedDao;
 import org.cyk.system.root.persistence.api.event.EventParticipationDao;
 import org.cyk.system.root.persistence.api.event.EventReminderDao;
 
@@ -29,6 +30,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 	
 	@Inject private ContactCollectionBusiness contactCollectionBusiness;
 	@Inject private EventParticipationDao eventParticipationDao;
+	@Inject private EventMissedDao eventMissedDao;
 	@Inject private EventReminderDao eventReminderDao;
 	//@Inject private RepeatedEventBusiness repeatedEventBusiness;
 	
@@ -54,6 +56,9 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
         for(EventParticipation eventParticipation : event.getEventParticipations()){
         	eventParticipation.setEvent(event);
         	eventParticipationDao.create(eventParticipation);
+        	if(eventParticipation.getMissed()!=null){
+        		eventMissedDao.create(eventParticipation.getMissed());
+        	}
         }
         return event;
     }

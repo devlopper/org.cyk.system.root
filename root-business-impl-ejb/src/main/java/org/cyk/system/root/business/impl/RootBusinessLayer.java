@@ -22,6 +22,8 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.RootBusinessLayerListener;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
+import org.cyk.system.root.business.api.event.EventMissedBusiness;
+import org.cyk.system.root.business.api.event.EventMissedReasonBusiness;
 import org.cyk.system.root.business.api.event.EventTypeBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.TagBusiness;
@@ -56,6 +58,8 @@ import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.event.Event;
+import org.cyk.system.root.model.event.EventMissed;
+import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.EventType;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
@@ -129,6 +133,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject private CountryBusiness countryBusiness;
 	@Inject private TagBusiness tagBusiness;
     @Inject private EventBusiness eventBusiness;
+    @Inject private EventMissedBusiness eventMissedBusiness;
+    @Inject private EventMissedReasonBusiness eventMissedReasonBusiness;
     @Inject @Getter private PersonBusiness personBusiness;
     @Inject @Getter private IntervalCollectionBusiness intervalCollectionBusiness;
     @Inject private RoleBusiness roleBusiness;
@@ -292,6 +298,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         notificationTemplate(NotificationTemplate.ALARM_EMAIL,"Alarm Email Notification Template","alarmEmailTitle.txt","alarmEmailMessage.html");
         notificationTemplate(NotificationTemplate.ALARM_SMS,"Alarm Sms Notification Template","alarmSmsTitle.txt","alarmSmsMessage.html");
         
+        createEnumeration(EventMissedReason.class,EventMissedReason.DISEASE, "Maladie");
+        createEnumeration(EventMissedReason.class,EventMissedReason.LATE, "Retard");
     }
     
     private void notificationTemplate(String code,String name,String titleFileFolder,String titleFileName,String bodyFileFolder,String bodyFileName){
@@ -324,8 +332,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     private void party(){
     	createEnumeration(Sex.class,Sex.MALE, "Masculin");
     	createEnumeration(Sex.class,Sex.FEMALE, "Feminin");
-        create(new MaritalStatus("B", "Celibataire"));
-        create(new MaritalStatus("M", "Marie"));
+    	createEnumeration(MaritalStatus.class,"B", "Celibataire");
+    	createEnumeration(MaritalStatus.class,"M", "Marie");
         
         createEnumeration(JobFunction.class,"DJ","Développeur Java");
         createEnumeration(JobFunction.class,"RV","Responsable des ventes");
@@ -335,7 +343,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createEnumeration(JobTitle.class,"Manager");
         createEnumeration(JobTitle.class,"Conseiller");
            
-        //create(new PersonTitle("123", "456"));
         createEnumeration(PersonTitle.class,PersonTitle.MISTER, "Mr");
         createEnumeration(PersonTitle.class,PersonTitle.MISS, "Ms");
         createEnumeration(PersonTitle.class,PersonTitle.MADAM, "Mme");
@@ -358,6 +365,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Override
     public void registerTypedBusinessBean(Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> beansMap) {
         beansMap.put((Class)Event.class, (TypedBusiness)eventBusiness);
+        beansMap.put((Class)EventMissed.class, (TypedBusiness)eventMissedBusiness);
+        beansMap.put((Class)EventMissedReason.class, (TypedBusiness)eventMissedReasonBusiness);
         beansMap.put((Class)Person.class, (TypedBusiness)personBusiness);
         beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
         beansMap.put((Class)Country.class, (TypedBusiness)countryBusiness);
