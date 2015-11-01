@@ -16,14 +16,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.RootValueValidator;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.utility.common.cdi.AbstractBean;
-import org.cyk.utility.common.validation.Client;
+
+import lombok.Getter;
+import lombok.Setter;
 
 
 /**
@@ -73,7 +72,7 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 		this.objectClass = objectClass;
 		validatorClass = (Class<AbstractValidator<OBJECT>>) this.getClass();
 		validator = Validation.buildDefaultValidatorFactory().getValidator();
-		groups.add(Client.class);
+		//groups.add(Client.class);
 	}
 	
 	/*
@@ -85,6 +84,7 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 	}*/
 	
 	public AbstractValidator<OBJECT> validate(OBJECT object){
+		//logTrace("Validating object {}", object);
 	    this.object=object;
 		if(Boolean.TRUE.equals(autoClearMessages))
 			messages = new LinkedHashSet<>();
@@ -104,7 +104,7 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 		/* collect messages */
 		if(!constraintViolationsModel.isEmpty())
         	for(ConstraintViolation<T> violation : constraintViolationsModel){
-        		__logger__().debug("Constraint Violation : Field = {} , Message {} ",violation.getPropertyPath(),violation.getMessage());
+        		logTrace("Constraint Violation : {}.{} : {} ",aObject.getClass().getName(),violation.getPropertyPath(),violation.getMessage());
         		messages.add(formatMessage(violation));
         	}
 	}
