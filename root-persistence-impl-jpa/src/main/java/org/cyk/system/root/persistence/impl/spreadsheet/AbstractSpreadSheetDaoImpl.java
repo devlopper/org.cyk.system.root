@@ -12,8 +12,8 @@ import org.cyk.system.root.persistence.api.spreadsheet.AbstractSpreadSheetDao;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
 import org.cyk.system.root.persistence.impl.event.AbstractIdentifiablePeriodDaoImpl;
 
-public class AbstractSpreadSheetDaoImpl<SPREADSHEET extends AbstractSpreadSheet<TEMPLATE,ROW, COLUMN,CELL>,TEMPLATE extends AbstractSpreadSheetTemplate<ROW, COLUMN>,ROW extends AbstractSpreadSheetTemplateRow<TEMPLATE>,COLUMN extends AbstractSpreadSheetTemplateColumn<TEMPLATE>,CELL extends AbstractSpreadSheetCell<SPREADSHEET, ROW, COLUMN, CELL>,SEARCH_CRITERIA extends SpreadSheetSearchCriteria> extends AbstractIdentifiablePeriodDaoImpl<SPREADSHEET> 
-	implements AbstractSpreadSheetDao<SPREADSHEET,TEMPLATE,ROW,COLUMN,CELL,SEARCH_CRITERIA> {
+public class AbstractSpreadSheetDaoImpl<SPREADSHEET extends AbstractSpreadSheet<TEMPLATE,ROW, COLUMN,CELL>,TEMPLATE extends AbstractSpreadSheetTemplate<ROW, COLUMN>,ROW extends AbstractSpreadSheetTemplateRow<TEMPLATE>,COLUMN extends AbstractSpreadSheetTemplateColumn<TEMPLATE>,CELL extends AbstractSpreadSheetCell<SPREADSHEET, ROW, COLUMN, VALUE>,VALUE,SEARCH_CRITERIA extends SpreadSheetSearchCriteria> extends AbstractIdentifiablePeriodDaoImpl<SPREADSHEET> 
+	implements AbstractSpreadSheetDao<SPREADSHEET,TEMPLATE,ROW,COLUMN,CELL,VALUE,SEARCH_CRITERIA> {
 
 	private static final long serialVersionUID = 6920278182318788380L;
 	

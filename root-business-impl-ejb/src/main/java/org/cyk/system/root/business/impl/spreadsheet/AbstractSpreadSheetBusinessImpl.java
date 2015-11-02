@@ -13,7 +13,7 @@ import org.cyk.system.root.model.spreadsheet.AbstractSpreadSheetTemplateRow;
 import org.cyk.system.root.model.spreadsheet.SpreadSheetSearchCriteria;
 import org.cyk.system.root.persistence.api.spreadsheet.AbstractSpreadSheetDao;
 
-public abstract class AbstractSpreadSheetBusinessImpl<SPREADSHEET extends AbstractSpreadSheet<TEMPLATE,ROW, COLUMN,CELL>,TEMPLATE extends AbstractSpreadSheetTemplate<ROW, COLUMN>,ROW extends AbstractSpreadSheetTemplateRow<TEMPLATE>,COLUMN extends AbstractSpreadSheetTemplateColumn<TEMPLATE>,CELL extends AbstractSpreadSheetCell<SPREADSHEET, ROW, COLUMN, CELL>,SEARCH_CRITERIA extends SpreadSheetSearchCriteria,DAO extends AbstractSpreadSheetDao<SPREADSHEET, TEMPLATE, ROW, COLUMN, CELL, SEARCH_CRITERIA>> extends AbstractTypedBusinessService<SPREADSHEET, DAO> implements AbstractSpreadSheetBusiness<SPREADSHEET, TEMPLATE, ROW, COLUMN, CELL, SEARCH_CRITERIA>,Serializable {
+public abstract class AbstractSpreadSheetBusinessImpl<SPREADSHEET extends AbstractSpreadSheet<TEMPLATE,ROW, COLUMN,CELL>,TEMPLATE extends AbstractSpreadSheetTemplate<ROW, COLUMN>,ROW extends AbstractSpreadSheetTemplateRow<TEMPLATE>,COLUMN extends AbstractSpreadSheetTemplateColumn<TEMPLATE>,CELL extends AbstractSpreadSheetCell<SPREADSHEET, ROW, COLUMN, VALUE>,VALUE,SEARCH_CRITERIA extends SpreadSheetSearchCriteria,DAO extends AbstractSpreadSheetDao<SPREADSHEET, TEMPLATE, ROW, COLUMN, CELL,VALUE, SEARCH_CRITERIA>> extends AbstractTypedBusinessService<SPREADSHEET, DAO> implements AbstractSpreadSheetBusiness<SPREADSHEET, TEMPLATE, ROW, COLUMN, CELL,VALUE, SEARCH_CRITERIA>,Serializable {
 
 	private static final long serialVersionUID = -7830673760640348717L;
 	

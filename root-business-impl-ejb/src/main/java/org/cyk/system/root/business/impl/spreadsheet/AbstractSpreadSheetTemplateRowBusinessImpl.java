@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.spreadsheet;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import org.cyk.system.root.business.api.spreadsheet.AbstractSpreadSheetTemplateRowBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -17,6 +18,9 @@ public abstract class AbstractSpreadSheetTemplateRowBusinessImpl<ROW extends Abs
 		super(dao);
 	}
 
-	
+	@Override
+	public Collection<ROW> findByTemplate(TEMPLATE template) {
+		return dao.readByTemplate(template);
+	}
 	
 }

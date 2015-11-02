@@ -10,7 +10,7 @@ import org.cyk.system.root.model.spreadsheet.AbstractSpreadSheetTemplateRow;
 import org.cyk.system.root.persistence.api.spreadsheet.AbstractSpreadSheetCellDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 
-public abstract class AbstractSpreadSheetCellDaoImpl<CELL extends AbstractSpreadSheetCell<SPREADSHEET, ROW, COLUMN, CELL>,ROW extends AbstractSpreadSheetTemplateRow<TEMPLATE>,COLUMN extends AbstractSpreadSheetTemplateColumn<TEMPLATE>,TEMPLATE extends AbstractSpreadSheetTemplate<ROW, COLUMN>,SPREADSHEET extends AbstractSpreadSheet<TEMPLATE,ROW, COLUMN,CELL>> extends AbstractTypedDao<CELL> implements AbstractSpreadSheetCellDao<CELL,ROW,COLUMN,TEMPLATE,SPREADSHEET> {
+public abstract class AbstractSpreadSheetCellDaoImpl<CELL extends AbstractSpreadSheetCell<SPREADSHEET, ROW, COLUMN, VALUE>,ROW extends AbstractSpreadSheetTemplateRow<TEMPLATE>,COLUMN extends AbstractSpreadSheetTemplateColumn<TEMPLATE>,VALUE,TEMPLATE extends AbstractSpreadSheetTemplate<ROW, COLUMN>,SPREADSHEET extends AbstractSpreadSheet<TEMPLATE,ROW, COLUMN,CELL>> extends AbstractTypedDao<CELL> implements AbstractSpreadSheetCellDao<CELL,ROW,COLUMN,VALUE,TEMPLATE,SPREADSHEET> {
 
 	private static final long serialVersionUID = 6920278182318788380L;
 

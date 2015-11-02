@@ -12,7 +12,7 @@ import org.cyk.system.root.model.spreadsheet.AbstractSpreadSheetTemplateColumn;
 import org.cyk.system.root.model.spreadsheet.AbstractSpreadSheetTemplateRow;
 import org.cyk.system.root.persistence.api.spreadsheet.AbstractSpreadSheetCellDao;
 
-public abstract class AbstractSpreadSheetCellBusinessImpl<CELL extends AbstractSpreadSheetCell<SPREADSHEET, ROW, COLUMN, CELL>,ROW extends AbstractSpreadSheetTemplateRow<TEMPLATE>,COLUMN extends AbstractSpreadSheetTemplateColumn<TEMPLATE>,TEMPLATE extends AbstractSpreadSheetTemplate<ROW, COLUMN>,SPREADSHEET extends AbstractSpreadSheet<TEMPLATE,ROW, COLUMN,CELL>,DAO extends AbstractSpreadSheetCellDao<CELL, ROW, COLUMN, TEMPLATE, SPREADSHEET>> extends AbstractTypedBusinessService<CELL, DAO> implements AbstractSpreadSheetCellBusiness<CELL, ROW, COLUMN, TEMPLATE, SPREADSHEET>,Serializable {
+public abstract class AbstractSpreadSheetCellBusinessImpl<CELL extends AbstractSpreadSheetCell<SPREADSHEET, ROW, COLUMN, VALUE>,ROW extends AbstractSpreadSheetTemplateRow<TEMPLATE>,COLUMN extends AbstractSpreadSheetTemplateColumn<TEMPLATE>,VALUE,TEMPLATE extends AbstractSpreadSheetTemplate<ROW, COLUMN>,SPREADSHEET extends AbstractSpreadSheet<TEMPLATE,ROW, COLUMN,CELL>,DAO extends AbstractSpreadSheetCellDao<CELL, ROW, COLUMN,VALUE, TEMPLATE, SPREADSHEET>> extends AbstractTypedBusinessService<CELL, DAO> implements AbstractSpreadSheetCellBusiness<CELL, ROW, COLUMN,VALUE, TEMPLATE, SPREADSHEET>,Serializable {
 
 	private static final long serialVersionUID = -7830673760640348717L;
 	
