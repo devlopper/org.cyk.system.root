@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.userinterface.spreadsheet;
+package org.cyk.system.root.model.spreadsheet;
 
 import java.io.Serializable;
 
@@ -24,6 +24,13 @@ public abstract class AbstractSpreadSheetTemplateDimension<TEMPLATE> extends Abs
 	
 	@Column(name="dim_index",nullable=false)
 	protected Integer index;
+
+	public AbstractSpreadSheetTemplateDimension(TEMPLATE template) {
+		super();
+		this.template = template;
+	}
+	
+	public static final String FIELD_TEMPLATE = "template";
 	
 }
 

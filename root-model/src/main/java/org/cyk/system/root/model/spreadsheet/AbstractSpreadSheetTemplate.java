@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.userinterface.spreadsheet;
+package org.cyk.system.root.model.spreadsheet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,10 +19,8 @@ public abstract class AbstractSpreadSheetTemplate<ROW,COLUMN> extends AbstractEn
 
 	private static final long serialVersionUID = -625974035216780560L;
 	
-	@Transient
-	protected Collection<ROW> rows = new ArrayList<>();
+	@Transient protected Collection<ROW> rows = new ArrayList<>();
 	
-	@Transient
-	protected Collection<COLUMN> columns = new ArrayList<>();
+	@Transient protected Collection<COLUMN> columns = new ArrayList<>();
 
 }

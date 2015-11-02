@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,13 +15,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.RootValueValidator;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.utility.common.cdi.AbstractBean;
-
-import lombok.Getter;
-import lombok.Setter;
 
 
 /**
@@ -47,7 +46,7 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 	//the object to validate
 	@Getter protected OBJECT object;
 	
-	protected List<Class<?>> groups = new LinkedList<>();
+	protected List<Class<?>> groups /*= new LinkedList<>()*/;
 	
 	// the processor
 	protected Validator validator;
@@ -72,7 +71,7 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 		this.objectClass = objectClass;
 		validatorClass = (Class<AbstractValidator<OBJECT>>) this.getClass();
 		validator = Validation.buildDefaultValidatorFactory().getValidator();
-		//groups.add(Client.class);
+		//groups.add(Client.class); //TODO must validate Client only
 	}
 	
 	/*
@@ -99,12 +98,12 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 	
 	private <T> void process(Class<T> aClass,T aObject){
 		/* bean validation */
-		Set<ConstraintViolation<T>> constraintViolationsModel = validator.validate(aObject,groups==null?null:groups.toArray(new Class<?>[]{}));
+		Set<ConstraintViolation<T>> constraintViolationsModel = groups==null || groups.isEmpty()?validator.validate(aObject):validator.validate(aObject,groups.toArray(new Class<?>[]{}));
 		
 		/* collect messages */
 		if(!constraintViolationsModel.isEmpty())
         	for(ConstraintViolation<T> violation : constraintViolationsModel){
-        		logTrace("Constraint Violation : {}.{} : {} ",aObject.getClass().getName(),violation.getPropertyPath(),violation.getMessage());
+        		logWarning("Constraint Violation : {}.{} : {} ",aObject.getClass().getName(),violation.getPropertyPath(),violation.getMessage());
         		messages.add(formatMessage(violation));
         	}
 	}

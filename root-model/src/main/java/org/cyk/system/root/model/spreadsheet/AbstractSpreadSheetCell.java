@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.userinterface.spreadsheet;
+package org.cyk.system.root.model.spreadsheet;
 
 import java.io.Serializable;
 
@@ -34,13 +34,17 @@ public abstract class AbstractSpreadSheetCell<SPREADSHEET,ROW,COLUMN,VALUE> exte
 		this.spreadSheet = spreadSheet;
 	}
 
-	public AbstractSpreadSheetCell(ROW row, COLUMN column) {
+	public AbstractSpreadSheetCell(ROW row, COLUMN column,VALUE value) {
 		super();
 		this.row = row;
 		this.column = column;
+		this.value = value;
 	}
 	
-	
+	public static final String FIELD_SPREADSHEET = "spreadSheet";
+	public static final String FIELD_ROW = "row";
+	public static final String FIELD_COLUMN = "column";
+	public static final String FIELD_VALUE = "value";
 
 }
 

@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.userinterface.spreadsheet;
+package org.cyk.system.root.model.spreadsheet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,24 +22,26 @@ import org.cyk.system.root.model.event.AbstractIdentifiablePeriod;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
+/**
+ * Storage of data in tabular form
+ * @author Christian Yao Komenan
+ *
+ * @param <TEMPLATE>
+ * @param <ROW>
+ * @param <COLUMN>
+ * @param <CELL>
+ */
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @MappedSuperclass @ModelBean(crudStrategy=CrudStrategy.BUSINESS)
 public abstract class AbstractSpreadSheet<TEMPLATE,ROW,COLUMN,CELL> extends AbstractIdentifiablePeriod implements Serializable {
 
 	private static final long serialVersionUID = -625974035216780560L;
 	
-	@ManyToOne
-	protected TEMPLATE template;
+	@ManyToOne protected TEMPLATE template;
+	@Temporal(TemporalType.TIMESTAMP) @Column(nullable=false) @NotNull protected Date creationDate;
 	
-	@Temporal(TemporalType.TIMESTAMP) @Column(nullable=false) @NotNull 
-	protected Date creationDate;
+	@Transient protected Collection<ROW> rows = new ArrayList<>();
+	@Transient protected Collection<COLUMN> columns = new ArrayList<>();
+	@Transient protected Collection<CELL> cells = new ArrayList<>();		
 	
-	@Transient
-	protected Collection<ROW> rows = new ArrayList<>();
-	
-	@Transient
-	protected Collection<COLUMN> columns = new ArrayList<>();
-	
-	@Transient
-	protected Collection<CELL> cells = new ArrayList<>();		
-	
+	public static final String FIELD_TEMPLATE = "template";
 }

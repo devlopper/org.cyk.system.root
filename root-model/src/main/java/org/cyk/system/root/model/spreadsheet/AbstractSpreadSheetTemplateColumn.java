@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.userinterface.spreadsheet;
+package org.cyk.system.root.model.spreadsheet;
 
 import java.io.Serializable;
 
@@ -20,6 +20,11 @@ public abstract class AbstractSpreadSheetTemplateColumn<TEMPLATE> extends Abstra
 	
 	@ManyToOne @NotNull
 	protected InputName inputName;
+
+	public AbstractSpreadSheetTemplateColumn(TEMPLATE template,InputName inputName) {
+		super(template);
+		this.inputName = inputName;
+	}
 
 	
 }
