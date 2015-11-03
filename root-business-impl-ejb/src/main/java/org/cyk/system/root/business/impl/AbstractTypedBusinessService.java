@@ -2,6 +2,8 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -162,6 +164,32 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	protected void applyDataReadConfigToDao(DataReadConfiguration dataReadConfig){
 		dao.getDataReadConfig().setFirstResultIndex(dataReadConfig.getFirstResultIndex());
 		dao.getDataReadConfig().setMaximumResultCount(dataReadConfig.getMaximumResultCount());
+	}
+	
+	/**
+	 * Remove what is in database but not in user
+	 * @param databaseIdentifiables
+	 * @param userIdentifiables
+	 * @return
+	 */
+	protected <T extends AbstractIdentifiable> Collection<T> delete(Class<T> aClass,TypedDao<T> dao,Collection<T> databaseIdentifiables,Collection<T> userIdentifiables) {
+		Set<T> deleted = new HashSet<>();
+		for(T database : databaseIdentifiables){
+			Boolean found = Boolean.FALSE;
+			for(T user : userIdentifiables){
+				if(database.getIdentifier().equals(user.getIdentifier())){
+					found = Boolean.TRUE;
+					break;
+				}
+			}
+			if(Boolean.FALSE.equals(found))
+				deleted.add(database);
+		}
+
+		for(T identifiable : deleted)
+			dao.delete(identifiable);
+		
+		return deleted;
 	}
 
 
