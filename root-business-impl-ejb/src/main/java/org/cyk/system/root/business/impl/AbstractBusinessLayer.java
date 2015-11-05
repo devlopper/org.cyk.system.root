@@ -337,12 +337,19 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		rootDataProducerHelper.createMany(objects);
 	}
 
+	public File createFile(Package basePackage,String relativePath, String name) {
+		return rootDataProducerHelper.createFile(basePackage,relativePath, name);
+	}
 	public File createFile(String relativePath, String name) {
-		return rootDataProducerHelper.createFile(relativePath, name);
+		return createFile(this.getClass().getPackage(),relativePath, name);
 	}
 
+	public byte[] getResourceAsBytes(Package basePackage,String relativePath) {
+		return rootDataProducerHelper.getResourceAsBytes(basePackage,relativePath);
+	}
+	
 	public byte[] getResourceAsBytes(String relativePath) {
-		return rootDataProducerHelper.getResourceAsBytes(relativePath);
+		return getResourceAsBytes(this.getClass().getPackage(),relativePath);
 	}
 
 	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code) {

@@ -53,12 +53,19 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 		rootDataProducerHelper.createMany(objects);
 	}
 
+	public File createFile(Package basePackage,String relativePath, String name) {
+		return rootDataProducerHelper.createFile(basePackage,relativePath, name);
+	}
 	public File createFile(String relativePath, String name) {
-		return rootDataProducerHelper.createFile(relativePath, name);
+		return createFile(rootDataProducerHelper.getBasePackage(),relativePath, name);
 	}
 
+	public byte[] getResourceAsBytes(Package basePackage,String relativePath) {
+		return rootDataProducerHelper.getResourceAsBytes(basePackage,relativePath);
+	}
+	
 	public byte[] getResourceAsBytes(String relativePath) {
-		return rootDataProducerHelper.getResourceAsBytes(relativePath);
+		return getResourceAsBytes(rootDataProducerHelper.getBasePackage(),relativePath);
 	}
 
 	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code) {

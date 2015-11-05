@@ -3,11 +3,15 @@ package org.cyk.system.root.business.impl;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import lombok.Getter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,13 +27,12 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
 	
 	private static final long serialVersionUID = 2282674526022995453L;
+	
+	private static RootDataProducerHelper INSTANCE;
 	
 	@Inject private GenericBusiness genericBusiness;
 	@Inject private IntervalCollectionBusiness intervalCollectionBusiness;
@@ -37,7 +40,15 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	@Inject private GenericDao genericDao;
 	
-	@Getter @Setter private Package basePackage;
+	@Getter private Package basePackage;
+	private Deque<Package> basePackageQueue = new ArrayDeque<>();
+	private Boolean basePackageQueueingEnabled = Boolean.FALSE;
+	
+	@Override
+	protected void initialisation() {
+		INSTANCE = this;
+		super.initialisation();
+	}
 	
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractIdentifiable> T create(T object){
@@ -83,12 +94,12 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return createIntervalCollection(code,values, Boolean.TRUE);
 	}
 	
-	public File createFile(String relativePath,String name){
-		return fileBusiness.create(fileBusiness.process(getResourceAsBytes(relativePath),name));
+	public File createFile(Package basePackage,String relativePath,String name){
+		return fileBusiness.create(fileBusiness.process(getResourceAsBytes(basePackage,relativePath),name));
 	}
 	
-	public byte[] getResourceAsBytes(String relativePath){
-    	String path = "/"+StringUtils.replace( (basePackage==null?this.getClass().getPackage():basePackage).getName(), ".", "/")+"/";
+	public byte[] getResourceAsBytes(Package basePackage,String relativePath){
+    	String path = "/"+StringUtils.replace( (basePackage==null?(this.basePackage==null?this.getClass().getPackage():this.basePackage):basePackage).getName(), ".", "/")+"/";
     	try {
     		logDebug("Getting resource as bytes {}", path+relativePath);
     		return IOUtils.toByteArray(this.getClass().getResourceAsStream(path+relativePath));
@@ -101,6 +112,36 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code){
 		return (T) genericDao.use(aClass).use(aClass).select().where("code", code).one();
+	}
+	
+	/**/
+	
+	public void setBasePackage(Package basePackage) {
+		if(Boolean.TRUE.equals(basePackageQueueingEnabled)){
+			if(basePackageQueue.peek().equals(basePackage))
+				;
+			else
+				basePackageQueue.push(this.basePackage);
+		}
+		__setBasePackage__(basePackage);
+	}
+	
+	public void setToPreviousBasePackage(){
+		if(Boolean.TRUE.equals(basePackageQueueingEnabled)){
+			if(basePackageQueue.isEmpty())
+				return;
+			__setBasePackage__(basePackageQueue.pop());
+		}else
+			;
+	}
+	
+	private void __setBasePackage__(Package basePackage) {
+		this.basePackage = basePackage;
+		logTrace("Base package set to {}", basePackage);
+	}
+	
+	public static RootDataProducerHelper getInstance() {
+		return INSTANCE;
 	}
 
 }
