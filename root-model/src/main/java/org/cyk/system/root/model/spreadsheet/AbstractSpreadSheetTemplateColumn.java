@@ -26,6 +26,9 @@ public abstract class AbstractSpreadSheetTemplateColumn<TEMPLATE> extends Abstra
 		this.inputName = inputName;
 	}
 
-	
+	@Override
+	public String toString() {
+		return inputName.getCode();
+	}
 }
 

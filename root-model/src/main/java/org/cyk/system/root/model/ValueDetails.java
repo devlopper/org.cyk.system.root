@@ -33,6 +33,10 @@ public class ValueDetails extends AbstractModelElement implements Serializable {
 		this.user = user;
 	}
 	
+	public void computeGap(){
+		gap = system==null?null:(user==null?null:system.subtract(user));
+	}
+	
 	@Override
 	public String getUiString() {
 		return " U="+user+" , S="+system+" , G="+gap;

@@ -41,6 +41,11 @@ public abstract class AbstractSpreadSheetCell<SPREADSHEET,ROW,COLUMN,VALUE> exte
 		this.value = value;
 	}
 	
+	@Override
+	public String toString() {
+		return row+" , "+column+" , "+value;
+	}
+	
 	public static final String FIELD_SPREADSHEET = "spreadSheet";
 	public static final String FIELD_ROW = "row";
 	public static final String FIELD_COLUMN = "column";
