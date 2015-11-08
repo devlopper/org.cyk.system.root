@@ -39,7 +39,11 @@ public class ValueDetails extends AbstractModelElement implements Serializable {
 	
 	@Override
 	public String getUiString() {
-		return " U="+user+" , S="+system+" , G="+gap;
+		return "U="+user+" , S="+system+" , G="+gap;
 	}
 
+	@Override
+	public String toString() {
+		return "U="+user+" , S="+system+" , G="+gap;
+	}
 }
