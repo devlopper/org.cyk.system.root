@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
@@ -75,7 +77,7 @@ public class Period extends AbstractModelElement implements Serializable{
 	
 	@Override
 	public String toString() {
-		return DATE_FORMAT.format(fromDate)+" "+DATE_FORMAT.format(toDate);//+" , "+(getDuration()/DateUtils.MILLIS_PER_MINUTE)+" min";
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);//+" , "+(getDuration()/DateUtils.MILLIS_PER_MINUTE)+" min";
 	}
 
 }
