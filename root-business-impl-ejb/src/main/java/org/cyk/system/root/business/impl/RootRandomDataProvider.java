@@ -8,6 +8,8 @@ import java.util.Date;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -29,6 +31,7 @@ import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
@@ -42,6 +45,8 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	
 	@Inject private GenericBusiness genericBusiness;
 	@Inject private PersonBusiness personBusiness;
+	
+	@Getter private Collection<RootRandomDataProviderListener> randomDataProviderListeners = new ArrayList<>();
 	
 	@Override
 	protected void initialisation() {
@@ -154,6 +159,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	public <ACTOR extends AbstractActor> ACTOR actor(Class<ACTOR> actorClass){
 		ACTOR actor = newInstance(actorClass);
 		actor.setPerson(person());
+		set(actor);
 		return actor;
 	}
 	
@@ -161,9 +167,38 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		for(int i=0;i<count;i++)
 			genericBusiness.create(actor(actorClass));
     }
+	
+	/**/
+	
+	private void set(Object object){
+		for(RootRandomDataProviderListener listener : randomDataProviderListeners)
+			listener.set(object);
+	}
+	
+	/**/
     
 	public static RootRandomDataProvider getInstance() {
 		return INSTANCE;
+	}
+	
+	/**/
+	
+	public static interface RootRandomDataProviderListener{
+		<T> T instanciate(Class<T> aClass);
+		void set(Object object);
+	}
+	
+	public static class RootRandomDataProviderAdapter extends BeanAdapter implements RootRandomDataProviderListener,Serializable{
+		private static final long serialVersionUID = 581887995233346336L;
+
+		@Override
+		public <T> T instanciate(Class<T> aClass) {
+			return null;
+		}
+
+		@Override
+		public void set(Object object) {}
+		
 	}
 	
 }
