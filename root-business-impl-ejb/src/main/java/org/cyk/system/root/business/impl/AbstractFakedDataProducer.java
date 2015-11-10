@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -19,6 +20,7 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	@Inject protected RootDataProducerHelper rootDataProducerHelper;
 	@Inject protected RootBusinessLayer rootBusinessLayer;
 	@Inject protected RootRandomDataProvider rootRandomDataProvider;
+	@Inject protected GenericBusiness genericBusiness;
 	protected FakedDataProducerListener listener;
 	
 	@Override
@@ -87,7 +89,12 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 		if(identifiables.isEmpty() || ( minimumSize!=null && identifiables.size() < minimumSize))
 			return; 
 		System.out.println("Creating "+identifiables.size()+" "+identifiableClass.getSimpleName());
-		business.create(identifiables);
+		if(business==null){
+			@SuppressWarnings("unchecked")
+			Collection<AbstractIdentifiable> collection = (Collection<AbstractIdentifiable>) identifiables;
+			genericBusiness.create(collection);
+		}else
+			business.create(identifiables);
 		flush(identifiableClass.getSimpleName());	
 		identifiables.clear();
 	}
@@ -95,6 +102,11 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	protected <IDENTIFIABLE extends AbstractIdentifiable> void flush(Class<IDENTIFIABLE> identifiableClass,TypedBusiness<IDENTIFIABLE> business,Collection<IDENTIFIABLE> identifiables){
 		flush(identifiableClass, business, identifiables, null);
 	}
+	
+	protected <IDENTIFIABLE extends AbstractIdentifiable> void flush(Class<IDENTIFIABLE> identifiableClass,Collection<IDENTIFIABLE> identifiables){
+		flush(identifiableClass, null, identifiables, null);
+	}
+	
 	
 	/**/
 	
