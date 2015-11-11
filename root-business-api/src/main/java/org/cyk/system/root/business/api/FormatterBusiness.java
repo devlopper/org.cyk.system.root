@@ -4,7 +4,7 @@ import org.cyk.system.root.model.AbstractFormatter;
 import org.cyk.system.root.model.ContentType;
 
 /**
- * Format an object to string
+ * Format an object to another type. Default is string
  * @author Christian Yao Komenan
  *
  */

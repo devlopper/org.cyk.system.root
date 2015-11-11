@@ -78,7 +78,22 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String name){
-		return createEnumeration(aClass, StringUtils.remove(name, Constant.CHARACTER_SPACE), name);
+		return createEnumeration(aClass, getCode(name), name);
+	}
+	
+	private String getCode(String name){
+		return StringUtils.remove(name, Constant.CHARACTER_SPACE);
+	}
+	
+	public <T extends AbstractEnumeration> void createEnumerations(Class<T> aClass,Object[] values){
+		Collection<AbstractIdentifiable> collection = new ArrayList<>();
+		for(Object value : values){
+			T data = newInstance(aClass);
+			data.setCode(getCode((String)value));
+			data.setName((String)value);
+			collection.add(data);
+		}
+		genericBusiness.create(collection);
 	}
 	
 	public IntervalCollection createIntervalCollection(String code,String[][] values,Boolean create){

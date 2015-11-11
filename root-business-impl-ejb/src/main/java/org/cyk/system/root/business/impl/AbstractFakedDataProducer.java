@@ -36,6 +36,9 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String name) {
 		return rootDataProducerHelper.createEnumeration(aClass, name);
 	}
+	public <T extends AbstractEnumeration> void createEnumerations(Class<T> aClass,Object[] values) {
+		rootDataProducerHelper.createEnumerations(aClass, values);
+	}
 
 	public IntervalCollection createIntervalCollection(String code,String[][] values,Boolean create){
 		return rootDataProducerHelper.createIntervalCollection(code,values,create);
