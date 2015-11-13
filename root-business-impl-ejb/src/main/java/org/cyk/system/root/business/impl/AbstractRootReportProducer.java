@@ -27,6 +27,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	private static final long serialVersionUID = 7126711234011563710L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRootReportProducer.class);
+	public static String NULL_VALUE = "NA";
+	public static String NOT_APPLICABLE = "NA";
 	
 	protected LabelValueCollectionReport currentLabelValueCollection;
 	
@@ -103,6 +105,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			if(jobInformations.getTitle()!=null)
 				report.setJobTitle(jobInformations.getTitle().getName());
 		}
+		
+		//System.out.println("AbstractRootReportProducer.set() : "+report.getImage());
 	}
 	
 	protected void set(AbstractActor actor,ActorReport report){
@@ -116,8 +120,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	protected void set(Interval interval,IntervalReport report){
-		report.setCode(interval.getCode());
-		report.setName(/*format(interval.getLow())+" - "+format(interval.getHigh())+" "+*/interval.getName());
+		report.setCode(interval==null?NOT_APPLICABLE:interval.getCode());
+		report.setName(interval==null?NOT_APPLICABLE:/*format(interval.getLow())+" - "+format(interval.getHigh())+" "+*/interval.getName());
 	}
 	
 	protected InputStream findInputStream(File file){
