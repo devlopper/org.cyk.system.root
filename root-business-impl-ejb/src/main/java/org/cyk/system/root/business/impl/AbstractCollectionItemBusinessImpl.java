@@ -21,4 +21,9 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		return dao.readByCollection(collection);
 	}
 	
+	@Override
+	public Collection<ITEM> findByCollection(COLLECTION collection, Boolean ascending) {
+		return dao.readByCollection(collection, ascending);
+	}
+	
 }

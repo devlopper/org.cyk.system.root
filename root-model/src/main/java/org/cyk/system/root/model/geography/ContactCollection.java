@@ -6,13 +6,13 @@ import java.util.Collection;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.ContentType;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter @Setter @Entity @NoArgsConstructor
 public class ContactCollection extends AbstractIdentifiable implements Serializable{
@@ -43,5 +43,36 @@ public class ContactCollection extends AbstractIdentifiable implements Serializa
 	    s.append(StringUtils.join(websites,","));
 	    return s.toString();
 	}
+	/*
+	public Collection<PhoneNumber> getPhoneNumbers(){
+		if(phoneNumbers==null)
+			phoneNumbers = new ArrayList<>();
+		return phoneNumbers;
+	}
+	
+	public Collection<Location> getLocations(){
+		if(locations==null)
+			locations = new ArrayList<>();
+		return locations;
+	}
+	
+	public Collection<PostalBox> getPostalBoxs(){
+		if(postalBoxs==null)
+			postalBoxs = new ArrayList<>();
+		return postalBoxs;
+	}
+	
+	public Collection<ElectronicMail> getElectronicMails(){
+		if(electronicMails==null)
+			electronicMails = new ArrayList<>();
+		return electronicMails;
+	}
+	
+	public Collection<Website> getWebsites(){
+		if(websites==null)
+			websites = new ArrayList<>();
+		return websites;
+	}
+	*/
 	
 }

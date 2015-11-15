@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,6 +22,14 @@ import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.geography.Country;
+import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.geography.PhoneNumber;
+import org.cyk.system.root.model.geography.PhoneNumberType;
+import org.cyk.system.root.model.geography.PostalBox;
+import org.cyk.system.root.model.geography.Website;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.persistence.api.GenericDao;
@@ -127,6 +136,69 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code){
 		return (T) genericDao.use(aClass).use(aClass).select().where("code", code).one();
+	}
+	
+	public PhoneNumber addPhoneNumber(ContactCollection collection,Country country,PhoneNumberType type,String number){
+		PhoneNumber phoneNumber = new PhoneNumber();
+		phoneNumber.setCollection(collection);
+		phoneNumber.setCountry(country);
+		phoneNumber.setType(type);
+		phoneNumber.setNumber(number);
+		if(collection.getPhoneNumbers()==null)
+			collection.setPhoneNumbers(new ArrayList<PhoneNumber>());
+		collection.getPhoneNumbers().add(phoneNumber);
+		return phoneNumber;
+	}
+	
+	public PhoneNumber addPhoneNumber(ContactCollection collection,PhoneNumberType type,String number){
+		return addPhoneNumber(collection,RootBusinessLayer.getInstance().getCountryCoteDivoire(), type, number);
+	}
+	public PhoneNumber addLandPhoneNumber(ContactCollection collection,String number){
+		return addPhoneNumber(collection,RootBusinessLayer.getInstance().getCountryCoteDivoire(), RootBusinessLayer.getInstance().getLandPhoneNumberType(), number);
+	}
+	public PhoneNumber addMobilePhoneNumber(ContactCollection collection,String number){
+		return addPhoneNumber(collection,RootBusinessLayer.getInstance().getCountryCoteDivoire(), RootBusinessLayer.getInstance().getMobilePhoneNumberType(), number);
+	}
+	public void addContacts(ContactCollection collection,String[] addresses,String[] landNumbers,String[] mobileNumbers,String[] postalBoxes,String[] emails,String[] websites){
+		if(addresses!=null)
+			for(String address : addresses){
+				Location location = new Location(collection, RootBusinessLayer.getInstance().getCountryCoteDivoire().getLocality(), address);
+				if(collection.getLocations()==null)
+					collection.setLocations(new ArrayList<Location>());
+				collection.getLocations().add(location);
+			}
+		if(landNumbers!=null)
+			for(String number : landNumbers)
+				addLandPhoneNumber(collection, number);
+		if(mobileNumbers!=null)
+			for(String number : mobileNumbers)
+				addMobilePhoneNumber(collection, number);
+		if(postalBoxes!=null)
+			for(String postalbox : postalBoxes){
+				PostalBox postalBox = new PostalBox(postalbox);
+				if(collection.getPostalBoxs()==null)
+					collection.setPostalBoxs(new ArrayList<PostalBox>());
+				collection.getPostalBoxs().add(postalBox);
+			}
+		if(emails!=null)
+			for(String email : emails){
+				ElectronicMail electronicMail = new ElectronicMail(collection, email);
+				if(collection.getElectronicMails()==null)
+					collection.setElectronicMails(new ArrayList<ElectronicMail>());
+				collection.getElectronicMails().add(electronicMail);
+			}
+		if(websites!=null)
+			for(String websitev : websites){
+				Website website;
+				try {
+					website = new Website(websitev);
+					if(collection.getWebsites()==null)
+						collection.setWebsites(new ArrayList<Website>());
+					collection.getWebsites().add(website);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+			}
 	}
 	
 	/**/

@@ -11,13 +11,12 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
-import lombok.Getter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessAdapter;
+import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.RootBusinessLayerListener;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -35,6 +34,7 @@ import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
@@ -75,6 +75,7 @@ import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.language.Language;
+import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -93,6 +94,8 @@ import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+
+import lombok.Getter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER)
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -137,6 +140,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private EventMissedReasonBusiness eventMissedReasonBusiness;
     @Inject @Getter private PersonBusiness personBusiness;
     @Inject @Getter private IntervalCollectionBusiness intervalCollectionBusiness;
+    @Inject @Getter private IntervalBusiness intervalBusiness;
     @Inject private RoleBusiness roleBusiness;
     @Inject private RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject private UserAccountBusiness userAccountBusiness;
@@ -149,7 +153,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private JobFunctionBusiness jobFunctionBusiness;
     @Inject @Getter private MetricCollectionBusiness metricCollectionBusiness;
     @Inject @Getter private MetricBusiness metricBusiness;
-    
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
@@ -379,6 +382,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)PersonTitle.class, (TypedBusiness)personTitleBusiness);
         beansMap.put((Class)JobFunction.class, (TypedBusiness)jobFunctionBusiness);
         beansMap.put((Class)IntervalCollection.class, (TypedBusiness)intervalCollectionBusiness);
+        beansMap.put((Class)Interval.class, (TypedBusiness)intervalBusiness);
         beansMap.put((Class)MetricCollection.class, (TypedBusiness)metricCollectionBusiness);
         beansMap.put((Class)Metric.class, (TypedBusiness)metricBusiness);
     }

@@ -10,6 +10,7 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.utility.common.cdi.AbstractBean;
 
@@ -75,6 +76,12 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 
 	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code) {
 		return rootDataProducerHelper.getEnumeration(aClass, code);
+	}
+	
+	public void addContacts(ContactCollection collection, String[] addresses, String[] landNumbers,
+			String[] mobileNumbers, String[] postalBoxes, String[] emails, String[] websites) {
+		rootDataProducerHelper.addContacts(collection, addresses, landNumbers, mobileNumbers, postalBoxes, emails,
+				websites);
 	}
 
 	public abstract void produce(FakedDataProducerListener listener);

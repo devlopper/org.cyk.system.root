@@ -22,14 +22,14 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	private static final long serialVersionUID = -165832578043422718L;
 	
 	@Embedded @AttributeOverrides(value={
-			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=FIELD_LOW_VALUE))
-			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=FIELD_LOW_EXCLUDED))
+			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=COLUMN_LOW_VALUE))
+			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=COLUMN_LOW_EXCLUDED))
 	})
 	private IntervalExtremity low = new IntervalExtremity();
 	
 	@Embedded @AttributeOverrides(value={
-			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=FIELD_HIGH_VALUE))
-			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=FIELD_HIGH_EXCLUDED))
+			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=COLUMN_HIGH_VALUE))
+			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=COLUMN_HIGH_EXCLUDED))
 	})
 	private IntervalExtremity high = new IntervalExtremity();
 	
@@ -42,13 +42,13 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 		this.high = new IntervalExtremity(high);
 	}
 	
-	private static final String LOW = "low";
-	public static final String FIELD_LOW_VALUE = LOW+"_"+IntervalExtremity.FIELD_VALUE;
-	public static final String FIELD_LOW_EXCLUDED = LOW+"_"+IntervalExtremity.FIELD_EXCLUDED;
+	public static final String FIELD_LOW = "low";
+	public static final String COLUMN_LOW_VALUE = FIELD_LOW+"_"+IntervalExtremity.FIELD_VALUE;
+	public static final String COLUMN_LOW_EXCLUDED = FIELD_LOW+"_"+IntervalExtremity.FIELD_EXCLUDED;
 	
-	private static final String HIGH = "high";
-	public static final String FIELD_HIGH_VALUE = HIGH+"_"+IntervalExtremity.FIELD_VALUE;
-	public static final String FIELD_HIGH_EXCLUDED = HIGH+"_"+IntervalExtremity.FIELD_EXCLUDED;
+	public static final String FIELD_HIGH = "high";
+	public static final String COLUMN_HIGH_VALUE = FIELD_HIGH+"_"+IntervalExtremity.FIELD_VALUE;
+	public static final String COLUMN_HIGH_EXCLUDED = FIELD_HIGH+"_"+IntervalExtremity.FIELD_EXCLUDED;
 	
 	/*
 	public Interval(IntervalManager manager) {

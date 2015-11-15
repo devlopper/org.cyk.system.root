@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessLayerListener;
 import org.cyk.system.root.business.api.BusinessManager;
+import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.datasource.DataSource;
@@ -51,6 +52,7 @@ import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractLayer;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
@@ -81,6 +83,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     @Inject protected PermissionBusiness permissionBusiness;
     @Inject protected RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject @Getter protected FileBusiness fileBusiness;
+    @Inject @Getter protected FormatterBusiness formatterBusiness;
     
     @Inject protected RootDataProducerHelper rootDataProducerHelper;
     
@@ -91,7 +94,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     protected void initialisation() {
         super.initialisation();
         id = this.getClass().getName();
-        String systemName = StringUtils.split(this.getClass().getName(), '.')[3];
+        String systemName = StringUtils.split(this.getClass().getName(), Constant.CHARACTER_DOT)[3];
         registerResourceBundles(systemName);
         registerTypedBusinessBean(businessLocator.getTypedBusinessBeanMap());
         
@@ -153,6 +156,10 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	
 	protected AbstractReportRepository getReportRepository(){
 		return null;
+	}
+	
+	protected <T> void registerFormatter(Class<T> aClass,AbstractFormatter<T> formatter){
+		formatterBusiness.registerFormatter(aClass, formatter);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
