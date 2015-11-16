@@ -58,5 +58,9 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     /**/
                     
                     Class<IDENTIFIABLE> getClazz();
+                    
+                    /**/
+                    
+                    
 
 }

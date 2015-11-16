@@ -8,14 +8,18 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import lombok.Getter;
+
 import org.cyk.system.root.business.api.BusinessServiceListener;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
+import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
+import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
@@ -154,5 +158,86 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	protected void logIdentifiable(String message,IDENTIFIABLE identifiable){
 		logDebug("{} : {}",message,identifiable.getLogMessage());
 	}
+	
+	/**/
+	
+	public static interface CascadeOperationListener<IDENTIFIABLE extends AbstractIdentifiable,DAO extends TypedDao<IDENTIFIABLE>,BUSINESS extends TypedBusiness<IDENTIFIABLE>>{
+    	
+		DAO getDao();
+		BUSINESS getBusiness();
+		
+		void create(Collection<IDENTIFIABLE> identifiables);
+    	void update(Collection<IDENTIFIABLE> identifiables);
+    	void delete(Collection<IDENTIFIABLE> identifiables);
+    	
+    	void operate(Collection<IDENTIFIABLE> identifiables,Crud crud);
+    	
+    	/**/
+    	
+    	@Getter
+    	public static class Adapter<IDENTIFIABLE extends AbstractIdentifiable,DAO extends TypedDao<IDENTIFIABLE>,BUSINESS extends TypedBusiness<IDENTIFIABLE>> implements CascadeOperationListener<IDENTIFIABLE, DAO, BUSINESS>{
+
+    		private DAO dao;
+    		private BUSINESS business;
+    		
+			public Adapter(DAO dao, BUSINESS business) {
+				super();
+				this.dao = dao;
+				this.business = business;
+			}
+			@Override public void create(Collection<IDENTIFIABLE> identifiables) {}
+			@Override public void update(Collection<IDENTIFIABLE> identifiables) {}
+			@Override public void delete(Collection<IDENTIFIABLE> identifiables) {}
+			@Override public void operate(Collection<IDENTIFIABLE> identifiables, Crud crud) {}
+			
+			/**/
+			
+			public static class Default<IDENTIFIABLE extends AbstractIdentifiable,DAO extends TypedDao<IDENTIFIABLE>,BUSINESS extends TypedBusiness<IDENTIFIABLE>> extends Adapter<IDENTIFIABLE, DAO, BUSINESS>{
+	    		
+	    		public Default(DAO dao, BUSINESS business) {
+					super(dao, business);
+				}
+
+				@Override
+	    		public void create(Collection<IDENTIFIABLE> identifiables) {
+	    			if(getBusiness()!=null)
+	    				getBusiness().create(identifiables);
+	    			else for(IDENTIFIABLE identifiable : identifiables)
+	    				getDao().create(identifiable);
+	    		}
+	    		
+	    		@Override
+	    		public void update(Collection<IDENTIFIABLE> identifiables) {
+	    			if(getBusiness()!=null)
+	    				getBusiness().update(identifiables);
+	    			else for(IDENTIFIABLE identifiable : identifiables)
+	    				getDao().update(identifiable);
+	    		}
+	    		
+	    		@Override
+	    		public void delete(Collection<IDENTIFIABLE> identifiables) {
+	    			if(getBusiness()!=null)
+	    				getBusiness().delete(identifiables);
+	    			else for(IDENTIFIABLE identifiable : identifiables)
+	    				getDao().delete(identifiable);
+	    		}
+	    		
+	    		@Override
+	    		public void operate(Collection<IDENTIFIABLE> identifiables, Crud crud) {
+	    			if(Crud.CREATE.equals(crud))
+						create(identifiables);
+					else if(Crud.READ.equals(crud))
+						;
+					else if(Crud.UPDATE.equals(crud))
+						update(identifiables);
+					else if(Crud.DELETE.equals(crud))
+						delete(identifiables);
+	    		}
+	    	}
+			
+    	}
+    	
+    	
+    }
 	
 }
