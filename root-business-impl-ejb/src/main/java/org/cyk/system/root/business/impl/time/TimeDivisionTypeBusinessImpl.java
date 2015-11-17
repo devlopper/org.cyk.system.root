@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.time;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
@@ -16,6 +17,16 @@ public class TimeDivisionTypeBusinessImpl extends AbstractEnumerationBusinessImp
 	@Inject
 	public TimeDivisionTypeBusinessImpl(TimeDivisionTypeDao dao) {
 		super(dao); 
+	}
+
+	@Override
+	public BigDecimal convertToDivisionDuration(TimeDivisionType timeDivisionType, Long millisecond) {
+		return new BigDecimal(millisecond).divide(new BigDecimal(timeDivisionType.getDuration()));
+	}
+
+	@Override
+	public Long convertToMillisecond(TimeDivisionType timeDivisionType,BigDecimal duration) {
+		return duration.multiply(new BigDecimal(timeDivisionType.getDuration())).longValue();
 	}   
 	
 }
