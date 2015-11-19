@@ -40,6 +40,7 @@ import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGeneratorConfiguration;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.party.Application;
@@ -363,4 +364,9 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		return rootDataProducerHelper.getEnumeration(aClass, code);
 	}
 
+	public void addContacts(ContactCollection collection, String[] addresses, String[] landNumbers,
+			String[] mobileNumbers, String[] postalBoxes, String[] emails, String[] websites) {
+		rootDataProducerHelper.addContacts(collection, addresses, landNumbers, mobileNumbers, postalBoxes, emails,
+				websites);
+	}
 }

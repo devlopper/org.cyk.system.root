@@ -35,6 +35,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.cdi.BeanAdapter;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -52,6 +53,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	@Getter private Package basePackage;
 	private Deque<Package> basePackageQueue = new ArrayDeque<>();
 	private Boolean basePackageQueueingEnabled = Boolean.FALSE;
+	
+	@Getter private Collection<RootDataProducerHelperListener> rootDataProducerHelperListeners = new ArrayList<>();
 	
 	@Override
 	protected void initialisation() {
@@ -83,6 +86,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		T data = newInstance(aClass);
 		data.setCode(code);
 		data.setName(name);
+		for(RootDataProducerHelperListener listener : rootDataProducerHelperListeners)
+			listener.set(data);
 		return (T) genericBusiness.create(data);
 	}
 	
@@ -100,6 +105,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			T data = newInstance(aClass);
 			data.setCode(getCode((String)value));
 			data.setName((String)value);
+			for(RootDataProducerHelperListener listener : rootDataProducerHelperListeners)
+				listener.set(data);
 			collection.add(data);
 		}
 		genericBusiness.create(collection);
@@ -231,4 +238,25 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return INSTANCE;
 	}
 
+	/**/
+	
+	public static interface RootDataProducerHelperListener{
+		void set(Object object);
+		
+		/**/
+		
+		public static class Adapter extends BeanAdapter implements RootDataProducerHelperListener,Serializable{
+			private static final long serialVersionUID = 581887995233346336L;
+			@Override
+			public void set(Object object) {}
+			
+			/**/
+			
+			public static class Default extends Adapter implements Serializable{
+				private static final long serialVersionUID = 581887995233346336L;
+		
+			}
+		}
+	}
+	
 }
