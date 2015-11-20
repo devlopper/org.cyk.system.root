@@ -33,6 +33,8 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
 	}   
 	
 	protected void __load__(ContactCollection aCollection) {
+		if(aCollection==null)
+			return;
         aCollection.setPhoneNumbers(contactDao.readByCollectionByClass(aCollection,PhoneNumber.class));
         aCollection.setLocations(contactDao.readByCollectionByClass(aCollection,Location.class));
         aCollection.setElectronicMails(contactDao.readByCollectionByClass(aCollection,ElectronicMail.class));

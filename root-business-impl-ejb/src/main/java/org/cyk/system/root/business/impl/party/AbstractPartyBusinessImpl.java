@@ -61,6 +61,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     /**/
         
     protected void __load__(PARTY party) {
-    	contactCollectionBusiness.load(party.getContactCollection());
+    	if(party.getContactCollection()!=null)
+    		contactCollectionBusiness.load(party.getContactCollection());
     }
 }

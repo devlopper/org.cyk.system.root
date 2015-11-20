@@ -49,8 +49,8 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	
     	Person person = RootRandomDataProvider.getInstance().oneFromDatabase(Person.class);
     	person = personBusiness.load(person.getIdentifier());
-    	debug(person.getExtendedInformations());
-    	debug(person.getJobInformations());
+    	//debug(person.getExtendedInformations());
+    	//debug(person.getJobInformations());
     	
     }
 

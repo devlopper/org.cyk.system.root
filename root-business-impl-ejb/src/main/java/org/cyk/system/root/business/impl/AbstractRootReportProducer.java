@@ -69,7 +69,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected void set(Person person,PersonReport report){
 		rootBusinessLayer.getPersonBusiness().load(person);
-		set(person.getContactCollection(), report.getContact());
+		if(person.getContactCollection()!=null)
+			set(person.getContactCollection(), report.getContact());
 		
 		report.setName(person.getName());
 		report.setLastName(person.getLastName());

@@ -181,7 +181,11 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractActor> T registerActor(Class<T> actorClass,String code,String[] names){
+	public <T extends AbstractActor> T createActor(Class<T> actorClass,String code,String[] names){
+		return (T) genericBusiness.create(_createActor_(actorClass, code, names));
+	}
+	
+	private <T extends AbstractActor> T _createActor_(Class<T> actorClass,String code,String[] names){
 		T actor = RootRandomDataProvider.getInstance().actor(actorClass);
 		actor.getRegistration().setCode(code);
 		if(names!=null){
@@ -192,13 +196,13 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 			if(names.length>2)
 				actor.getPerson().setSurname(names[2]);
 		}
-		return (T) genericBusiness.create(actor);
+		return actor;
 	}
 	
-	public <T extends AbstractActor> List<T> registerActors(Class<T> actorClass,String[] codes){
+	public <T extends AbstractActor> List<T> createActors(Class<T> actorClass,String[] codes){
 		List<T> list = new ArrayList<>();
 		for(String code : codes)
-			list.add(registerActor(actorClass,code, null));
+			list.add(createActor(actorClass,code, null));
 		return list;
 	}
 	
