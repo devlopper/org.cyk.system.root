@@ -43,14 +43,14 @@ public abstract class AbstractJasperReportBasedOnDynamicBuilder extends Abstract
 			default:border = Border.PEN_1_POINT();break;
 			}
 			styleBuilder.setBorder(border);
-			styleBuilder.setBorderColor(style.getBorder().getAll().getColor().systemColor());
+			styleBuilder.setBorderColor(style.getBorder().getAll().getColor().getSystemColor());
 		}
 		borderSide(styleBuilder,style.getBorder().getLeft(),0);
 		borderSide(styleBuilder,style.getBorder().getTop(),1);
 		borderSide(styleBuilder,style.getBorder().getRight(),2);
 		borderSide(styleBuilder,style.getBorder().getBottom(),3);
 		
-		Color color = style.getBackground().getColor().systemColor();
+		Color color = style.getBackground().getColor().getSystemColor();
 		if(color==null){
 			styleBuilder.setTransparency(Transparency.TRANSPARENT);
 		}else{
@@ -58,7 +58,7 @@ public abstract class AbstractJasperReportBasedOnDynamicBuilder extends Abstract
 			styleBuilder.setBackgroundColor(color);
 		}
 		
-		styleBuilder.setTextColor(style.getText().getColor().systemColor());
+		styleBuilder.setTextColor(style.getText().getColor().getSystemColor());
 		Horizontal horizontal = style.getText().getAlignment().getHorizontal();
 		if(Horizontal.AUTO.equals(horizontal))
 			horizontal = Horizontal.LEFT;

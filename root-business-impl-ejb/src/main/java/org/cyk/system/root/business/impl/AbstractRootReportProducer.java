@@ -18,6 +18,7 @@ import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonReport;
+import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.utility.common.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,16 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	private static final long serialVersionUID = 7126711234011563710L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRootReportProducer.class);
+	private static final String JASPER_STYLE = "<style size=\"%s\" forecolor=\"%s\">%s</style>";
 	public static String NULL_VALUE = "NA";
 	public static String NOT_APPLICABLE = "NA";
 	
 	protected LabelValueCollectionReport currentLabelValueCollection;
+	
+	protected String getJasperStyle(String text,Style style){
+		return String.format(JASPER_STYLE, style.getFont().getSize(),"#"+style.getText().getColor().getHexademicalCode(),text);
+		//return String.format(JASPER_STYLE, style.getFont().getSize(),"#0000ff",text);
+	}
 	
 	protected LabelValueCollectionReport labelValueCollection(String labelId){
 		currentLabelValueCollection = new LabelValueCollectionReport();
@@ -133,5 +140,5 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	protected Logger __logger__() {
 		return LOGGER;
 	}
-
+	
 }
