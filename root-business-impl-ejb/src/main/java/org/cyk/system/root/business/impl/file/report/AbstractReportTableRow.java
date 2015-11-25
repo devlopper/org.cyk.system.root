@@ -11,7 +11,12 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter @Setter @Deprecated
+/**
+ * Use AbstractOutputDetails instead
+ * @author Christian Yao Komenan
+ *
+ */
 public abstract class AbstractReportTableRow extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 6250896775642285064L;
