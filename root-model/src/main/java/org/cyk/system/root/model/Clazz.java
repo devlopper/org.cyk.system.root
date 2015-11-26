@@ -19,7 +19,7 @@ import org.cyk.utility.common.annotation.ModelBean.CrudInheritanceStrategy;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-/*@Entity*/ @Getter @Setter @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.INTERNAL)
+/*@Entity*/ @Getter @Setter @NoArgsConstructor //@ModelBean(crudStrategy=CrudStrategy.INTERNAL)
 public class Clazz extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = 524804677149804204L;
