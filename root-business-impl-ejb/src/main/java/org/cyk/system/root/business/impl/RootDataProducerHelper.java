@@ -170,6 +170,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		if(addresses!=null)
 			for(String address : addresses){
 				Location location = new Location(collection, RootBusinessLayer.getInstance().getCountryCoteDivoire().getLocality(), address);
+				location.setType(RootBusinessLayer.getInstance().getOfficeLocationType());
 				if(collection.getLocations()==null)
 					collection.setLocations(new ArrayList<Location>());
 				collection.getLocations().add(location);
