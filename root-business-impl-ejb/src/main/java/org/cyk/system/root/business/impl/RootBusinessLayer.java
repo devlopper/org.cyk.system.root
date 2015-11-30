@@ -11,12 +11,13 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessAdapter;
-import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.RootBusinessLayerListener;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -95,9 +96,7 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
-import lombok.Getter;
-
-@Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER)
+@Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
  
 	public static final int DEPLOYMENT_ORDER = 0;
@@ -107,28 +106,28 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	private Timer alarmTimer;
 	
-	@Getter private final String parameterGenericReportBasedOnDynamicBuilder = "grbodb"; 
-	@Getter private final String parameterGenericDashBoardReport = "gdbr"; 
-	@Getter private final String parameterFromDate = "fd"; 
-	@Getter private final String parameterToDate = "td"; 
+	private final String parameterGenericReportBasedOnDynamicBuilder = "grbodb"; 
+	private final String parameterGenericDashBoardReport = "gdbr"; 
+	private final String parameterFromDate = "fd"; 
+	private final String parameterToDate = "td"; 
 	
-	@Getter private PhoneNumberType landPhoneNumberType,mobilePhoneNumberType;
-	@Getter private LocationType homeLocationType,officeLocationType;
-	@Getter private LocalityType countryLocalityType,cityLocalityType,continentLocalityType;
-	@Getter private Country countryCoteDivoire;
-	@Getter private Role administratorRole,managerRole,businessActorRole,settingManagerRole,securityManagerRole,userRole;
-	@Getter private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
-	@Getter private EventType anniversaryEventType,reminderEventType;
-	@Getter private Sex sexMale,sexFemale;
+	private PhoneNumberType landPhoneNumberType,mobilePhoneNumberType;
+	private LocationType homeLocationType,officeLocationType;
+	private LocalityType countryLocalityType,cityLocalityType,continentLocalityType;
+	private Country countryCoteDivoire;
+	private Role administratorRole,managerRole,businessActorRole,settingManagerRole,securityManagerRole,userRole;
+	private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
+	private EventType anniversaryEventType,reminderEventType;
+	private Sex sexMale,sexFemale;
 	
-	@Inject @Getter private LanguageBusiness languageBusiness;
-	@Inject @Getter private MathematicsBusiness mathematicsBusiness;
-	@Inject @Getter private TimeBusiness timeBusiness;
-	@Inject @Getter private NumberBusiness numberBusiness;
-	@Inject @Getter private GraphicBusiness graphicBusiness;
-	@Inject @Getter private ApplicationBusiness applicationBusiness;
-	@Inject @Getter private GenericBusiness genericBusiness;
-	@Inject @Getter private ContactCollectionBusiness contactCollectionBusiness;
+	@Inject private LanguageBusiness languageBusiness;
+	@Inject private MathematicsBusiness mathematicsBusiness;
+	@Inject private TimeBusiness timeBusiness;
+	@Inject private NumberBusiness numberBusiness;
+	@Inject private GraphicBusiness graphicBusiness;
+	@Inject private ApplicationBusiness applicationBusiness;
+	@Inject private GenericBusiness genericBusiness;
+	@Inject private ContactCollectionBusiness contactCollectionBusiness;
 	@Inject private PhoneNumberTypeBusiness phoneNumberTypeBusiness;
 	@Inject private LocationTypeBusiness locationTypeBusiness;
 	@Inject private LocalityBusiness localityBusiness;
@@ -138,21 +137,21 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private EventBusiness eventBusiness;
     @Inject private EventMissedBusiness eventMissedBusiness;
     @Inject private EventMissedReasonBusiness eventMissedReasonBusiness;
-    @Inject @Getter private PersonBusiness personBusiness;
-    @Inject @Getter private IntervalCollectionBusiness intervalCollectionBusiness;
-    @Inject @Getter private IntervalBusiness intervalBusiness;
+    @Inject private PersonBusiness personBusiness;
+    @Inject private IntervalCollectionBusiness intervalCollectionBusiness;
+    @Inject private IntervalBusiness intervalBusiness;
     @Inject private RoleBusiness roleBusiness;
     @Inject private RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject private UserAccountBusiness userAccountBusiness;
     @Inject private TimeDivisionTypeBusiness timeDivisionTypeBusiness;
     @Inject private EventTypeBusiness eventTypeBusiness;
-    @Inject @Getter private StringGeneratorBusiness stringGeneratorBusiness;
-    @Inject @Getter private ClazzBusiness clazzBusiness;
+    @Inject private StringGeneratorBusiness stringGeneratorBusiness;
+    @Inject private ClazzBusiness clazzBusiness;
     @Inject private JobTitleBusiness jobTitleBusiness;
     @Inject private PersonTitleBusiness personTitleBusiness;
     @Inject private JobFunctionBusiness jobFunctionBusiness;
-    @Inject @Getter private MetricCollectionBusiness metricCollectionBusiness;
-    @Inject @Getter private MetricBusiness metricBusiness;
+    @Inject private MetricCollectionBusiness metricCollectionBusiness;
+    @Inject private MetricBusiness metricBusiness;
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
