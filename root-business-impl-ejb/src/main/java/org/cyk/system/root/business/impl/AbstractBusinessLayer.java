@@ -327,11 +327,16 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		return rootDataProducerHelper.createEnumeration(aClass, name);
 	}
 
-	public IntervalCollection createIntervalCollection(String code,String[][] values){
-		return rootDataProducerHelper.createIntervalCollection(code,values);
+	public IntervalCollection createIntervalCollection(String code, String[][] values, String codeSeparator,Boolean create) {
+		return rootDataProducerHelper.createIntervalCollection(code, values, codeSeparator, create);
 	}
-	public IntervalCollection createIntervalCollection(String code,String[][] values,Boolean create){
-		return rootDataProducerHelper.createIntervalCollection(code,values,create);
+
+	public IntervalCollection createIntervalCollection(String code, String[][] values, String codeSeparator) {
+		return rootDataProducerHelper.createIntervalCollection(code, values, codeSeparator);
+	}
+
+	public IntervalCollection createIntervalCollection(String code, String[][] values) {
+		return rootDataProducerHelper.createIntervalCollection(code, values);
 	}
 
 	public <T extends AbstractIdentifiable> T create(T object) {
@@ -369,4 +374,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		rootDataProducerHelper.addContacts(collection, addresses, landNumbers, mobileNumbers, postalBoxes, emails,
 				websites);
 	}
+
+	
 }

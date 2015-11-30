@@ -112,17 +112,21 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		genericBusiness.create(collection);
 	}
 	
-	public IntervalCollection createIntervalCollection(String code,String[][] values,Boolean create){
+	public IntervalCollection createIntervalCollection(String code,String[][] values,String codeSeparator,Boolean create){
 		IntervalCollection collection = new IntervalCollection(code);
 		for(String[] v : values){
-			collection.getCollection().add(new Interval(collection,v[0],v[1],new BigDecimal(v[2]),new BigDecimal(v[3])));
+			collection.getCollection().add(new Interval(collection,StringUtils.isBlank(codeSeparator)?v[0]:(code+codeSeparator+v[0])
+					,v[1],new BigDecimal(v[2]),new BigDecimal(v[3])));
 		}
 		if(Boolean.TRUE.equals(create))
 			return intervalCollectionBusiness.create(collection);
 		return collection;
 	}
+	public IntervalCollection createIntervalCollection(String code,String[][] values,String codeSeparator){
+		return createIntervalCollection(code,values,codeSeparator, Boolean.TRUE);
+	}
 	public IntervalCollection createIntervalCollection(String code,String[][] values){
-		return createIntervalCollection(code,values, Boolean.TRUE);
+		return createIntervalCollection(code,values,null);
 	}
 	
 	public File createFile(Package basePackage,String relativePath,String name){
