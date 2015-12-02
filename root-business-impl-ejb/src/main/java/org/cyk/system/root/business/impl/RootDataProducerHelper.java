@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 
 import lombok.Getter;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -131,6 +132,10 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	public File createFile(Package basePackage,String relativePath,String name){
 		return fileBusiness.create(fileBusiness.process(getResourceAsBytes(basePackage,relativePath),name));
+	}
+	public File createFile(Package basePackage,String relativePath){
+		String name = FilenameUtils.getName(relativePath);
+		return createFile(basePackage, relativePath, name);
 	}
 	
 	public byte[] getResourceAsBytes(Package basePackage,String relativePath){

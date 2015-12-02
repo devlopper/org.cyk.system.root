@@ -356,6 +356,12 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	public File createFile(String relativePath, String name) {
 		return createFile(this.getClass().getPackage(),relativePath, name);
 	}
+	public File createFile(Package basePackage,String relativePath){
+		return rootDataProducerHelper.createFile(basePackage, relativePath);
+	}
+	public File createFile(String relativePath){
+		return rootDataProducerHelper.createFile(this.getClass().getPackage(), relativePath);
+	}
 
 	public byte[] getResourceAsBytes(Package basePackage,String relativePath) {
 		return rootDataProducerHelper.getResourceAsBytes(basePackage,relativePath);
