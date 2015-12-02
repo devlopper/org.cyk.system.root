@@ -1,0 +1,31 @@
+package org.cyk.system.root.model.file.report;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+
+import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.file.File;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter @Setter @NoArgsConstructor @Entity
+public class ReportTemplate extends AbstractEnumeration implements Serializable {
+
+	private static final long serialVersionUID = -6245201590820068337L;
+
+	@ManyToOne private File template;
+	@ManyToOne private File backgroundImage;
+	
+	public ReportTemplate(String code, File template,File backgroundImage) {
+		super(code, code, null, null);
+		this.template = template;
+		this.backgroundImage = backgroundImage;
+	}
+	
+	
+	
+}
