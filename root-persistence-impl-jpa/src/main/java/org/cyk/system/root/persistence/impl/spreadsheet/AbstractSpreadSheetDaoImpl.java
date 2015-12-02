@@ -16,15 +16,15 @@ public class AbstractSpreadSheetDaoImpl<SPREADSHEET extends AbstractSpreadSheet<
 	implements AbstractSpreadSheetDao<SPREADSHEET,TEMPLATE,ROW,COLUMN,CELL,VALUE,SEARCH_CRITERIA> {
 
 	private static final long serialVersionUID = 6920278182318788380L;
-	
+	/*
 	private static final String READ_BY_CRITERIA_SELECT_FORMAT = "SELECT ps FROM Production ps ";
 	private static final String READ_BY_CRITERIA_WHERE_FORMAT = "WHERE ps.period.fromDate BETWEEN :fromDate AND :toDate ";
 	
 	private static final String READ_BY_CRITERIA_NOTORDERED_FORMAT = READ_BY_CRITERIA_SELECT_FORMAT+READ_BY_CRITERIA_WHERE_FORMAT;
 	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_SELECT_FORMAT+READ_BY_CRITERIA_WHERE_FORMAT+ORDER_BY_FORMAT;
+	*/
+	private String /*readAllSortedByDate,readByCriteria,*/countByCriteria,readByCriteriaDateAscendingOrder,readByCriteriaDateDescendingOrder;
 	
-	private String readAllSortedByDate,readByCriteria,countByCriteria,readByCriteriaDateAscendingOrder,readByCriteriaDateDescendingOrder;
-
 	@Override
     protected void namedQueriesInitialisation() {
     	super.namedQueriesInitialisation();
