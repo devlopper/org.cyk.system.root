@@ -16,13 +16,13 @@ public class SmtpSocketFactory extends AbstractModelElement implements Serializa
 
 	private static final long serialVersionUID = 8430989676173921303L;
 
-	@Column(nullable=false) @NotNull 
+	@Column(name="socketclass",nullable=false) @NotNull 
 	private String clazz;
 
-	@Column(nullable=false) @NotNull 
+	@Column(name="socketfallback",nullable=false) @NotNull 
 	private Boolean fallback;
 	
-	@Column(nullable=false) @NotNull 
+	@Column(name="socketport",nullable=false) @NotNull 
 	private Integer port;
 	
 	@Override

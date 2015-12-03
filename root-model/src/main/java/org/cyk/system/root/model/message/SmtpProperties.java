@@ -21,17 +21,17 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 
 	private static final long serialVersionUID = -5516162693913912313L;
 
-	@Column(nullable=false) @NotNull  @Email
+	@Column(name="csender",nullable=false) @NotNull  @Email
 	private String from;
 	
 	@OneToOne(cascade=CascadeType.ALL) private Credentials credentials;
 	
 	@Embedded private SmtpSocketFactory socketFactory = new SmtpSocketFactory();
 	
-	@Column(nullable=false) @NotNull
+	@Column(name="chost",nullable=false) @NotNull
 	private String host;
 	
-	@Column(nullable=false) @NotNull 
+	@Column(name="cport",nullable=false) @NotNull 
 	private Integer port;
 	
 	@Column(nullable=false) @NotNull 

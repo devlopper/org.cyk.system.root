@@ -37,6 +37,9 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.BeanAdapter;
+import org.cyk.utility.common.database.DatabaseUtils;
+import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
+import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -48,8 +51,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	@Inject private GenericBusiness genericBusiness;
 	@Inject private IntervalCollectionBusiness intervalCollectionBusiness;
 	@Inject private FileBusiness fileBusiness;
-	
 	@Inject private GenericDao genericDao;
+	@Inject private DatabaseUtils databaseUtils;
 	
 	@Getter private Package basePackage;
 	private Deque<Package> basePackageQueue = new ArrayDeque<>();
@@ -218,6 +221,43 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			}
 	}
 	
+	public void createDatabase(){
+		CreateParameters parameters = new CreateParameters();
+		parameters.setDatabaseName(getDatabaseName());
+		try {
+			databaseUtils.createDatabase(parameters);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void dropDatabase(){
+		DropParameters parameters = new DropParameters();
+		parameters.setDatabaseName(getDatabaseName());
+		try {
+			databaseUtils.dropDatabase(parameters);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void exportDatabase(String systemId,Boolean autoTimeStampAction,String fileSuffix){
+		try {
+			databaseUtils.exportDatabase(String.format(DATABASE_NAME_FORMAT, systemId),autoTimeStampAction,fileSuffix);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void exportDatabase(Boolean autoTimeStampAction,String fileSuffix){
+		exportDatabase(getDatabaseName(), autoTimeStampAction, fileSuffix);
+	}
+	public void exportDatabase(){
+		exportDatabase(Boolean.FALSE, Constant.EMPTY_STRING);
+	}
+	
+	private String getDatabaseName(){
+		return StringUtils.substringBetween(basePackage.getName(), "org.cyk.system.", ".business.impl");
+	}
+	
 	/**/
 	
 	public void setBasePackage(Package basePackage) {
@@ -268,5 +308,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			}
 		}
 	}
+	
+	public static final String DATABASE_NAME_FORMAT = "cyk_%s_db";
 	
 }
