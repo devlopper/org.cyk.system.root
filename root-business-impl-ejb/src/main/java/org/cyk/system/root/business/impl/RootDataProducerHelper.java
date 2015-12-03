@@ -240,9 +240,9 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		}
 	}
 	
-	public void exportDatabase(String systemId,Boolean autoTimeStampAction,String fileSuffix){
+	public void exportDatabase(String databaseName,Boolean autoTimeStampAction,String fileSuffix){
 		try {
-			databaseUtils.exportDatabase(String.format(DATABASE_NAME_FORMAT, systemId),autoTimeStampAction,fileSuffix);
+			databaseUtils.exportDatabase(databaseName,autoTimeStampAction,fileSuffix);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -255,7 +255,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	
 	private String getDatabaseName(){
-		return StringUtils.substringBetween(basePackage.getName(), "org.cyk.system.", ".business.impl");
+		return String.format(DATABASE_NAME_FORMAT,StringUtils.substringBetween(basePackage.getName(), "org.cyk.system.", ".business.impl"));
 	}
 	
 	/**/
