@@ -42,7 +42,7 @@ public class FormatterBusinessImpl extends AbstractBusinessServiceImpl implement
 
 	@Override
 	public String format(Object object) {
-		return format(object);
+		return format(object,ContentType.TEXT);
 	}
 
 	@Override
