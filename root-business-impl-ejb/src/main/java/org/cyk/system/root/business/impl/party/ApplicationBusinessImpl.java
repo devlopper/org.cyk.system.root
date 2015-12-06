@@ -72,22 +72,24 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	 */
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void install(Installation installation) {
-		logInfo("Installation starts.");
-		try {
-			installData(installation);
-			installAccounts(installation);
-			installLicense(installation);
-			
-			if(installation.getSmtpProperties()!=null){
-				smtpPropertiesBusiness.create(installation.getSmtpProperties());
-				installation.getApplication().setSmtpProperties(installation.getSmtpProperties());
+		if(findCurrentInstance()==null){
+			logInfo("Installation starts.");
+			try {
+				installData(installation);
+				installAccounts(installation);
+				installLicense(installation);
+				
+				if(installation.getSmtpProperties()!=null){
+					smtpPropertiesBusiness.create(installation.getSmtpProperties());
+					installation.getApplication().setSmtpProperties(installation.getSmtpProperties());
+				}
+				
+				logInfo("Installation done.");
+			} catch (Exception e) {
+				e.printStackTrace();
+				logThrowable(e);
+				exceptionUtils().exception(Boolean.TRUE,"exception.install",new Object[]{e});
 			}
-			
-			logInfo("Installation done.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			logThrowable(e);
-			exceptionUtils().exception(Boolean.TRUE,"exception.install",new Object[]{e});
 		}
 	}
 	
@@ -139,7 +141,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		
 	}  
 
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Application findCurrentInstance() {
     	if(INSTANCE==null){
     		Collection<Application> applications = dao.readAll();
