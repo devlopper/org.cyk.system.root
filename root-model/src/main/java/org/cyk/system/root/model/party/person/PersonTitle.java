@@ -20,10 +20,10 @@ public class PersonTitle extends AbstractEnumeration implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	public static final String MISTER = "MISTER1";
-	public static final String MADAM = "MADAM1";
-	public static final String MISS = "MISS1";
-	public static final String DOCTOR = "DOCTOR1";
+	public static final String MISTER = "MISTER";
+	public static final String MADAM = "MADAM";
+	public static final String MISS = "MISS";
+	public static final String DOCTOR = "DOCTOR";
 	
 	public PersonTitle(String code, String libelle) {
 		super(code, libelle,null, null);
