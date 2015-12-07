@@ -77,6 +77,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	protected void set(Person person,PersonReport report){
 		if(person==null){
 			report.setName(NOT_APPLICABLE);
+			report.setNames(NOT_APPLICABLE);
+			report.setLastName(NOT_APPLICABLE);
 			report.setLastName(Constant.EMPTY_STRING);
 		}else{
 			rootBusinessLayer.getPersonBusiness().load(person);
@@ -123,9 +125,13 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	protected void set(AbstractActor actor,ActorReport report){
-		set(actor.getPerson(), report.getPerson());
-		report.setRegistrationCode(actor.getRegistration().getCode());
-		report.setRegistrationDate(format(actor.getRegistration().getDate()));
+		set(actor==null?null:actor.getPerson(), report.getPerson());
+		if(actor==null){
+			
+		}else{
+			report.setRegistrationCode(actor.getRegistration().getCode());
+			report.setRegistrationDate(format(actor.getRegistration().getDate()));
+		}
 	}
 	
 	protected void set(Person person,ActorReport report){
