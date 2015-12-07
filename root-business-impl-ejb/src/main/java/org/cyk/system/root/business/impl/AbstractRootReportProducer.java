@@ -75,46 +75,51 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	protected void set(Person person,PersonReport report){
-		rootBusinessLayer.getPersonBusiness().load(person);
-		if(person.getContactCollection()!=null)
-			set(person.getContactCollection(), report.getContact());
-		
-		report.setName(person.getName());
-		report.setLastName(person.getLastName());
-		report.setNames(person.getNames());
-		report.setSurname(person.getSurname());
-		report.setBirthDate(format(person.getBirthDate()));
-		report.setCode(person.getCode());
-		
-		if(person.getImage()!=null)
-			report.setImage(findInputStream(person.getImage()));
-		
-		if(person.getNationality()!=null)
-			report.setNationality(person.getNationality().getUiString());
-		if(person.getSex()!=null)
-			report.setSex(person.getSex().getName());
-		
-		if(person.getExtendedInformations()!=null){
-			PersonExtendedInformations extendedInformations = person.getExtendedInformations();
-			if(extendedInformations.getBirthLocation()!=null)
-				report.setBirthLocation(extendedInformations.getBirthLocation().getUiString());
-			if(extendedInformations.getTitle()!=null)
-				report.setTitle(extendedInformations.getTitle().getUiString());
-			if(extendedInformations.getSignatureSpecimen()!=null)
-				report.setSignatureSpecimen(findInputStream(extendedInformations.getSignatureSpecimen()));
-			if(extendedInformations.getMaritalStatus()!=null)
-				report.setMaritalStatus(extendedInformations.getMaritalStatus().getName());
+		if(person==null){
+			report.setName(NOT_APPLICABLE);
+			report.setLastName(Constant.EMPTY_STRING);
+		}else{
+			rootBusinessLayer.getPersonBusiness().load(person);
+			if(person.getContactCollection()!=null)
+				set(person.getContactCollection(), report.getContact());
+			
+			report.setName(person.getName());
+			report.setLastName(person.getLastName());
+			report.setNames(person.getNames());
+			report.setSurname(person.getSurname());
+			report.setBirthDate(format(person.getBirthDate()));
+			report.setCode(person.getCode());
+			
+			if(person.getImage()!=null)
+				report.setImage(findInputStream(person.getImage()));
+			
+			if(person.getNationality()!=null)
+				report.setNationality(person.getNationality().getUiString());
+			if(person.getSex()!=null)
+				report.setSex(person.getSex().getName());
+			
+			if(person.getExtendedInformations()!=null){
+				PersonExtendedInformations extendedInformations = person.getExtendedInformations();
+				if(extendedInformations.getBirthLocation()!=null)
+					report.setBirthLocation(extendedInformations.getBirthLocation().getUiString());
+				if(extendedInformations.getTitle()!=null)
+					report.setTitle(extendedInformations.getTitle().getUiString());
+				if(extendedInformations.getSignatureSpecimen()!=null)
+					report.setSignatureSpecimen(findInputStream(extendedInformations.getSignatureSpecimen()));
+				if(extendedInformations.getMaritalStatus()!=null)
+					report.setMaritalStatus(extendedInformations.getMaritalStatus().getName());
+			}
+			
+			if(person.getJobInformations()!=null){
+				JobInformations jobInformations = person.getJobInformations();
+				if(jobInformations.getFunction()!=null)
+					report.setJobFonction(jobInformations.getFunction().getName());
+				if(jobInformations.getTitle()!=null)
+					report.setJobTitle(jobInformations.getTitle().getName());
+			}
+			
+			//System.out.println("AbstractRootReportProducer.set() : "+report.getImage());	
 		}
-		
-		if(person.getJobInformations()!=null){
-			JobInformations jobInformations = person.getJobInformations();
-			if(jobInformations.getFunction()!=null)
-				report.setJobFonction(jobInformations.getFunction().getName());
-			if(jobInformations.getTitle()!=null)
-				report.setJobTitle(jobInformations.getTitle().getName());
-		}
-		
-		//System.out.println("AbstractRootReportProducer.set() : "+report.getImage());
 	}
 	
 	protected void set(AbstractActor actor,ActorReport report){
