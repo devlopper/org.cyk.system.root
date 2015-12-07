@@ -30,7 +30,7 @@ public class UserAccountLock extends AbstractIdentifiable implements Serializabl
 	@ManyToOne @NotNull(groups=org.cyk.utility.common.validation.System.class)
 	private LockCause lockCause;
 	
-	@Column(name="_date",nullable=false) @NotNull(groups=org.cyk.utility.common.validation.System.class)
+	@Column(name="lock_date",nullable=false) @NotNull(groups=org.cyk.utility.common.validation.System.class)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 	
