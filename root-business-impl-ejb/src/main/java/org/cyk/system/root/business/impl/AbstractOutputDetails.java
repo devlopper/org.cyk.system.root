@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 
 public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements Serializable {
@@ -34,6 +35,14 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	}
 	protected String formatDateTime(Date date) {
 		return timeBusiness.formatDateTime(date);
+	}
+	
+	protected String formatResponse(Boolean value){
+		if(value==null)
+			return Constant.EMPTY_STRING;
+		if(Boolean.TRUE.equals(value))
+			return rootBusinessLayer.getLanguageBusiness().findText("yes");
+		return rootBusinessLayer.getLanguageBusiness().findText("no");
 	}
 	
 }
