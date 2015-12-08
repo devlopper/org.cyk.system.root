@@ -368,6 +368,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	public String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass) {
 		return findDoFunctionnalityText(aClass, Boolean.TRUE, Boolean.FALSE);
 	}
+	
+	@Override
+	public String findResponseText(Boolean value) {
+		if(value==null)
+			return Constant.EMPTY_STRING;
+		return findText(Boolean.TRUE.equals(value)?"yes":"no");
+	}
 
 	/**/
 	

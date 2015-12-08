@@ -52,6 +52,8 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	
 	String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass);
 	
+	String findResponseText(Boolean value);
+	
 	void setCachingEnabled(Boolean aValue);
 	Boolean getCachingEnabled();
 	
