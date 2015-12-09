@@ -24,7 +24,7 @@ public class BusinessEntityInfos implements Serializable {
 	@Getter @Setter private Boolean male;
     
     @Getter @Setter private String varName,uiLabelId,uiLabel,identifier,uiIconName,uiIconExtension;
-    @Getter @Setter private String uiConsultViewId,uiListViewId,uiEditViewId;
+    @Getter @Setter private String uiConsultViewId,uiListViewId,uiEditViewId,uiCreateManyViewId;
     
     public BusinessEntityInfos(Class<? extends Identifiable<?>> clazz,LanguageBusiness languageBusiness) {
         super();

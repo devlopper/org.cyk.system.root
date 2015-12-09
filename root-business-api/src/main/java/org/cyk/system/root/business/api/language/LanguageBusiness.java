@@ -62,4 +62,8 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	void setCachingStrategy(CachingStrategy aValue);
 	CachingStrategy getCachingStrategy();
 	
+	/**/
+	
+	
+	
 }

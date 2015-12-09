@@ -29,6 +29,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.EnumHelper;
 import org.cyk.system.root.model.language.Language;
+import org.cyk.system.root.model.language.LanguageEntry;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
@@ -373,7 +374,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	public String findResponseText(Boolean value) {
 		if(value==null)
 			return Constant.EMPTY_STRING;
-		return findText(Boolean.TRUE.equals(value)?"yes":"no");
+		return findText(Boolean.TRUE.equals(value)?LanguageEntry.YES:LanguageEntry.NO);
 	}
 
 	/**/
