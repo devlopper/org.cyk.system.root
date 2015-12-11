@@ -9,22 +9,25 @@ import lombok.Setter;
 
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.model.Identifiable;
+import org.cyk.system.root.model.userinterface.ClassUserInterface;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudInheritanceStrategy;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@EqualsAndHashCode(of="clazz") //FIXME should be replaced by Clazz //@Deprecated
+@Getter @Setter @EqualsAndHashCode(of="clazz")//FIXME should be replaced by Clazz //@Deprecated
 public class BusinessEntityInfos implements Serializable {
     
 	private static final long serialVersionUID = -8725167267186070601L;
-	@Getter @Setter private Class<? extends Identifiable<?>> clazz;
-	@Getter  private ModelBean modelBeanAnnotation;
-	@Getter @Setter private Boolean male;
+	
+	private Class<? extends Identifiable<?>> clazz;
+	private ModelBean modelBeanAnnotation;
+	private Boolean male;
     
-    @Getter @Setter private String varName,uiLabelId,uiLabel,identifier,uiIconName,uiIconExtension;
-    @Getter @Setter private String uiConsultViewId,uiListViewId,uiEditViewId,uiCreateManyViewId;
+    private String varName,identifier;
+    
+    private ClassUserInterface userInterface = new ClassUserInterface();
     
     public BusinessEntityInfos(Class<? extends Identifiable<?>> clazz,LanguageBusiness languageBusiness) {
         super();
@@ -33,10 +36,10 @@ public class BusinessEntityInfos implements Serializable {
         this.varName = Introspector.decapitalize(clazz.getSimpleName());
         modelBeanAnnotation = CommonUtils.getInstance().getAnnotation(clazz,ModelBean.class);
         
-        uiLabelId = "model.entity."+varName;
-        uiLabel = languageBusiness.findText(uiLabelId);
+        userInterface.setLabelId("model.entity."+varName);
+        userInterface.setLabel(languageBusiness.findText(userInterface.getLabelId()));
         if(modelBeanAnnotation!=null){
-        	uiIconName = modelBeanAnnotation.uiIconName();
+        	userInterface.setLabelId(modelBeanAnnotation.uiIconName());
         }
     }
 

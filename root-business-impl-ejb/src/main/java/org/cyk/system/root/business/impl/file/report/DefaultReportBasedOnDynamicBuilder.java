@@ -32,7 +32,7 @@ public class DefaultReportBasedOnDynamicBuilder extends AbstractReportBasedOnDyn
 				if(parameters.getIdentifiableClass()!=null)
 					businessEntityInfos = applicationBusiness.findBusinessEntityInfos((Class<AbstractIdentifiable>) parameters.getIdentifiableClass());
 				
-				StringBuilder titleBuilder = new StringBuilder(businessEntityInfos==null?"TITLE":languageBusiness.findText(businessEntityInfos.getUiLabelId()));
+				StringBuilder titleBuilder = new StringBuilder(businessEntityInfos==null?"TITLE":languageBusiness.findText(businessEntityInfos.getUserInterface().getLabelId()));
 				if(parameters.getExtendedParameterMap()!=null){
 					String[] paramValues = null;
 					Date fromDate = null;
