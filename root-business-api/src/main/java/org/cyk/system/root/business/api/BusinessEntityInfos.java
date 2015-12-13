@@ -39,7 +39,7 @@ public class BusinessEntityInfos implements Serializable {
         userInterface.setLabelId("model.entity."+varName);
         userInterface.setLabel(languageBusiness.findText(userInterface.getLabelId()));
         if(modelBeanAnnotation!=null){
-        	userInterface.setLabelId(modelBeanAnnotation.uiIconName());
+        	userInterface.setIconName(modelBeanAnnotation.uiIconName());
         }
     }
 
