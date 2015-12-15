@@ -12,6 +12,7 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -166,7 +167,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private RootTestHelper rootTestHelper;
     @Inject private ApplicationDao applicationDao;
     
-    private Application application;
+    @Setter private Application application;
     
     //private Person personAdmin,personGuest;
     
@@ -185,8 +186,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}
 		});
         
-        application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
-        
+        application = applicationDao.select().one();
+       
         rootTestHelper.setReportBusiness(reportBusiness);
         rootTestHelper.setRootBusinessLayer(this); 
         
@@ -395,6 +396,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     @Override
     protected void setConstants(){
+    	application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
+        
     	landPhoneNumberType = phoneNumberTypeBusiness.find(PhoneNumberType.LAND);
     	mobilePhoneNumberType = phoneNumberTypeBusiness.find(PhoneNumberType.MOBILE);
     	
