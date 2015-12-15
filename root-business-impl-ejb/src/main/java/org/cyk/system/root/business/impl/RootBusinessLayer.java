@@ -17,7 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
-import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessAdapter;
+import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.RootBusinessLayerListener;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -172,7 +172,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	INSTANCE = this; 
         super.initialisation();
         
-        ClazzBusiness.LISTENERS.add(new ClazzBusinessAdapter() {
+        ClazzBusiness.LISTENERS.add(new ClazzBusinessListener.Adapter() {
 			private static final long serialVersionUID = 4056356640763766384L;
 			@Override
 			public void doSetUiLabel(Clazz clazz) {

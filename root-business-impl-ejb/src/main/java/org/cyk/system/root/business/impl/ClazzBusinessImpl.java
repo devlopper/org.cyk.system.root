@@ -1,7 +1,10 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -30,6 +33,44 @@ public class ClazzBusinessImpl extends AbstractBean implements ClazzBusiness,Ser
 				return entry.getValue();
 		logWarning("No Clazz found for {}", identifier);
 		return null;
+	}
+	
+	@Override
+	public Object findParentOf(Class<?> rootClass, Object object) {
+		if(object==null || object.getClass().equals(rootClass))
+			return null;
+		Object value = null;
+		for(ClazzBusinessListener listener : LISTENERS){
+			Object v = listener.getParentOf(object); 
+			if(v!=null)
+				value = v;
+		}
+		return value;
+	}
+	
+	private void findParentsOf(Class<?> rootClass, Object object,List<Object> list) {
+		list.add(object);
+		Object parent = findParentOf(rootClass, object);
+		if(parent==null)
+			;
+		else
+			findParentsOf(rootClass, parent,list);
+	}
+	
+	@Override
+	public List<Object> findParentsOf(Class<?> rootClass, Object object) {
+		List<Object> list = findPathOf(rootClass,object);
+		if(list.size()>0)
+			list.remove(list.size()-1);
+		return list;
+	}
+	
+	@Override
+	public List<Object> findPathOf(Class<?> rootClass, Object object) {
+		List<Object> list = new ArrayList<>();
+		findParentsOf(rootClass,object,list);
+		Collections.reverse(list);
+		return list;
 	}
 	
 	@Override
