@@ -141,7 +141,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		
 	}  
 
-    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public Application findCurrentInstance() {
     	if(INSTANCE==null){
     		Collection<Application> applications = dao.readAll();

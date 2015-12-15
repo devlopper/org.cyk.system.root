@@ -183,7 +183,7 @@ public abstract class AbstractReportBusinessImpl extends AbstractBusinessService
      */
     private  String buildFileName(AbstractReport<?> report){
     	StringBuilder s = new StringBuilder(String.format(FILE_NAME_FORMAT,StringUtils.isNotBlank(report.getOwnerName())?report.getOwnerName()
-    			:RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getName(),
+    			:RootBusinessLayer.getInstance().getApplication().getName(),
 				report.getTitle(),StringUtils.replace(report.getCreationDate(),Constant.CHARACTER_COLON.toString(),Constant.CHARACTER_H.toString()),report.getCreatedBy()));
     	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_SLASH.charValue()));
     	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_BACK_SLASH.charValue()));

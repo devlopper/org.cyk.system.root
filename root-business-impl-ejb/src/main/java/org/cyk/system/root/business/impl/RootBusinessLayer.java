@@ -80,6 +80,7 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.JobFunction;
@@ -93,6 +94,7 @@ import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
+import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 
@@ -162,6 +164,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private RootReportRepository reportRepository;
     
     @Inject private RootTestHelper rootTestHelper;
+    @Inject private ApplicationDao applicationDao;
+    
+    private Application application;
     
     //private Person personAdmin,personGuest;
     
@@ -179,6 +184,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				clazz.setUiLabel(languageBusiness.findText(clazz.getUiLabelId()));
 			}
 		});
+        
+        application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
         
         rootTestHelper.setReportBusiness(reportBusiness);
         rootTestHelper.setRootBusinessLayer(this); 
