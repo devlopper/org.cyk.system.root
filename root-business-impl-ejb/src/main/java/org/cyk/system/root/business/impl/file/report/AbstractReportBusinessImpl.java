@@ -198,7 +198,7 @@ public abstract class AbstractReportBusinessImpl extends AbstractBusinessService
     public void prepare(AbstractReport<?> report){
     	//logTrace("Prepare report {}", report);
     	if(StringUtils.isBlank(report.getOwnerName()))
-    		report.setOwnerName(RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getName());
+    		report.setOwnerName(RootBusinessLayer.getInstance().getApplication().getName());
     	
     	if(StringUtils.isBlank(report.getCreationDate()))
 			report.setCreationDate(timeBusiness.formatDateTime(new Date()));
