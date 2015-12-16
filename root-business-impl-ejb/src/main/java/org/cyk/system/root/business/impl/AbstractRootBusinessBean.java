@@ -31,4 +31,8 @@ public abstract class AbstractRootBusinessBean extends AbstractBean implements S
 		return timeBusiness.formatDate(date);
 	}
 	
+	protected String formatUsingBusiness(Object object) {
+		return rootBusinessLayer.getFormatterBusiness().format(object);
+	}
+	
 }

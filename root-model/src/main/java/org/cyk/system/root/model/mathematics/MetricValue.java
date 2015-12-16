@@ -22,8 +22,22 @@ public class MetricValue extends AbstractIdentifiable implements Serializable {
 
 	@ManyToOne @NotNull private Metric metric;
 	
-	@Column(name="metric_value",precision=20,scale=FLOAT_SCALE) 
-	private BigDecimal value;
+	/*
+	 * The solution to support value type is to defined each possible usable type of value.
+	 * Depending on the business anyone of those value fields can be filled.
+	 * A value field will be named as xxxValue where xxx is the type of value
+	 */
+	
+	@Column(precision=20,scale=FLOAT_SCALE) 
+	private BigDecimal numberValue;
+	
+	private String stringValue;
+	
+	/*
+	 * The field is used to extend the type of the string value. this enable the support of any value type
+	 * which can be define by the business
+	 */
+	private String stringValueType;
 
 	public MetricValue(Metric metric) {
 		super();

@@ -40,4 +40,8 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 		return rootBusinessLayer.getLanguageBusiness().findResponseText(value);
 	}
 	
+	protected String formatUsingBusiness(Object object) {
+		return rootBusinessLayer.getFormatterBusiness().format(object);
+	}
+	
 }

@@ -41,6 +41,7 @@ import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
@@ -59,6 +60,7 @@ import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
+import org.cyk.system.root.model.ContentType;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventMissed;
 import org.cyk.system.root.model.event.EventMissedReason;
@@ -81,6 +83,7 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
@@ -155,6 +158,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private JobFunctionBusiness jobFunctionBusiness;
     @Inject private MetricCollectionBusiness metricCollectionBusiness;
     @Inject private MetricBusiness metricBusiness;
+    @Inject private MetricValueBusiness metricValueBusiness;
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
@@ -183,6 +187,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			@Override
 			public void doSetUiLabel(Clazz clazz) {
 				clazz.setUiLabel(languageBusiness.findText(clazz.getUiLabelId()));
+			}
+		});
+        
+        registerFormatter(MetricValue.class, new AbstractFormatter<MetricValue>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(MetricValue metricValue, ContentType contentType) {
+				return metricValueBusiness.format(metricValue);
 			}
 		});
         
