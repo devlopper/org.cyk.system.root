@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
@@ -22,6 +24,7 @@ import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.persistence.api.file.FileDao;
+
 
 public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao> implements FileBusiness,Serializable {
 
@@ -34,20 +37,25 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		super(dao); 
 	}
 
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public File process(byte[] bytes, String name) {
         if(bytes==null || bytes.length==0)
             return null;
         File file = new File();
-        file.setBytes(bytes);
+        process(file, bytes, name);
+        return file;
+    }
+    
+    @Override
+	public void process(File file, byte[] bytes, String name) {
+    	file.setBytes(bytes);
         file.setExtension(findExtension(name));
         if(file.getExtension()!=null){
             file.setExtension(file.getExtension().toLowerCase());//better use lower case because of mime type lookup
         }
-        return file;
-    }
+	}
 
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public String findMime(String extension) {
         try {
             return Files.probeContentType(Paths.get("file."+extension));
@@ -57,7 +65,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
         }
     }
     
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public String findExtension(String name) {
     	int i = name.lastIndexOf('.');
         if (i > 0)
@@ -65,7 +73,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     	return null;
     }
     
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public InputStream findInputStream(File file) {
         if(file.getBytes()==null)
             if(file.getUri()==null)
@@ -85,7 +93,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
         return null;
     }
     
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Path findSystemPath(File file, Boolean createTemporaryIfNotExist) {
     	if(file.getUri()==null){
     		try {
@@ -103,17 +111,17 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     	return null;
     }
     
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Path findSystemPath(File file) {
     	return findSystemPath(file,Boolean.TRUE);
     }
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public URI findThumbnailUri(File file,ThumnailSize size) {
 		return mediaBusiness.findThumbnailUri(file.getUri(), size);
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public URI findEmbeddedUri(File file) {
 		return mediaBusiness.findEmbeddedUri(file.getUri());
 	}

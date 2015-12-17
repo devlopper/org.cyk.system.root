@@ -1,37 +1,41 @@
 package org.cyk.system.root.model.geography;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputText;
-
-@Getter @Setter @Entity
-@AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @Entity @NoArgsConstructor
 public class Website extends Contact implements Serializable {
 
 	private static final long serialVersionUID = 923076998880521464L;
 
-	@Input @InputText
-	@NotNull
-	private URL url;
+	@NotNull @Column(name="url",nullable=false) private String urlAsString;//TODO use UniformResourceLocator instead of String
+	//@Transient private URL url;
 	
-	public Website(String url) throws MalformedURLException {
-		this.url = new URL(url);
+	public Website(String urlAsString) {
+		this.urlAsString = urlAsString;
 	}
+	/*
+	public URL getUrl(){
+		if(url==null)
+			try {
+				url = new URL(urlAsString);
+			} catch (MalformedURLException e) {
+				// Must Never Happen
+				e.printStackTrace();
+			}
+		return url;
+	}*/
 
 	@Override
 	public String toString() {
-		return url==null?"":url.toString();
+		return urlAsString;
 	}
 	
 }

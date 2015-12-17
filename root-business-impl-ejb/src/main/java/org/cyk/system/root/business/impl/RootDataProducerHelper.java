@@ -3,7 +3,6 @@ package org.cyk.system.root.business.impl;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -210,14 +209,10 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		if(websites!=null)
 			for(String websitev : websites){
 				Website website;
-				try {
-					website = new Website(websitev);
-					if(collection.getWebsites()==null)
-						collection.setWebsites(new ArrayList<Website>());
-					collection.getWebsites().add(website);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
+				website = new Website(websitev);
+				if(collection.getWebsites()==null)
+					collection.setWebsites(new ArrayList<Website>());
+				collection.getWebsites().add(website);
 			}
 	}
 	
