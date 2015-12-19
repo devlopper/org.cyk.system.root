@@ -92,9 +92,9 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			report.setBirthDate(format(person.getBirthDate()));
 			report.setCode(person.getCode());
 			
-			if(person.getImage()!=null)
+			if(person.getImage()!=null){
 				report.setImage(findInputStream(person.getImage()));
-			
+			}
 			if(person.getNationality()!=null)
 				report.setNationality(person.getNationality().getUiString());
 			if(person.getSex()!=null)
