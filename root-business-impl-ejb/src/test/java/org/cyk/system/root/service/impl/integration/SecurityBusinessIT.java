@@ -1,11 +1,22 @@
 package org.cyk.system.root.service.impl.integration;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.BusinessLayer;
+import org.cyk.system.root.business.api.BusinessLayerListener;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilder;
+import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.security.Installation;
+import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.security.RoleUniformResourceLocator;
 import org.cyk.system.root.model.security.UserAccountSearchCriteria;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -21,12 +32,7 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
 	public static Archive<?> createDeployment() {
 	    return createRootDeployment();
 	}
-		 
-	@Override
-    protected void populate() {
-	   
-    }
-	
+		 	
     @Override
     protected void create() {}
 
@@ -46,6 +52,14 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
 
     @Override
     protected void businesses() {
+    	RootBusinessLayer.getInstance().getBusinessLayerListeners().add(new BusinessLayerListener.Adapter.Default(){
+			private static final long serialVersionUID = 6148913289155659043L;
+			@Override
+    		public void beforeInstall(BusinessLayer businessLayer,Installation installation) {
+    			installation.getApplication().setUniformResourceLocatorFilteringEnabled(Boolean.TRUE);
+    			super.beforeInstall(businessLayer, installation);
+    		}
+    	});
     	installApplication();
     	UserAccountSearchCriteria criteria = new UserAccountSearchCriteria(null);
     	//System.out.println(RootBusinessLayer.getInstance().getAdministratorRole());
@@ -60,10 +74,46 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	uniformResourceLocatorBuilder.newUniformResourceLocator();
     	uniformResourceLocatorBuilder.addParameters("mc",Person.class);
     	
-    	System.out.println(uniformResourceLocatorBuilder.build());
+    	//System.out.println(uniformResourceLocatorBuilder.build());
+    	
+    	urls();
     }
 
-    /**/
+    private void urls(){
+    	UniformResourceLocator u1,u2,u3,u4,u5,u6,u7,u8,u9;
+    	create(u1 = new UniformResourceLocator("/"));
+    	create(u2 = new UniformResourceLocator("/a"));
+    	create(u3 = new UniformResourceLocator("/b"));
+    	create(u4 = new UniformResourceLocator("/a/1"));
+    	create(u5 = new UniformResourceLocator("/a/2"));
+    	
+    	//System.out.println(RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().findAll());
+    	
+    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getUserRole(),u1));
+    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getUserRole(),u2));
+    	
+    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getAdministratorRole(),u1));
+    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getAdministratorRole(),u3));
+    	
+    	//isUrlAccessible("/path", RootBusinessLayer.getInstance().getUserRole());
+    	isUrlAccessible("/a", RootBusinessLayer.getInstance().getUserRole());
+    	isUrlAccessible("/a/1", RootBusinessLayer.getInstance().getUserRole());
+    	
+    	//System.out.println(RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().findAll());
+    }
+    
+    private void isUrlAccessible(String path,Role...roles){
+    	URL _url = null;
+    	try {
+    		_url = new URL("http://www.mydomain.com"+path);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+    	assertThat("Path "+path+" is accessible", RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().isAccessible(_url));
+    	if(roles!=null && roles.length>0)
+    		assertThat("Path "+path+" is accessible by "+StringUtils.join(roles,",")
+    			, RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().isAccessible(_url,Arrays.asList(roles)));
+    }
     
     
 

@@ -20,7 +20,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.RootBusinessLayerListener;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.event.EventMissedBusiness;
@@ -43,6 +42,7 @@ import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
+import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.party.person.JobFunctionBusiness;
@@ -51,6 +51,7 @@ import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonTitleBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
+import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.api.time.TimeDivisionTypeBusiness;
@@ -84,6 +85,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
+import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
@@ -95,6 +97,7 @@ import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleSecuredView;
+import org.cyk.system.root.model.security.RoleUniformResourceLocator;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
@@ -159,6 +162,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private MetricCollectionBusiness metricCollectionBusiness;
     @Inject private MetricBusiness metricBusiness;
     @Inject private MetricValueBusiness metricValueBusiness;
+    @Inject private UniformResourceLocatorBusiness uniformResourceLocatorBusiness;
+    @Inject private RoleUniformResourceLocatorBusiness roleUniformResourceLocatorBusiness;
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
@@ -199,7 +204,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		});
         
         application = applicationDao.select().one();
-       
+        
         rootTestHelper.setReportBusiness(reportBusiness);
         rootTestHelper.setRootBusinessLayer(this); 
         
@@ -404,6 +409,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)Interval.class, (TypedBusiness)intervalBusiness);
         beansMap.put((Class)MetricCollection.class, (TypedBusiness)metricCollectionBusiness);
         beansMap.put((Class)Metric.class, (TypedBusiness)metricBusiness);
+        beansMap.put((Class)UniformResourceLocator.class, (TypedBusiness)uniformResourceLocatorBusiness);
+        beansMap.put((Class)RoleUniformResourceLocator.class, (TypedBusiness)roleUniformResourceLocatorBusiness);
     }
     
     @Override

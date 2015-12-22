@@ -21,4 +21,6 @@ public class Application extends Party implements Serializable {
 	
 	@OneToOne private License license;
 	
+	private Boolean uniformResourceLocatorFilteringEnabled = Boolean.FALSE;
+	
 }

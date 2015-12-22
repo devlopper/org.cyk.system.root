@@ -21,8 +21,8 @@ public class UniformResourceLocatorBuilder extends AbstractBean implements Seria
 		return this;
 	}
 	
-	public UniformResourceLocatorBuilder setPath(String path){
-		uniformResourceLocator.setPath(path);
+	public UniformResourceLocatorBuilder setAddress(String address){
+		uniformResourceLocator.setAddress(address);
 		return this;
 	}
 	

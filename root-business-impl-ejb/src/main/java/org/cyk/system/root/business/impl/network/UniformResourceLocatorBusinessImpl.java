@@ -1,56 +1,50 @@
 package org.cyk.system.root.business.impl.network;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.BusinessExceptionNoRollBack;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
-import org.cyk.system.root.model.security.Role;
-import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.network.UniformResourceLocatorDao;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Singleton //@Deployment(initialisationType=InitialisationType.EAGER,order=100)
 public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusinessImpl<UniformResourceLocator, UniformResourceLocatorDao> implements UniformResourceLocatorBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
-	//TODO to be moved in database
-	private final static Collection<UniformResourceLocator> URLS = new ArrayList<>();
-	
-	@Getter @Setter private Boolean filteringEnabled = Boolean.FALSE;
-	
+	 
 	@Inject
 	public UniformResourceLocatorBusinessImpl(UniformResourceLocatorDao dao) {
 		super(dao); 
 	}
-	
+	/*
 	@Override
 	public UniformResourceLocator create(UniformResourceLocator uniformResourceLocator) {
 		URLS.add(uniformResourceLocator);
 		return uniformResourceLocator;
-	}
+	}*/
 	
-	@Override
-	public UniformResourceLocator find(Collection<UniformResourceLocator> uniformResourceLocators,URL url) {
-		logTrace("Database URL : {}",uniformResourceLocators);
-		logTrace("Java URL : {} , Path : {} , Query : {}", url,url.getPath(),url.getQuery());
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public UniformResourceLocator find(URL url,Collection<UniformResourceLocator> uniformResourceLocators) {
+		//logTrace("Database URL : {}",uniformResourceLocators);
+		logTrace("URL Infos : {} , Path : {} , Query : {}", url,url.getPath(),url.getQuery());
 		if(uniformResourceLocators==null || uniformResourceLocators.isEmpty()){
 			return null;
 		}
 		for(UniformResourceLocator uniformResourceLocator : uniformResourceLocators){
 			logTrace("Uniform Resource Locator : {} parameters : {}", uniformResourceLocator,uniformResourceLocator.getParameters());
-			if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
-				if(StringUtils.equalsIgnoreCase(url.getPath(),uniformResourceLocator.getPath())){
+			//if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
+				if(StringUtils.equalsIgnoreCase(url.getPath(),uniformResourceLocator.getAddress())){
 					logTrace("Matchs path");
 					if(uniformResourceLocator.getParameters().isEmpty()){
 						logTrace("No parameters to check");
@@ -79,48 +73,39 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 					logTrace("Try to match query parameters whith {}. size={}, count={}, match={}",uniformResourceLocator.getParameters(),size,count,match);
 					if(Boolean.TRUE.equals(match))
 						return uniformResourceLocator;
-				}else
-					return uniformResourceLocator;
+				//}else
+				//	return uniformResourceLocator;
 			}
 		}
 		return null;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public UniformResourceLocator find(URL url) {
-		return find(URLS, url);
+		return find(url,dao.readAll());
 	}
 	
-	@Override
-	public UniformResourceLocator findByRoles(Collection<Role> roles, URL url) {
-		Collection<UniformResourceLocator> collection = new ArrayList<>();
-		for(Role role : roles)
-			collection.addAll(role.getUniformResourceLocators());
-		return find(collection, url);
-	}
-
-	@Override
-	public UniformResourceLocator findByUserAccount(UserAccount userAccount, URL url) {
-		return findByRoles(userAccount.getRoles(), url);
-	}
-	
-	@Override
-	public Boolean isAccessible(Collection<UniformResourceLocator> uniformResourceLocators, URL url) {
-		return Boolean.TRUE.equals(filteringEnabled)?find(uniformResourceLocators, url)!=null:Boolean.TRUE;
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public String findPath(UniformResourceLocator uniformResourceLocator) {
+		try {
+			if(StringUtils.startsWith(uniformResourceLocator.getAddress().toLowerCase(), "http://"))
+				return new URL(uniformResourceLocator.getAddress()).getPath();
+			else
+				return uniformResourceLocator.getAddress();
+		} catch (MalformedURLException e) {
+			throw new BusinessExceptionNoRollBack(e.toString());
+		}
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Boolean isAccessible(URL url,Collection<UniformResourceLocator> uniformResourceLocators) {
+		return Boolean.TRUE.equals(RootBusinessLayer.getInstance().getApplication().getUniformResourceLocatorFilteringEnabled())
+				?find(url,uniformResourceLocators)!=null:Boolean.TRUE;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isAccessible(URL url) {
-		return Boolean.TRUE.equals(filteringEnabled)?find(url)!=null:Boolean.TRUE;
+		return Boolean.TRUE.equals(RootBusinessLayer.getInstance().getApplication().getUniformResourceLocatorFilteringEnabled())?find(url)!=null:Boolean.TRUE;
 	}
 
-	@Override
-	public Boolean isAccessibleByRoles(Collection<Role> roles, URL url) {
-		return Boolean.TRUE.equals(filteringEnabled)?findByRoles(roles, url)!=null:Boolean.TRUE;
-	}
-
-	@Override
-	public Boolean isAccessibleByUserAccount(UserAccount userAccount, URL url) {
-		return Boolean.TRUE.equals(filteringEnabled)?findByUserAccount(userAccount, url)!=null:Boolean.TRUE;
-	}
 }
