@@ -91,6 +91,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     protected ValidatorMap validatorMap = ValidatorMap.getInstance();
     @Getter protected Collection<BusinessLayerListener> businessLayerListeners = new ArrayList<>();
     
+    private BusinessListener businessListener;
+    
     @Override
     protected void initialisation() {
         super.initialisation();

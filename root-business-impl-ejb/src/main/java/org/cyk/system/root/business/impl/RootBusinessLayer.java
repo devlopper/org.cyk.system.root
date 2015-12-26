@@ -92,6 +92,7 @@ import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.Role;
@@ -103,6 +104,7 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -196,7 +198,29 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			public void doSetUiLabel(Clazz clazz) {
 				clazz.setUiLabel(languageBusiness.findText(clazz.getUiLabelId()));
 			}
-		});
+		}); 
+        
+        BusinessListener.LISTENERS.add(new BusinessListener.Adapter.Default(){
+			private static final long serialVersionUID = 2105514784569748009L;
+			@SuppressWarnings("unchecked")
+			@Override
+			public <T extends AbstractIdentifiable> Collection<T> find(Class<T> dataClass,DataReadConfiguration configuration) {
+				if(Person.class.equals(dataClass)){
+					PersonSearchCriteria p = new PersonSearchCriteria(configuration.getGlobalFilter());
+					p.getReadConfig().set(configuration);
+					return (Collection<T>) personBusiness.findByCriteria(p);
+				}
+				return super.find(dataClass, configuration);
+			}
+			
+			@Override
+			public <T extends AbstractIdentifiable> Long count(Class<T> dataClass,DataReadConfiguration configuration) {
+				if(Person.class.equals(dataClass)){
+					return personBusiness.countByCriteria(new PersonSearchCriteria(configuration.getGlobalFilter()));
+				}
+				return super.count(dataClass, configuration);
+			}
+        });
         
         registerFormatter(MetricValue.class, new AbstractFormatter<MetricValue>() {
 			private static final long serialVersionUID = -4793331650394948152L;
@@ -489,5 +513,23 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	}
     
     
+    
+    public <T extends AbstractIdentifiable> Long count(Class<T> aClass, DataReadConfiguration dataReadConfiguration) {
+		for(BusinessListener listener : BusinessListener.LISTENERS){
+			Long count = listener.count(aClass, dataReadConfiguration);
+			if(count!=null)
+				return count;
+		}	
+		return null;
+	}
+
+	public <T extends AbstractIdentifiable> Collection<T> find(Class<T> aClass,DataReadConfiguration dataReadConfiguration) {
+		for(BusinessListener listener : BusinessListener.LISTENERS){
+			Collection<T> collection = listener.find(aClass,dataReadConfiguration);
+			if(collection!=null)
+				return collection;
+		}
+		return null;
+	}
     
 }
