@@ -3,10 +3,8 @@ package org.cyk.system.root.model.security;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,35 +26,31 @@ import javax.validation.constraints.Size;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.userinterface.UserInterfaceCollection;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @Entity @NoArgsConstructor
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS) 
 public class UserAccount extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -23914558440705885L;
 
-	@ManyToOne @NotNull 
-	private Party user;
+	@ManyToOne @NotNull private Party user;
 	
 	@OneToOne(cascade=CascadeType.ALL) private Credentials credentials = new Credentials();
 	
-	@Temporal(TemporalType.TIMESTAMP) @NotNull @Column(nullable=false)
-	private Date creationDate;
+	@Temporal(TemporalType.TIMESTAMP) @NotNull @Column(nullable=false) private Date creationDate;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="UserAccountRoles",joinColumns = { @JoinColumn(name = "useraccountid") } ,inverseJoinColumns={ @JoinColumn(name = "roleid") })
 	@Size(min=1)
     private Set<Role> roles =new HashSet<>();
-	
-	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-	private Collection<SecretQuestionAnswer> secretQuestionAnswers = new LinkedHashSet<>();
 
-	@OneToOne private BusinessServiceCollection businessServiceCollection;
-	@OneToOne private UserInterfaceCollection userInterfaceCollection;
+	private Boolean disabled;
+	
 	@OneToOne private UserAccountLock currentLock;
 	
 	/**/

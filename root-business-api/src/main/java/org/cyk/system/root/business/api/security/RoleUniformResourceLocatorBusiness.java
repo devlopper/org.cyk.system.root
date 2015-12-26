@@ -26,6 +26,8 @@ public interface RoleUniformResourceLocatorBusiness extends TypedBusiness<RoleUn
 	RoleUniformResourceLocator findByRoles(URL url,Collection<Role> roles);
 	RoleUniformResourceLocator findByUserAccount(URL url,UserAccount userAccount);
 	
+	Collection<RoleUniformResourceLocator> findByUserAccount(UserAccount userAccount);
+	
 	Boolean isAccessible(URL url,Collection<Role> roles);
 	Boolean isAccessibleByUserAccount(URL url,UserAccount userAccount);
 }

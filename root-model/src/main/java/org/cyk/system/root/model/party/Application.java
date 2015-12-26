@@ -23,4 +23,5 @@ public class Application extends Party implements Serializable {
 	
 	private Boolean uniformResourceLocatorFilteringEnabled = Boolean.FALSE;
 	
+	private String webContext;
 }

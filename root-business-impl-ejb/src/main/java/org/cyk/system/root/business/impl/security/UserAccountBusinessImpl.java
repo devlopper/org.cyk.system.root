@@ -62,6 +62,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		}else{
 			//TODO
 			//exceptionUtils().exception(USER_ACCOUNT_MAP.get(credentials.getUsername())!=null,EXCEPTION_ALREADY_CONNECTED, "exception.useraccount.multipleconnect");
+			logInfo("User account connected : Username={} , Roles={}", account.getCredentials().getUsername(),account.getRoles());
 		}
 		
 		USER_ACCOUNT_MAP.put(credentials.getUsername(),account);
@@ -94,7 +95,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	public Collection<UserAccount> findByCriteria(UserAccountSearchCriteria criteria) {
 		Collection<UserAccount> userAccounts;
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
-			userAccounts = dao.readAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole()));
+			userAccounts = dao.readAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getRoleAdministrator()));
 		else
 			userAccounts = dao.readByCriteria(criteria);
 		for(UserAccount userAccount : userAccounts)
@@ -105,7 +106,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Long countByCriteria(UserAccountSearchCriteria criteria) {
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
-			return dao.countAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole()));
+			return dao.countAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getRoleAdministrator()));
 		return dao.countByCriteria(criteria);
 	}
 	
@@ -148,5 +149,17 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		return dao.countAllExcludeRoles(roles);
 	}
 
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Boolean hasAtLeastOneRole(UserAccount userAccount, Collection<Role> roles) {
+		for(Role role1 : userAccount.getRoles())
+			for(Role role2 : roles)
+				if(role1.equals(role2))
+					return Boolean.TRUE;
+		return Boolean.FALSE;
+	}
 	
+	@Override
+	public Boolean hasRole(UserAccount userAccount, Role role) {
+		return hasAtLeastOneRole(userAccount, Arrays.asList(role));
+	}
 }

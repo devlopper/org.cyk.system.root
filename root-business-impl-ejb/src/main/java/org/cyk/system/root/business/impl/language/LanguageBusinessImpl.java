@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
@@ -34,6 +35,7 @@ import org.cyk.system.root.persistence.api.language.LanguageDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
@@ -348,16 +350,33 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	}
 	
 	@Override
-	public String findDoActionText(String actionId,Class<? extends AbstractIdentifiable> aClass,Boolean one,Boolean global) {
+	public String findDoActionText(Object actionId,Class<? extends AbstractIdentifiable> aClass,Boolean one,Boolean global) {
 		BusinessEntityInfos businessEntityInfos = null;
-		for(BusinessEntityInfos b : ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS)
-    		if(b.getClazz().equals(aClass)){
-    			businessEntityInfos = b;
-    			break;
-    		}
+		if(ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS!=null)
+			for(BusinessEntityInfos b : ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS)
+	    		if(b.getClazz().equals(aClass)){
+	    			businessEntityInfos = b;
+	    			break;
+	    		}
 		
-		String determinant = findDeterminantText(GenderType.MALE.equals(businessEntityInfos.getGenderType()), one,global);
-		return findText("doactionformat", new Object[]{findText(actionId),determinant,findClassLabelText(aClass)});
+		GenderType genderType = GenderType.UNSET;
+		if(businessEntityInfos==null){
+			ModelBean modelBean = aClass.getAnnotation(ModelBean.class);
+			if(modelBean!=null)
+				genderType = modelBean.genderType();
+		}else
+			genderType = businessEntityInfos.getGenderType();
+		String actionIdentifierAsString = null;
+		if(actionId instanceof Crud)
+			actionIdentifierAsString = "crud."+((Crud)actionId).name().toLowerCase();
+		else
+			actionIdentifierAsString = actionId.toString();
+		
+		if(GenderType.UNSET.equals(genderType))
+			return findText(DO_ACTION_FORMAT, new Object[]{findText(actionIdentifierAsString),findClassLabelText(aClass)});
+		
+		String determinant = findDeterminantText(GenderType.MALE.equals(genderType), one,global);
+		return findText(DO_ACTION_PLUS_DET_FORMAT, new Object[]{findText(actionIdentifierAsString),determinant,findClassLabelText(aClass)});
 	}
 	
 	@Override

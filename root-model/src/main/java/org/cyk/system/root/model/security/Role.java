@@ -8,19 +8,20 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+
+import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.userinterface.UserInterfaceCollection;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.model.AbstractEnumeration;
-import org.cyk.system.root.model.network.UniformResourceLocator;
-import org.cyk.utility.common.annotation.ModelBean;
-import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
-
-@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.INTERNAL) 
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS) 
 public class Role extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = 5908328682512231058L;
@@ -29,7 +30,10 @@ public class Role extends AbstractEnumeration implements Serializable {
     @JoinTable(name="RolePermissions",joinColumns = { @JoinColumn(name = "roleid") } ,inverseJoinColumns={ @JoinColumn(name = "permissionid") })
 	private Set<Permission> permissions = new HashSet<>();
 	
-	@Transient private Set<UniformResourceLocator> uniformResourceLocators = new HashSet<>();
+	@Transient private Set<RoleUniformResourceLocator> roleUniformResourceLocators = new HashSet<>();
+	
+	@OneToOne private BusinessServiceCollection businessServiceCollection;
+	@OneToOne private UserInterfaceCollection userInterfaceCollection;
 	
 	public Role(String code, String name) {
 		super(code, name, null, null);
@@ -51,8 +55,5 @@ public class Role extends AbstractEnumeration implements Serializable {
 	public static final String MANAGER = "MANAGER";
 	public static final String SECURITY_MANAGER = "SECURITY_MANAGER";
 	public static final String SETTING_MANAGER = "SETTING_MANAGER";
-	
-	public static final String BUSINESS_ACTOR = "BUSINESS_ACTOR";
-	
 	public static final String USER = "USER";
 }

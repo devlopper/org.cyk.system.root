@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -18,21 +19,50 @@ import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.persistence.api.network.UniformResourceLocatorDao;
+import org.cyk.system.root.persistence.api.network.UniformResourceLocatorParameterDao;
+import org.cyk.utility.common.Constant;
 
+@Stateless
 public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusinessImpl<UniformResourceLocator, UniformResourceLocatorDao> implements UniformResourceLocatorBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
-	 
+	
+	@Inject private UniformResourceLocatorParameterDao uniformResourceLocatorParameterDao;
+	
 	@Inject
 	public UniformResourceLocatorBusinessImpl(UniformResourceLocatorDao dao) {
 		super(dao); 
 	}
-	/*
 	@Override
 	public UniformResourceLocator create(UniformResourceLocator uniformResourceLocator) {
-		URLS.add(uniformResourceLocator);
+		uniformResourceLocator = super.create(uniformResourceLocator);
+		save(uniformResourceLocator);
 		return uniformResourceLocator;
-	}*/
+	}
+	
+	private void save(UniformResourceLocator uniformResourceLocator){
+		for(UniformResourceLocatorParameter uniformResourceLocatorParameter : uniformResourceLocator.getParameters()){
+			uniformResourceLocatorParameter.setUniformResourceLocator(uniformResourceLocator);
+			exceptionUtils().exception(uniformResourceLocatorParameter.getName()==null, "no name set");
+			if(uniformResourceLocatorParameter.getIdentifier()==null)
+				uniformResourceLocatorParameterDao.create(uniformResourceLocatorParameter);
+			else
+				uniformResourceLocatorParameterDao.update(uniformResourceLocatorParameter);		
+		}
+	}
+	
+	@Override
+	public UniformResourceLocator save(UniformResourceLocator uniformResourceLocator,Collection<UniformResourceLocatorParameter> parameters) {
+		uniformResourceLocator = dao.update(uniformResourceLocator);
+		uniformResourceLocator.setParameters(parameters);
+		
+		Collection<UniformResourceLocatorParameter> database = uniformResourceLocatorParameterDao.readByUniformResourceLocator(uniformResourceLocator);
+		
+		delete(UniformResourceLocatorParameter.class,uniformResourceLocatorParameterDao,database, uniformResourceLocator.getParameters());
+		
+		save(uniformResourceLocator);
+		return uniformResourceLocator;
+	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public UniformResourceLocator find(URL url,Collection<UniformResourceLocator> uniformResourceLocators) {
@@ -44,7 +74,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 		for(UniformResourceLocator uniformResourceLocator : uniformResourceLocators){
 			logTrace("Uniform Resource Locator : {} parameters : {}", uniformResourceLocator,uniformResourceLocator.getParameters());
 			//if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
-				if(StringUtils.equalsIgnoreCase(url.getPath(),uniformResourceLocator.getAddress())){
+				if(StringUtils.equalsIgnoreCase(url.getPath(),findPath(uniformResourceLocator))){
 					logTrace("Matchs path");
 					if(uniformResourceLocator.getParameters().isEmpty()){
 						logTrace("No parameters to check");
@@ -91,7 +121,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 			if(StringUtils.startsWith(uniformResourceLocator.getAddress().toLowerCase(), "http://"))
 				return new URL(uniformResourceLocator.getAddress()).getPath();
 			else
-				return uniformResourceLocator.getAddress();
+				return Constant.CHARACTER_SLASH+RootBusinessLayer.getInstance().getApplication().getWebContext()+uniformResourceLocator.getAddress();
 		} catch (MalformedURLException e) {
 			throw new BusinessExceptionNoRollBack(e.toString());
 		}

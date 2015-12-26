@@ -3,6 +3,7 @@ package org.cyk.system.root.model.network;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -12,12 +13,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor //@Entity
+@Getter @Setter @NoArgsConstructor @Entity
 public class UniformResourceLocatorParameter extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = 5164454356106670454L;
 
-	@ManyToOne private UniformResourceLocator uniformResourceLocator;
+	@ManyToOne @NotNull private UniformResourceLocator uniformResourceLocator;
 	
 	@Column(nullable=false) @NotNull private String name;
 	
@@ -37,6 +38,7 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 	
 	/**/
 
+	public static final String FIELD_UNIFORM_RESOURCE_LOCATOR = "uniformResourceLocator";
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_VALUE = "value";
 }

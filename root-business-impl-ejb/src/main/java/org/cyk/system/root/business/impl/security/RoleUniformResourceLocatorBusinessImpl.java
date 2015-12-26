@@ -48,6 +48,11 @@ public class RoleUniformResourceLocatorBusinessImpl extends AbstractTypedBusines
 					return roleUniformResourceLocator;
 		return null;
 	}
+	
+	@Override
+	public Collection<RoleUniformResourceLocator> findByUserAccount(UserAccount userAccount) {
+		return findByRoles(userAccount.getRoles());
+	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public RoleUniformResourceLocator findByUserAccount(URL url,UserAccount userAccount) {

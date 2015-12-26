@@ -29,6 +29,9 @@ public interface UserAccountBusiness extends TypedBusiness<UserAccount> {
 	Boolean createSessionNotification(UserAccount userAccount,Notification notification);
 	void deleteSessionNotification(UserAccount userAccount,Notification notification);
 	
+	Boolean hasAtLeastOneRole(UserAccount userAccount,Collection<Role> roles);
+	Boolean hasRole(UserAccount userAccount,Role role);
+	
 	//void updatePassword(UserAccount userAccount,String oldPassword,String newPassword);
 	
 	/**/

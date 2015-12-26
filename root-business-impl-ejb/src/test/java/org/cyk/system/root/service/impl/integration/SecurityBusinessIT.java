@@ -63,7 +63,7 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	installApplication();
     	UserAccountSearchCriteria criteria = new UserAccountSearchCriteria(null);
     	//System.out.println(RootBusinessLayer.getInstance().getAdministratorRole());
-    	criteria.getRoleExcluded().add(RootBusinessLayer.getInstance().getAdministratorRole());
+    	criteria.getRoleExcluded().add(RootBusinessLayer.getInstance().getRoleAdministrator());
     	
     	/*System.out.println(userAccountBusiness.findAll());
     	System.out.println(userAccountBusiness.findAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole())));
@@ -89,30 +89,30 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	
     	//System.out.println(RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().findAll());
     	
-    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getUserRole(),u1));
-    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getUserRole(),u2));
+    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getRoleUser(),u1));
+    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getRoleUser(),u2));
     	
-    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getAdministratorRole(),u1));
-    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getAdministratorRole(),u3));
+    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getRoleAdministrator(),u1));
+    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getRoleAdministrator(),u3));
     	
-    	//isUrlAccessible("/path", RootBusinessLayer.getInstance().getUserRole());
-    	isUrlAccessible("/a", RootBusinessLayer.getInstance().getUserRole());
-    	isUrlAccessible("/a/1", RootBusinessLayer.getInstance().getUserRole());
+    	isUrlAccessible("/path",Boolean.FALSE,Boolean.FALSE, RootBusinessLayer.getInstance().getRoleUser());
+    	isUrlAccessible("/a",Boolean.TRUE,Boolean.TRUE, RootBusinessLayer.getInstance().getRoleUser());
+    	isUrlAccessible("/a/1",Boolean.TRUE,Boolean.FALSE, RootBusinessLayer.getInstance().getRoleUser());
     	
     	//System.out.println(RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().findAll());
     }
     
-    private void isUrlAccessible(String path,Role...roles){
+    private void isUrlAccessible(String path,Boolean byApplication,Boolean byRole,Role...roles){
     	URL _url = null;
     	try {
     		_url = new URL("http://www.mydomain.com"+path);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-    	assertThat("Path "+path+" is accessible", RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().isAccessible(_url));
+    	assertThat("Path "+path+" is accessible", RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().isAccessible(_url).equals(byApplication));
     	if(roles!=null && roles.length>0)
     		assertThat("Path "+path+" is accessible by "+StringUtils.join(roles,",")
-    			, RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().isAccessible(_url,Arrays.asList(roles)));
+    			, RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().isAccessible(_url,Arrays.asList(roles)).equals(byRole));
     }
     
     

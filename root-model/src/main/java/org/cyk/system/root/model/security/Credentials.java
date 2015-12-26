@@ -21,15 +21,11 @@ public class Credentials extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -3099832512046879464L;
 	
-	@Input
-	@InputText
-	@Column(unique=true,nullable=false)
+	@Input @InputText @Column(unique=true,nullable=false)
 	@NotNull(groups={Client.class,org.cyk.utility.common.validation.System.class})
 	private String username;
 	
-	@Input
-	@InputPassword
-	@Column(nullable=false)
+	@Input @InputPassword @Column(nullable=false)
 	@NotNull(groups={Client.class,org.cyk.utility.common.validation.System.class})
 	private String password;
 	
@@ -77,8 +73,10 @@ public class Credentials extends AbstractIdentifiable implements Serializable {
 		return true;
 	}
 	
+	/**/
 	
-
+	public static final String FIELD_USERNAME = "username";
+	public static final String FIELD_PASSWORD = "password";
 
 
 

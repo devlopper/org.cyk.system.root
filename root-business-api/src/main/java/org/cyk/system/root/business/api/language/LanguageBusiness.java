@@ -46,7 +46,7 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 
 	String findDeterminantText(Boolean male, Boolean one,Boolean global);
 
-	String findDoActionText(String actionId,Class<? extends AbstractIdentifiable> aClass, Boolean one,Boolean global);
+	String findDoActionText(Object actionId,Class<? extends AbstractIdentifiable> aClass, Boolean one,Boolean global);
 
 	String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass,Boolean one, Boolean global);
 	
@@ -64,6 +64,7 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	
 	/**/
 	
-	
+	String DO_ACTION_PLUS_DET_FORMAT = "doactionformatplusdet";
+	String DO_ACTION_FORMAT = "doactionformat";
 	
 }

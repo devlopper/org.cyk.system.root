@@ -109,9 +109,10 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		ApplicationAccount administratorAccount = new ApplicationAccount();
 		administratorAccount.setUser(installation.getApplication());
 		administratorAccount.setCredentials(installation.getAdministratorCredentials());
-		//Installer : The one who delivers the system
-		administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
-		administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getAdministratorRole());
+		//Installer : The one who delivers the system = SUPER SUPER USER = Configure what the system will do
+		//administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
+		//administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getAdministratorRole());
+		administratorAccount.getRoles().addAll(roleDao.readAll());
 		userAccountBusiness.create(administratorAccount);
 		
 		logInfo("Creating manager account");
@@ -122,8 +123,8 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		
 		//Super User : The one who use the system
 		
-		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole())));
-		managerAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
+		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(RootBusinessLayer.getInstance().getRoleAdministrator())));
+		//managerAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
 		
 		userAccountBusiness.create(managerAccount);
 		

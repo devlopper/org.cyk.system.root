@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +18,9 @@ public class RoleUniformResourceLocator extends AbstractIdentifiable implements 
 
 	private static final long serialVersionUID = -1426919647717880937L;
 	
-	@ManyToOne private Role role;
+	@ManyToOne @NotNull private Role role;
 	
-	@ManyToOne private UniformResourceLocator uniformResourceLocator;
+	@ManyToOne @NotNull private UniformResourceLocator uniformResourceLocator;
 	
 	public RoleUniformResourceLocator(Role role,UniformResourceLocator uniformResourceLocator) {
 		super();
@@ -29,7 +30,7 @@ public class RoleUniformResourceLocator extends AbstractIdentifiable implements 
 	
 	@Override
 	public String toString() {
-		return role+">"+uniformResourceLocator;
+		return uniformResourceLocator.getAddress();
 	}
 	
 	/**/

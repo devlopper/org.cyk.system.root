@@ -11,9 +11,6 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -43,6 +40,7 @@ import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
+import org.cyk.system.root.business.api.network.UniformResourceLocatorParameterBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.party.person.JobFunctionBusiness;
@@ -86,6 +84,7 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.network.UniformResourceLocator;
+import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
@@ -104,6 +103,9 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -124,7 +126,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private LocationType homeLocationType,officeLocationType;
 	private LocalityType countryLocalityType,cityLocalityType,continentLocalityType;
 	private Country countryCoteDivoire;
-	private Role administratorRole,managerRole,businessActorRole,settingManagerRole,securityManagerRole,userRole;
+	private Role roleAdministrator,roleManager,roleSettingManager,roleSecurityManager,roleUser;
 	private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
 	private EventType anniversaryEventType,reminderEventType;
 	private Sex sexMale,sexFemale;
@@ -163,6 +165,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private MetricBusiness metricBusiness;
     @Inject private MetricValueBusiness metricValueBusiness;
     @Inject private UniformResourceLocatorBusiness uniformResourceLocatorBusiness;
+    @Inject private UniformResourceLocatorParameterBusiness uniformResourceLocatorParameterBusiness;
     @Inject private RoleUniformResourceLocatorBusiness roleUniformResourceLocatorBusiness;
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
@@ -381,7 +384,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
     	createRole(Role.ADMINISTRATOR, "Administrator");
     	createRole(Role.MANAGER, "Manager");
-    	createRole(Role.BUSINESS_ACTOR, "Business actor");
         createRole(Role.SETTING_MANAGER, "Setting Manager");
         createRole(Role.SECURITY_MANAGER, "Security Manager");
         createRole(Role.USER, "User",SHIRO_PRIVATE_FOLDER);
@@ -410,6 +412,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)MetricCollection.class, (TypedBusiness)metricCollectionBusiness);
         beansMap.put((Class)Metric.class, (TypedBusiness)metricBusiness);
         beansMap.put((Class)UniformResourceLocator.class, (TypedBusiness)uniformResourceLocatorBusiness);
+        beansMap.put((Class)UniformResourceLocatorParameter.class, (TypedBusiness)uniformResourceLocatorParameterBusiness);
         beansMap.put((Class)RoleUniformResourceLocator.class, (TypedBusiness)roleUniformResourceLocatorBusiness);
     }
     
@@ -428,12 +431,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	continentLocalityType = localityTypeBusiness.find(LocalityType.CONTINENT);
     	cityLocalityType = localityTypeBusiness.find(LocalityType.CITY);
     	
-    	administratorRole = roleBusiness.find(Role.ADMINISTRATOR);
-    	managerRole = roleBusiness.find(Role.MANAGER);
-    	settingManagerRole = roleBusiness.find(Role.SETTING_MANAGER);
-    	securityManagerRole = roleBusiness.find(Role.SECURITY_MANAGER);
-    	businessActorRole = roleBusiness.find(Role.BUSINESS_ACTOR);
-    	userRole = roleBusiness.find(Role.USER);
+    	roleAdministrator = roleBusiness.find(Role.ADMINISTRATOR);
+    	roleManager = roleBusiness.find(Role.MANAGER);
+    	roleSettingManager = roleBusiness.find(Role.SETTING_MANAGER);
+    	roleSecurityManager = roleBusiness.find(Role.SECURITY_MANAGER);
+    	roleUser = roleBusiness.find(Role.USER);
     	
     	timeDivisionTypeDay = timeDivisionTypeBusiness.find(TimeDivisionType.DAY);
     	timeDivisionTypeTrimester = timeDivisionTypeBusiness.find(TimeDivisionType.TRIMESTER);
