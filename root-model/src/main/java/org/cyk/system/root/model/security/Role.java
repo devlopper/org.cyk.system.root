@@ -8,12 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractEnumeration;
-import org.cyk.system.root.model.userinterface.UserInterfaceCollection;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
@@ -31,9 +29,8 @@ public class Role extends AbstractEnumeration implements Serializable {
 	private Set<Permission> permissions = new HashSet<>();
 	
 	@Transient private Set<RoleUniformResourceLocator> roleUniformResourceLocators = new HashSet<>();
-	
-	@OneToOne private BusinessServiceCollection businessServiceCollection;
-	@OneToOne private UserInterfaceCollection userInterfaceCollection;
+	@Transient private Set<RoleBusinessService> roleBusinessServices;
+	@Transient private Set<RoleUserInterface> roleUserInterfaces;
 	
 	public Role(String code, String name) {
 		super(code, name, null, null);
