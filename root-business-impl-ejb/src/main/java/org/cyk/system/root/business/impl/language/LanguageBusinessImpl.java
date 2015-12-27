@@ -41,6 +41,8 @@ import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.Text;
 import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
+import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.StringHelper.CaseType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -55,6 +57,10 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	private static final String FIELD_MARKER_START = "field.";
 	private static final String FIELD_OF_FORMAT = "%s.of";
 	
+	private static final String SUBSTITUTE_TAG = "cyk_code";
+	private static final String SUBSTITUTE_TAG_START = "<"+SUBSTITUTE_TAG+">";
+	private static final String SUBSTITUTE_TAG_END = "</"+SUBSTITUTE_TAG+">";
+	
 	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid",".count"));
 	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new LinkedHashMap<>();
 	private static List<Entry<String, ClassLoader>> RESOURCE_BUNDLE_ENTRIES = new ArrayList<>();
@@ -64,6 +70,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	private static LanguageBusiness INSTANCE;
 	
 	@Setter private Locale locale = Locale.FRENCH;
+	@Getter @Setter private CaseType caseType = CaseType.FURL;
 	@Getter @Setter private Boolean cachingEnabled = Boolean.TRUE;
 	@Getter @Setter private CachingStrategy cachingStrategy = CachingStrategy.NONE;
 	 
@@ -92,22 +99,32 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
     }
 
 	@Override
+	public String findText(String code,Object[] parameters,CaseType caseType) {
+		return findText(locale,code,parameters,caseType);
+	}
+	
+	@Override
 	public String findText(String code,Object[] parameters) {
-		return findText(locale,code,parameters);
+		return findText(code,parameters,getCaseType());
+	}
+	
+	@Override
+    public String findText(String code,CaseType caseType) {
+	    return findText(locale,code);
 	}
 	
 	@Override
     public String findText(String code) {
-	    return findText(locale,code);
+	    return findText(code,getCaseType());
 	}
 
 	@Override
-	public String findText(Locale locale,String code,Object[] parameters) {
+	public String findText(Locale locale,String code,Object[] parameters,CaseType caseType) {
 		logTrace("Text lookup id={} , locale={}",code,locale);
 		String value = null,cacheId=null;
 		// 1 - Lookup in cache
 		if(Boolean.TRUE.equals(cachingEnabled)){
-			cacheId = locale+"_"+code+StringUtils.join(parameters);
+			cacheId = locale+Constant.CHARACTER_UNDESCORE.toString()+code+StringUtils.join(parameters)+Constant.CHARACTER_UNDESCORE.toString()+caseType;
 			logTrace("Lookup in cache firstly");
 			/*
 			CachingStrategy cachingStrategy = getCachingStrategy();
@@ -131,6 +148,12 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 						/*if(!locale.equals(resourceBundle.getLocale()))
 							throw new RuntimeException("Locale has changed! No same locale : "+locale+" <> "+resourceBundle.getLocale());*/
 						value = parameters==null?resourceBundle.getString(code):MessageFormat.format(resourceBundle.getString(code),parameters);
+						
+						String substituteCode = null;
+						while((substituteCode = StringUtils.substringBetween(value, SUBSTITUTE_TAG_START, SUBSTITUTE_TAG_END)) != null){
+							value = StringUtils.replace(value, SUBSTITUTE_TAG_START+substituteCode+SUBSTITUTE_TAG_END, findText(substituteCode, CaseType.NONE));
+						}
+						value = StringHelper.getInstance().applyCaseType(value, caseType);
 						if(Boolean.TRUE.equals(cachingEnabled)){
 							RESOURCE_BUNDLE_VALUE_CACHE.put(cacheId, value);
 							logDebug("value of {} is {}",code,value);
@@ -150,10 +173,20 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			return value;
 		
 	}
+	
+	@Override
+	public String findText(Locale locale,String code,Object[] parameters) {
+		return findText(locale, code, parameters, getCaseType());
+	}
 
 	@Override
-    public String findText(Locale locale,String code) {
-	    return findText(locale,code,null);
+    public String findText(Locale locale,String code,CaseType caseType) {
+	    return findText(locale,code,null,caseType);
+	}
+	
+	@Override
+	public String findText(Locale locale,String code) {
+	    return findText(locale,code,getCaseType());
 	}
 	
 	@Override
@@ -396,6 +429,10 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		return findText(Boolean.TRUE.equals(value)?LanguageEntry.YES:LanguageEntry.NO);
 	}
 
+	/**/
+	
+	
+	
 	/**/
 	
 	@Getter @Setter

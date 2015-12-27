@@ -7,15 +7,20 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.utility.common.annotation.user.interfaces.Text;
+import org.cyk.utility.common.helper.StringHelper.CaseType;
 
 public interface LanguageBusiness extends TypedBusiness<Language> {
 
+    String findText(String code,Object[] parameters,CaseType caseType);
     String findText(String code,Object[] parameters);
     
+    String findText(String code,CaseType caseType);
     String findText(String code);
     
+	String findText(Locale locale,String code,Object[] parameters,CaseType caseType);
 	String findText(Locale locale,String code,Object[] parameters);
 	
+	String findText(Locale locale,String code,CaseType caseType);
 	String findText(Locale locale,String code);
 	
 	String findText(Enum<?> anEnum,Object[] parameters);
@@ -39,6 +44,9 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
     String findListOfText(Class<?> aClass);
     
 	void setLocale(Locale locale);
+	
+	void setCaseType(CaseType caseType);
+	CaseType getCaseType();
 	
 	Locale findCurrentLocale();
 	

@@ -31,20 +31,22 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 	
 	@Test
 	public void findText() {
-	    assertTrue("bonjour".equals(languageBusiness.findText( Locale.FRENCH,"good.morning")));
-        assertTrue("good morning".equals(languageBusiness.findText(Locale.ENGLISH,"good.morning")));
+	    assertTrue("Bonjour".equals(languageBusiness.findText( Locale.FRENCH,"good.morning")));
+        assertTrue("Good morning".equals(languageBusiness.findText(Locale.ENGLISH,"good.morning")));
         
         assertTrue("##hello##".equals(languageBusiness.findText( Locale.FRENCH,"hello")));
         assertTrue("##hello##".equals(languageBusiness.findText(Locale.ENGLISH,"hello")));
+        
+        assertEquals("Oui you are or non",languageBusiness.findText("myyes"));
 	}
 
 	@Test
     public void findFieldLabelText() {
-		assertEquals("Nombre de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userCount", Boolean.TRUE)));
+		assertEquals("Nombre de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userCount", Boolean.TRUE)));
 	    assertEquals("Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "user", Boolean.TRUE))); 
-	    assertEquals("Quantite de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userQuantity", Boolean.TRUE))); 
-	    assertEquals("Prix de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userPrice", Boolean.TRUE))); 
-	    assertEquals("Prix unitaire de Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userUnitPrice", Boolean.TRUE))); 
+	    assertEquals("Quantite de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userQuantity", Boolean.TRUE))); 
+	    assertEquals("Prix de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userPrice", Boolean.TRUE))); 
+	    assertEquals("Prix unitaire de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userUnitPrice", Boolean.TRUE))); 
 	    assertEquals("Couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color", Boolean.TRUE)));
 	    assertEquals("Une autre couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color2", Boolean.TRUE)));
     }
@@ -64,10 +66,13 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 	
 	@Test
     public void findCrudText() {
-		assertEquals("Créer La Personne", languageBusiness.findDoActionText(Crud.CREATE, Person.class,Boolean.TRUE,Boolean.TRUE));
-		assertEquals("Lire Une Personne", languageBusiness.findDoActionText(Crud.READ, Person.class,Boolean.TRUE,Boolean.FALSE));
-		assertEquals("Mettre à jour Les Personne", languageBusiness.findDoActionText(Crud.UPDATE, Person.class,Boolean.FALSE,Boolean.TRUE));
-		assertEquals("Supprimer Des Personne", languageBusiness.findDoActionText(Crud.DELETE, Person.class,Boolean.FALSE,Boolean.FALSE));
+		assertEquals("Créer la personne", languageBusiness.findDoActionText(Crud.CREATE, Person.class,Boolean.TRUE,Boolean.TRUE));
+		
+		assertEquals("Lire une personne", languageBusiness.findDoActionText(Crud.READ, Person.class,Boolean.TRUE,Boolean.FALSE));
+		assertEquals("Lire des personne", languageBusiness.findDoActionText(Crud.READ, Person.class,Boolean.FALSE,Boolean.FALSE));
+		
+		assertEquals("Mettre à jour les personne", languageBusiness.findDoActionText(Crud.UPDATE, Person.class,Boolean.FALSE,Boolean.TRUE));
+		assertEquals("Supprimer des personne", languageBusiness.findDoActionText(Crud.DELETE, Person.class,Boolean.FALSE,Boolean.FALSE));
 		
 		//assertEquals("Lire personne", languageBusiness.findDoActionText(Crud.READ, Person.class,Boolean.TRUE,Boolean.FALSE));
 		//assertEquals("Mettre à jour personne", languageBusiness.findDoActionText(Crud.UPDATE, Person.class,Boolean.TRUE,Boolean.FALSE));
@@ -75,10 +80,10 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		
 		/**/
 		
-		assertEquals("Créer Numéro de téléphone", languageBusiness.findDoActionText(Crud.CREATE, PhoneNumber.class,Boolean.TRUE,Boolean.TRUE));
-		assertEquals("Lire Numéro de téléphone", languageBusiness.findDoActionText(Crud.READ, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
-		assertEquals("Mettre à jour Numéro de téléphone", languageBusiness.findDoActionText(Crud.UPDATE, PhoneNumber.class,Boolean.FALSE,Boolean.TRUE));
-		assertEquals("Supprimer Numéro de téléphone", languageBusiness.findDoActionText(Crud.DELETE, PhoneNumber.class,Boolean.FALSE,Boolean.FALSE));
+		assertEquals("Créer numéro de téléphone", languageBusiness.findDoActionText(Crud.CREATE, PhoneNumber.class,Boolean.TRUE,Boolean.TRUE));
+		assertEquals("Lire numéro de téléphone", languageBusiness.findDoActionText(Crud.READ, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
+		assertEquals("Mettre à jour numéro de téléphone", languageBusiness.findDoActionText(Crud.UPDATE, PhoneNumber.class,Boolean.FALSE,Boolean.TRUE));
+		assertEquals("Supprimer numéro de téléphone", languageBusiness.findDoActionText(Crud.DELETE, PhoneNumber.class,Boolean.FALSE,Boolean.FALSE));
 		
 		//assertEquals("Lire personne", languageBusiness.findDoActionText(Crud.READ, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
 		//assertEquals("Mettre à jour personne", languageBusiness.findDoActionText(Crud.UPDATE, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
