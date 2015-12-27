@@ -66,7 +66,7 @@ public class RoleUniformResourceLocatorBusinessImpl extends AbstractTypedBusines
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isAccessibleByUserAccount(URL url, UserAccount userAccount) {
-		return findByUserAccount(url, userAccount)!=null;
+		return (userAccount.getDisabled()==null || Boolean.FALSE.equals(userAccount.getDisabled())) && findByUserAccount(url, userAccount)!=null;
 	}
 	
 	

@@ -438,6 +438,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)UniformResourceLocator.class, (TypedBusiness)uniformResourceLocatorBusiness);
         beansMap.put((Class)UniformResourceLocatorParameter.class, (TypedBusiness)uniformResourceLocatorParameterBusiness);
         beansMap.put((Class)RoleUniformResourceLocator.class, (TypedBusiness)roleUniformResourceLocatorBusiness);
+        beansMap.put((Class)Role.class, (TypedBusiness)roleBusiness);
     }
     
     @Override
