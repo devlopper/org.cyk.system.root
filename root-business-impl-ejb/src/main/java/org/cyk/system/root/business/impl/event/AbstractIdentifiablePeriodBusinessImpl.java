@@ -22,7 +22,7 @@ public abstract class AbstractIdentifiablePeriodBusinessImpl<IDENTIFIABLE extend
 		super(dao); 
 	}  
 
-    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
+    @Override @TransactionAttribute(TransactionAttributeType.NEVER) 
     public Collection<IDENTIFIABLE> findWhereFromDateBetweenPeriod(Period period) {
         return dao.readWhereFromDateBetweenPeriod(period);
     }

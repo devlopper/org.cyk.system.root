@@ -39,6 +39,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 		super(dao); 
 	}  
     
+	//@Secure
     @Override
     public Collection<Event> findWhereFromDateBetweenPeriodByParties(Period period, Collection<Party> parties) {
     	return dao.readWhereFromDateBetweenPeriodByParties(period, parties);
@@ -142,7 +143,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 		return dao.readWhereDateBetweenPeriodByParties(universalTimeCoordinated(),parties);
 	}
 
-	@Override
+	@Override 
 	public Long countCurrents(Collection<Party> parties) {
 		return dao.countWhereDateBetweenPeriodByParties(universalTimeCoordinated(),parties);
 	}

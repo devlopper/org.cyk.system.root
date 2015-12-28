@@ -16,6 +16,7 @@ public interface RoleUniformResourceLocatorBusiness extends TypedBusiness<RoleUn
 	 * @return collection of roles
 	 */
 	Collection<RoleUniformResourceLocator> findByRoles(Collection<Role> roles);
+	Collection<RoleUniformResourceLocator> findByRole(Role role);
 	
 	/**
 	 * Find the matching UniformResourceLocator associated to those roles

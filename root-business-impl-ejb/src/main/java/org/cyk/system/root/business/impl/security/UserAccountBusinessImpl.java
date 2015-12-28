@@ -16,6 +16,7 @@ import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.business.impl.UserSessionBusiness;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
@@ -31,6 +32,8 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	
 	@Inject private LanguageBusiness languageBusiness;
 	//@Inject private RootValueValidator rootValueValidator;
+	
+	@Inject private UserSessionBusiness userSessionBusiness;
 	
 	@Inject
 	public UserAccountBusinessImpl(UserAccountDao dao) {
@@ -64,6 +67,8 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 			//exceptionUtils().exception(USER_ACCOUNT_MAP.get(credentials.getUsername())!=null,EXCEPTION_ALREADY_CONNECTED, "exception.useraccount.multipleconnect");
 			logInfo("User account connected : Username={} , Roles={}", account.getCredentials().getUsername(),account.getRoles());
 		}
+		System.out.println("UserAccountBusinessImpl.connect() : "+userSessionBusiness);
+		userSessionBusiness.setUserAccount(account);
 		
 		USER_ACCOUNT_MAP.put(credentials.getUsername(),account);
 		return account;
@@ -103,7 +108,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		return userAccounts;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER) @Secure
 	public Long countByCriteria(UserAccountSearchCriteria criteria) {
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
 			return dao.countAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getRoleAdministrator()));

@@ -14,6 +14,7 @@ import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilder;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
@@ -57,10 +58,14 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
 			@Override
     		public void beforeInstall(BusinessLayer businessLayer,Installation installation) {
     			installation.getApplication().setUniformResourceLocatorFilteringEnabled(Boolean.TRUE);
+    			installation.getApplication().setWebContext("");
     			super.beforeInstall(businessLayer, installation);
     		}
     	});
     	installApplication();
+    	
+    	userAccountBusiness.connect(new Credentials("manager", "123"));
+    	
     	UserAccountSearchCriteria criteria = new UserAccountSearchCriteria(null);
     	//System.out.println(RootBusinessLayer.getInstance().getAdministratorRole());
     	criteria.getRoleExcluded().add(RootBusinessLayer.getInstance().getRoleAdministrator());

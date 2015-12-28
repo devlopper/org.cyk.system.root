@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl;
+package org.cyk.system.root.business.impl.security;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,8 +10,8 @@ import javax.interceptor.InterceptorBinding;
 
 @InterceptorBinding
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value={ElementType.METHOD})
+@Target(value={ElementType.TYPE,ElementType.METHOD})
 @Qualifier 
-public @interface Log { 
+public @interface Secure { 
 	
 }

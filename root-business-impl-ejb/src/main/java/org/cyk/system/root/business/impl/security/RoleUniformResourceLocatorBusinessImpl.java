@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.security;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
@@ -32,6 +33,11 @@ public class RoleUniformResourceLocatorBusinessImpl extends AbstractTypedBusines
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<RoleUniformResourceLocator> findByRoles(Collection<Role> roles) {
 		return dao.readByRoles(roles);
+	}
+	
+	@Override
+	public Collection<RoleUniformResourceLocator> findByRole(Role role) {
+		return findByRoles(Arrays.asList(role));
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

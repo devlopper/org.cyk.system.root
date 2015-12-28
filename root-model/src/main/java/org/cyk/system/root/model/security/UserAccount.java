@@ -69,9 +69,9 @@ public class UserAccount extends AbstractIdentifiable implements Serializable {
 		if(roles!=null)
 			this.roles.addAll(Arrays.asList(roles));
 	}
-	
+	/*
 	@Override
 	public String toString() {
 		return super.toString()+","+user.getContactCollection().getIdentifier();
-	}
+	}*/
 }
