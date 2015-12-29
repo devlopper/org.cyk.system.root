@@ -20,9 +20,6 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.CommonBusinessAction;
@@ -48,6 +45,9 @@ import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
 
@@ -63,6 +63,9 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	private static final String SUBSTITUTE_TAG = "cyk_code";
 	private static final String SUBSTITUTE_TAG_START = "<"+SUBSTITUTE_TAG+">";
 	private static final String SUBSTITUTE_TAG_END = "</"+SUBSTITUTE_TAG+">";
+	
+	private static final String MANY = "many";
+	private static final String MANY_MARKER = "."+MANY;
 	
 	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid",".count"));
 	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new LinkedHashMap<>();
@@ -357,10 +360,16 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	}
     
     @Override
+    public String findClassLabelText(FindClassLabelTextParameters parameters) {
+    	if(AbstractModelElement.class.isAssignableFrom(parameters.getClazz()))
+    		return findText("model.entity."+StringUtils.uncapitalize(parameters.getClazz().getSimpleName())
+    		+( (parameters.getOne()==null || parameters.getOne()) ? Constant.EMPTY_STRING : MANY_MARKER));
+    	return findText(StringUtils.replace(parameters.getClazz().getName(), Constant.CHARACTER_DOLLAR.toString(), Constant.CHARACTER_DOT.toString()));
+    }
+    
+    @Override
     public String findClassLabelText(Class<?> aClass) {
-    	if(AbstractModelElement.class.isAssignableFrom(aClass))
-    		return findText("model.entity."+StringUtils.uncapitalize(aClass.getSimpleName()));
-    	return findText(StringUtils.replace(aClass.getName(), Constant.CHARACTER_DOLLAR.toString(), Constant.CHARACTER_DOT.toString()));
+    	return findClassLabelText(new FindClassLabelTextParameters(aClass));
     }
     
     @Override
@@ -374,13 +383,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 
 	@Override
 	public String findListOfText(Class<?> aClass) {
-		return findText("listofsomething", new Object[]{findClassLabelText(aClass)});
+		return findText("listofsomething", new Object[]{findClassLabelText(new FindClassLabelTextParameters(aClass, Boolean.FALSE))});
 	}
 	
 	@Override
 	public String findDeterminantText(Boolean male,Boolean one,Boolean global) {
 		String smale = Boolean.TRUE.equals(male)?"male":"female";
-		String sone = Boolean.TRUE.equals(one)?"one":"many";
+		String sone = Boolean.TRUE.equals(one)?"one":MANY;
 		String sglobal = Boolean.TRUE.equals(global)?"global":"notglobal";
 		return findText("determinant."+smale+"."+sone+"."+sglobal);
 	}
@@ -417,7 +426,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			actionIdentifierAsString = actionIdentifier.toString();
 		
 		if(GenderType.UNSET.equals(genderType) || parameters.getOne()==null || parameters.getGlobal()==null)
-			return findText(DO_SOMETHING_FORMAT, new Object[]{findText(actionIdentifierAsString),findClassLabelText(parameters.getSubjectClass())});
+			return findText(DO_SOMETHING_FORMAT, new Object[]{findText(actionIdentifierAsString)
+					,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass()))});
 		
 		String determinant = findDeterminantText(GenderType.MALE.equals(genderType), parameters.getOne(),parameters.getGlobal());
 		if(parameters.getGlobal())
@@ -437,7 +447,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			else
 				;
 			
-		return findText(DO_SOMETHING_PLUS_DET_FORMAT, new Object[]{findText(actionIdentifierAsString),determinant,findClassLabelText(parameters.getSubjectClass())});
+		return findText(DO_SOMETHING_PLUS_DET_FORMAT, new Object[]{findText(actionIdentifierAsString),determinant
+				,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass(),parameters.getOne()))});
 	}
 	
 	@Override

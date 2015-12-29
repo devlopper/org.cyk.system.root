@@ -41,6 +41,7 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
     
     String findFieldLabelText(Field field);
     
+    String findClassLabelText(FindClassLabelTextParameters parameters);
     String findClassLabelText(Class<?> aClass);
     
     String findObjectLabelText(Object object);
@@ -76,6 +77,21 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	String DO_SOMETHING_FORMAT = "dosomethingformat";
 	
 	/**/
+	@Getter @Setter
+	public static class FindClassLabelTextParameters implements Serializable{
+		private static final long serialVersionUID = 6396335973589816204L;
+		private Class<?> clazz;
+		private Boolean one=Boolean.TRUE;
+		public FindClassLabelTextParameters(Class<?> clazz, Boolean one) {
+			super();
+			this.clazz = clazz;
+			this.one = one;
+		}
+		public FindClassLabelTextParameters(Class<?> clazz) {
+			this(clazz,Boolean.TRUE);
+		}
+	}
+	
 	@Getter @Setter
 	public static class FindDoSomethingTextParameters implements Serializable{
 		private static final long serialVersionUID = 6396335973589816204L;

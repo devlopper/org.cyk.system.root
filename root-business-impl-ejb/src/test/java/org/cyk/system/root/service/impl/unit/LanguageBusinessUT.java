@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.cyk.system.root.business.api.CommonBusinessAction;
+import org.cyk.system.root.business.api.language.LanguageBusiness.FindClassLabelTextParameters;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindDoSomethingTextParameters;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.model.geography.PhoneNumber;
@@ -57,6 +58,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 	@Test
     public void findClassLabelText() {
 		assertEquals("Compte utilisateur",languageBusiness.findClassLabelText(UserAccount.class));
+		assertEquals("Comptes utilisateurs",languageBusiness.findClassLabelText(new FindClassLabelTextParameters(UserAccount.class, Boolean.FALSE)));
 		assertEquals("Compte administrateur",languageBusiness.findClassLabelText(ApplicationAccount.class));
 	}
 	
@@ -97,19 +99,19 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.FALSE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Lire des personne", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Lire des personnes", languageBusiness.findDoSomethingText(parameters));
 		
 		parameters.setActionIdentifier(CommonBusinessAction.UPDATE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.TRUE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Mettre à jour les personne", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Mettre à jour les personnes", languageBusiness.findDoSomethingText(parameters));
 		
 		parameters.setActionIdentifier(CommonBusinessAction.DELETE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.FALSE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Supprimer des personne", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Supprimer des personnes", languageBusiness.findDoSomethingText(parameters));
 		
 		//assertEquals("Lire personne", languageBusiness.findDoSomethingText(Crud.READ, Person.class,Boolean.TRUE,Boolean.FALSE));
 		//assertEquals("Mettre à jour personne", languageBusiness.findDoSomethingText(Crud.UPDATE, Person.class,Boolean.TRUE,Boolean.FALSE));
