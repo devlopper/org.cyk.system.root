@@ -48,7 +48,7 @@ public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, Role
 	public Role save(Role role,Collection<RoleUniformResourceLocator> roleUniformResourceLocators) {
 		role = dao.update(role);
 		role.setRoleUniformResourceLocators(new HashSet<>(roleUniformResourceLocators));
-		
+	
 		Collection<RoleUniformResourceLocator> database = roleUniformResourceLocatorDao.readByRoles(Arrays.asList(role));
 		
 		delete(RoleUniformResourceLocator.class,roleUniformResourceLocatorDao,database, role.getRoleUniformResourceLocators());

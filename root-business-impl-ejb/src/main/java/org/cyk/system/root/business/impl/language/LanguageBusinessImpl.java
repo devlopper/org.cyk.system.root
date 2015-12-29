@@ -20,8 +20,12 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
+import org.cyk.system.root.business.api.CommonBusinessAction;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -44,9 +48,6 @@ import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
 
@@ -56,6 +57,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	private static final String UNKNOWN_MARKER_END = "##";
 	private static final String FIELD_MARKER_START = "field.";
 	private static final String FIELD_OF_FORMAT = "%s.of";
+	
+	private static final String COMMON_BUSINESS_ACTION_FORMAT = "commonbusinessaction.%s.%s";
 	
 	private static final String SUBSTITUTE_TAG = "cyk_code";
 	private static final String SUBSTITUTE_TAG_START = "<"+SUBSTITUTE_TAG+">";
@@ -383,43 +386,52 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	}
 	
 	@Override
-	public String findDoActionText(Object actionId,Class<? extends AbstractIdentifiable> aClass,Boolean one,Boolean global) {
+	public String findDoSomethingText(FindDoSomethingTextParameters parameters) {
 		BusinessEntityInfos businessEntityInfos = null;
 		if(ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS!=null)
 			for(BusinessEntityInfos b : ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS)
-	    		if(b.getClazz().equals(aClass)){
+	    		if(b.getClazz().equals(parameters.getSubjectClass())){
 	    			businessEntityInfos = b;
 	    			break;
 	    		}
 		
 		GenderType genderType = GenderType.UNSET;
 		if(businessEntityInfos==null){
-			ModelBean modelBean = aClass.getAnnotation(ModelBean.class);
+			ModelBean modelBean = parameters.getSubjectClass().getAnnotation(ModelBean.class);
 			if(modelBean!=null)
 				genderType = modelBean.genderType();
 		}else
 			genderType = businessEntityInfos.getGenderType();
+		Object actionIdentifier = null;
 		String actionIdentifierAsString = null;
-		if(actionId instanceof Crud)
-			actionIdentifierAsString = "crud."+((Crud)actionId).name().toLowerCase();
+		if(parameters.getActionIdentifier() instanceof Crud)
+			//actionIdentifierAsString = "crud."+((Crud)parameters.getActionIdentifier()).name().toLowerCase();
+			actionIdentifier=CommonBusinessAction.valueOf(((Crud)parameters.getActionIdentifier()).name());
 		else
-			actionIdentifierAsString = actionId.toString();
+			actionIdentifier = parameters.getActionIdentifier();
 		
-		if(GenderType.UNSET.equals(genderType))
-			return findText(DO_ACTION_FORMAT, new Object[]{findText(actionIdentifierAsString),findClassLabelText(aClass)});
+		if(actionIdentifier instanceof CommonBusinessAction)
+			actionIdentifierAsString = String.format(COMMON_BUSINESS_ACTION_FORMAT, ((CommonBusinessAction)actionIdentifier).name().toLowerCase(),
+					Boolean.TRUE.equals(parameters.getVerb()) ? "verb" : "name");
+		else
+			actionIdentifierAsString = actionIdentifier.toString();
 		
-		String determinant = findDeterminantText(GenderType.MALE.equals(genderType), one,global);
-		return findText(DO_ACTION_PLUS_DET_FORMAT, new Object[]{findText(actionIdentifierAsString),determinant,findClassLabelText(aClass)});
-	}
-	
-	@Override
-	public String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass,Boolean one,Boolean global) {
-		return findDoActionText("dofunctionality", aClass, one, global);
-	}
-
-	@Override
-	public String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass) {
-		return findDoFunctionnalityText(aClass, Boolean.TRUE, Boolean.FALSE);
+		if(GenderType.UNSET.equals(genderType) /*|| !Boolean.TRUE.equals(parameters.getVerb())*/)
+			return findText(DO_SOMETHING_FORMAT, new Object[]{findText(actionIdentifierAsString),findClassLabelText(parameters.getSubjectClass())});
+		
+		String determinant = findDeterminantText(GenderType.MALE.equals(genderType), parameters.getOne(),parameters.getGlobal());
+		if(parameters.getGlobal())
+			if(Boolean.TRUE.equals(parameters.getVerb()))
+				;
+			else
+				determinant = findText("of")+" "+determinant;
+		else
+			if(Boolean.TRUE.equals(parameters.getVerb()))
+				;
+			else
+				determinant = findText("ofprefix")+determinant;
+			
+		return findText(DO_SOMETHING_PLUS_DET_FORMAT, new Object[]{findText(actionIdentifierAsString),determinant,findClassLabelText(parameters.getSubjectClass())});
 	}
 	
 	@Override

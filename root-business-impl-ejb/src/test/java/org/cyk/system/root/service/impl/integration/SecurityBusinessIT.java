@@ -58,11 +58,14 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
 			@Override
     		public void beforeInstall(BusinessLayer businessLayer,Installation installation) {
     			installation.getApplication().setUniformResourceLocatorFilteringEnabled(Boolean.TRUE);
-    			installation.getApplication().setWebContext("");
+    			installation.getApplication().setWebContext("context");
     			super.beforeInstall(businessLayer, installation);
     		}
     	});
     	installApplication();
+    	
+    	//userAccountBusiness.create(new UserAccount(RootBusinessLayer.getInstance().getPersonBusiness().findOneRandomly()
+    	//		, new Credentials("123456789", "789456123"), new Date(), RootBusinessLayer.getInstance().getRoleManager()));
     	
     	userAccountBusiness.connect(new Credentials("manager", "123"));
     	
@@ -85,12 +88,12 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     }
 
     private void urls(){
-    	UniformResourceLocator u1,u2,u3,u4,u5,u6,u7,u8,u9;
-    	create(u1 = new UniformResourceLocator("/"));
-    	create(u2 = new UniformResourceLocator("/a"));
-    	create(u3 = new UniformResourceLocator("/b"));
-    	create(u4 = new UniformResourceLocator("/a/1"));
-    	create(u5 = new UniformResourceLocator("/a/2"));
+    	UniformResourceLocator u1,u2,u3/*,u4,u5,u6,u7,u8,u9*/;
+    	create(u1 = new UniformResourceLocator("/context/"));
+    	create(u2 = new UniformResourceLocator("/context/a"));
+    	create(u3 = new UniformResourceLocator("/context/b"));
+    	create(/*u4 = */new UniformResourceLocator("/context/a/1"));
+    	create(/*u5 = */new UniformResourceLocator("/context/a/2"));
     	
     	//System.out.println(RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().findAll());
     	

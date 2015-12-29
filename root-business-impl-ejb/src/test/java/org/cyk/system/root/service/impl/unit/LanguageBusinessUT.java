@@ -6,10 +6,13 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.cyk.system.root.business.api.Crud;
+import org.cyk.system.root.business.api.CommonBusinessAction;
+import org.cyk.system.root.business.api.language.LanguageBusiness.FindDoSomethingTextParameters;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.security.ApplicationAccount;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
@@ -52,6 +55,12 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     }
 	
 	@Test
+    public void findClassLabelText() {
+		assertEquals("Compte utilisateur",languageBusiness.findClassLabelText(UserAccount.class));
+		assertEquals("Compte administrateur",languageBusiness.findClassLabelText(ApplicationAccount.class));
+	}
+	
+	@Test
     public void findDeterminantText() {
     	assertEquals("Le", languageBusiness.findDeterminantText(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE));
     	assertEquals("Un", languageBusiness.findDeterminantText(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE));
@@ -65,31 +74,78 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     }
 	
 	@Test
-    public void findCrudText() {
-		assertEquals("Créer la personne", languageBusiness.findDoActionText(Crud.CREATE, Person.class,Boolean.TRUE,Boolean.TRUE));
+    public void findDoSomethingText() {
+		FindDoSomethingTextParameters parameters = new FindDoSomethingTextParameters();
+		parameters.setActionIdentifier(CommonBusinessAction.CREATE);
+		parameters.setSubjectClass(Person.class);
+		parameters.setOne(Boolean.TRUE);
+		parameters.setGlobal(Boolean.TRUE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Créer la personne", languageBusiness.findDoSomethingText(parameters));
+		parameters.setVerb(Boolean.FALSE);
+		assertEquals("Création de la personne", languageBusiness.findDoSomethingText(parameters));
+		parameters.setGlobal(Boolean.FALSE);
+		assertEquals("Création d'une personne", languageBusiness.findDoSomethingText(parameters));
 		
-		assertEquals("Lire une personne", languageBusiness.findDoActionText(Crud.READ, Person.class,Boolean.TRUE,Boolean.FALSE));
-		assertEquals("Lire des personne", languageBusiness.findDoActionText(Crud.READ, Person.class,Boolean.FALSE,Boolean.FALSE));
+		parameters.setActionIdentifier(CommonBusinessAction.READ);
+		parameters.setOne(Boolean.TRUE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Lire une personne", languageBusiness.findDoSomethingText(parameters));
 		
-		assertEquals("Mettre à jour les personne", languageBusiness.findDoActionText(Crud.UPDATE, Person.class,Boolean.FALSE,Boolean.TRUE));
-		assertEquals("Supprimer des personne", languageBusiness.findDoActionText(Crud.DELETE, Person.class,Boolean.FALSE,Boolean.FALSE));
+		parameters.setActionIdentifier(CommonBusinessAction.READ);
+		parameters.setOne(Boolean.FALSE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Lire des personne", languageBusiness.findDoSomethingText(parameters));
 		
-		//assertEquals("Lire personne", languageBusiness.findDoActionText(Crud.READ, Person.class,Boolean.TRUE,Boolean.FALSE));
-		//assertEquals("Mettre à jour personne", languageBusiness.findDoActionText(Crud.UPDATE, Person.class,Boolean.TRUE,Boolean.FALSE));
-		//assertEquals("Supprimer personne", languageBusiness.findDoActionText(Crud.DELETE, Person.class,Boolean.TRUE,Boolean.FALSE));
+		parameters.setActionIdentifier(CommonBusinessAction.UPDATE);
+		parameters.setOne(Boolean.FALSE);
+		parameters.setGlobal(Boolean.TRUE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Mettre à jour les personne", languageBusiness.findDoSomethingText(parameters));
+		
+		parameters.setActionIdentifier(CommonBusinessAction.DELETE);
+		parameters.setOne(Boolean.FALSE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Supprimer des personne", languageBusiness.findDoSomethingText(parameters));
+		
+		//assertEquals("Lire personne", languageBusiness.findDoSomethingText(Crud.READ, Person.class,Boolean.TRUE,Boolean.FALSE));
+		//assertEquals("Mettre à jour personne", languageBusiness.findDoSomethingText(Crud.UPDATE, Person.class,Boolean.TRUE,Boolean.FALSE));
+		//assertEquals("Supprimer personne", languageBusiness.findDoSomethingText(Crud.DELETE, Person.class,Boolean.TRUE,Boolean.FALSE));
 		
 		/**/
+		parameters.setActionIdentifier(CommonBusinessAction.CREATE);
+		parameters.setSubjectClass(PhoneNumber.class);
+		parameters.setOne(Boolean.TRUE);
+		parameters.setGlobal(Boolean.TRUE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Créer numéro de téléphone", languageBusiness.findDoSomethingText(parameters));
 		
-		assertEquals("Créer numéro de téléphone", languageBusiness.findDoActionText(Crud.CREATE, PhoneNumber.class,Boolean.TRUE,Boolean.TRUE));
-		assertEquals("Lire numéro de téléphone", languageBusiness.findDoActionText(Crud.READ, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
-		assertEquals("Mettre à jour numéro de téléphone", languageBusiness.findDoActionText(Crud.UPDATE, PhoneNumber.class,Boolean.FALSE,Boolean.TRUE));
-		assertEquals("Supprimer numéro de téléphone", languageBusiness.findDoActionText(Crud.DELETE, PhoneNumber.class,Boolean.FALSE,Boolean.FALSE));
+		parameters.setActionIdentifier(CommonBusinessAction.READ);
+		parameters.setOne(Boolean.TRUE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Lire numéro de téléphone", languageBusiness.findDoSomethingText(parameters));
 		
-		//assertEquals("Lire personne", languageBusiness.findDoActionText(Crud.READ, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
-		//assertEquals("Mettre à jour personne", languageBusiness.findDoActionText(Crud.UPDATE, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
-		//assertEquals("Supprimer personne", languageBusiness.findDoActionText(Crud.DELETE, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
+		parameters.setActionIdentifier(CommonBusinessAction.UPDATE);
+		parameters.setOne(Boolean.FALSE);
+		parameters.setGlobal(Boolean.TRUE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Mettre à jour numéro de téléphone", languageBusiness.findDoSomethingText(parameters));
+		
+		parameters.setActionIdentifier(CommonBusinessAction.DELETE);
+		parameters.setOne(Boolean.FALSE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Supprimer numéro de téléphone", languageBusiness.findDoSomethingText(parameters));
+		
+		//assertEquals("Lire personne", languageBusiness.findDoSomethingText(Crud.READ, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
+		//assertEquals("Mettre à jour personne", languageBusiness.findDoSomethingText(Crud.UPDATE, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
+		//assertEquals("Supprimer personne", languageBusiness.findDoSomethingText(Crud.DELETE, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
 	}
-	
+
 	//@Test
 	public void performanceNoCache(){
 		for(long i=0;i<performanceMaximumNumberOfCall;i++)

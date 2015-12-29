@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.api;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.utility.common.cdi.AbstractBean;

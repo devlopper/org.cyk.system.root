@@ -1,7 +1,11 @@
 package org.cyk.system.root.business.api.language;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Locale;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -54,12 +58,8 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 
 	String findDeterminantText(Boolean male, Boolean one,Boolean global);
 
-	String findDoActionText(Object actionId,Class<? extends AbstractIdentifiable> aClass, Boolean one,Boolean global);
+	String findDoSomethingText(FindDoSomethingTextParameters parameters);
 
-	String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass,Boolean one, Boolean global);
-	
-	String findDoFunctionnalityText(Class<? extends AbstractIdentifiable> aClass);
-	
 	String findResponseText(Boolean value);
 	
 	void setCachingEnabled(Boolean aValue);
@@ -72,7 +72,15 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	
 	/**/
 	
-	String DO_ACTION_PLUS_DET_FORMAT = "doactionformatplusdet";
-	String DO_ACTION_FORMAT = "doactionformat";
+	String DO_SOMETHING_PLUS_DET_FORMAT = "dosomethingformatplusdet";
+	String DO_SOMETHING_FORMAT = "dosomethingformat";
 	
+	/**/
+	@Getter @Setter
+	public static class FindDoSomethingTextParameters implements Serializable{
+		private static final long serialVersionUID = 6396335973589816204L;
+		private Object actionIdentifier;
+		private Class<? extends AbstractIdentifiable> subjectClass;
+		private Boolean one,global,verb=Boolean.TRUE;
+	}
 }

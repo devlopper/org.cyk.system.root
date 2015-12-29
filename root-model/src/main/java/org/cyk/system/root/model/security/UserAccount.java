@@ -28,12 +28,13 @@ import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS) 
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS) 
 public class UserAccount extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -23914558440705885L;
@@ -69,6 +70,12 @@ public class UserAccount extends AbstractIdentifiable implements Serializable {
 		if(roles!=null)
 			this.roles.addAll(Arrays.asList(roles));
 	}
+	
+	@Override
+	public String getUiString() {
+		return credentials.getUsername();
+	}
+	
 	/*
 	@Override
 	public String toString() {

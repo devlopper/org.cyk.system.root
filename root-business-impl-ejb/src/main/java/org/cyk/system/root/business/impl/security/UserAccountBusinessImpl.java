@@ -24,7 +24,7 @@ import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.security.UserAccountSearchCriteria;
 import org.cyk.system.root.persistence.api.security.UserAccountDao;
 
-@Stateless
+@Stateless //@Secure
 public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAccount, UserAccountDao> implements UserAccountBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -40,11 +40,11 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		super(dao); 
 	}  
 
-	@Override
+	@Override //@Secure
 	public UserAccount create(UserAccount userAccount) {
 		userAccount.setCreationDate(universalTimeCoordinated());
 		//Use validator and externalise rules to file
-		return super.create(userAccount); 
+		return super.create(userAccount);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -67,7 +67,6 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 			//exceptionUtils().exception(USER_ACCOUNT_MAP.get(credentials.getUsername())!=null,EXCEPTION_ALREADY_CONNECTED, "exception.useraccount.multipleconnect");
 			logInfo("User account connected : Username={} , Roles={}", account.getCredentials().getUsername(),account.getRoles());
 		}
-		System.out.println("UserAccountBusinessImpl.connect() : "+userSessionBusiness);
 		userSessionBusiness.setUserAccount(account);
 		
 		USER_ACCOUNT_MAP.put(credentials.getUsername(),account);
@@ -108,7 +107,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		return userAccounts;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER) @Secure
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER) //@Secure 
 	public Long countByCriteria(UserAccountSearchCriteria criteria) {
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
 			return dao.countAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getRoleAdministrator()));
