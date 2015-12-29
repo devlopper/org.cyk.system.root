@@ -8,4 +8,5 @@ public enum CommonBusinessAction {
     ,SELECT
     ,SEARCH
     ,CONSULT
+    ,LIST
 }

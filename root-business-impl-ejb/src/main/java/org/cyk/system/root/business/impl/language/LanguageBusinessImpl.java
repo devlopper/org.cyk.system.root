@@ -416,7 +416,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		else
 			actionIdentifierAsString = actionIdentifier.toString();
 		
-		if(GenderType.UNSET.equals(genderType) /*|| !Boolean.TRUE.equals(parameters.getVerb())*/)
+		if(GenderType.UNSET.equals(genderType) || parameters.getOne()==null || parameters.getGlobal()==null)
 			return findText(DO_SOMETHING_FORMAT, new Object[]{findText(actionIdentifierAsString),findClassLabelText(parameters.getSubjectClass())});
 		
 		String determinant = findDeterminantText(GenderType.MALE.equals(genderType), parameters.getOne(),parameters.getGlobal());
