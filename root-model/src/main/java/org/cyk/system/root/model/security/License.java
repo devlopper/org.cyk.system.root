@@ -13,42 +13,54 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.time.Period;
-import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
+import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Entity
-@Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS) 
 public class License extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -1426919647717880937L;
 	
-	@Column(name="licence_text",length=1024*4)
-	@NotNull(groups=org.cyk.utility.common.validation.System.class)
+	@OneToOne
 	/**
 	 * Readable human text on which agreement is made
 	 */
-	private String text;
+	private File file;
 	
+	/**
+	 * The license key. used for mapping in the license management system
+	 */
 	@Column(name="licence_key")
-	//@Input
-	//@InputText
 	private String key;
 	
-	@IncludeInputs
-	@OneToOne 
-	@Valid
+	@OneToOne @Valid
 	private Period period = new Period();
 	
 	@NotNull(groups=org.cyk.utility.common.validation.System.class)
+	
 	/**
 	 * to track who has been activated on the license management system
 	 */
-	private Boolean activated;
+	private Boolean activated = Boolean.FALSE;
 	
-	@NotNull(groups=org.cyk.utility.common.validation.System.class)
+	@NotNull
 	/**
 	 * 
 	 */
-	private Boolean expired;
+	private Boolean expirable = Boolean.FALSE;
 	
+	@NotNull
+	/**
+	 * 
+	 */
+	private Boolean expired = Boolean.FALSE;
+	
+	@Override
+	public String getUiString() {
+		return identifier+Constant.EMPTY_STRING;
+	}
 }

@@ -5,9 +5,6 @@ import org.cyk.system.root.model.security.License;
 
 public interface LicenseBusiness extends TypedBusiness<License> {
     
-	Boolean getEnabled();
-	void setEnabled(Boolean value);
-	
 	void expire(License license);
 	
 	void expand(License license);

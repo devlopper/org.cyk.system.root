@@ -11,6 +11,9 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -47,6 +50,7 @@ import org.cyk.system.root.business.api.party.person.JobFunctionBusiness;
 import org.cyk.system.root.business.api.party.person.JobTitleBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonTitleBusiness;
+import org.cyk.system.root.business.api.security.LicenseBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
 import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
@@ -95,6 +99,7 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.root.model.security.License;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
@@ -105,9 +110,6 @@ import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.computation.DataReadConfiguration;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -169,6 +171,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private UniformResourceLocatorBusiness uniformResourceLocatorBusiness;
     @Inject private UniformResourceLocatorParameterBusiness uniformResourceLocatorParameterBusiness;
     @Inject private RoleUniformResourceLocatorBusiness roleUniformResourceLocatorBusiness;
+    @Inject private LicenseBusiness licenseBusiness;
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
@@ -181,7 +184,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private RootTestHelper rootTestHelper;
     @Inject private ApplicationDao applicationDao;
     
-    @Setter private Application application;
+    //@Setter private Application application;
+    @Setter private Long applicationIdentifier;
     
     //private Person personAdmin,personGuest;
     
@@ -230,7 +234,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}
 		});
         
-        application = applicationDao.select().one();
+        //application = applicationDao.select().one();
         
         rootTestHelper.setReportBusiness(reportBusiness);
         rootTestHelper.setRootBusinessLayer(this); 
@@ -439,11 +443,15 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)UniformResourceLocatorParameter.class, (TypedBusiness)uniformResourceLocatorParameterBusiness);
         beansMap.put((Class)RoleUniformResourceLocator.class, (TypedBusiness)roleUniformResourceLocatorBusiness);
         beansMap.put((Class)Role.class, (TypedBusiness)roleBusiness);
+        beansMap.put((Class)License.class, (TypedBusiness)licenseBusiness);
     }
     
     @Override
     protected void setConstants(){
-    	application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
+    	Application application = applicationDao.select().one();
+    	if(application!=null)
+    		applicationIdentifier = application.getIdentifier();
+    	//application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
         
     	landPhoneNumberType = phoneNumberTypeBusiness.find(PhoneNumberType.LAND);
     	mobilePhoneNumberType = phoneNumberTypeBusiness.find(PhoneNumberType.MOBILE);
@@ -477,6 +485,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_EMAIL);
     	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_SMS);
     	
+    }
+    
+    public Application getApplication(){
+    	if(applicationIdentifier==null)
+    		return null;
+    	return applicationDao.read(applicationIdentifier);
     }
    
     @Override
