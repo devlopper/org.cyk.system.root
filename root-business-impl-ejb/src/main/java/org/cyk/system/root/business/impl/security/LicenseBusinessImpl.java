@@ -19,17 +19,5 @@ public class LicenseBusinessImpl extends AbstractTypedBusinessService<License, L
 	public LicenseBusinessImpl(LicenseDao dao) {
 		super(dao); 
 	}
-	
-	@Override
-	public void expire(License license) {
-		license.setExpired(Boolean.TRUE);
-		update(license);
-	}
-
-	@Override
-	public void expand(License license) {
-		license.setExpired(Boolean.FALSE);
-		update(license);
-	}
 		
 }
