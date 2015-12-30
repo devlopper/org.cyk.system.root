@@ -29,7 +29,7 @@ public class EventParticipationBusinessImpl extends AbstractTypedBusinessService
 		super(dao); 
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)//TODO is Support needed ?
 	public void setMissedEvent(Collection<EventParticipation> eventParticipations) {
 		Collection<EventMissed> eventMisseds = eventMissedDao.readByEventParticipations(eventParticipations);
 		for(EventMissed eventMissed : eventMisseds){
@@ -41,17 +41,17 @@ public class EventParticipationBusinessImpl extends AbstractTypedBusinessService
 		}
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public EventParticipation findByEventByParty(Event event, Party party) {
 		return dao.readByEventByParty(event,party);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<EventParticipation> findByParty(Party party) {
 		return dao.readByParty(party);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<EventParticipation> findByEvent(Event event) {
 		return dao.readByEvent(event);
 	}

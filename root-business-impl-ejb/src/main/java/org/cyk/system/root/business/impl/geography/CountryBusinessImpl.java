@@ -32,7 +32,7 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 		return country;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Country findByCode(String code) {
 		return dao.readByCode(code);
 	}   

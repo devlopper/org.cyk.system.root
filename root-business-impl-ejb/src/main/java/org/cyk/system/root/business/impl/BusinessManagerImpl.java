@@ -51,7 +51,7 @@ public class BusinessManagerImpl extends AbstractStartupBean implements
 		BUSINESS_LAYERS = list;
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<BusinessLayer> findBusinessLayers() {
 		/*
 		for (Object object : startupBeanExtension.getReferences())

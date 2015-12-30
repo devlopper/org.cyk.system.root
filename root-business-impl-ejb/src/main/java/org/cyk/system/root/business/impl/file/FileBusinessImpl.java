@@ -25,7 +25,6 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.persistence.api.file.FileDao;
 
-
 public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao> implements FileBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -37,7 +36,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		super(dao); 
 	}
 
-    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) //TODO is this Support and followings really needed ???
     public File process(byte[] bytes, String name) {
         if(bytes==null || bytes.length==0)
             return null;
@@ -116,12 +115,12 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     	return findSystemPath(file,Boolean.TRUE);
     }
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public URI findThumbnailUri(File file,ThumnailSize size) {
 		return mediaBusiness.findThumbnailUri(file.getUri(), size);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public URI findEmbeddedUri(File file) {
 		return mediaBusiness.findEmbeddedUri(file.getUri());
 	}

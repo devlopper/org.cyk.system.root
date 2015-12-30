@@ -155,7 +155,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
     	return INSTANCE;
     }
     
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Collection<BusinessEntityInfos> findBusinessEntitiesInfos() {
         if(BUSINESS_ENTITIES_INFOS==null){
         	BUSINESS_ENTITIES_INFOS = new HashSet<>();
@@ -168,7 +168,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
         return BUSINESS_ENTITIES_INFOS;
     }
     
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public BusinessEntityInfos findBusinessEntityInfos(Class<? extends AbstractIdentifiable> aClass) {
     	for(BusinessEntityInfos b : findBusinessEntitiesInfos())
     		if(b.getClazz().equals(aClass))
@@ -176,7 +176,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
     	return null;
     }
 
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Collection<BusinessEntityInfos> findBusinessEntitiesInfos(CrudStrategy crudStrategy) {
         Collection<BusinessEntityInfos> l = new HashSet<>();
         for(BusinessEntityInfos infos : findBusinessEntitiesInfos()){

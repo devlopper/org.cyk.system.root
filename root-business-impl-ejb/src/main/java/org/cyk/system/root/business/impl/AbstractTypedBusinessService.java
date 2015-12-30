@@ -68,27 +68,27 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    	delete(identifiable);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IDENTIFIABLE load(Long identifier) {
 		IDENTIFIABLE identifiable = find(identifier);
 		load(identifiable);
 		return identifiable;
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public void load(IDENTIFIABLE identifiable) {
 		__load__(identifiable);
 	}
 	
 	protected void __load__(IDENTIFIABLE identifiable) {}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public void load(Collection<IDENTIFIABLE> identifiables) {
 		for(IDENTIFIABLE identifiable : identifiables)
 			load(identifiable);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findAll() {
 		return dao.readAll();
 	}
@@ -98,7 +98,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return dao.countAll();
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findAll(DataReadConfiguration dataReadConfig) {
 		dao.getDataReadConfig().set(dataReadConfig);
 		return dao.readAll();

@@ -115,7 +115,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 			delete(identifiable);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@TransactionAttribute(TransactionAttributeType.NEVER)
 	@Override
 	public AbstractGenericBusinessService<AbstractIdentifiable, Long> use(Class<? extends AbstractIdentifiable> aClass) {
 		genericDao.use(aClass);
@@ -131,7 +131,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	}
 	
 	@SuppressWarnings("unchecked")
-    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public <T extends AbstractIdentifiable> T load(Class<T> aClass, Long identifier) {
 	    TypedBusiness<T> businessBean = (TypedBusiness<T>) BusinessLocator.getInstance().locate((Class<AbstractIdentifiable>) aClass);
 	    if(businessBean==null)

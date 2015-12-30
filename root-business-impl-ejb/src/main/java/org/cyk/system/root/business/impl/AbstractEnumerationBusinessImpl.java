@@ -19,12 +19,12 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
         super(dao);
     }
     
-    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public ENUMERATION find(String code){
         return dao.read(code);
     }
     
-    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public ENUMERATION load(String code) {
     	ENUMERATION enumeration = find(code);
     	load(enumeration);

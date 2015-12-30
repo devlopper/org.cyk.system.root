@@ -105,7 +105,9 @@ import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
+import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
+import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -175,6 +177,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
+    @Inject private CountryDao countryDao;
+    @Inject private GenericDao genericDao;
     //@Inject private EventParticipationDao eventParticipationDao;
     
     @Inject private PersonValidator personValidator;
@@ -459,24 +463,24 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	homeLocationType = locationTypeBusiness.find(LocationType.HOME);
     	officeLocationType = locationTypeBusiness.find(LocationType.OFFICE);
     	
-    	countryCoteDivoire = countryBusiness.findByCode(Country.COTE_DIVOIRE);
+    	countryCoteDivoire = countryDao.readByCode(Country.COTE_DIVOIRE);
     	countryLocalityType = localityTypeBusiness.find(LocalityType.COUNTRY);
     	continentLocalityType = localityTypeBusiness.find(LocalityType.CONTINENT);
     	cityLocalityType = localityTypeBusiness.find(LocalityType.CITY);
     	
-    	roleAdministrator = roleBusiness.find(Role.ADMINISTRATOR);
-    	roleManager = roleBusiness.find(Role.MANAGER);
-    	roleSettingManager = roleBusiness.find(Role.SETTING_MANAGER);
-    	roleSecurityManager = roleBusiness.find(Role.SECURITY_MANAGER);
-    	roleUser = roleBusiness.find(Role.USER);
+    	roleAdministrator = getEnumeration(Role.class,Role.ADMINISTRATOR);
+    	roleManager = getEnumeration(Role.class,Role.MANAGER);
+    	roleSettingManager = getEnumeration(Role.class,Role.SETTING_MANAGER);
+    	roleSecurityManager = getEnumeration(Role.class,Role.SECURITY_MANAGER);
+    	roleUser = getEnumeration(Role.class,Role.USER);
     	
-    	timeDivisionTypeDay = timeDivisionTypeBusiness.find(TimeDivisionType.DAY);
-    	timeDivisionTypeTrimester = timeDivisionTypeBusiness.find(TimeDivisionType.TRIMESTER);
-    	timeDivisionTypeSemester = timeDivisionTypeBusiness.find(TimeDivisionType.SEMESTER);
-    	timeDivisionTypeYear = timeDivisionTypeBusiness.find(TimeDivisionType.YEAR);
+    	timeDivisionTypeDay = getEnumeration(TimeDivisionType.class,TimeDivisionType.DAY);
+    	timeDivisionTypeTrimester = getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER);
+    	timeDivisionTypeSemester = getEnumeration(TimeDivisionType.class,TimeDivisionType.SEMESTER);
+    	timeDivisionTypeYear = getEnumeration(TimeDivisionType.class,TimeDivisionType.YEAR);
     	
-    	anniversaryEventType = eventTypeBusiness.find(EventType.ANNIVERSARY);
-    	reminderEventType = eventTypeBusiness.find(EventType.REMINDER);
+    	anniversaryEventType = getEnumeration(EventType.class,EventType.ANNIVERSARY);
+    	reminderEventType = getEnumeration(EventType.class,EventType.REMINDER);
     	
     	sexMale = getEnumeration(Sex.class, Sex.MALE);
     	sexFemale = getEnumeration(Sex.class, Sex.FEMALE);

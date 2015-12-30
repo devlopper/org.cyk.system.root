@@ -32,12 +32,12 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 		return intervalDao;
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BigDecimal findLowestValue(IntervalCollection intervalCollection) {
 		return dao.readLowestValue(intervalCollection);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BigDecimal findHighestValue(IntervalCollection intervalCollection) {
 		return dao.readHighestValue(intervalCollection);
 	}
