@@ -20,6 +20,9 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.CommonBusinessAction;
@@ -29,7 +32,6 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.system.root.model.EnumHelper;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.language.LanguageEntry;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
@@ -44,9 +46,6 @@ import org.cyk.utility.common.annotation.user.interfaces.Text;
 import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
@@ -221,7 +220,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 
     @Override
     public String findText(Locale locale, Enum<?> anEnum, Object[] parameters) {
-        return EnumHelper.getInstance().text(locale, anEnum);
+        String code = "enum."+anEnum.getClass().getSimpleName().toLowerCase()+"."+anEnum.name();
+        return findText(code, parameters);
     }
 
     @Override

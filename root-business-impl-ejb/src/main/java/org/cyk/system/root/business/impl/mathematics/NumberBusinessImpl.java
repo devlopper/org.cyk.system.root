@@ -7,6 +7,8 @@ import java.util.Locale;
 
 import javax.inject.Singleton;
 
+import lombok.Setter;
+
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
@@ -20,7 +22,7 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 	//private NumberFormat numberFormatter = NumberFormat.getNumberInstance(currentLocale);
 	//private DecimalFormat myFormatter = new DecimalFormat(pattern);
 
-	private LanguageBusiness languageBusiness = LanguageBusinessImpl.getInstance();
+	@Setter private LanguageBusiness languageBusiness = LanguageBusinessImpl.getInstance();
 	
 	@Override
 	public String format(Number number, Locale locale) {

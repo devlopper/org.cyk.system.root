@@ -1,16 +1,22 @@
 package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Setter;
+
 import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness;
+import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.computation.ArithmeticOperator;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class ExceptionUtils extends AbstractBean implements Serializable {
@@ -22,7 +28,9 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
         return INSTANCE;
     }
     
-    @Inject protected LanguageBusiness languageBusiness;    
+    @Inject @Setter protected LanguageBusiness languageBusiness;
+    @Inject @Setter protected NumberBusiness numberBusiness;
+    @Inject @Setter protected TimeBusiness timeBusiness;
    
     @Override
     protected void initialisation() {
@@ -68,8 +76,17 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
         exception("","exception.internal");
     }
 
+    /* Specialized short cuts */
+    
     public void resourceNotFound(){
         exception("","exception.resource.notfound");
+    }
+    
+    public void comparison(Boolean condition,String operand1,ArithmeticOperator operator,String operand2){
+    	exception(condition, "exception.comparison",new Object[]{operand1,languageBusiness.findText(operator),operand2});
+	}
+    public void comparison(Boolean condition,String operand1,ArithmeticOperator operator,BigDecimal operand2){
+    	comparison(condition, operand1, operator, numberBusiness.format(operand2));
     }
     
 }
