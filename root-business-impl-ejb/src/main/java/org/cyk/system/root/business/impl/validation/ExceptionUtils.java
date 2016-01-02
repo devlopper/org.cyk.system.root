@@ -13,6 +13,8 @@ import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
@@ -81,6 +83,12 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     public void resourceNotFound(){
         exception("","exception.resource.notfound");
     }
+    
+    public void comparisonBetween(BigDecimal value,Interval interval,String valueNameId){
+    	exception(!RootBusinessLayer.getInstance().getIntervalBusiness().contains(interval, value, 2) , "exception.comparison.between",new Object[]{languageBusiness.findText(valueNameId)
+    			,RootBusinessLayer.getInstance().getNumberBusiness().format(interval.getLow().getValue())
+    			,RootBusinessLayer.getInstance().getNumberBusiness().format(interval.getHigh().getValue())});
+	}
     
     public void comparison(Boolean condition,String operand1,ArithmeticOperator operator,String operand2){
     	exception(condition, "exception.comparison",new Object[]{operand1,languageBusiness.findText(operator),operand2});

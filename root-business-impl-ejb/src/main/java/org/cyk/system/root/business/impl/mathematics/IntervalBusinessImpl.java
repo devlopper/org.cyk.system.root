@@ -31,12 +31,15 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		return null;
 	}  
 	
-	private Boolean contains(Interval interval, BigDecimal value,Integer scale) {		
+	@Override
+	public Boolean contains(Interval interval, BigDecimal value,Integer scale) {		
 		BigDecimal low = interval.getLow().getValue(),high = interval.getHigh().getValue();
-		if(low==null && high==null)
-			return(value==null);
 		if(value==null)
 			return false;
+		if(low==null && high==null)
+			return true;//(value==null);
+		//if(value==null)
+		//	return false;
 		
 		BigDecimal correctedScale = scale==null?value:value.setScale(scale,RoundingMode.DOWN);//truncates
 		if(low==null)

@@ -32,6 +32,11 @@ public class IntervalExtremity extends AbstractModelElement implements Serializa
 		return value==null?"INFINTE":value.toString();
 	}
 	
+	@Override
+	public String toString() {
+		return value==null?"INFINTE":value.toString();
+	}
+	
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_EXCLUDED = "excluded";
 

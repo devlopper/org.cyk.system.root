@@ -9,5 +9,5 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 public interface IntervalBusiness extends AbstractCollectionItemBusiness<Interval,IntervalCollection> {
     
     Interval findByCollectionByValue(IntervalCollection collection,BigDecimal value,Integer scale);
-    
+    Boolean contains(Interval interval, BigDecimal value,Integer scale);
 }

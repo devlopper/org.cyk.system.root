@@ -46,9 +46,14 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     public EntityManager getEntityManager() {
         return g.getEntityManager();
     }
-    
     @Override
-    protected void populate() {}
+    protected Boolean populateInTransaction() {
+    	return Boolean.FALSE;
+    }
+    @Override
+    protected void populate() {
+    	installApplication();
+    }
 	 
     @Override
     protected void _execute_() {
@@ -61,7 +66,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
         businesses();
     }
     
-	protected abstract void finds();
+	protected void finds(){}
 	
 	protected abstract void businesses();
 	/*
@@ -118,4 +123,10 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
                 //.addPackage(PersonValidator.class.getPackage())
                 ;
     } 
+    
+    @Override protected void create() {}
+    @Override protected void read() {}
+    @Override protected void update() {}
+    @Override protected void delete() {}
+    
 }
