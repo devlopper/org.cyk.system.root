@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractCollection;
@@ -25,7 +27,11 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull
 	private BigDecimal value = BigDecimal.ZERO;
  
-	@NotNull private Interval interval;
+	@OneToOne @JoinColumn(name="theinterval") @NotNull private Interval interval;
+	
+	@OneToOne @NotNull private MovementAction incrementAction;
+	
+	@OneToOne @NotNull private MovementAction decrementAction;
 
 	public MovementCollection(String code, BigDecimal value,Interval interval) {
 		super(code, code, null, null);

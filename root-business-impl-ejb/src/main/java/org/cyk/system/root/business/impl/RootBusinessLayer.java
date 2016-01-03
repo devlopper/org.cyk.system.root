@@ -41,6 +41,7 @@ import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
+import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
@@ -90,6 +91,7 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.mathematics.Movement;
+import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
@@ -179,6 +181,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private RoleUniformResourceLocatorBusiness roleUniformResourceLocatorBusiness;
     @Inject private LicenseBusiness licenseBusiness;
     @Inject private MovementBusiness movementBusiness;
+    @Inject private MovementActionBusiness movementActionBusiness;
     @Inject private MovementCollectionBusiness movementCollectionBusiness;
     
     @Inject private NotificationTemplateDao notificationTemplateDao;
@@ -456,6 +459,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)License.class, (TypedBusiness)licenseBusiness);
         beansMap.put((Class)MovementCollection.class, (TypedBusiness)movementCollectionBusiness);
         beansMap.put((Class)Movement.class, (TypedBusiness)movementBusiness);
+        beansMap.put((Class)MovementAction.class, (TypedBusiness)movementActionBusiness);
     }
     
     @Override

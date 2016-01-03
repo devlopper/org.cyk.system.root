@@ -32,6 +32,8 @@ import org.cyk.system.root.model.geography.PostalBox;
 import org.cyk.system.root.model.geography.Website;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
+import org.cyk.system.root.model.mathematics.MovementAction;
+import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
@@ -132,6 +134,12 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return createIntervalCollection(code,values,null);
 	}
 	
+	public Interval createInterval(IntervalCollection collection,String code,String name,String low,String high){
+		Interval interval = new Interval(collection, code, name, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
+		
+		return interval;
+	}
+	
 	public File createFile(Package basePackage,String relativePath,String name){
 		return fileBusiness.create(fileBusiness.process(getResourceAsBytes(basePackage,relativePath),name));
 	}
@@ -214,6 +222,19 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 					collection.setWebsites(new ArrayList<Website>());
 				collection.getWebsites().add(website);
 			}
+	}
+	
+	public MovementCollection createMovementCollection(String code,String incrementActionName,String decrementActionName){
+		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, createInterval(null, code+"int", code+"int", "0", null));
+		movementCollection.setIncrementAction(createMovementAction(getCode(incrementActionName), incrementActionName));
+		movementCollection.setDecrementAction(createMovementAction(getCode(decrementActionName), decrementActionName));
+		return movementCollection;
+	}
+	
+	public MovementAction createMovementAction(String code, String name){
+		MovementAction movementAction = new MovementAction(code, name);
+		movementAction.setInterval(createInterval(null, code+"int", code+"int", "0", null));
+		return movementAction;
 	}
 	
 	public void createDatabase(){

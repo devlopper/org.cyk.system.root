@@ -39,7 +39,7 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 
 	private static final long serialVersionUID = 7237631838579839333L;
 
-	public static final Collection<TestEnvironmentListener> TEST_ENVIRONMENT_LISTENERS = new ArrayList<>();
+	//public static final Collection<TestEnvironmentListener> TEST_ENVIRONMENT_LISTENERS = TestEnvironmentListener.COLLECTION; //new ArrayList<>();
 	
 	protected String reportFolder = "target/report";
 	
@@ -102,12 +102,12 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 	/**/
 	
 	protected void assertEquals(String message,Object expected,Object actual){
-		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertEquals(message, expected, actual);
 	}
 	
 	protected void assertBigDecimalEquals(String message,BigDecimal expected,BigDecimal actual){
-		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertBigDecimalEquals(message, expected, actual);
 	}
 	
@@ -116,32 +116,32 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 	}
 	
 	protected static void assertThat(String reason,Boolean assertion){
-		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertThat(reason, assertion);
 	}
 	
 	protected static <T> void assertThat(T actual,Matcher<? super T> matcher){
-		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertThat(actual, matcher);
 	}
 	
 	protected  <T> void assertThat(String reason,T actual,Matcher<? super T> matcher){
-		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertThat(reason, actual, matcher);
 	}
 	
 	protected static void hasProperty(Object object,String name,Object value){
-		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.hasProperty(object, name, value);
 	}
 	
 	protected static void hasProperties(Object object,Object...entries){
-		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.hasProperties(object, entries);
 	}
 	
 	protected static <T> void contains(Class<T> aClass,Collection<T> list,Object[] names,Object[][] values){
-		for(TestEnvironmentListener listener : TEST_ENVIRONMENT_LISTENERS)
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.contains(aClass, list, names, values);
 	}
 	
@@ -205,5 +205,5 @@ public abstract class AbstractTestHelper extends AbstractBean implements Seriali
 			list.add(createActor(actorClass,code, null));
 		return list;
 	}
-	
+
 }

@@ -1,8 +1,11 @@
 package org.cyk.system.root.service.impl.integration;
 
+import java.math.BigDecimal;
+
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.cyk.system.root.business.api.AbstractBusinessException;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
@@ -15,12 +18,38 @@ import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
+import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.test.ArchiveBuilder;
 import org.cyk.utility.test.integration.AbstractIntegrationTestJpaBased;
-import org.jboss.shrinkwrap.api.Archive; 
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Assert; 
 
 public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased {
 
+	static {
+		TestEnvironmentListener.COLLECTION.add(new TestEnvironmentListener.Adapter.Default(){
+			private static final long serialVersionUID = -2347039842308401189L;
+			@Override
+			protected Throwable getThrowable(Throwable throwable) {
+				return commonUtils.getThrowableInstanceOf(throwable, AbstractBusinessException.class);
+			}
+			@Override
+    		public void assertEquals(String message, Object expected, Object actual) {
+    			Assert.assertEquals(message, expected, actual);
+    		}
+    		@Override
+    		public String formatBigDecimal(BigDecimal value) {
+    			return RootBusinessLayer.getInstance().getNumberBusiness().format(value);
+    		}
+    	});
+	}
+	
+	@Deployment
+    public static Archive<?> createDeployment() {
+        return createRootDeployment();
+    }
+	
     /*
 	public static ArchiveBuilder deployment(Class<?>[] classes){
 		ArchiveBuilder builder = new ArchiveBuilder();

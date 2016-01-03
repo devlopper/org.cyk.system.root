@@ -84,8 +84,8 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
         exception("","exception.resource.notfound");
     }
     
-    public void comparisonBetween(BigDecimal value,Interval interval,String valueNameId){
-    	exception(!RootBusinessLayer.getInstance().getIntervalBusiness().contains(interval, value, 2) , "exception.comparison.between",new Object[]{languageBusiness.findText(valueNameId)
+    public void comparisonBetween(BigDecimal value,Interval interval,String valueName){
+    	exception(!RootBusinessLayer.getInstance().getIntervalBusiness().contains(interval, value, 2) , "exception.comparison.between",new Object[]{valueName
     			,RootBusinessLayer.getInstance().getNumberBusiness().format(interval.getLow().getValue())
     			,RootBusinessLayer.getInstance().getNumberBusiness().format(interval.getHigh().getValue())});
 	}
