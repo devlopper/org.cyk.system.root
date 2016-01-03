@@ -194,7 +194,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private FileValidator fileValidator;
     @Inject private RootReportRepository reportRepository;
     
-    @Inject private RootTestHelper rootTestHelper;
+    @Inject private RootBusinessTestHelper rootBusinessTestHelper;
     @Inject private ApplicationDao applicationDao;
     
     //@Setter private Application application;
@@ -249,8 +249,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         //application = applicationDao.select().one();
         
-        rootTestHelper.setReportBusiness(reportBusiness);
-        rootTestHelper.setRootBusinessLayer(this); 
+        rootBusinessTestHelper.setReportBusiness(reportBusiness);
         
         applicationBusiness.registerValueGenerator((ValueGenerator<?, ?>) new StringValueGenerator<Party>(
         		ValueGenerator.PARTY_CODE_IDENTIFIER,ValueGenerator.PARTY_CODE_DESCRIPTION, Party.class));

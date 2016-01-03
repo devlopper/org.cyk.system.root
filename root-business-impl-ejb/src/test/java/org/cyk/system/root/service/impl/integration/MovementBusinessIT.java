@@ -13,60 +13,50 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     protected void populate() {
     	super.populate();
     	MovementCollection  movementCollection = new MovementCollection();
-    	rootTestHelper.set(movementCollection, movementUnlimitedIdentifier,"0", null, null,"Entrée","Sortie");
+    	rootBusinessTestHelper.set(movementCollection, movementUnlimitedIdentifier,"0", null, null,"Entrée","Sortie");
     	create(movementCollection);
     	
     	movementCollection = new MovementCollection();
-    	rootTestHelper.set(movementCollection, movementLimitedIdentifier, "0","0", "1000000","Dépot","Retrait");
+    	rootBusinessTestHelper.set(movementCollection, movementLimitedIdentifier, "0","0", "1000000","Dépot","Retrait");
     	create(movementCollection);
     	
     }
     
     @Override
     protected void businesses() {
-    	rootTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "100000");
-    	rootTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "200000");
-    	rootTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "300000");
-    	rootTestHelper.createMovement(movementUnlimitedIdentifier, "-80000", "220000");
+    	rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "100000");
+    	rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "200000");
+    	rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "300000");
+    	rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "-80000", "220000");
     }
     
     /* Exceptions */
     
     @Test
     public void incrementValueMustNotBeLessThanIntervalLow(){
-    	rootTestHelper.incrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
+    	rootBusinessTestHelper.incrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
     }
     @Test
     public void incrementValueMustNotBeGreaterThanIntervalHigh(){
-    	rootTestHelper.incrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
+    	rootBusinessTestHelper.incrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
     }
     @Test
     public void decrementValueMustNotBeLessThanIntervalLow(){
-    	rootTestHelper.decrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
+    	rootBusinessTestHelper.decrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
     }
     @Test
     public void decrementValueMustNotBeGreaterThanIntervalHigh(){
-    	rootTestHelper.decrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
+    	rootBusinessTestHelper.decrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
     }
     
     @Test
-    public void valueLowerThanActionMinimum(){
-    	rootTestHelper.valueLowerThanActionMinimum(movementLimitedIdentifier, "0");
-    }
-    
-    //@Test
-    public void valueGreaterThanActionMaximum(){
-    	rootTestHelper.valueGreaterThanActionMaximum(movementLimitedIdentifier, "0");
+    public void collectionValueMustNotBeLessThanIntervalLow(){
+    	rootBusinessTestHelper.collectionValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
     }
     
     @Test
-    public void valueGreaterThanHigh(){
-    	rootTestHelper.valueGreaterThanHigh(movementLimitedIdentifier, "3000000");
-    }
-    
-    @Test
-    public void valueLowerThanLow(){
-    	rootTestHelper.valueLowerThanLow(movementLimitedIdentifier, "100");
+    public void collectionValueMustNotBeGreaterThanIntervalHigh(){
+    	rootBusinessTestHelper.collectionValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
     }
     
 }

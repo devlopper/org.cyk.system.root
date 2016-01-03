@@ -10,7 +10,7 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.business.impl.RootTestHelper;
+import org.cyk.system.root.business.impl.RootBusinessTestHelper;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
@@ -66,7 +66,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	@Inject private GenericDaoImpl g;
 	@Inject protected GenericBusiness genericBusiness;
 	@Inject protected ApplicationBusiness applicationBusiness;
-	@Inject protected RootTestHelper rootTestHelper;
+	@Inject protected RootBusinessTestHelper rootBusinessTestHelper;
 	
 	@Inject protected ValidatorMap validatorMap;// = ValidatorMap.getInstance();
 	@Inject protected RootBusinessLayer rootBusinessLayer;
@@ -142,7 +142,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
                 new ArchiveBuilder().create().getArchive().
                     addClasses(BusinessIntegrationTestHelper.classes()).
                     addPackages(Boolean.FALSE, BusinessIntegrationTestHelper.packages())
-                    .addClasses(RootBusinessLayer.class,RootTestHelper.class)
+                    .addClasses(RootBusinessLayer.class,RootBusinessTestHelper.class)
                     .addClasses(PersistenceIntegrationTestHelper.classes())
                 //_deploymentOfPackages("org.cyk.system.root").getArchive()
               

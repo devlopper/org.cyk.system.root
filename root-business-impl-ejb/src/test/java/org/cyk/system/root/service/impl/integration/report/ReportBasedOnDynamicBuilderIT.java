@@ -115,13 +115,13 @@ public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
         parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultReportBasedOnDynamicBuilder());
         parameters.getReportBasedOnDynamicBuilderListeners().add(new DefaultJasperReportBasedOnDynamicBuilder());
         
-        rootTestHelper.reportBasedOnDynamicBuilderParameters(parameters);
+        rootBusinessTestHelper.reportBasedOnDynamicBuilderParameters(parameters);
         
         Collection<Class<? extends AbstractIdentifiable>> classes = new ArrayList<>();
         classes.add(EventType.class);
         classes.add(TimeDivisionType.class);
         for(Object clazz : classes)
-        	rootTestHelper.reportBasedOnDynamicBuilderParameters((Class<?>) clazz);
+        	rootBusinessTestHelper.reportBasedOnDynamicBuilderParameters((Class<?>) clazz);
         
         //---------------------------
         
