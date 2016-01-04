@@ -11,4 +11,5 @@ public interface PersonDao extends AbstractPartyDao<Person,PersonSearchCriteria>
 
 	Collection<Event> readBirthDateDayOfYearBetween(Integer fromDayOfYear,Integer toDayOfYear);
     
+	
 }

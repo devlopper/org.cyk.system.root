@@ -15,14 +15,20 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-	protected String readByEmail,readByCriteria,countByCriteria,readByCriteriaNameAscendingOrder,readByCriteriaNameDescendingOrder;
+	protected String readByEmail,readByCode,readByCriteria,countByCriteria,readByCriteriaNameAscendingOrder,readByCriteriaNameDescendingOrder;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
+		registerNamedQuery(readByCode, _select().where(Party.FIELD_CODE));
 		registerNamedQuery(readByEmail, "SELECT party FROM "+clazz.getSimpleName()+" party WHERE EXISTS("
 				+ " SELECT email FROM ElectronicMail email WHERE email.address = :pemail AND email.collection = party.contactCollection"
 				+ ")");
+	}
+	
+	@Override
+	public PARTY readByCode(String code) {
+		return namedQuery(readByEmail).parameter(Party.FIELD_CODE, code).ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
 	@Override

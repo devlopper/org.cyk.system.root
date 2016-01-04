@@ -100,7 +100,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return createEnumeration(aClass, getCode(name), name);
 	}
 	
-	private String getCode(String name){
+	public String getCode(String name){
 		return StringUtils.remove(name, Constant.CHARACTER_SPACE);
 	}
 	

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -12,8 +13,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
@@ -37,9 +42,6 @@ import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -343,6 +345,16 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	private Boolean isIncrementAction(String value){
 		BigDecimal v = commonUtils.getBigDecimal(value);
 		return v == null ? null : v.signum() == 0 ? null : v.signum() == 1;
+	}
+	
+	protected Date getDate(String date){
+		//RootBusinessLayer.getInstance().getTimeBusiness().find
+		try {
+			return date==null ? new Date() : DateUtils.parseDate(date, "dd/MM/yyyy HH:mm");
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**/
