@@ -7,11 +7,11 @@ import java.util.Arrays;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.BusinessLayer;
-import org.cyk.system.root.business.api.BusinessLayerListener;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilder;
+import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
+import org.cyk.system.root.business.impl.party.ApplicationBusinessImplListener;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
@@ -53,13 +53,13 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
 
     @Override
     protected void businesses() {
-    	RootBusinessLayer.getInstance().getBusinessLayerListeners().add(new BusinessLayerListener.Adapter.Default(){
+    	ApplicationBusinessImpl.LISTENERS.add(new ApplicationBusinessImplListener.Adapter.Default(){
 			private static final long serialVersionUID = 6148913289155659043L;
 			@Override
-    		public void beforeInstall(BusinessLayer businessLayer,Installation installation) {
+    		public void installationStarted(Installation installation) {
     			installation.getApplication().setUniformResourceLocatorFilteringEnabled(Boolean.TRUE);
     			installation.getApplication().setWebContext("context");
-    			super.beforeInstall(businessLayer, installation);
+    			super.installationStarted(installation);
     		}
     	});
     	installApplication();

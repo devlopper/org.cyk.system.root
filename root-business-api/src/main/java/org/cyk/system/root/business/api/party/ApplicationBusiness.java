@@ -40,5 +40,9 @@ public interface ApplicationBusiness extends AbstractPartyBusiness<Application,P
     ValueGenerator<?, ?> findValueGenerator(String identifier);
     
     <INPUT,OUTPUT> OUTPUT generateValue(String identifier,Class<INPUT> inputClass,Class<OUTPUT> outputClass,INPUT input);
+    
+    /**/
+    
+    
      
 }

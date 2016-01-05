@@ -65,6 +65,7 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	}
 
 	public static final String FIELD_CODE = "code";
+	public static final String FIELD_NAME = "name";
 
 	
 }

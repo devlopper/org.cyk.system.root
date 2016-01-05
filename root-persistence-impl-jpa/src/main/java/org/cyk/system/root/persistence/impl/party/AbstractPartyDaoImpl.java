@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.persistence.NoResultException;
 
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
@@ -22,18 +23,18 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByCode, _select().where(Party.FIELD_CODE));
 		registerNamedQuery(readByEmail, "SELECT party FROM "+clazz.getSimpleName()+" party WHERE EXISTS("
-				+ " SELECT email FROM ElectronicMail email WHERE email.address = :pemail AND email.collection = party.contactCollection"
+				+ " SELECT email FROM ElectronicMail email WHERE email.address = :"+ElectronicMail.FIELD_ADDRESS+" AND email.collection = party.contactCollection"
 				+ ")");
 	}
 	
 	@Override
 	public PARTY readByCode(String code) {
-		return namedQuery(readByEmail).parameter(Party.FIELD_CODE, code).ignoreThrowable(NoResultException.class).resultOne();
+		return namedQuery(readByCode).parameter(Party.FIELD_CODE, code).ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
 	@Override
 	public PARTY readByEmail(String email) {
-		return namedQuery(readByEmail).parameter("pemail", email).ignoreThrowable(NoResultException.class).resultOne();
+		return namedQuery(readByEmail).parameter(ElectronicMail.FIELD_ADDRESS, email).ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -58,10 +59,10 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 	}
 	
 	protected void applyCriteriaParameters(QueryWrapper<?> queryWrapper,SEARCH_CRITERIA searchCriteria){
-		queryWrapper.parameter("name",searchCriteria.getNameSearchCriteria().getPreparedValue());
+		queryWrapper.parameter(Party.FIELD_NAME,searchCriteria.getNameSearchCriteria().getPreparedValue());
 	}
                 
-    
+    /**/
 	
 }
  

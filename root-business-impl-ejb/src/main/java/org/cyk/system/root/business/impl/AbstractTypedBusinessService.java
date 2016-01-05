@@ -68,21 +68,21 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    	delete(identifiable);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IDENTIFIABLE load(Long identifier) {
 		IDENTIFIABLE identifiable = find(identifier);
 		load(identifiable);
 		return identifiable;
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(IDENTIFIABLE identifiable) {
 		__load__(identifiable);
 	}
 	
 	protected void __load__(IDENTIFIABLE identifiable) {}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(Collection<IDENTIFIABLE> identifiables) {
 		for(IDENTIFIABLE identifiable : identifiables)
 			load(identifiable);

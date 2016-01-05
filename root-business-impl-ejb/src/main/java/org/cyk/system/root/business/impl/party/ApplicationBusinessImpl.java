@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.party;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,6 +46,8 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
+	public static final Collection<ApplicationBusinessImplListener> LISTENERS = new ArrayList<>();
+	
 	private static Application INSTANCE;
 	private static ApplicationPropertiesProvider PROPERTIES_PROVIDER;
 	private static ShiroConfigurator SHIRO_CONFIGURATOR;
@@ -75,6 +78,9 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		if(findCurrentInstance()==null){
 			logInfo("Installation starts.");
 			try {
+				for(ApplicationBusinessImplListener listener : LISTENERS)
+					listener.installationStarted(installation);
+				
 				installData(installation);
 				installAccounts(installation);
 				installLicense(installation);
@@ -87,6 +93,9 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 				
 				for(AbstractIdentifiable identifiable : installation.getIdentifiables())
 					RootBusinessLayer.getInstance().getGenericBusiness().create(identifiable);
+				
+				for(ApplicationBusinessImplListener listener : LISTENERS)
+					listener.installationEnded(installation);
 				
 				logInfo("Installation done.");
 			} catch (Exception e) {

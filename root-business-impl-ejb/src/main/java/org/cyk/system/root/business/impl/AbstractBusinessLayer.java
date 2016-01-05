@@ -179,11 +179,11 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	
 	@Override
 	public void installApplication(Installation installation) {
-		for(BusinessLayerListener listener : businessLayerListeners)
-			listener.beforeInstall(this, installation);
+		//for(BusinessLayerListener listener : businessLayerListeners)
+		//	listener.beforeInstall(this, installation);
 		applicationBusiness.install(installation);
-		for(BusinessLayerListener listener : businessLayerListeners)
-			listener.afterInstall(this, installation);
+		//for(BusinessLayerListener listener : businessLayerListeners)
+		//	listener.afterInstall(this, installation);
 	}
 	
 	@Override

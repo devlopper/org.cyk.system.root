@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Movement;
@@ -47,6 +48,16 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			movement.setDate(universalTimeCoordinated());
 		movement =  super.create(movement);
 		logTrace(movement.getLogMessage());
+		return movement;
+	}
+	
+	@Override
+	public Movement newInstance(MovementCollection movementCollection, Boolean increment) {
+		Movement movement = new Movement();
+		movement.setCollection(movementCollection);
+		movement.setCode(movementCollection.getCode()+"_"+System.currentTimeMillis()+"_"+RandomStringUtils.randomAlphabetic(10));
+		movement.setName(movementCollection.getName());
+		movement.setAction(increment==null || increment ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction());
 		return movement;
 	}
 	
