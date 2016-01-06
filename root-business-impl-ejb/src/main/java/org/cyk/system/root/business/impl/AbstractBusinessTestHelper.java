@@ -23,6 +23,7 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
+import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
@@ -35,7 +36,14 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachine;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineAlphabet;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalState;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
+import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.generator.RandomDataProvider;
@@ -58,6 +66,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	@Inject protected GenericBusiness genericBusiness;
 	@Inject protected IntervalCollectionBusiness intervalCollectionBusiness;
 	@Inject protected MetricCollectionBusiness metricCollectionBusiness;
+	@Inject protected FiniteStateMachineStateDao finiteStateMachineStateDao;
+	@Inject protected FiniteStateMachineAlphabetDao finiteStateMachineAlphabetDao;
 	
 	public <T extends AbstractIdentifiable> void reportBasedOnTemplateFile(Class<T> aClass,Collection<T> collection,Map<String, String[]> map,String reportIdentifier){
         AbstractReportConfiguration<T, ReportBasedOnTemplateFile<T>> c = reportBusiness.findConfiguration(reportIdentifier);
@@ -215,10 +225,59 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			list.add(createActor(actorClass,code, null));
 		return list;
 	}
+	
+	public void createFiniteStateMachine(String machineCode,String[] alphabetCodes,String[] stateCodes,String initialStateCode,String[] finalStateCodes,String[][] transitions){
+		FiniteStateMachine machine = new FiniteStateMachine();
+		set(machine, machineCode);
+		genericBusiness.create(machine);
+		
+		Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+		for(String code : alphabetCodes){
+			FiniteStateMachineAlphabet alphabet = new FiniteStateMachineAlphabet();
+			set(alphabet,machineCode,code);
+			identifiables.add(alphabet);
+		}
+		genericBusiness.create(identifiables);
+		
+		identifiables = new ArrayList<>();
+		for(String code : stateCodes){
+			FiniteStateMachineState state = new FiniteStateMachineState();
+			set(state,machineCode,code);
+			identifiables.add(state);
+		}
+		genericBusiness.create(identifiables);
+		
+		machine.setInitialState(finiteStateMachineStateDao.read(machineCode+"_"+initialStateCode));
+		machine.setCurrentState(machine.getInitialState());
+		genericBusiness.update(machine);
+		
+		identifiables = new ArrayList<>();
+		for(String code : finalStateCodes){
+			FiniteStateMachineFinalState state = new FiniteStateMachineFinalState();
+			state.setState(finiteStateMachineStateDao.read(machineCode+"_"+code));
+			identifiables.add(state);
+		}
+		genericBusiness.create(identifiables);
+		
+		identifiables = new ArrayList<>();
+		for(String[] transitionInfos : transitions){
+			FiniteStateMachineTransition transition = new FiniteStateMachineTransition();
+			transition.setFromState(finiteStateMachineStateDao.read(machineCode+"_"+transitionInfos[0]));
+			transition.setAlphabet(finiteStateMachineAlphabetDao.read(machineCode+"_"+transitionInfos[1]));
+			transition.setToState(finiteStateMachineStateDao.read(machineCode+"_"+transitionInfos[2]));
+			identifiables.add(transition);
+		}
+		genericBusiness.create(identifiables);
+	}
 
 	/**/
 	
 	/* Setters */
+	
+	private void setEnumeration(AbstractEnumeration enumeration,String code){
+		enumeration.setCode(code);
+		enumeration.setName(code);
+	}
 	
 	public void set(Interval interval,String code,String name,String low,String high){
 		interval.setCode(code);
@@ -257,6 +316,19 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		movement.setAction(movement.getValue() == null ? null : movement.getValue().signum() == 1 ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction());
 	}
 	
+	public void set(FiniteStateMachine machine,String code){
+		setEnumeration(machine, code);
+	}
+	public void set(FiniteStateMachineAlphabet alphabet,String machineCode,String code){
+		setEnumeration(alphabet, machineCode+"_"+code);
+		alphabet.setMachine(getRootBusinessLayer().getFiniteStateMachineBusiness().find(machineCode));
+	}
+	public void set(FiniteStateMachineState state,String machineCode,String code){
+		setEnumeration(state, machineCode+"_"+code);
+		state.setMachine(getRootBusinessLayer().getFiniteStateMachineBusiness().find(machineCode));
+	}
+	
+	
 	/* Businesses */
 	
 	public void createMovement(String movementCollectionCode,String value,String expectedValue,String expectedThrowableMessage){
@@ -275,6 +347,23 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     }
 	public void createMovement(String movementCollectionCode,String value,String expectedBalance){
 		createMovement(movementCollectionCode,value, expectedBalance,null);
+	}
+	
+	public void readFiniteStateMachine(String machineCode,String alphabetCode,String expectedStateCode){
+		alphabetCode = machineCode+"_"+alphabetCode;
+		if(expectedStateCode!=null)
+			expectedStateCode = machineCode+"_"+expectedStateCode;
+		FiniteStateMachine machine = RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().find(machineCode);
+		RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().read(machine, RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness()
+				.find(alphabetCode));
+		if(expectedStateCode!=null)
+			assertEquals("Current state", expectedStateCode, machine.getCurrentState().getCode());
+	}
+	
+	public void readFiniteStateMachine(String machineCode,String[] alphabetCodes,String expectedStateCode){
+		for(int i=0;i<alphabetCodes.length;i++)
+			readFiniteStateMachine(machineCode, alphabetCodes[i], i == alphabetCodes.length-1 ? expectedStateCode : null);
+		
 	}
 	
 	/* Assertions */

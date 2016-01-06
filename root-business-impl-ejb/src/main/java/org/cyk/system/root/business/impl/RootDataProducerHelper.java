@@ -237,6 +237,10 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return movementAction;
 	}
 	
+	/*public void create(FiniteStateMachine machine,String code,String[] alphabetCodes,String[] stateCodes,String[][] transitions){
+		
+	}*/
+	
 	public void createDatabase(){
 		CreateParameters parameters = new CreateParameters();
 		parameters.setDatabaseName(getDatabaseName());
