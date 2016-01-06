@@ -8,4 +8,6 @@ public interface FiniteStateMachineBusiness extends AbstractEnumerationBusiness<
 
 	void read(FiniteStateMachine machine,FiniteStateMachineAlphabet alphabet);
 	
+	FiniteStateMachine clone(FiniteStateMachine machineModel,String machineCode);
+	
 }
