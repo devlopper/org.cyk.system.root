@@ -356,8 +356,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		FiniteStateMachine machine = RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().find(machineCode);
 		RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().read(machine, RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness()
 				.find(alphabetCode));
-		if(expectedStateCode!=null)
-			assertEquals("Current state", expectedStateCode, machine.getCurrentState().getCode());
+		assertFiniteStateMachine(machine, expectedStateCode);
 	}
 	
 	public void readFiniteStateMachine(String machineCode,String[] alphabetCodes,String expectedStateCode){
@@ -366,12 +365,28 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 	}
 	
+	public void findByFromStateByAlphabet(String machineCode,String fromStateCode,String alphabetCode,String expectedStateCode){
+		String message = fromStateCode+" and "+alphabetCode+" > "+expectedStateCode;
+		fromStateCode = machineCode+"_"+fromStateCode;
+		alphabetCode = machineCode+"_"+alphabetCode;
+		expectedStateCode = machineCode+"_"+expectedStateCode;
+		FiniteStateMachineState state = RootBusinessLayer.getInstance().getFiniteStateMachineStateBusiness()
+			.findByFromStateByAlphabet(RootBusinessLayer.getInstance().getFiniteStateMachineStateBusiness().find(fromStateCode), 
+					RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness().find(alphabetCode));
+		assertEquals(message, expectedStateCode, state.getCode());
+	}
+	
 	/* Assertions */
 	
 	private void assertMovementCollection(MovementCollection movementCollection,String expectedValue){
     	movementCollection = (MovementCollection) genericBusiness.use(MovementCollection.class).find(movementCollection.getIdentifier());
     	assertEquals("Value",new BigDecimal(expectedValue), movementCollection.getValue());
     }
+	
+	private void assertFiniteStateMachine(FiniteStateMachine machine,String expectedStateCode){
+		if(expectedStateCode!=null)
+			assertEquals("Current state", expectedStateCode, machine.getCurrentState().getCode());
+	}
 	
 	/* Exceptions */
 	

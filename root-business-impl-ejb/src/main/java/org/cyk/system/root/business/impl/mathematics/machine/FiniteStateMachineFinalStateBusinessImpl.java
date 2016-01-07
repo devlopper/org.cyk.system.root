@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineFinalStateBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalState;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineFinalStateDao;
 
 public class FiniteStateMachineFinalStateBusinessImpl extends AbstractTypedBusinessService<FiniteStateMachineFinalState, FiniteStateMachineFinalStateDao> implements FiniteStateMachineFinalStateBusiness,Serializable {
@@ -16,6 +17,11 @@ public class FiniteStateMachineFinalStateBusinessImpl extends AbstractTypedBusin
 	@Inject
 	public FiniteStateMachineFinalStateBusinessImpl(FiniteStateMachineFinalStateDao dao) {
 		super(dao); 
+	}
+
+	@Override
+	public FiniteStateMachineFinalState findByState(FiniteStateMachineState state) {
+		return dao.readByState(state);
 	}
 	
 	

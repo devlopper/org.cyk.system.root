@@ -1,13 +1,10 @@
 package org.cyk.system.root.service.impl.integration;
 
-import org.cyk.system.root.business.impl.RootBusinessLayer;
-
-
 public class MachineBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
 
-    private String machine1Code = "(a|b)*abb",machine2Code="clone_machine";
+    private String machine1Code = "(a|b)*abb"/*,machine2Code="clone_machine"*/;
     
     @Override
     protected void populate() {
@@ -26,10 +23,14 @@ public class MachineBusinessIT extends AbstractBusinessIT {
 		rootBusinessTestHelper.readFiniteStateMachine(machine1Code, new String[]{"a","a","a","a","a","b","b"}, "s3");
 		rootBusinessTestHelper.readFiniteStateMachine(machine1Code, new String[]{"a","b","a","a","b","a","b","b"}, "s3");
 		
+		rootBusinessTestHelper.findByFromStateByAlphabet(machine1Code, "s0", "a", "s1");
+		
+		/*
 		RootBusinessLayer.getInstance().getFiniteStateMachineBusiness()
 			.clone(RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().find(machine1Code), machine2Code);
 		
 		debug(RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().find(machine2Code).getInitialState());
+		*/
 	}
    
     

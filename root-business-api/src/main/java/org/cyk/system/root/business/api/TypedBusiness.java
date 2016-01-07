@@ -37,4 +37,6 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     
     Collection<IDENTIFIABLE> findByNotClass(Class<?> aClass);
     Long countByNotClass(Class<?> aClass);
+    
+    //TODO clone service must be implemented using reflection and listener
 }

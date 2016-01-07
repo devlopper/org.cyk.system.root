@@ -2,8 +2,6 @@ package org.cyk.system.root.business.impl.mathematics.machine;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -13,22 +11,17 @@ import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachine;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineAlphabet;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalState;
-import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
-import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
-import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineFinalStateDao;
-import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineTransitionDao;
-import org.cyk.utility.common.Constant;
 
 @Stateless
 public class FiniteStateMachineBusinessImpl extends AbstractEnumerationBusinessImpl<FiniteStateMachine, FiniteStateMachineDao> implements FiniteStateMachineBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private FiniteStateMachineAlphabetDao alphabetDao;
-	@Inject private FiniteStateMachineStateDao stateDao;
+	//@Inject private FiniteStateMachineAlphabetDao alphabetDao;
+	//@Inject private FiniteStateMachineStateDao stateDao;
 	@Inject private FiniteStateMachineFinalStateDao finalStateDao;
 	@Inject private FiniteStateMachineTransitionDao transitionDao;
 	
@@ -49,7 +42,7 @@ public class FiniteStateMachineBusinessImpl extends AbstractEnumerationBusinessI
 		logIdentifiable("Read", machine);
 	}
 	
-	@Override 
+	/*@Override 
 	public FiniteStateMachine clone(FiniteStateMachine machineModel, String machineCode) {
 		FiniteStateMachine machine = new FiniteStateMachine();
 		machine.setCode(machineCode);
@@ -83,6 +76,6 @@ public class FiniteStateMachineBusinessImpl extends AbstractEnumerationBusinessI
 		machine.setCurrentState(stateDao.read(identifierMap.get(machineModel.getCurrentState().getIdentifier())));
 		update(machine);
 		return machine;
-	}
+	}*/
 	
 }
