@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.file;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,6 +12,8 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -21,7 +24,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
+import org.cyk.system.root.business.api.file.StreamBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.Mime;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.persistence.api.file.FileDao;
 
@@ -30,6 +35,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	private static final long serialVersionUID = -3799482462496328200L;
 
 	@Inject private MediaBusiness mediaBusiness;
+	@Inject private StreamBusiness streamBusiness;
 	
 	@Inject
 	public FileBusinessImpl(FileDao dao) {
@@ -123,6 +129,14 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public URI findEmbeddedUri(File file) {
 		return mediaBusiness.findEmbeddedUri(file.getUri());
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ByteArrayOutputStream merge(Collection<File> files,Mime mime) {
+		Collection<InputStream> inputStreams = new ArrayList<>();
+		for(File file : files)
+			inputStreams.add(findInputStream(file));
+		return streamBusiness.merge(inputStreams, mime);
 	}
 	
 }

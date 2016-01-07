@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
@@ -178,6 +179,14 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	protected void writeReport(org.cyk.system.root.model.file.File file,String name,String extension){
     	try {
 			write(file.getBytes(), System.getProperty("user.dir")+"/"+reportFolder+"/"+name+"."+extension);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+	
+	protected void writeStream(ByteArrayOutputStream byteArrayOutputStream,String name,String extension){
+    	try {
+			write(byteArrayOutputStream.toByteArray(), System.getProperty("user.dir")+"/"+reportFolder+"/"+name+"."+extension);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
