@@ -33,7 +33,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@Getter @Setter
 	@Id @GeneratedValue // Generation is customizable using mapping file
 	protected Long identifier;
-	
+
 	//private Long index;
 	
 	//TODO any object can have its description or more extended by a collection of additional (external) informations 
