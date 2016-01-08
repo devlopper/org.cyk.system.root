@@ -34,4 +34,10 @@ public class Rank extends AbstractModelElement implements Serializable{
 		return toString();
 	}
 	
+	@Override
+	public String getLogMessage() {
+		return String.format(LOG_FORMAT,sequenceOrder,value,exaequo);
+	}
+	private static final String LOG_FORMAT = Average.class.getSimpleName()+"(S=%s V=%s E=%s)";
+	
 }

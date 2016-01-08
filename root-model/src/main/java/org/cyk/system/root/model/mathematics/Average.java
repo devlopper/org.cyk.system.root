@@ -32,4 +32,10 @@ public class Average extends AbstractModelElement implements Serializable{
 		return value.toString();
 	}
 	
+	@Override
+	public String getLogMessage() {
+		return String.format(LOG_FORMAT,dividend,divisor,value);
+	}
+	private static final String LOG_FORMAT = Average.class.getSimpleName()+"(%s / %s = %s)";
+	
 }

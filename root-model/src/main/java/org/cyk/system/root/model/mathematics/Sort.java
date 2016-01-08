@@ -15,6 +15,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.utility.common.Constant;
 
 @Getter @Setter @Embeddable @NoArgsConstructor @AllArgsConstructor
 public class Sort extends AbstractModelElement implements Serializable {
@@ -36,5 +37,13 @@ public class Sort extends AbstractModelElement implements Serializable {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.SHORT_PREFIX_STYLE);
 	}
+	
+	@Override
+	public String getLogMessage() {
+		return String.format(LOG_FORMAT,average==null?Constant.EMPTY_STRING:average.getLogMessage()
+				,rank==null?Constant.EMPTY_STRING:rank.getLogMessage()
+				,averageInterval==null?Constant.EMPTY_STRING:averageInterval.getCode());
+	}
+	private static final String LOG_FORMAT = Sort.class.getSimpleName()+"(%s %s %s)";
 	
 }

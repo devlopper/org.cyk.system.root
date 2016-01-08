@@ -13,7 +13,6 @@ import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
-import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,13 +37,16 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	//TODO any object can have its description or more extended by a collection of additional (external) informations 
 	
-	@Transient
-	private String __id__;
+	//@Transient private String __id__;
 	
-	private String __identifier__(){
+	/*private String __identifier__(){
 		if(__id__==null)
 			__id__ = getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);
 		return __id__;
+	}*/
+	
+	private String __identifier__(){
+		return getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);
 	}
 	
 	@Override
