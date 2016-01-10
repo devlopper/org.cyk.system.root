@@ -434,6 +434,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		collectionValueMustNotBeOffThanIntervalExtremity(movementCollectionCode,Boolean.TRUE);
     }
 	
+	public void intervalContains(Interval interval,String value,String scale){
+		assertThat("Interval "+interval+" contains "+value
+				,RootBusinessLayer.getInstance().getIntervalBusiness().contains(interval, commonUtils.getBigDecimal(value), scale==null ? 0: new Integer(scale)));
+	}
+	
 	
 	private String getThrowableMessage(String movementCollectionCode,Boolean increment,Integer actionId){
 		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().find(movementCollectionCode);

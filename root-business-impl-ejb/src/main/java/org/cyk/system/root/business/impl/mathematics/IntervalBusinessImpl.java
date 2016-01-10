@@ -11,6 +11,7 @@ import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
+import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 
 public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Interval, IntervalDao,IntervalCollection> implements IntervalBusiness,Serializable {
@@ -31,11 +32,38 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		return null;
 	}  
 	
+	private Boolean isOutOfExtremity(IntervalExtremity intervalExtremity,Boolean low, BigDecimal value, Integer scale) {
+		if(value==null || intervalExtremity.getValue()==null)
+			return false;
+		BigDecimal correctedScale = scale==null?value:value.setScale(scale,RoundingMode.DOWN);//truncates
+		Integer comparison = correctedScale.compareTo(intervalExtremity.getValue());
+		if(Boolean.TRUE.equals(intervalExtremity.getExcluded()))
+			if(Boolean.TRUE.equals(low))
+				return comparison<0;
+			else
+				return comparison>0;
+		else
+			if(Boolean.TRUE.equals(low))
+				return comparison<=0;
+			else
+				return comparison>=0;
+	}
+	
+	@Override
+	public Boolean isLower(Interval interval, BigDecimal value, Integer scale) {
+		return isOutOfExtremity(interval.getLow(), Boolean.TRUE, value, scale);
+	}
+	
+	@Override
+	public Boolean isHigher(Interval interval, BigDecimal value, Integer scale) {
+		return isOutOfExtremity(interval.getHigh(), Boolean.FALSE, value, scale);
+	}
+	
 	@Override
 	public Boolean contains(Interval interval, BigDecimal value,Integer scale) {		
-		BigDecimal low = interval.getLow().getValue(),high = interval.getHigh().getValue();
 		if(value==null)
 			return false;
+		BigDecimal low = interval.getLow().getValue(),high = interval.getHigh().getValue();
 		if(low==null && high==null)
 			return true;//(value==null);
 		//if(value==null)
