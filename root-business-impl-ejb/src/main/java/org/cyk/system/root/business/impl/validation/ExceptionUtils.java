@@ -14,6 +14,7 @@ import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -95,6 +96,34 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
 	}
     public void comparison(Boolean condition,String operand1,ArithmeticOperator operator,BigDecimal operand2){
     	comparison(condition, operand1, operator, numberBusiness.format(operand2));
+    }
+    
+    public void cannotProcessMoreThan(BigDecimal value,String processNameId,BigDecimal limit,String subjectNameId){
+    	if(value==null)
+    		return;
+    	exception(value.compareTo(limit) >= 0 , "exception.cannotprocessmorethan",new Object[]{
+    		RootBusinessLayer.getInstance().getLanguageBusiness().findText(processNameId)
+			,RootBusinessLayer.getInstance().getNumberBusiness().format(limit)
+    		,RootBusinessLayer.getInstance().getLanguageBusiness().findText(subjectNameId)
+			});
+    }
+    public void cannotProcessMoreThan(Long value,String processNameId,BigDecimal limit,String subjectNameId){
+    	if(value==null)
+    		return;
+    	cannotProcessMoreThan(new BigDecimal(value), processNameId, limit, subjectNameId);
+    }
+    public void cannotProcessMoreThan(Long value,String processNameId,BigDecimal limit,Class<? extends AbstractIdentifiable> identifiableClass){
+    	cannotProcessMoreThan(value, processNameId, limit
+    			, RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getUserInterface().getLabelId());
+    }
+    public void cannotProcessMoreThan(Long value,String processNameId,Interval interval,Class<? extends AbstractIdentifiable> identifiableClass){
+    	if(interval==null || interval.getLow()==null || interval.getLow().getValue()==null)
+    		return;
+    	cannotProcessMoreThan(value, processNameId, interval.getHigh().getValue(), identifiableClass);
+    }
+    
+    public void cannotCreateMoreThan(Long value,Interval interval,Class<? extends AbstractIdentifiable> identifiableClass){
+    	cannotProcessMoreThan(value, "crud.create", interval, identifiableClass);
     }
     
 }
