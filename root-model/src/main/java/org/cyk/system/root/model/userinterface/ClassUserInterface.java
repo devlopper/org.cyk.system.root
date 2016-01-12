@@ -14,7 +14,7 @@ public class ClassUserInterface extends AbstractModelElement implements Serializ
 	private static final long serialVersionUID = -2596683791977022898L;
 
 	@Getter @Setter private Class<?> clazz,hierarchyHighestAncestorClass;
-    @Getter @Setter private String labelId,label,iconName,iconExtension;
+	@Getter @Setter private String labelId,label,iconName,iconExtension;
     @Getter @Setter private String consultViewId,listViewId,editViewId,createManyViewId,selectViewId;
 	
 	@Override

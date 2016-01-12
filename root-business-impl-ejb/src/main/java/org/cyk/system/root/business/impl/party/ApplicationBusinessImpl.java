@@ -1,6 +1,8 @@
 package org.cyk.system.root.business.impl.party;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,6 +14,8 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.BusinessLayer;
@@ -168,8 +172,26 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
     public Collection<BusinessEntityInfos> findBusinessEntitiesInfos() {
         if(BUSINESS_ENTITIES_INFOS==null){
         	BUSINESS_ENTITIES_INFOS = new HashSet<>();
-            for(Class<? extends Identifiable<?>> clazz : persistenceManager.findEntities()){
-                BusinessEntityInfos b = new BusinessEntityInfos(clazz, languageBusiness);
+            for(Class<? extends Identifiable<?>> entityClass : persistenceManager.findEntities()){
+                BusinessEntityInfos b = new BusinessEntityInfos(entityClass, languageBusiness);
+                //find all classes having attribute of type class
+                Collection<Class<? extends Annotation>> annotations = new ArrayList<>();
+                annotations.add(ManyToOne.class);
+                for(Class<? extends Identifiable<?>> childClass : persistenceManager.findEntities()){
+                	for(Field field : commonUtils.getAllFields(childClass, annotations)){
+                		if(field.getType().equals(entityClass))
+                			b.getManyToOneClasses().add(childClass);
+                	}
+                }
+                
+                annotations.clear();
+                annotations.add(OneToOne.class);
+                for(Class<? extends Identifiable<?>> childClass : persistenceManager.findEntities()){
+                	for(Field field : commonUtils.getAllFields(childClass, annotations)){
+                		if(field.getType().equals(entityClass))
+                			b.getOneToOneClasses().add(childClass);
+                	}
+                }
                 
                 BUSINESS_ENTITIES_INFOS.add(b);
             }

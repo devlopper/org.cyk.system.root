@@ -2,6 +2,8 @@ package org.cyk.system.root.business.api;
 
 import java.beans.Introspector;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,6 +24,7 @@ public class BusinessEntityInfos implements Serializable {
 	private static final long serialVersionUID = -8725167267186070601L;
 	
 	private Class<? extends Identifiable<?>> clazz;
+	@Setter private Collection<Class<? extends Identifiable<?>>> manyToOneClasses,oneToOneClasses;
 	private ModelBean modelBeanAnnotation;
 	private Boolean male;
     
@@ -43,6 +46,18 @@ public class BusinessEntityInfos implements Serializable {
         }
     }
 
+    public Collection<Class<? extends Identifiable<?>>> getManyToOneClasses(){
+    	if(manyToOneClasses==null)
+    		manyToOneClasses = new ArrayList<>();
+    	return manyToOneClasses;
+    }
+    
+    public Collection<Class<? extends Identifiable<?>>> getOneToOneClasses(){
+    	if(oneToOneClasses==null)
+    		oneToOneClasses = new ArrayList<>();
+    	return oneToOneClasses;
+    }
+    
     public CrudStrategy getCrudStrategy() {
         if(modelBeanAnnotation==null)
             return null;
