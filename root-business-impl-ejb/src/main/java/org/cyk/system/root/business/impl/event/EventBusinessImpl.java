@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl.event;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.ejb.Stateless;
@@ -95,13 +94,13 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     	return super.update(event);
     }
     */
-	
-    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
+    
+    /*@Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public Event load(Long identifier) {
         Event event = super.load(identifier);
         contactCollectionBusiness.load(event.getContactCollection());
         return event;
-    }
+    }*/
     
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<Event> findByCriteria(EventSearchCriteria criteria) {
@@ -124,9 +123,9 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 		return dao.countByCriteria(criteria);
 	}
 	
-	protected void __load__(Event event) {
+	/*protected void __load__(Event event) {
 		event.setEventParticipations(eventParticipationDao.readByEvents(Arrays.asList(event)));
-	}
+	}*/
 
 	@Override
 	public Collection<Event> findPasts(Collection<Party> parties) {

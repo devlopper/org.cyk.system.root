@@ -24,6 +24,7 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.event.EventMissedBusiness;
 import org.cyk.system.root.business.api.event.EventMissedReasonBusiness;
+import org.cyk.system.root.business.api.event.EventParticipationBusiness;
 import org.cyk.system.root.business.api.event.EventTypeBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.TagBusiness;
@@ -161,6 +162,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject private CountryBusiness countryBusiness;
 	@Inject private TagBusiness tagBusiness;
     @Inject private EventBusiness eventBusiness;
+    @Inject private EventParticipationBusiness eventParticipationBusiness;
     @Inject private EventMissedBusiness eventMissedBusiness;
     @Inject private EventMissedReasonBusiness eventMissedReasonBusiness;
     @Inject private PersonBusiness personBusiness;
