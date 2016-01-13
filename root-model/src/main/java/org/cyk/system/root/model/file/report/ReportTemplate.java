@@ -2,6 +2,7 @@ package org.cyk.system.root.model.file.report;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -19,6 +20,7 @@ public class ReportTemplate extends AbstractEnumeration implements Serializable 
 
 	@ManyToOne private File template;
 	@ManyToOne private File backgroundImage;
+	@Column(nullable=false) private Boolean usable = Boolean.TRUE;
 	
 	public ReportTemplate(String code, File template,File backgroundImage) {
 		super(code, code, null, null);
