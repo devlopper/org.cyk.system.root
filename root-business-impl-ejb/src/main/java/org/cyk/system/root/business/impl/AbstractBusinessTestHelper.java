@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
@@ -19,6 +21,7 @@ import lombok.Setter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
@@ -48,6 +51,7 @@ import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachin
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.test.ExpectedValues;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
@@ -121,6 +125,26 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	/**/
+	
+	protected void doAssertions(Object object,ExpectedValues expectedValues){
+		for(Entry<ExpectedValues.Field, String> entry : expectedValues.getMap().entrySet()){
+			String message = entry.getKey().toString();
+			Field field = FieldUtils.getField(entry.getKey().getClazz(), entry.getKey().getName(), Boolean.TRUE);
+			if(field==null){
+				
+			}else{
+				if(BigDecimal.class.equals(field.getType()))
+					try {
+						assertBigDecimalEquals(message, entry.getValue(), (BigDecimal)FieldUtils.readField(field, object, Boolean.TRUE));
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				else
+					assertEquals(field.getType()+" not yet handled", Boolean.TRUE, Boolean.FALSE);
+			}
+		}
+		//listener.assertEquals(message, expected, actual);	
+	}
 	
 	protected void assertEquals(String message,Object expected,Object actual){
 		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
