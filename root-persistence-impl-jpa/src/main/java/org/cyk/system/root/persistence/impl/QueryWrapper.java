@@ -53,9 +53,12 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 		return this;
 	}
 	
-	public QueryWrapper<T> parameterIdentifiers(Collection<? extends AbstractIdentifiable> identifiables){
-		parameter(QueryStringBuilder.VAR_IDENTIFIERS, Utils.ids(identifiables));
+	public QueryWrapper<T> parameterIdentifiers(String name,Collection<? extends AbstractIdentifiable> identifiables){
+		parameter(name, Utils.ids(identifiables));
 		return this;
+	}
+	public QueryWrapper<T> parameterIdentifiers(Collection<? extends AbstractIdentifiable> identifiables){
+		return parameterIdentifiers(QueryStringBuilder.VAR_IDENTIFIERS, identifiables);
 	}
 	
 	public QueryWrapper<T> parameterClasses(Collection<Class<?>> classes){

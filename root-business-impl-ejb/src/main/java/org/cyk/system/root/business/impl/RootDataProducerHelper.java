@@ -34,7 +34,14 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachine;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineAlphabet;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalState;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
 import org.cyk.system.root.persistence.api.GenericDao;
+import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
+import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.BeanAdapter;
@@ -53,6 +60,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	@Inject private IntervalCollectionBusiness intervalCollectionBusiness;
 	@Inject private FileBusiness fileBusiness;
 	@Inject private GenericDao genericDao;
+	@Inject private FiniteStateMachineStateDao finiteStateMachineStateDao;
+	@Inject private FiniteStateMachineAlphabetDao finiteStateMachineAlphabetDao;
 	@Inject private DatabaseUtils databaseUtils;
 	
 	@Getter private Package basePackage;
@@ -237,9 +246,53 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return movementAction;
 	}
 	
-	/*public void create(FiniteStateMachine machine,String code,String[] alphabetCodes,String[] stateCodes,String[][] transitions){
+	public FiniteStateMachine createFiniteStateMachine(String machineCode,String[] alphabetCodes,String[] stateCodes,String initialStateCode,String[] finalStateCodes,String[][] transitions){
+		FiniteStateMachine machine = createEnumeration(FiniteStateMachine.class, machineCode);
 		
-	}*/
+		Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+		for(String code : alphabetCodes){
+			FiniteStateMachineAlphabet alphabet = new FiniteStateMachineAlphabet();
+			alphabet.setCode(code);
+			alphabet.setName(code);
+			alphabet.setMachine(machine);
+			identifiables.add(alphabet);
+		}
+		genericBusiness.create(identifiables);
+		
+		identifiables = new ArrayList<>();
+		for(String code : stateCodes){
+			FiniteStateMachineState state = new FiniteStateMachineState();
+			state.setCode(code);
+			state.setName(code);
+			state.setMachine(machine);
+			identifiables.add(state);
+		}
+		genericBusiness.create(identifiables);
+		
+		machine.setInitialState(finiteStateMachineStateDao.read(initialStateCode));
+		machine.setCurrentState(machine.getInitialState());
+		genericBusiness.update(machine);
+		
+		identifiables = new ArrayList<>();
+		for(String code : finalStateCodes){
+			FiniteStateMachineFinalState state = new FiniteStateMachineFinalState();
+			state.setState(finiteStateMachineStateDao.read(code));
+			identifiables.add(state);
+		}
+		genericBusiness.create(identifiables);
+		
+		identifiables = new ArrayList<>();
+		for(String[] transitionInfos : transitions){
+			FiniteStateMachineTransition transition = new FiniteStateMachineTransition();
+			transition.setFromState(finiteStateMachineStateDao.read(transitionInfos[0]));
+			transition.setAlphabet(finiteStateMachineAlphabetDao.read(transitionInfos[1]));
+			transition.setToState(finiteStateMachineStateDao.read(transitionInfos[2]));
+			identifiables.add(transition);
+		}
+		genericBusiness.create(identifiables);
+		
+		return machine;
+	}
 	
 	public void createDatabase(){
 		CreateParameters parameters = new CreateParameters();

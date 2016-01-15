@@ -1,5 +1,7 @@
 package org.cyk.system.root.service.impl.integration;
 
+import org.cyk.system.root.business.impl.RootDataProducerHelper;
+
 public class MachineBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
@@ -9,7 +11,14 @@ public class MachineBusinessIT extends AbstractBusinessIT {
     @Override
     protected void populate() {
     	super.populate();
-    	rootBusinessTestHelper.createFiniteStateMachine(machine1Code, new String[]{"a","b"}, new String[]{"s0","s1","s2","s3"}, "s0", new String[]{"s3"}, new String[][]{
+    	/*rootBusinessTestHelper.createFiniteStateMachine(machine1Code, new String[]{"a","b"}, new String[]{"s0","s1","s2","s3"}, "s0", new String[]{"s3"}, new String[][]{
+    			{"s0","a","s1"},{"s0","b","s0"}
+    			,{"s1","a","s1"},{"s1","b","s2"}
+    			,{"s2","a","s1"},{"s2","b","s3"}
+    			,{"s3","a","s1"},{"s3","b","s0"}
+    	});*/
+    	
+    	RootDataProducerHelper.getInstance().createFiniteStateMachine(machine1Code, new String[]{"a","b"}, new String[]{"s0","s1","s2","s3"}, "s0", new String[]{"s3"}, new String[][]{
     			{"s0","a","s1"},{"s0","b","s0"}
     			,{"s1","a","s1"},{"s1","b","s2"}
     			,{"s2","a","s1"},{"s2","b","s3"}

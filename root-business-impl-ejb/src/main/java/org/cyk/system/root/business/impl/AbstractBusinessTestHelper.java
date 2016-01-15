@@ -129,7 +129,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	protected void doAssertions(Object object,ExpectedValues expectedValues){
 		for(Entry<ExpectedValues.Field, String> entry : expectedValues.getMap().entrySet()){
 			String message = entry.getKey().toString();
-			Field field = FieldUtils.getField(entry.getKey().getClazz(), entry.getKey().getName(), Boolean.TRUE);
+			Field field = FieldUtils.getField(object.getClass(), entry.getKey().getName(), Boolean.TRUE);
 			if(field==null){
 				
 			}else{
@@ -383,9 +383,6 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	public void readFiniteStateMachine(String machineCode,String alphabetCode,String expectedStateCode){
-		alphabetCode = machineCode+"_"+alphabetCode;
-		if(expectedStateCode!=null)
-			expectedStateCode = machineCode+"_"+expectedStateCode;
 		FiniteStateMachine machine = RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().find(machineCode);
 		RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().read(machine, RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness()
 				.find(alphabetCode));
@@ -400,9 +397,6 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	public void findByFromStateByAlphabet(String machineCode,String fromStateCode,String alphabetCode,String expectedStateCode){
 		String message = fromStateCode+" and "+alphabetCode+" > "+expectedStateCode;
-		fromStateCode = machineCode+"_"+fromStateCode;
-		alphabetCode = machineCode+"_"+alphabetCode;
-		expectedStateCode = machineCode+"_"+expectedStateCode;
 		FiniteStateMachineState state = RootBusinessLayer.getInstance().getFiniteStateMachineStateBusiness()
 			.findByFromStateByAlphabet(RootBusinessLayer.getInstance().getFiniteStateMachineStateBusiness().find(fromStateCode), 
 					RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness().find(alphabetCode));
