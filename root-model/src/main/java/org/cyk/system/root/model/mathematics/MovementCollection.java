@@ -24,8 +24,7 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 	
-	@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull
-	private BigDecimal value = BigDecimal.ZERO;
+	@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value = BigDecimal.ZERO;
  
 	@OneToOne @JoinColumn(name="theinterval") @NotNull private Interval interval;
 	
