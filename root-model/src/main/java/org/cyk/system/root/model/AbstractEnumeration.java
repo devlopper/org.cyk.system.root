@@ -91,5 +91,9 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
     	return name;
     }
 
+    /**/
+    
+    public static final String FIELD_CODE = "code";
+    public static final String FIELD_NAME = "name";
 	
 }

@@ -128,19 +128,25 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	protected void doAssertions(Object object,ExpectedValues expectedValues){
 		for(Entry<ExpectedValues.Field, String> entry : expectedValues.getMap().entrySet()){
+			if(!object.getClass().equals(entry.getKey().getClazz()))
+				continue;
 			String message = entry.getKey().toString();
 			Field field = FieldUtils.getField(object.getClass(), entry.getKey().getName(), Boolean.TRUE);
 			if(field==null){
 				
 			}else{
-				if(BigDecimal.class.equals(field.getType()))
-					try {
-						assertBigDecimalEquals(message, entry.getValue(), (BigDecimal)FieldUtils.readField(field, object, Boolean.TRUE));
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					}
-				else
-					assertEquals(field.getType()+" not yet handled", Boolean.TRUE, Boolean.FALSE);
+				message = field.getDeclaringClass().getSimpleName()+"."+field.getName();
+				try {
+					Object value = FieldUtils.readField(field, object, Boolean.TRUE);
+					logTrace("Assert "+field.getType().getSimpleName()+" equals between {} and {}", entry.getValue(),value);
+					//System.out.println("Assert "+field.getType().getSimpleName()+" equals between "+entry.getValue()+" and "+value+"");
+					if(BigDecimal.class.equals(field.getType()))
+						assertBigDecimalEquals(message, entry.getValue(), (BigDecimal)value);	
+					else
+						assertEquals(field.getType()+" not yet handled", Boolean.TRUE, Boolean.FALSE);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		//listener.assertEquals(message, expected, actual);	
@@ -415,6 +421,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			assertEquals("Current state", expectedStateCode, machine.getCurrentState().getCode());
 	}
 	
+	
+	
 	/* Exceptions */
 	
 	private void valueMustNotBeOffThanActionIntervalExtremity(String movementCollectionCode,Boolean incrementAction,Boolean lowExtemity){
@@ -483,14 +491,16 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		return v == null ? null : v.signum() == 0 ? null : v.signum() == 1;
 	}
 	
-	protected Date getDate(String date){
-		//RootBusinessLayer.getInstance().getTimeBusiness().find
+	protected Date getDate(String date,Boolean nowIfNull){
 		try {
-			return date==null ? new Date() : DateUtils.parseDate(date, "dd/MM/yyyy HH:mm");
+			return date==null ? Boolean.TRUE.equals(nowIfNull) ? new Date() : null : DateUtils.parseDate(date, "dd/MM/yyyy HH:mm");
 		} catch (ParseException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	protected Date getDate(String date){
+		return getDate(date, Boolean.TRUE);
 	}
 	
 	/**/
