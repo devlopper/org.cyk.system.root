@@ -29,4 +29,10 @@ public class MovementAction extends AbstractEnumeration implements Serializable 
 	public static final String FIELD_MINIMUM_VALUE = "minimumValue";
 	public static final String FIELD_MAXIMUM_VALUE = "maximumValue";
 
+	@Override
+	public String getLogMessage() {
+		return String.format(LOG_FORMAT, code,interval.getLogMessage());
+	}
+	
+	public static final String LOG_FORMAT = MovementAction.class.getSimpleName()+"(%s %s)";
 }

@@ -50,6 +50,14 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	public static final String COLUMN_HIGH_VALUE = FIELD_HIGH+"_"+IntervalExtremity.FIELD_VALUE;
 	public static final String COLUMN_HIGH_EXCLUDED = FIELD_HIGH+"_"+IntervalExtremity.FIELD_EXCLUDED;
 	
+	@Override
+	public String getLogMessage() {
+		return String.format(LOG_FORMAT, Boolean.TRUE.equals(low.getExcluded()) ? "]":"[",low.getValue()==null ? "<-" : low.getValue()
+				,high.getValue()==null ? "->" : high.getValue(),Boolean.TRUE.equals(high.getExcluded()) ? "[":"]");
+	}
+	
+	public static final String LOG_FORMAT = Interval.class.getSimpleName()+"(%s%s , %s%s)";
+	
 	/*
 	public Interval(IntervalManager manager) {
 		this.manager = manager;

@@ -325,9 +325,9 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		interval.getHigh().setValue(commonUtils.getBigDecimal(high));
 	}
 	
-	public void set(MovementCollection movementCollection,String code,String value,String low,String high,String incrementActionName,String decrementActionName){
+	public void set(MovementCollection movementCollection,String code,String name,String value,String low,String high,String incrementActionName,String decrementActionName){
 		movementCollection.setCode(code);
-		movementCollection.setName(code);
+		movementCollection.setName(name);
 		movementCollection.setValue(value ==null ? null : new BigDecimal(value));
 		movementCollection.setInterval(new Interval());
 		set(movementCollection.getInterval(),code+"int", code+"intname", low,high);
@@ -479,7 +479,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return String.format("%s doit être inférieur à %",action.getName(),action.getInterval().getHigh().getValue());
 		
 		if(actionId==3)
-			return String.format("%s doit être entre %s et %s",action.getName()
+			return String.format("%s doit être entre %s et %s",/*action.getName()*/ movementCollection.getName()
 				,getRootBusinessLayer().getNumberBusiness().format(movementCollection.getInterval().getLow().getValue())
 				,getRootBusinessLayer().getNumberBusiness().format(movementCollection.getInterval().getHigh().getValue()));
 		

@@ -31,6 +31,10 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	@OneToOne @NotNull private MovementAction incrementAction;
 	
 	@OneToOne @NotNull private MovementAction decrementAction;
+	
+	//TODO to be model using a class which can be called MovementCollectionAlert or something like that. really i do not know so to think about
+	//@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal minimalQuantityAlert = BigDecimal.ZERO;
+	//@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal minimalQuantityBlock = BigDecimal.ZERO;
 
 	public MovementCollection(String code, BigDecimal value,Interval interval) {
 		super(code, code, null, null);
@@ -38,4 +42,12 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 		this.interval = interval;
 	}
 	
+	@Override
+	public String getLogMessage() {
+		return String.format(LOG_FORMAT, value,interval.getLogMessage());
+	}
+	
+	public static final String LOG_FORMAT = MovementCollection.class.getSimpleName()+"(VALUE=%s %s)";
+	
+	public static final String FIELD_VALUE = "value";
 }

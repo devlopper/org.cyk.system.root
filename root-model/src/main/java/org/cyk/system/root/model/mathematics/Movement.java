@@ -33,8 +33,10 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	@Override
 	public String getLogMessage() {
-		return date+" | "+value+" | "+collection.getCode();
+		return String.format(LOG_FORMAT, date,action.getLogMessage(),value,collection.getLogMessage());
 	}
+	
+	public static final String LOG_FORMAT = Movement.class.getSimpleName()+"(DATE=%s %s VALUE=%s %s)";
 	
 	/**/
 	

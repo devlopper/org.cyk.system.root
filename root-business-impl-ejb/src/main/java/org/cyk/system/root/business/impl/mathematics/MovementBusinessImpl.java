@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -39,19 +41,20 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		Boolean positive = increment.signum() == 0 ? null : increment.signum() == 1 ;
 		BigDecimal sign = new BigDecimal((Boolean.TRUE.equals(positive) ? Constant.EMPTY_STRING:"-")+"1");
 		exceptionUtils().comparison(positive==null || increment.multiply(sign).signum() <= 0, movement.getAction().getName(), ArithmeticOperator.GT, BigDecimal.ZERO);
+		logTrace("Action is {}. current value {} will be incremented by {} ", movement.getAction().getName(),current,increment);
 		current = current.add(increment);
-		exceptionUtils().comparisonBetween(current,movement.getCollection().getInterval(), movement.getAction().getName());
+		exceptionUtils().comparisonBetween(current,movement.getCollection().getInterval(), movement.getCollection().getName());
 		
 		movement.getCollection().setValue(current);
 		movementCollectionDao.update(movement.getCollection());
 		if(movement.getDate()==null)
 			movement.setDate(universalTimeCoordinated());
 		movement =  super.create(movement);
-		logTrace(movement.getLogMessage());
+		logIdentifiable("Created", movement);
 		return movement;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Movement newInstance(MovementCollection movementCollection, Boolean increment) {
 		Movement movement = new Movement();
 		movement.setCollection(movementCollection);

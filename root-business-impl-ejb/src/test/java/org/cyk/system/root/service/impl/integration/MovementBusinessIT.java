@@ -13,11 +13,11 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     protected void populate() {
     	super.populate();
     	MovementCollection  movementCollection = new MovementCollection();
-    	rootBusinessTestHelper.set(movementCollection, movementUnlimitedIdentifier,"0", null, null,"Entrée","Sortie");
+    	rootBusinessTestHelper.set(movementCollection, movementUnlimitedIdentifier,"Le stock","0", null, null,"Entrée","Sortie");
     	create(movementCollection);
     	
     	movementCollection = new MovementCollection();
-    	rootBusinessTestHelper.set(movementCollection, movementLimitedIdentifier, "0","0", "1000000","Dépot","Retrait");
+    	rootBusinessTestHelper.set(movementCollection, movementLimitedIdentifier,"Montant de caisse", "0","0", "1000000","Dépot","Retrait");
     	create(movementCollection);
     	
     }
