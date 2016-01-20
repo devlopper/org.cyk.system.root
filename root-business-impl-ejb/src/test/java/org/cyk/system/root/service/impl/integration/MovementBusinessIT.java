@@ -17,17 +17,19 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	create(movementCollection);
     	
     	movementCollection = new MovementCollection();
-    	rootBusinessTestHelper.set(movementCollection, movementLimitedIdentifier,"Montant de caisse", "0","0", "1000000","Dépot","Retrait");
+    	rootBusinessTestHelper.set(movementCollection, movementLimitedIdentifier,"Montant de caisse", "0","0", "100","Dépot","Retrait");
     	create(movementCollection);
     	
     }
     
     @Override
     protected void businesses() {
-    	rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "100000");
-    	rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "200000");
-    	rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "300000");
-    	rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "-80000", "220000");
+    	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "100000");
+    	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "200000");
+    	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "300000");
+    	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "-80000", "220000");
+    	
+    	rootBusinessTestHelper.createMovement(movementLimitedIdentifier, "99", "99");
     }
     
     /* Exceptions */

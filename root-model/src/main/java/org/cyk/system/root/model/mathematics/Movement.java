@@ -27,7 +27,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	@Temporal(TemporalType.TIMESTAMP) @Column(name="mdate",nullable=false) @NotNull private Date date;
 	
-	@Column(name="mvalue",precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
+	@Column(name="mvalue",precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
 	
 	/**/
 	

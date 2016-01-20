@@ -384,8 +384,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     		assertMovementCollection(movement.getCollection(), expectedValue);
     	}
     }
-	public void createMovement(String movementCollectionCode,String value,String expectedBalance){
-		createMovement(movementCollectionCode,value, expectedBalance,null);
+	public void createMovement(String movementCollectionCode,String value,String expectedValue){
+		createMovement(movementCollectionCode,value, expectedValue,null);
 	}
 	
 	public void readFiniteStateMachine(String machineCode,String alphabetCode,String expectedStateCode){
@@ -448,7 +448,9 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	private void collectionValueMustNotBeOffThanIntervalExtremity(String movementCollectionCode,Boolean incrementAction){
 		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().find(movementCollectionCode);
-		BigDecimal value = Boolean.TRUE.equals(incrementAction) ? movementCollection.getInterval().getHigh().getValue() : BigDecimal.ONE.negate();
+		BigDecimal value = Boolean.TRUE.equals(incrementAction) 
+				? getRootBusinessLayer().getIntervalBusiness().findLowestGreatestValue(movementCollection.getInterval()).add(BigDecimal.ONE) 
+				: getRootBusinessLayer().getIntervalBusiness().findGreatestLowestValue(movementCollection.getInterval()).subtract(BigDecimal.ONE);
 		if(value==null)
 			return;
 		createMovement(movementCollectionCode,value.toString(), null,getThrowableMessage(movementCollectionCode, isIncrementAction(value.toString()),3));

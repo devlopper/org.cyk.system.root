@@ -39,4 +39,32 @@ public class IntervalBusinessUT extends AbstractUnitTest {
 		Interval interval = new Interval(null, null, null, new BigDecimal("1"), new BigDecimal("5"));
 		Assert.assertTrue(intervalBusiness.isHigher(interval, new BigDecimal("6"), 0));
 	}
+	
+	@Test
+	public void findGreatestLowestValueExcluded() {
+		Interval interval = new Interval(null, null, null, new BigDecimal("1"), new BigDecimal("5"));
+		interval.getLow().setExcluded(Boolean.TRUE);
+		Assert.assertEquals(new BigDecimal("0"),intervalBusiness.findGreatestLowestValue(interval));
+	}
+	
+	@Test
+	public void findGreatestLowestValueIncluded() {
+		Interval interval = new Interval(null, null, null, new BigDecimal("1"), new BigDecimal("5"));
+		interval.getLow().setExcluded(Boolean.FALSE);
+		Assert.assertEquals(new BigDecimal("1"),intervalBusiness.findGreatestLowestValue(interval));
+	}
+	
+	@Test
+	public void findLowestGreatestValueExcluded() {
+		Interval interval = new Interval(null, null, null, new BigDecimal("1"), new BigDecimal("5"));
+		interval.getHigh().setExcluded(Boolean.TRUE);
+		Assert.assertEquals(new BigDecimal("6"),intervalBusiness.findLowestGreatestValue(interval));
+	}
+	
+	@Test
+	public void findLowestGreatestValueIncluded() {
+		Interval interval = new Interval(null, null, null, new BigDecimal("1"), new BigDecimal("5"));
+		interval.getHigh().setExcluded(Boolean.FALSE);
+		Assert.assertEquals(new BigDecimal("5"),intervalBusiness.findLowestGreatestValue(interval));
+	}
 }

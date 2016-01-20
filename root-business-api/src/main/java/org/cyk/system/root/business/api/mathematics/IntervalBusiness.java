@@ -14,4 +14,6 @@ public interface IntervalBusiness extends AbstractCollectionItemBusiness<Interva
     Boolean isHigher(Interval interval, BigDecimal value,Integer scale);
     Boolean contains(Interval interval, BigDecimal value,Integer scale);
     
+    BigDecimal findLowestGreatestValue(Interval interval);
+    BigDecimal findGreatestLowestValue(Interval interval);
 }

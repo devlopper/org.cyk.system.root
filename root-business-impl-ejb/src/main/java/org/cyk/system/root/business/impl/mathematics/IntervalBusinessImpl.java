@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
@@ -23,7 +25,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		super(dao); 
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Interval findByCollectionByValue(IntervalCollection collection, BigDecimal value,Integer scale) {
 		Collection<Interval> intervals = dao.readByCollection(collection);
 		for(Interval interval : intervals)
@@ -49,17 +51,17 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 				return comparison>=0;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Boolean isLower(Interval interval, BigDecimal value, Integer scale) {
 		return isOutOfExtremity(interval.getLow(), Boolean.TRUE, value, scale);
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Boolean isHigher(Interval interval, BigDecimal value, Integer scale) {
 		return isOutOfExtremity(interval.getHigh(), Boolean.FALSE, value, scale);
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Boolean contains(Interval interval, BigDecimal value,Integer scale) {		
 		if(value==null)
 			return false;
@@ -99,10 +101,20 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	}
 
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<Interval> findByCollection(IntervalCollection collection) {
 		return dao.readByCollection(collection);
 	}  
 
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public BigDecimal findLowestGreatestValue(Interval interval) {
+    	return interval.getHigh().getValue()==null ? null 
+    			: Boolean.FALSE.equals(interval.getHigh().getExcluded()) ? interval.getHigh().getValue() : interval.getHigh().getValue().add(BigDecimal.ONE);
+    }
     
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public BigDecimal findGreatestLowestValue(Interval interval) {
+    	return interval.getLow().getValue()==null ? null 
+    			: Boolean.FALSE.equals(interval.getLow().getExcluded()) ? interval.getLow().getValue() : interval.getLow().getValue().subtract(BigDecimal.ONE);
+    }
 }

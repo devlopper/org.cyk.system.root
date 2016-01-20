@@ -2,6 +2,8 @@ package org.cyk.system.root.model.search;
 
 import java.io.Serializable;
 
+import org.cyk.utility.common.Constant;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,8 +35,9 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 	@Override
 	public String toString() {
 		Object o = getPreparedValue();
-		if(o!=null)
+		if(o==null)
+			return Constant.EMPTY_STRING;
+		else
 			return o.toString();
-		return super.toString();
 	}
 }

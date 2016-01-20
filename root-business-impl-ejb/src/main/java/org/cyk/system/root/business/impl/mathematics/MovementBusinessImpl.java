@@ -41,7 +41,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		Boolean positive = increment.signum() == 0 ? null : increment.signum() == 1 ;
 		BigDecimal sign = new BigDecimal((Boolean.TRUE.equals(positive) ? Constant.EMPTY_STRING:"-")+"1");
 		exceptionUtils().comparison(positive==null || increment.multiply(sign).signum() <= 0, movement.getAction().getName(), ArithmeticOperator.GT, BigDecimal.ZERO);
-		logTrace("Action is {}. current value {} will be incremented by {} ", movement.getAction().getName(),current,increment);
+		logTrace("Current value = {}. {} = {} ", current,movement.getAction().getName(),increment);
 		current = current.add(increment);
 		exceptionUtils().comparisonBetween(current,movement.getCollection().getInterval(), movement.getCollection().getName());
 		
