@@ -54,8 +54,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		return movement;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Movement newInstance(MovementCollection movementCollection, Boolean increment) {
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Movement instanciate(MovementCollection movementCollection, Boolean increment) {
 		Movement movement = new Movement();
 		movement.setCollection(movementCollection);
 		movement.setCode(movementCollection.getCode()+"_"+System.currentTimeMillis()+"_"+RandomStringUtils.randomAlphabetic(10));

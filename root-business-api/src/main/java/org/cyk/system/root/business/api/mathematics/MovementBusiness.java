@@ -6,6 +6,6 @@ import org.cyk.system.root.model.mathematics.MovementCollection;
 
 public interface MovementBusiness extends AbstractCollectionItemBusiness<Movement,MovementCollection> {
 
-	Movement newInstance(MovementCollection movementCollection, Boolean increment);
+	Movement instanciate(MovementCollection movementCollection, Boolean increment);
 	
 }
