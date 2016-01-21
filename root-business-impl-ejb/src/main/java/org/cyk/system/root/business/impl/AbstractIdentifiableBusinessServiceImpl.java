@@ -152,7 +152,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	protected void logInstanceCreated(IDENTIFIABLE identifiable){
-		logDebug("Instance of {} created. {}", identifiable.getClass().getSimpleName(),identifiable.getLogMessage());
+		logDebug("Instance created. {}", identifiable.getClass().getSimpleName(),identifiable.getLogMessage());
 	}
 	 
 	protected void logIdentifiable(String message,AbstractIdentifiable identifiable){
