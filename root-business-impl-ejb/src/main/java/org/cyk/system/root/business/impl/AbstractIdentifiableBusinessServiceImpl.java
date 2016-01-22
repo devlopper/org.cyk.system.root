@@ -135,6 +135,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	/**
 	 * Utilities methods
 	 */
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public IDENTIFIABLE instanciate(){
+		return newInstance(getClazz());
+	}
 	
 	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
 		getPersistenceService().getDataReadConfig().set(searchCriteria.getReadConfig());
@@ -152,7 +156,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	protected void logInstanceCreated(IDENTIFIABLE identifiable){
-		logDebug("Instance created. {}", identifiable.getClass().getSimpleName(),identifiable.getLogMessage());
+		logDebug("Instance created. {}", identifiable.getLogMessage());
 	}
 	 
 	protected void logIdentifiable(String message,AbstractIdentifiable identifiable){

@@ -44,10 +44,10 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	
 	@Override
 	public String getLogMessage() {
-		return String.format(LOG_FORMAT, value,interval.getLogMessage());
+		return String.format(LOG_FORMAT, code,value,interval.getLogMessage());
 	}
 	
-	public static final String LOG_FORMAT = MovementCollection.class.getSimpleName()+"(VALUE=%s %s)";
+	public static final String LOG_FORMAT = MovementCollection.class.getSimpleName()+"(C=%s V=%s %s)";
 	
 	public static final String FIELD_VALUE = "value";
 }

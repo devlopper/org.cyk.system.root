@@ -313,7 +313,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	/* Setters */
 	
-	private void setEnumeration(AbstractEnumeration enumeration,String code){
+	protected void setEnumeration(AbstractEnumeration enumeration,String code){
 		enumeration.setCode(code);
 		enumeration.setName(code);
 	}
