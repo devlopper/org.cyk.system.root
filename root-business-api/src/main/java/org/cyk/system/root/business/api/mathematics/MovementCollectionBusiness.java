@@ -5,5 +5,7 @@ import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 
 public interface MovementCollectionBusiness extends AbstractCollectionBusiness<MovementCollection,Movement> {
-    
+
+	MovementCollection instanciate(String code,String incrementActionName,String decrementActionName);
+	
 }

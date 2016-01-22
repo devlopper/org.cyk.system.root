@@ -1,8 +1,11 @@
 package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
@@ -12,6 +15,7 @@ import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
+import org.cyk.utility.common.Constant;
 
 @Stateless
 public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao> implements MovementCollectionBusiness,Serializable {
@@ -28,6 +32,17 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Override
 	protected MovementDao getItemDao() {
 		return movementDao;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public MovementCollection instanciate(String code,String incrementActionName,String decrementActionName) {
+		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, RootBusinessLayer.getInstance().getIntervalBusiness()
+				.instanciate(null, code, "0", null));
+		movementCollection.setIncrementAction(RootBusinessLayer.getInstance().getMovementActionBusiness()
+				.instanciate(code+Constant.CHARACTER_UNDESCORE+computeCode(incrementActionName), incrementActionName));
+		movementCollection.setDecrementAction(RootBusinessLayer.getInstance().getMovementActionBusiness()
+				.instanciate(code+Constant.CHARACTER_UNDESCORE+computeCode(decrementActionName), decrementActionName));
+		return movementCollection;
 	}
 	
 	@Override
