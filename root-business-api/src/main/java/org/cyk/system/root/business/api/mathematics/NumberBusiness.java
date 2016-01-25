@@ -12,6 +12,7 @@ public interface NumberBusiness {
 	BigDecimal incrementBy(BigDecimal value,BigDecimal increment);
 	BigDecimal incrementByPercentage(BigDecimal value,BigDecimal percent);
 	
+	BigDecimal parseBigDecimal(String value);
 	
 	BigDecimal _100 = new BigDecimal("100");
 }

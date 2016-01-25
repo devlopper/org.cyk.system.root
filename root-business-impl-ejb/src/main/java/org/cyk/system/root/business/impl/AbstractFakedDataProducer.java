@@ -5,6 +5,9 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
@@ -24,11 +27,27 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	@Inject protected GenericBusiness genericBusiness;
 	protected FakedDataProducerListener listener;
 	
+	@Getter @Setter protected Boolean doBusiness = Boolean.FALSE;
+	
 	@Override
 	protected void initialisation() {
 		super.initialisation();
 		rootDataProducerHelper.setBasePackage(this.getClass().getPackage());
 	}
+	
+	/**/
+	protected abstract void structure();
+	protected abstract void doBusiness(FakedDataProducerListener listener);
+	protected abstract Package getBasePackage();
+	
+	public void produce(FakedDataProducerListener listener){
+		this.listener =listener;
+		rootDataProducerHelper.setBasePackage(getBasePackage());		
+    	structure();
+    	if(Boolean.TRUE.equals(doBusiness))
+    		doBusiness(listener);
+	}
+	/**/
 	
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String code, String name) {
 		return rootDataProducerHelper.createEnumeration(aClass, code, name);
@@ -41,8 +60,7 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 		rootDataProducerHelper.createEnumerations(aClass, values);
 	}
 
-	public IntervalCollection createIntervalCollection(String code, String[][] values, String codeSeparator,
-			Boolean create) {
+	public IntervalCollection createIntervalCollection(String code, String[][] values, String codeSeparator,Boolean create) {
 		return rootDataProducerHelper.createIntervalCollection(code, values, codeSeparator, create);
 	}
 
@@ -90,7 +108,7 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 				websites);
 	}
 
-	public abstract void produce(FakedDataProducerListener listener);
+	
 	
 	protected void flush(String message){
 		if(listener==null)

@@ -1,5 +1,9 @@
 package org.cyk.system.root.business.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
@@ -20,8 +24,52 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 	public AbstractEnumerationBusinessImpl(DAO dao) {
         super(dao);
     }
-    
-    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
+
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ENUMERATION instanciate(String name) {
+		return instanciate(computeCode(name), name);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ENUMERATION instanciate(String code, String name) {
+		ENUMERATION enumeration = instanciate();
+		enumeration.setCode(code);
+		enumeration.setName(name);
+		return enumeration;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ENUMERATION instanciate(List<String> arguments) {
+		if(arguments.size()==1)
+			return instanciate(arguments.get(0));
+		if(arguments.size()==2)
+			return instanciate(arguments.get(0),arguments.get(1));
+		exceptionUtils().exception("instanciate.toomucharguments");
+		return null;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ENUMERATION instanciate(String[] arguments) {
+		return instanciate(Arrays.asList(arguments));
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public List<ENUMERATION> instanciateMany(List<List<String>> arguments) {
+		List<ENUMERATION> r = new ArrayList<>();
+		for(List<String> list : arguments)
+			r.add(instanciate(list));
+		return r;
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public List<ENUMERATION> instanciateMany(String[][] arguments) {
+		List<ENUMERATION> r = new ArrayList<>();
+		for(String[] list : arguments)
+			r.add(instanciate(list));
+		return r;
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public ENUMERATION find(String code){
         return dao.read(code);
     }

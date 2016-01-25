@@ -78,4 +78,6 @@ public interface TimeBusiness {
 	Date findWithTimeAtEndOfTheDay(Date date);
 	
 	Set<Integer> findMonthIndexes(Period period);
+	
+	Date parse(String date);
 }

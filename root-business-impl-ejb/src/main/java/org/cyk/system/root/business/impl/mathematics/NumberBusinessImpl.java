@@ -51,5 +51,10 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 	public BigDecimal incrementByPercentage(BigDecimal value, BigDecimal percent) {
 		return incrementBy(value, computePercentage(value, percent));
 	}
+	
+	@Override
+	public BigDecimal parseBigDecimal(String value) {
+		return value == null ? null : new BigDecimal(value);
+	}
 
 }

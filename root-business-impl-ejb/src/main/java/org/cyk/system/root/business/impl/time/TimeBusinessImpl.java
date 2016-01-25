@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.time;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -343,6 +344,16 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 			index++;
 		}while(index!=endIndex);
 		return indexes;
+	}
+	
+	@Override
+	public Date parse(String date) {
+		try {
+			return new SimpleDateFormat(DATE_SHORT_PATTERN, languageBusiness.findCurrentLocale()).parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

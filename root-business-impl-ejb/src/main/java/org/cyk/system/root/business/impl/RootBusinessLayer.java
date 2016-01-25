@@ -509,6 +509,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_EMAIL);
     	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_SMS);
     	
+    	
     }
     
     public Application getApplication(){
