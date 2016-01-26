@@ -64,6 +64,12 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		return movement;
 	}
 	
-	
+	@Override
+	public Movement instanciate(MovementCollection movementCollection,String value) {
+		BigDecimal bigDecimal = new BigDecimal(value);
+		Movement movement = instanciate(movementCollection, bigDecimal.compareTo(BigDecimal.ZERO) >= 0);
+		movement.setValue(bigDecimal);
+		return movement;
+	}
 	
 }
