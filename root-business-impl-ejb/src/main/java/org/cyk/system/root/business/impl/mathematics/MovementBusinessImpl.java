@@ -33,10 +33,13 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	
 	@Override
 	public Movement create(Movement movement) {
-		MovementAction action = movement.getAction();
-		exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(movement.getValue().abs())>0
-				, movement.getAction().getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
+		MovementAction action = movement.getAction();	
 		BigDecimal increment = movement.getValue();
+		exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && increment.signum()==-1, "exception.value.mustbepositive");
+		exceptionUtils().exception(movement.getCollection().getDecrementAction().equals(action) && increment.signum()==1, "exception.value.mustbenegative");
+		exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(increment.abs())>0
+				, movement.getAction().getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
+		//BigDecimal increment = movement.getValue();
 		BigDecimal current = movement.getCollection().getValue();
 		Boolean positive = increment.signum() == 0 ? null : increment.signum() == 1 ;
 		BigDecimal sign = new BigDecimal((Boolean.TRUE.equals(positive) ? Constant.EMPTY_STRING:"-")+"1");
