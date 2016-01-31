@@ -12,6 +12,7 @@ import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.mathematics.Movement;
+import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
@@ -51,6 +52,16 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 		RootBusinessLayer.getInstance().getMovementActionBusiness().create(movementCollection.getIncrementAction());
 		RootBusinessLayer.getInstance().getMovementActionBusiness().create(movementCollection.getDecrementAction());
 		return super.create(movementCollection);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public BigDecimal computeValue(MovementCollection movementCollection, MovementAction movementAction,BigDecimal increment) {
+		increment = increment.abs();
+		if(movementCollection.getIncrementAction().equals(movementAction))
+			return movementCollection.getValue().add(increment);
+		else if(movementCollection.getDecrementAction().equals(movementAction))
+			return movementCollection.getValue().subtract(increment);
+		return null;
 	}
 
 }
