@@ -22,4 +22,8 @@ public class MovementDetails extends AbstractEnumerationDetails<Movement> implem
 		date = formatDateTime(movement.getDate());
 		value = formatNumber(movement.getValue());
 	}
+	
+	public static final String FIELD_ACTION = "action";
+	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_DATE = "date";
 }

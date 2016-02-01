@@ -22,4 +22,7 @@ public abstract class AbstractEnumerationDetails<ENUMERATION extends AbstractEnu
 		code = enumeration.getCode();
 		name = enumeration.getName();
 	}
+	
+	public static final String FIELD_CODE = "code";
+	public static final String FIELD_NAME = "name";
 }

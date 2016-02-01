@@ -18,4 +18,8 @@ public class MovementCollectionDetails extends AbstractEnumerationDetails<Moveme
 		increment = formatUsingBusiness(movementCollection.getIncrementAction());
 		decrement = formatUsingBusiness(movementCollection.getDecrementAction());
 	}
+	
+	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_INCREMENT = "increment";
+	public static final String FIELD_DECREMENT = "decrement";
 }
