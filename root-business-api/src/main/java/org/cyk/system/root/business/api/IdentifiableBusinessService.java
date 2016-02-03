@@ -1,6 +1,9 @@
 package org.cyk.system.root.business.api;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.utility.common.computation.ArithmeticOperator;
@@ -59,9 +62,21 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     
                     Class<IDENTIFIABLE> getClazz();
                     IDENTIFIABLE instanciate();
+                    IDENTIFIABLE instanciate(IdentifiableInstanciationArguments arguments);
                     
                     /**/
                     
-                    
+                    public static class IdentifiableInstanciationArguments implements Serializable{
+
+                		private static final long serialVersionUID = 2205844302131503169L;
+                    	protected final Map<String, Object> map = new HashMap<>();
+						public Object get(String key) {
+							return map.get(key);
+						}
+						public Object set(String key, Object value) {
+							return map.put(key, value);
+						}
+                    	
+                    }
 
 }

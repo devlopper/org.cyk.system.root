@@ -13,6 +13,7 @@ import lombok.Getter;
 import org.cyk.system.root.business.api.BusinessServiceListener;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
+import org.cyk.system.root.business.api.IdentifiableBusinessService.IdentifiableInstanciationArguments;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -140,6 +141,13 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return newInstance(getClazz());
 	}
 	
+	@Override
+	public IDENTIFIABLE instanciate(IdentifiableInstanciationArguments arguments) {
+		IDENTIFIABLE identifiable = instanciate();
+		
+		return identifiable;
+	}
+
 	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
 		getPersistenceService().getDataReadConfig().set(searchCriteria.getReadConfig());
 	}

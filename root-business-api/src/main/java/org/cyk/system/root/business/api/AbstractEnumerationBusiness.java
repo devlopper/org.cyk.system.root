@@ -16,4 +16,7 @@ public interface AbstractEnumerationBusiness<ENUMERATION extends AbstractEnumera
 	
     ENUMERATION find(String code);
     ENUMERATION load(String code);
+    
+    /**/
+   
 }
