@@ -9,6 +9,7 @@ public interface AbstractEnumerationBusiness<ENUMERATION extends AbstractEnumera
 	ENUMERATION instanciateOne(String name);
 	ENUMERATION instanciateOne(String code,String name);
 	List<ENUMERATION> instanciateMany(List<List<String>> strings);
+	List<ENUMERATION> instanciateMany(String[][] strings);
 	
     ENUMERATION find(String code);
     ENUMERATION load(String code);

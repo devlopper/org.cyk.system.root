@@ -49,6 +49,18 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 		return r;
 	}
 
+	@Override
+	public List<ENUMERATION> instanciateMany(String[][] strings) {
+		List<List<String>> argumentList = new ArrayList<>();
+		for(String[] inputtedArgument : strings){
+			List<String> arguments = new ArrayList<>();
+			argumentList.add(arguments);
+			for(String argument : inputtedArgument)
+				arguments.add(argument);
+		}
+		return instanciateMany(argumentList);
+	}
+
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public ENUMERATION find(String code){
         return dao.read(code);
