@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
@@ -13,7 +14,6 @@ import lombok.Getter;
 import org.cyk.system.root.business.api.BusinessServiceListener;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
-import org.cyk.system.root.business.api.IdentifiableBusinessService.IdentifiableInstanciationArguments;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -21,6 +21,7 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
@@ -137,17 +138,24 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	 * Utilities methods
 	 */
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public IDENTIFIABLE instanciate(){
+	public IDENTIFIABLE instanciateOne(){
 		return newInstance(getClazz());
 	}
 	
 	@Override
-	public IDENTIFIABLE instanciate(IdentifiableInstanciationArguments arguments) {
-		IDENTIFIABLE identifiable = instanciate();
-		
+	public IDENTIFIABLE instanciateOne(ObjectFieldValues arguments) {
+		IDENTIFIABLE identifiable = instanciateOne();
+		commonUtils.instanciateOne(getClazz(),identifiable, arguments);
 		return identifiable;
 	}
-
+	
+	@Override
+	public Collection<IDENTIFIABLE> instanciateMany(Collection<ObjectFieldValues> arguments) {
+		Collection<IDENTIFIABLE> identifiables = new ArrayList<>();
+		for(ObjectFieldValues o : arguments)
+			identifiables.add(instanciateOne(o));
+		return identifiables;
+	}
 	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
 		getPersistenceService().getDataReadConfig().set(searchCriteria.getReadConfig());
 	}

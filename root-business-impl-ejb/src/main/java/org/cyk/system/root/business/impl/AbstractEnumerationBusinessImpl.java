@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.TransactionAttribute;
@@ -12,60 +11,41 @@ import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.persistence.api.AbstractEnumerationDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ObjectFieldValues;
 
 public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends AbstractEnumeration,DAO extends AbstractEnumerationDao<ENUMERATION>> 
     extends AbstractTypedBusinessService<ENUMERATION, DAO> implements AbstractEnumerationBusiness<ENUMERATION> {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -2383681421917333298L;
 
 	public AbstractEnumerationBusinessImpl(DAO dao) {
         super(dao);
     }
-
-    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public ENUMERATION instanciate(String name) {
-		return instanciate(computeCode(name), name);
-	}
-
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public ENUMERATION instanciate(String code, String name) {
-		ENUMERATION enumeration = instanciate();
-		enumeration.setCode(code);
-		enumeration.setName(name);
-		return enumeration;
+	public ENUMERATION instanciateOne(String code,String name) {
+		ObjectFieldValues objectFieldValues = new ObjectFieldValues(clazz);
+		objectFieldValues.set(AbstractEnumeration.FIELD_CODE, code);
+		objectFieldValues.set(AbstractEnumeration.FIELD_NAME, name);
+		return commonUtils.instanciateOne(clazz, objectFieldValues);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public ENUMERATION instanciate(List<String> arguments) {
-		if(arguments.size()==1)
-			return instanciate(arguments.get(0));
-		if(arguments.size()==2)
-			return instanciate(arguments.get(0),arguments.get(1));
-		exceptionUtils().exception("instanciate.toomucharguments");
-		return null;
+	public ENUMERATION instanciateOne(String name) {
+		return instanciateOne(computeCode(name), name);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public ENUMERATION instanciate(String[] arguments) {
-		return instanciate(Arrays.asList(arguments));
-	}
-
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public List<ENUMERATION> instanciateMany(List<List<String>> arguments) {
 		List<ENUMERATION> r = new ArrayList<>();
-		for(List<String> list : arguments)
-			r.add(instanciate(list));
-		return r;
-	}
-
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public List<ENUMERATION> instanciateMany(String[][] arguments) {
-		List<ENUMERATION> r = new ArrayList<>();
-		for(String[] list : arguments)
-			r.add(instanciate(list));
+		for(List<String> argument : arguments){
+			if(argument.size()==1)
+				r.add(instanciateOne(argument.get(0)));
+			else if(argument.size()==2)
+				r.add(instanciateOne(argument.get(0),argument.get(1)));
+			else
+				throw new RuntimeException("Too much arguments") ;
+		}
 		return r;
 	}
 

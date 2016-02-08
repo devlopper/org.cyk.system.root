@@ -10,7 +10,7 @@ public interface IntervalBusiness extends AbstractCollectionItemBusiness<Interva
     
     Interval findByCollectionByValue(IntervalCollection collection,BigDecimal value,Integer scale);
     
-    Interval instanciate(IntervalCollection collection,String code,String low,String high);
+    Interval instanciateOne(IntervalCollection collection,String code,String low,String high);
     
     Boolean isLower(Interval interval, BigDecimal value,Integer scale);
     Boolean isHigher(Interval interval, BigDecimal value,Integer scale);

@@ -58,7 +58,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Movement instanciate(MovementCollection movementCollection, Boolean increment) {
+	public Movement instanciateOne(MovementCollection movementCollection, Boolean increment) {
 		Movement movement = new Movement();
 		movement.setCollection(movementCollection);
 		movement.setCode(movementCollection.getCode()+"_"+System.currentTimeMillis()+"_"+RandomStringUtils.randomAlphabetic(10));
@@ -68,9 +68,9 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	public Movement instanciate(MovementCollection movementCollection,String value) {
+	public Movement instanciateOne(MovementCollection movementCollection,String value) {
 		BigDecimal bigDecimal = new BigDecimal(value);
-		Movement movement = instanciate(movementCollection, bigDecimal.compareTo(BigDecimal.ZERO) >= 0);
+		Movement movement = instanciateOne(movementCollection, bigDecimal.compareTo(BigDecimal.ZERO) >= 0);
 		movement.setValue(bigDecimal);
 		return movement;
 	}

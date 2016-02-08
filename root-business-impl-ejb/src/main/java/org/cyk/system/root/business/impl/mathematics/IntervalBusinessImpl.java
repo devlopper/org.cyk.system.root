@@ -26,7 +26,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	}
 	
 	@Override
-	public Interval instanciate(IntervalCollection collection, String code, String low, String high) {
+	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
 		Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
 		
 		return interval;

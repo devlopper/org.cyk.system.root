@@ -36,13 +36,13 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public MovementCollection instanciate(String code,String incrementActionName,String decrementActionName) {
+	public MovementCollection instanciateOne(String code,String incrementActionName,String decrementActionName) {
 		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, RootBusinessLayer.getInstance().getIntervalBusiness()
-				.instanciate(null, code, "0", null));
+				.instanciateOne(null, code, "0", null));
 		movementCollection.setIncrementAction(RootBusinessLayer.getInstance().getMovementActionBusiness()
-				.instanciate(code+Constant.CHARACTER_UNDESCORE+computeCode(incrementActionName), incrementActionName));
+				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+computeCode(incrementActionName), incrementActionName));
 		movementCollection.setDecrementAction(RootBusinessLayer.getInstance().getMovementActionBusiness()
-				.instanciate(code+Constant.CHARACTER_UNDESCORE+computeCode(decrementActionName), decrementActionName));
+				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+computeCode(decrementActionName), decrementActionName));
 		return movementCollection;
 	}
 	

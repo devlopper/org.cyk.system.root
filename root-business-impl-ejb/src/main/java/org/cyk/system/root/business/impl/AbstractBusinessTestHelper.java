@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import lombok.Setter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
@@ -48,10 +46,11 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransitio
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
+import org.cyk.utility.common.ClassRepository.ClassField;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.generator.RandomDataProvider;
-import org.cyk.utility.common.test.ExpectedValues;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
@@ -126,8 +125,18 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	/**/
 	
-	protected void doAssertions(Object object,ExpectedValues expectedValues){
-		for(Entry<ExpectedValues.Field, String> entry : expectedValues.getMap().entrySet()){
+	protected void doAssertions(Object object,ObjectFieldValues expectedValues){
+		for(Entry<ClassField, Object> entry : expectedValues.getValuesMap().entrySet()){
+			String message = entry.getKey().toString();
+			String expectedValue = (String)entry.getValue();
+			Object actualValue = commonUtils.readProperty(object, entry.getKey().getName());
+			if(String.class.equals(entry.getKey().getField().getType()))
+				assertEquals(message, expectedValue, (String)actualValue);	
+			else if(BigDecimal.class.equals(entry.getKey().getField().getType()))
+				assertBigDecimalEquals(message, expectedValue, (BigDecimal)actualValue);	
+			else
+				assertEquals(entry.getKey().getField().getType()+" not yet handled", Boolean.TRUE, Boolean.FALSE);
+			/*
 			if(!object.getClass().equals(entry.getKey().getClazz()))
 				continue;
 			String message = entry.getKey().toString();
@@ -148,6 +157,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 					e.printStackTrace();
 				}
 			}
+			*/
 		}
 		//listener.assertEquals(message, expected, actual);	
 	}

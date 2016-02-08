@@ -22,9 +22,9 @@ public class MovementActionBusinessImpl extends AbstractTypedBusinessService<Mov
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public MovementAction instanciate(String code,String name) {
+	public MovementAction instanciateOne(String code,String name) {
 		MovementAction movementAction = new MovementAction(code, name);
-		movementAction.setInterval(RootBusinessLayer.getInstance().getIntervalBusiness().instanciate(null, code, "0", null));
+		movementAction.setInterval(RootBusinessLayer.getInstance().getIntervalBusiness().instanciateOne(null, code, "0", null));
 		return movementAction;
 	}
 	
