@@ -3,9 +3,11 @@ package org.cyk.system.root.service.impl.unit;
 import java.util.Collection;
 
 import org.cyk.system.root.business.impl.geography.PhoneNumberTypeBusinessImpl;
+import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.PhoneNumberType;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.ObjectFieldValues;
-import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -22,7 +24,7 @@ public class InstanciationBusinessUT extends AbstractBusinessUT {
 		collection.add(phoneNumberTypeBusiness);
 	}
 	
-	@Test
+	//@Test
 	public void enumeration() {
 		Assert.assertNotNull(phoneNumberTypeBusiness.instanciateOne());
 		assertEquals(phoneNumberTypeBusiness.instanciateOne("Land"), new ObjectFieldValues(PhoneNumberType.class)
@@ -40,11 +42,23 @@ public class InstanciationBusinessUT extends AbstractBusinessUT {
 				.set(PhoneNumberType.FIELD_NAME, "My Name"));
 	}
 	
+	@Test
+	public void locality() {
+		ObjectFieldValues objectFieldValues = new ObjectFieldValues(Locality.class).set(Locality.FIELD_CODE, "MonCOde");
+	}
+	
+	@Test
+	public void party() {
+		ObjectFieldValues objectFieldValues = new ObjectFieldValues(Party.class).set(Party.FIELD_CODE, "MonCOde");
+	}
+	
+	@Test
+	public void person() {
+		ObjectFieldValues objectFieldValues = new ObjectFieldValues(Person.class).set(Person.FIELD_CODE, "MonCOde");
+	}
+	
 	/**/
 	
-	protected void assertEquals(Object actual,ObjectFieldValues expected){
-		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
-			listener.assertEquals(actual, expected);
-	}
+	
 
 }
