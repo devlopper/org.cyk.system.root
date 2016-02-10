@@ -74,7 +74,9 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	/**/
 	
 	String DO_SOMETHING_PLUS_DET_FORMAT = "dosomethingformatplusdet";
+	String DO_SOMETHING_PLUS_DET_PLUS_FOR_FORMAT = "dosomethingformatplusdetplusfor";
 	String DO_SOMETHING_FORMAT = "dosomethingformat";
+	String DO_SOMETHING_PLUS_FOR_FORMAT = "dosomethingformatplusfor";
 	
 	/**/
 	@Getter @Setter
@@ -98,5 +100,6 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 		private Object actionIdentifier;
 		private Class<? extends AbstractIdentifiable> subjectClass;
 		private Boolean one,global,verb=Boolean.TRUE;
+		private String forWhat;
 	}
 }

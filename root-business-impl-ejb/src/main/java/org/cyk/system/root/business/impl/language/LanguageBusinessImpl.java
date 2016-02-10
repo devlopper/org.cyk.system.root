@@ -426,8 +426,9 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			actionIdentifierAsString = actionIdentifier.toString();
 		
 		if(GenderType.UNSET.equals(genderType) || parameters.getOne()==null || parameters.getGlobal()==null)
-			return findText(DO_SOMETHING_FORMAT, new Object[]{findText(actionIdentifierAsString)
-					,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass()))});
+			return findText(StringUtils.isBlank(parameters.getForWhat())?DO_SOMETHING_FORMAT:DO_SOMETHING_PLUS_FOR_FORMAT
+					, new Object[]{findText(actionIdentifierAsString),findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass()))
+							,findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()});
 		
 		String determinant = findDeterminantText(GenderType.MALE.equals(genderType), parameters.getOne(),parameters.getGlobal());
 		if(parameters.getGlobal())
@@ -446,9 +447,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 					determinant = findText("ofprefix")+determinant;
 			else
 				;
-			
-		return findText(DO_SOMETHING_PLUS_DET_FORMAT, new Object[]{findText(actionIdentifierAsString),determinant
-				,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass(),parameters.getOne()))});
+		//if(StringUtils.isBlank(parameters.getForWhat()))	
+		//	return findText(DO_SOMETHING_PLUS_DET_FORMAT, new Object[]{findText(actionIdentifierAsString),determinant
+		//		,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass(),parameters.getOne()))});
+		//else
+			return findText(StringUtils.isBlank(parameters.getForWhat())?DO_SOMETHING_PLUS_DET_FORMAT:DO_SOMETHING_PLUS_DET_PLUS_FOR_FORMAT
+					, new Object[]{findText(actionIdentifierAsString),determinant,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass()
+							,parameters.getOne())),findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()});
 	}
 	
 	@Override
