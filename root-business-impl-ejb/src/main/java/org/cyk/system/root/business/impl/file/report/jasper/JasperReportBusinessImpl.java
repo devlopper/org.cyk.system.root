@@ -1,8 +1,11 @@
 package org.cyk.system.root.business.impl.file.report.jasper;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +28,7 @@ import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import net.sf.jasperreports.export.SimpleXmlExporterOutput;
 
+import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.JasperReportBasedOnDynamicBuilderListener;
 import org.cyk.system.root.business.api.file.report.JasperReportBusiness;
@@ -36,6 +40,8 @@ import org.cyk.system.root.model.file.report.Column;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderListener;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
+import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.cdi.BeanAdapter;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
@@ -55,7 +61,13 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(aReport.getDataSource());
 		InputStream inputStream = fileBusiness.findInputStream(aReport.getTemplateFile());
 		try {
-			JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
+			String jrxml = IOUtils.toString(inputStream);
+			for(Listener listener : Listener.COLLECTION)
+				if(Boolean.TRUE.equals(listener.isJrxmlProcessable()))
+					jrxml = listener.processJrxml(jrxml);
+			
+			ByteArrayInputStream bais = new ByteArrayInputStream(jrxml.getBytes(Constant.ENCODING_UTF8));
+			JasperDesign jasperDesign = JRXmlLoader.load(bais);
 			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanColDataSource);
 		
@@ -64,7 +76,7 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 			if(aReport.getHeight()!=null)
 				jasperPrint.setPageHeight(aReport.getHeight());
 			__build__(aReport, jasperPrint, print);
-		} catch (JRException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -147,6 +159,38 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 			aReport.setBytes(baos.toByteArray());
 		} catch (JRException e) {
 			throw new RuntimeException(e);
+		}
+	}
+	
+	/**/
+	
+	public static interface Listener{
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		Boolean isJrxmlProcessable();
+		String processJrxml(String jrxml);
+		
+		/**/
+		
+		public static class Adapter extends BeanAdapter implements Listener,Serializable{
+			private static final long serialVersionUID = -9048282379616583423L;
+			
+			@Override
+			public Boolean isJrxmlProcessable() {
+				return null;
+			}
+			
+			@Override
+			public String processJrxml(String jrxml) {
+				return null;
+			}
+			/**/
+			
+			public static class Default extends Adapter implements Serializable{
+				private static final long serialVersionUID = 2884910167320359611L;
+				
+			}
 		}
 	}
 	

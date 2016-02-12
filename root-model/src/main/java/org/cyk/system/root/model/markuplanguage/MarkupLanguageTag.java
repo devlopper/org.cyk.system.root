@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.html;
+package org.cyk.system.root.model.markuplanguage;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -8,12 +8,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class HtmlTag implements Serializable {
+public class MarkupLanguageTag implements Serializable {
 	
 	private static final long serialVersionUID = -6056328070972266554L;
 
-	private String name/*,body*/;
+	private String name,text;
 	private Map<String,String> attributes = new HashMap<>();
 	
-
+	private MarkupLanguageTag parent;
 }
