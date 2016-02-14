@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness;
 import org.cyk.system.root.model.markuplanguage.MarkupLanguageDocument;
 import org.cyk.utility.common.Constant;
@@ -43,8 +44,13 @@ public class MarkupLanguageBusinessBasedOnJDom2Impl extends AbstractMarkupLangua
 	}
 	
 	@Override
-	protected List<Element> getElementChildren(MarkupLanguageDocument markupLanguageDocument,Element element, String name) {
-		return element.getChildren(name,Namespace.getNamespace(markupLanguageDocument.getNamespace()));
+	protected List<Element> getElementChildren(MarkupLanguageDocument markupLanguageDocument,Element element, String name,String space) {
+		//System.out.println(element.getContent(0));
+		//return element.getChildren();
+		//System.out.println(Namespace.getNamespace(StringUtils.isBlank(space)?markupLanguageDocument.getNamespace():space));
+		return element.getChildren(name,Namespace.getNamespace(StringUtils.isBlank(space)?"":""
+				,StringUtils.isBlank(space)?markupLanguageDocument.getNamespace():space));
+		//return element.getChildren(name,Namespace.NO_NAMESPACE);
 	}
 
 	@Override
@@ -91,31 +97,4 @@ public class MarkupLanguageBusinessBasedOnJDom2Impl extends AbstractMarkupLangua
 		attribute.setValue(value);
 	}
 	
-	@Override
-	protected void tagToUpdateFound(Element element) {
-		super.tagToUpdateFound(element);
-		System.out.println(element.getText());
-		System.out.println(element.getChildren().get(0).getText());
-	}
-	
-	/*
-	protected static void readXmlNode(String file,Namespace namespace,String[][] valuePaths){
-		File arquillianFile = testSourceFile(file);
-		SAXBuilder builder = new SAXBuilder();
-		Document document;
-		try {
-			document = builder.build(arquillianFile);
-			Element element = null;
-			for(String[] valuePath : valuePaths){
-				element = document.getRootElement();
-				for(int i=0;i<valuePath.length-1;i++)
-					element = element.getChild(valuePath[i],namespace);	
-				valuePath[valuePath.length-1] = element.getText();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
-	
-
 }

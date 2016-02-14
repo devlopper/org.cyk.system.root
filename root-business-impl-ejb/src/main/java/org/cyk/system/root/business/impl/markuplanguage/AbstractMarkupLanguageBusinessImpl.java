@@ -2,8 +2,9 @@ package org.cyk.system.root.business.impl.markuplanguage;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,39 +26,49 @@ public abstract class AbstractMarkupLanguageBusinessImpl<NAMESPACE,BUILDER,DOCUM
 	}
 	
 	protected ELEMENT getElement(MarkupLanguageDocument markupLanguageDocument,ELEMENT element,List<TagArguments> tagArgumentsList){
-		for(TagArguments tagArguments : tagArgumentsList){
-			/*
-			List<ELEMENT> children = i < tagNames.size() ? getElementChildren(markupLanguageDocument,element,tagNames.get(i))
-					:getElementChildren(markupLanguageDocument,element);
-			*/
-			
-			List<ELEMENT> children = getElementChildren(markupLanguageDocument,element,tagArguments.getName());
-			if(tagArguments.getAttributes()==null || tagArguments.getAttributes().isEmpty()){
-				if(children.size()==1)
-					element = children.get(0);
-				else{
-					throw new RuntimeException("Only one child was expected but "+children.size()+" has been found");	
-				}
-			}else{
-				Boolean match;
-				for(ELEMENT anElement : children){
-					match = Boolean.TRUE;
+		for(int i = 0; i<tagArgumentsList.size(); i++){
+			TagArguments tagArguments = tagArgumentsList.get(i);
+			List<ELEMENT> children = getElementChildren(markupLanguageDocument,element,tagArguments.getName(),tagArguments.getSpace());
+			List<ELEMENT> matches = new ArrayList<>();
+			for(int j = 0; j< children.size(); j++){
+				ELEMENT child = children.get(j);
+				Boolean match = Boolean.TRUE;
+				
+				if(tagArguments.getAttributes()!=null){
 					for(Entry<String, String> entry : tagArguments.getAttributes().entrySet()){
-						for(ATTRIBUTE attribute : getElementAttributes(anElement))
+						for(ATTRIBUTE attribute : getElementAttributes(child))
 							if(entry.getKey().equals(getAttributeName(attribute)) ){
-								if( !entry.getValue().equals(getAttributeValue(attribute)) ){
-									match = Boolean.FALSE;
+								if( (match = entry.getValue().equals(getAttributeValue(attribute))) == Boolean.FALSE )
 									break;
-								}
 							}
+						if(Boolean.FALSE.equals(match))
+							break;
 					}
-					if(Boolean.TRUE.equals(match))
-						return anElement;	
 				}
-				throw new RuntimeException("No math found with the following attributes : "+tagArguments.getAttributes());
+				
+				if(Boolean.TRUE.equals(match))
+					matches.add(child);
 			}
+			
+			ELEMENT found = null;
+			if(tagArguments.getIndex()==null){
+				if(matches.size()==1)
+					found = matches.get(0);
+				else
+					throw new RuntimeException("Only one child expected but "+matches.size()+" found");
+			}else {
+				found = matches.get(tagArguments.getIndex().intValue());
+			}
+			
+			if(found==null)
+				throw new RuntimeException("No match found");
+			else
+				if(i == tagArgumentsList.size()-1)
+					return found;
+				else
+					element = found;
 		}
-		return element;
+		throw new RuntimeException("No match found");
 	}
 	
 	@Override
@@ -69,7 +80,7 @@ public abstract class AbstractMarkupLanguageBusinessImpl<NAMESPACE,BUILDER,DOCUM
 			MarkupLanguageDocument markupLanguageDocument = build(text, buildArguments);
 			
 			DOCUMENT document = createDocument(builder,markupLanguageDocument);
-			ELEMENT element = getElement(markupLanguageDocument, getRoot(document), arguments.getTagNames(),arguments.getAttributes());
+			ELEMENT element = getElement(markupLanguageDocument, getRoot(document), arguments.getTagArguments());
 			MarkupLanguageTag tag = new MarkupLanguageTag();
 			tag.setName(getElementName(element));
 			tag.setText(getElementText(element));
@@ -90,7 +101,7 @@ public abstract class AbstractMarkupLanguageBusinessImpl<NAMESPACE,BUILDER,DOCUM
 			MarkupLanguageDocument markupLanguageDocument = build(text, buildArguments);
 			
 			DOCUMENT document = createDocument(builder,markupLanguageDocument);
-			ELEMENT element = getElement(markupLanguageDocument, getRoot(document), updateTagArguments.getFindTagArguments().getTagNames(),updateTagArguments.getFindTagArguments().getAttributes());
+			ELEMENT element = getElement(markupLanguageDocument, getRoot(document), updateTagArguments.getFindTagArguments().getTagArguments());
 			
 			tagToUpdateFound(element);
 			
@@ -116,7 +127,7 @@ public abstract class AbstractMarkupLanguageBusinessImpl<NAMESPACE,BUILDER,DOCUM
 	protected abstract String getDocumentAsString(DOCUMENT document) throws IOException;
 	protected abstract ELEMENT getRoot(DOCUMENT document);
 	protected abstract List<ELEMENT> getElementChildren(MarkupLanguageDocument markupLanguageDocument,ELEMENT element);
-	protected abstract List<ELEMENT> getElementChildren(MarkupLanguageDocument markupLanguageDocument,ELEMENT element,String name);
+	protected abstract List<ELEMENT> getElementChildren(MarkupLanguageDocument markupLanguageDocument,ELEMENT element,String name,String space);
 	
 	protected abstract String getElementName(ELEMENT element);
 	protected abstract String getElementText(ELEMENT element);

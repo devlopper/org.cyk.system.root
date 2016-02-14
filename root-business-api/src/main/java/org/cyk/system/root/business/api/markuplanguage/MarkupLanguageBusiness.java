@@ -29,8 +29,9 @@ public interface MarkupLanguageBusiness {
 	public static class TagArguments implements Serializable{
 		private static final long serialVersionUID = 6782959448219692933L;
 		
-		private String name;
+		private String name,space;
 		private Map<String,String> attributes = new HashMap<>();
+		private Integer index;
 		
 		public TagArguments setAttributes(String...values){
 			for(int i = 0; i< values.length ; i=i+2)
@@ -45,12 +46,30 @@ public interface MarkupLanguageBusiness {
 		
 		private List<TagArguments> tagArguments = new ArrayList<>();
 		
-		public FindTagArguments addTag(String name,String...attributes){
+		public FindTagArguments addTag(String name,String space,Integer index,String...attributes){
 			TagArguments tag = new TagArguments();
 			tag.setName(name);
+			tag.setSpace(space);
+			tag.setIndex(index);
 			tag.setAttributes(attributes);
 			tagArguments.add(tag);
 			return this;
+		}
+		
+		public FindTagArguments addTag(String name,String space,String[] attributes){
+			return addTag(name,space, null, attributes);
+		}
+		public FindTagArguments addTag(String name,Integer index,String[] attributes){
+			return addTag(name, null,index, attributes);
+		}
+		public FindTagArguments addTag(String name,Integer index){
+			return addTag(name, null,index, new String[]{});
+		}
+		public FindTagArguments addTag(String name,String[] attributes){
+			return addTag(name, null,null, attributes);
+		}
+		public FindTagArguments addTag(String name){
+			return addTag(name, null,null, new String[]{});
 		}
 	}
 	
