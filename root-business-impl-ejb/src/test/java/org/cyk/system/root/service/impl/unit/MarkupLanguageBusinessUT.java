@@ -4,11 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Collection;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness.FindTagArguments;
 import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness.UpdateTagArguments;
 import org.cyk.system.root.business.impl.markuplanguage.MarkupLanguageBusinessBasedOnJDom2Impl;
-import org.cyk.system.root.model.markuplanguage.MarkupLanguageTag;
 import org.cyk.utility.common.Constant;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -84,7 +83,22 @@ public class MarkupLanguageBusinessUT extends AbstractBusinessUT {
 		updateTagArguments.setAttributes("width","150"); 
 		text = markupLanguageBusinessBasedOnJDom2.updateTag(text, updateTagArguments);
 		
-		System.out.println(text);
+		updateTagArguments = new UpdateTagArguments();
+		updateTagArguments.getFindTagArguments().addTag("style",new String[]{"name","title"});
+		updateTagArguments.setAttributes("backcolor","yellow"); 
+		text = markupLanguageBusinessBasedOnJDom2.updateTag(text, updateTagArguments);
+		
+		updateTagArguments = new UpdateTagArguments();
+		updateTagArguments.getFindTagArguments().addTag("style",new String[]{"name","block header"});
+		updateTagArguments.setAttributes("backcolor","yellow"); 
+		text = markupLanguageBusinessBasedOnJDom2.updateTag(text, updateTagArguments);
+		
+		//System.out.println(text);
+		try {
+			FileUtils.writeStringToFile(new File(System.getProperty("user.dir")+"\\target\\generated\\1.jrxml"), text, Constant.ENCODING_UTF8);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -58,7 +58,7 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 	
 	@Override
 	public void build(ReportBasedOnTemplateFile<?> aReport, Boolean print) {
-		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(aReport.getDataSource());
+		JRBeanCollectionDataSource datasource = new JRBeanCollectionDataSource(aReport.getDataSource());
 		InputStream inputStream = fileBusiness.findInputStream(aReport.getTemplateFile());
 		try {
 			String jrxml = IOUtils.toString(inputStream);
@@ -67,9 +67,20 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 					jrxml = listener.processJrxml(jrxml);
 			
 			ByteArrayInputStream bais = new ByteArrayInputStream(jrxml.getBytes(Constant.ENCODING_UTF8));
+			for(Listener listener : Listener.COLLECTION)
+				listener.processInputStream(bais);
+			
 			JasperDesign jasperDesign = JRXmlLoader.load(bais);
+			for(Listener listener : Listener.COLLECTION)
+				listener.processDesign(jasperDesign);
+			
 			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, beanColDataSource);
+			for(Listener listener : Listener.COLLECTION)
+				listener.processReport(jasperReport);
+			
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, datasource);
+			for(Listener listener : Listener.COLLECTION)
+				listener.processPrint(jasperPrint);
 		
 			if(aReport.getWidth()!=null)
 				jasperPrint.setPageWidth(aReport.getWidth());
@@ -169,6 +180,10 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 		Collection<Listener> COLLECTION = new ArrayList<>();
 		
 		Boolean isJrxmlProcessable();
+		void processPrint(JasperPrint jasperPrint);
+		void processReport(JasperReport jasperReport);
+		void processDesign(JasperDesign jasperDesign);
+		void processInputStream(ByteArrayInputStream bais);
 		String processJrxml(String jrxml);
 		
 		/**/
@@ -185,6 +200,12 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 			public String processJrxml(String jrxml) {
 				return null;
 			}
+			
+			@Override public void processDesign(JasperDesign jasperDesign) {}
+			@Override public void processInputStream(ByteArrayInputStream bais) {}
+			@Override public void processPrint(JasperPrint jasperPrint) {}
+			@Override public void processReport(JasperReport jasperReport) {}
+			
 			/**/
 			
 			public static class Default extends Adapter implements Serializable{
