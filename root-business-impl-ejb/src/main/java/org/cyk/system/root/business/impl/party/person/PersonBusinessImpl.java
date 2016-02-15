@@ -72,7 +72,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return p;
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public String findNames(Person person,FindNamesOptions options) {
 		List<String> blocks = new ArrayList<>();
 		if(StringUtils.isNotBlank(person.getName()))
@@ -83,12 +83,12 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return StringUtils.join(blocks,Constant.CHARACTER_SPACE);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public String findNames(Person person) {
 		return findNames(person, new FindNamesOptions());
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(Person person) {
 		super.load(person);
 		person.setExtendedInformations(extendedInformationsDao.readByParty(person));

@@ -63,24 +63,24 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 		try {
 			String jrxml = IOUtils.toString(inputStream);
 			for(Listener listener : Listener.COLLECTION)
-				if(Boolean.TRUE.equals(listener.isJrxmlProcessable()))
-					jrxml = listener.processJrxml(jrxml);
+				if(Boolean.TRUE.equals(listener.isJrxmlProcessable(aReport)))
+					jrxml = listener.processJrxml(aReport,jrxml);
 			
 			ByteArrayInputStream bais = new ByteArrayInputStream(jrxml.getBytes(Constant.ENCODING_UTF8));
 			for(Listener listener : Listener.COLLECTION)
-				listener.processInputStream(bais);
+				listener.processInputStream(aReport,bais);
 			
 			JasperDesign jasperDesign = JRXmlLoader.load(bais);
 			for(Listener listener : Listener.COLLECTION)
-				listener.processDesign(jasperDesign);
+				listener.processDesign(aReport,jasperDesign);
 			
 			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
 			for(Listener listener : Listener.COLLECTION)
-				listener.processReport(jasperReport);
+				listener.processReport(aReport,jasperReport);
 			
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, datasource);
 			for(Listener listener : Listener.COLLECTION)
-				listener.processPrint(jasperPrint);
+				listener.processPrint(aReport,jasperPrint);
 		
 			if(aReport.getWidth()!=null)
 				jasperPrint.setPageWidth(aReport.getWidth());
@@ -179,12 +179,12 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 		
 		Collection<Listener> COLLECTION = new ArrayList<>();
 		
-		Boolean isJrxmlProcessable();
-		void processPrint(JasperPrint jasperPrint);
-		void processReport(JasperReport jasperReport);
-		void processDesign(JasperDesign jasperDesign);
-		void processInputStream(ByteArrayInputStream bais);
-		String processJrxml(String jrxml);
+		Boolean isJrxmlProcessable(ReportBasedOnTemplateFile<?> aReport);
+		void processPrint(ReportBasedOnTemplateFile<?> aReport,JasperPrint jasperPrint);
+		void processReport(ReportBasedOnTemplateFile<?> aReport,JasperReport jasperReport);
+		void processDesign(ReportBasedOnTemplateFile<?> aReport,JasperDesign jasperDesign);
+		void processInputStream(ReportBasedOnTemplateFile<?> aReport,ByteArrayInputStream bais);
+		String processJrxml(ReportBasedOnTemplateFile<?> aReport,String jrxml);
 		
 		/**/
 		
@@ -192,19 +192,19 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 			private static final long serialVersionUID = -9048282379616583423L;
 			
 			@Override
-			public Boolean isJrxmlProcessable() {
+			public Boolean isJrxmlProcessable(ReportBasedOnTemplateFile<?> aReport) {
 				return null;
 			}
 			
 			@Override
-			public String processJrxml(String jrxml) {
+			public String processJrxml(ReportBasedOnTemplateFile<?> aReport,String jrxml) {
 				return null;
 			}
 			
-			@Override public void processDesign(JasperDesign jasperDesign) {}
-			@Override public void processInputStream(ByteArrayInputStream bais) {}
-			@Override public void processPrint(JasperPrint jasperPrint) {}
-			@Override public void processReport(JasperReport jasperReport) {}
+			@Override public void processDesign(ReportBasedOnTemplateFile<?> aReport,JasperDesign jasperDesign) {}
+			@Override public void processInputStream(ReportBasedOnTemplateFile<?> aReport,ByteArrayInputStream bais) {}
+			@Override public void processPrint(ReportBasedOnTemplateFile<?> aReport,JasperPrint jasperPrint) {}
+			@Override public void processReport(ReportBasedOnTemplateFile<?> aReport,JasperReport jasperReport) {}
 			
 			/**/
 			
