@@ -43,4 +43,20 @@ public class StreamBusinessUT extends AbstractUnitTest {
 		}
 	}
 	
+	@Test
+	public void mergeJpeg() {
+		File base = new File(System.getProperty("user.dir"));
+		File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\image\\jpeg");
+		Collection<InputStream> inputStreams = new ArrayList<>();
+		try {
+			inputStreams.add(new FileInputStream(new File(directory, "1.jpg")));
+			inputStreams.add(new FileInputStream(new File(directory, "2.jpg")));
+			ByteArrayOutputStream outputStream = streamBusiness.merge(inputStreams, Mime.IMAGE_JPEG);
+			FileUtils.writeByteArrayToFile(new File(base, "target/generated/"+System.currentTimeMillis()+".jpg"), outputStream.toByteArray());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

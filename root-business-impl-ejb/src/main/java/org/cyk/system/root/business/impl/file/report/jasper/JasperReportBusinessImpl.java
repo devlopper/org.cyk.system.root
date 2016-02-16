@@ -29,9 +29,12 @@ import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import net.sf.jasperreports.export.SimpleXmlExporterOutput;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.JasperReportBasedOnDynamicBuilderListener;
 import org.cyk.system.root.business.api.file.report.JasperReportBusiness;
+import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness.UpdateTagArguments;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.file.report.AbstractReportBusinessImpl;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.file.report.AbstractReport;
@@ -176,6 +179,18 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 	/**/
 	
 	public static interface Listener{
+		String NAMESPACE_COMPONENT = "http://jasperreports.sourceforge.net/jasperreports/components";
+		
+		String WIDTH = "width";
+		String DETAIL = "detail";
+		String BAND = "band";
+		String FRAME = "frame";
+		String COMPONENT_ELEMENT = "componentElement";
+		String TABLE = "table";
+		String COLUMN = "column";
+		String COLUMN_HEADER = "columnHeader";
+		String TEXT_FIELD = "textField";
+		String REPORT_ELEMENT = "reportElement";
 		
 		Collection<Listener> COLLECTION = new ArrayList<>();
 		
@@ -205,6 +220,26 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 			@Override public void processInputStream(ReportBasedOnTemplateFile<?> aReport,ByteArrayInputStream bais) {}
 			@Override public void processPrint(ReportBasedOnTemplateFile<?> aReport,JasperPrint jasperPrint) {}
 			@Override public void processReport(ReportBasedOnTemplateFile<?> aReport,JasperReport jasperReport) {}
+			
+			/**/
+			
+			protected String updateTableColumn(String jrxml,Object[] parentTags,Integer tableIndex,Integer columnIndex,String[] attributes){
+				UpdateTagArguments updateTagArguments = new UpdateTagArguments();
+				for(int i=0;i<parentTags.length;i=i+2)
+					updateTagArguments.getFindTagArguments().addTag((String)parentTags[i],(Integer)parentTags[i+1]);
+				
+				updateTagArguments.getFindTagArguments().addTag(TABLE,NAMESPACE_COMPONENT,tableIndex).addTag(COLUMN,NAMESPACE_COMPONENT,columnIndex);
+    			updateTagArguments.setAttributes(attributes); 
+    			jrxml = RootBusinessLayer.getInstance().getMarkupLanguageBusiness().updateTag(jrxml, updateTagArguments);
+    			if(ArrayUtils.contains(attributes, WIDTH)){
+    				UpdateTagArguments textFieldUpdateTagArguments = new UpdateTagArguments();
+    				textFieldUpdateTagArguments.setFindTagArguments(updateTagArguments.getFindTagArguments());
+    				textFieldUpdateTagArguments.getFindTagArguments().addTag(COLUMN_HEADER,NAMESPACE_COMPONENT,0).addTag(TEXT_FIELD, 0).addTag(REPORT_ELEMENT, 0);
+    				textFieldUpdateTagArguments.setAttributes(WIDTH,updateTagArguments.getAttributes().get(WIDTH));
+    				jrxml = RootBusinessLayer.getInstance().getMarkupLanguageBusiness().updateTag(jrxml, textFieldUpdateTagArguments);
+    			}
+    			return jrxml;
+			}
 			
 			/**/
 			

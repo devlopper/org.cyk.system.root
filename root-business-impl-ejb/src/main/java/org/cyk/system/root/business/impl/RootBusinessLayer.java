@@ -36,6 +36,7 @@ import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
@@ -188,6 +189,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private MovementBusiness movementBusiness;
     @Inject private MovementActionBusiness movementActionBusiness;
     @Inject private MovementCollectionBusiness movementCollectionBusiness;
+    @Inject private MarkupLanguageBusiness markupLanguageBusiness;
     
     @Inject private FiniteStateMachineBusiness finiteStateMachineBusiness;
     @Inject private FiniteStateMachineStateBusiness finiteStateMachineStateBusiness;
