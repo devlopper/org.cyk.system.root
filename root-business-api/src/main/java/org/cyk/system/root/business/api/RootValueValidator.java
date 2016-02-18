@@ -2,6 +2,8 @@ package org.cyk.system.root.business.api;
 
 import java.util.Set;
 
+import org.cyk.utility.common.FileExtension;
+
 
 public interface RootValueValidator {
 
@@ -11,7 +13,7 @@ public interface RootValueValidator {
 	
 	/* File */
 	
-	Boolean isValidFileExtension(String extension,Set<String> extensions);
+	Boolean isValidFileExtension(String extension,Set<FileExtension> extensions);
 	
 	Boolean isValidFileExtension(String extension);
 	

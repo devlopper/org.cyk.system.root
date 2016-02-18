@@ -9,7 +9,7 @@ import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 import org.cyk.system.root.business.impl.file.StreamBusinessImpl;
-import org.cyk.system.root.model.Mime;
+import org.cyk.utility.common.FileExtension;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -35,7 +35,7 @@ public class StreamBusinessUT extends AbstractUnitTest {
 		try {
 			inputStreams.add(new FileInputStream(new File(directory, "1.pdf")));
 			inputStreams.add(new FileInputStream(new File(directory, "2.pdf")));
-			ByteArrayOutputStream outputStream = streamBusiness.merge(inputStreams, Mime.PDF);
+			ByteArrayOutputStream outputStream = streamBusiness.merge(inputStreams, FileExtension.PDF);
 			FileUtils.writeByteArrayToFile(new File(base, "target/"+System.currentTimeMillis()+".pdf"), outputStream.toByteArray());
 			
 		} catch (Exception e) {
@@ -51,7 +51,7 @@ public class StreamBusinessUT extends AbstractUnitTest {
 		try {
 			inputStreams.add(new FileInputStream(new File(directory, "1.jpg")));
 			inputStreams.add(new FileInputStream(new File(directory, "2.jpg")));
-			ByteArrayOutputStream outputStream = streamBusiness.merge(inputStreams, Mime.IMAGE_JPEG);
+			ByteArrayOutputStream outputStream = streamBusiness.merge(inputStreams, FileExtension.JPG);
 			FileUtils.writeByteArrayToFile(new File(base, "target/generated/"+System.currentTimeMillis()+".jpg"), outputStream.toByteArray());
 			
 		} catch (Exception e) {

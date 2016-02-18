@@ -8,8 +8,8 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
-import org.cyk.system.root.model.Mime;
 import org.cyk.system.root.model.file.File;
+import org.cyk.utility.common.FileExtension;
 
 public interface FileBusiness extends TypedBusiness<File> {
     
@@ -31,7 +31,7 @@ public interface FileBusiness extends TypedBusiness<File> {
     
     Path findSystemPath(File file);
     
-    ByteArrayOutputStream merge(Collection<File> files,Mime mime);
+    ByteArrayOutputStream merge(Collection<File> files,FileExtension fileExtension);
     
     /* Media Stuff */
     

@@ -26,9 +26,9 @@ import org.cyk.system.root.business.api.file.MediaBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
 import org.cyk.system.root.business.api.file.StreamBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.model.Mime;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.persistence.api.file.FileDao;
+import org.cyk.utility.common.FileExtension;
 
 public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao> implements FileBusiness,Serializable {
 
@@ -132,11 +132,11 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public ByteArrayOutputStream merge(Collection<File> files,Mime mime) {
+	public ByteArrayOutputStream merge(Collection<File> files,FileExtension fileExtension) {
 		Collection<InputStream> inputStreams = new ArrayList<>();
 		for(File file : files)
 			inputStreams.add(findInputStream(file));
-		return streamBusiness.merge(inputStreams, mime);
+		return streamBusiness.merge(inputStreams, fileExtension);
 	}
 	
 }

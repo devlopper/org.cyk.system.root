@@ -14,16 +14,17 @@ import javax.imageio.ImageIO;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.cyk.system.root.business.api.file.StreamBusiness;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
-import org.cyk.system.root.model.Mime;
+import org.cyk.utility.common.FileContentType;
+import org.cyk.utility.common.FileExtension;
 
 public class StreamBusinessImpl implements StreamBusiness,Serializable {
 
 	private static final long serialVersionUID = -1477124794923780532L;
 
 	@Override
-	public ByteArrayOutputStream merge(Collection<InputStream> inputStreams, Mime mime) {
+	public ByteArrayOutputStream merge(Collection<InputStream> inputStreams, FileExtension fileExtension) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		if(Mime.PDF.equals(mime)){
+		if(FileExtension.PDF.equals(fileExtension)){
 			PDFMergerUtility merger = new PDFMergerUtility();
 			merger.addSources(new ArrayList<>(inputStreams));
 			merger.setDestinationStream(outputStream);
@@ -33,7 +34,7 @@ public class StreamBusinessImpl implements StreamBusiness,Serializable {
 				e.printStackTrace();
 				ExceptionUtils.getInstance().exception("stream.cannotmerge");
 			}
-		}else if(Mime.IMAGE_JPEG.equals(mime)){
+		}else if(FileContentType.IMAGE.equals(fileExtension.getContentType())){
 			BufferedImage result = new BufferedImage(500, 800, BufferedImage.TYPE_INT_RGB);
 			Graphics g = result.getGraphics();
 			
@@ -51,7 +52,7 @@ public class StreamBusinessImpl implements StreamBusiness,Serializable {
 		        y += bi.getHeight();
 		    }
 			try {
-				ImageIO.write(result,"jpeg",outputStream);
+				ImageIO.write(result,fileExtension.getValue(),outputStream);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

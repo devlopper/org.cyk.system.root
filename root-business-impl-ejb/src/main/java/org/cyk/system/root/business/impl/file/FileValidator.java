@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.cyk.system.root.business.impl.RootValueValidatorImpl;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.model.file.File;
+import org.cyk.utility.common.FileExtension;
 import org.cyk.utility.common.validation.Client;
 
 @Getter @Setter
@@ -20,7 +21,7 @@ public class FileValidator extends AbstractValidator<File> implements Serializab
     private static final long serialVersionUID = -3799482462496328200L;
     
     
-    protected Set<String> extensions = new HashSet<>(RootValueValidatorImpl.EXTENSIONS);
+    protected Set<FileExtension> extensions = new HashSet<>(RootValueValidatorImpl.EXTENSIONS);
     protected Long minimumSize=RootValueValidatorImpl.SIZE_MINIMUM,maximumSize=RootValueValidatorImpl.SIZE_MAXIMUM;
     
     /**/

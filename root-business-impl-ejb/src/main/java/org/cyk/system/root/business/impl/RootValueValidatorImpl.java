@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.cyk.system.root.business.api.RootValueValidator;
+import org.cyk.utility.common.FileExtension;
 import org.cyk.utility.common.FileExtensionGroup;
 
 public class RootValueValidatorImpl implements RootValueValidator,Serializable {
@@ -14,7 +15,7 @@ public class RootValueValidatorImpl implements RootValueValidator,Serializable {
 
 	public static Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z]+$");//FIXME name can have accent and so on
 	
-	public static Set<String> EXTENSIONS = new HashSet<>();
+	public static Set<FileExtension> EXTENSIONS = new HashSet<>();
     static{
     	for(FileExtensionGroup fileExtensionGroup : FileExtensionGroup.values())
     		EXTENSIONS.addAll(fileExtensionGroup.getExtensions());
@@ -34,7 +35,7 @@ public class RootValueValidatorImpl implements RootValueValidator,Serializable {
 	}
 
 	@Override
-	public Boolean isValidFileExtension(String extension,Set<String> extensions) {
+	public Boolean isValidFileExtension(String extension,Set<FileExtension> extensions) {
 		return (extensions==null?EXTENSIONS:extensions).contains(extension);
 	}
 	
