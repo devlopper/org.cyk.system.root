@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -35,6 +36,11 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 	@Override
 	public String format(Number number) {
 		return format(number, languageBusiness.findCurrentLocale());
+	}
+	
+	@Override
+	public String formatToBase(Number number, FormatToBaseArguments arguments) {
+		return new BigInteger(number.toString()).toString(arguments.getBase());
 	}
 	
 	@Override
