@@ -4,16 +4,19 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.inject.Singleton;
 
-import lombok.Setter;
-
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.utility.common.Constant;
+
+import lombok.Setter;
 
 @Singleton
 public class NumberBusinessImpl implements NumberBusiness,Serializable {
@@ -125,6 +128,50 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 	@Override
 	public BigDecimal parseBigDecimal(String value) {
 		return value == null ? null : new BigDecimal(value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public<NUMBER extends Number> NUMBER findHighest(Collection<NUMBER> numbers) {
+		NUMBER highest = null;
+		for(Number number : numbers)
+			if(number instanceof Long){
+				if(highest==null || (Long)number > (Long)highest)
+					highest = (NUMBER) number;
+			}else if(number instanceof Integer){
+				if(highest==null || (Integer)number > (Integer)highest)
+					highest = (NUMBER) number;
+			}else
+				throw new RuntimeException("Not yet handled "+number.getClass());
+		return highest;
+	}
+	
+	@Override
+	public String concatenate(Collection<? extends Number> numbers,Integer elementLenght) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for(Number number : numbers)
+			stringBuilder.append(StringUtils.leftPad(String.valueOf(number), elementLenght,Constant.CHARACTER_ZERO));
+		return stringBuilder.toString();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <NUMBER extends Number> Collection<NUMBER> deconcatenate(Class<NUMBER> numberClass,String number,Integer elementLenght) {
+		Collection<NUMBER> numbers = new ArrayList<>();
+		for(int i=0; i<number.length();i=i+elementLenght){
+			String p = StringUtils.substring(number, i, i+elementLenght);
+			NUMBER n = null;
+			if(Long.class.equals(numberClass))
+				n = (NUMBER) new Long(p);
+			else if(Integer.class.equals(numberClass))
+				n = (NUMBER) new Integer(p);
+			
+			if(n==null)
+				;
+			else
+				numbers.add(n);
+		}
+		return numbers;
 	}
 
 }

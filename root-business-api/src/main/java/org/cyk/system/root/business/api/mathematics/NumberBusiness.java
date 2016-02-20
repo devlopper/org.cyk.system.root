@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.api.mathematics;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Locale;
 
 public interface NumberBusiness {
@@ -25,7 +26,9 @@ public interface NumberBusiness {
 	String decodeBase36(String number);
 	String decodeBase62(String number);
 	
-	//String concatenate(Collection<Long> numbers,Boolean numberLenght);
+	<NUMBER extends Number> NUMBER findHighest(Collection<NUMBER> numbers);
+	String concatenate(Collection<? extends Number> numbers,Integer elementLenght);
+	<NUMBER extends Number> Collection<NUMBER> deconcatenate(Class<NUMBER> numberClass,String number,Integer elementLenght);
 	
 	BigDecimal computePercentage(BigDecimal value,BigDecimal percent);
 	BigDecimal incrementBy(BigDecimal value,BigDecimal increment);

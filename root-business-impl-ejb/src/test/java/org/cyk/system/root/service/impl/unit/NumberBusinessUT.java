@@ -2,7 +2,10 @@ package org.cyk.system.root.service.impl.unit;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
@@ -27,6 +30,9 @@ public class NumberBusinessUT extends AbstractUnitTest {
 	protected void _execute_() {
 		super._execute_();
 		assertEquals("15", numberBusiness.encode("15", NumberBusiness.BASE_10_CHARACTERS));
+		
+		assertConcatenate(Integer.class, Arrays.asList(1,18,7412,951), 2, "0001001874120951");
+		
 	}
 	
 	@Test
@@ -43,7 +49,7 @@ public class NumberBusinessUT extends AbstractUnitTest {
 		assertEncode36("123456789852","1KPQZGPO");	
 	}
 	
-	@Test
+	//@Test
 	public void base10ToBase62(){
 		assertEncode62("15","f");
 		assertEncode62("9517345682523141","HAycT9quN");
@@ -102,6 +108,16 @@ public class NumberBusinessUT extends AbstractUnitTest {
 	}
 	
 	/**/
+	
+	private <NUMBER extends Number> void assertConcatenate(Class<NUMBER> numberClass,List<NUMBER> numbers,Integer highestIndex,String expectedConcatenation){
+		NUMBER highest = numberBusiness.findHighest(numbers);
+		assertEquals(numbers.get(highestIndex.intValue()), highest);
+		String c = numberBusiness.concatenate(numbers, highest.toString().length());
+		assertEquals(expectedConcatenation, c);
+		List<NUMBER> numbers2 = new ArrayList<>(numberBusiness.deconcatenate(numberClass, c, highest.toString().length()));
+		for(int i=0;i<numbers.size();i++)
+			assertEquals(numbers.get(i), numbers2.get(i));
+	}
 	
 	private void assertEncode16(String number,String result){
 		assertCoding(number, "16", numberBusiness.encodeToBase16(number), result);
