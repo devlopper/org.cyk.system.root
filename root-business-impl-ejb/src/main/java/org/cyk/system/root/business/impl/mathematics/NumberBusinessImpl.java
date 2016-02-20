@@ -39,8 +39,72 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 	}
 	
 	@Override
-	public String formatToBase(Number number, FormatToBaseArguments arguments) {
-		return new BigInteger(number.toString()).toString(arguments.getBase());
+	public String encode(String number, String inputCharacters, String outputCharacters) {
+		BigInteger integer = new BigInteger(number);
+		if (integer.compareTo(BigInteger.ZERO) == -1) {
+			throw new IllegalArgumentException(number+" must be nonnegative");
+		}
+		BigInteger size = new BigInteger(String.valueOf(outputCharacters.length()));
+		String result = "";
+		while (integer.compareTo(BigInteger.ZERO) == 1) {
+			result = outputCharacters.charAt(integer.mod(size).intValue()) + result;
+			integer = integer.divide(size);
+		}
+		return result;
+	}
+	@Override
+	public String encode(String number, String outputCharacters) {
+		return encode(number, BASE_10_CHARACTERS, outputCharacters);
+	}
+	@Override
+	public String encodeToBase16(String number) {
+		return encode(number, BASE_16_CHARACTERS);
+	}
+	@Override
+	public String encodeToBase36(String number) {
+		return encode(number, BASE_36_CHARACTERS);
+	}
+	@Override
+	public String encodeToBase62(String number) {
+		return encode(number, BASE_62_CHARACTERS);
+	}
+	
+	@Override
+	public String decode(String number, String inputCharacters, String outputCharacters) {
+		for (char character : number.toCharArray()) {
+			if (!inputCharacters.contains(String.valueOf(character))) {
+				throw new IllegalArgumentException("Invalid character(s) in string: " + character);
+			}
+		}
+		BigInteger result = BigInteger.ZERO;
+		number = new StringBuffer(number).reverse().toString();
+		BigDecimal count = BigDecimal.ONE;
+		BigDecimal inputCharactersLenght = new BigDecimal(inputCharacters.length());
+		for (char character : number.toCharArray()) {
+			result = result.add(new BigDecimal(inputCharacters.indexOf(character)).multiply(count).toBigInteger());
+			count = count.multiply(inputCharactersLenght);
+		}
+		return result.toString();
+	}
+	
+	@Override
+	public String decode(String number, String inputCharacters) {
+		return decode(number, inputCharacters, BASE_10_CHARACTERS);
+	}
+	
+	@Override
+	public String decodeBase16(String number) {
+		return decode(number, BASE_16_CHARACTERS);
+	}
+	
+	@Override
+	public String decodeBase36(String number) {
+		return decode(number, BASE_36_CHARACTERS);
+	}
+	
+	@Override
+	public String decodeBase62(String number) {
+		return decode(number, BASE_62_CHARACTERS);
 	}
 	
 	@Override
