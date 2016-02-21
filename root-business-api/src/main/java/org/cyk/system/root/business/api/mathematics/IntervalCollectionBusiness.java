@@ -10,4 +10,6 @@ public interface IntervalCollectionBusiness extends AbstractCollectionBusiness<I
     
     BigDecimal findLowestValue(IntervalCollection intervalCollection);
     BigDecimal findHighestValue(IntervalCollection intervalCollection);
+    
+    Boolean isAllIntervalLowerEqualsToHigher(IntervalCollection intervalCollection); 
 }

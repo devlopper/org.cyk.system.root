@@ -41,6 +41,12 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		return null;
 	}  
 	
+	@Override
+	public Boolean isLowerEqualsToHigher(Interval interval) {
+		BigDecimal l1=findGreatestLowestValue(interval),l2=findLowestGreatestValue(interval);
+		return l1!=null && l2!=null && l1.equals(l2);
+	}
+	
 	private Boolean isOutOfExtremity(IntervalExtremity intervalExtremity,Boolean low, BigDecimal value, Integer scale) {
 		if(value==null || intervalExtremity.getValue()==null)
 			return false;

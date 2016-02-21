@@ -67,4 +67,18 @@ public class IntervalBusinessUT extends AbstractUnitTest {
 		interval.getHigh().setExcluded(Boolean.FALSE);
 		Assert.assertEquals(new BigDecimal("5"),intervalBusiness.findLowestGreatestValue(interval));
 	}
+	
+	@Test
+	public void isLowerEqualsToHigher() {
+		Interval interval1 = new Interval(null, null, null, new BigDecimal("1"), new BigDecimal("5"));
+		interval1.getHigh().setExcluded(Boolean.FALSE);
+		Assert.assertEquals(Boolean.FALSE,intervalBusiness.isLowerEqualsToHigher(interval1));
+		
+		Interval interval2 = new Interval(null, null, null, new BigDecimal("1"), new BigDecimal("1"));
+		interval2.getLow().setExcluded(Boolean.FALSE);
+		interval2.getHigh().setExcluded(Boolean.FALSE);
+		Assert.assertEquals(Boolean.TRUE,intervalBusiness.isLowerEqualsToHigher(interval2));
+	}
+	
+	
 }

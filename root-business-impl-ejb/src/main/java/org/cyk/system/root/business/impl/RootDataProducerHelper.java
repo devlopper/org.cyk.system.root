@@ -11,8 +11,6 @@ import java.util.Deque;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +30,9 @@ import org.cyk.system.root.model.geography.PostalBox;
 import org.cyk.system.root.model.geography.Website;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
+import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.mathematics.MetricValueInputted;
+import org.cyk.system.root.model.mathematics.MetricValueType;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachine;
@@ -48,6 +49,8 @@ import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.database.DatabaseUtils;
 import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
 import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
+
+import lombok.Getter;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -147,6 +150,24 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		Interval interval = new Interval(collection, code, name, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
 		
 		return interval;
+	}
+	
+	public MetricCollection createMetricCollection(String code,String name,MetricValueType metricValueType,MetricValueInputted metricValueInputted
+			,Byte numberOfDecimalAfterDot,String[] items,String[][] intervals){
+		MetricCollection metricCollection = new MetricCollection(code,name);
+		metricCollection.setValueInputted(metricValueInputted);
+		metricCollection.setValueType(metricValueType);
+		for(int i=0;i<items.length;i++){
+			metricCollection.addItem(code+"_"+i+"",items[i]);
+		}
+		
+		metricCollection.setValueIntervalCollection(new IntervalCollection(code+"_METRIC_IC"));
+		metricCollection.getValueIntervalCollection().setNumberOfDecimalAfterDot(numberOfDecimalAfterDot);
+		for(String[] interval : intervals){
+			metricCollection.getValueIntervalCollection().addItem(interval[0], interval[1], interval[2], interval[3]);
+		}
+		create(metricCollection);
+		return metricCollection;
 	}
 	
 	public File createFile(Package basePackage,String relativePath,String name){

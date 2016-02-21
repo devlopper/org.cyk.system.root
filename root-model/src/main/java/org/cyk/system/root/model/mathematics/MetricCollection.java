@@ -8,11 +8,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import org.cyk.system.root.model.AbstractCollection;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.cyk.system.root.model.AbstractCollection;
 
 @Entity @Getter @Setter @NoArgsConstructor
 public class MetricCollection extends AbstractCollection<Metric> implements Serializable {
@@ -21,6 +21,7 @@ public class MetricCollection extends AbstractCollection<Metric> implements Seri
 
 	@OneToOne private IntervalCollection valueIntervalCollection;
 	@Enumerated(EnumType.ORDINAL) @NotNull private MetricValueType valueType = MetricValueType.NUMBER;
+	@Enumerated(EnumType.ORDINAL) @NotNull private MetricValueInputted valueInputted = MetricValueInputted.VALUE_INTERVAL_VALUE;
 	
 	public MetricCollection(String code, String name) {
 		super(code, name, null, null);

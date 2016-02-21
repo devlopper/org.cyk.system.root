@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.persistence.api.mathematics.IntervalCollectionDao;
@@ -31,6 +32,15 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	protected IntervalDao getItemDao() {
 		return intervalDao;
 	}
+	
+	@Override
+	public IntervalCollection create(IntervalCollection collection) {
+		collection = super.create(collection);
+		collection.setLowestValue(findLowestValue(collection));
+		collection.setHighestValue(findHighestValue(collection));
+		collection = dao.update(collection);
+		return collection;
+	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BigDecimal findLowestValue(IntervalCollection intervalCollection) {
@@ -40,6 +50,14 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public BigDecimal findHighestValue(IntervalCollection intervalCollection) {
 		return dao.readHighestValue(intervalCollection);
+	}
+	
+	@Override
+	public Boolean isAllIntervalLowerEqualsToHigher(IntervalCollection intervalCollection) {
+		for(Interval interval : intervalDao.readByCollection(intervalCollection, Boolean.TRUE))
+			if( !Boolean.TRUE.equals(RootBusinessLayer.getInstance().getIntervalBusiness().isLowerEqualsToHigher(interval)) )
+				return Boolean.FALSE;
+		return Boolean.TRUE;
 	}
 	
 	@Override
