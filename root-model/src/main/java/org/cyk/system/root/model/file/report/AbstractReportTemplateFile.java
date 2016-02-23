@@ -82,4 +82,27 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex6(){
 		return labelValueCollections.get(6);
 	}
+	
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex7(){
+		return labelValueCollections.get(7);
+	}
+	
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex8(){
+		return labelValueCollections.get(8);
+	}
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex9(){
+		return labelValueCollections.get(9);
+	}
+	
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex10(){
+		return labelValueCollections.get(10);
+	}
+	
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex11(){
+		return labelValueCollections.get(11);
+	}
+	
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex12(){
+		return labelValueCollections.get(12);
+	}
 }
