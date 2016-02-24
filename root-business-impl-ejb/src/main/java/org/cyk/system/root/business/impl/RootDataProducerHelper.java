@@ -191,7 +191,15 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code){
-		return (T) genericDao.use(aClass).use(aClass).select().where("code", code).one();
+		return (T) genericDao.use(aClass).select().where("code", code).one();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractEnumeration> Collection<T> getEnumerations(Class<T> aClass){
+		Collection<T> collection = new ArrayList<>();
+		for(AbstractIdentifiable identifiable : genericBusiness.use(aClass).find().all())
+			collection.add((T) identifiable);
+		return collection;
 	}
 	
 	public PhoneNumber addPhoneNumber(ContactCollection collection,Country country,PhoneNumberType type,String number){
