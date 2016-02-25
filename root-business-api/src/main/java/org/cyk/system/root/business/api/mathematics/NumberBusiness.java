@@ -1,8 +1,12 @@
 package org.cyk.system.root.business.api.mathematics;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Locale;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public interface NumberBusiness {
 
@@ -13,6 +17,7 @@ public interface NumberBusiness {
 	
 	String format(Number number,Locale locale);
 	String format(Number number);
+	String format(Number number,FormatArguments arguments);
 	
 	String encode(String number,String inputCharacters,String outputCharacters);
 	String encode(String number,String outputCharacters);
@@ -37,4 +42,15 @@ public interface NumberBusiness {
 	BigDecimal parseBigDecimal(String value);
 	
 	BigDecimal _100 = new BigDecimal("100");
+	
+	/**/
+	
+	@Getter @Setter
+	public static class FormatArguments implements Serializable{
+		private static final long serialVersionUID = 7407251574517349144L;
+		public static enum Type{DIGIT,LETTER};
+		private Locale locale;
+		private Type type = Type.DIGIT;
+		private Boolean isRank = Boolean.FALSE;
+	}
 }
