@@ -48,9 +48,9 @@ public interface NumberBusiness {
 	@Getter @Setter
 	public static class FormatArguments implements Serializable{
 		private static final long serialVersionUID = 7407251574517349144L;
-		public static enum Type{DIGIT,LETTER};
+		public static enum CharacterSet{DIGIT,LETTER};
 		private Locale locale;
-		private Type type = Type.DIGIT;
+		private CharacterSet type = CharacterSet.DIGIT;
 		private Boolean isRank = Boolean.FALSE;
 	}
 }

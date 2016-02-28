@@ -43,9 +43,10 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 	
 	@Override
 	public String format(Number number, FormatArguments arguments) {
-		if(FormatArguments.Type.DIGIT.equals(arguments.getType())){
-			throw new RuntimeException("Not yet implemented");
-		}else if(FormatArguments.Type.LETTER.equals(arguments.getType())){
+		if(FormatArguments.CharacterSet.DIGIT.equals(arguments.getType())){
+			NumberFormat numberFormatter = NumberFormat.getNumberInstance(arguments.getLocale()==null?languageBusiness.findCurrentLocale():arguments.getLocale());
+			return numberFormatter.format(number);
+		}else if(FormatArguments.CharacterSet.LETTER.equals(arguments.getType())){
 			if(Boolean.TRUE.equals(arguments.getIsRank())){
 				return languageBusiness.findText("rank."+number+".letter");
 			}else{
