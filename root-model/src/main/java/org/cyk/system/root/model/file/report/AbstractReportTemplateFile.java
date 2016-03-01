@@ -55,70 +55,91 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	
 	/**/
 	
+	private LabelValueCollectionReport getLabelValueCollectionAtIndex(Integer index){
+		return labelValueCollections.get(index.intValue());
+		//return index < labelValueCollections.size() ? labelValueCollections.get(index.intValue()) : null;
+	}
+	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex0(){
-		return labelValueCollections.get(0);
+		return getLabelValueCollectionAtIndex(0);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex1(){
-		return labelValueCollections.get(1);
+		return getLabelValueCollectionAtIndex(1);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex2(){
-		return labelValueCollections.get(2);
+		return getLabelValueCollectionAtIndex(2);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex3(){
-		return labelValueCollections.get(3);
+		return getLabelValueCollectionAtIndex(3);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex4(){
-		return labelValueCollections.get(4);
+		return getLabelValueCollectionAtIndex(4);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex5(){
-		return labelValueCollections.get(5);
+		return getLabelValueCollectionAtIndex(5);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex6(){
-		return labelValueCollections.get(6);
+		return getLabelValueCollectionAtIndex(6);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex7(){
-		return labelValueCollections.get(7);
+		return getLabelValueCollectionAtIndex(7);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex8(){
-		return labelValueCollections.get(8);
+		return getLabelValueCollectionAtIndex(8);
 	}
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex9(){
-		return labelValueCollections.get(9);
+		return getLabelValueCollectionAtIndex(9);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex10(){
-		return labelValueCollections.get(10);
+		return getLabelValueCollectionAtIndex(10);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex11(){
-		return labelValueCollections.get(11);
+		return getLabelValueCollectionAtIndex(11);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex12(){
-		return labelValueCollections.get(12);
+		return getLabelValueCollectionAtIndex(12);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex13(){
-		return labelValueCollections.get(13);
+		return getLabelValueCollectionAtIndex(13);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex14(){
-		return labelValueCollections.get(14);
+		return getLabelValueCollectionAtIndex(14);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex15(){
-		return labelValueCollections.get(15);
+		return getLabelValueCollectionAtIndex(15);
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex16(){
-		return labelValueCollections.get(16);
+		return getLabelValueCollectionAtIndex(16);
+	}
+	
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex17(){
+		return getLabelValueCollectionAtIndex(17);
+	}
+	
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex18(){
+		return getLabelValueCollectionAtIndex(18);
+	}
+	
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex19(){
+		return getLabelValueCollectionAtIndex(19);
+	}
+	
+	public LabelValueCollectionReport getLabelValueCollectionAtIndex20(){
+		return getLabelValueCollectionAtIndex(20);
 	}
 }
