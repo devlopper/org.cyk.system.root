@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
@@ -19,7 +20,7 @@ import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
 
 @Stateless
-public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao> implements MovementCollectionBusiness,Serializable {
+public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao,MovementBusiness> implements MovementCollectionBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
@@ -28,6 +29,11 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Inject
 	public MovementCollectionBusinessImpl(MovementCollectionDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected MovementBusiness getItemBusiness() {
+		return RootBusinessLayer.getInstance().getMovementBusiness();
 	}
 		
 	@Override

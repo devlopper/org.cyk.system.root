@@ -22,6 +22,22 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
         super(dao);
     }
 	
+	@Override
+	public ENUMERATION instanciateOne(String[] values,InstanciateOneListener listener) {
+		if(values.length>1){
+			if(listener!=null)
+				listener.setLastProcessedIndex(1);
+			return instanciateOne(values[0],values[1]);
+		}
+		if(values.length>0){
+			if(listener!=null)
+				listener.setLastProcessedIndex(0);
+			return instanciateOne(values[0]);
+		}
+		
+		return null;
+	}
+
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ENUMERATION instanciateOne(String code,String name) {
 		ObjectFieldValues objectFieldValues = new ObjectFieldValues(clazz);

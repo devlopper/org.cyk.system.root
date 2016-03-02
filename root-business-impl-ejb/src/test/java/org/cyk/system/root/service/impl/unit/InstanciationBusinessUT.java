@@ -3,6 +3,8 @@ package org.cyk.system.root.service.impl.unit;
 import java.util.Collection;
 
 import org.cyk.system.root.business.impl.geography.PhoneNumberTypeBusinessImpl;
+import org.cyk.system.root.business.impl.mathematics.IntervalCollectionBusinessImpl;
+import org.cyk.system.root.business.impl.mathematics.MetricCollectionBusinessImpl;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.party.Party;
@@ -17,11 +19,16 @@ public class InstanciationBusinessUT extends AbstractBusinessUT {
 	private static final long serialVersionUID = 124355073578123984L;
 
 	@InjectMocks private PhoneNumberTypeBusinessImpl phoneNumberTypeBusiness;
+	@InjectMocks private MetricCollectionBusinessImpl metricCollectionBusiness;
+	@InjectMocks private IntervalCollectionBusinessImpl intervalCollectionBusiness;
+	//@InjectMocks private MetricBusinessImpl metricCollectionBusiness;
 	
 	@Override
 	protected void registerBeans(Collection<Object> collection) {
 		super.registerBeans(collection);
 		collection.add(phoneNumberTypeBusiness);
+		collection.add(metricCollectionBusiness);
+		collection.add(intervalCollectionBusiness);
 	}
 	
 	//@Test

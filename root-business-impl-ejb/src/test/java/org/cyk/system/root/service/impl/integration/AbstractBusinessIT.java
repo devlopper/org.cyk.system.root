@@ -18,6 +18,7 @@ import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
+import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.test.ArchiveBuilder;
 import org.cyk.utility.test.integration.AbstractIntegrationTestJpaBased;
@@ -136,6 +137,11 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     protected void installApplication(){
     	RootBusinessLayer.getInstance().installApplication();
     }
+    
+    protected void assertEquals(Object actual,ObjectFieldValues expected){
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
+			listener.assertEquals(actual, expected);
+	}
     
     public static Archive<?> createRootDeployment() {
         return  

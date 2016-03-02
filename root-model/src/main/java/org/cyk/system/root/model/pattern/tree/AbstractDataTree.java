@@ -44,4 +44,9 @@ public class AbstractDataTree<TYPE extends DataTreeType> extends AbstractDataTre
 		this.type=type;
 	}
 	
+	public AbstractDataTree<TYPE> setType(TYPE type){
+		this.type = type;
+		return this;
+	}
+	
 }

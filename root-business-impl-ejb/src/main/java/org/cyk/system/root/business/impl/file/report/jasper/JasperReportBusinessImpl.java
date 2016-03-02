@@ -91,7 +91,7 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 				jasperPrint.setPageHeight(aReport.getHeight());
 			__build__(aReport, jasperPrint, print);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

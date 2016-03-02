@@ -8,10 +8,10 @@ import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
-import org.cyk.system.root.model.mathematics.MetricValueType;
-import org.cyk.utility.common.ObjectFieldValues;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.shrinkwrap.api.Archive;
 
-public class CollectionBusinessIT extends AbstractBusinessIT {
+public class InstanciateBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
     
@@ -44,7 +44,7 @@ public class CollectionBusinessIT extends AbstractBusinessIT {
     	assertThat("Has no interval collection", metricBusiness.find("1").getValueIntervalCollection()==null);
     	
     	metric1.setValueIntervalCollection(new IntervalCollection("IC1"));
-    	metric1.getValueIntervalCollection().addItem("1", "I1","1","2"); 
+    	metric1.getValueIntervalCollection().addItem("1", "I1","1","2");
     	metric1.getValueIntervalCollection().addItem("2", "I2","3","4");
     	metric1.getValueIntervalCollection().addItem("3", "I3","5","6");
     	metric1.getValueIntervalCollection().addItem("4", "I4","7","8");
@@ -55,14 +55,11 @@ public class CollectionBusinessIT extends AbstractBusinessIT {
     	assertThat("Is null", metricCollectionBusiness.find("MC0")==null);
     	assertThat("Interval collection IC1 exists", intervalCollectionBusiness.find("IC1")!=null);
     	assertThat("Has interval collection", metricBusiness.find("1").getValueIntervalCollection()!=null);
-    	
-    	metricCollection = metricCollectionBusiness.instanciateOne("MC1", "NAME", MetricValueType.NUMBER
-			, new String[]{"MV1","MV2","MV3"}
-			, new String[][]{ {"E", "Excellent", "1", "1"},{"G", "Good", "2", "2"},{"S", "Satisfactory", "3", "3"},{"N", "Needs Improvement", "4", "4"}
-	    	,{"H", "Has no regard", "5", "5"} });
-		assertEquals(metricCollection, new ObjectFieldValues(MetricCollection.class)
-			.set(MetricCollection.FIELD_CODE, "MC1"));
     }
 
+    @Override protected void create() {}
+    @Override protected void delete() {}
+    @Override protected void read() {}
+    @Override protected void update() {}
 
 }

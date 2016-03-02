@@ -24,14 +24,14 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	public IntervalBusinessImpl(IntervalDao dao) {
 		super(dao); 
 	}
-	
+		
 	@Override
 	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
 		Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
 		
 		return interval;
 	}
-
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Interval findByCollectionByValue(IntervalCollection collection, BigDecimal value,Integer scale) {
 		Collection<Interval> intervals = dao.readByCollection(collection);
