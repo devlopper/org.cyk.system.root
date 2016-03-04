@@ -25,17 +25,6 @@ public class LabelValueCollection extends AbstractModelElement implements Serial
 		return toString();
 	}
 	
-	public void add(String labelId,String label,String value){
-		collection.add(new LabelValue(labelId,label, value));
-	}
-	
-	public LabelValue getById(String labelId){
-		for(LabelValue labelValue : collection)
-			if(labelValue.getLabelId().equals(labelId))
-				return labelValue;
-		return null;
-	}
-	
 	@Override
 	public String toString() {
 		return StringUtils.join(collection,",");

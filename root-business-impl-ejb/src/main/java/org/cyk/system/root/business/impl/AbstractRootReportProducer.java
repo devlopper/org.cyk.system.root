@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.RootReportProducer;
@@ -12,6 +13,8 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ContactReport;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalReport;
+import org.cyk.system.root.model.mathematics.Metric;
+import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.ActorReport;
 import org.cyk.system.root.model.party.person.JobInformations;
@@ -145,6 +148,33 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected InputStream findInputStream(File file){
 		return RootBusinessLayer.getInstance().getFileBusiness().findInputStream(file);
+	}
+	
+	protected String[][] convertToArray(Collection<Metric> metrics,Collection<MetricValue> metricValues){
+		String[][] values = new String[metrics.size()][2];
+		Integer i = 0;
+		for(Metric metric : metrics){
+			for(MetricValue metricValue : metricValues)
+				if(metricValue.getMetric().equals(metric)){
+					values[i][0] = metric.getName();
+					values[i][1] = rootBusinessLayer.getMetricValueBusiness().format(metricValue);
+				}
+			i++;
+		}
+		return values;
+	}
+	
+	protected String[][] convertToArray(Collection<Interval> intervals,Boolean includeExtremities){
+		String[][] values = new String[intervals.size()][2+(Boolean.TRUE.equals(includeExtremities)?1:0)];
+		Integer i = 0;
+		for(Interval interval : intervals){
+			values[i][0] = interval.getCode();
+			values[i][1] = interval.getName(); //rootBusinessLayer.getMetricValueBusiness().format(metricValue);
+			if(Boolean.TRUE.equals(includeExtremities))
+				values[i][2] = interval.getLow()+" - "+interval.getHigh();
+			i++;
+		}
+		return values;
 	}
 
 	@Override

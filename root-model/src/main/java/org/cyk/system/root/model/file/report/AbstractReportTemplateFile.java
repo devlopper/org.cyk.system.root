@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 
 @Getter @Setter @NoArgsConstructor
@@ -15,16 +16,17 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	  
 	private static final long serialVersionUID = 5632592320990657808L;
 
-	protected LabelValueCollection currentLabelValueCollection;
+	protected LabelValueCollectionReport currentLabelValueCollection;
 	protected List<LabelValueCollectionReport> labelValueCollections = new ArrayList<>();
 	
-	public void labelValue(LabelValueCollection collection,String labelId,String labelValue,String value,Boolean condition){
+	public void labelValue(LabelValueCollectionReport collection,String labelId,String labelValue,String value,Boolean condition){
 		if(!Boolean.TRUE.equals(condition))
 			return;
 		currentLabelValueCollection = collection;
 		currentLabelValueCollection.add(labelId,labelValue, value);
 	}
-	public void labelValue(LabelValueCollection collection,String labelId,String value,Boolean condition){
+	
+	public void labelValue(LabelValueCollectionReport collection,String labelId,String value,Boolean condition){
 		labelValue(collection, labelId,null, value, condition);
 	}
 	
@@ -32,14 +34,14 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		labelValue(currentLabelValueCollection, id, value,condition);
 	}
 	
-	public void labelValue(LabelValueCollection collection,String id,String value){
+	public void labelValue(LabelValueCollectionReport collection,String id,String value){
 		labelValue(collection, id, value,Boolean.TRUE);
 	}
 	public void labelValue(String id,String value){
 		labelValue(currentLabelValueCollection,id, value);
 	}
 	
-	public LabelValue getLabelValue(String id){
+	public LabelValueReport getLabelValue(String id){
 		return currentLabelValueCollection.getById(id);
 	}
 	
@@ -51,6 +53,24 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	
 	public LabelValueCollectionReport randomLabelValueCollection(){
 		return randomLabelValueCollection(5);
+	}
+	
+	public void addLabelValueCollection(LabelValueCollectionReport labelValueCollectionReport){
+		currentLabelValueCollection = labelValueCollectionReport;
+		labelValueCollections.add(labelValueCollectionReport);
+	}
+	
+	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values){
+		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();
+		labelValueCollectionReport.setName(name);
+		if(values!=null)
+			for(String[] string : values){
+				LabelValueReport labelValue = labelValueCollectionReport.add(string[0], string[1]);
+				if(string.length>2)
+					labelValue.setExtendedValues(ArrayUtils.subarray(string, 2, string.length));
+			}
+		addLabelValueCollection(labelValueCollectionReport);
+		return labelValueCollectionReport;
 	}
 	
 	/**/

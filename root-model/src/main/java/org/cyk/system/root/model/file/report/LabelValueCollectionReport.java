@@ -38,16 +38,18 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 		collection.add(r = new LabelValueReport(this,identifier, label, value));
 		return r;
 	}
+	
 	public LabelValueReport add(String label,String value){
 		return add(null, label, value);
 	}
+	
 	public LabelValueReport add(String label){
 		return add(null, label, null);
 	}
 	
-	public LabelValueReport getById(String labelId){
+	public LabelValueReport getById(String identifier){
 		for(LabelValueReport labelValue : collection)
-			if(labelValue.getIdentifier().equals(labelId))
+			if(labelValue.getIdentifier().equals(identifier))
 				return labelValue;
 		return null;
 	}
