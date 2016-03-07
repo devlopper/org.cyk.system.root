@@ -2,16 +2,19 @@ package org.cyk.system.root.business.impl;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.RootReportProducer;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
 import org.cyk.system.root.model.file.report.LabelValueReport;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ContactReport;
 import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalReport;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricValue;
@@ -23,6 +26,7 @@ import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonReport;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.cdi.BeanAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,18 +172,50 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		String[][] values = new String[intervals.size()][2+(Boolean.TRUE.equals(includeExtremities)?1:0)];
 		Integer i = 0;
 		for(Interval interval : intervals){
-			values[i][0] = interval.getCode();
-			values[i][1] = interval.getName(); //rootBusinessLayer.getMetricValueBusiness().format(metricValue);
+			/*for(Listener listener : Listener.COLLECTION){
+				String v = listener.getCollectionItemCode(interval);
+				if(v!=null)
+					values[i][0] = v;
+			}*/
+			values[i][0] = rootBusinessLayer.getIntervalBusiness().findRelativeCode(interval);
+			values[i][1] = interval.getName();
 			if(Boolean.TRUE.equals(includeExtremities))
 				values[i][2] = interval.getLow()+" - "+interval.getHigh();
 			i++;
 		}
 		return values;
 	}
-
+	
+	protected LabelValueCollectionReport addIntervalCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,Boolean ascending,Boolean includeExtremities,
+			Integer[][] columnsToSwap){
+		String[][] values =  convertToArray(rootBusinessLayer.getIntervalDao().readByCollection(intervalCollection,ascending),includeExtremities);
+		if(columnsToSwap!=null)
+			for(Integer[] index : columnsToSwap){
+				commonUtils.swapColumns(values, index[0], index[1]);
+			}
+		return report.addLabelValueCollection(intervalCollection.getName(),values);
+	}
+	
 	@Override
 	protected Logger __logger__() {
 		return LOGGER;
+	}
+	
+	/**/
+	
+	public static interface Listener {
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		/**/
+		public static class Adapter extends BeanAdapter implements Serializable,Listener {
+			private static final long serialVersionUID = 1L;
+			
+			/**/
+			public static class Default extends Adapter implements Serializable {
+				private static final long serialVersionUID = 1L;
+				
+			}
+		}
 	}
 	
 }

@@ -8,7 +8,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
@@ -72,11 +71,10 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public IntervalCollection instanciateOne(String code,String name,String[][] intervals,String codeSeparator){
+	public IntervalCollection instanciateOne(String code,String name,String itemCodeSeparator,String[][] intervals){
 		IntervalCollection collection = instanciateOne(code,name);
 		for(String[] v : intervals){
-			collection.getCollection().add(new Interval(collection,StringUtils.isBlank(codeSeparator)?v[0]:(code+codeSeparator+v[0])
-					,v[1],new BigDecimal(v[2]),new BigDecimal(v[3])));
+			collection.getCollection().add(new Interval(collection,v[0],v[1],commonUtils.getBigDecimal(v[2]),commonUtils.getBigDecimal(v[3])));
 		}
 		return collection;
 	}

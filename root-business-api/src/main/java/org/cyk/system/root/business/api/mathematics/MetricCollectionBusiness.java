@@ -7,6 +7,7 @@ import org.cyk.system.root.model.mathematics.MetricValueType;
 
 public interface MetricCollectionBusiness extends AbstractCollectionBusiness<MetricCollection,Metric> {
     
+	MetricCollection instanciateOne(String code,String name,MetricValueType metricValueType,String[] items,String intervalCollectionName,String[][] intervals);
 	MetricCollection instanciateOne(String code,String name,MetricValueType metricValueType,String[] items,String[][] intervals);
     
 }

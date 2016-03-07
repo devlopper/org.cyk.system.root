@@ -54,12 +54,18 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 	}
 	 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public MetricCollection instanciateOne(String code,String name,MetricValueType metricValueType,String[] items,String[][] intervals){
+	public MetricCollection instanciateOne(String code,String name,MetricValueType metricValueType,String[] items,String intervalCollectionName,String[][] intervals){
 		MetricCollection collection = instanciateOne(code,name,items);
 		collection.setValueType(metricValueType);
-		String intervalCode = code+Constant.CHARACTER_UNDESCORE+collection.getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE+Interval.class.getSimpleName();
-		collection.setValueIntervalCollection(RootBusinessLayer.getInstance().getIntervalCollectionBusiness().instanciateOne(intervalCode, intervalCode, intervals));
+		if(intervalCollectionName==null)
+			intervalCollectionName = code+Constant.CHARACTER_UNDESCORE+collection.getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE+Interval.class.getSimpleName();
+		collection.setValueIntervalCollection(RootBusinessLayer.getInstance().getIntervalCollectionBusiness().instanciateOne(code, intervalCollectionName, intervals));
 		return collection;
+	}
+	
+	@Override
+	public MetricCollection instanciateOne(String code, String name, MetricValueType metricValueType, String[] items,String[][] intervals) {
+		return instanciateOne(code, name, metricValueType, items, null, intervals);
 	}
 	
 }

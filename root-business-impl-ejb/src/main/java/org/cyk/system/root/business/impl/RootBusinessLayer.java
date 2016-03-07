@@ -11,9 +11,6 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -119,10 +116,16 @@ import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
+import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -169,6 +172,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private PersonBusiness personBusiness;
     @Inject private IntervalCollectionBusiness intervalCollectionBusiness;
     @Inject private IntervalBusiness intervalBusiness;
+    @Inject private IntervalDao intervalDao;
     @Inject private RoleBusiness roleBusiness;
     @Inject private RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject private UserAccountBusiness userAccountBusiness;
@@ -180,7 +184,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private PersonTitleBusiness personTitleBusiness;
     @Inject private JobFunctionBusiness jobFunctionBusiness;
     @Inject private MetricCollectionBusiness metricCollectionBusiness;
+    @Inject private MetricCollectionDao metricCollectionDao;
     @Inject private MetricBusiness metricBusiness;
+    @Inject private MetricDao metricDao;
     @Inject private MetricValueBusiness metricValueBusiness;
     @Inject private UniformResourceLocatorBusiness uniformResourceLocatorBusiness;
     @Inject private UniformResourceLocatorParameterBusiness uniformResourceLocatorParameterBusiness;

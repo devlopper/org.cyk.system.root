@@ -8,6 +8,9 @@ import java.util.Collection;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+import org.cyk.utility.common.Constant;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +20,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 
 	private static final long serialVersionUID = -3099832512046879464L;
 	
+	protected String itemCodeSeparator = Constant.CHARACTER_UNDESCORE.toString(); 
 	@Transient protected Collection<ITEM> collection;
 
 	public AbstractCollection(String code, String name, String abbreviation,String description) {
@@ -34,7 +38,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		Class<ITEM> clazz = (Class<ITEM>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		try {
 			ITEM item = clazz.newInstance();
-			item.setCode(code);
+			item.setCode( (StringUtils.isBlank(itemCodeSeparator) ? Constant.EMPTY_STRING : (this.code+itemCodeSeparator))+code);
 			item.setName(name);
 			((AbstractCollectionItem<AbstractCollection<ITEM>>)item).setCollection(this);
 			getCollection().add(item);

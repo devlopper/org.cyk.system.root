@@ -25,18 +25,13 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	protected ITEM instanciateOneItem(String[] values,InstanciateOneListener listener){
 		return getItemBusiness().instanciateOne(values,listener);
 	}
-	
-	protected String getDefaultCodeSeparator(){
-		return Constant.CHARACTER_UNDESCORE.toString();
-	}
-	
+
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public COLLECTION instanciateOne(String code,String name,String[][] items,String codeSeparator){
+	public COLLECTION instanciateOne(String code,String name,String itemCodeSeparator,String[][] items){
 		COLLECTION collection = instanciateOne(code,name);
+		collection.setItemCodeSeparator(itemCodeSeparator);
 		for(String[] v : items){
 			ITEM item = instanciateOneItem(v,null);
-			if(StringUtils.isNotBlank(codeSeparator))
-				item.setCode(code+codeSeparator+item.getCode());
 			item.setCollection(collection);
 			collection.getCollection().add(item);
 		}
@@ -45,16 +40,15 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public COLLECTION instanciateOne(String code,String name,String[][] items){
-		return instanciateOne(code, name, items, getDefaultCodeSeparator());
+		return instanciateOne(code, name, Constant.CHARACTER_UNDESCORE.toString(), items);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public COLLECTION instanciateOne(String code,String name,String[] items,String codeSeparator){
+	public COLLECTION instanciateOne(String code,String name,String itemCodeSeparator,String[] items){
 		COLLECTION collection = instanciateOne(code,name);
+		collection.setItemCodeSeparator(itemCodeSeparator);
 		for(String v : items){
 			ITEM item = instanciateOneItem(new String[]{v},null);
-			if(StringUtils.isNotBlank(codeSeparator))
-				item.setCode(code+codeSeparator+item.getCode());
 			item.setCollection(collection);
 			collection.getCollection().add(item);
 		}
@@ -63,7 +57,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public COLLECTION instanciateOne(String code,String name,String[] items){
-		return instanciateOne(code, name, items, getDefaultCodeSeparator());
+		return instanciateOne(code, name, Constant.CHARACTER_UNDESCORE.toString(), items);
 	}
 	
 	@Override
@@ -72,6 +66,8 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		if(collection.getCollection()!=null){
 			for(ITEM item : collection.getCollection()){
 				item.setCollection(collection);
+				if(StringUtils.isNotBlank(item.getCollection().getItemCodeSeparator()) && !StringUtils.contains(item.getCode(), item.getCollection().getItemCodeSeparator()))
+					item.setCode(item.getCollection().getCode()+item.getCollection().getItemCodeSeparator()+item.getCode());
 				item = createItem(item);
 			}
 		}
