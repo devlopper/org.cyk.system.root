@@ -73,6 +73,12 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		return labelValueCollectionReport;
 	}
 	
+	public LabelValueCollectionReport addNotRenderedLabelValueCollection(){
+		LabelValueCollectionReport labelValueCollectionReport = addLabelValueCollection("NOT_RENDERED", null);
+		labelValueCollectionReport.setRendered(Boolean.FALSE);
+		return labelValueCollectionReport;
+	}
+	
 	/**/
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex(Integer index){

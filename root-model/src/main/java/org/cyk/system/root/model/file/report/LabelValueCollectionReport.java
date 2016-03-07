@@ -20,6 +20,7 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 	private static final long serialVersionUID = -3815250939177148339L;
 
 	private String name,html;
+	private Boolean rendered = Boolean.TRUE;
 	private List<LabelValueReport> collection = new ArrayList<>();
 	private LabelValueItemStyle labelStyle,valueStyle;
 	
