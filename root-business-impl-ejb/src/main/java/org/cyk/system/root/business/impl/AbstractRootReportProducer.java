@@ -196,6 +196,13 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return report.addLabelValueCollection(intervalCollection.getName(),values);
 	}
 	
+	/*protected LabelValueCollectionReport addMetricCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,MetricCollection metricCollection){
+		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();
+		labelValueCollectionReport.setName(metricCollection.getName());
+		for(MetricValue metricValue : rootBusinessLayer.getMetricDao().fin)
+	}*/
+			
+	
 	@Override
 	protected Logger __logger__() {
 		return LOGGER;
