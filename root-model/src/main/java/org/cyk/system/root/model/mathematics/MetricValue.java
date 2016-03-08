@@ -44,6 +44,7 @@ public class MetricValue extends AbstractIdentifiable implements Serializable {
 		this.metric = metric;
 	}
 
+	public static final String FIELD_METRIC = "metric";
 	
 	
 }
