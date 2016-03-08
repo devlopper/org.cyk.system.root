@@ -27,4 +27,14 @@ public class MetricCollection extends AbstractCollection<Metric> implements Seri
 		super(code, name, null, null);
 	}
 	
+	public MetricCollection setMetricValueType(MetricValueType valueType){
+		this.valueType = valueType;
+		return this;
+	}
+	
+	public MetricCollection setMetricValueInputted(MetricValueInputted valueInputted){
+		this.valueInputted = valueInputted;
+		return this;
+	}
+	
 }
