@@ -72,6 +72,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 			return null;
 		}
 		for(UniformResourceLocator uniformResourceLocator : uniformResourceLocators){
+			uniformResourceLocator.setParameters(uniformResourceLocatorParameterDao.readByUniformResourceLocator(uniformResourceLocator));
 			logTrace("Uniform Resource Locator : {} parameters : {}", uniformResourceLocator,uniformResourceLocator.getParameters());
 			//if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
 				if(StringUtils.equalsIgnoreCase(url.getPath(),findPath(uniformResourceLocator))){
