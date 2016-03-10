@@ -50,7 +50,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	public static final Collection<ApplicationBusinessImplListener> LISTENERS = new ArrayList<>();
+	
 	
 	private static Application INSTANCE;
 	private static ApplicationPropertiesProvider PROPERTIES_PROVIDER;
@@ -82,7 +82,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		if(findCurrentInstance()==null){
 			logInfo("Installation starts.");
 			try {
-				for(ApplicationBusinessImplListener listener : LISTENERS)
+				for(Listener listener : Listener.COLLECTION)
 					listener.installationStarted(installation);
 				
 				installData(installation);
@@ -98,7 +98,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 				for(AbstractIdentifiable identifiable : installation.getIdentifiables())
 					RootBusinessLayer.getInstance().getGenericBusiness().create(identifiable);
 				
-				for(ApplicationBusinessImplListener listener : LISTENERS)
+				for(Listener listener : Listener.COLLECTION)
 					listener.installationEnded(installation);
 				
 				logInfo("Installation done.");
@@ -270,6 +270,29 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		logDebug("Generator id={} input={} output={}", identifier,input,output);
 		//logStackTraceAsString("org.cyk.");
 		return output;
+	}
+	
+	/**/
+	
+	public static interface Listener{
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		void installationStarted(Installation installation);
+		void installationEnded(Installation installation);
+		
+		/**/
+		public static class Adapter implements Listener,Serializable {
+			private static final long serialVersionUID = -2983067114876599661L;
+			@Override public void installationStarted(Installation installation) {}
+			@Override public void installationEnded(Installation installation) {}
+			
+			/**/
+			public static class Default extends Adapter implements Serializable {
+				private static final long serialVersionUID = -8533811278793391794L;
+				
+			}
+		}
 	}
 
 }
