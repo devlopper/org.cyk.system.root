@@ -2,22 +2,27 @@ package org.cyk.system.root.service.impl.integration;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.Sex;
+import org.junit.Test;
 
-public class InstanciateBusinessIT extends AbstractBusinessIT {
+public class InstanciationBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
     
     @Inject private MetricCollectionBusiness metricCollectionBusiness;
     @Inject private MetricBusiness metricBusiness;
     @Inject private IntervalCollectionBusiness intervalCollectionBusiness;
+    @Inject private PersonBusiness personBusiness;
+    @Inject private ClazzBusiness clazzBusiness;
     
     @Override
     protected void finds() {
@@ -57,9 +62,29 @@ public class InstanciateBusinessIT extends AbstractBusinessIT {
     	assertThat("Has interval collection", metricBusiness.find("1").getValueIntervalCollection()!=null);
     }
 
-    @Override protected void create() {}
-    @Override protected void delete() {}
-    @Override protected void read() {}
-    @Override protected void update() {}
+    @Test
+    public void person(){
+    	/*ObjectFieldValues objectFieldValues = new ObjectFieldValues(Person.class);
+    	objectFieldValues.set(Person.FIELD_CODE, "pers001");
+    	objectFieldValues.set(Person.FIELD_NAME, "thename");
+    	objectFieldValues.set(Person.FIELD_LASTNAME, "ln1 ln2 ln3");
+    	objectFieldValues.set(Person.FIELD_SURNAME, "pololo");
+    	objectFieldValues.set(Person.FIELD_BIRTH_DATE, new Date());
+    	objectFieldValues.setBaseName(Person.FIELD_SEX).set(Sex.FIELD_CODE, "M");
+    	objectFieldValues.setBaseName(Person.FIELD_EXTENDED_INFORMATIONS,PersonExtendedInformations.FIELD_TITLE).set(PersonTitle.FIELD_CODE, "MR");
+    	//objectFieldValues.setBaseName(Person.FIELD_EXTENDED_INFORMATIONS,PersonExtendedInformations.FIELD_BIRTH_LOCATION).set(Location.FIELD_COMMENT, "babi");
+    	
+    	System.out.println(objectFieldValues);
+    	Person person = personBusiness.instanciateOne(objectFieldValues);
+    	assertEquals(person, objectFieldValues);
+    	*/
+    	
+    	Person person = new Person();
+    	person.setName("Paul");
+    	person.setSex(new Sex());
+    	person.getSex().setCode(Sex.FEMALE);
+    	personBusiness.completeInstanciationOfOne(person);
+    	System.out.println(person.getSex().getName());
+    }
 
 }

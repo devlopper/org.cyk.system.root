@@ -15,14 +15,11 @@ public class Location extends Contact implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	//@Input @InputChoice @InputOneChoice @InputOneCombo
 	@ManyToOne private LocationType type;
 	
-	//@Input @InputChoice @InputOneChoice @InputOneCombo
 	@ManyToOne private Locality locality;
 	
-	//@Input @InputTextarea
-	private String comment;
+	private String comment;//TODO should be renamed to otherDetails
     
 	public Location() {}
 	
@@ -34,7 +31,7 @@ public class Location extends Contact implements Serializable{
 	
 	@Override
 	public String toString() {
-		return locality==null?comment:(locality.toString()+(StringUtils.isEmpty(comment)?"":" , "+comment));
+		return getUiString();
 	}
 	
 	@Override
@@ -42,4 +39,7 @@ public class Location extends Contact implements Serializable{
 		return locality==null?comment:(locality.getUiString()+(StringUtils.isEmpty(comment)?"":" , "+comment));
 	}
 	
+	/**/
+	
+	public static final String FIELD_COMMENT = "comment";
 }

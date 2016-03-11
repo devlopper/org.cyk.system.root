@@ -28,4 +28,7 @@ public class JobInformations extends AbstractPersonExtendedInformations implemen
 	public JobInformations(Person party) {
 		super(party);
 	}
+	
+	public static final String FIELD_FUNCTION = "function";
+	public static final String FIELD_TITLE = "title";
 }

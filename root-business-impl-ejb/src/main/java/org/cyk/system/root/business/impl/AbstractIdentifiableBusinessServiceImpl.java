@@ -156,6 +156,17 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			identifiables.add(instanciateOne(o));
 		return identifiables;
 	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public void completeInstanciationOfOne(IDENTIFIABLE identifiable) {
+		
+	}
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public void completeInstanciationOfMany(Collection<IDENTIFIABLE> identifiables) {
+		for(IDENTIFIABLE identifiable : identifiables)
+			completeInstanciationOfOne(identifiable);
+		
+	}
 	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
 		getPersistenceService().getDataReadConfig().set(searchCriteria.getReadConfig());
 	}

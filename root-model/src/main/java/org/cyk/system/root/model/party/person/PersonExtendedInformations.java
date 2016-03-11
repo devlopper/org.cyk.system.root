@@ -37,4 +37,8 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 		super(party);
 	}
 	
+	public static final String FIELD_BIRTH_LOCATION = "birthLocation";
+	public static final String FIELD_TITLE = "title";
+	public static final String FIELD_SIGNATURE_SPECIMEN = "signatureSpecimen";
+	
 }

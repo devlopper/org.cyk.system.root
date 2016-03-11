@@ -52,7 +52,7 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	
 	@Temporal(TemporalType.DATE) protected Date birthDate;
 	
-	@OneToOne protected ContactCollection contactCollection;// = new ContactCollection();
+	@OneToOne protected ContactCollection contactCollection;
 	
 	public Party(String name) {
 		super();
@@ -66,6 +66,7 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 
 	public static final String FIELD_CODE = "code";
 	public static final String FIELD_NAME = "name";
-
+	public static final String FIELD_BIRTH_DATE = "birthDate";
+	public static final String FIELD_IMAGE = "image";
 	
 }

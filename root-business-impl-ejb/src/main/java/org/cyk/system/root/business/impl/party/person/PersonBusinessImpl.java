@@ -11,9 +11,13 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonSearchCriteria;
+import org.cyk.system.root.model.party.person.PersonTitle;
+import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.party.person.JobInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.MedicalInformationsDao;
@@ -94,6 +98,21 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		person.setExtendedInformations(extendedInformationsDao.readByParty(person));
 		person.setJobInformations(jobInformationsDao.readByParty(person));
 		person.setMedicalInformations(medicalInformationsDao.readByParty(person));
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public void completeInstanciationOfOne(Person person) {
+		super.completeInstanciationOfOne(person);
+		person.setSex(RootDataProducerHelper.getInstance().getEnumeration(Sex.class, person.getSex().getCode()));
+		if(person.getExtendedInformations()!=null){
+			PersonExtendedInformations personExtendedInformations = person.getExtendedInformations();
+			personExtendedInformations.setTitle(RootDataProducerHelper.getInstance().getEnumeration(PersonTitle.class, personExtendedInformations.getTitle().getCode()));
+			if(personExtendedInformations.getBirthLocation()!=null){
+				//Location location = personExtendedInformations.getBirthLocation();
+				
+			}
+		}
+		
 	}
 	
 }

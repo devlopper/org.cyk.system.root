@@ -4,12 +4,11 @@ import java.io.Serializable;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
-import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
@@ -19,15 +18,13 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject protected PersonBusiness personBusiness;
-	
 	public AbstractActorBusinessImpl(DAO dao) {
 		super(dao); 
 	}
 	
 	@Override
 	public ACTOR create(ACTOR anActor) {
-		personBusiness.create(anActor.getPerson());
+		RootBusinessLayer.getInstance().getPersonBusiness().create(anActor.getPerson());
 		anActor.getRegistration().setDate(universalTimeCoordinated()); 
 		if(StringUtils.isBlank(anActor.getRegistration().getCode()))
 			anActor.getRegistration().setCode(generateStringValue(ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER, anActor));
@@ -36,7 +33,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	
 	@Override
 	public ACTOR update(ACTOR anActor) {
-		personBusiness.update(anActor.getPerson());
+		RootBusinessLayer.getInstance().getPersonBusiness().update(anActor.getPerson());
 		return super.update(anActor);
 	}
 	
@@ -51,7 +48,13 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	}
 	
 	protected void __load__(ACTOR actor){
-		personBusiness.load(actor.getPerson());
+		RootBusinessLayer.getInstance().getPersonBusiness().load(actor.getPerson());
+	}
+
+	@Override
+	public void completeInstanciationOfOne(ACTOR actor) {
+		super.completeInstanciationOfOne(actor);
+		RootBusinessLayer.getInstance().getPersonBusiness().completeInstanciationOfOne(actor.getPerson());
 	}
 
 	

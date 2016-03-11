@@ -51,5 +51,13 @@ public class Person extends Party implements Serializable{
 	public String getUiString() {
 		return getNames();
 	}
-
+	
+	/**/
+	
+	public static final String FIELD_LASTNAME = "lastName";
+	public static final String FIELD_SURNAME = "surname";
+	public static final String FIELD_SEX = "sex";
+	public static final String FIELD_NATIONALITY = "nationality";
+	public static final String FIELD_EXTENDED_INFORMATIONS = "extendedInformations";
+	public static final String FIELD_JOB_INFORMATIONS = "jobInformations";
 }

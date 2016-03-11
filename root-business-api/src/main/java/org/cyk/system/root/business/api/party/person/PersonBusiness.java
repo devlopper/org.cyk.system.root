@@ -15,7 +15,7 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person,PersonSearc
 
 	String findNames(Person person,FindNamesOptions options);
 	String findNames(Person person);
-	
+
 	/**/
 	
 	@Getter @Setter @NoArgsConstructor @AllArgsConstructor
@@ -25,5 +25,5 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person,PersonSearc
 		private Boolean useTitle = Boolean.FALSE;
 		
 	}
-	
+
 }

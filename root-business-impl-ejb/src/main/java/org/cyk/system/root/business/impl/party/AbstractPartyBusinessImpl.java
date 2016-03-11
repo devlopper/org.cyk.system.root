@@ -58,9 +58,10 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     	return dao.countByCriteria(criteria);
     }
     
+    
     /**/
         
-    protected void __load__(PARTY party) {
+	protected void __load__(PARTY party) {
     	if(party.getContactCollection()!=null)
     		contactCollectionBusiness.load(party.getContactCollection());
     }

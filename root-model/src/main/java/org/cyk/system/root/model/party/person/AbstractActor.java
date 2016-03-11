@@ -33,4 +33,9 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 	public String getUiString() {
 		return registration.getCode()+" "+person.getUiString();
 	}
+	
+	/**/
+	
+	public static final String FIELD_PERSON = "person";
+	public static final String FIELD_REGISTRATION = "registration";
 }

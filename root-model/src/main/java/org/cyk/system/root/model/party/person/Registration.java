@@ -45,5 +45,8 @@ public class Registration extends AbstractModelElement implements Serializable{
 	public String toString() {
 		return code+" "+date;
 	}
+	
+	public static final String FIELD_DATE = "date";
+	public static final String FIELD_CODE = "code";
 
 }

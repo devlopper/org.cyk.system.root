@@ -61,7 +61,10 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     Class<IDENTIFIABLE> getClazz();
                     IDENTIFIABLE instanciateOne();
                     IDENTIFIABLE instanciateOne(ObjectFieldValues arguments);
+                    void completeInstanciationOfOne(IDENTIFIABLE identifiable);
+                    
                     Collection<IDENTIFIABLE> instanciateMany(Collection<ObjectFieldValues> arguments);
+                    void completeInstanciationOfMany(Collection<IDENTIFIABLE> identifiables);
                     
                     /**/
                     
