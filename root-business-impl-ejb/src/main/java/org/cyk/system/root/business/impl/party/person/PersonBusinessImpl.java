@@ -107,11 +107,13 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			person.setSex(RootDataProducerHelper.getInstance().getEnumeration(Sex.class, person.getSex().getCode()));
 		if(person.getExtendedInformations()!=null && person.getExtendedInformations().getIdentifier()==null){
 			PersonExtendedInformations personExtendedInformations = person.getExtendedInformations();
-			personExtendedInformations.setTitle(RootDataProducerHelper.getInstance().getEnumeration(PersonTitle.class, personExtendedInformations.getTitle().getCode()));
+			if(personExtendedInformations.getTitle()!=null && personExtendedInformations.getTitle().getIdentifier()==null)
+				personExtendedInformations.setTitle(RootDataProducerHelper.getInstance().getEnumeration(PersonTitle.class, personExtendedInformations.getTitle().getCode()));
 			if(personExtendedInformations.getBirthLocation()!=null){
 				//Location location = personExtendedInformations.getBirthLocation();
 				
 			}
+			
 		}
 		
 	}
