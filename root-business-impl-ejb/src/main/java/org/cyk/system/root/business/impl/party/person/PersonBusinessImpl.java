@@ -103,8 +103,9 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void completeInstanciationOfOne(Person person) {
 		super.completeInstanciationOfOne(person);
-		person.setSex(RootDataProducerHelper.getInstance().getEnumeration(Sex.class, person.getSex().getCode()));
-		if(person.getExtendedInformations()!=null){
+		if(person.getSex()!=null && person.getSex().getIdentifier()==null)
+			person.setSex(RootDataProducerHelper.getInstance().getEnumeration(Sex.class, person.getSex().getCode()));
+		if(person.getExtendedInformations()!=null && person.getExtendedInformations().getIdentifier()==null){
 			PersonExtendedInformations personExtendedInformations = person.getExtendedInformations();
 			personExtendedInformations.setTitle(RootDataProducerHelper.getInstance().getEnumeration(PersonTitle.class, personExtendedInformations.getTitle().getCode()));
 			if(personExtendedInformations.getBirthLocation()!=null){
