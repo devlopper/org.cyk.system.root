@@ -13,11 +13,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
+import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.party.person.JobFunction;
+import org.cyk.system.root.model.party.person.JobInformations;
+import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.party.person.JobInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.MedicalInformationsDao;
@@ -36,6 +41,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	@Inject private JobInformationsDao jobInformationsDao;
 	@Inject private MedicalInformationsDao medicalInformationsDao;
 	@Inject private ContactDao contactDao;
+	@Inject private FileDao fileDao;
 	
 	@Inject
 	public PersonBusinessImpl(PersonDao dao) {
@@ -67,6 +73,8 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		if(person.getExtendedInformations()!=null){
 			if(person.getExtendedInformations().getBirthLocation()!=null)
 				contactDao.update(person.getExtendedInformations().getBirthLocation());
+			if(person.getExtendedInformations().getSignatureSpecimen()!=null && person.getExtendedInformations().getSignatureSpecimen().getIdentifier()==null)
+				fileDao.create(person.getExtendedInformations().getSignatureSpecimen());
 			extendedInformationsDao.update(person.getExtendedInformations());
 		}
 		if(person.getJobInformations()!=null)
@@ -117,6 +125,73 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		}
 		
 	}
+
+	@Override
+	public void completeInstanciationOfOneFromValues(Person person,AbstractCompleteInstanciationOfOneFromValuesArguments<Person> completeInstanciationOfOneFromValuesArguments) {
+		CompletePersonInstanciationOfOneFromValuesArguments arguments = (CompletePersonInstanciationOfOneFromValuesArguments) completeInstanciationOfOneFromValuesArguments;
+		super.completeInstanciationOfOneFromValues(person,arguments.getPartyInstanciationOfOneFromValuesArguments());
+		
+		if(arguments.getBirthLocationOtherDetailsIndex()!=null){
+			if(getExtendedInformations(person).getBirthLocation()==null)
+				person.getExtendedInformations().setBirthLocation(new Location());
+			getExtendedInformations(person).getBirthLocation().setComment(arguments.getValues()[arguments.getBirthLocationOtherDetailsIndex()]);
+		}
+		
+		if(arguments.getJobFunctionCodeIndex()!=null){
+			if(getJobInformations(person).getFunction()==null)
+				getJobInformations(person).setFunction(new JobFunction());
+			getJobInformations(person).getFunction().setCode(arguments.getValues()[arguments.getJobFunctionCodeIndex()]);
+		}
+		
+		if(arguments.getJobTitleCodeIndex()!=null){
+			if(getJobInformations(person).getTitle()==null)
+				getJobInformations(person).setTitle(new JobTitle());
+			getJobInformations(person).getTitle().setCode(arguments.getValues()[arguments.getJobTitleCodeIndex()]);
+		}
+		
+		if(arguments.getLastnameIndex()!=null){
+			person.setLastName(arguments.getValues()[arguments.getLastnameIndex()]);
+		}
+		
+		if(arguments.getSexCodeIndex()!=null){
+			if(person.getSex()==null)
+				person.setSex(new Sex());
+			person.getSex().setCode(arguments.getValues()[arguments.getSexCodeIndex()]);
+		}
+		
+		if(arguments.getTitleCodeIndex()!=null){
+			if(getExtendedInformations(person).getTitle()==null)
+				person.getExtendedInformations().setTitle(new PersonTitle());
+			getExtendedInformations(person).getTitle().setCode(arguments.getValues()[arguments.getTitleCodeIndex()]);
+		}
+		
+		completeInstanciationOfOne(person);
+		
+		completeInstanciationOfOneFromValuesProcessed(person,arguments.getValues(),arguments.getListener());
+	}
 	
+	@Override
+	public void completeInstanciationOfManyFromValues(List<Person> persons,AbstractCompleteInstanciationOfManyFromValuesArguments<Person> completeInstanciationOfManyFromValuesArguments) {
+		CompletePersonInstanciationOfManyFromValuesArguments arguments = (CompletePersonInstanciationOfManyFromValuesArguments) completeInstanciationOfManyFromValuesArguments;
+		completeInstanciationOfManyFromValuesBeforeProcessing(persons,arguments.getValues(), arguments.getListener());
+		for(int index = 0; index < arguments.getValues().size(); index++ ){
+			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index));
+			completeInstanciationOfOneFromValues(persons.get(index), arguments.getInstanciationOfOneFromValuesArguments());
+		}
+		completeInstanciationOfManyFromValuesAfterProcessing(persons,arguments.getValues(), arguments.getListener());
+	}
+
+	private JobInformations getJobInformations(Person person){
+		if(person.getJobInformations()==null)
+			person.setJobInformations(new JobInformations(person));
+		return person.getJobInformations();
+	}
+	
+	private PersonExtendedInformations getExtendedInformations(Person person){
+		if(person.getExtendedInformations()==null)
+			person.setExtendedInformations(new PersonExtendedInformations(person));
+		return person.getExtendedInformations();
+	}
+
 }
  

@@ -1,12 +1,18 @@
 package org.cyk.system.root.business.api;
 
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import org.cyk.system.root.model.Identifiable;
+import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends BusinessService {
 	
@@ -64,9 +70,51 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     void completeInstanciationOfOne(IDENTIFIABLE identifiable);
                     
                     Collection<IDENTIFIABLE> instanciateMany(Collection<ObjectFieldValues> arguments);
+                    void completeInstanciationOfManyFromValues(List<IDENTIFIABLE> actors,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments);
+                    
+                    void completeInstanciationOfOneFromValues(IDENTIFIABLE identifiable,AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> arguments);
+                    IDENTIFIABLE completeInstanciationOfOneFromValues(AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> arguments);
+                    
+                    List<IDENTIFIABLE> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments);
+                    List<IDENTIFIABLE> instanciateMany(ReadExcelSheetArguments readExcelSheetArguments,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments);
+                    
                     void completeInstanciationOfMany(Collection<IDENTIFIABLE> identifiables);
                     
                     /**/
                     
+                	public static interface CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE extends Identifiable<?>>{
+
+                		void beforeProcessing(IDENTIFIABLE identifiable,String[] values);
+                		void afterProcessing(IDENTIFIABLE identifiable,String[] values);
+
+                	}
+                	
+                	@Getter @Setter
+                	public static class AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE extends Identifiable<?>> implements Serializable{
+
+                		private static final long serialVersionUID = 6568108456054174796L;
+                		
+                		protected String[] values;
+                		protected CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener;
+                		
+                	}
+                	
+                	public static interface CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE extends Identifiable<?>>{
+
+                		void beforeProcessing(List<IDENTIFIABLE> identifiables,List<String[]> values);
+                		void afterProcessing(List<IDENTIFIABLE> identifiables,List<String[]> values);
+                		
+                	}
+                	
+                	@Getter @Setter
+                	public static class AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE extends Identifiable<?>> implements Serializable{
+
+                		private static final long serialVersionUID = 6568108456054174796L;
+                		
+                		protected List<String[]> values;
+                		protected CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE> listener;
+                		
+                	}
+    
 
 }

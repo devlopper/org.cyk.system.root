@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.party;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -65,4 +66,42 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     	if(party.getContactCollection()!=null)
     		contactCollectionBusiness.load(party.getContactCollection());
     }
+
+	@Override
+	public void completeInstanciationOfOneFromValues(PARTY party,AbstractCompleteInstanciationOfOneFromValuesArguments<PARTY> completeInstanciationOfOneFromValuesArguments) {
+		CompletePartyInstanciationOfOneFromValuesArguments<PARTY> arguments = (CompletePartyInstanciationOfOneFromValuesArguments<PARTY>) completeInstanciationOfOneFromValuesArguments;
+		completeInstanciationOfOneFromValuesBeforeProcessing(party,arguments.getValues(),arguments.getListener());
+		
+		if(arguments.getCodeIndex()!=null)
+			party.setCode(arguments.getValues()[arguments.getCodeIndex()]);
+		
+		if(arguments.getNameIndex()!=null)
+			party.setName(arguments.getValues()[arguments.getNameIndex()]);
+		
+		if(arguments.getBirthDateIndex()!=null && StringUtils.isNotBlank(arguments.getValues()[arguments.getBirthDateIndex()]))
+			party.setBirthDate(timeBusiness.parse(arguments.getValues()[arguments.getBirthDateIndex()]));
+		
+		if(arguments.getCreationDateIndex()!=null)
+			party.setCreationDate(timeBusiness.parse(arguments.getValues()[arguments.getCreationDateIndex()]));
+		
+		completeInstanciationOfOneFromValuesProcessed(party,arguments.getValues(),arguments.getListener());
+		
+	}
+
+	@Override
+	public void completeInstanciationOfManyFromValues(List<PARTY> parties,AbstractCompleteInstanciationOfManyFromValuesArguments<PARTY> completeInstanciationOfManyFromValuesArguments) {
+		CompletePartyInstanciationOfManyFromValuesArguments<PARTY> arguments = (CompletePartyInstanciationOfManyFromValuesArguments<PARTY>) completeInstanciationOfManyFromValuesArguments;
+		completeInstanciationOfManyFromValuesBeforeProcessing(parties,arguments.getValues(),arguments.getListener());
+		for(int index = 0; index < arguments.getValues().size(); index++ ){
+			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index));
+			completeInstanciationOfOneFromValues(parties.get(index), arguments.getInstanciationOfOneFromValuesArguments());
+		}
+		completeInstanciationOfManyFromValuesAfterProcessing(parties,arguments.getValues(),arguments.getListener());
+	}
+
+	
+
+	
+	
+	
 }

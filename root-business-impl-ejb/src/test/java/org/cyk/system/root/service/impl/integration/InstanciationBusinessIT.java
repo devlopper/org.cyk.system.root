@@ -1,17 +1,26 @@
 package org.cyk.system.root.service.impl.integration;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.ClazzBusiness;
+import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfManyFromValuesArguments;
+import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfOneFromValuesArguments;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.junit.Test;
 
 public class InstanciationBusinessIT extends AbstractBusinessIT {
@@ -22,7 +31,6 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     @Inject private MetricBusiness metricBusiness;
     @Inject private IntervalCollectionBusiness intervalCollectionBusiness;
     @Inject private PersonBusiness personBusiness;
-    @Inject private ClazzBusiness clazzBusiness;
     
     @Override
     protected void finds() {
@@ -85,6 +93,46 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	person.getSex().setCode(Sex.FEMALE);
     	personBusiness.completeInstanciationOfOne(person);
     	System.out.println(person.getSex().getName());
+    	
+    	CompletePersonInstanciationOfOneFromValuesArguments personInstanciationOfOneFromValuesArguments = new CompletePersonInstanciationOfOneFromValuesArguments();
+    	personInstanciationOfOneFromValuesArguments.setValues(new String[]{"Sam"});
+    	personInstanciationOfOneFromValuesArguments.getPartyInstanciationOfOneFromValuesArguments().setNameIndex(0);
+    	
+    	person = new Person();
+    	personBusiness.completeInstanciationOfOneFromValues(person, personInstanciationOfOneFromValuesArguments);
+    	
+    	CompletePersonInstanciationOfManyFromValuesArguments completePersonInstanciationOfManyFromValuesArguments = new CompletePersonInstanciationOfManyFromValuesArguments();
+    	completePersonInstanciationOfManyFromValuesArguments.setValues(Arrays.asList(new String[]{"Jack"},new String[]{"Jack"}));
+    	completePersonInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(0);
+    	List<Person> persons = new ArrayList<>();
+    	persons.add(new Person());
+    	persons.add(new Person());
+    	personBusiness.completeInstanciationOfManyFromValues(persons, completePersonInstanciationOfManyFromValuesArguments);
+    	for(Person p : persons)
+    		System.out.println(p);
+    	
+    	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\excel");
+		File file = new File(directory, "persons.xlsx");
+		
+    	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
+    	try {
+			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	readExcelSheetArguments.setSheetIndex(0);
+    	readExcelSheetArguments.setFromRowIndex(2);
+    	readExcelSheetArguments.setFromColumnIndex(1);
+		//List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
+		
+		CompletePersonInstanciationOfManyFromValuesArguments completeInstanciationOfManyFromValuesArguments = new CompletePersonInstanciationOfManyFromValuesArguments();
+		//completeActorInstanciationOfManyFromValuesArguments.setValues(list);
+    	
+		completeInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setTitleCodeIndex(1);
+		completeInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(2);
+		completeInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setLastnameIndex(3);
+		persons = personBusiness.instanciateMany(readExcelSheetArguments, completeInstanciationOfManyFromValuesArguments);
+		personBusiness.create(persons);
     }
 
 }

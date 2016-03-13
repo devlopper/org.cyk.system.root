@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-
-import lombok.Getter;
 
 import org.cyk.system.root.business.api.BusinessServiceListener;
 import org.cyk.system.root.business.api.Crud;
@@ -21,10 +20,13 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+
+import lombok.Getter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -165,8 +167,69 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public void completeInstanciationOfMany(Collection<IDENTIFIABLE> identifiables) {
 		for(IDENTIFIABLE identifiable : identifiables)
 			completeInstanciationOfOne(identifiable);
+	}
+	
+	@Override
+	public List<IDENTIFIABLE> instanciateMany(ReadExcelSheetArguments readExcelSheetArguments,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments) {
+		List<String[]> list;
+		try {
+			list = commonUtils.readExcelSheet(readExcelSheetArguments);
+		} catch (Exception e) {
+			System.out.println("ERR -------------- : "+e);
+			System.out.println("ERR -------------- : "+e.getCause());
+			e.printStackTrace();
+			exceptionUtils().exception(e);
+			return null;
+		}
+		completeInstanciationOfManyFromValuesArguments.setValues(list);
+    	return  completeInstanciationOfManyFromValues(completeInstanciationOfManyFromValuesArguments);
+	}
+
+	@Override
+	public void completeInstanciationOfOneFromValues(IDENTIFIABLE identifiable,AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> arguments) {
 		
 	}
+
+	@Override
+	public IDENTIFIABLE completeInstanciationOfOneFromValues(AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> arguments) {
+		return null;
+	}
+	
+	@Override
+	public void completeInstanciationOfManyFromValues(List<IDENTIFIABLE> actors,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments) {
+		
+	}
+
+	@Override
+	public List<IDENTIFIABLE> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments) {
+		List<IDENTIFIABLE> identifiables = new ArrayList<>();
+		for(int index = 0; index < arguments.getValues().size(); index++ ){
+			IDENTIFIABLE identifiable = newInstance(getClazz());
+			identifiables.add(identifiable);
+		}
+		completeInstanciationOfManyFromValues(identifiables,arguments);
+		return identifiables;
+	}
+
+	protected void completeInstanciationOfOneFromValuesBeforeProcessing(IDENTIFIABLE identifiable,String[] values,CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener){
+		if(listener!=null)
+			listener.beforeProcessing(identifiable,values);
+	}
+	
+	protected void completeInstanciationOfOneFromValuesProcessed(IDENTIFIABLE identifiable,String[] values,CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener){
+		if(listener!=null)
+			listener.afterProcessing(identifiable,values);
+	}
+	
+	protected void completeInstanciationOfManyFromValuesBeforeProcessing(List<IDENTIFIABLE> identifiables,List<String[]> values,CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE> listener){
+		if(listener!=null)
+			listener.beforeProcessing(identifiables,values);
+	}
+	protected void completeInstanciationOfManyFromValuesAfterProcessing(List<IDENTIFIABLE> identifiables,List<String[]> values,CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE> listener){
+		if(listener!=null)
+			listener.afterProcessing(identifiables,values);
+	}
+
 	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
 		getPersistenceService().getDataReadConfig().set(searchCriteria.getReadConfig());
 	}

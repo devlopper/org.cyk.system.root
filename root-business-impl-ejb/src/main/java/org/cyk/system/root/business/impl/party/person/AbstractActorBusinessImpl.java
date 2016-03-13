@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -56,6 +57,46 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		super.completeInstanciationOfOne(actor);
 		RootBusinessLayer.getInstance().getPersonBusiness().completeInstanciationOfOne(actor.getPerson());
 	}
+
+	@Override
+	public void completeInstanciationOfOneFromValues(ACTOR actor,AbstractCompleteInstanciationOfOneFromValuesArguments<ACTOR> completeInstanciationOfManyFromValuesArguments) {
+		CompleteActorInstanciationOfOneFromValuesArguments<ACTOR> arguments = (CompleteActorInstanciationOfOneFromValuesArguments<ACTOR>) completeInstanciationOfManyFromValuesArguments;
+		if(actor.getPerson()==null)
+			actor.setPerson(new Person());
+		RootBusinessLayer.getInstance().getPersonBusiness().completeInstanciationOfOneFromValues(actor.getPerson(), arguments.getPersonInstanciationOfOneFromValuesArguments());
+		
+		if(arguments.getRegistrationCodeIndex()!=null)
+			actor.getRegistration().setCode(arguments.getValues()[arguments.getRegistrationCodeIndex()]);
+		
+		if(arguments.getRegistrationDateIndex()!=null)
+			actor.getRegistration().setDate(timeBusiness.parse(arguments.getValues()[arguments.getRegistrationDateIndex()]));
+		
+		completeInstanciationOfOne(actor);
+		
+		completeInstanciationOfOneFromValuesProcessed(actor, arguments.getValues(),arguments.getListener());
+	} 
+
+	@Override
+	public void completeInstanciationOfManyFromValues(List<ACTOR> actors,AbstractCompleteInstanciationOfManyFromValuesArguments<ACTOR> completeInstanciationOfManyFromValuesArguments) {
+		CompleteActorInstanciationOfManyFromValuesArguments<ACTOR> arguments = (CompleteActorInstanciationOfManyFromValuesArguments<ACTOR>) completeInstanciationOfManyFromValuesArguments;
+		completeInstanciationOfManyFromValuesBeforeProcessing(actors,arguments.getValues(),arguments.getListener());
+		for(int index = 0; index < arguments.getValues().size(); index++ ){
+			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index));
+			completeInstanciationOfOneFromValues(actors.get(index), arguments.getInstanciationOfOneFromValuesArguments());
+		}
+		completeInstanciationOfManyFromValuesAfterProcessing(actors,arguments.getValues(),arguments.getListener());
+	}
+/*
+	@Override
+	public List<ACTOR> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<ACTOR> arguments) {
+		List<ACTOR> actors = new ArrayList<>();
+		for(int index = 0; index < arguments.getValues().size(); index++ ){
+			ACTOR actor = newInstance(getClazz());
+			actors.add(actor);
+		}
+		completeInstanciationOfManyFromValues(actors,arguments);
+		return actors;
+	}*/
 
 	
 	
