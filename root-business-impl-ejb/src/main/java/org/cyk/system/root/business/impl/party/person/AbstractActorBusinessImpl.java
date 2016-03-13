@@ -61,6 +61,8 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	@Override
 	public void completeInstanciationOfOneFromValues(ACTOR actor,AbstractCompleteInstanciationOfOneFromValuesArguments<ACTOR> completeInstanciationOfManyFromValuesArguments) {
 		CompleteActorInstanciationOfOneFromValuesArguments<ACTOR> arguments = (CompleteActorInstanciationOfOneFromValuesArguments<ACTOR>) completeInstanciationOfManyFromValuesArguments;
+		completeInstanciationOfOneFromValuesBeforeProcessing(actor, arguments.getValues(),arguments.getListener());
+		
 		if(actor.getPerson()==null)
 			actor.setPerson(new Person());
 		RootBusinessLayer.getInstance().getPersonBusiness().completeInstanciationOfOneFromValues(actor.getPerson(), arguments.getPersonInstanciationOfOneFromValuesArguments());
@@ -73,7 +75,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		
 		completeInstanciationOfOne(actor);
 		
-		completeInstanciationOfOneFromValuesProcessed(actor, arguments.getValues(),arguments.getListener());
+		completeInstanciationOfOneFromValuesAfterProcessing(actor, arguments.getValues(),arguments.getListener());
 	} 
 
 	@Override

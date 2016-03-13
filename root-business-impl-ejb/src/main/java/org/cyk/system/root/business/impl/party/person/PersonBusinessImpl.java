@@ -167,7 +167,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 		completeInstanciationOfOne(person);
 		
-		completeInstanciationOfOneFromValuesProcessed(person,arguments.getValues(),arguments.getListener());
+		completeInstanciationOfOneFromValuesAfterProcessing(person,arguments.getValues(),arguments.getListener());
 	}
 	
 	@Override

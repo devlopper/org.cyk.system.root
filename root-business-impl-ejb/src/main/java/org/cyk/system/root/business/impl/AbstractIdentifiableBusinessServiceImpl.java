@@ -216,7 +216,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			listener.beforeProcessing(identifiable,values);
 	}
 	
-	protected void completeInstanciationOfOneFromValuesProcessed(IDENTIFIABLE identifiable,String[] values,CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener){
+	protected void completeInstanciationOfOneFromValuesAfterProcessing(IDENTIFIABLE identifiable,String[] values,CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener){
 		if(listener!=null)
 			listener.afterProcessing(identifiable,values);
 	}
