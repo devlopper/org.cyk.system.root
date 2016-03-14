@@ -5,5 +5,5 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 public interface GenericBusiness extends AbstractGenericBusinessService<AbstractIdentifiable, Long> {
 
 	
-    
+    void flushEntityManager();
 }

@@ -13,6 +13,7 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.PersistenceService;
+import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 
 @Stateless 
 //@Remote 
@@ -22,6 +23,8 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	private static final long serialVersionUID = -1042342183332719272L;
  
 	@Inject private BusinessLocator businessLocator;
+	
+	@Inject private GenericDaoImpl genericDaoImpl;
 	
 	@Override
 	protected PersistenceService<AbstractIdentifiable, Long> getPersistenceService() {
@@ -147,4 +150,8 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	    return genericDao.refresh(identifiable);
 	}
 
+	@Override
+	public void flushEntityManager() {
+		genericDaoImpl.getEntityManager().flush();
+	}
 }
