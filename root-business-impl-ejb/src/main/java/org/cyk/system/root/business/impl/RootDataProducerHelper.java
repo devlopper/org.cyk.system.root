@@ -110,6 +110,15 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return (T) genericBusiness.create(data);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractEnumeration> T updateEnumeration(Class<T> aClass,String code,String name){
+		T data = getEnumeration(aClass, code);
+		data.setName(name);
+		for(RootDataProducerHelperListener listener : rootDataProducerHelperListeners)
+			listener.set(data);
+		return (T) genericBusiness.update(data);
+	}
+	
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String name){
 		return createEnumeration(aClass, getCode(name), name);
 	}

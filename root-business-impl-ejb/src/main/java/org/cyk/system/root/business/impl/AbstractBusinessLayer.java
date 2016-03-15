@@ -327,6 +327,10 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String name) {
 		return rootDataProducerHelper.createEnumeration(aClass, name);
 	}
+	
+	public <T extends AbstractEnumeration> T updateEnumeration(Class<T> aClass,String code,String name){
+		return rootDataProducerHelper.updateEnumeration(aClass, code, name);
+	}
 
 	public IntervalCollection createIntervalCollection(String code, String[][] values, String codeSeparator,Boolean create) {
 		return rootDataProducerHelper.createIntervalCollection(code, values, codeSeparator, create);
