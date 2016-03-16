@@ -6,7 +6,6 @@ import javax.inject.Singleton;
 
 import org.cyk.system.root.business.api.RootBusinessServiceSimulatorBusiness;
 import org.cyk.utility.common.computation.ExecutionProgress;
-import org.cyk.utility.common.computation.ExecutionProgressListener;
 
 @Singleton
 public class RootBusinessServiceSimulatorBusinessImpl extends AbstractBusinessServiceImpl implements RootBusinessServiceSimulatorBusiness,Serializable {
@@ -14,7 +13,7 @@ public class RootBusinessServiceSimulatorBusinessImpl extends AbstractBusinessSe
 	private static final long serialVersionUID = -146387231230323629L;
 
 	@Override
-	public void simulateExecutionProgress(ExecutionProgressListener executionProgressListener) {
+	public void simulateExecutionProgress(ExecutionProgress.Listener executionProgressListener) {
 		ExecutionProgress executionProgress = new ExecutionProgress("Check execution progresse!!!", 100d);
 		executionProgress.getExecutionProgressListeners().add(executionProgressListener);
 		
