@@ -13,18 +13,15 @@ public class RootBusinessServiceSimulatorBusinessImpl extends AbstractBusinessSe
 	private static final long serialVersionUID = -146387231230323629L;
 
 	@Override
-	public void simulateExecutionProgress(ExecutionProgress.Listener executionProgressListener) {
-		ExecutionProgress executionProgress = new ExecutionProgress("Check execution progresse!!!", 100d);
-		executionProgress.getExecutionProgressListeners().add(executionProgressListener);
-		
-		pause(1000);executionProgress.addWorkDoneByStep(5);
-		pause(1000);executionProgress.addWorkDoneByStep(10);
-		pause(1000);executionProgress.addWorkDoneByStep(10);
-		pause(1000);executionProgress.addWorkDoneByStep(30);
-		pause(1000);executionProgress.addWorkDoneByStep(5);
-		pause(1000);executionProgress.addWorkDoneByStep(5);
-		pause(1000);executionProgress.addWorkDoneByStep(25);
-		pause(1000);executionProgress.addWorkDoneByStep(10);
+	public void simulateExecutionProgress(ExecutionProgress executionProgress) {
+		executionProgress.setCurrentExecutionStep("Tache 1");pause(2000); executionProgress.addWorkDoneByStep(5);
+		executionProgress.setCurrentExecutionStep("Tache deux");pause(3000); executionProgress.addWorkDoneByStep(10);
+		executionProgress.setCurrentExecutionStep("Tache 3");pause(3000);executionProgress.addWorkDoneByStep(10,new RuntimeException());
+		executionProgress.setCurrentExecutionStep("Tache 4");pause(5000);executionProgress.addWorkDoneByStep(30);
+		executionProgress.setCurrentExecutionStep("Tache Cinq");pause(2000);executionProgress.addWorkDoneByStep(5);
+		executionProgress.setCurrentExecutionStep("Tache Six");pause(4000);executionProgress.addWorkDoneByStep(5,new RuntimeException());
+		executionProgress.setCurrentExecutionStep("UNE Tache 777");pause(3000);executionProgress.addWorkDoneByStep(25);
+		executionProgress.setCurrentExecutionStep("ANNathoer TaCHe 8");pause(4000);executionProgress.addWorkDoneByStep(10);
 	}
 
 	
