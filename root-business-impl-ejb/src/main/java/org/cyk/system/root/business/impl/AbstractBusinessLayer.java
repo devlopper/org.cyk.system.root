@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -10,8 +11,6 @@ import java.util.Map;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-
-import lombok.Getter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
@@ -45,6 +44,8 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.party.Application;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Installation;
@@ -56,6 +57,8 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractLayer;
+
+import lombok.Getter;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -122,7 +125,34 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     		fakeTransactions();
     }
     
-    protected abstract void persistData();
+    protected void persistData(){
+    	persistStructureData();
+    	
+    	persistSecurityData();
+    	if(RootDataProducerHelper.getInstance().getUniformResourceLocators()!=null){
+    		System.out.println("Uniform resource locators : "+RootDataProducerHelper.getInstance().getUniformResourceLocators().size());
+    		RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().create(RootDataProducerHelper.getInstance().getUniformResourceLocators());
+    		RootDataProducerHelper.getInstance().setUniformResourceLocators(null);
+    	}
+    	if(RootDataProducerHelper.getInstance().getRoleUniformResourceLocators()!=null){
+    		System.out.println("Role uniform resource locators : "+RootDataProducerHelper.getInstance().getRoleUniformResourceLocators().size());
+    		RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().create(RootDataProducerHelper.getInstance().getRoleUniformResourceLocators());
+    		RootDataProducerHelper.getInstance().setRoleUniformResourceLocators(null);
+    	}
+    	if(RootDataProducerHelper.getInstance().getUserAccounts()!=null){
+    		System.out.println("User accounts : "+RootDataProducerHelper.getInstance().getUserAccounts().size());
+    		RootBusinessLayer.getInstance().getUserAccountBusiness().create(RootDataProducerHelper.getInstance().getUserAccounts());	
+    		RootDataProducerHelper.getInstance().setUserAccounts(null);
+    	}
+    	
+    }
+    protected void persistStructureData(){
+    	
+    }
+    protected void persistSecurityData(){
+    	
+    }
+    
     protected abstract void setConstants();
     protected abstract void fakeTransactions();
     
@@ -197,6 +227,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		installation.setFaked(fake);
 		installApplication(installation);
 	}
+	
+	
 	
 	protected void handleObjectToInstall(Object object){
 		for(BusinessLayerListener listener : businessLayerListeners)
@@ -390,5 +422,20 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		return rootDataProducerHelper.createMovementCollection(code, incrementActionName, decrementActionName);
 	}
 
+	protected void instanciateRoleUniformResourceLocator(Collection<Role> roles,Object...uniformResourceLocatorArray){
+		rootDataProducerHelper.instanciateRoleUniformResourceLocator(roles, uniformResourceLocatorArray);
+	}
+	
+	protected void instanciateRoleUniformResourceLocator(Role role,Object...uniformResourceLocatorArray){
+		rootDataProducerHelper.instanciateRoleUniformResourceLocator(Arrays.asList(role), uniformResourceLocatorArray);
+	}
+	
+	protected void instanciateUserAccounts(Collection<Party> parties, Role... roles) {
+		rootDataProducerHelper.instanciateUserAccounts(parties, roles);
+	}
+	
+	protected void instanciateUserAccountsFromActors(Collection<? extends AbstractActor> actors, Role... roles) {
+		rootDataProducerHelper.instanciateUserAccountsFromActors(actors, roles);
+	}
 	
 }

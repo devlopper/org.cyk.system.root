@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
@@ -66,6 +67,7 @@ import org.cyk.system.root.business.api.userinterface.GraphicBusiness;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
+import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.ContentType;
@@ -120,6 +122,7 @@ import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
+import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -201,6 +204,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private FiniteStateMachineStateBusiness finiteStateMachineStateBusiness;
     @Inject private FiniteStateMachineAlphabetBusiness finiteStateMachineAlphabetBusiness;
     
+    @Inject private RoleDao roleDao;
     @Inject private NotificationTemplateDao notificationTemplateDao;
     @Inject private NotificationBusiness notificationBusiness;
     @Inject private CountryDao countryDao;
@@ -578,6 +582,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				return collection;
 		}
 		return null;
+	}
+	
+	public String getRelativeCode(AbstractCollection<?> collection,String code){
+		return StringUtils.isBlank(collection.getItemCodeSeparator()) ? code 
+				: StringUtils.split(code,collection.getItemCodeSeparator())[1];
 	}
     
 }

@@ -9,12 +9,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfManyFromValuesArguments;
 import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfOneFromValuesArguments;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -133,6 +136,20 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
 		completeInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setLastnameIndex(3);
 		persons = personBusiness.instanciateMany(readExcelSheetArguments, completeInstanciationOfManyFromValuesArguments);
 		personBusiness.create(persons);
+    }
+    
+    @Test
+    public void uniformResourceLocator(){
+    	assertEquals("/private/__tools__/crud/crudone.jsf?clazz=Person&crud=create",
+    			RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateOneCrudOne(Person.class, Crud.CREATE, null).toString());
+    	assertEquals("/private/__tools__/crud/crudone.jsf?clazz=Person&crud=read",
+    			RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateOneCrudOne(Person.class, Crud.READ, null).toString());
+    	assertEquals("/private/__tools__/crud/crudone.jsf?clazz=Person&crud=update",
+    			RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateOneCrudOne(Person.class, Crud.UPDATE, null).toString());
+    	assertEquals("/private/__tools__/crud/crudone.jsf?clazz=Person&crud=delete",
+    			RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateOneCrudOne(Person.class, Crud.DELETE, null).toString());
+    	
+    	System.out.println(StringUtils.join(RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateManyBusinessCrud(Person.class, true, true, true, null, null),"\r\n"));
     }
 
 }

@@ -6,7 +6,9 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.mathematics.MetricValue;
+import org.cyk.system.root.model.mathematics.MetricValueInputted;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueDao;
 
 public class MetricValueBusinessImpl extends AbstractTypedBusinessService<MetricValue, MetricValueDao> implements MetricValueBusiness,Serializable {
@@ -26,7 +28,10 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 			value = numberBusiness.format(metricValue.getNumberValue());
 			break;
 		case STRING:
-			value = metricValue.getStringValue();//TODO must depends on string value type
+			if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
+				value = RootBusinessLayer.getInstance().getRelativeCode(metricValue.getMetric().getCollection(), metricValue.getStringValue());
+			else
+				value = metricValue.getStringValue();//TODO must depends on string value type
 			break;
 		}
 		return value;

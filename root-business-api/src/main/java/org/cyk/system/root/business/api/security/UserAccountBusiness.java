@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.event.Notification;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
@@ -33,6 +35,10 @@ public interface UserAccountBusiness extends TypedBusiness<UserAccount> {
 	Boolean hasRole(UserAccount userAccount,Role role);
 	
 	//void updatePassword(UserAccount userAccount,String oldPassword,String newPassword);
+	
+	UserAccount instanciateOne(Party party,Role...roles);
+	Collection<UserAccount> instanciateManyFromParties(Collection<Party> parties,Role...roles);
+	Collection<UserAccount> instanciateManyFromActors(Collection<? extends AbstractActor> actors,Role...roles);
 	
 	/**/
 	

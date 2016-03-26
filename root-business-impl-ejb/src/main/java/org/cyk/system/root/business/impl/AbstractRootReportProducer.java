@@ -161,6 +161,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			for(MetricValue metricValue : metricValues)
 				if(metricValue.getMetric().equals(metric)){
 					values[i][0] = metric.getName();
+					//System.out.println(metricValue.getStringValue());
 					values[i][1] = rootBusinessLayer.getMetricValueBusiness().format(metricValue);
 				}
 			i++;

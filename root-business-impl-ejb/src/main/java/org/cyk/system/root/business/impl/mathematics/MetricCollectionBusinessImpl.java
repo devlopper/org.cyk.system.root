@@ -7,7 +7,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
@@ -25,7 +24,6 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private IntervalCollectionBusiness intervalCollectionBusiness;
 	@Inject private MetricDao metricDao;
 	
 	@Inject
@@ -37,9 +35,9 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 	public MetricCollection create(MetricCollection metricCollection) {
 		if(metricCollection.getValueIntervalCollection()!=null)
 			if(metricCollection.getValueIntervalCollection().getIdentifier()==null){
-				intervalCollectionBusiness.create(metricCollection.getValueIntervalCollection());
+				RootBusinessLayer.getInstance().getIntervalCollectionBusiness().create(metricCollection.getValueIntervalCollection());
 			}else
-				intervalCollectionBusiness.update(metricCollection.getValueIntervalCollection());
+				RootBusinessLayer.getInstance().getIntervalCollectionBusiness().update(metricCollection.getValueIntervalCollection());
 		return super.create(metricCollection);
 	}
 	

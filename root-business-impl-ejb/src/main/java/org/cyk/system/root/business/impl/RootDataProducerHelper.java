@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
 
@@ -40,6 +41,12 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineAlphabet;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
+import org.cyk.system.root.model.network.UniformResourceLocator;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.security.RoleUniformResourceLocator;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
@@ -51,6 +58,7 @@ import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
 import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -72,6 +80,10 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	private Boolean basePackageQueueingEnabled = Boolean.FALSE;
 	
 	@Getter private Collection<RootDataProducerHelperListener> rootDataProducerHelperListeners = new ArrayList<>();
+	
+	@Getter @Setter private Collection<UniformResourceLocator> uniformResourceLocators;
+	@Getter @Setter private Collection<RoleUniformResourceLocator> roleUniformResourceLocators;
+	@Getter @Setter private Collection<UserAccount> userAccounts;
 	
 	@Override
 	protected void initialisation() {
@@ -369,6 +381,51 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	private String getDatabaseName(){
 		return String.format(DATABASE_NAME_FORMAT,StringUtils.substringBetween(basePackage.getName(), "org.cyk.system.", ".business.impl"));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void instanciateRoleUniformResourceLocator(Collection<Role> roles,Object...uniformResourceLocatorArray){
+		for(Role role : roles)
+			for(Object object : uniformResourceLocatorArray){
+				Collection<UniformResourceLocator> uniformResourceLocators;
+				if( object instanceof Collection )
+					uniformResourceLocators = (Collection<UniformResourceLocator>) object;
+				else if( object instanceof UniformResourceLocator)
+					uniformResourceLocators = Arrays.asList((UniformResourceLocator)object);
+				else
+					uniformResourceLocators = null;
+				if(uniformResourceLocators!=null)
+					if(roleUniformResourceLocators==null)
+						roleUniformResourceLocators = new ArrayList<>();
+				for(UniformResourceLocator uniformResourceLocator : uniformResourceLocators){
+					Boolean found = Boolean.FALSE;
+					/*if(this.uniformResourceLocators!=null)
+						for(UniformResourceLocator v : this.uniformResourceLocators)
+							if(v.getCode().equals(uniformResourceLocator.getCode())){
+								found = Boolean.TRUE;
+								break;
+							}*/
+					if(Boolean.FALSE.equals(found)){
+						if(this.uniformResourceLocators==null)
+							this.uniformResourceLocators = new ArrayList<>();
+						this.uniformResourceLocators.add(uniformResourceLocator);
+					}
+					roleUniformResourceLocators.add(new RoleUniformResourceLocator(role, uniformResourceLocator));
+				}
+			}
+	}
+	
+	public void instanciateUserAccounts(Collection<Party> parties, Role... roles) {
+		if(this.userAccounts==null)
+			this.userAccounts = new ArrayList<>();
+		this.userAccounts = RootBusinessLayer.getInstance().getUserAccountBusiness().instanciateManyFromParties(parties, roles);
+	}
+	
+	public void instanciateUserAccountsFromActors(Collection<? extends AbstractActor> actors, Role... roles) {
+		Collection<Party> parties = new ArrayList<>();
+		for(AbstractActor actor : actors)
+			parties.add(actor.getPerson());
+		instanciateUserAccounts(parties, roles);
 	}
 	
 	/**/

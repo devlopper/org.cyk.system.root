@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.security;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
@@ -18,11 +20,14 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.UserSessionBusiness;
 import org.cyk.system.root.model.event.Notification;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.security.UserAccountSearchCriteria;
 import org.cyk.system.root.persistence.api.security.UserAccountDao;
+import org.cyk.utility.common.Constant;
 
 @Stateless //@Secure
 public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAccount, UserAccountDao> implements UserAccountBusiness,Serializable {
@@ -114,7 +119,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		return dao.countByCriteria(criteria);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Boolean createSessionNotification(UserAccount userAccount,Notification notification) {
 		if(contains(userAccount.getSessionNotificationsDeleted(), notification) || 
 				contains(userAccount.getSessionNotifications(), notification))
@@ -123,7 +128,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		return Boolean.TRUE;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void deleteSessionNotification(UserAccount userAccount,Notification notification) {
 		for(int i = 0;i<userAccount.getSessionNotifications().size();)
 			if(equals(userAccount.getSessionNotifications().get(i),notification)){
@@ -153,7 +158,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		return dao.countAllExcludeRoles(roles);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Boolean hasAtLeastOneRole(UserAccount userAccount, Collection<Role> roles) {
 		for(Role role1 : userAccount.getRoles())
 			for(Role role2 : roles)
@@ -162,8 +167,35 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		return Boolean.FALSE;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Boolean hasRole(UserAccount userAccount, Role role) {
 		return hasAtLeastOneRole(userAccount, Arrays.asList(role));
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public UserAccount instanciateOne(Party party,Role...roles) {
+		UserAccount userAccount = new UserAccount();
+		userAccount.setUser(party);
+		userAccount.getCredentials().setUsername(StringUtils.replace(party.getName(), Constant.CHARACTER_SPACE.toString(), Constant.EMPTY_STRING.toString()));
+		userAccount.getCredentials().setPassword(RandomStringUtils.randomAlphanumeric(6));
+		if(roles!=null)
+			userAccount.getRoles().addAll(Arrays.asList(roles));
+		return userAccount;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<UserAccount> instanciateManyFromParties(Collection<Party> parties, Role... roles) {
+		Collection<UserAccount> userAccounts = new ArrayList<>();
+		for(Party party : parties)
+			userAccounts.add(instanciateOne(party, roles));
+		return userAccounts;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<UserAccount> instanciateManyFromActors(Collection<? extends AbstractActor> actors,Role... roles) {
+		Collection<Party> parties = new ArrayList<>();
+		for(AbstractActor actor : actors)
+			parties.add(actor.getPerson());
+		return instanciateManyFromParties(parties, roles);
 	}
 }

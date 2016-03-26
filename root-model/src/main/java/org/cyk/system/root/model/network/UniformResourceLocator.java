@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
@@ -25,7 +26,7 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 
 	private static final long serialVersionUID = -4633680454658548588L;
 
-	@Input @InputText @Column(nullable=false,unique=true) @NotNull(groups=Client.class) private String address;
+	@Input @InputText @Column(nullable=false/*,unique=true*/) @NotNull(groups=Client.class) private String address;
 	//private Boolean parametersRequired = Boolean.TRUE;
 	
 	@Transient private Collection<UniformResourceLocatorParameter> parameters = new ArrayList<>();
@@ -48,7 +49,8 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	
 	@Override
 	public String toString() {
-		return address+(parameters==null || parameters.isEmpty() ? Constant.EMPTY_STRING : (" , "+parameters));
+		return address+(parameters==null || parameters.isEmpty() ? Constant.EMPTY_STRING : Constant.CHARACTER_QUESTION_MARK
+				+(StringUtils.join(parameters,Constant.CHARACTER_AMPERSTAMP)));
 	}
 	
 	/**/
