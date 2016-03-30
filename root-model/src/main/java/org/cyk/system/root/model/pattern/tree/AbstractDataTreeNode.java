@@ -20,8 +20,7 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	
-	@ManyToOne
-	@NotNull(groups=System.class)
+	@ManyToOne @NotNull(groups=System.class)
 	protected NestedSetNode node;
 	
 	@Transient private Collection<AbstractDataTreeNode> children;
@@ -34,5 +33,7 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 	public AbstractDataTreeNode(AbstractDataTreeNode parent,String code) {
 		this(parent,code,code);
 	}
+	
+	public static final String FIELD_NODE = "node";
 	
 }

@@ -1,11 +1,14 @@
 package org.cyk.system.root.model.pattern.tree;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -25,27 +28,20 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	public static final Integer FIRST_LEFT_INDEX = 0;
 	public static final Integer FIRST_RIGHT_INDEX = 1;
 	
-	@ManyToOne
-	@JoinColumn(name="theset")
-	@NotNull(groups=System.class)
+	@ManyToOne @JoinColumn(name="theset") @NotNull(groups=System.class)
 	private NestedSet set;
 	
-	@JoinColumn(name="parent")
-	@ManyToOne
+	@JoinColumn(name="parent") @ManyToOne
 	private NestedSetNode parent;
 	
-	@Column(nullable=false)
-	@NotNull(groups=System.class)
+	@Column(nullable=false) @NotNull(groups=System.class)
 	private Integer leftIndex;
 	
-	@Column(nullable=false)
-	@NotNull(groups=System.class)
+	@Column(nullable=false) @NotNull(groups=System.class)
 	private Integer rightIndex;
-	/*
-	@JoinColumn(name="data")
-	@ManyToOne
-	private AbstractDataTreeNode data;
-	*/
+	
+	@Transient private Collection<NestedSetNode> children;
+	
 	public NestedSetNode() {}
 	
 	public NestedSetNode(NestedSet set,NestedSetNode parent, int leftIndex, int rightIndex) {
@@ -60,34 +56,26 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 		this(set,parent,FIRST_LEFT_INDEX,FIRST_RIGHT_INDEX) ;
 	}
 	
-	public boolean isLeaf(){
+	public Boolean isLeaf(){
 		return leftIndex+1==rightIndex;
 	}
 	
-	public void updateBoundariesGreaterThanOrEqualTo(boolean increase,int index){
-		int sign = increase?+1:-1;
-		if(leftIndex>=index)
-			leftIndex=leftIndex+sign*2;
-		if(rightIndex>=index)
-			rightIndex=rightIndex+sign*2;
-	}
-	
-	public void updateBoundaries(int step,Boolean left){
-		if(left==null || left)
-			leftIndex = leftIndex + step;
-		if(left==null || !left)
-			rightIndex = rightIndex + step;
+	public Collection<NestedSetNode> getChildren(){
+		if(this.children==null)
+			this.children = new ArrayList<>();
+		return this.children;
 	}
 	
 	@Override
 	public String toString() {
 		return "("+leftIndex+","+rightIndex+")";
 	}
-	/*
-	public static NestedSetNode createChildOf(NestedSetNode root){
-		NestedSetNode child = new NestedSetNode(root.getSet(), root, root.getRightIndex(), root.getRightIndex()+1);
-		root.setRightIndex(root.getRightIndex()+2);
-		return child;
-	}*/
+	
+	/**/
+	
+	public static final String FIELD_SET = "set";
+	public static final String FIELD_PARENT = "parent";
+	public static final String FIELD_LEFT_INDEX = "leftIndex";
+	public static final String FIELD_RIGHT_INDEX = "rightIndex";
 	
 }

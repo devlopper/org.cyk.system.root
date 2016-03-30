@@ -4,10 +4,10 @@ import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_CO
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_FROM;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_ORDER_BY;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_SELECT;
+import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COMPUTE;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COUNT;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_READ;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_SUM;
-import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COMPUTE;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -26,8 +26,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import lombok.Getter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -42,14 +40,14 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.generator.RandomDataProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.Getter;
 
 public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements Serializable,PersistenceService<IDENTIFIABLE, Long> {
 
 	private static final long serialVersionUID = -8198334103295401293L;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistenceService.class);
+	//private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistenceService.class);
 	
 	private final static Set<Class<?>> NAMED_QUERIES_INITIALIZED = new HashSet<>();
 	private final static String SELECT_IDENTIFIER_FORMAT = "SELECT record.identifier FROM %s record";
@@ -356,11 +354,6 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		//queryWrapper.parameter(QueryStringBuilder.VAR_BETWEEN_TO,searchCriteria.getToDateSearchCriteria().getPreparedValue());
 	}
 	
-	@Override
-	protected Logger __logger__() {
-		return LOGGER;
-	}
-
 	/**/
 	
 	public static final String PARAMETER_INDEX = "pindex";

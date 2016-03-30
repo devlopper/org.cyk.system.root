@@ -4,6 +4,7 @@ import static org.cyk.utility.common.computation.ArithmeticOperator.GT;
 import static org.cyk.utility.common.computation.ArithmeticOperator.LT;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -34,7 +35,8 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByLeftIndexByRightIndex, _select().where("node.set", "nestedSet")
 				.and("node.leftIndex","leftIndex",ArithmeticOperator.EQ).and("node.leftIndex","rightIndex",ArithmeticOperator.EQ));
-		registerNamedQuery(readByParent, _select().where("node.set", "nestedSet").and("node.leftIndex","leftIndex",GT).and("node.leftIndex","rightIndex",LT));
+		registerNamedQuery(readByParent, _select().where("node.set", "nestedSet").and("node.leftIndex","leftIndex",GT).and("node.leftIndex","rightIndex",LT)
+				.orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_LEFT_INDEX), Boolean.TRUE));
 		registerNamedQuery(readRoots, _select().where(null,"node.set.root", QueryStringBuilder.VAR+".node",ArithmeticOperator.EQ,false));
 	}
 	
@@ -89,11 +91,30 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 	public ENUMERATION delete(ENUMERATION enumeration) {
 		Collection<ENUMERATION> list = readByParent(enumeration);
 		list.add(enumeration);
+		//System.out.println(list);
+		
+		Collection<ENUMERATION> leaves = new ArrayList<>();
+		for(ENUMERATION index : list){
+			if(Boolean.TRUE.equals(index.getNode().isLeaf()))
+					leaves.add(index);
+		}
+		
+		/*for(ENUMERATION leaf : leaves){
+			entityManager.remove(entityManager.merge(leaf));
+		}*/
+		
 		NestedSetNode node = enumeration.getNode();
 		for(ENUMERATION e : list)
 			entityManager.remove(entityManager.merge(e));
 		nestedSetNodeDao.delete(node);
 		return enumeration;
 	}
+	
+	/*private ENUMERATION getParent(ENUMERATION enumeration,Collection<ENUMERATION> enumerations){
+		for(ENUMERATION index : enumerations)
+			if( index.getNode()!=null && enumeration.getNode().getParent().getIdentifier().equals(index.getNode().getIdentifier()) )
+				return index;
+		return null;
+	}*/
 	
 }

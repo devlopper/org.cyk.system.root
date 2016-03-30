@@ -149,7 +149,7 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	assertEquals("/private/__tools__/crud/crudone.jsf?clazz=Person&crud=delete",
     			RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateOneCrudOne(Person.class, Crud.DELETE, null).toString());
     	
-    	System.out.println(StringUtils.join(RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateManyBusinessCrud(Person.class, true, true, true, null, null),"\r\n"));
+    	System.out.println(StringUtils.join(RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateManyBusinessCrud(Person.class, true, true, true, null,null, null),"\r\n"));
     }
 
 }
