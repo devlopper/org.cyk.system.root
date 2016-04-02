@@ -116,7 +116,7 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
     	showChildren(africa);
     	showChildren(america);
     	
-    	localityBusiness.move(localityBusiness.find(coteDivoire.getIdentifier()), america);
+    	move(coteDivoire, america);
     	
     	//localityBusiness.move(localityBusiness.find(coteDivoireSouthStateLaguneRegionDepartment1.getIdentifier()), 
     	//		localityBusiness.find(coteDivoireSouthStateSassandraRegion.getIdentifier()));
@@ -133,6 +133,12 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
     }
 
     /**/
+    
+    private void move(Locality locality,Locality parent){
+    	locality = localityBusiness.find(locality.getIdentifier());
+    	parent = localityBusiness.find(parent.getIdentifier());
+    	localityBusiness.move(locality, parent);
+    }
     
     private void showChildren(Locality locality){
     	locality = localityBusiness.find(locality.getIdentifier());

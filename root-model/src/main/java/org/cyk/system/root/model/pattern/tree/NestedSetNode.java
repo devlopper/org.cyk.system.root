@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.validation.System;
@@ -39,6 +40,8 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	
 	@Column(nullable=false) @NotNull(groups=System.class)
 	private Integer rightIndex;
+	
+	private String detachedIdentifier;
 	
 	@Transient private Collection<NestedSetNode> children;
 	
@@ -68,7 +71,12 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	
 	@Override
 	public String toString() {
-		return "("+leftIndex+","+rightIndex+")";
+		return String.format(TO_STRING_FORMAT, identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier());
+	}
+	
+	@Override
+	public String getLogMessage() {
+		return String.format(LOG_MESSAGE_FORMAT, identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier());
 	}
 	
 	/**/
@@ -77,5 +85,8 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	public static final String FIELD_PARENT = "parent";
 	public static final String FIELD_LEFT_INDEX = "leftIndex";
 	public static final String FIELD_RIGHT_INDEX = "rightIndex";
+	public static final String FIELD_DETACHED_IDENTIFIER = "detachedIdentifier";
 	
+	private static final String LOG_MESSAGE_FORMAT = NestedSetNode.class.getSimpleName()+"(I=%s,L=%s,R=%s,P=%s)";
+	private static final String TO_STRING_FORMAT = "(I=%s,L=%s,R=%s,P=%s)";
 }

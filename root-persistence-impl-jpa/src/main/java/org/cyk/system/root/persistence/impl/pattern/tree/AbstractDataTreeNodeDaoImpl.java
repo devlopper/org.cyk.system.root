@@ -4,16 +4,11 @@ import static org.cyk.utility.common.computation.ArithmeticOperator.GT;
 import static org.cyk.utility.common.computation.ArithmeticOperator.LT;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.inject.Inject;
-
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
-import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
-import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.persistence.impl.AbstractEnumerationDaoImpl;
 import org.cyk.system.root.persistence.impl.QueryStringBuilder;
 import org.cyk.utility.common.computation.ArithmeticOperator;
@@ -23,7 +18,7 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 
 	private static final long serialVersionUID = 6306356272165070761L;
 
-	@Inject protected NestedSetNodeDao nestedSetNodeDao;
+	//@Inject protected NestedSetNodeDao nestedSetNodeDao;
 	
 	/* 
 	 *Named Queries Identifiers Declaration 
@@ -72,43 +67,8 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
     public Long countRoots() {
         return countNamedQuery(countRoots).resultOne();
     }
+		
 	
-	/*
-	 * CRUD specialization
-	 */
-	
-	@Override
-	public ENUMERATION create(ENUMERATION enumeration) {
-		if(enumeration.getNode()==null)
-			enumeration.setNode(new NestedSetNode(new NestedSet(), null));
-		
-		if(enumeration.getNode().getIdentifier()==null)
-			nestedSetNodeDao.create(enumeration.getNode());
-		return super.create(enumeration);
-	}
-	
-	@Override
-	public ENUMERATION delete(ENUMERATION enumeration) {
-		Collection<ENUMERATION> list = readByParent(enumeration);
-		list.add(enumeration);
-		//System.out.println(list);
-		
-		Collection<ENUMERATION> leaves = new ArrayList<>();
-		for(ENUMERATION index : list){
-			if(Boolean.TRUE.equals(index.getNode().isLeaf()))
-					leaves.add(index);
-		}
-		
-		/*for(ENUMERATION leaf : leaves){
-			entityManager.remove(entityManager.merge(leaf));
-		}*/
-		
-		NestedSetNode node = enumeration.getNode();
-		for(ENUMERATION e : list)
-			entityManager.remove(entityManager.merge(e));
-		nestedSetNodeDao.delete(node);
-		return enumeration;
-	}
 	
 	/*private ENUMERATION getParent(ENUMERATION enumeration,Collection<ENUMERATION> enumerations){
 		for(ENUMERATION index : enumerations)

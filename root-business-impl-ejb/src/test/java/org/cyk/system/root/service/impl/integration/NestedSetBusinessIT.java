@@ -5,18 +5,14 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
-import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
-import org.cyk.utility.test.TestMethod;
-import org.junit.Assert;
 
 public class NestedSetBusinessIT extends AbstractBusinessIT {
 	   
 	private static final long serialVersionUID = 8691254326402622637L;
 	
-	private static NestedSet setA,set2,set3;
-	private static NestedSetNode a;
-	private static NestedSetNode a1,a2,a3,a4;
+	private static NestedSet setA,setB,set3;
+	private static NestedSetNode a,b;
+	private static NestedSetNode a1,a2,a3,a4,b1,b2,b3,b4;
 	private static NestedSetNode a11,a12,a13,a14,a21,a22,a23,a24,a31,a32,a33,a34,a41,a42,a43,a44;
 	private static NestedSetNode a111,a112,a113,a114,a121,a122,a123,a124,a131,a132,a133,a134,a141,a142,a143,a144
 		,a211,a212,a213,a214,a221,a222,a223,a224,a231,a232,a233,a234,a241,a242,a243,a244
@@ -30,7 +26,6 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
 			NestedSetNode parent =  null;
 			
 			setA = new NestedSet();
-			//nestedSetDao.create(setA);
 			nestedSetNodeBusiness.create(a = new NestedSetNode(setA,null));
 			
 			parent = a;
@@ -38,7 +33,8 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
 			a2 = createChild(parent);
 			a3 = createChild(parent);
 			a4 = createChild(parent);
-			/*
+			
+			
 			parent = a1;
 			a11 = createChild(parent);
 			a12 = createChild(parent);
@@ -62,7 +58,7 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
 			a42 = createChild(parent);
 			a43 = createChild(parent);
 			a44 = createChild(parent);
-			
+			/*
 			parent = a11;
 			a111 = createChild(parent);
 			a112 = createChild(parent);
@@ -159,6 +155,14 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
 			a443 = createChild(parent);
 			a444 = createChild(parent);
 			*/
+			setB = new NestedSet();
+			nestedSetNodeBusiness.create(b = new NestedSetNode(setB,null));
+			
+			parent = b;
+			b1 = createChild(parent);
+			b2 = createChild(parent);
+			b3 = createChild(parent);
+			b4 = createChild(parent);
 	}
 	
 	@Override
@@ -175,20 +179,41 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
     protected void businesses() {
     	installApplication();
     	createAll();
-    	showChildren(a);
-    	detach(a2);
     	
-    	System.out.println("   ---   After Detach   ---");
-    	showChildren(a);
+    	assertDetach(a1,5l,16l);
+    	assertDetach(a2,5l,11l);
+    	
+    	assertAttach(a1, b1,5l,10l);
     	
     }
     
     private NestedSetNode createChild(NestedSetNode parent){
-		return nestedSetNodeBusiness.create(new NestedSetNode(parent.getSet(), parent));
+		return nestedSetNodeBusiness.create(new NestedSetNode(parent.getSet(), nestedSetNodeBusiness.find(parent.getIdentifier())));
 	}
 	
-    private NestedSetNode detach(NestedSetNode node){
-		return nestedSetNodeBusiness.detach(nestedSetNodeBusiness.find(node.getIdentifier()));
+    private NestedSetNode delete(NestedSetNode node){
+		return nestedSetNodeBusiness.delete(nestedSetNodeBusiness.find(node.getIdentifier()));
+	}
+    
+    private void assertDetach(NestedSetNode node,Long expectedDetachedNodeCount,Long expectedSetNodeCount){
+		node = nestedSetNodeBusiness.find(node.getIdentifier());
+		nestedSetNodeBusiness.detach(node);
+		node = nestedSetNodeBusiness.find(node.getIdentifier());
+		Long detachedNodeCount = nestedSetNodeBusiness.countByDetachedIdentifier(node.getDetachedIdentifier());
+		Long setNodeCount = nestedSetNodeBusiness.countWhereDetachedIdentifierIsNullBySet(node.getSet());
+		assertEquals("Detached node count", expectedDetachedNodeCount, detachedNodeCount);
+		assertEquals("Set node count", expectedSetNodeCount, setNodeCount);
+	}
+    
+    private void assertAttach(NestedSetNode node,NestedSetNode parent,Long expectedAttachedNodeCount,Long expectedSetNodeCount){
+    	node = nestedSetNodeBusiness.find(node.getIdentifier());
+    	parent = nestedSetNodeBusiness.find(parent.getIdentifier());
+    	nestedSetNodeBusiness.attach(node,parent);
+    	Long attachedNodeCount = nestedSetNodeBusiness.countByParent(node)+1;
+    	node = nestedSetNodeBusiness.find(node.getIdentifier());
+    	Long setNodeCount = nestedSetNodeBusiness.countWhereDetachedIdentifierIsNullBySet(node.getSet());
+    	assertEquals("Attached node count", expectedAttachedNodeCount, attachedNodeCount);
+		assertEquals("Set node count", expectedSetNodeCount, setNodeCount);
 	}
     
     private void showChildren(NestedSetNode node){

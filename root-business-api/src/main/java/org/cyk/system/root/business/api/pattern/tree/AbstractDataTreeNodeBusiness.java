@@ -12,7 +12,7 @@ public interface AbstractDataTreeNodeBusiness<ENUMERATION extends AbstractEnumer
     Collection<ENUMERATION> findHierarchies();
     Collection<ENUMERATION> findByParent(ENUMERATION parent);
     
-    void move(ENUMERATION node,ENUMERATION parent);
+    void move(ENUMERATION anEnumeration,ENUMERATION parent);
     
     ENUMERATION findParent(ENUMERATION child);
     

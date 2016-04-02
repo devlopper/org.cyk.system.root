@@ -6,6 +6,9 @@ import java.math.BigDecimal;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.CommonUtils;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /*lombok*/
 
 /*mapping - jpa*/
@@ -20,10 +23,16 @@ public abstract class AbstractModelElement implements Serializable{
 	public static final int PERCENT_SCALE = 4;
 	public static final BigDecimal LOWEST_NON_ZERO_POSITIVE_VALUE = new BigDecimal("0."+StringUtils.repeat('0', 10)+"1");
 	
+	@Getter @Setter protected String lastComputedLogMessage;
+	
 	public abstract String getUiString();
  
 	public String getLogMessage(){
 		return CommonUtils.getInstance().getFieldsValues(this, AbstractModelElement.class);
+	}
+	
+	public void computeLogMessage(){
+		lastComputedLogMessage = getLogMessage();
 	}
 	
 }
