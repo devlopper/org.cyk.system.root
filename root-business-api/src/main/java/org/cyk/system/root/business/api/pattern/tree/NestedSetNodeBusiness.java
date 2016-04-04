@@ -8,7 +8,7 @@ import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 
 public interface NestedSetNodeBusiness extends TypedBusiness<NestedSetNode> {
 	
-	Collection<NestedSetNode> readByParent(NestedSetNode parent);
+	Collection<NestedSetNode> findByParent(NestedSetNode parent);
 	Long countByParent(NestedSetNode parent);
 	
 	Collection<NestedSetNode> findBySet(NestedSet set);

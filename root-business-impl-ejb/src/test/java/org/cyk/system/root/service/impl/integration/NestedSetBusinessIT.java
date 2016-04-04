@@ -220,7 +220,7 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
     
     private void showChildren(NestedSetNode node){
     	node =  nestedSetNodeBusiness.find(node.getIdentifier());
-		System.out.println("Children of "+node+" = "+nestedSetNodeBusiness.readByParent(node));
+		System.out.println("Children of "+node+" = "+nestedSetNodeBusiness.findByParent(node));
 	}
 
 }

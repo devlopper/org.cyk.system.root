@@ -32,7 +32,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Collection<NestedSetNode> readByParent(NestedSetNode parent) {
+	public Collection<NestedSetNode> findByParent(NestedSetNode parent) {
 		return dao.readByParent(parent);
 	}
 	
@@ -83,11 +83,23 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			node.setLeftIndex(NestedSetNode.FIRST_LEFT_INDEX);
 			node.setRightIndex(NestedSetNode.FIRST_RIGHT_INDEX);	
 		}else{
-			Integer parentRightIndex = node.getParent().getRightIndex();
+			NestedSetNode parent = node.getParent();
+			Integer parentRightIndex = parent.getRightIndex();
 			node.setLeftIndex(parentRightIndex);
 			node.setRightIndex(node.getLeftIndex()+1);
-			Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputed = dao.readBySetByLeftOrRightGreaterThanOrEqualTo(node.getParent().getSet(), parentRightIndex);
-			nestedSetNodesWhereIndexesToBeRecomputed.remove(node);
+			Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputedCandidate = dao.readBySetByLeftOrRightGreaterThanOrEqualTo(node.getSet(), parentRightIndex);
+			Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputed = new ArrayList<>();
+			
+			nestedSetNodesWhereIndexesToBeRecomputed.add(parent);
+			for(NestedSetNode index : nestedSetNodesWhereIndexesToBeRecomputedCandidate){
+				// Because node parent can be changed by attach so to be ignore
+				// only one instance of parent must be handled to avoid inconsistent update
+				if(index.equals(node) || index.equals(parent)){
+					
+				}else{
+					nestedSetNodesWhereIndexesToBeRecomputed.add(index);
+				}
+			}
 			logTrace("On create : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
 			for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
 				if(n.equals(node)){
@@ -98,15 +110,11 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 					logTrace("Node indexes {} recomputed",n);
 				}
 			}
-			
-			//node.setParent(dao.read(node.getParent().getIdentifier()));
-			//debug(node.getParent());
-			
 		}
 		
+		node.setDetachedIdentifier(null);
 		if(node.getIdentifier()==null){
 			logTrace("Node indexes {} computed",node);
-			node.setDetachedIdentifier(null);
 			dao.create(node);
 			if(node.getSet().getRoot()==null){//first node of the set
 				logTrace("First set node {} created",node);
@@ -116,6 +124,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		}else{
 			dao.update(node);
 			logTrace("Node {} updated",node);
+			
 		}
 		
 		
@@ -190,6 +199,8 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			treeNode.setSet(parent.getSet());//attaching to the parent's set
 			create(treeNode);
 			logTrace("{} attached", treeNode);
+			//System.out.println("Children of "+node+" : "+dao.readByParent(node));
+			//System.out.println("Children of "+node+" : "+dao.readAll());
 		}
 		return node;
 	}
