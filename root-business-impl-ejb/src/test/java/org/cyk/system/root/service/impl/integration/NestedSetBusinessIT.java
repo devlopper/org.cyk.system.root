@@ -155,6 +155,8 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
 			a443 = createChild(parent);
 			a444 = createChild(parent);
 			*/
+			
+			System.out.println("B Set");
 			setB = new NestedSet();
 			nestedSetNodeBusiness.create(b = new NestedSetNode(setB,null));
 			

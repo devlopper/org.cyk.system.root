@@ -145,7 +145,7 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
     	List<Locality> localities = new ArrayList<>(localityBusiness.findByParent(locality));
     	localities.add(0, locality);
     	for(Locality l : localities){
-    		System.out.println(l+"("+localityDao.readParent(l)+")");
+    		System.out.println(l.getNode().getIdentifier()+" - "+l+"("+localityDao.readParent(l)+")");
     	}
     }
 

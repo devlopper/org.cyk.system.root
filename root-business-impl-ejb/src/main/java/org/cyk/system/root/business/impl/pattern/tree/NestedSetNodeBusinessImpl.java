@@ -18,7 +18,6 @@ import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
-import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 
 @Stateless
 public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<NestedSetNode, NestedSetNodeDao> implements NestedSetNodeBusiness,Serializable {
@@ -77,62 +76,53 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			nestedSetDao.create(node.getSet());
 			logTrace("Set {} auto created",node.getSet());
 		}
-		
-		Integer parentRightIndex = null;
-		Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputed = null;
-		if(node.getParent()==null)
-			;
-		else{
-			parentRightIndex = node.getParent().getRightIndex();
-			nestedSetNodesWhereIndexesToBeRecomputed = dao.readBySetByLeftOrRightGreaterThanOrEqualTo(node.getParent().getSet(), parentRightIndex);
-		}
-		
-		computeIndexesOnAdd(node, node.getSet().getRoot()==null, nestedSetNodesWhereIndexesToBeRecomputed);
 			
 		if(node.getSet().getRoot()==null){//first node of the set
 			node.setParent(null);
 			node.getSet().setRoot(node);
-			logTrace("First set node {} created",node);
-		}else{
-			for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed)
-				if(n.getIdentifier().equals(node.getParent().getIdentifier())){
-					Integer i = n.getRightIndex();
-					System.out.println("RINDEX : "+i);
-					n.setRightIndex(i);
-					dao.update(n);
-					node.setParent(n);
-					
-					break;
-				}
-			node.setParent(dao.update(node.getParent()));
-			//debug(node.getParent());
-			logTrace("Node {} created",node);
-		}
-		node.setDetachedIdentifier(null);
-		dao.create(node);
-		System.out.println("   ---   PARENT   ---");
-		debug( dao.read(node.getParent().getIdentifier()) );
-		//((GenericDaoImpl)genericDao).getEntityManager().flush();
-		return node;
-	}
-	
-	private void computeIndexesOnAdd(NestedSetNode node,Boolean isFirstNode,Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputed){
-		if(Boolean.TRUE.equals(isFirstNode)){//first node of the set
 			node.setLeftIndex(NestedSetNode.FIRST_LEFT_INDEX);
-			node.setRightIndex(NestedSetNode.FIRST_RIGHT_INDEX);
+			node.setRightIndex(NestedSetNode.FIRST_RIGHT_INDEX);	
 		}else{
-			logTrace("On add : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
-			NestedSetNode parent = node.getParent();
-			Integer parentRightIndex = parent.getRightIndex();
+			Integer parentRightIndex = node.getParent().getRightIndex();
 			node.setLeftIndex(parentRightIndex);
 			node.setRightIndex(node.getLeftIndex()+1);
+			Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputed = dao.readBySetByLeftOrRightGreaterThanOrEqualTo(node.getParent().getSet(), parentRightIndex);
+			nestedSetNodesWhereIndexesToBeRecomputed.remove(node);
+			logTrace("On create : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
 			for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
-				updateBoundariesGreaterThanOrEqualTo(n,Boolean.TRUE, parentRightIndex);
-				dao.update(n);
-				logTrace("Node indexes {} recomputed",n);
+				if(n.equals(node)){
+					
+				}else{
+					updateBoundariesGreaterThanOrEqualTo(n,Boolean.TRUE, parentRightIndex);
+					dao.update(n);
+					logTrace("Node indexes {} recomputed",n);
+				}
 			}
+			
+			//node.setParent(dao.read(node.getParent().getIdentifier()));
+			//debug(node.getParent());
+			
 		}
-		logTrace("Node indexes {} computed",node);
+		
+		if(node.getIdentifier()==null){
+			logTrace("Node indexes {} computed",node);
+			node.setDetachedIdentifier(null);
+			dao.create(node);
+			if(node.getSet().getRoot()==null){//first node of the set
+				logTrace("First set node {} created",node);
+			}else{
+				logTrace("Node {} created",node);
+			}
+		}else{
+			dao.update(node);
+			logTrace("Node {} updated",node);
+		}
+		
+		
+		//System.out.println("   ---   PARENT   ---");
+		//debug( dao.read(node.getParent().getIdentifier()) );
+		//((GenericDaoImpl)genericDao).getEntityManager().flush();
+		return node;
 	}
 
 	@Override
