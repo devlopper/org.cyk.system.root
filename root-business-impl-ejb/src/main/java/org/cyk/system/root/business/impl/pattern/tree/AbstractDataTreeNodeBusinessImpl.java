@@ -39,13 +39,14 @@ public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends Abstr
 	
 	@Override
 	public ENUMERATION delete(ENUMERATION enumeration) {
+		NestedSetNode rootNode = enumeration.getNode();
 		Collection<ENUMERATION> list = dao.readByParent(enumeration);
 		list.add(enumeration);
 		for(ENUMERATION e : list){
 			e.setNode(null);
 			dao.delete(e);
 		}
-		nestedSetNodeBusiness.delete(enumeration.getNode());
+		nestedSetNodeBusiness.delete(rootNode);
 		return enumeration;
 	}
 	

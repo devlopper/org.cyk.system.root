@@ -34,6 +34,10 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 		this(parent,code,code);
 	}
 	
+	public void setParent(AbstractDataTreeNode parent){
+		this.node=parent==null?null:new NestedSetNode(parent.getNode().getSet(), parent.getNode());
+	}
+	
 	public static final String FIELD_NODE = "node";
 	
 }

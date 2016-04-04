@@ -36,7 +36,7 @@ public class AbstractDataTree<TYPE extends DataTreeType> extends AbstractDataTre
 	
 	public AbstractDataTree(AbstractDataTree<TYPE> parent,String code) {
 		super(parent,code);
-		this.node=parent==null?null:new NestedSetNode(parent.getNode().getSet(), parent.getNode());
+		setParent(parent);
 	}
 	
 	public AbstractDataTree(AbstractDataTree<TYPE> parent,TYPE type,String code) {
