@@ -19,4 +19,6 @@ public interface AbstractDataTreeNodeBusiness<ENUMERATION extends AbstractEnumer
     Boolean isAncestorOf(ENUMERATION ancestor,ENUMERATION child);
     Boolean isAtLeastOneAncestorOf(Collection<ENUMERATION> ancestors,ENUMERATION child);
 
+    ENUMERATION instanciateOne(String parentCode,String code,String name);
+    
 }

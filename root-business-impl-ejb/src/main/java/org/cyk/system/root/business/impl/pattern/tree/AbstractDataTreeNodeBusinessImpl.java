@@ -96,7 +96,14 @@ public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends Abstr
         return hierarchy;
     }
     
-    private void loadChildren(ENUMERATION parent){
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ENUMERATION instanciateOne(String parentCode, String code,String name) {
+		ENUMERATION enumeration = instanciateOne(code,name);
+    	enumeration.setParent(dao.read(parentCode));
+    	return enumeration;
+	}
+
+	private void loadChildren(ENUMERATION parent){
        buildHierarchy(parent,new ArrayList<>(dao.readByParent(parent)));
     }
     

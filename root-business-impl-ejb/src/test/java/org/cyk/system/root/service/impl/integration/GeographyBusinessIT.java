@@ -45,7 +45,7 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
 		create(city = new LocalityType(department, String.valueOf(level++), "City"));
 		
 		level = 0;
-		create(africa = new Locality(null, continent, String.valueOf(level++), "Africa"));
+		create(africa =  new Locality(null, continent, String.valueOf(level++), "Africa"));
 		
 		create(america = new Locality(null, continent, String.valueOf(level++), "America"));
 		
