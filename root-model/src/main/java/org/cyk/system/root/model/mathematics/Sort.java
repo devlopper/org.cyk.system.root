@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.persistence.Transient;
+import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class Sort extends AbstractModelElement implements Serializable {
 	@Embedded private Rank rank = new Rank();
 	@Column(length=1024) private String comments;
 	
-	@Transient private Interval averageInterval;
+	@ManyToOne private Interval averageInterval;
 	
 	@Override
 	public String getUiString() {
@@ -45,5 +45,10 @@ public class Sort extends AbstractModelElement implements Serializable {
 				,averageInterval==null?Constant.EMPTY_STRING:averageInterval.getCode());
 	}
 	private static final String LOG_FORMAT = Sort.class.getSimpleName()+"(%s %s %s)";
+	
+	public static final String FIELD_AVERAGE = "average";
+	public static final String FIELD_RANK = "rank";
+	public static final String FIELD_COMMENTS = "comments";
+	public static final String FIELD_AVERAGEINTERVAL = "averageInterval";
 	
 }
