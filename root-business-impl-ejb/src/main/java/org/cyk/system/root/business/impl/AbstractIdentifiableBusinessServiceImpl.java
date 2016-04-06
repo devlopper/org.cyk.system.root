@@ -10,6 +10,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import lombok.Getter;
+
 import org.cyk.system.root.business.api.BusinessServiceListener;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
@@ -25,8 +27,6 @@ import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
-
-import lombok.Getter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -237,6 +237,11 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	protected void notifyCrudDone(Crud crud,AbstractIdentifiable identifiable){
 		for(BusinessServiceListener listener : BusinessServiceListener.COLLECTION)
 			listener.crudDone(crud, identifiable);
+	}
+	
+	protected <T extends AbstractIdentifiable> void setCallArgumentsObjects(BusinessServiceCallArguments<T> callArguments,Collection<T> identifiables){
+		if(callArguments!=null)
+			callArguments.setObjects(identifiables);
 	}
 	
 	/**/
