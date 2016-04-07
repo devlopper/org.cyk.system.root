@@ -333,16 +333,25 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	@Override
 	public Collection<IDENTIFIABLE> readManyRandomly(Integer count) {
-		return entityManager.createQuery(_select().in(null).getValue(),clazz)
+		/*return entityManager.createQuery(_select().in(null).getValue(),clazz)
 				.setParameter(QueryStringBuilder.VAR_IDENTIFIERS, readManyIdentifiersRandomly(count))
 				.setMaxResults(count)
 				.getResultList();
+		*/
+		return readByIdentifiers(readManyIdentifiersRandomly(count));
 	}
 	
 	@Override
 	public IDENTIFIABLE readOneRandomly() {
 		Collection<IDENTIFIABLE> collection = readManyRandomly(1);
 		return collection.isEmpty()?null:collection.iterator().next();
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readByIdentifiers(Collection<Long> identifiers) {
+		return entityManager.createQuery(_select().in(null).getValue(),clazz)
+				.setParameter(QueryStringBuilder.VAR_IDENTIFIERS, identifiers)
+				.getResultList();
 	}
 	
 	/**/

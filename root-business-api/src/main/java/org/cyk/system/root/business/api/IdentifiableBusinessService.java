@@ -55,12 +55,13 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
 					
 					//DataReadConfig getDataReadConfig();
 					
-					Long findOneIdentifierRandomly();
-                    Collection<Long> findManyIdentifiersRandomly(Integer count);
-                    Collection<Long> findAllIdentifiers();
+					IDENTIFIER findOneIdentifierRandomly();
+                    Collection<IDENTIFIER> findManyIdentifiersRandomly(Integer count);
+                    Collection<IDENTIFIER> findAllIdentifiers();
                     
                     IDENTIFIABLE findOneRandomly();
                     Collection<IDENTIFIABLE> findManyRandomly(Integer count);
+                    Collection<IDENTIFIABLE> findByIdentifiers(Collection<IDENTIFIER> identifiers);
                     
                     /**/
                     

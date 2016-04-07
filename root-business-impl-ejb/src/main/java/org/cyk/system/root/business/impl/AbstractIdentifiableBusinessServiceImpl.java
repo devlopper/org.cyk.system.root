@@ -136,6 +136,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public Collection<IDENTIFIABLE> findManyRandomly(Integer count) {
 		return getPersistenceService().readManyRandomly(count);
 	}
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findByIdentifiers(Collection<Long> identifiers) {
+		return getPersistenceService().readByIdentifiers(identifiers);
+	}
 	/**
 	 * Utilities methods
 	 */

@@ -406,7 +406,9 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		
 		GenderType genderType = GenderType.UNSET;
 		if(businessEntityInfos==null){
-			ModelBean modelBean = parameters.getSubjectClass().getAnnotation(ModelBean.class);
+			ModelBean modelBean = null;
+			if(parameters.getSubjectClass()!=null)
+				modelBean = parameters.getSubjectClass().getAnnotation(ModelBean.class);
 			if(modelBean!=null)
 				genderType = modelBean.genderType();
 		}else
