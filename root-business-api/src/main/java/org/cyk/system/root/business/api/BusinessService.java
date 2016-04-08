@@ -25,8 +25,10 @@ public interface BusinessService {
 		public void setObjects(Collection<OBJECT> objects){
 			this.objects = objects;
 			if(this.objects != null){
-				if(executionProgress!=null)
+				if(executionProgress!=null){
 					executionProgress.setTotalAmountOfWorkUsing100AsBase(new Double(this.objects.size()));
+					executionProgress.clear();
+				}
 			}
 		}
 		
