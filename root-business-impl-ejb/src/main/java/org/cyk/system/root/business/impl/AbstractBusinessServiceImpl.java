@@ -36,6 +36,12 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		return RootBusinessLayer.getInstance().getStringGeneratorBusiness().generateIdentifier(identifiable, runtimeGeneratorIdentifier, databaseGenerator);
 	}
 	
+	protected void setCallArgumentsCurrentExecutionStep(BusinessServiceCallArguments<?> callArguments,Object object){
+		if(callArguments!=null && callArguments.getExecutionProgress()!=null){
+			callArguments.getExecutionProgress().setCurrentExecutionStep(RootBusinessLayer.getInstance().getFormatterBusiness().format(object));
+		}
+	}
+	
 	protected void addCallArgumentsWorkDoneByStep(BusinessServiceCallArguments<?> callArguments){
 		if(callArguments!=null && callArguments.getExecutionProgress()!=null){
 			callArguments.getExecutionProgress().addWorkDoneByStep(1);
