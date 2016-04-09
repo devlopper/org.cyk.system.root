@@ -28,6 +28,12 @@ public class Sort extends AbstractModelElement implements Serializable {
 	
 	@ManyToOne private Interval averageInterval;
 	
+	public Rank getRank(){
+		if(rank==null)
+			rank = new Rank();
+		return rank;
+	}
+	
 	@Override
 	public String getUiString() {
 		return average+" "+rank+" "+comments;
