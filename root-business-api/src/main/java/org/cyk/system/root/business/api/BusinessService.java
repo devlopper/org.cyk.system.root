@@ -2,8 +2,6 @@ package org.cyk.system.root.business.api;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.cyk.utility.common.computation.ExecutionProgress;
 
@@ -18,7 +16,6 @@ public interface BusinessService {
 		private static final long serialVersionUID = 7151479991050865862L;
 		
 		private Collection<OBJECT> objects;
-		private Set<String> previousServiceIdentifiers;
 		protected ExecutionProgress executionProgress;
 		
 		public BusinessServiceCallArguments(Collection<OBJECT> objects){
@@ -33,22 +30,6 @@ public interface BusinessService {
 					executionProgress.clear();
 				}
 			}
-		}
-		
-		public Set<String> getPreviousServiceIdentifiers(){
-			if(previousServiceIdentifiers==null)
-				previousServiceIdentifiers = new LinkedHashSet<>();
-			return previousServiceIdentifiers;
-		}
-		
-		public void addPreviousServiceIdentifiers(String...identifiers){
-			if(identifiers!=null)
-				for(String identifier : identifiers)
-					getPreviousServiceIdentifiers().add(identifier);
-		}
-		
-		public Boolean containPreviousServiceIdentifier(String identifier){
-			return getPreviousServiceIdentifiers().contains(identifier);
 		}
 		
 	}
