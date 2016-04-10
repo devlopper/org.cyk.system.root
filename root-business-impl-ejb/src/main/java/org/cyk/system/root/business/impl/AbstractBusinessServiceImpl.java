@@ -48,6 +48,11 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		}
 	}
 	
+	protected void clearCallArgumentsExecution(BusinessServiceCallArguments<?> callArguments){
+		if(callArguments!=null && callArguments.getExecutionProgress()!=null){
+			callArguments.getExecutionProgress().clear();
+		}
+	}
 	/**/
 	
 }
