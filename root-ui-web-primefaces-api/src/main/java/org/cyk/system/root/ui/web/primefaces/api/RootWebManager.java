@@ -11,8 +11,10 @@ import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
+import org.cyk.ui.web.primefaces.HierarchyNode;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.primefaces.model.TreeNode;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=RootWebManager.DEPLOYMENT_ORDER)
 public class RootWebManager extends AbstractPrimefacesManager implements Serializable {
@@ -30,7 +32,7 @@ public class RootWebManager extends AbstractPrimefacesManager implements Seriali
 	}
 	
 	@Override
-	public SystemMenu systemMenu(AbstractUserSession userSession) {
+	public SystemMenu systemMenu(AbstractUserSession<TreeNode,HierarchyNode> userSession) {
 		SystemMenu systemMenu = new SystemMenu();
 		UICommandable group = uiProvider.createCommandable("contacts", null);
 		group.addChild(menuManager.crudMany(Locality.class, null));
