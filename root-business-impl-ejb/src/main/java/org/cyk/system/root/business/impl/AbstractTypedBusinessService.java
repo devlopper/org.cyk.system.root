@@ -1,9 +1,10 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.TransactionAttribute;
@@ -40,14 +41,9 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public IDENTIFIABLE create(IDENTIFIABLE object) {
 	    validationPolicy.validateCreate(object);
         object = dao.create(object);
-        for(Listener listener : Listener.COLLECTION){
-        	Class<?> aClass = listener.getEntityClass();
-        	if(aClass==null)
-        		logWarning("No class specified for create on object {}({})", object.getClass().getSimpleName(),object);
-        	else
-        		if(aClass.equals(object.getClass()))
-        			listener.processOnCreated(object);
-        }
+        Listener listener = Listener.MAP.get(object.getClass());
+    	if(listener!=null)
+    		listener.processOnCreated(object);
         return object;
 	}
 	
@@ -207,7 +203,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	public static interface Listener {
 		
-		Collection<Listener> COLLECTION = new ArrayList<>();
+		Map<Class<? extends AbstractIdentifiable>,Listener> MAP = new HashMap<>();
 		
 		void processOnCreated(Object object);
 		void processOnUpdated(Object object);
