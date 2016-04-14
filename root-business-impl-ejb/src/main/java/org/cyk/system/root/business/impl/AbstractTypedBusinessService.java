@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
@@ -37,7 +39,16 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override
 	public IDENTIFIABLE create(IDENTIFIABLE object) {
 	    validationPolicy.validateCreate(object);
-        return dao.create(object);
+        object = dao.create(object);
+        for(Listener listener : Listener.COLLECTION){
+        	Class<?> aClass = listener.getEntityClass();
+        	if(aClass==null)
+        		logWarning("No class specified for create on object {}({})", object.getClass().getSimpleName(),object);
+        	else
+        		if(aClass.equals(object.getClass()))
+        			listener.processOnCreated(object);
+        }
+        return object;
 	}
 	
 	@Override
@@ -192,5 +203,38 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return deleted;
 	}
 
+	/**/
+	
+	public static interface Listener {
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		void processOnCreated(Object object);
+		void processOnUpdated(Object object);
+		void processOnDeleted(Object object);
+		Class<?> getEntityClass();
+		/**/
+		
+		public static class Adapter extends BeanAdapter implements Listener , Serializable {
+			private static final long serialVersionUID = -8937406338204006055L;
+			
+			@Override
+			public Class<?> getEntityClass() {
+				return null;
+			}
+			@Override public void processOnCreated(Object object) {}
+			@Override public void processOnUpdated(Object object) {}
+			@Override public void processOnDeleted(Object object) {}
+			
+			/**/
+			
+			public static class Default extends Adapter implements Serializable {
+
+				private static final long serialVersionUID = -42928448720961203L;
+				
+			}
+			
+		}
+	}
 
 }
