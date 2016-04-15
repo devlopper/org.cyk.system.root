@@ -41,7 +41,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public IDENTIFIABLE create(IDENTIFIABLE object) {
 	    validationPolicy.validateCreate(object);
         object = dao.create(object);
-        Listener listener = Listener.MAP.get(object.getClass());
+        @SuppressWarnings("unchecked")
+		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(object.getClass());
     	if(listener!=null)
     		listener.processOnCreated(object);
         return object;
@@ -201,30 +202,30 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	/**/
 	
-	public static interface Listener {
+	public static interface Listener<IDENTIFIABLE extends AbstractIdentifiable> {
 		
-		Map<Class<? extends AbstractIdentifiable>,Listener> MAP = new HashMap<>();
+		Map<Class<? extends AbstractIdentifiable>,Listener<? extends AbstractIdentifiable>> MAP = new HashMap<>();
 		
-		void processOnCreated(Object object);
-		void processOnUpdated(Object object);
-		void processOnDeleted(Object object);
+		void processOnCreated(IDENTIFIABLE identifiable);
+		void processOnUpdated(IDENTIFIABLE identifiable);
+		void processOnDeleted(IDENTIFIABLE identifiable);
 		Class<?> getEntityClass();
 		/**/
 		
-		public static class Adapter extends BeanAdapter implements Listener , Serializable {
+		public static class Adapter<IDENTIFIABLE extends AbstractIdentifiable> extends BeanAdapter implements Listener<IDENTIFIABLE> , Serializable {
 			private static final long serialVersionUID = -8937406338204006055L;
 			
 			@Override
 			public Class<?> getEntityClass() {
 				return null;
 			}
-			@Override public void processOnCreated(Object object) {}
-			@Override public void processOnUpdated(Object object) {}
-			@Override public void processOnDeleted(Object object) {}
+			@Override public void processOnCreated(IDENTIFIABLE identifiable) {}
+			@Override public void processOnUpdated(IDENTIFIABLE identifiable) {}
+			@Override public void processOnDeleted(IDENTIFIABLE identifiable) {}
 			
 			/**/
 			
-			public static class Default extends Adapter implements Serializable {
+			public static class Default<IDENTIFIABLE extends AbstractIdentifiable> extends Adapter<IDENTIFIABLE> implements Serializable {
 
 				private static final long serialVersionUID = -42928448720961203L;
 				
