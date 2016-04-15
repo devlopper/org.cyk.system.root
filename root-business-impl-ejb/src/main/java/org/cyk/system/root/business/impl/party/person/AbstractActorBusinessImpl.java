@@ -24,6 +24,14 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	}
 	
 	@Override
+	public ACTOR instanciateOne(AbstractActor actor) {
+		ACTOR myActor = instanciateOne();
+		myActor.setPerson(actor.getPerson());
+		myActor.getRegistration().setCode(actor.getRegistration().getCode());
+		return myActor;
+	}
+
+	@Override
 	public ACTOR create(ACTOR anActor) {
 		if(anActor.getPerson().getIdentifier()==null)
 			RootBusinessLayer.getInstance().getPersonBusiness().create(anActor.getPerson());
@@ -44,7 +52,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return dao.readByPerson(person);
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public ACTOR findByRegistrationCode(String registrationCode) {
 		return dao.readByRegistrationCode(registrationCode);
 	}

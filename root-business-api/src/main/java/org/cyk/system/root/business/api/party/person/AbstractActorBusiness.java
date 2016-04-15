@@ -16,6 +16,8 @@ public interface AbstractActorBusiness<ACTOR extends AbstractActor> extends Type
 	
 	ACTOR findByRegistrationCode(String registrationCode);
 	
+	ACTOR instanciateOne(AbstractActor actor);
+	
 	//void completeInstanciationOfOneFromValues(ACTOR actor,CompleteActorInstanciationOfOneFromValuesArguments<ACTOR> arguments);
 	//void completeInstanciationOfManyFromValues(List<ACTOR> actors,CompleteActorInstanciationOfManyFromValuesArguments<ACTOR> arguments);
 	//List<ACTOR> completeInstanciationOfManyFromValues(CompleteActorInstanciationOfManyFromValuesArguments<ACTOR> arguments);
