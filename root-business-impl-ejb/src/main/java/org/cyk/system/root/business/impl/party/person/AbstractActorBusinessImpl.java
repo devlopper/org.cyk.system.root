@@ -23,7 +23,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		super(dao); 
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ACTOR instanciateOne(AbstractActor actor) {
 		ACTOR myActor = instanciateOne();
 		myActor.setPerson(actor.getPerson());
