@@ -29,7 +29,7 @@ public interface GraphicBusiness {
 		
 		public CreateFromTextOptions() {
 			listeners.add(new DefaultCreateFromText());
-			font = new Font("Arial", Font.PLAIN, 48);;
+			font = new Font("Arial", Font.PLAIN, 48);
 		}
 	}
 	
