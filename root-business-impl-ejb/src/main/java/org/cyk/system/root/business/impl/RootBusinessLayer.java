@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -125,10 +129,8 @@ import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -223,7 +225,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     //private Person personAdmin,personGuest;
     
-    private static final Collection<RootBusinessLayerListener> ROOT_BUSINESS_LAYER_LISTENERS = new ArrayList<>();
+    private static final Collection<Listener> ROOT_BUSINESS_LAYER_LISTENERS = new ArrayList<>();
     
     @Override
     protected void initialisation() {
@@ -295,7 +297,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				@Override
 				public String execute(AbstractActor actor) {
 					String generatedCode = null;
-					for(RootBusinessLayerListener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+					for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
 						String value = listener.generateActorRegistrationCode(actor,null);
 						if(value!=null)
 							generatedCode = value;
@@ -305,7 +307,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 					else{
 						do{
 							AbstractActorBusiness<AbstractActor> business =  null;
-							for(RootBusinessLayerListener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+							for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
 								AbstractActorBusiness<AbstractActor> value = listener.findActorBusiness(actor);
 								if(value!=null)
 									business = value;
@@ -318,7 +320,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 								break;
 							else{
 								String previousGeneratedCode = generatedCode;
-								for(RootBusinessLayerListener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+								for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
 									String value = listener.generateActorRegistrationCode(actor,previousGeneratedCode);
 									if(value!=null)
 										generatedCode = value;
@@ -560,7 +562,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	}
     }
     
-    public Collection<RootBusinessLayerListener> getRootBusinessLayerListeners() {
+    public Collection<Listener> getRootBusinessLayerListeners() {
 		return ROOT_BUSINESS_LAYER_LISTENERS;
 	}
     
@@ -588,5 +590,47 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		return StringUtils.isBlank(collection.getItemCodeSeparator()) ? code 
 				: StringUtils.split(code,collection.getItemCodeSeparator())[1];
 	}
+	
+	/**/
+	
+	public interface Listener {
+
+		String generateActorRegistrationCode(AbstractActor actor,String previousCode);
+		
+		<ACTOR extends AbstractActor> AbstractActorBusiness<ACTOR> findActorBusiness(ACTOR actor);
+		
+		void populateCandidateRoles(List<Role> roles);
+		
+		/**/
+		
+		public static class Adapter extends AbstractBean implements Listener,Serializable {
+			
+			private static final long serialVersionUID = -7771053357545118564L;
+
+			@Override
+			public String generateActorRegistrationCode(AbstractActor actor,String previousCode) {
+				return null;
+			}
+
+			@Override
+			public <ACTOR extends AbstractActor> AbstractActorBusiness<ACTOR> findActorBusiness(ACTOR actor) {
+				return null;
+			}
+
+			@Override
+			public void populateCandidateRoles(List<Role> roles) {}
+			
+			/**/
+			
+			public static class Default extends Adapter implements Serializable {
+
+				private static final long serialVersionUID = 3580112506828375899L;
+				
+			}
+		}
+
+		
+	}
+
     
 }

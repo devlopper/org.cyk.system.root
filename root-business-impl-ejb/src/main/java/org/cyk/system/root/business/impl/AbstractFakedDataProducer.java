@@ -25,7 +25,7 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	@Inject protected RootBusinessLayer rootBusinessLayer;
 	@Inject protected RootRandomDataProvider rootRandomDataProvider;
 	@Inject protected GenericBusiness genericBusiness;
-	protected FakedDataProducerListener listener;
+	protected Listener listener;
 	
 	@Getter @Setter protected Boolean doBusiness = Boolean.FALSE;
 	
@@ -37,10 +37,10 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	
 	/**/
 	protected abstract void structure();
-	protected abstract void doBusiness(FakedDataProducerListener listener);
+	protected abstract void doBusiness(Listener listener);
 	protected abstract Package getBasePackage();
 	
-	public void produce(FakedDataProducerListener listener){
+	public void produce(Listener listener){
 		this.listener =listener;
 		rootDataProducerHelper.setBasePackage(getBasePackage());		
     	structure();
@@ -140,18 +140,34 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	protected <IDENTIFIABLE extends AbstractIdentifiable> void flush(Class<IDENTIFIABLE> identifiableClass,Collection<IDENTIFIABLE> identifiables){
 		flush(identifiableClass, null, identifiables, null);
 	}
-	
-	
+		
 	/**/
 	
-	public static interface FakedDataProducerListener{
+	public static interface Listener{
+		
 		void flush();
+		
+		/**/
+		
+		public static class Adapter implements Listener,Serializable{
+
+			private static final long serialVersionUID = -2345108310426625945L;
+
+			@Override
+			public void flush() {}
+			
+			/**/
+			
+			public static class Default extends Adapter implements Serializable{
+
+				private static final long serialVersionUID = -2345108310426625945L;
+
+				@Override
+				public void flush() {}
+				
+			}
+			
+		}
 	}
 	
-	public static class FakedDataProducerAdapter implements FakedDataProducerListener{
-
-		@Override
-		public void flush() {}
-		
-	}
 }
