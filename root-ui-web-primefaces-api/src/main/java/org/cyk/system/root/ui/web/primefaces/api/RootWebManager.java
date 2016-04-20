@@ -8,6 +8,7 @@ import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.event.EventType;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.ui.api.AbstractUserSession;
+import org.cyk.ui.api.command.AbstractCommandable.Builder;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
@@ -34,11 +35,11 @@ public class RootWebManager extends AbstractPrimefacesManager implements Seriali
 	@Override
 	public SystemMenu systemMenu(AbstractUserSession<TreeNode,HierarchyNode> userSession) {
 		SystemMenu systemMenu = new SystemMenu();
-		UICommandable group = uiProvider.createCommandable("contacts", null);
+		UICommandable group = Builder.instanciateOne().setLabelFromId("contacts").create();
 		group.addChild(menuManager.crudMany(Locality.class, null));
 		systemMenu.getReferenceEntities().add(group);
 		
-		group = uiProvider.createCommandable("event", null);
+		group = Builder.instanciateOne().setLabelFromId("event").create();
 		group.addChild(menuManager.crudMany(EventType.class, null));
 		systemMenu.getReferenceEntities().add(group);
 		
