@@ -36,11 +36,11 @@ public class RootWebManager extends AbstractPrimefacesManager implements Seriali
 	public SystemMenu systemMenu(AbstractUserSession<TreeNode,HierarchyNode> userSession) {
 		SystemMenu systemMenu = new SystemMenu();
 		UICommandable group = Builder.instanciateOne().setLabelFromId("contacts").create();
-		group.addChild(menuManager.crudMany(Locality.class, null));
+		group.addChild(Builder.createList(Locality.class, null));
 		systemMenu.getReferenceEntities().add(group);
 		
 		group = Builder.instanciateOne().setLabelFromId("event").create();
-		group.addChild(menuManager.crudMany(EventType.class, null));
+		group.addChild(Builder.createList(EventType.class, null));
 		systemMenu.getReferenceEntities().add(group);
 		
 		return systemMenu;

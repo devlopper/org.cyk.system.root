@@ -29,6 +29,7 @@ import org.cyk.system.root.business.api.CommonBusinessAction;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
@@ -384,6 +385,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	@Override
 	public String findListOfText(Class<?> aClass) {
 		return findText("listofsomething", new Object[]{findClassLabelText(new FindClassLabelTextParameters(aClass, Boolean.FALSE))});
+	}
+	
+	@Override
+	public String findActionIdentifierText(String actionIdentifier,BusinessEntityInfos businessEntityInfos,Boolean verb){
+		return RootBusinessLayer.getInstance().getLanguageBusiness().findText("action."+(Boolean.TRUE.equals(verb)?"verb":"noun")
+				+"."+businessEntityInfos.getVarName().toLowerCase()
+				+ (StringUtils.isBlank(actionIdentifier)?Constant.EMPTY_STRING:(Constant.CHARACTER_DOT+actionIdentifier)));
 	}
 	
 	@Override

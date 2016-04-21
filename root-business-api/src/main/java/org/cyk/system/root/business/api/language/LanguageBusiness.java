@@ -7,6 +7,7 @@ import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.language.Language;
@@ -63,6 +64,8 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 
 	String findResponseText(Boolean value);
 	
+	String findActionIdentifierText(String actionIdentifier,BusinessEntityInfos businessEntityInfos,Boolean verb);
+	
 	void setCachingEnabled(Boolean aValue);
 	Boolean getCachingEnabled();
 	
@@ -101,5 +104,20 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 		private Class<? extends AbstractIdentifiable> subjectClass;
 		private Boolean one,global,verb=Boolean.TRUE;
 		private String forWhat;
+		
+		/**/
+		
+		public static FindDoSomethingTextParameters create(Object actionIdentifier,Class<? extends AbstractIdentifiable> identifiableClass,Boolean verb){
+			FindDoSomethingTextParameters labelParameters = new FindDoSomethingTextParameters();
+			labelParameters = new FindDoSomethingTextParameters();
+			labelParameters.setActionIdentifier(actionIdentifier);
+			labelParameters.setSubjectClass(identifiableClass);
+			labelParameters.setVerb(verb);
+			return labelParameters;
+		}
+		
+		public static FindDoSomethingTextParameters create(Object actionIdentifier,Class<? extends AbstractIdentifiable> identifiableClass){
+			return create(actionIdentifier, identifiableClass, Boolean.TRUE);
+		}
 	}
 }
