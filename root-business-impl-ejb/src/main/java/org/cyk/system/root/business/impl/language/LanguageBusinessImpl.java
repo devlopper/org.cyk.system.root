@@ -389,9 +389,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	@Override
 	public String findActionIdentifierText(String actionIdentifier,BusinessEntityInfos businessEntityInfos,Boolean verb){
-		return RootBusinessLayer.getInstance().getLanguageBusiness().findText("action."+(Boolean.TRUE.equals(verb)?"verb":"noun")
-				+"."+businessEntityInfos.getVarName().toLowerCase()
-				+ (StringUtils.isBlank(actionIdentifier)?Constant.EMPTY_STRING:(Constant.CHARACTER_DOT+actionIdentifier)));
+		return RootBusinessLayer.getInstance().getLanguageBusiness().findText("action"+Constant.CHARACTER_DOT+businessEntityInfos.getVarName().toLowerCase()
+				+Constant.CHARACTER_DOT+actionIdentifier+Constant.CHARACTER_DOT+(Boolean.TRUE.equals(verb)?"verb":"name"));
 	}
 	
 	@Override
