@@ -46,5 +46,8 @@ public class MetricValue extends AbstractIdentifiable implements Serializable {
 
 	public static final String FIELD_METRIC = "metric";
 	
-	
+	@Override
+	public String toString() {
+		return numberValue == null ? stringValue : numberValue.toString();
+	}
 }

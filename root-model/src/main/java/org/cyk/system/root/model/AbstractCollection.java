@@ -49,4 +49,11 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		}
 	}
 	
+	@Override
+	public String getLogMessage() {
+		return String.format(LOG_MESSAGE, getClass().getSimpleName(),code,itemCodeSeparator);
+	}
+	
+	private static final String LOG_MESSAGE = "%s(C=%s SEP=%s)";
+	
 }
