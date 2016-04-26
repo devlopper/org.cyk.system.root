@@ -249,6 +249,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 					PersonSearchCriteria criteria = new PersonSearchCriteria(configuration.getGlobalFilter());
 					criteria.getReadConfig().set(configuration);
 					return (Collection<T>) personBusiness.findByCriteria(criteria);
+				}else if(AbstractActor.class.isAssignableFrom(dataClass)){
+					System.out
+							.println("RootBusinessLayer.initialisation().new Default() {...}.find() : ACTOR");
 				}
 				return super.find(dataClass, configuration);
 			}
