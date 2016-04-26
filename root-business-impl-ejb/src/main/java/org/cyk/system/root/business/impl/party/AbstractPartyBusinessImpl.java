@@ -47,14 +47,15 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public Collection<PARTY> findByCriteria(SEARCH_CRITERIA criteria) {
-    	if(StringUtils.isBlank(criteria.getNameSearchCriteria().getValue()))
+    	if(StringUtils.isBlank(criteria.getName().getValue())){
     		return findAll(criteria.getReadConfig());
+    	}
     	return dao.readByCriteria(criteria);
     }
     
     @Override  @TransactionAttribute(TransactionAttributeType.NEVER)
     public Long countByCriteria(SEARCH_CRITERIA criteria) {
-    	if(StringUtils.isBlank(criteria.getNameSearchCriteria().getValue()))
+    	if(StringUtils.isBlank(criteria.getName().getValue()))
     		return countAll();
     	return dao.countByCriteria(criteria);
     }

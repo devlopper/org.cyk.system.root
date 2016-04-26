@@ -41,8 +41,8 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 	@Override
 	public Collection<PARTY> readByCriteria(SEARCH_CRITERIA searchCriteria) {
 		String queryName = null;
-		if(searchCriteria.getNameSearchCriteria().getAscendingOrdered()!=null){
-			queryName = Boolean.TRUE.equals(searchCriteria.getNameSearchCriteria().getAscendingOrdered())?
+		if(searchCriteria.getName().getAscendingOrdered()!=null){
+			queryName = Boolean.TRUE.equals(searchCriteria.getName().getAscendingOrdered())?
 					readByCriteriaNameAscendingOrder:readByCriteriaNameDescendingOrder;
 		}else
 			queryName = readByCriteriaNameAscendingOrder;
@@ -59,8 +59,10 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 	}
 	
 	protected void applyCriteriaParameters(QueryWrapper<?> queryWrapper,SEARCH_CRITERIA searchCriteria){
-		queryWrapper.parameter(Party.FIELD_NAME,searchCriteria.getNameSearchCriteria().getPreparedValue());
+		queryWrapper.parameter(Party.FIELD_NAME,searchCriteria.getName().getPreparedValue());
 	}
+	
+	
                 
     /**/
 	

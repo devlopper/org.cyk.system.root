@@ -13,14 +13,14 @@ public class PartySearchCriteria extends AbstractFieldValueSearchCriteriaSet imp
 
 	private static final long serialVersionUID = 6796076474234170332L;
 
-	protected StringSearchCriteria nameSearchCriteria = new StringSearchCriteria();
+	protected StringSearchCriteria name = new StringSearchCriteria();
 	
 	public PartySearchCriteria(){
 		this(null);
 	}
 	
 	public PartySearchCriteria(String name) {
-		setStringSearchCriteria(nameSearchCriteria, name);
+		setStringSearchCriteria(this.name, name);
 		
 	}
 	

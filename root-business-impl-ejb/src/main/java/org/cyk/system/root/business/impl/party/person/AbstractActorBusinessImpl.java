@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.TransactionAttribute;
@@ -11,11 +12,12 @@ import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.generator.ValueGenerator;
+import org.cyk.system.root.model.party.AbstractActorSearchCriteria;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
 
-public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO extends AbstractActorDao<ACTOR>> extends AbstractTypedBusinessService<ACTOR, DAO> implements AbstractActorBusiness<ACTOR>,Serializable {
+public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO extends AbstractActorDao<ACTOR,SEARCH_CRITERIA>,SEARCH_CRITERIA extends AbstractActorSearchCriteria<ACTOR>> extends AbstractTypedBusinessService<ACTOR, DAO> implements AbstractActorBusiness<ACTOR,SEARCH_CRITERIA>,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
@@ -108,6 +110,21 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		completeInstanciationOfManyFromValues(actors,arguments);
 		return actors;
 	}*/
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<ACTOR> findByCriteria(SEARCH_CRITERIA criteria) {
+		if(StringUtils.isBlank(criteria.getPerson().getName().getValue())){
+    		return findAll(criteria.getReadConfig());
+    	}
+    	return dao.readByCriteria(criteria);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countByCriteria(SEARCH_CRITERIA criteria) {
+		if(StringUtils.isBlank(criteria.getPerson().getName().getValue()))
+    		return countAll();
+    	return dao.countByCriteria(criteria);
+	}
 
 	
 	

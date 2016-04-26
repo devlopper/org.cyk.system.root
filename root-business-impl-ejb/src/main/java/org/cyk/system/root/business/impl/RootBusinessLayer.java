@@ -240,15 +240,15 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}
 		}); 
         
-        BusinessListener.LISTENERS.add(new BusinessListener.Adapter.Default(){
+        BusinessListener.COLLECTION.add(new BusinessListener.Adapter.Default(){
 			private static final long serialVersionUID = 2105514784569748009L;
 			@SuppressWarnings("unchecked")
 			@Override
 			public <T extends AbstractIdentifiable> Collection<T> find(Class<T> dataClass,DataReadConfiguration configuration) {
 				if(Person.class.equals(dataClass)){
-					PersonSearchCriteria p = new PersonSearchCriteria(configuration.getGlobalFilter());
-					p.getReadConfig().set(configuration);
-					return (Collection<T>) personBusiness.findByCriteria(p);
+					PersonSearchCriteria criteria = new PersonSearchCriteria(configuration.getGlobalFilter());
+					criteria.getReadConfig().set(configuration);
+					return (Collection<T>) personBusiness.findByCriteria(criteria);
 				}
 				return super.find(dataClass, configuration);
 			}
@@ -306,9 +306,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 						generatedCode = RandomStringUtils.randomAlphabetic(6);
 					else{
 						do{
-							AbstractActorBusiness<AbstractActor> business =  null;
+							AbstractActorBusiness<AbstractActor,?> business =  null;
 							for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
-								AbstractActorBusiness<AbstractActor> value = listener.findActorBusiness(actor);
+								AbstractActorBusiness<AbstractActor,?> value = listener.findActorBusiness(actor);
 								if(value!=null)
 									business = value;
 							}
@@ -569,7 +569,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     
     public <T extends AbstractIdentifiable> Long count(Class<T> aClass, DataReadConfiguration dataReadConfiguration) {
-		for(BusinessListener listener : BusinessListener.LISTENERS){
+		for(BusinessListener listener : BusinessListener.COLLECTION){
 			Long count = listener.count(aClass, dataReadConfiguration);
 			if(count!=null)
 				return count;
@@ -578,7 +578,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	}
 
 	public <T extends AbstractIdentifiable> Collection<T> find(Class<T> aClass,DataReadConfiguration dataReadConfiguration) {
-		for(BusinessListener listener : BusinessListener.LISTENERS){
+		for(BusinessListener listener : BusinessListener.COLLECTION){
 			Collection<T> collection = listener.find(aClass,dataReadConfiguration);
 			if(collection!=null)
 				return collection;
@@ -598,7 +598,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 
 		String generateActorRegistrationCode(AbstractActor actor,String previousCode);
 		
-		<ACTOR extends AbstractActor> AbstractActorBusiness<ACTOR> findActorBusiness(ACTOR actor);
+		<ACTOR extends AbstractActor> AbstractActorBusiness<ACTOR,?> findActorBusiness(ACTOR actor);
 		
 		void populateCandidateRoles(List<Role> roles);
 		
@@ -614,7 +614,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}
 
 			@Override
-			public <ACTOR extends AbstractActor> AbstractActorBusiness<ACTOR> findActorBusiness(ACTOR actor) {
+			public <ACTOR extends AbstractActor> AbstractActorBusiness<ACTOR,?> findActorBusiness(ACTOR actor) {
 				return null;
 			}
 

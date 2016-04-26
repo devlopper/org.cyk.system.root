@@ -11,12 +11,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputPassword;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.validation.Client;
 
-@Entity @Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.INTERNAL,genderType=GenderType.MALE)
 public class Credentials extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -3099832512046879464L;

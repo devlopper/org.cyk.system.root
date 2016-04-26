@@ -15,7 +15,7 @@ public interface BusinessListener {
 	
 	<T extends AbstractIdentifiable> Long count(Class<T> dataClass, DataReadConfiguration configuration);
 	
-	Collection<BusinessListener> LISTENERS = new ArrayList<>();
+	Collection<BusinessListener> COLLECTION = new ArrayList<>();
 	
 	/**/
 	
