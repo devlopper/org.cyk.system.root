@@ -227,7 +227,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private static final Collection<Listener> ROOT_BUSINESS_LAYER_LISTENERS = new ArrayList<>();
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected void initialisation() {
     	INSTANCE = this; 
         super.initialisation();
@@ -240,31 +241,21 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}
 		}); 
         
-        BusinessListener.COLLECTION.add(new BusinessListener.Adapter.Default(){
-			private static final long serialVersionUID = 2105514784569748009L;
-			@SuppressWarnings("unchecked")
+        BusinessServiceProvider.Identifiable.COLLECTION.add(new BusinessServiceProvider.Identifiable.Adapter.Default<Person>(Person.class){
+			private static final long serialVersionUID = 1322416788278558869L;
 			@Override
-			public <T extends AbstractIdentifiable> Collection<T> find(Class<T> dataClass,DataReadConfiguration configuration) {
-				if(Person.class.equals(dataClass)){
-					PersonSearchCriteria criteria = new PersonSearchCriteria(configuration.getGlobalFilter());
-					criteria.getReadConfig().set(configuration);
-					return (Collection<T>) personBusiness.findByCriteria(criteria);
-				}else if(AbstractActor.class.isAssignableFrom(dataClass)){
-					System.out
-							.println("RootBusinessLayer.initialisation().new Default() {...}.find() : ACTOR");
-				}
-				return super.find(dataClass, configuration);
+			public Collection<Person> find(DataReadConfiguration configuration) {
+				PersonSearchCriteria criteria = new PersonSearchCriteria(configuration.getGlobalFilter());
+				criteria.getReadConfig().set(configuration);
+				return personBusiness.findByCriteria(criteria);
 			}
 			
 			@Override
-			public <T extends AbstractIdentifiable> Long count(Class<T> dataClass,DataReadConfiguration configuration) {
-				if(Person.class.equals(dataClass)){
-					return personBusiness.countByCriteria(new PersonSearchCriteria(configuration.getGlobalFilter()));
-				}
-				return super.count(dataClass, configuration);
+			public Long count(DataReadConfiguration configuration) {
+				return personBusiness.countByCriteria(new PersonSearchCriteria(configuration.getGlobalFilter()));
 			}
         });
-        
+         
         registerFormatter(MetricValue.class, new AbstractFormatter<MetricValue>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
@@ -292,8 +283,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		registerResourceBundle("org.cyk.system."+systemName+".business.impl.resources.message", getClass().getClassLoader());
         */
         
-        @SuppressWarnings("unchecked")
-		ValueGenerator<AbstractActor,String> actorRegistrationCodeGenerator = (ValueGenerator<AbstractActor, String>) 
+        ValueGenerator<AbstractActor,String> actorRegistrationCodeGenerator = (ValueGenerator<AbstractActor, String>) 
 				RootBusinessLayer.getInstance().getApplicationBusiness().findValueGenerator(ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER);
 		
 		actorRegistrationCodeGenerator.setMethod(new GenerateMethod<AbstractActor, String>() {
@@ -567,26 +557,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     public Collection<Listener> getRootBusinessLayerListeners() {
 		return ROOT_BUSINESS_LAYER_LISTENERS;
-	}
-    
-    
-    
-    public <T extends AbstractIdentifiable> Long count(Class<T> aClass, DataReadConfiguration dataReadConfiguration) {
-		for(BusinessListener listener : BusinessListener.COLLECTION){
-			Long count = listener.count(aClass, dataReadConfiguration);
-			if(count!=null)
-				return count;
-		}	
-		return null;
-	}
-
-	public <T extends AbstractIdentifiable> Collection<T> find(Class<T> aClass,DataReadConfiguration dataReadConfiguration) {
-		for(BusinessListener listener : BusinessListener.COLLECTION){
-			Collection<T> collection = listener.find(aClass,dataReadConfiguration);
-			if(collection!=null)
-				return collection;
-		}
-		return null;
 	}
 	
 	public String getRelativeCode(AbstractCollection<?> collection,String code){
