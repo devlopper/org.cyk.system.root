@@ -18,8 +18,9 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	private static final long serialVersionUID = 6306356272165070761L;
 	
 	private static final String READ_BY_CRITERIA_FORMAT = "SELECT actor FROM %s actor WHERE "
-    		+ "    ( LOCATE(LOWER(:name),LOWER(actor.person.name))                > 0 )"
-    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.person.lastName))            > 0 )"
+    		+ "    ( LOCATE(LOWER(:name),LOWER(actor.person.name))                  > 0 )"
+    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.person.lastName))              > 0 )"
+    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.registration.code))            > 0 )"
     		;
 	
 	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_FORMAT+" "+ORDER_BY_FORMAT;
