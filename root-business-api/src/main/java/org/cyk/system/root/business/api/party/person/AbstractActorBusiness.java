@@ -3,16 +3,15 @@ package org.cyk.system.root.business.api.party.person;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfOneFromValuesArguments;
-import org.cyk.system.root.model.party.AbstractActorSearchCriteria;
-import org.cyk.system.root.model.party.person.AbstractActor;
-import org.cyk.system.root.model.party.person.Person;
-
 import lombok.Getter;
 import lombok.Setter;
 
-public interface AbstractActorBusiness<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActorSearchCriteria<ACTOR>> extends TypedBusiness<ACTOR> {
+import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfOneFromValuesArguments;
+import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.party.person.Person;
+
+public interface AbstractActorBusiness<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends TypedBusiness<ACTOR> {
 
 	ACTOR findByPerson(Person person);
 	

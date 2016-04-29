@@ -18,8 +18,8 @@ import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
-import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.file.FileDao;
@@ -31,7 +31,7 @@ import org.cyk.system.root.persistence.api.party.person.PersonExtendedInformatio
 import org.cyk.utility.common.Constant;
 
 @Stateless
-public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao,PersonSearchCriteria> implements PersonBusiness,Serializable {
+public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao,SearchCriteria> implements PersonBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	

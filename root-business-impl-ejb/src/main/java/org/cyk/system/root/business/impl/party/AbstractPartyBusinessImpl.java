@@ -14,7 +14,7 @@ import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.PartySearchCriteria;
+import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
 
 public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends AbstractPartyDao<PARTY,SEARCH_CRITERIA>,SEARCH_CRITERIA extends PartySearchCriteria> extends AbstractTypedBusinessService<PARTY, DAO> implements AbstractPartyBusiness<PARTY,SEARCH_CRITERIA>,Serializable {

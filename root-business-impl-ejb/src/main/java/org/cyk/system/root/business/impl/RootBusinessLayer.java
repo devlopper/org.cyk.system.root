@@ -110,7 +110,6 @@ import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.PersonSearchCriteria;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.License;
@@ -245,14 +244,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = 1322416788278558869L;
 			@Override
 			public Collection<Person> find(DataReadConfiguration configuration) {
-				PersonSearchCriteria criteria = new PersonSearchCriteria(configuration.getGlobalFilter());
+				Person.SearchCriteria criteria = new Person.SearchCriteria(configuration.getGlobalFilter());
 				criteria.getReadConfig().set(configuration);
 				return personBusiness.findByCriteria(criteria);
 			}
 			
 			@Override
 			public Long count(DataReadConfiguration configuration) {
-				return personBusiness.countByCriteria(new PersonSearchCriteria(configuration.getGlobalFilter()));
+				return personBusiness.countByCriteria(new Person.SearchCriteria(configuration.getGlobalFilter()));
 			}
         });
          

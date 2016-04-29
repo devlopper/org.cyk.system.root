@@ -10,14 +10,16 @@ import javax.ejb.TransactionAttributeType;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.BusinessServiceProvider;
+import org.cyk.system.root.business.impl.BusinessServiceProvider.Service;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.generator.ValueGenerator;
-import org.cyk.system.root.model.party.AbstractActorSearchCriteria;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
-public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO extends AbstractActorDao<ACTOR,SEARCH_CRITERIA>,SEARCH_CRITERIA extends AbstractActorSearchCriteria<ACTOR>> extends AbstractTypedBusinessService<ACTOR, DAO> implements AbstractActorBusiness<ACTOR,SEARCH_CRITERIA>,Serializable {
+public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO extends AbstractActorDao<ACTOR,SEARCH_CRITERIA>,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends AbstractTypedBusinessService<ACTOR, DAO> implements AbstractActorBusiness<ACTOR,SEARCH_CRITERIA>,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
@@ -126,7 +128,34 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
     	return dao.countByCriteria(criteria);
 	}
 
+	/**/
 	
+	public static abstract class BusinessServiceProviderIdentifiable<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends BusinessServiceProvider.Identifiable.Adapter.Default<ACTOR> implements Serializable {
+
+		private static final long serialVersionUID = -3282900979154003071L;
+
+		public BusinessServiceProviderIdentifiable(Class<ACTOR> clazz) {
+			super(clazz);
+		}
+
+		@SuppressWarnings("unchecked")
+		public Collection<ACTOR> find(DataReadConfiguration configuration) {
+			SEARCH_CRITERIA criteria = createSearchCriteria(Service.FIND,configuration);
+			criteria.getReadConfig().set(configuration);
+			return ((AbstractActorBusiness<ACTOR, SEARCH_CRITERIA>)getBusiness()).findByCriteria(criteria);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public Long count(DataReadConfiguration configuration) {
+			SEARCH_CRITERIA criteria = createSearchCriteria(Service.COUNT,configuration);
+			return ((AbstractActorBusiness<ACTOR, SEARCH_CRITERIA>)getBusiness()).countByCriteria(criteria);
+		}
+		
+		protected abstract SEARCH_CRITERIA createSearchCriteria(Service service,DataReadConfiguration configuration);
+		
+		
+	}
 	
 	
 }

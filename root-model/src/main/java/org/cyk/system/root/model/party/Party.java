@@ -20,6 +20,8 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.validation.Client;
 
 @Getter @Setter //@ModelBean(crudStrategy=CrudStrategy.ENUMERATION)
@@ -68,5 +70,26 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_BIRTH_DATE = "birthDate";
 	public static final String FIELD_IMAGE = "image";
+	
+	/**/
+	
+	@Getter @Setter
+	public static class PartySearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		protected StringSearchCriteria name = new StringSearchCriteria();
+		
+		public PartySearchCriteria(){
+			this(null);
+		}
+		
+		public PartySearchCriteria(String name) {
+			setStringSearchCriteria(this.name, name);
+			
+		}
+		
+	}
+
 	
 }

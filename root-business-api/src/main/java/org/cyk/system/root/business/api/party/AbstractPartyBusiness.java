@@ -3,12 +3,12 @@ package org.cyk.system.root.business.api.party;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.PartySearchCriteria;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 
 public interface AbstractPartyBusiness<PARTY extends Party,SEARCH_CRITERIA extends PartySearchCriteria> extends TypedBusiness<PARTY> {
 

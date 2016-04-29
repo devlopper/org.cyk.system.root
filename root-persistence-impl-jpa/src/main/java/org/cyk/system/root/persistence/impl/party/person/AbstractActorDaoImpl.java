@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import javax.persistence.NoResultException;
 
-import org.cyk.system.root.model.party.AbstractActorSearchCriteria;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
@@ -14,7 +13,7 @@ import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
 
-public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActorSearchCriteria<ACTOR>> extends AbstractTypedDao<ACTOR> implements AbstractActorDao<ACTOR,SEARCH_CRITERIA>,Serializable {
+public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends AbstractTypedDao<ACTOR> implements AbstractActorDao<ACTOR,SEARCH_CRITERIA>,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	

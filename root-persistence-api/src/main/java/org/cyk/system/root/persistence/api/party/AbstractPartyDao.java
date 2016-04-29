@@ -3,7 +3,7 @@ package org.cyk.system.root.persistence.api.party;
 import java.util.Collection;
 
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.PartySearchCriteria;
+import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.TypedDao;
 
 public interface AbstractPartyDao<PARTY extends Party,SEARCH_CRITERIA extends PartySearchCriteria> extends TypedDao<PARTY> {

@@ -5,11 +5,11 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.PersonSearchCriteria;
+import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.impl.party.AbstractPartyDaoImpl;
 
-public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,PersonSearchCriteria> implements PersonDao,Serializable {
+public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,SearchCriteria> implements PersonDao,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	

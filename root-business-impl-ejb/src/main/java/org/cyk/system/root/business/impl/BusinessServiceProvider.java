@@ -22,6 +22,8 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 
 	private static final long serialVersionUID = 6526060809947143790L;
 
+	public static enum Service{FIND,COUNT,FIND_ALL,COUNT_ALL};
+	
 	private static BusinessServiceProvider INSTANCE;
 	
 	@Override

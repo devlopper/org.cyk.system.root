@@ -2,12 +2,11 @@ package org.cyk.system.root.persistence.api.party.person;
 
 import java.util.Collection;
 
-import org.cyk.system.root.model.party.AbstractActorSearchCriteria;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.TypedDao;
 
-public interface AbstractActorDao<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActorSearchCriteria<ACTOR>> extends TypedDao<ACTOR> {
+public interface AbstractActorDao<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends TypedDao<ACTOR> {
 
 	ACTOR readByPerson(Person person);
 	

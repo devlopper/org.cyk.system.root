@@ -13,6 +13,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -60,4 +61,25 @@ public class Person extends Party implements Serializable{
 	public static final String FIELD_NATIONALITY = "nationality";
 	public static final String FIELD_EXTENDED_INFORMATIONS = "extendedInformations";
 	public static final String FIELD_JOB_INFORMATIONS = "jobInformations";
+	
+	/**/
+	
+	@Getter @Setter
+	public static class SearchCriteria extends PartySearchCriteria implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		protected StringSearchCriteria lastNameSearchCriteria = new StringSearchCriteria();
+		
+		public SearchCriteria(){
+			this(null);
+		}
+		
+		public SearchCriteria(String name) {
+			super(name);
+			setStringSearchCriteria(lastNameSearchCriteria, name);
+			
+		}
+		
+	}
 }

@@ -7,7 +7,7 @@ import javax.persistence.NoResultException;
 
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.PartySearchCriteria;
+import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
