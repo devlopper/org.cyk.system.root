@@ -26,7 +26,8 @@ public class Sort extends AbstractModelElement implements Serializable {
 	@Embedded private Rank rank = new Rank();
 	@Column(length=1024) private String comments;
 	
-	@ManyToOne private Interval averageInterval;
+	@ManyToOne private Interval averageAppreciatedInterval;
+	@ManyToOne private Interval averagePromotedInterval;
 	
 	public Rank getRank(){
 		if(rank==null)
@@ -48,13 +49,15 @@ public class Sort extends AbstractModelElement implements Serializable {
 	public String getLogMessage() {
 		return String.format(LOG_FORMAT,average==null?Constant.EMPTY_STRING:average.getLogMessage()
 				,rank==null?Constant.EMPTY_STRING:rank.getLogMessage()
-				,averageInterval==null?Constant.EMPTY_STRING:averageInterval.getCode());
+				,averageAppreciatedInterval==null?Constant.EMPTY_STRING:averageAppreciatedInterval.getCode()
+				,averagePromotedInterval==null?Constant.EMPTY_STRING:averagePromotedInterval.getCode());
 	}
 	private static final String LOG_FORMAT = Sort.class.getSimpleName()+"(%s %s %s)";
 	
 	public static final String FIELD_AVERAGE = "average";
 	public static final String FIELD_RANK = "rank";
 	public static final String FIELD_COMMENTS = "comments";
-	public static final String FIELD_AVERAGEINTERVAL = "averageInterval";
+	public static final String FIELD_AVERAGE_APPRECIATED_INTERVAL = "averageAppreciatedInterval";
+	public static final String FIELD_AVERAGE_PROMOTED_INTERVAL = "averagePromotedInterval";
 	
 }

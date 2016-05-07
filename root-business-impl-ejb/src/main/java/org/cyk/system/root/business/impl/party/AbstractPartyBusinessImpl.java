@@ -50,6 +50,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     	if(StringUtils.isBlank(criteria.getName().getValue())){
     		return findAll(criteria.getReadConfig());
     	}
+    	prepareFindByCriteria(criteria);
     	return dao.readByCriteria(criteria);
     }
     
@@ -57,6 +58,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     public Long countByCriteria(SEARCH_CRITERIA criteria) {
     	if(StringUtils.isBlank(criteria.getName().getValue()))
     		return countAll();
+    	prepareFindByCriteria(criteria);
     	return dao.countByCriteria(criteria);
     }
     

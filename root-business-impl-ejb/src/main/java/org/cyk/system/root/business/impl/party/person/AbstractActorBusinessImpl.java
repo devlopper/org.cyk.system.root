@@ -118,6 +118,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		if(StringUtils.isBlank(criteria.getPerson().getName().getValue())){
     		return findAll(criteria.getReadConfig());
     	}
+		prepareFindByCriteria(criteria);
     	return dao.readByCriteria(criteria);
 	}
 
@@ -125,6 +126,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	public Long countByCriteria(SEARCH_CRITERIA criteria) {
 		if(StringUtils.isBlank(criteria.getPerson().getName().getValue()))
     		return countAll();
+		prepareFindByCriteria(criteria);
     	return dao.countByCriteria(criteria);
 	}
 
