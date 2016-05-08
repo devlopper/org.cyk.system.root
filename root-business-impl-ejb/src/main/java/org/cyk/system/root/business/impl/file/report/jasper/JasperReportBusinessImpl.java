@@ -44,6 +44,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderListener
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.cdi.BeanAdapter;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
@@ -60,18 +61,34 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 	@Inject private FileBusiness fileBusiness;
 	
 	@Override
-	public void build(ReportBasedOnTemplateFile<?> aReport, Boolean print) {
+	public void build(final ReportBasedOnTemplateFile<?> aReport, Boolean print) {
 		JRBeanCollectionDataSource datasource = new JRBeanCollectionDataSource(aReport.getDataSource());
 		InputStream inputStream = fileBusiness.findInputStream(aReport.getTemplateFile());
 		try {
-			String jrxml = IOUtils.toString(inputStream);
+			final StringBuilder jrxmlBuilder = new StringBuilder(IOUtils.toString(inputStream));
+			
+			listenerUtils.getString(Listener.COLLECTION, new ListenerUtils.ResultMethod<Listener, String>() {
+				@Override
+				public String execute(Listener listener) {
+					jrxmlBuilder.delete(0, jrxmlBuilder.length());
+					jrxmlBuilder.append(listener.processJrxml(aReport, jrxmlBuilder.toString()));
+					return jrxmlBuilder.toString();
+				}
+			});
+			/*
 			for(Listener listener : Listener.COLLECTION)
 				if(Boolean.TRUE.equals(listener.isJrxmlProcessable(aReport)))
 					jrxml = listener.processJrxml(aReport,jrxml);
+			*/
 			
-			ByteArrayInputStream bais = new ByteArrayInputStream(jrxml.getBytes(Constant.ENCODING_UTF8));
-			for(Listener listener : Listener.COLLECTION)
-				listener.processInputStream(aReport,bais);
+			final ByteArrayInputStream bais = new ByteArrayInputStream(jrxmlBuilder.toString().getBytes(Constant.ENCODING_UTF8));
+			listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+				@Override
+				public void execute(Listener listener) {
+					listener.processInputStream(aReport,bais);
+				}
+			});
+			
 			
 			JasperDesign jasperDesign = JRXmlLoader.load(bais);
 			for(Listener listener : Listener.COLLECTION)
