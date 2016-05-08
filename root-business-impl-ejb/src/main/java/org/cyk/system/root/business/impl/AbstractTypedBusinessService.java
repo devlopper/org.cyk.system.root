@@ -56,7 +56,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE update(IDENTIFIABLE object) {
-		return dao.update(object);
+		object = dao.update(object);
+		 @SuppressWarnings("unchecked")
+			Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(object.getClass());
+	    	if(listener!=null)
+	    		listener.processOnUpdated(object);
+		return object;
 	}
 	
 	@Override
@@ -67,7 +72,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE delete(IDENTIFIABLE object) {
-		return dao.delete(object);
+		object = dao.delete(object);
+		 @SuppressWarnings("unchecked")
+			Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(object.getClass());
+	    	if(listener!=null)
+	    		listener.processOnDeleted(object);
+		return object;
 	}
 	
 	@Override

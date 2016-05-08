@@ -34,13 +34,17 @@ public class Person extends Party implements Serializable{
 	@Transient private JobInformations jobInformations;
 	@Transient private MedicalInformations medicalInformations;
 	
+	@Transient private String names;
+	
 	public Person(String firstName,String lastName) {
 		super(firstName);
 		this.lastName = lastName;
 	}
 	
 	public String getNames(){
-		return name+(StringUtils.isEmpty(lastName)?"":(" "+lastName));
+		if(StringUtils.isBlank(names))
+			names = name+(StringUtils.isEmpty(lastName)?"":(" "+lastName));
+		return names;
 	}
 
 	@Override

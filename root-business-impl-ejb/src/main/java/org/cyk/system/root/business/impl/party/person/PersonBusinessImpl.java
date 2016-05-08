@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -92,7 +93,13 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		if(StringUtils.isNotBlank(person.getLastName()))
 			blocks.add(person.getLastName());
 		
-		return StringUtils.join(blocks,Constant.CHARACTER_SPACE);
+		if(Boolean.TRUE.equals(options.getFirstNameIsFirst()))
+			;
+		else
+			Collections.reverse(blocks);
+		
+		person.setNames(StringUtils.join(blocks,Constant.CHARACTER_SPACE));
+		return person.getNames();
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

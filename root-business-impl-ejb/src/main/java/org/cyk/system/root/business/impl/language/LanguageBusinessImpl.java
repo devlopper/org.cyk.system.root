@@ -60,6 +60,10 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	private static final String COMMON_BUSINESS_ACTION_FORMAT = "commonbusinessaction.%s.%s";
 	
+	private static final String DO_NOT_PROCESS_TAG = "cyk_donotprocess";
+	private static final String DO_NOT_PROCESS_TAG_START = "<"+DO_NOT_PROCESS_TAG+">";
+	private static final String DO_NOT_PROCESS_TAG_END = "</"+DO_NOT_PROCESS_TAG+">";
+	
 	private static final String SUBSTITUTE_TAG = "cyk_code";
 	private static final String SUBSTITUTE_TAG_START = "<"+SUBSTITUTE_TAG+">";
 	private static final String SUBSTITUTE_TAG_END = "</"+SUBSTITUTE_TAG+">";
@@ -159,7 +163,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 						while((substituteCode = StringUtils.substringBetween(value, SUBSTITUTE_TAG_START, SUBSTITUTE_TAG_END)) != null){
 							value = StringUtils.replace(value, SUBSTITUTE_TAG_START+substituteCode+SUBSTITUTE_TAG_END, findText(substituteCode, CaseType.NONE));
 						}
-						value = StringHelper.getInstance().applyCaseType(value, caseType);
+						
+						if(StringUtils.startsWith(value,DO_NOT_PROCESS_TAG_START) && StringUtils.endsWith(value,DO_NOT_PROCESS_TAG_END)){
+							value = StringUtils.substringBetween(value, DO_NOT_PROCESS_TAG_START, DO_NOT_PROCESS_TAG_END);
+						}else{
+							value = StringHelper.getInstance().applyCaseType(value, caseType);
+						}
+						
 						if(Boolean.TRUE.equals(cachingEnabled)){
 							RESOURCE_BUNDLE_VALUE_CACHE.put(cacheId, value);
 							logDebug("value of {} is {}",code,value);

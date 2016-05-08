@@ -94,7 +94,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			
 			report.setName(person.getName());
 			report.setLastName(person.getLastName());
-			report.setNames(person.getNames());
+			report.setNames(rootBusinessLayer.getPersonBusiness().findNames(person));
 			report.setSurname(person.getSurname());
 			report.setBirthDate(format(person.getBirthDate()));
 			report.setCode(person.getCode());

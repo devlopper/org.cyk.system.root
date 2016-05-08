@@ -24,8 +24,9 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCrite
 	@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 	public static class FindNamesOptions implements Serializable{
 		private static final long serialVersionUID = 5198052741650985781L;
+		public static Boolean FIRST_NAME_IS_FIRST=Boolean.TRUE;
 		
-		private Boolean useTitle = Boolean.FALSE;
+		private Boolean useTitle = Boolean.FALSE,firstNameIsFirst=FIRST_NAME_IS_FIRST;
 		
 	}
 	
