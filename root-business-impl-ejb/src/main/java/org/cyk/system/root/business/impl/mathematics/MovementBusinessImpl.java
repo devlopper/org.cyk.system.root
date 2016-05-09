@@ -57,6 +57,13 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		return movement;
 	}
 	
+	@Override
+	public Movement delete(Movement movement) {
+		commonUtils.increment(BigDecimal.class, movement.getCollection(), MovementCollection.FIELD_VALUE, movement.getValue().negate());
+		movementCollectionDao.update(movement.getCollection());
+		return super.delete(movement);
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Movement instanciateOne(MovementCollection movementCollection, Boolean increment) {
 		Movement movement = new Movement();
