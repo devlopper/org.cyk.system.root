@@ -303,7 +303,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 
 				@Override
 	    		public void create(Collection<IDENTIFIABLE> identifiables) {
-	    			if(getBusiness()!=null)
+					if(identifiables==null)
+	    				return;
+					if(getBusiness()!=null)
 	    				getBusiness().create(identifiables);
 	    			else for(IDENTIFIABLE identifiable : identifiables)
 	    				getDao().create(identifiable);
@@ -311,6 +313,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	    		
 	    		@Override
 	    		public void update(Collection<IDENTIFIABLE> identifiables) {
+	    			if(identifiables==null)
+	    				return;
 	    			if(getBusiness()!=null)
 	    				getBusiness().update(identifiables);
 	    			else for(IDENTIFIABLE identifiable : identifiables)
@@ -319,6 +323,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	    		
 	    		@Override
 	    		public void delete(Collection<IDENTIFIABLE> identifiables) {
+	    			if(identifiables==null)
+	    				return;
 	    			if(getBusiness()!=null)
 	    				getBusiness().delete(identifiables);
 	    			else for(IDENTIFIABLE identifiable : identifiables)
@@ -327,6 +333,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	    		
 	    		@Override
 	    		public void operate(Collection<IDENTIFIABLE> identifiables, Crud crud) {
+	    			if(identifiables==null)
+	    				return;
 	    			if(Crud.CREATE.equals(crud))
 						create(identifiables);
 					else if(Crud.READ.equals(crud))
