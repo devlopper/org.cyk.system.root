@@ -16,6 +16,8 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	  
 	private static final long serialVersionUID = 5632592320990657808L;
 
+	protected String title;
+	
 	protected LabelValueCollectionReport currentLabelValueCollection;
 	protected List<LabelValueCollectionReport> labelValueCollections = new ArrayList<>();
 	
