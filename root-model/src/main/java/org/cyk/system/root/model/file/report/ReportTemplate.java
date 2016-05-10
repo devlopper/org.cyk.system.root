@@ -21,13 +21,17 @@ public class ReportTemplate extends AbstractEnumeration implements Serializable 
 	@ManyToOne private File template;
 	@ManyToOne private File headerImage;
 	@ManyToOne private File backgroundImage;
+	
+	@ManyToOne private File draftBackgroundImage;
+	
 	@Column(nullable=false) private Boolean usable = Boolean.TRUE;
 	
-	public ReportTemplate(String code, File template,File headerImage,File backgroundImage) {
+	public ReportTemplate(String code, File template,File headerImage,File backgroundImage,File draftBackgroundImage) {
 		super(code, code, null, null);
 		this.template = template;
 		this.headerImage = headerImage;
 		this.backgroundImage = backgroundImage;
+		this.draftBackgroundImage = draftBackgroundImage;
 	}
 	
 	
