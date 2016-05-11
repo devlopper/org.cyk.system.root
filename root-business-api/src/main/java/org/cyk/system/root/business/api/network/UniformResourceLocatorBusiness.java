@@ -1,6 +1,5 @@
 package org.cyk.system.root.business.api.network;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
 
@@ -10,13 +9,8 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public interface UniformResourceLocatorBusiness extends AbstractEnumerationBusiness<UniformResourceLocator> {
     
-	Environment ENVIRONMENT = new Environment();
-	
 	UniformResourceLocator instanciateOne(String name,String relativeUrl,String[] parameters);
 	UniformResourceLocator instanciateOne(String relativeUrl,String[] parameters);
 	
@@ -40,42 +34,17 @@ public interface UniformResourceLocatorBusiness extends AbstractEnumerationBusin
 	
 	/**/
 	
-	@Getter @Setter
-	public static class Environment implements Serializable {
-
-		private static final long serialVersionUID = 1276033839426765782L;
-
-		private String privateFolderName="private";
-		
-		private String fileExtension = "jsf";
-		private String fileList = "list";
-		private String fileEdit = "edit";
-		private String fileConsult = "consult";
-		private String fileCreateMany = "createMany";
-		
-		private String urlDynamicCrudOne = "/private/__tools__/crud/crudone.jsf";
-		private String urlDynamicCrudMany = "/private/__tools__/crud/crudmany.jsf";
-		private String urlDynamicSelectOne = "/private/__tools__/selectone.jsf";
-		private String urlDynamicSelectMany = "/private/__tools__/selectmany.jsf";
-		
-		private String parameterClass="clazz";
-		private String parameterCrud="crud";
-		private String parameterCrudCreate="create";
-		private String parameterCrudRead="read";
-		private String parameterCrudUpdate="update";
-		private String parameterCrudDelete="delete";
-		private String parameterActionIdentifier="actid";
-		
-		public String getParameterCrudValue(Crud crud){
-			crud=crud==null?Crud.READ:crud;
-			switch(crud){
-			case CREATE:return parameterCrudCreate;
-			case READ:return parameterCrudRead;
-			case UPDATE:return parameterCrudUpdate;
-			case DELETE:return parameterCrudDelete;
-			default: return null;
-			}
-		}
-		
-	}
+	String DYNAMIC_CRUD_ONE = "/private/__tools__/crud/crudone.jsf";
+	String DYNAMIC_CRUD_MANY = "/private/__tools__/crud/crudmany.jsf";
+	String DYNAMIC_SELECT_ONE = "/private/__tools__/selectone.jsf";
+	String DYNAMIC_SELECT_MANY = "/private/__tools__/selectmany.jsf";
+	
+	String PRIVATE_FOLDER="private";
+	
+	String PROCESSED_FILE_EXTENSION = "jsf";
+	String FILE_LIST = "list";
+	String FILE_EDIT = "edit";
+	String FILE_CONSULT = "consult";
+	String FILE_CREATE_MANY = "createMany";
+	
 }

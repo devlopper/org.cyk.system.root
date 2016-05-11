@@ -59,16 +59,16 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public UniformResourceLocator instanciateOneCrudOne(Class<? extends AbstractIdentifiable> identifiableClass,Crud crud,String[] parameters) {
-		UniformResourceLocator uniformResourceLocator = instanciateOne(ENVIRONMENT.getUrlDynamicCrudOne(), ArrayUtils.addAll(new String[]{ENVIRONMENT.getParameterClass()
+		UniformResourceLocator uniformResourceLocator = instanciateOne(DYNAMIC_CRUD_ONE, ArrayUtils.addAll(new String[]{UniformResourceLocatorParameter.CLASS
 				,RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getIdentifier()
-				,ENVIRONMENT.getParameterCrud(),ENVIRONMENT.getParameterCrudValue(crud)},parameters));
+				,UniformResourceLocatorParameter.CRUD,UniformResourceLocatorParameterBusinessImpl.getCrudAsString(crud)},parameters));
 		//System.out.println("Code = <<"+uniformResourceLocator.getCode()+">>");
 		return uniformResourceLocator;
 	}
 	
 	@Override
 	public UniformResourceLocator instanciateOneCrudMany(Class<? extends AbstractIdentifiable> identifiableClass,String[] parameters) {
-		return instanciateOne(ENVIRONMENT.getUrlDynamicCrudMany(), ArrayUtils.addAll(new String[]{ENVIRONMENT.getParameterClass()
+		return instanciateOne(DYNAMIC_CRUD_MANY, ArrayUtils.addAll(new String[]{UniformResourceLocatorParameter.CLASS
 				,RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getIdentifier()},parameters));
 	}
 	
@@ -82,32 +82,32 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	
 	@Override
 	public UniformResourceLocator instanciateOneSelectOne(Class<? extends AbstractIdentifiable> identifiableClass,String actionIdentifier,String[] parameters) {
-		return instanciateOne(ENVIRONMENT.getUrlDynamicSelectOne(), ArrayUtils.addAll(new String[]{ENVIRONMENT.getParameterClass()
+		return instanciateOne(DYNAMIC_SELECT_ONE, ArrayUtils.addAll(new String[]{UniformResourceLocatorParameter.CLASS
 				,RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getIdentifier()
-				,ENVIRONMENT.getParameterActionIdentifier(),actionIdentifier},parameters));
+				,UniformResourceLocatorParameter.ACTION_IDENTIFIER,actionIdentifier},parameters));
 	}
 	
 	@Override
 	public UniformResourceLocator instanciateOneSelectMany(Class<? extends AbstractIdentifiable> identifiableClass,String actionIdentifier,String[] parameters) {
-		return instanciateOne(ENVIRONMENT.getUrlDynamicSelectMany(), ArrayUtils.addAll(new String[]{ENVIRONMENT.getParameterClass()
+		return instanciateOne(DYNAMIC_SELECT_MANY, ArrayUtils.addAll(new String[]{UniformResourceLocatorParameter.CLASS
 				,RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getIdentifier()
-				,ENVIRONMENT.getParameterActionIdentifier(),actionIdentifier},parameters));
+				,UniformResourceLocatorParameter.ACTION_IDENTIFIER,actionIdentifier},parameters));
 	}
 	
 	@Override
 	public Collection<UniformResourceLocator> instanciateManyBusinessCrud(Class<? extends AbstractIdentifiable> identifiableClass, Boolean list,Boolean edit,Boolean consult,Boolean createMany, String[] selectOneActionIdentifiers,String[] selectManyActionIdentifiers) {
 		Collection<UniformResourceLocator> uniformResourceLocators = new ArrayList<>();
 		String name = identifiableClass.getSimpleName().toLowerCase();
-		String folder = Constant.CHARACTER_SLASH+ENVIRONMENT.getPrivateFolderName()+Constant.CHARACTER_SLASH+name+Constant.CHARACTER_SLASH;
+		String folder = Constant.CHARACTER_SLASH+PRIVATE_FOLDER+Constant.CHARACTER_SLASH+name+Constant.CHARACTER_SLASH;
 		
 		if(Boolean.TRUE.equals(list))
-			uniformResourceLocators.add(instanciateOne(name+Constant.CHARACTER_UNDESCORE+ENVIRONMENT.getFileList(),folder+ENVIRONMENT.getFileList()+Constant.CHARACTER_DOT+ENVIRONMENT.getFileExtension(),new String[]{}));
+			uniformResourceLocators.add(instanciateOne(name+Constant.CHARACTER_UNDESCORE+FILE_LIST,folder+FILE_LIST+Constant.CHARACTER_DOT+PROCESSED_FILE_EXTENSION,new String[]{}));
 		if(Boolean.TRUE.equals(edit))
-			uniformResourceLocators.add(instanciateOne(name+Constant.CHARACTER_UNDESCORE+ENVIRONMENT.getFileEdit(),folder+ENVIRONMENT.getFileEdit()+Constant.CHARACTER_DOT+ENVIRONMENT.getFileExtension(),new String[]{}));
+			uniformResourceLocators.add(instanciateOne(name+Constant.CHARACTER_UNDESCORE+FILE_EDIT,folder+FILE_EDIT+Constant.CHARACTER_DOT+PROCESSED_FILE_EXTENSION,new String[]{}));
 		if(Boolean.TRUE.equals(consult))
-			uniformResourceLocators.add(instanciateOne(name+Constant.CHARACTER_UNDESCORE+ENVIRONMENT.getFileConsult(),folder+ENVIRONMENT.getFileConsult()+Constant.CHARACTER_DOT+ENVIRONMENT.getFileExtension(),new String[]{}));
+			uniformResourceLocators.add(instanciateOne(name+Constant.CHARACTER_UNDESCORE+FILE_CONSULT,folder+FILE_CONSULT+Constant.CHARACTER_DOT+PROCESSED_FILE_EXTENSION,new String[]{}));
 		if(Boolean.TRUE.equals(createMany))
-			uniformResourceLocators.add(instanciateOne(name+Constant.CHARACTER_UNDESCORE+ENVIRONMENT.getFileCreateMany(),folder+ENVIRONMENT.getFileCreateMany()+Constant.CHARACTER_DOT+ENVIRONMENT.getFileExtension(),new String[]{}));
+			uniformResourceLocators.add(instanciateOne(name+Constant.CHARACTER_UNDESCORE+FILE_CREATE_MANY,folder+FILE_CREATE_MANY+Constant.CHARACTER_DOT+PROCESSED_FILE_EXTENSION,new String[]{}));
 		if(selectOneActionIdentifiers!=null)
 			for(String selectOneActionIdentifier : selectOneActionIdentifiers)
 				uniformResourceLocators.add(instanciateOneSelectOne(identifiableClass, selectOneActionIdentifier, null));

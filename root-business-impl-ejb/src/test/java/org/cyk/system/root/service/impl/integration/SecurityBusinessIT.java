@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilder;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.person.Person;
@@ -77,8 +76,8 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	System.out.println(userAccountBusiness.findByCriteria(criteria));*/
     	Assert.assertEquals(1l, userAccountBusiness.countByCriteria(criteria).longValue());
     	
-    	UniformResourceLocatorBuilder uniformResourceLocatorBuilder = new UniformResourceLocatorBuilder();
-    	uniformResourceLocatorBuilder.newUniformResourceLocator();
+    	UniformResourceLocator.Builder uniformResourceLocatorBuilder = new UniformResourceLocator.Builder();
+    	uniformResourceLocatorBuilder.instanciate();
     	uniformResourceLocatorBuilder.addParameters("mc",Person.class);
     	
     	//System.out.println(uniformResourceLocatorBuilder.build());

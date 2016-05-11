@@ -7,7 +7,7 @@ import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 
 public interface UniformResourceLocatorParameterBusiness extends TypedBusiness<UniformResourceLocatorParameter> {
-    
+	
 	Collection<UniformResourceLocatorParameter> findByUniformResourceLocator(UniformResourceLocator uniformResourceLocator);
 	
 }

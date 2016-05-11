@@ -263,6 +263,19 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}
 		});
         
+        UniformResourceLocatorParameter.Builder.Listener.COLLECTION.add(new UniformResourceLocatorParameter.Builder.Listener.Adapter.Default(){
+			private static final long serialVersionUID = -6619563566928210717L;
+        	@Override
+        	public String getValueAsString(Object object) {
+        		if(object instanceof Class<?>){
+    				if(AbstractIdentifiable.class.isAssignableFrom((Class<?>) object))
+    					return RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos((Class<? extends AbstractIdentifiable>) object).getIdentifier();
+    			}else if(object instanceof AbstractIdentifiable)
+    				return ((AbstractIdentifiable)object).getIdentifier().toString();
+        		return super.getValueAsString(object);
+        	}
+        });
+        
         //application = applicationDao.select().one();
         
         rootBusinessTestHelper.setReportBusiness(reportBusiness);
