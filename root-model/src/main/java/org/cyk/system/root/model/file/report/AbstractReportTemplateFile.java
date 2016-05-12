@@ -67,11 +67,16 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		labelValueCollectionReport.setName(name);
 		if(values!=null)
 			for(String[] string : values){
-				LabelValueReport labelValue = labelValueCollectionReport.add(string[0], string[1]);
-				if(string.length>2)
-					labelValue.setExtendedValues(ArrayUtils.subarray(string, 2, string.length));
+				if(string[1]==null)
+					;
+				else{
+					LabelValueReport labelValue = labelValueCollectionReport.add(string[0], string[1]);
+					if(string.length>2)
+						labelValue.setExtendedValues(ArrayUtils.subarray(string, 2, string.length));
+				}
 			}
 		addLabelValueCollection(labelValueCollectionReport);
+		
 		return labelValueCollectionReport;
 	}
 	
