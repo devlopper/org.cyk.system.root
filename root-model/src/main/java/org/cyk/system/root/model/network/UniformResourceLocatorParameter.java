@@ -204,5 +204,6 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 	public static final String ATTACHMENT = "attachment";
 	
 	public static final String URL = "url";
-	public static final String OUTCOME = "outcome";
+	public static final String VIEW_IDENTIFIER = "outcome";
+	public static final String VIEW_IDENTIFIER_REPORT = "report";
 }
