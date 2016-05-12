@@ -54,7 +54,7 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
 		
 		create(coteDivoireNorthState = createLocality(coteDivoire, state, String.valueOf(level++), "Le grand Nord"));
 		create(coteDivoireSouthState = createLocality(coteDivoire, state, String.valueOf(level++), "Le grand Sud"));
-		/*
+		
 		create(coteDivoireSouthStateLaguneRegion = createLocality(coteDivoireSouthState, region, String.valueOf(level++), "Les lagunes"));
 		create(coteDivoireSouthStateSassandraRegion = createLocality(coteDivoireSouthState, region, String.valueOf(level++), "Le sassandra"));
 		
@@ -62,7 +62,7 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
 		create(coteDivoireSouthStateLaguneRegionDepartment2 = createLocality(coteDivoireSouthStateLaguneRegion, department, String.valueOf(level++), "Bassam"));
 		
 		create(abidjan = createLocality(coteDivoireSouthStateLaguneRegionDepartment1, city, String.valueOf(level++), "Abidjan"));
-		*/
+		
 	}
 	
     @Override
@@ -116,7 +116,8 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
     	showChildren(africa);
     	showChildren(america);
     	
-    	move(coteDivoire, america);
+    	//move(coteDivoire, america);
+    	delete(africa);
     	
     	//localityBusiness.move(localityBusiness.find(coteDivoireSouthStateLaguneRegionDepartment1.getIdentifier()), 
     	//		localityBusiness.find(coteDivoireSouthStateSassandraRegion.getIdentifier()));
@@ -133,6 +134,11 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
     }
 
     /**/
+    
+    private void delete(Locality locality){
+    	locality = localityBusiness.find(locality.getIdentifier());
+    	localityBusiness.delete(locality);
+    }
     
     private void move(Locality locality,Locality parent){
     	locality = localityBusiness.find(locality.getIdentifier());
