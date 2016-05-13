@@ -125,6 +125,8 @@ import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
+import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
+import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -200,6 +202,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private MovementActionBusiness movementActionBusiness;
     @Inject private MovementCollectionBusiness movementCollectionBusiness;
     @Inject private MarkupLanguageBusiness markupLanguageBusiness;
+    
+    @Inject private NestedSetDao nestedSetDao;
+    @Inject private NestedSetNodeDao nestedSetNodeDao;
     
     @Inject private FiniteStateMachineBusiness finiteStateMachineBusiness;
     @Inject private FiniteStateMachineStateBusiness finiteStateMachineStateBusiness;
