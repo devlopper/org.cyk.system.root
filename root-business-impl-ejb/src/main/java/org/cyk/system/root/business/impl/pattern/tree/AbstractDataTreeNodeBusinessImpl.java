@@ -39,12 +39,16 @@ public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends Abstr
 	
 	@Override
 	public ENUMERATION delete(ENUMERATION enumeration) {
+		logTrace("Deleting {} on node {}. Children are the followings :", enumeration,enumeration.getNode());
 		NestedSetNode rootNode = enumeration.getNode();
 		Collection<ENUMERATION> list = dao.readByParent(enumeration);
+		for(ENUMERATION element : list)
+			logTrace("\tChild {} on node {}", element,element.getNode());
 		list.add(enumeration);
 		for(ENUMERATION e : list){
 			e.setNode(null);
 			dao.delete(e);
+			logTrace("\t\tElement {} deleted", e);
 		}
 		nestedSetNodeBusiness.delete(rootNode);
 		return enumeration;

@@ -113,11 +113,20 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
     	//localityBusiness.delete(abidjan);
     	
     	
-    	showChildren(africa);
-    	showChildren(america);
+    	//showChildren(africa);
+    	//showChildren(america);
     	
     	//move(coteDivoire, america);
+    	
+    	System.out.println("Before delete");
+    	for(Locality locality : localityBusiness.findAll())
+    		System.out.println(locality+" | "+locality.getNode());
+    	
     	delete(africa);
+    	
+    	System.out.println("After delete");
+    	for(Locality locality : localityBusiness.findAll())
+    		System.out.println(locality+" | "+locality.getNode());
     	
     	//localityBusiness.move(localityBusiness.find(coteDivoireSouthStateLaguneRegionDepartment1.getIdentifier()), 
     	//		localityBusiness.find(coteDivoireSouthStateSassandraRegion.getIdentifier()));
@@ -126,10 +135,9 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
     	localityBusiness.move(localityBusiness.find(coteDivoire.getIdentifier()), 
     			localityBusiness.find(america.getIdentifier()));
     	*/
-    	System.out.println("------     After moving     -----");
-    	showChildren(africa);
-    	showChildren(america);
-    	
+    	//System.out.println("------     After moving     -----");
+    	//showChildren(africa);
+    	//showChildren(america);
     	
     }
 
