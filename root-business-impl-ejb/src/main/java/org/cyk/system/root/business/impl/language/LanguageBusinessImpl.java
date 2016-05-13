@@ -71,7 +71,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	private static final String MANY = "many";
 	private static final String MANY_MARKER = "."+MANY;
 	
-	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid",".count"));
+	private static final Set<String> FIELD_TYPE_MARKERS = new LinkedHashSet<>(Arrays.asList(".quantity",".unit.price",".price",".paid",".count",".index",".identifier"));
 	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new LinkedHashMap<>();
 	private static List<Entry<String, ClassLoader>> RESOURCE_BUNDLE_ENTRIES = new ArrayList<>();
 	
