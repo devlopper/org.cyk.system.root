@@ -36,6 +36,12 @@ public class NumberBusinessUT extends AbstractUnitTest {
 	}
 	
 	@Test
+	public void concatenate(){
+		List<Long> numbers = Arrays.asList(7657L,7827L,7997L,8167L,8337L,8507L,8677L,8847L,9017L,9187L,9357L,9527L,9697L,9867L,10037L,10207L,10377L,10547L,10717L,10887L);
+		assertConcatenate(Long.class, numbers, numbers.size()-1, "0765707827079970816708337085070867708847090170918709357095270969709867100371020710377105471071710887");
+	}
+	
+	@Test
 	public void base10ToBase16(){
 		assertEncode16("15","F");
 	}

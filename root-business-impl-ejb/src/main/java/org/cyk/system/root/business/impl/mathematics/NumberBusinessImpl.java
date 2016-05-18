@@ -15,11 +15,12 @@ import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.cdi.AbstractBean;
 
 import lombok.Setter;
 
 @Singleton
-public class NumberBusinessImpl implements NumberBusiness,Serializable {
+public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,Serializable {
 
 	private static final long serialVersionUID = -1477124794923780532L;
 	
@@ -68,6 +69,7 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 			result = outputCharacters.charAt(integer.mod(size).intValue()) + result;
 			integer = integer.divide(size);
 		}
+		logTrace("encoding {} in base {} is {}", number,outputCharacters.length(),result);
 		return result;
 	}
 	@Override
@@ -102,6 +104,7 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 			result = result.add(new BigDecimal(inputCharacters.indexOf(character)).multiply(count).toBigInteger());
 			count = count.multiply(inputCharactersLenght);
 		}
+		logTrace("decoding {} from base {} is {}", number,inputCharacters.length(),result);
 		return result.toString();
 	}
 	
@@ -158,6 +161,7 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 					highest = (NUMBER) number;
 			}else
 				throw new RuntimeException("Not yet handled "+number.getClass());
+		logTrace("highest value between {} is {}", numbers,highest);
 		return highest;
 	}
 	
@@ -166,6 +170,7 @@ public class NumberBusinessImpl implements NumberBusiness,Serializable {
 		StringBuilder stringBuilder = new StringBuilder();
 		for(Number number : numbers)
 			stringBuilder.append(StringUtils.leftPad(String.valueOf(number), elementLenght,Constant.CHARACTER_ZERO));
+		logTrace("concatenation of {} with lenght {} is {}", numbers,elementLenght,stringBuilder);
 		return stringBuilder.toString();
 	}
 	
