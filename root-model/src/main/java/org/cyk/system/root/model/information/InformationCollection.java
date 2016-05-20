@@ -19,10 +19,8 @@ import org.cyk.system.root.model.file.File;
 @Getter @Setter @Entity @NoArgsConstructor
 public class InformationCollection extends AbstractIdentifiable implements Serializable {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 8167875049554197503L;
+
 	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     private Collection<File> files = new HashSet<>();
     

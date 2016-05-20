@@ -19,6 +19,7 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileCollection;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
@@ -55,6 +56,8 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	@Temporal(TemporalType.DATE) protected Date birthDate;
 	
 	@OneToOne protected ContactCollection contactCollection;
+	
+	@OneToOne protected FileCollection fileCollection;
 	
 	public Party(String name) {
 		super();

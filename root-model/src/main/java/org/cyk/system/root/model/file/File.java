@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -53,6 +54,13 @@ public class File extends AbstractIdentifiable implements Serializable{
 	@OneToMany(cascade=CascadeType.ALL)
     private Collection<Tag> tags = new HashSet<>();
 
+	/**
+	 * User specific data for reading 
+	 */
+	private String description;
+	
+	@ManyToOne private FileCollection collection;
+	
 	private String groupIdentifier;
 	
 	@Override
