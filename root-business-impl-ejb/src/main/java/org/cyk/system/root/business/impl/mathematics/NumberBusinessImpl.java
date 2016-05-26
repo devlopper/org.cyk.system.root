@@ -52,7 +52,8 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 			}
 			stringBuilder.append(numberFormatter.format(number));
 			if(Boolean.TRUE.equals(arguments.getIsPercentage())){
-				stringBuilder.append(Constant.CHARACTER_SPACE+"%");
+				if(StringUtils.isNotBlank(arguments.getPercentageSymbol()))
+					stringBuilder.append(Constant.CHARACTER_SPACE+arguments.getPercentageSymbol());
 			}
 		}else if(FormatArguments.CharacterSet.LETTER.equals(arguments.getType())){
 			if(Boolean.TRUE.equals(arguments.getIsRank())){

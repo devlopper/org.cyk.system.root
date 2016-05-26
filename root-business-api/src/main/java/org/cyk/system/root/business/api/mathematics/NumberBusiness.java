@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Locale;
 
+import org.cyk.utility.common.Constant;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,5 +55,6 @@ public interface NumberBusiness {
 		private CharacterSet type = CharacterSet.DIGIT;
 		private Boolean isRank = Boolean.FALSE;
 		private Boolean isPercentage = Boolean.FALSE;
+		private String percentageSymbol = Constant.CHARACTER_PERCENT.toString();
 	}
 }
