@@ -44,9 +44,16 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 	
 	@Override
 	public String format(Number number, FormatArguments arguments) {
+		StringBuilder stringBuilder = new StringBuilder();
 		if(FormatArguments.CharacterSet.DIGIT.equals(arguments.getType())){
 			NumberFormat numberFormatter = NumberFormat.getNumberInstance(arguments.getLocale()==null?languageBusiness.findCurrentLocale():arguments.getLocale());
-			return numberFormatter.format(number);
+			if(Boolean.TRUE.equals(arguments.getIsPercentage())){
+				number = new BigDecimal(number.toString()).multiply(_100);
+			}
+			stringBuilder.append(numberFormatter.format(number));
+			if(Boolean.TRUE.equals(arguments.getIsPercentage())){
+				stringBuilder.append(Constant.CHARACTER_SPACE+"%");
+			}
 		}else if(FormatArguments.CharacterSet.LETTER.equals(arguments.getType())){
 			if(Boolean.TRUE.equals(arguments.getIsRank())){
 				return languageBusiness.findText("rank."+number+".letter");
@@ -54,7 +61,7 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 				throw new RuntimeException("Not yet implemented");
 			}
 		}
-		return null;
+		return stringBuilder.toString();
 	}
 	
 	@Override

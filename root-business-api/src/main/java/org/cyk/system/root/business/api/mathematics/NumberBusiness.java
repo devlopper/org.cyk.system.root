@@ -52,5 +52,6 @@ public interface NumberBusiness {
 		private Locale locale;
 		private CharacterSet type = CharacterSet.DIGIT;
 		private Boolean isRank = Boolean.FALSE;
+		private Boolean isPercentage = Boolean.FALSE;
 	}
 }
