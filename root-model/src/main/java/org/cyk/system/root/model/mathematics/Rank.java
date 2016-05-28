@@ -7,10 +7,11 @@ import javax.persistence.Embeddable;
 
 import org.cyk.system.root.model.AbstractModelElement;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @Embeddable
+@Getter @Setter @Embeddable @EqualsAndHashCode(of={Rank.FIELD_VALUE,Rank.FIELD_EXAEQUO},callSuper=false)
 public class Rank extends AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = -2665387343931538712L;
@@ -29,6 +30,8 @@ public class Rank extends AbstractModelElement implements Serializable{
 		return value+" - "+exaequo;
 	}
 
+	
+	
 	@Override
 	public String getUiString() {
 		return toString();
@@ -40,4 +43,7 @@ public class Rank extends AbstractModelElement implements Serializable{
 	}
 	private static final String LOG_FORMAT = Average.class.getSimpleName()+"(S=%s V=%s E=%s)";
 	
+	public static final String FIELD_SEQUENCE_ORDER = "sequenceOrder";
+	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_EXAEQUO = "exaequo";
 }
