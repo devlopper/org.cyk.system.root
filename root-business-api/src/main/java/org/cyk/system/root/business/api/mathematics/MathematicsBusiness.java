@@ -28,6 +28,8 @@ public interface MathematicsBusiness {
 	
 	<SORTABLE extends Sortable> void rank(/*Class<SORTABLE> aClass,*/List<SORTABLE> sortables,RankOptions<SORTABLE> options);
 	
+	<T> void sortByRank(SortByRankArguments<T> arguments);
+	
 	String format(Rank rank);
 	
 	/**/
@@ -66,6 +68,11 @@ public interface MathematicsBusiness {
 		public String toString() {
 			return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_FIELD_NAMES_STYLE);
 		}
+	}
+	
+	public interface SortByRankArguments<T>{
+		List<T> getObjects();
+		Rank getRank(T object);
 	}
 	
 }

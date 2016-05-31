@@ -29,6 +29,12 @@ public class Sort extends AbstractModelElement implements Serializable {
 	@ManyToOne private Interval averageAppreciatedInterval;
 	@ManyToOne private Interval averagePromotedInterval;
 	
+	public Average getAverage(){
+		if(average==null)
+			average = new Average();
+		return average;
+	}
+	
 	public Rank getRank(){
 		if(rank==null)
 			rank = new Rank();

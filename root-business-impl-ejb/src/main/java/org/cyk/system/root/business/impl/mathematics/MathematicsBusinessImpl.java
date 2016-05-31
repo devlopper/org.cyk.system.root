@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,8 +129,9 @@ public class MathematicsBusinessImpl extends AbstractBusinessServiceImpl impleme
 		RankType type = options.getType();
 		if(type==null)
 			type = RankType.SEQUENCE;
-		int value = 1,i=0,j=0;	
+		int value = 1,i=0,j=0,sequenceOrder=0;	
 		for(SORTABLE sortable : sortables){
+			sortable.getRank().setSequenceOrder(sequenceOrder++);
 			sortable.getRank().setValue(null);
 			sortable.getRank().setExaequo(null);
 			if(sortable.getValue()==null){
@@ -152,6 +154,16 @@ public class MathematicsBusinessImpl extends AbstractBusinessServiceImpl impleme
 	@Override
 	public String format(Rank rank) {
 		return rank.getValue()+ (Boolean.TRUE.equals(rank.getExaequo())?languageBusiness.findText("rank.exaequo"):"");
+	}
+	
+	@Override
+	public <T> void sortByRank(final SortByRankArguments<T> arguments) {
+		Collections.sort(arguments.getObjects(), new Comparator<T>() {
+			@Override
+			public int compare(T o1, T o2) {
+				return arguments.getRank(o1).getSequenceOrder().compareTo(arguments.getRank(o2).getSequenceOrder());
+			}
+		});
 	}
 	
 	/**/
