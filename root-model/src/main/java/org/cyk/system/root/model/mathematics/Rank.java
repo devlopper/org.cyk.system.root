@@ -6,6 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.BooleanSearchCriteria;
+import org.cyk.system.root.model.search.IntegerSearchCriteria;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,8 +33,6 @@ public class Rank extends AbstractModelElement implements Serializable{
 		return value+" - "+exaequo;
 	}
 
-	
-	
 	@Override
 	public String getUiString() {
 		return toString();
@@ -46,4 +47,17 @@ public class Rank extends AbstractModelElement implements Serializable{
 	public static final String FIELD_SEQUENCE_ORDER = "sequenceOrder";
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_EXAEQUO = "exaequo";
+	
+	/**/
+	
+	@Getter @Setter
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		private IntegerSearchCriteria sequenceOrder = new IntegerSearchCriteria();
+		private IntegerSearchCriteria value = new IntegerSearchCriteria();
+		private BooleanSearchCriteria exaequo = new BooleanSearchCriteria();
+		
+	}
 }

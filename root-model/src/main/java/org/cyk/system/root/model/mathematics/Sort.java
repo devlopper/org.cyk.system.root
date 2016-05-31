@@ -7,15 +7,16 @@ import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.ManyToOne;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.utility.common.Constant;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.utility.common.Constant;
 
 @Getter @Setter @Embeddable @NoArgsConstructor @AllArgsConstructor
 public class Sort extends AbstractModelElement implements Serializable {
@@ -66,4 +67,16 @@ public class Sort extends AbstractModelElement implements Serializable {
 	public static final String FIELD_AVERAGE_APPRECIATED_INTERVAL = "averageAppreciatedInterval";
 	public static final String FIELD_AVERAGE_PROMOTED_INTERVAL = "averagePromotedInterval";
 	
+	/**/
+	
+	@Getter @Setter
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		private Average.SearchCriteria average = new Average.SearchCriteria();
+		private Rank.SearchCriteria rank = new Rank.SearchCriteria();
+		
+		
+	}
 }
