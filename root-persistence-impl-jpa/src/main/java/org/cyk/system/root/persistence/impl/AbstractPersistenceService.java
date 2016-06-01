@@ -31,6 +31,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractPeriodSearchCriteria;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.utility.common.Constant;
@@ -362,6 +363,8 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		//queryWrapper.parameter(QueryStringBuilder.VAR_BETWEEN_FROM,searchCriteria.getFromDateSearchCriteria().getPreparedValue());
 		//queryWrapper.parameter(QueryStringBuilder.VAR_BETWEEN_TO,searchCriteria.getToDateSearchCriteria().getPreparedValue());
 	}
+	
+	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria){}
 	
 	/**/
 	
