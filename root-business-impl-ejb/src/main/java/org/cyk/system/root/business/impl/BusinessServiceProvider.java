@@ -37,9 +37,8 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 		return (TypedBusiness<T>) BusinessLocator.getInstance().locate(identifiableClass);
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T extends AbstractIdentifiable> Collection<T> find(Class<T> identifiableClass,final DataReadConfiguration configuration){
-		Collection<T> collection = ListenerUtils.getInstance().getValue(Collection.class, getListeners(identifiableClass), new ListenerUtils.ResultMethod<Identifiable<T>, Collection>(){
+		Collection<T> collection = ListenerUtils.getInstance().getCollection(getListeners(identifiableClass), new ListenerUtils.CollectionMethod<Identifiable<T>, T>(){
 			@Override
 			public Collection<T> execute(Identifiable<T> listener) {
 				return listener.find(configuration);
@@ -53,7 +52,7 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 	}
 	
 	public <T extends AbstractIdentifiable> Long count(Class<T> identifiableClass, final DataReadConfiguration configuration){
-		Long value = ListenerUtils.getInstance().getValue(Long.class, getListeners(identifiableClass), new ListenerUtils.ResultMethod<Identifiable<T>, Long>(){
+		Long value = ListenerUtils.getInstance().getValue(Long.class, getListeners(identifiableClass), new ListenerUtils.LongMethod<Identifiable<T>>(){
 			@Override
 			public Long execute(Identifiable<T> listener) {
 				return listener.count(configuration);
@@ -66,9 +65,9 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 		return value;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public <T extends AbstractIdentifiable> Collection<T> findAll(Class<T> identifiableClass,final DataReadConfiguration configuration){
-		Collection<T> collection = ListenerUtils.getInstance().getValue(Collection.class, getListeners(identifiableClass), new ListenerUtils.ResultMethod<Identifiable<T>, Collection>(){
+		Collection<T> collection = ListenerUtils.getInstance().getCollection(getListeners(identifiableClass), new ListenerUtils.CollectionMethod<Identifiable<T>, T>(){
 			@Override
 			public Collection<T> execute(Identifiable<T> listener) {
 				return listener.findAll(configuration);
@@ -88,7 +87,7 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 	
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractIdentifiable> Long countAll(Class<T> identifiableClass,final DataReadConfiguration configuration){
-		Long value = ListenerUtils.getInstance().getValue(Long.class, getListeners(identifiableClass), new ListenerUtils.ResultMethod<Identifiable<T>, Long>(){
+		Long value = ListenerUtils.getInstance().getLong(getListeners(identifiableClass), new ListenerUtils.LongMethod<Identifiable<T>>(){
 			@Override
 			public Long execute(Identifiable<T> listener) {
 				return listener.countAll(configuration);

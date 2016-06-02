@@ -67,7 +67,7 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 		try {
 			final StringBuilder jrxmlBuilder = new StringBuilder(IOUtils.toString(inputStream));
 			
-			listenerUtils.getString(Listener.COLLECTION, new ListenerUtils.ResultMethod<Listener, String>() {
+			listenerUtils.getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
 				@Override
 				public String execute(Listener listener) {
 					jrxmlBuilder.delete(0, jrxmlBuilder.length());
