@@ -26,11 +26,11 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne @JoinColumn(name="maction") @NotNull private MovementAction action;
-	
+	@ManyToOne @JoinColumn(name="maction") @NotNull private MovementAction action;	
 	@Temporal(TemporalType.TIMESTAMP) @Column(name="mdate",nullable=false) @NotNull private Date date;
-	
 	@Column(name="mvalue",precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
+	
+	@Column private String supportingDocumentIdentifier;
 	
 	/**/
 	
