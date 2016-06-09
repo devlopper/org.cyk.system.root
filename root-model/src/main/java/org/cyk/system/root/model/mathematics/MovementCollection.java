@@ -32,6 +32,8 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	
 	@OneToOne @NotNull private MovementAction decrementAction;
 	
+	private Boolean supportDocumentIdentifier = Boolean.FALSE;
+	
 	//TODO to be model using a class which can be called MovementCollectionAlert or something like that. really i do not know so to think about
 	//@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal minimalQuantityAlert = BigDecimal.ZERO;
 	//@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal minimalQuantityBlock = BigDecimal.ZERO;
