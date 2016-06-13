@@ -311,9 +311,9 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		identifiables = new ArrayList<>();
 		for(String[] transitionInfos : transitions){
 			FiniteStateMachineTransition transition = new FiniteStateMachineTransition();
-			transition.setFromState(finiteStateMachineStateDao.read(machineCode+"_"+transitionInfos[0]));
-			transition.setAlphabet(finiteStateMachineAlphabetDao.read(machineCode+"_"+transitionInfos[1]));
-			transition.setToState(finiteStateMachineStateDao.read(machineCode+"_"+transitionInfos[2]));
+			transition.setFromState(finiteStateMachineStateDao.read(machineCode+Constant.CHARACTER_UNDESCORE+transitionInfos[0]));
+			transition.setAlphabet(finiteStateMachineAlphabetDao.read(machineCode+Constant.CHARACTER_UNDESCORE+transitionInfos[1]));
+			transition.setToState(finiteStateMachineStateDao.read(machineCode+Constant.CHARACTER_UNDESCORE+transitionInfos[2]));
 			identifiables.add(transition);
 		}
 		genericBusiness.create(identifiables);
