@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.mathematics.machine;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -8,6 +9,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachine;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineAlphabet;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
@@ -29,4 +31,8 @@ public class FiniteStateMachineStateBusinessImpl extends AbstractEnumerationBusi
 		return transitionDao.readByFromStateByAlphabet(fromState, alphabet).getToState();
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<FiniteStateMachineState> findByMachine(FiniteStateMachine machine) {
+		return dao.readByMachine(machine);
+	}
 }
