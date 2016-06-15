@@ -75,7 +75,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	private static final Map<String,ClassLoader> RESOURCE_BUNDLE_MAP = new LinkedHashMap<>();
 	private static List<Entry<String, ClassLoader>> RESOURCE_BUNDLE_ENTRIES = new ArrayList<>();
 	
-	private static final Map<String,String> RESOURCE_BUNDLE_VALUE_CACHE = new HashMap<>();
+	public static final Map<String,String> RESOURCE_BUNDLE_VALUE_CACHE = new HashMap<>();
 	
 	private static LanguageBusiness INSTANCE;
 	
@@ -128,13 +128,21 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	    return findText(code,getCaseType());
 	}
 
+	public static String buildCacheIdentifier(Locale locale,String code,Object[] parameters,CaseType caseType){
+		return locale+Constant.CHARACTER_UNDESCORE.toString()+code+StringUtils.join(parameters)+Constant.CHARACTER_UNDESCORE.toString()+caseType;
+	}
+	
+	public static void cache(Locale locale,String code,Object[] parameters,CaseType caseType,String value){
+		RESOURCE_BUNDLE_VALUE_CACHE.put(buildCacheIdentifier(locale, code, parameters, caseType), value);
+	}
+	
 	@Override
 	public String findText(Locale locale,String code,Object[] parameters,CaseType caseType) {
 		logTrace("Text lookup id={} , locale={}",code,locale);
 		String value = null,cacheId=null;
 		// 1 - Lookup in cache
 		if(Boolean.TRUE.equals(cachingEnabled)){
-			cacheId = locale+Constant.CHARACTER_UNDESCORE.toString()+code+StringUtils.join(parameters)+Constant.CHARACTER_UNDESCORE.toString()+caseType;
+			cacheId = buildCacheIdentifier(locale, code, parameters, caseType);
 			logTrace("Lookup in cache firstly");
 			/*
 			CachingStrategy cachingStrategy = getCachingStrategy();
