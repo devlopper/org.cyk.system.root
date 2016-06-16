@@ -7,15 +7,13 @@ import javax.inject.Singleton;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.event.EventType;
 import org.cyk.system.root.model.geography.Locality;
-import org.cyk.ui.api.AbstractUserSession;
 import org.cyk.ui.api.command.AbstractCommandable.Builder;
 import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
-import org.cyk.ui.web.primefaces.HierarchyNode;
+import org.cyk.ui.web.primefaces.UserSession;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
-import org.primefaces.model.TreeNode;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=RootWebManager.DEPLOYMENT_ORDER)
 public class RootWebManager extends AbstractPrimefacesManager implements Serializable {
@@ -33,7 +31,7 @@ public class RootWebManager extends AbstractPrimefacesManager implements Seriali
 	}
 	
 	@Override
-	public SystemMenu systemMenu(AbstractUserSession<TreeNode,HierarchyNode> userSession) {
+	public SystemMenu systemMenu(UserSession userSession) {
 		SystemMenu systemMenu = new SystemMenu();
 		UICommandable group = Builder.instanciateOne().setLabelFromId("contacts").create();
 		group.addChild(Builder.createList(Locality.class, null));
