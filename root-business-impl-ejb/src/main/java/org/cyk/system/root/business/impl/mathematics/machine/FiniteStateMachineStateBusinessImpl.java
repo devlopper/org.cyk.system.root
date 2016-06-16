@@ -35,4 +35,9 @@ public class FiniteStateMachineStateBusinessImpl extends AbstractEnumerationBusi
 	public Collection<FiniteStateMachineState> findByMachine(FiniteStateMachine machine) {
 		return dao.readByMachine(machine);
 	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<FiniteStateMachineState> findFromByMachineByAlphabet(FiniteStateMachine machine, FiniteStateMachineAlphabet alphabet) {
+		return dao.readFromByMachineByAlphabet(machine, alphabet);
+	}
 }
