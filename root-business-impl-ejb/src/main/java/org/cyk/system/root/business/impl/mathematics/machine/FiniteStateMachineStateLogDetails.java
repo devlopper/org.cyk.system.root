@@ -10,11 +10,12 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class FiniteStateMachineStateLogDetails extends AbstractLogDetails<FiniteStateMachineStateLog> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText protected String identifier;
+	@Input @InputText protected String identifier,state;
 	
 	public FiniteStateMachineStateLogDetails(FiniteStateMachineStateLog finiteStateMachineStateLog) {
 		super(finiteStateMachineStateLog);
 		identifier = finiteStateMachineStateLog.getIdentifiableGlobalIdentifier().getIdentifier();
+		state = formatUsingBusiness(finiteStateMachineStateLog.getState());
 	}
 	
 }
