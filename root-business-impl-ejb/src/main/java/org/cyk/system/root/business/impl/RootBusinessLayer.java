@@ -76,6 +76,7 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.ContentType;
+import org.cyk.system.root.model.GlobalIdentifier;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventMissed;
 import org.cyk.system.root.model.event.EventMissedReason;
@@ -130,6 +131,10 @@ import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.persistence.api.security.RoleDao;
+import org.cyk.system.root.persistence.impl.GenericDaoImpl;
+import org.cyk.utility.common.AbstractMethod;
+import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
@@ -346,6 +351,23 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				}
 			});
 		
+		AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_VALUE = new StringMethod<AbstractIdentifiable>() {
+			private static final long serialVersionUID = -206221150563679476L;
+			@Override
+			protected String __execute__(AbstractIdentifiable identifiable) {
+				return identifiable.getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE+System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE
+						+RandomStringUtils.randomAlphanumeric(10);
+			}
+		};
+		
+		AbstractIdentifiable.PERSIST_GLOBAL_IDENTIFIER = new AbstractMethod<Object, GlobalIdentifier>() {
+			private static final long serialVersionUID = 153358109323471469L;
+			@Override
+			protected Object __execute__(GlobalIdentifier globalIdentifier) {
+				((GenericDaoImpl)RootBusinessLayer.getInstance().getGenericDao()).getEntityManager().persist(globalIdentifier);
+				return globalIdentifier;
+			}
+		};
     }
     
     @Override

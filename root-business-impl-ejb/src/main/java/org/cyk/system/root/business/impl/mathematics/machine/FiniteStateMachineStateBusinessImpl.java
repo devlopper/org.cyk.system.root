@@ -8,13 +8,10 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
-import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateLogBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachine;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineAlphabet;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
-import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog;
-import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineTransitionDao;
 
@@ -23,7 +20,6 @@ public class FiniteStateMachineStateBusinessImpl extends AbstractEnumerationBusi
 	private static final long serialVersionUID = -3799482462496328200L;
 	
 	@Inject private FiniteStateMachineTransitionDao transitionDao;
-	@Inject private FiniteStateMachineStateLogBusiness stateLogBusiness;
 	
 	@Inject
 	public FiniteStateMachineStateBusinessImpl(FiniteStateMachineStateDao dao) {
