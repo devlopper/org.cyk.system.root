@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
@@ -33,17 +34,8 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@Id @GeneratedValue // Generation is customizable using mapping file
 	protected Long identifier;
 
-	//private Long index;
-	
-	//TODO any object can have its description or more extended by a collection of additional (external) informations 
-	
-	//@Transient private String __id__;
-	
-	/*private String __identifier__(){
-		if(__id__==null)
-			__id__ = getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);
-		return __id__;
-	}*/
+	@Getter @Setter @OneToOne 
+	protected GlobalIdentifier globalIdentifier;
 	
 	private String __identifier__(){
 		return getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);

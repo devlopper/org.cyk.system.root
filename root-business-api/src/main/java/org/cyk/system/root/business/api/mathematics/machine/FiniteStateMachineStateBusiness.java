@@ -13,4 +13,5 @@ public interface FiniteStateMachineStateBusiness extends AbstractEnumerationBusi
 	
 	Collection<FiniteStateMachineState> findByMachine(FiniteStateMachine machine);
 	Collection<FiniteStateMachineState> findFromByMachineByAlphabet(FiniteStateMachine machine,FiniteStateMachineAlphabet alphabet);
+	
 }

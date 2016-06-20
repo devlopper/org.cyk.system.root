@@ -52,6 +52,7 @@ import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineAlphabetBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
+import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateLogBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorParameterBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
@@ -208,6 +209,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     @Inject private FiniteStateMachineBusiness finiteStateMachineBusiness;
     @Inject private FiniteStateMachineStateBusiness finiteStateMachineStateBusiness;
+    @Inject private FiniteStateMachineStateLogBusiness finiteStateMachineStateLogBusiness;
     @Inject private FiniteStateMachineAlphabetBusiness finiteStateMachineAlphabetBusiness;
     
     @Inject private RoleDao roleDao;
