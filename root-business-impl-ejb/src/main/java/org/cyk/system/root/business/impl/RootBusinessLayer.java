@@ -102,6 +102,7 @@ import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
@@ -494,6 +495,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)MovementCollection.class, (TypedBusiness)movementCollectionBusiness);
         beansMap.put((Class)Movement.class, (TypedBusiness)movementBusiness);
         beansMap.put((Class)MovementAction.class, (TypedBusiness)movementActionBusiness);
+        beansMap.put((Class)FiniteStateMachineStateLog.class, (TypedBusiness)finiteStateMachineStateLogBusiness);
     }
     
     @Override

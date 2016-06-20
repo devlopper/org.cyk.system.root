@@ -13,16 +13,16 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.Party;
 
 @Getter @Setter @MappedSuperclass
 public abstract class AbstractLog extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = 2576023570217657424L;
 
-	@ManyToOne @NotNull private Person person;
+	@ManyToOne @NotNull private Party party;
 	
-	@Temporal(TemporalType.TIMESTAMP) @Column(name="thedate") @NotNull private Date date;
+	@Temporal(TemporalType.TIMESTAMP) @Column(name="thedate",nullable=false) @NotNull private Date date;
 	
 	/**/
 	

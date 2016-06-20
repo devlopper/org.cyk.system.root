@@ -13,7 +13,7 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog;
-import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateLogDao;
 
 @Stateless
@@ -34,17 +34,17 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 	}
 
 	@Override
-	public void create(AbstractIdentifiable identifiable,FiniteStateMachineState finiteStateMachineState, Person person) {
-		create(Arrays.asList(identifiable),finiteStateMachineState,person);
+	public void create(AbstractIdentifiable identifiable,FiniteStateMachineState finiteStateMachineState, Party party) {
+		create(Arrays.asList(identifiable),finiteStateMachineState,party);
 	}
 
 	@Override
-	public void create(Collection<AbstractIdentifiable> identifiables,FiniteStateMachineState finiteStateMachineState, Person person) {
+	public void create(Collection<AbstractIdentifiable> identifiables,FiniteStateMachineState finiteStateMachineState, Party party) {
 		Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs = new ArrayList<>();
 		for(AbstractIdentifiable identifiable : identifiables){
 			FiniteStateMachineStateLog finiteStateMachineStateLog = new FiniteStateMachineStateLog();
 			finiteStateMachineStateLog.setState(finiteStateMachineState);
-			finiteStateMachineStateLog.setPerson(person);
+			finiteStateMachineStateLog.setParty(party);
 			finiteStateMachineStateLog.setIdentifiableGlobalIdentifier(identifiable.getGlobalIdentifier());
 			finiteStateMachineStateLogs.add(finiteStateMachineStateLog);
 		}

@@ -21,7 +21,7 @@ public class FiniteStateMachineStateLog extends AbstractLog implements Serializa
 
 	@ManyToOne @NotNull private FiniteStateMachineState state;
 	
-	@ManyToOne private GlobalIdentifier identifiableGlobalIdentifier;
+	@ManyToOne @NotNull private GlobalIdentifier identifiableGlobalIdentifier;
 	
 	/**/
 	
