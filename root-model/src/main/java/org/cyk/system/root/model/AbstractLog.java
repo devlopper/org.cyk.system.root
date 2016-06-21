@@ -26,6 +26,6 @@ public abstract class AbstractLog extends AbstractIdentifiable implements Serial
 	
 	/**/
 	
-	public static final String FIELD_PERSON = "person";
+	public static final String FIELD_PARTY = "party";
 	public static final String FIELD_DATE = "date";
 }

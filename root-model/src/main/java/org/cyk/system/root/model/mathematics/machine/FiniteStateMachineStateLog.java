@@ -13,8 +13,9 @@ import org.cyk.system.root.model.AbstractLog;
 import org.cyk.system.root.model.GlobalIdentifier;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Getter @Setter @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS)
+@Getter @Setter @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 public class FiniteStateMachineStateLog extends AbstractLog implements Serializable {
 
 	private static final long serialVersionUID = 2576023570217657424L;

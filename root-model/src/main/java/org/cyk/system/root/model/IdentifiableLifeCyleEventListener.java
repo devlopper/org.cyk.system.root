@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface IdentifiableLifeCyleEventListener<IDENTIFIABLE extends Identifiable<IDENTIFIER>, IDENTIFIER> {
 
+	Map<Class<? extends org.cyk.system.root.model.Identifiable<?>>, org.cyk.system.root.model.Identifiable<?>> MAP = new HashMap<>();
+	
 	void onPrePersist(IDENTIFIABLE identifiable);
 
 	void onPostPersist(IDENTIFIABLE identifiable);

@@ -25,32 +25,6 @@ public class FiniteStateMachineStateBusinessImpl extends AbstractEnumerationBusi
 	public FiniteStateMachineStateBusinessImpl(FiniteStateMachineStateDao dao) {
 		super(dao); 
 	}
-	/*
-	@Override
-	public FiniteStateMachineState create(FiniteStateMachineState finiteStateMachineState,Person person) {
-		createFiniteStateMachineStateLog(finiteStateMachineState,person);
-		return super.create(finiteStateMachineState);
-	}
-	
-	@Override
-	public void create(Collection<FiniteStateMachineState> finiteStateMachineStates,Person person) {
-		for(FiniteStateMachineState finiteStateMachineState : finiteStateMachineStates)
-			finiteStateMachineState.set
-	}
-	
-	@Override
-	public FiniteStateMachineState update(FiniteStateMachineState finiteStateMachineState,Person person) {
-		createFiniteStateMachineStateLog(finiteStateMachineState,person);
-		return super.update(finiteStateMachineState);
-	}
-	
-	private void createFiniteStateMachineStateLog(FiniteStateMachineState finiteStateMachineState,Person person){
-		FiniteStateMachineStateLog finiteStateMachineStateLog = new FiniteStateMachineStateLog();
-		finiteStateMachineStateLog.setState(finiteStateMachineState);
-		finiteStateMachineStateLog.setPerson(person);
-		finiteStateMachineStateLog.setDate(timeBusiness.findUniversalTimeCoordinated());
-		stateLogBusiness.create(finiteStateMachineStateLog);
-	}*/
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public FiniteStateMachineState findByFromStateByAlphabet(FiniteStateMachineState fromState,FiniteStateMachineAlphabet alphabet) {

@@ -14,12 +14,12 @@ public abstract class AbstractLogDetails<LOG extends AbstractLog> extends Abstra
 	
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText protected String date,person;
+	@Input @InputText protected String date,party;
 	
 	public AbstractLogDetails(LOG log) {
 		super(log);
 		date = formatDate(log.getDate());
-		person = formatUsingBusiness(log.getParty());
+		party = formatUsingBusiness(log.getParty());
 	}
 	
 	public static final String FIELD_DATE = "date";
