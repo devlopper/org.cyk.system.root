@@ -1,6 +1,7 @@
 package org.cyk.system.root.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map.Entry;
 
 import javax.persistence.GeneratedValue;
@@ -45,7 +46,10 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	protected GlobalIdentifier globalIdentifier;
 	
 	@Transient @Getter @Setter
-	protected Party processedBy;// In order to get the user processing this object
+	protected Party processingUser;// In order to get the user processing this object
+	
+	@Transient @Getter @Setter
+	protected Date processingDate;
 	
 	private String __identifier__(){
 		return getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);
