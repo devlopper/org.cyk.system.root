@@ -18,7 +18,7 @@ public abstract class AbstractLogDetails<LOG extends AbstractLog> extends Abstra
 	
 	public AbstractLogDetails(LOG log) {
 		super(log);
-		date = formatDate(log.getDate());
+		date = formatDateTime(log.getDate());
 		party = formatUsingBusiness(log.getParty());
 	}
 	
