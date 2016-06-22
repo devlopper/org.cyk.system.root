@@ -14,11 +14,13 @@ import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.cyk.system.root.model.party.Party;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.StringMethod;
 import org.slf4j.Logger;
@@ -41,6 +43,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 
 	@Getter @Setter @OneToOne 
 	protected GlobalIdentifier globalIdentifier;
+	
+	@Transient @Getter @Setter
+	protected Party processedBy;// In order to get the user processing this object
 	
 	private String __identifier__(){
 		return getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);
