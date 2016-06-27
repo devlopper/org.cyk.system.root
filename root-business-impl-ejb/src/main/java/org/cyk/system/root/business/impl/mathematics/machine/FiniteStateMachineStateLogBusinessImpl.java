@@ -10,7 +10,9 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateLogBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.BusinessLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateLogDao;
@@ -51,5 +53,12 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 		create(finiteStateMachineStateLogs);
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends AbstractIdentifiable> Collection<T> findByClass(Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs,Class<T> aClass) {
+		Collection<GlobalIdentifier> globalIdentifiers = new ArrayList<>();
+		for(FiniteStateMachineStateLog finiteStateMachineStateLog : finiteStateMachineStateLogs)
+			globalIdentifiers.add(finiteStateMachineStateLog.getGlobalIdentifier());
+		return (Collection<T>) BusinessLocator.getInstance().locate(aClass).findByGlobalIdentifiers(globalIdentifiers);
+	}
 }

@@ -12,4 +12,6 @@ public interface FiniteStateMachineStateLogBusiness extends TypedBusiness<Finite
 	void create(AbstractIdentifiable identifiable,FiniteStateMachineState state);
 	void create(Collection<AbstractIdentifiable> identifiables,FiniteStateMachineState state);
 	
+	<T extends AbstractIdentifiable> Collection<T> findByClass(Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs,Class<T> aClass);
+	
 }
