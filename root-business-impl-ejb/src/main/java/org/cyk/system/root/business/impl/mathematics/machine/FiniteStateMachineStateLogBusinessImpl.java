@@ -60,7 +60,7 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 	public <T extends AbstractIdentifiable> Collection<T> findByClass(Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs,Class<T> aClass) {
 		Collection<GlobalIdentifier> globalIdentifiers = new ArrayList<>();
 		for(FiniteStateMachineStateLog finiteStateMachineStateLog : finiteStateMachineStateLogs)
-			globalIdentifiers.add(finiteStateMachineStateLog.getGlobalIdentifier());
+			globalIdentifiers.add(finiteStateMachineStateLog.getIdentifiableGlobalIdentifier());
 		return (Collection<T>) BusinessLocator.getInstance().locate(aClass).findByGlobalIdentifiers(globalIdentifiers);
 	}
 }
