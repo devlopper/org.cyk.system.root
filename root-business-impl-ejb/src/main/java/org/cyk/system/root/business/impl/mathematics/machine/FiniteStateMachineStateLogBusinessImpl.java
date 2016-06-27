@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateLogBusiness;
@@ -54,7 +56,7 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public <T extends AbstractIdentifiable> Collection<T> findByClass(Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs,Class<T> aClass) {
 		Collection<GlobalIdentifier> globalIdentifiers = new ArrayList<>();
 		for(FiniteStateMachineStateLog finiteStateMachineStateLog : finiteStateMachineStateLogs)
