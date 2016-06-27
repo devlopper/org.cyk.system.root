@@ -12,6 +12,7 @@ import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.GlobalIdentifier;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
@@ -55,6 +56,14 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 	
 	public QueryWrapper<T> parameterIdentifiers(String name,Collection<? extends AbstractIdentifiable> identifiables){
 		parameter(name, Utils.ids(identifiables));
+		return this;
+	}
+	public QueryWrapper<T> parameterGlobalIdentifiers(String name,Collection<GlobalIdentifier> globalIdentifiers){
+		parameter(name, Utils.getGlobalIdentfierValues(globalIdentifiers));
+		return this;
+	}
+	public QueryWrapper<T> parameterGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers){
+		parameterGlobalIdentifiers(QueryStringBuilder.VAR_IDENTIFIERS, globalIdentifiers);
 		return this;
 	}
 	public QueryWrapper<T> parameterIdentifiers(Collection<? extends AbstractIdentifiable> identifiables){

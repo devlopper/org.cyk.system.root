@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.GlobalIdentifier;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
 import org.cyk.system.root.persistence.api.TypedDao;
 
@@ -15,7 +16,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	private static final long serialVersionUID = -2964204372097468908L;
 
 	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
-		,readAllInclude,countAllInclude;
+		,readAllInclude,countAllInclude,readByGlobalIdentifiers,countByGlobalIdentifiers;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -45,6 +46,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		
 		registerNamedQuery(readAllInclude, _select().whereIdentifierIn());
 		registerNamedQuery(readAllExclude, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.identifier NOT IN :identifiers");
+		registerNamedQuery(readByGlobalIdentifiers, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier IN :identifiers");
 		
 		if(Boolean.TRUE.equals(readByClassEnabled())){
 			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy("identifier",Boolean.TRUE));
@@ -80,6 +82,16 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	public Long countAllExclude(Collection<IDENTIFIABLE> identifiables) {
 		return namedQuery(countAllExclude,Long.class).parameterIdentifiers(identifiables).resultOne();
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readByGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers) {
+		return namedQuery(readByGlobalIdentifiers).parameterGlobalIdentifiers(globalIdentifiers).resultMany();
+	}
+	
+	@Override
+	public Long countByGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers) {
+		return namedQuery(countByGlobalIdentifiers,Long.class).parameterGlobalIdentifiers(globalIdentifiers).resultOne();
 	}
 	
 	@Override

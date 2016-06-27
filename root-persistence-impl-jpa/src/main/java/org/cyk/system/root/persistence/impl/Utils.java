@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.GlobalIdentifier;
 
 
 public class Utils {
@@ -15,4 +16,10 @@ public class Utils {
 		return ids;
 	}
 
+	public static Collection<String> getGlobalIdentfierValues(Collection<GlobalIdentifier> globalIdentifiers){
+		Collection<String> ids = new HashSet<>();
+		for(GlobalIdentifier globalIdentifier : globalIdentifiers)
+			ids.add(globalIdentifier.getIdentifier());
+		return ids;
+	}
 }
