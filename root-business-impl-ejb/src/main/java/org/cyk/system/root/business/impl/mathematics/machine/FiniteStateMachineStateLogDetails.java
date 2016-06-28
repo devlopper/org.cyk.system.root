@@ -22,4 +22,7 @@ public class FiniteStateMachineStateLogDetails extends AbstractLogDetails<Finite
 		state = formatUsingBusiness(finiteStateMachineStateLog.getState());
 	}
 	
+	public static final String FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER = "identifiableGlobalIdentifier";
+	public static final String FIELD_STATE = "state";
+	
 }
