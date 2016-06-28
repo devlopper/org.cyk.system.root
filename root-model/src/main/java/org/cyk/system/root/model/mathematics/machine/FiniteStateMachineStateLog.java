@@ -1,6 +1,9 @@
 package org.cyk.system.root.model.mathematics.machine;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -9,8 +12,10 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractLog;
 import org.cyk.system.root.model.GlobalIdentifier;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -28,4 +33,48 @@ public class FiniteStateMachineStateLog extends AbstractLog implements Serializa
 	
 	public static final String FIELD_STATE = "state";
 
+	/**/
+	
+	@Getter @Setter
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		protected Collection<FiniteStateMachineState> finiteStateMachineStates = new ArrayList<>();
+		
+		public SearchCriteria(){
+			
+		}
+		
+		public SearchCriteria addFiniteStateMachineStates(Collection<FiniteStateMachineState> finiteStateMachineStates){
+			this.finiteStateMachineStates.addAll(finiteStateMachineStates);
+			return this;
+		}
+		public SearchCriteria addFiniteStateMachineState(FiniteStateMachineState finiteStateMachineState){
+			return addFiniteStateMachineStates(Arrays.asList(finiteStateMachineState));
+		}
+	}
+	
+	@Getter @Setter
+	public static class IdentifiablesSearchCriteria<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		protected Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs = new ArrayList<>();
+		protected Class<IDENTIFIABLE> identifiableClass;
+		protected SearchCriteria finiteStateMachineStateLog = new SearchCriteria();
+		
+		public IdentifiablesSearchCriteria(Class<IDENTIFIABLE> identifiableClass){
+			this.identifiableClass = identifiableClass;
+		}
+		
+		public IdentifiablesSearchCriteria<IDENTIFIABLE> addFiniteStateMachineStateLogs(Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs){
+			this.finiteStateMachineStateLogs.addAll(finiteStateMachineStateLogs);
+			return this;
+		}
+		public IdentifiablesSearchCriteria<IDENTIFIABLE> addFiniteStateMachineStateLog(FiniteStateMachineStateLog finiteStateMachineStateLog){
+			return addFiniteStateMachineStateLogs(Arrays.asList(finiteStateMachineStateLog));
+		}
+		
+	}
 }

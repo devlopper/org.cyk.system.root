@@ -17,6 +17,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.IdentifiablesSearchCriteria;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateLogDao;
 
 @Stateless
@@ -54,13 +55,23 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 		}
 		create(finiteStateMachineStateLogs);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public <T extends AbstractIdentifiable> Collection<T> findByClass(Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs,Class<T> aClass) {
+	public <IDENTIFIABLE extends AbstractIdentifiable> Collection<IDENTIFIABLE> findIdentifiablesByCriteria(IdentifiablesSearchCriteria<IDENTIFIABLE> criteria) {
 		Collection<GlobalIdentifier> globalIdentifiers = new ArrayList<>();
+		Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs = new ArrayList<>();
+		if(criteria.getFiniteStateMachineStateLogs()!=null)
+			finiteStateMachineStateLogs.addAll(criteria.getFiniteStateMachineStateLogs());
+		finiteStateMachineStateLogs.addAll(dao.readByCriteria(criteria.getFiniteStateMachineStateLog()));	
+		
 		for(FiniteStateMachineStateLog finiteStateMachineStateLog : finiteStateMachineStateLogs)
 			globalIdentifiers.add(finiteStateMachineStateLog.getIdentifiableGlobalIdentifier());
-		return (Collection<T>) BusinessLocator.getInstance().locate(aClass).findByGlobalIdentifiers(globalIdentifiers);
+		return (Collection<IDENTIFIABLE>) BusinessLocator.getInstance().locate(criteria.getIdentifiableClass()).findByGlobalIdentifiers(globalIdentifiers);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public <IDENTIFIABLE extends AbstractIdentifiable> Long countIdentifiablesByCriteria(IdentifiablesSearchCriteria<IDENTIFIABLE> criteria) {
+		return null;
 	}
 }
