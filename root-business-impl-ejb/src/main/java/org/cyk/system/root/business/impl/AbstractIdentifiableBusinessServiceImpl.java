@@ -138,6 +138,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findByIdentifiers(Collection<Long> identifiers) {
+		if(identifiers==null || identifiers.isEmpty())
+			return new ArrayList<>();
 		return getPersistenceService().readByIdentifiers(identifiers);
 	}
 	/**

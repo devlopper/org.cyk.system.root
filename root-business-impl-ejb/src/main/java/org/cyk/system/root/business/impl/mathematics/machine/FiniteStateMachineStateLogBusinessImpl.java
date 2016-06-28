@@ -18,6 +18,7 @@ import org.cyk.system.root.model.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.IdentifiablesSearchCriteria;
+import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.SearchCriteria;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateLogDao;
 
 @Stateless
@@ -73,5 +74,15 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public <IDENTIFIABLE extends AbstractIdentifiable> Long countIdentifiablesByCriteria(IdentifiablesSearchCriteria<IDENTIFIABLE> criteria) {
 		return null;
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<FiniteStateMachineStateLog> findByCriteria(SearchCriteria searchCriteria) {
+		return dao.readByCriteria(searchCriteria);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countByCriteria(SearchCriteria searchCriteria) {
+		return dao.countByCriteria(searchCriteria);
 	}
 }
