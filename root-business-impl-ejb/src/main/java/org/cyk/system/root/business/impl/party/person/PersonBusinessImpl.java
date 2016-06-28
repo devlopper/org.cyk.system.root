@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
+import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.person.JobFunction;
@@ -48,6 +49,11 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	public PersonBusinessImpl(PersonDao dao) {
 		super(dao); 
 	}  
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Person instanciateOne() {
+		return RootRandomDataProvider.getInstance().person();
+	}
 	
 	@Override
 	public Person create(Person person) {

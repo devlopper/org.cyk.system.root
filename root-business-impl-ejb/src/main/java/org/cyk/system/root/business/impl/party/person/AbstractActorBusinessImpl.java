@@ -7,6 +7,7 @@ import java.util.List;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -35,6 +36,14 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return myActor;
 	}
 
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ACTOR instanciateOne() {
+		ACTOR actor = super.instanciateOne();
+		actor.setPerson(RootBusinessLayer.getInstance().getPersonBusiness().instanciateOne());
+		actor.getRegistration().setCode(RandomStringUtils.randomAlphanumeric(5));
+		return actor;
+	}
+	
 	@Override
 	public ACTOR create(ACTOR anActor) {
 		if(anActor.getPerson().getIdentifier()==null)

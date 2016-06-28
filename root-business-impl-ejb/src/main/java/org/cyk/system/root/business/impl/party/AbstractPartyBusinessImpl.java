@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
@@ -27,6 +28,15 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		super(dao); 
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public PARTY instanciateOne() {
+		PARTY party = super.instanciateOne();
+		party.setCode(RandomStringUtils.randomAlphanumeric(5));
+		return party;
+	}
+
+
+
 	@Override
     public PARTY create(PARTY party) {
 		if(StringUtils.isBlank(party.getCode()))
