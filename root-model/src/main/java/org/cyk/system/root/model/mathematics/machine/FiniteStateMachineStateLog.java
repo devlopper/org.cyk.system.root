@@ -62,10 +62,11 @@ public class FiniteStateMachineStateLog extends AbstractLog implements Serializa
 
 		protected Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs = new ArrayList<>();
 		protected Class<IDENTIFIABLE> identifiableClass;
-		protected SearchCriteria finiteStateMachineStateLog = new SearchCriteria();
+		protected SearchCriteria finiteStateMachineStateLog;
 		
-		public IdentifiablesSearchCriteria(Class<IDENTIFIABLE> identifiableClass){
+		public IdentifiablesSearchCriteria(Class<IDENTIFIABLE> identifiableClass,SearchCriteria finiteStateMachineStateLog){
 			this.identifiableClass = identifiableClass;
+			this.finiteStateMachineStateLog = finiteStateMachineStateLog;
 		}
 		
 		public IdentifiablesSearchCriteria<IDENTIFIABLE> addFiniteStateMachineStateLogs(Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs){
