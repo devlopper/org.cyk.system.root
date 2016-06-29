@@ -39,10 +39,7 @@ public class NumberBusinessUT extends AbstractUnitTest {
 	@Test
 	public void formatSequences(){
 		List<Integer> numbers = Arrays.asList(1,3,4,5,6,7,12,13,17,18,19,20,29);
-		FormatSequenceArguments<Integer> arguments = new FormatSequenceArguments<>();
-		arguments.setStep(1);
-		arguments.setExtremitySeparator("à");
-		arguments.setSequenceSeparator(",");
+		FormatSequenceArguments<Integer> arguments = new FormatSequenceArguments<>(1);
 		System.out.println(numberBusiness.formatSequences(numbers, arguments));
 	}
 	

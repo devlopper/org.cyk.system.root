@@ -65,7 +65,14 @@ public interface NumberBusiness {
 		private static final long serialVersionUID = -5152613949478843525L;
 		
 		private NUMBER step;
-		private String extremitySeparator;
-		private String sequenceSeparator;
+		private String extremitySeparator=Constant.CHARACTER_HYPHEN.toString();
+		private String sequenceSeparator = Constant.CHARACTER_COMA.toString();
+		
+		public FormatSequenceArguments(NUMBER step) {
+			super();
+			this.step = step;
+		}
+		
+		
 	}
 }
