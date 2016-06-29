@@ -237,4 +237,24 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 		sequence.clear();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <NUMBER extends Number> NUMBER parse(Class<NUMBER> numberClass,String number) {
+		StringBuilder stringBuilder = new StringBuilder();
+		for(int i = 0 ; i < number.length() ; i++)
+			if( ((int)number.charAt(i)) < 127 )
+				stringBuilder.append(number.charAt(i));
+		number = stringBuilder.toString();
+		number = StringUtils.remove(number, Constant.CHARACTER_SPACE);
+		
+		BigDecimal bigDecimal = new BigDecimal(number);
+		if(BigDecimal.class.equals(numberClass))
+			return (NUMBER) bigDecimal;
+		if(Long.class.equals(numberClass))
+			return (NUMBER) new Long(bigDecimal.longValue());
+		if(Integer.class.equals(numberClass))
+			return (NUMBER) new Integer(bigDecimal.intValue());
+		return null;
+	}
+	
 }

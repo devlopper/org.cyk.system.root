@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateLogBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.BusinessLocator;
@@ -19,7 +21,9 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.IdentifiablesSearchCriteria;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.SearchCriteria;
+import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateLogDao;
+import org.joda.time.DateTime;
 
 @Stateless
 public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusinessService<FiniteStateMachineStateLog, FiniteStateMachineStateLogDao> implements FiniteStateMachineStateLogBusiness,Serializable {
@@ -78,7 +82,22 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<FiniteStateMachineStateLog> findByCriteria(SearchCriteria searchCriteria) {
-		return dao.readByCriteria(searchCriteria);
+		Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs = dao.readByCriteria(searchCriteria);
+		for(FiniteStateMachineStateLog finiteStateMachineStateLog : finiteStateMachineStateLogs){
+			DateTime dateTime = new DateTime(finiteStateMachineStateLog.getDate().getTime());
+			Date date = null;
+			if(StringUtils.isBlank(searchCriteria.getTimeDivisionTypeCode())){
+				date = dateTime.toDate();
+			}else{
+				switch(searchCriteria.getTimeDivisionTypeCode()){
+				case TimeDivisionType.DAY:
+					date = dateTime.withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate();
+					break;
+				}	
+			}
+			finiteStateMachineStateLog.setDate(date);
+		}
+		return finiteStateMachineStateLogs;
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

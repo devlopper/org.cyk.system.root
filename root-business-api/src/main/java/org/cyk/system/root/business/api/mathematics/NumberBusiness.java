@@ -21,6 +21,8 @@ public interface NumberBusiness {
 	String format(Number number);
 	String format(Number number,FormatArguments arguments);
 	
+	<NUMBER extends Number> NUMBER parse(Class<NUMBER> numberClass,String number);
+	
 	<NUMBER extends Number> String formatSequences(Collection<NUMBER> numbers,FormatSequenceArguments<NUMBER> arguments);
 	
 	String encode(String number,String inputCharacters,String outputCharacters);

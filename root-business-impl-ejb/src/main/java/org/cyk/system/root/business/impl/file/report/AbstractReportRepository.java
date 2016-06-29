@@ -83,7 +83,12 @@ public abstract class AbstractReportRepository extends AbstractBean implements S
 	protected String format(BigDecimal value){
 		return RootBusinessLayer.getInstance().getNumberBusiness().format(value);
 	}
-	
+	protected String formatDate(Date date) {
+		return RootBusinessLayer.getInstance().getTimeBusiness().formatDate(date);
+	}
+	protected String formatDateTime(Date date) {
+		return RootBusinessLayer.getInstance().getTimeBusiness().formatDateTime(date);
+	}
 	/**/
 	
 	protected void set(BigDecimal[][] totals,Integer i,Integer j,BigDecimal value){

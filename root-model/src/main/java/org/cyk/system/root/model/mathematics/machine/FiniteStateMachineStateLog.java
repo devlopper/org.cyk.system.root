@@ -41,6 +41,7 @@ public class FiniteStateMachineStateLog extends AbstractLog implements Serializa
 		private static final long serialVersionUID = 6796076474234170332L;
 
 		protected Collection<FiniteStateMachineState> finiteStateMachineStates = new ArrayList<>();
+		protected String timeDivisionTypeCode;
 		
 		public SearchCriteria(){
 			

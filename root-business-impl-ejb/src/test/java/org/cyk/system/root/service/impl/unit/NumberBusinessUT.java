@@ -37,6 +37,12 @@ public class NumberBusinessUT extends AbstractUnitTest {
 	}
 	
 	@Test
+	public void parse(){
+		String number = "5 000";//numberBusiness.format(5000);
+		System.out.println(numberBusiness.parse(BigDecimal.class, number));
+	}
+	
+	@Test
 	public void formatSequences(){
 		List<Integer> numbers = Arrays.asList(1,3,4,5,6,7,12,13,17,18,19,20,29);
 		FormatSequenceArguments<Integer> arguments = new FormatSequenceArguments<>(1);
