@@ -25,7 +25,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		super(dao); 
 	}
 		
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
 		Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
 		
@@ -41,7 +41,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		return null;
 	}  
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Boolean isLowerEqualsToHigher(Interval interval) {
 		BigDecimal l1=findGreatestLowestValue(interval),l2=findLowestGreatestValue(interval);
 		return l1!=null && l2!=null && l1.equals(l2);
@@ -130,4 +130,24 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
     	return interval.getLow().getValue()==null ? null 
     			: Boolean.FALSE.equals(interval.getLow().getExcluded()) ? interval.getLow().getValue() : interval.getLow().getValue().subtract(BigDecimal.ONE);
     }
+
+	/*
+    @Override
+	public <NUMBER extends Number> Collection<Interval> instanciateManyFromNumberSequence(Collection<NUMBER> numbers,InstanciateManyFromNumberSequenceArguments<NUMBER> arguments) {
+    	Collection<Interval> intervals = new ArrayList<>();
+    	Interval interval = null;
+    	for(NUMBER number : numbers){
+    		if(interval == null){
+    			interval = new Interval();
+    			interval.getLow().setValue(new BigDecimal(number.toString()));
+    		}else{
+    			if()
+    			interval.getHigh().setValue(new BigDecimal(number.toString()));
+    			
+    		}
+    	}
+		return intervals;
+	}*/
+
+    
 }

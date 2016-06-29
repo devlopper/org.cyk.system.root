@@ -19,4 +19,15 @@ public interface IntervalBusiness extends AbstractCollectionItemBusiness<Interva
     
     BigDecimal findLowestGreatestValue(Interval interval);
     BigDecimal findGreatestLowestValue(Interval interval);
+    /*
+    <NUMBER extends Number> Collection<Interval> instanciateManyFromNumberSequence(Collection<NUMBER> numbers,InstanciateManyFromNumberSequenceArguments<NUMBER> arguments);
+    
+    @Getter @Setter
+    public static class InstanciateManyFromNumberSequenceArguments<NUMBER extends Number> implements Serializable{
+		private static final long serialVersionUID = 7050465080777251064L;
+    	
+		private NUMBER step;
+		
+    }
+    */
 }

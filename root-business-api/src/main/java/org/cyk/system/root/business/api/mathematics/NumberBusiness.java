@@ -21,6 +21,8 @@ public interface NumberBusiness {
 	String format(Number number);
 	String format(Number number,FormatArguments arguments);
 	
+	<NUMBER extends Number> String formatSequences(Collection<NUMBER> numbers,FormatSequenceArguments<NUMBER> arguments);
+	
 	String encode(String number,String inputCharacters,String outputCharacters);
 	String encode(String number,String outputCharacters);
 	String encodeToBase16(String number);
@@ -56,5 +58,14 @@ public interface NumberBusiness {
 		private Boolean isRank = Boolean.FALSE;
 		private Boolean isPercentage = Boolean.FALSE;
 		private String percentageSymbol = Constant.CHARACTER_PERCENT.toString();
+	}
+	
+	@Getter @Setter
+	public static class FormatSequenceArguments<NUMBER extends Number> implements Serializable{
+		private static final long serialVersionUID = -5152613949478843525L;
+		
+		private NUMBER step;
+		private String extremitySeparator;
+		private String sequenceSeparator;
 	}
 }

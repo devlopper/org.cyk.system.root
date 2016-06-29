@@ -6,9 +6,12 @@ import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Singleton;
+
+import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
@@ -16,8 +19,6 @@ import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
-
-import lombok.Setter;
 
 @Singleton
 public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,Serializable {
@@ -202,4 +203,38 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 		return numbers;
 	}
 
+	@Override
+	public <NUMBER extends Number> String formatSequences(Collection<NUMBER> numbers,FormatSequenceArguments<NUMBER> arguments) {
+		StringBuilder stringBuilder = new StringBuilder();
+		List<NUMBER> sequence = new ArrayList<>();
+		BigDecimal step = new BigDecimal(arguments.getStep().intValue());
+		BigDecimal previous = null;
+		for(NUMBER number : numbers){
+			if(sequence.isEmpty())
+				sequence.add(number);
+			else{
+				if ( previous.add(step).compareTo(new BigDecimal(number.intValue())) == 0){
+					sequence.add(number);
+				}else{
+					addSequence(stringBuilder, sequence, arguments);
+					sequence.add(number);
+				}
+			}
+			previous = new BigDecimal(number.intValue());
+		}
+		if(!sequence.isEmpty())
+			addSequence(stringBuilder, sequence, arguments);
+		
+		return stringBuilder.toString();
+	}
+	
+	private void addSequence(StringBuilder stringBuilder,List<? extends Number> sequence,FormatSequenceArguments<? extends Number> arguments){
+		if(stringBuilder.length()>0)
+			stringBuilder.append(Constant.CHARACTER_SPACE+arguments.getSequenceSeparator()+Constant.CHARACTER_SPACE);
+		stringBuilder.append( sequence.get(0) );
+		if(sequence.size()>1)
+			stringBuilder.append(Constant.CHARACTER_SPACE+arguments.getExtremitySeparator()+Constant.CHARACTER_SPACE+sequence.get(sequence.size()-1) );
+		sequence.clear();
+	}
+	
 }

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness.FormatSequenceArguments;
 import org.cyk.system.root.business.impl.mathematics.NumberBusinessImpl;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
@@ -33,6 +34,16 @@ public class NumberBusinessUT extends AbstractUnitTest {
 		
 		assertConcatenate(Integer.class, Arrays.asList(1,18,7412,951), 2, "0001001874120951");
 		
+	}
+	
+	@Test
+	public void formatSequences(){
+		List<Integer> numbers = Arrays.asList(1,3,4,5,6,7,12,13,17,18,19,20,29);
+		FormatSequenceArguments<Integer> arguments = new FormatSequenceArguments<>();
+		arguments.setStep(1);
+		arguments.setExtremitySeparator("à");
+		arguments.setSequenceSeparator(",");
+		System.out.println(numberBusiness.formatSequences(numbers, arguments));
 	}
 	
 	@Test
@@ -124,6 +135,16 @@ public class NumberBusinessUT extends AbstractUnitTest {
 		for(int i=0;i<numbers.size();i++)
 			assertEquals(numbers.get(i), numbers2.get(i));
 	}
+	/*
+	private <NUMBER extends Number> void assertFormatSequences(Class<NUMBER> numberClass,List<NUMBER> numbers,Collection<String> results){
+		NUMBER highest = numberBusiness.findHighest(numbers);
+		assertEquals(numbers.get(highestIndex.intValue()), highest);
+		String c = numberBusiness.concatenate(numbers, highest.toString().length());
+		assertEquals(expectedConcatenation, c);
+		List<NUMBER> numbers2 = new ArrayList<>(numberBusiness.deconcatenate(numberClass, c, highest.toString().length()));
+		for(int i=0;i<numbers.size();i++)
+			assertEquals(numbers.get(i), numbers2.get(i));
+	}*/
 	
 	private void assertEncode16(String number,String result){
 		assertCoding(number, "16", numberBusiness.encodeToBase16(number), result);
