@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 /*lombok*/
 
 /*mapping - jpa*/
-@MappedSuperclass
+@MappedSuperclass @Getter @Setter
 public abstract class AbstractIdentifiable extends AbstractModelElement implements Identifiable<Long>, Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -38,18 +38,11 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public static StringMethod<AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_VALUE;
 	public static AbstractMethod<Object,GlobalIdentifier> PERSIST_GLOBAL_IDENTIFIER;
 	
-	@Getter @Setter
-	@Id @GeneratedValue // Generation is customizable using mapping file
-	protected Long identifier;
+	@Id @GeneratedValue protected Long identifier;// Generation is customizable using mapping file
 
-	@Getter @Setter @OneToOne 
-	protected GlobalIdentifier globalIdentifier;
+	@OneToOne protected GlobalIdentifier globalIdentifier;
 	
-	@Transient @Getter @Setter
-	protected Party processingUser;// In order to get the user processing this object
-	
-	@Transient @Getter @Setter
-	protected Date processingDate;
+	@Transient protected Processing processing;
 	
 	private String __identifier__(){
 		return getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);
@@ -160,6 +153,22 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	protected Logger getLogger(){
 		return LoggerFactory.getLogger(getClass());
+	}
+	
+	/**/
+	
+	@Getter @Setter
+	/**
+	 * Informations about client processing
+	 * @author Christian Yao Komenan
+	 *
+	 */
+	public static class Processing implements Serializable {
+		private static final long serialVersionUID = -6123968511493504593L;
+		
+		private String identifier;
+		private Party party;
+		private Date date;
 	}
  
 }

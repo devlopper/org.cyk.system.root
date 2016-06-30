@@ -53,8 +53,8 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 		for(AbstractIdentifiable identifiable : identifiables){
 			FiniteStateMachineStateLog finiteStateMachineStateLog = new FiniteStateMachineStateLog();
 			finiteStateMachineStateLog.setState(finiteStateMachineState);
-			finiteStateMachineStateLog.setParty(finiteStateMachineState.getProcessingUser());
-			finiteStateMachineStateLog.setDate(finiteStateMachineState.getProcessingDate());
+			finiteStateMachineStateLog.setParty(finiteStateMachineState.getProcessing().getParty());
+			finiteStateMachineStateLog.setDate(finiteStateMachineState.getProcessing().getDate());
 			finiteStateMachineStateLog.setIdentifiableGlobalIdentifier(identifiable.getGlobalIdentifier());
 			finiteStateMachineStateLogs.add(finiteStateMachineStateLog);
 		}
