@@ -44,6 +44,12 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	@Transient protected Processing processing;
 	
+	public Processing getProcessing(){
+		if(processing==null)
+			processing = new Processing();
+		return  processing;
+	}
+	
 	private String __identifier__(){
 		return getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);
 	}
@@ -76,6 +82,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/**/
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PrePersist
 	private void onPrePersist() {
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){
@@ -92,6 +99,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PostPersist
 	private void onPostPersist() {
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){
@@ -102,6 +110,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PostLoad
 	private void onPostLoad() {
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){
@@ -111,6 +120,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PreUpdate
 	private void onPreUpdate() {
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){
@@ -120,6 +130,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PostUpdate
 	private void onPostUpdate() {
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){
@@ -129,6 +140,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PreRemove
 	private void onPreRemove() {
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){
@@ -138,6 +150,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PostRemove
 	private void onPostRemove() {
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){

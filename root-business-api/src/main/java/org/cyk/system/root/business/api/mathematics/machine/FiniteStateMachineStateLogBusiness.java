@@ -11,8 +11,8 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.
 
 public interface FiniteStateMachineStateLogBusiness extends TypedBusiness<FiniteStateMachineStateLog> {
 
-	void create(AbstractIdentifiable identifiable,FiniteStateMachineState state);
-	void create(Collection<AbstractIdentifiable> identifiables,FiniteStateMachineState state);
+	FiniteStateMachineStateLog create(AbstractIdentifiable identifiable,FiniteStateMachineState state);
+	Collection<FiniteStateMachineStateLog> create(Collection<AbstractIdentifiable> identifiables,FiniteStateMachineState state);
 	
 	Collection<FiniteStateMachineStateLog> findByCriteria(SearchCriteria searchCriteria);
 	Long countByCriteria(SearchCriteria searchCriteria);

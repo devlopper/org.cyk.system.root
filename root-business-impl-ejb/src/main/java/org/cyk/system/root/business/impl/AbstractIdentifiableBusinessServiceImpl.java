@@ -24,6 +24,7 @@ import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.ObjectFieldValues;
+import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
@@ -353,4 +354,35 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
     	
     }
 	
+	/**/
+	
+	public static interface Listener<IDENTIFIABLE extends AbstractIdentifiable> {
+		
+		void beforeCreate(IDENTIFIABLE identifiable);
+		void afterCreate(IDENTIFIABLE identifiable);
+		
+		void beforeUpdate(IDENTIFIABLE identifiable);
+		void afterUpdate(IDENTIFIABLE identifiable);
+		
+		void beforeDelete(IDENTIFIABLE identifiable);
+		void afterDelete(IDENTIFIABLE identifiable);
+		
+		/**/
+		
+		public static class Adapter<IDENTIFIABLE extends AbstractIdentifiable> extends BeanAdapter implements Listener<IDENTIFIABLE>,Serializable{
+			private static final long serialVersionUID = 8213436661982661753L;
+			
+			@Override public void beforeCreate(IDENTIFIABLE identifiable) {}
+			@Override public void afterCreate(IDENTIFIABLE identifiable) {}
+			
+			@Override public void beforeUpdate(IDENTIFIABLE identifiable) {}
+			@Override public void afterUpdate(IDENTIFIABLE identifiable) {}
+			
+			@Override public void beforeDelete(IDENTIFIABLE identifiable) {}
+			@Override public void afterDelete(IDENTIFIABLE identifiable) {}
+			
+			/**/
+		}
+		
+	}
 }

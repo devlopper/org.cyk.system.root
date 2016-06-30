@@ -43,12 +43,12 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 	}
 
 	@Override
-	public void create(AbstractIdentifiable identifiable,FiniteStateMachineState finiteStateMachineState) {
-		create(Arrays.asList(identifiable),finiteStateMachineState);
+	public FiniteStateMachineStateLog create(AbstractIdentifiable identifiable,FiniteStateMachineState finiteStateMachineState) {
+		return create(Arrays.asList(identifiable),finiteStateMachineState).iterator().next();
 	}
 
 	@Override
-	public void create(Collection<AbstractIdentifiable> identifiables,FiniteStateMachineState finiteStateMachineState) {
+	public Collection<FiniteStateMachineStateLog> create(Collection<AbstractIdentifiable> identifiables,FiniteStateMachineState finiteStateMachineState) {
 		Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs = new ArrayList<>();
 		for(AbstractIdentifiable identifiable : identifiables){
 			FiniteStateMachineStateLog finiteStateMachineStateLog = new FiniteStateMachineStateLog();
@@ -59,6 +59,7 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 			finiteStateMachineStateLogs.add(finiteStateMachineStateLog);
 		}
 		create(finiteStateMachineStateLogs);
+		return finiteStateMachineStateLogs;
 	}
 
 	@SuppressWarnings("unchecked")
