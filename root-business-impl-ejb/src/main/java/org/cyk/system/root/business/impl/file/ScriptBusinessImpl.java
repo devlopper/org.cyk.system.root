@@ -19,17 +19,16 @@ import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.persistence.api.file.ScriptDao;
 
 public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, ScriptDao> implements ScriptBusiness, Serializable {
-
+	private static final long serialVersionUID = 8072220305781523624L;
+	
+	private static final String DEFAULT_ENGINE_NAME = "javascript";
+	
 	@Inject private FileBusiness fileBusiness;
-  
+	
 	@Inject
 	public ScriptBusinessImpl(ScriptDao dao) { 
 		super(dao);
 	} 
-
-	private static final long serialVersionUID = 8072220305781523624L;
-
-	private static final String DEFAULT_ENGINE_NAME = "javascript";
 
 	@Override
 	public Map<String, Object> evaluate(Script script,Map<String, Object> inputs) {
