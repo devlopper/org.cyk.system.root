@@ -384,5 +384,22 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			/**/
 		}
 		
+		/**/
+		
+		public static interface SearchCriteria<IDENTIFIABLE extends AbstractIdentifiable,CRITERIA extends AbstractFieldValueSearchCriteriaSet> extends Listener<IDENTIFIABLE> {
+			
+			void beforeSearchFind(CRITERIA searchCriteria);
+			void afterSearchFind(CRITERIA searchCriteria,Collection<IDENTIFIABLE> identifiables);
+			
+			/**/
+			
+			public static class Adapter<IDENTIFIABLE extends AbstractIdentifiable,CRITERIA extends AbstractFieldValueSearchCriteriaSet> extends Listener.Adapter<IDENTIFIABLE> implements SearchCriteria<IDENTIFIABLE,CRITERIA>,Serializable{
+				private static final long serialVersionUID = 7753187759402144033L;
+
+				@Override public void beforeSearchFind(CRITERIA searchCriteria) {}
+				@Override public void afterSearchFind(CRITERIA searchCriteria,Collection<IDENTIFIABLE> identifiables) {}
+				
+			}
+		}
 	}
 }

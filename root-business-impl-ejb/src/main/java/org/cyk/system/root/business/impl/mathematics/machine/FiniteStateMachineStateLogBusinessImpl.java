@@ -23,6 +23,7 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.SearchCriteria;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateLogDao;
+import org.cyk.utility.common.ListenerUtils;
 import org.joda.time.DateTime;
 
 @Stateless
@@ -64,7 +65,7 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 
 	@SuppressWarnings("unchecked")
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public <IDENTIFIABLE extends AbstractIdentifiable> Collection<IDENTIFIABLE> findIdentifiablesByCriteria(IdentifiablesSearchCriteria<IDENTIFIABLE> criteria) {
+	public <IDENTIFIABLE extends AbstractIdentifiable> Collection<IDENTIFIABLE> findIdentifiablesByCriteria(final IdentifiablesSearchCriteria<IDENTIFIABLE> criteria) {
 		Collection<GlobalIdentifier> globalIdentifiers = new ArrayList<>();
 		Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs = new ArrayList<>();
 		if(criteria.getFiniteStateMachineStateLogs()!=null)
@@ -73,7 +74,24 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 		
 		for(FiniteStateMachineStateLog finiteStateMachineStateLog : finiteStateMachineStateLogs)
 			globalIdentifiers.add(finiteStateMachineStateLog.getIdentifiableGlobalIdentifier());
-		return (Collection<IDENTIFIABLE>) BusinessLocator.getInstance().locate(criteria.getIdentifiableClass()).findByGlobalIdentifiers(globalIdentifiers);
+		
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>(){
+			@Override
+			public void execute(Listener listener) {
+				listener.beforeSearchIdentifiablesFind(criteria);
+			}
+			
+		});
+		final Collection<IDENTIFIABLE> identifiables = (Collection<IDENTIFIABLE>) BusinessLocator.getInstance().locate(criteria.getIdentifiableClass()).findByGlobalIdentifiers(globalIdentifiers);
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>(){
+			@Override
+			public void execute(Listener listener) {
+				listener.afterSearchIdentifiablesFind(criteria,identifiables);
+			}
+			
+		});
+		
+		return identifiables;
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -82,8 +100,22 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Collection<FiniteStateMachineStateLog> findByCriteria(SearchCriteria searchCriteria) {
-		Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs = dao.readByCriteria(searchCriteria);
+	public Collection<FiniteStateMachineStateLog> findByCriteria(final SearchCriteria searchCriteria) {
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>(){
+			@Override
+			public void execute(Listener listener) {
+				listener.beforeSearchFind(searchCriteria);
+			}
+			
+		});
+		final Collection<FiniteStateMachineStateLog> finiteStateMachineStateLogs = dao.readByCriteria(searchCriteria);
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>(){
+			@Override
+			public void execute(Listener listener) {
+				listener.afterSearchFind(searchCriteria,finiteStateMachineStateLogs);
+			}
+		});
+		
 		for(FiniteStateMachineStateLog finiteStateMachineStateLog : finiteStateMachineStateLogs){
 			DateTime dateTime = new DateTime(finiteStateMachineStateLog.getDate().getTime());
 			Date date = null;
@@ -104,5 +136,29 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Long countByCriteria(SearchCriteria searchCriteria) {
 		return dao.countByCriteria(searchCriteria);
+	}
+	
+	/**/
+	
+	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.SearchCriteria<FiniteStateMachineStateLog,FiniteStateMachineStateLog.SearchCriteria> {
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+
+		void beforeSearchIdentifiablesFind(FiniteStateMachineStateLog.IdentifiablesSearchCriteria<? extends AbstractIdentifiable> searchCriteria);
+		<T extends AbstractIdentifiable> void afterSearchIdentifiablesFind(FiniteStateMachineStateLog.IdentifiablesSearchCriteria<T> searchCriteria,Collection<T> identifiables);
+		
+		/**/
+		
+		public static class Adapter extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.SearchCriteria.Adapter<FiniteStateMachineStateLog,FiniteStateMachineStateLog.SearchCriteria> implements Listener,Serializable{
+			private static final long serialVersionUID = 8213436661982661753L;
+
+			@Override
+			public void beforeSearchIdentifiablesFind(IdentifiablesSearchCriteria<? extends AbstractIdentifiable> searchCriteria) {}
+
+			@Override
+			public <T extends AbstractIdentifiable> void afterSearchIdentifiablesFind(IdentifiablesSearchCriteria<T> searchCriteria,Collection<T> identifiables) {}
+			
+		}
+		
 	}
 }
