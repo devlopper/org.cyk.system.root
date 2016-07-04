@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Movement;
@@ -33,6 +34,9 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	
 	@Override
 	public Movement create(Movement movement) {
+		if(StringUtils.isBlank(movement.getSupportingDocumentIdentifier()))
+			movement.setSupportingDocumentIdentifier(null);
+		exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier())!=null, "exception.supportingDocumentIdentifierAlreadyUsed");
 		MovementAction action = movement.getAction();	
 		BigDecimal increment = movement.getValue();
 		exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && increment.signum()==-1, "exception.value.mustbepositive");

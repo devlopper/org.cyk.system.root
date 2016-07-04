@@ -45,5 +45,6 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_DATE = "date";
+	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";
 		
 }
