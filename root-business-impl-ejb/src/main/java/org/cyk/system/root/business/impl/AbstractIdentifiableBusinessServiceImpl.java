@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import lombok.Getter;
 
-import org.cyk.system.root.business.api.BusinessServiceListener;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -240,12 +239,12 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
 		getPersistenceService().getDataReadConfig().set(searchCriteria.getReadConfig());
 	}
-	
+	/*
 	protected void notifyCrudDone(Crud crud,AbstractIdentifiable identifiable){
 		for(BusinessServiceListener listener : BusinessServiceListener.COLLECTION)
 			listener.crudDone(crud, identifiable);
 	}
-	
+	*/
 	protected <T extends AbstractIdentifiable> void setCallArgumentsObjects(BusinessServiceCallArguments<T> callArguments,Collection<T> identifiables){
 		if(callArguments!=null)
 			callArguments.setObjects(identifiables);
