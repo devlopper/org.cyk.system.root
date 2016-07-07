@@ -18,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
+import org.cyk.system.root.model.AbstractCollection;
+import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
@@ -129,6 +131,14 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		for(RootDataProducerHelperListener listener : rootDataProducerHelperListeners)
 			listener.set(data);
 		return (T) genericBusiness.update(data);
+	}
+	public <T extends AbstractCollectionItem<COLLECTION>,COLLECTION extends AbstractCollection<T>> T updateCollectionItem(Class<T> aClass,Class<COLLECTION> collectionClass,String collectionCode,String code,String name){
+		AbstractCollection<T> collection = getEnumeration(collectionClass, collectionCode);
+		if(StringUtils.isBlank(collection.getItemCodeSeparator()))
+			;
+		else
+			code = collectionCode+ collection.getItemCodeSeparator()+ code;
+		return updateEnumeration(aClass, code, name);
 	}
 	
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String name){
