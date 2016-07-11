@@ -77,9 +77,11 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	public static final Map<String,String> RESOURCE_BUNDLE_VALUE_CACHE = new HashMap<>();
 	
+	public static Locale LOCALE = Locale.FRENCH;
+	
 	private static LanguageBusiness INSTANCE;
 	
-	@Setter private Locale locale = Locale.FRENCH;
+	@Setter private Locale locale = LOCALE;
 	@Getter @Setter private CaseType caseType = CaseType.FURL;
 	@Getter @Setter private Boolean cachingEnabled = Boolean.TRUE;
 	@Getter @Setter private CachingStrategy cachingStrategy = CachingStrategy.NONE;
@@ -134,6 +136,9 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	public static void cache(Locale locale,String code,Object[] parameters,CaseType caseType,String value){
 		RESOURCE_BUNDLE_VALUE_CACHE.put(buildCacheIdentifier(locale, code, parameters, caseType), value);
+	}
+	public static void cache(Class<? extends AbstractIdentifiable> identifiableClass,String one,String many){
+		cache(LOCALE, buildEntityLabelIdentifier(identifiableClass), null, CaseType.FURL, one);
 	}
 	
 	@Override
@@ -378,10 +383,14 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		return null;
 	}
     
+    public static String buildEntityLabelIdentifier(Class<?> aClass){
+    	return "model.entity."+StringUtils.uncapitalize(aClass.getSimpleName());
+    }
+    
     @Override
     public String findClassLabelText(FindClassLabelTextParameters parameters) {
     	if(AbstractModelElement.class.isAssignableFrom(parameters.getClazz()))
-    		return findText("model.entity."+StringUtils.uncapitalize(parameters.getClazz().getSimpleName())
+    		return findText(buildEntityLabelIdentifier(parameters.getClazz())
     		+( (parameters.getOne()==null || parameters.getOne()) ? Constant.EMPTY_STRING : MANY_MARKER));
     	return findText(StringUtils.replace(parameters.getClazz().getName(), Constant.CHARACTER_DOLLAR.toString(), Constant.CHARACTER_DOT.toString()));
     }
