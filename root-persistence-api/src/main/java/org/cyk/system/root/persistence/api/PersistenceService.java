@@ -49,6 +49,8 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	                    
 	                    void detach(IDENTIFIABLE identifiable);
 	                    
+	                    void flush();
+	                    
 	                    IDENTIFIER readOneIdentifierRandomly();
 	                    Collection<IDENTIFIER> readManyIdentifiersRandomly(Integer count);
 	                    Collection<IDENTIFIER> readAllIdentifiers();

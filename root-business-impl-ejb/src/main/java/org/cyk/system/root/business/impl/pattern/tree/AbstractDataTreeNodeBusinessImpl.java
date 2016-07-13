@@ -31,7 +31,6 @@ public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends Abstr
 	public ENUMERATION create(ENUMERATION enumeration) {
 		if(enumeration.getNode()==null)
 			enumeration.setNode(new NestedSetNode(new NestedSet(), null));
-		
 		if(enumeration.getNode().getIdentifier()==null)
 			nestedSetNodeBusiness.create(enumeration.getNode());
 		return super.create(enumeration);

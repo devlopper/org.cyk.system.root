@@ -314,6 +314,11 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	}
 	
 	@Override
+	public void flush() {
+		entityManager.flush();
+	}
+	
+	@Override
 	public Collection<Long> readAllIdentifiers() {
 		List<Long> identifiers = entityManager.createQuery(String.format(SELECT_IDENTIFIER_FORMAT, entityName()),Long.class).getResultList();
 		return identifiers;

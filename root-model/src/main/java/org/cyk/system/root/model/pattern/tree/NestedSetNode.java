@@ -71,7 +71,7 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	
 	@Override
 	public String toString() {
-		return String.format(TO_STRING_FORMAT, identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier(),detachedIdentifier,set.getIdentifier());
+		return super.toString()+String.format(TO_STRING_FORMAT, identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier(),detachedIdentifier,set.getIdentifier());
 	}
 	
 	@Override

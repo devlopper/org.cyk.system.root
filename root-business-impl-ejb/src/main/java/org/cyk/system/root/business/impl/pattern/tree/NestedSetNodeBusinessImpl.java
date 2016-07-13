@@ -76,7 +76,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			nestedSetDao.create(node.getSet());
 			logTrace("Set {} auto created",node.getSet());
 		}
-			
+		//NestedSetNode root = null;	
 		if(node.getSet().getRoot()==null){//first node of the set
 			node.setParent(null);
 			node.getSet().setRoot(node);
@@ -97,9 +97,43 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 				if(index.equals(node) || index.equals(parent)){
 					
 				}else{
+					//index.getSet().setRoot(root);
 					nestedSetNodesWhereIndexesToBeRecomputed.add(index);
 				}
 			}
+			
+			System.out.println("TO REC : "+nestedSetNodesWhereIndexesToBeRecomputed);
+			for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed)
+				if(n.getParent()==null){
+					for(NestedSetNode root : nestedSetNodesWhereIndexesToBeRecomputed){
+						if(n.getSet().getRoot().equals(root)){
+							n.getSet().setRoot(root);
+							System.out.println("Root set : "+root);
+							break;
+						}
+					}
+				}else{
+					System.out.println("1 - N = "+n+" , P = " +n.getParent());
+					for(NestedSetNode p : nestedSetNodesWhereIndexesToBeRecomputed)
+						if(n.getParent().equals(p) || n.getSet().getRoot().equals(p)){
+							if(n.getParent().equals(p))
+								n.setParent(p);
+							if(n.getSet().getRoot().equals(p))
+								n.getSet().setRoot(p);
+							break;
+						}
+					System.out.println("2 - N = "+n+" , P = " +n.getParent());
+				}
+						
+			/*
+			for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed)
+				if(n.getParent()!=null && n.getParent().getParent()!=null)
+					for(NestedSetNode p : nestedSetNodesWhereIndexesToBeRecomputed)
+						if(n.getParent().getParent().equals(p)){
+							n.getParent().setParent(p);
+							break;
+						}
+			*/
 			logTrace("On create : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
 			for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
 				if(n.equals(node)){
@@ -107,6 +141,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 				}else{
 					updateBoundariesGreaterThanOrEqualTo(n,Boolean.TRUE, parentRightIndex);
 					dao.update(n);
+					System.out.println("R : "+n.getSet().getRoot()+" , P : "+n.getParent());
 					logTrace("Node indexes {} recomputed",n);
 				}
 			}
@@ -126,8 +161,9 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			logTrace("Node {} updated",node);
 			
 		}
-		
-		
+		dao.update(node.getSet().getRoot());
+		System.out.println("NR : "+node.getSet().getRoot()+" , NP : "+node.getParent());
+		//debug(node.getParent().getParent());
 		//System.out.println("   ---   PARENT   ---");
 		//debug( dao.read(node.getParent().getIdentifier()) );
 		//((GenericDaoImpl)genericDao).getEntityManager().flush();
@@ -136,6 +172,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 
 	@Override
 	public NestedSetNode delete(NestedSetNode node) {
+		genericDao.clear();
 		List<NestedSetNode> tree = new ArrayList<>(dao.readByParent(node));
 		Collections.reverse(tree);
 		tree.add(node);
@@ -153,6 +190,8 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			dao.delete(n);
 			logTrace("{} deleted", n.getLastComputedLogMessage());
 		}
+		
+		genericDao.flush();
 		return node;
 	}
 	

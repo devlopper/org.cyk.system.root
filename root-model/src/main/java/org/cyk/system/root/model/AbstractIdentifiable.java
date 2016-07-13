@@ -20,9 +20,13 @@ import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.utility.common.AbstractMethod;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +54,15 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return  processing;
 	}
 	
+	protected String getMemoryAddress(){
+		return getClass().getSimpleName()+Constant.CHARACTER_AT+String.valueOf(System.identityHashCode(this)); 
+		//StringUtils.substringBefore(ToStringBuilder.reflectionToString(this, ToStringStyle.NO_FIELD_NAMES_STYLE),"[");
+	}
+	
 	private String __identifier__(){
-		return getClass().getSimpleName()+"/"+(identifier==null?"?":identifier);
+		return //getMemoryAddress()
+				getClass().getSimpleName()
+				+Constant.CHARACTER_SLASH+StringUtils.defaultString(identifier==null?null:identifier.toString(),Constant.CHARACTER_QUESTION_MARK.toString());
 	}
 	
 	@Override
@@ -72,7 +83,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	@Override
 	public String toString() {
-		return __identifier__();
+		//return __identifier__();
+		return StringUtils.substringAfterLast(StringUtils.substringBefore(ToStringBuilder.reflectionToString(this, ToStringStyle.NO_FIELD_NAMES_STYLE),"["),Constant.CHARACTER_DOT.toString())
+				+Constant.CHARACTER_SLASH+StringUtils.defaultString(identifier==null?null:identifier.toString(),Constant.CHARACTER_QUESTION_MARK.toString());
 	}
 	
 	@Override

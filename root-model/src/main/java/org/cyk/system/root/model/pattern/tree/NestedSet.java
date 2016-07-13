@@ -22,5 +22,5 @@ public class NestedSet extends AbstractIdentifiable implements Serializable  {
 	private NestedSetNode root;
 	
 	public NestedSet() {}
-	
+
 }
