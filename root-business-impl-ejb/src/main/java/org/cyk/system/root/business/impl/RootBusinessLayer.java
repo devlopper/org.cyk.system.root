@@ -61,6 +61,7 @@ import org.cyk.system.root.business.api.party.person.JobFunctionBusiness;
 import org.cyk.system.root.business.api.party.person.JobTitleBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonTitleBusiness;
+import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.api.security.LicenseBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
@@ -116,6 +117,8 @@ import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.root.model.pattern.tree.NestedSet;
+import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.security.License;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleSecuredView;
@@ -211,6 +214,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private MovementActionBusiness movementActionBusiness;
     @Inject private MovementCollectionBusiness movementCollectionBusiness;
     @Inject private MarkupLanguageBusiness markupLanguageBusiness;
+    @Inject private NestedSetNodeBusiness nestedSetNodeBusiness;
+    //@Inject private NestedSetBusiness nestedSetBusiness;
     
     @Inject private NestedSetDao nestedSetDao;
     @Inject private NestedSetNodeDao nestedSetNodeDao;
@@ -276,6 +281,20 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			@Override
 			public String format(MetricValue metricValue, ContentType contentType) {
 				return metricValueBusiness.format(metricValue);
+			}
+		});
+        registerFormatter(NestedSet.class, new AbstractFormatter<NestedSet>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(NestedSet nestedSet, ContentType contentType) {
+				return nestedSet.getIdentifier().toString();
+			}
+		});
+        registerFormatter(NestedSetNode.class, new AbstractFormatter<NestedSetNode>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(NestedSetNode nestedSetNode, ContentType contentType) {
+				return nestedSetNode.getLeftIndex()+Constant.CHARACTER_COMA.toString()+nestedSetNode.getRightIndex();
 			}
 		});
         
@@ -522,6 +541,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)MovementAction.class, (TypedBusiness)movementActionBusiness);
         beansMap.put((Class)FiniteStateMachineState.class, (TypedBusiness)finiteStateMachineStateBusiness);
         beansMap.put((Class)FiniteStateMachineStateLog.class, (TypedBusiness)finiteStateMachineStateLogBusiness);
+        beansMap.put((Class)NestedSetNode.class, (TypedBusiness)nestedSetNodeBusiness);
     }
     
     @Override
