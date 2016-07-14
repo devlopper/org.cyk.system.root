@@ -16,7 +16,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	private static final long serialVersionUID = -2964204372097468908L;
 
 	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
-		,readAllInclude,countAllInclude,readByGlobalIdentifiers,countByGlobalIdentifiers;
+		,readAllInclude,countAllInclude,readByGlobalIdentifiers,countByGlobalIdentifiers,executeDelete;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -52,6 +52,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy("identifier",Boolean.TRUE));
 			registerNamedQuery(readByNotClasses, _select().whereClassNotIn());
 		}
+		
+		registerNamedQuery(executeDelete, "DELETE FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
 	}
 	
 	protected Boolean readByClassEnabled(){
@@ -136,6 +138,11 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		Collection<Class<?>> classes = new ArrayList<>();
 		classes.add(aClass);
 		return countByNotClasses(classes);
+	}
+	
+	@Override
+	public void delete(Collection<IDENTIFIABLE> identifiables) {
+		namedQuery(executeDelete).parameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(identifiables));	
 	}
 	
 	/**/

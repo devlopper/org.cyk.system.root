@@ -5,6 +5,7 @@ import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_FR
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_ORDER_BY;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_SELECT;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COMPUTE;
+import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_EXECUTE;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COUNT;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_READ;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_SUM;
@@ -77,7 +78,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		for(Field field : namedQueriesFields)
 			//TODO use an array to hold those values
 			if(field.getName().startsWith(KW_NQ_READ) || field.getName().startsWith(KW_NQ_COUNT) 
-					|| field.getName().startsWith(KW_NQ_SUM) || field.getName().startsWith(KW_NQ_COMPUTE))
+					|| field.getName().startsWith(KW_NQ_SUM) || field.getName().startsWith(KW_NQ_COMPUTE) || field.getName().startsWith(KW_NQ_EXECUTE))
 				try {
 					FieldUtils.writeField(field, this, addPrefix(field.getName()), true);
 				} catch (IllegalAccessException e) {

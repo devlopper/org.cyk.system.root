@@ -76,8 +76,9 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	    if(businessBean==null){
 	        validationPolicy.validateCreate(anIdentifiable);
 	        return genericDao.create(anIdentifiable);
-        }else
-            return businessBean.create(anIdentifiable);   
+        }else{
+        	return businessBean.create(anIdentifiable); 
+        }
 	}
 	
 	@Override

@@ -70,24 +70,25 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		return dao.countByDetachedIdentifier(identifier);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Override
 	public NestedSetNode create(NestedSetNode node) {
 		if(node.getSet().getIdentifier()==null){//set not yet created
 			nestedSetDao.create(node.getSet());
 			logTrace("Set {} auto created",node.getSet());
 		}
-		//NestedSetNode root = null;	
 		if(node.getSet().getRoot()==null){//first node of the set
 			node.setParent(null);
 			node.getSet().setRoot(node);
 			node.setLeftIndex(NestedSetNode.FIRST_LEFT_INDEX);
 			node.setRightIndex(NestedSetNode.FIRST_RIGHT_INDEX);	
 		}else{
+			NestedSet set = node.getParent().getSet();
+			node.setSet(set);
 			NestedSetNode parent = node.getParent();
 			Integer parentRightIndex = parent.getRightIndex();
 			node.setLeftIndex(parentRightIndex);
 			node.setRightIndex(node.getLeftIndex()+1);
-			Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputedCandidate = dao.readBySetByLeftOrRightGreaterThanOrEqualTo(node.getSet(), parentRightIndex);
+			Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputedCandidate = dao.readBySetByLeftOrRightGreaterThanOrEqualTo(set, parentRightIndex);
 			Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputed = new ArrayList<>();
 			
 			nestedSetNodesWhereIndexesToBeRecomputed.add(parent);
@@ -96,55 +97,12 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 				// only one instance of parent must be handled to avoid inconsistent update
 				if(index.equals(node) || index.equals(parent)){
 					
-				}else{
-					//index.getSet().setRoot(root);
+				}else
 					nestedSetNodesWhereIndexesToBeRecomputed.add(index);
-				}
 			}
-			
-			System.out.println("TO REC : "+nestedSetNodesWhereIndexesToBeRecomputed);
-			for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed)
-				if(n.getParent()==null){
-					for(NestedSetNode root : nestedSetNodesWhereIndexesToBeRecomputed){
-						if(n.getSet().getRoot().equals(root)){
-							n.getSet().setRoot(root);
-							System.out.println("Root set : "+root);
-							break;
-						}
-					}
-				}else{
-					System.out.println("1 - N = "+n+" , P = " +n.getParent());
-					for(NestedSetNode p : nestedSetNodesWhereIndexesToBeRecomputed)
-						if(n.getParent().equals(p) || n.getSet().getRoot().equals(p)){
-							if(n.getParent().equals(p))
-								n.setParent(p);
-							if(n.getSet().getRoot().equals(p))
-								n.getSet().setRoot(p);
-							break;
-						}
-					System.out.println("2 - N = "+n+" , P = " +n.getParent());
-				}
-						
-			/*
-			for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed)
-				if(n.getParent()!=null && n.getParent().getParent()!=null)
-					for(NestedSetNode p : nestedSetNodesWhereIndexesToBeRecomputed)
-						if(n.getParent().getParent().equals(p)){
-							n.getParent().setParent(p);
-							break;
-						}
-			*/
 			logTrace("On create : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
-			for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
-				if(n.equals(node)){
-					
-				}else{
-					updateBoundariesGreaterThanOrEqualTo(n,Boolean.TRUE, parentRightIndex);
-					dao.update(n);
-					System.out.println("R : "+n.getSet().getRoot()+" , P : "+n.getParent());
-					logTrace("Node indexes {} recomputed",n);
-				}
-			}
+			dao.incrementLeftIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.TRUE, parentRightIndex), 2l);
+			dao.incrementRightIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.FALSE, parentRightIndex), 2l);
 		}
 		
 		node.setDetachedIdentifier(null);
@@ -159,20 +117,13 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		}else{
 			dao.update(node);
 			logTrace("Node {} updated",node);
-			
 		}
-		dao.update(node.getSet().getRoot());
-		System.out.println("NR : "+node.getSet().getRoot()+" , NP : "+node.getParent());
-		//debug(node.getParent().getParent());
-		//System.out.println("   ---   PARENT   ---");
-		//debug( dao.read(node.getParent().getIdentifier()) );
-		//((GenericDaoImpl)genericDao).getEntityManager().flush();
+		
 		return node;
 	}
 
 	@Override
 	public NestedSetNode delete(NestedSetNode node) {
-		genericDao.clear();
 		List<NestedSetNode> tree = new ArrayList<>(dao.readByParent(node));
 		Collections.reverse(tree);
 		tree.add(node);
@@ -191,7 +142,8 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			logTrace("{} deleted", n.getLastComputedLogMessage());
 		}
 		
-		genericDao.flush();
+		//dao.delete(tree);
+		
 		return node;
 	}
 	
@@ -199,12 +151,14 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		logTrace("On delete : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
 		
 		int step = subTreeNodesCount*2;
-		for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
+		/*for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
 			updateBoundaries(n,-step, n.getLeftIndex()>subTreeRootNodeRightIndex?null:false);//both bounds or right only
 			dao.update(n);
 			logTrace("Node indexes {} recomputed",n);
-		}
+		}*/
 		
+		//dao.incrementLeftIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.TRUE, subTreeRootNodeRightIndex), -step*1l);
+		dao.incrementRightIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.FALSE, subTreeRootNodeRightIndex), -step*1l);
 	}
 	
 	@Override
@@ -252,6 +206,13 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			updateBoundaries(node, sign*2, Boolean.TRUE);
 		if(node.getRightIndex()>=index)
 			updateBoundaries(node, sign*2, Boolean.FALSE);
+	}
+	private Collection<NestedSetNode> getWhereBoundariesGreaterThanOrEqualTo(Collection<NestedSetNode> nestedSetNodes,Boolean left,Integer index){
+		Collection<NestedSetNode> result = new ArrayList<>();
+		for(NestedSetNode nestedSetNode : nestedSetNodes)
+			if( (Boolean.TRUE.equals(left) && nestedSetNode.getLeftIndex()>=index) || (Boolean.FALSE.equals(left) && nestedSetNode.getRightIndex()>=index) )
+				result.add(nestedSetNode);
+		return result;
 	}
 	
 	private void updateBoundaries(NestedSetNode node,Integer step,Boolean left){

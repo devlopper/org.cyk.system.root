@@ -24,4 +24,6 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
     
     Collection<IDENTIFIABLE> readByNotClass(Class<?> aClass);
     Long countByNotClass(Class<?> aClass);
+    
+    void delete(Collection<IDENTIFIABLE> identifiables);
 }
