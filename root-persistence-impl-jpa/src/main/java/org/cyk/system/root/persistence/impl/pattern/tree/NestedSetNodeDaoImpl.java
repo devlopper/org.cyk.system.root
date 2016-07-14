@@ -19,7 +19,7 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	private String readByParent,countByParent,readByDetachedIdentifier,countByDetachedIdentifier;
 	private String readBySet,countBySet,readWhereDetachedIdentifierIsNullBySet,countWhereDetachedIdentifierIsNullBySet;
 	private String readBySetByLeftOrRightGreaterThanOrEqualTo;
-	private String incrementLeftIndex="incrementLeftIndex",incrementRightIndex="incrementRightIndex";
+	private String executeIncrementLeftIndex,executeIncrementRightIndex;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -32,8 +32,8 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 				 .append(String.format(" AND (r.%1$s >= :%2$s OR r.%3$s >= :%2$s)",NestedSetNode.FIELD_LEFT_INDEX, PARAMETER_INDEX,NestedSetNode.FIELD_RIGHT_INDEX))
 				 	.orderBy(NestedSetNode.FIELD_LEFT_INDEX,Boolean.TRUE)
 				);
-		 registerNamedQuery(incrementLeftIndex, "UPDATE NestedSetNode nestedSetNode SET nestedSetNode.leftIndex = nestedSetNode.leftIndex + :increment WHERE nestedSetNode.identifier IN :identifiers");
-		 registerNamedQuery(incrementRightIndex, "UPDATE NestedSetNode nestedSetNode SET nestedSetNode.rightIndex = :increment + nestedSetNode.rightIndex  WHERE nestedSetNode.identifier IN :identifiers");
+		 registerNamedQuery(executeIncrementLeftIndex, "UPDATE NestedSetNode nestedSetNode SET nestedSetNode.leftIndex = nestedSetNode.leftIndex + :increment WHERE nestedSetNode.identifier IN :identifiers");
+		 registerNamedQuery(executeIncrementRightIndex, "UPDATE NestedSetNode nestedSetNode SET nestedSetNode.rightIndex = :increment + nestedSetNode.rightIndex  WHERE nestedSetNode.identifier IN :identifiers");
 	}
 	
 	@Override
@@ -84,18 +84,18 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	}
 	
 	@Override
-	public void incrementLeftIndex(Collection<NestedSetNode> nestedSetNodes,Long increment) {
+	public void executeIncrementLeftIndex(Collection<NestedSetNode> nestedSetNodes,Long increment) {
 		if(nestedSetNodes==null || nestedSetNodes.isEmpty())
 			return ;
-		entityManager.createNamedQuery(incrementLeftIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes))
+		entityManager.createNamedQuery(executeIncrementLeftIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes))
 		.setParameter("increment", increment).executeUpdate();
 	}
 	
 	@Override
-	public void incrementRightIndex(Collection<NestedSetNode> nestedSetNodes,Long increment) {
+	public void executeIncrementRightIndex(Collection<NestedSetNode> nestedSetNodes,Long increment) {
 		if(nestedSetNodes==null || nestedSetNodes.isEmpty())
 			return ;
-		entityManager.createNamedQuery(incrementRightIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes)).setParameter("increment", increment).executeUpdate();
+		entityManager.createNamedQuery(executeIncrementRightIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes)).setParameter("increment", increment).executeUpdate();
 	}
 	
 	private static final String PARAMETER_NESTED_SET = "nestedSet";

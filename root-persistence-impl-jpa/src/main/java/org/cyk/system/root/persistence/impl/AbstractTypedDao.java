@@ -141,7 +141,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	}
 	
 	@Override
-	public void delete(Collection<IDENTIFIABLE> identifiables) {
+	public void executeDelete(Collection<IDENTIFIABLE> identifiables) {
 		namedQuery(executeDelete).parameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(identifiables));	
 	}
 	

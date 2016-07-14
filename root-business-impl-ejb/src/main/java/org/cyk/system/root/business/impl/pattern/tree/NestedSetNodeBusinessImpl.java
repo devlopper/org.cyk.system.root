@@ -101,8 +101,8 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 					nestedSetNodesWhereIndexesToBeRecomputed.add(index);
 			}
 			logTrace("On create : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
-			dao.incrementLeftIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.TRUE, parentRightIndex), 2l);
-			dao.incrementRightIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.FALSE, parentRightIndex), 2l);
+			dao.executeIncrementLeftIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.TRUE, parentRightIndex), 2l);
+			dao.executeIncrementRightIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.FALSE, parentRightIndex), 2l);
 		}
 		
 		node.setDetachedIdentifier(null);
@@ -151,14 +151,14 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		logTrace("On delete : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
 		
 		int step = subTreeNodesCount*2;
-		/*for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
+		for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
 			updateBoundaries(n,-step, n.getLeftIndex()>subTreeRootNodeRightIndex?null:false);//both bounds or right only
-			dao.update(n);
+			//dao.update(n); // I think it is not necessary! to be confirmed
 			logTrace("Node indexes {} recomputed",n);
-		}*/
+		}
 		
 		//dao.incrementLeftIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.TRUE, subTreeRootNodeRightIndex), -step*1l);
-		dao.incrementRightIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.FALSE, subTreeRootNodeRightIndex), -step*1l);
+		//dao.executeIncrementRightIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.FALSE, subTreeRootNodeRightIndex), -step*1l);
 	}
 	
 	@Override
@@ -200,13 +200,13 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 	
 	/**/
 	
-	private void updateBoundariesGreaterThanOrEqualTo(NestedSetNode node,Boolean increase,Integer index){
+	/*private void updateBoundariesGreaterThanOrEqualTo(NestedSetNode node,Boolean increase,Integer index){
 		int sign = increase?+1:-1;
 		if(node.getLeftIndex()>=index)
 			updateBoundaries(node, sign*2, Boolean.TRUE);
 		if(node.getRightIndex()>=index)
 			updateBoundaries(node, sign*2, Boolean.FALSE);
-	}
+	}*/
 	private Collection<NestedSetNode> getWhereBoundariesGreaterThanOrEqualTo(Collection<NestedSetNode> nestedSetNodes,Boolean left,Integer index){
 		Collection<NestedSetNode> result = new ArrayList<>();
 		for(NestedSetNode nestedSetNode : nestedSetNodes)
