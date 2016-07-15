@@ -40,6 +40,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private static final long serialVersionUID = 1L;
 	
 	public static StringMethod<AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_VALUE;
+	public static AbstractMethod<Party,AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_CREATED_BY;
+	public static AbstractMethod<Date,AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_CREATION_DATE;
+	public static AbstractMethod<Boolean,AbstractIdentifiable> GLOBAL_IDENTIFIER_BUILDABLE;
 	public static AbstractMethod<Object,GlobalIdentifier> PERSIST_GLOBAL_IDENTIFIER;
 	
 	@Id @GeneratedValue protected Long identifier;// Generation is customizable using mapping file
@@ -104,10 +107,12 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 				entry.getValue().onPrePersist(this);
 			}
 		}
-		
-		if(globalIdentifier==null && BUILD_GLOBAL_IDENTIFIER_VALUE!=null && PERSIST_GLOBAL_IDENTIFIER!=null){
+		if(globalIdentifier==null && GLOBAL_IDENTIFIER_BUILDABLE!=null && Boolean.TRUE.equals(GLOBAL_IDENTIFIER_BUILDABLE.execute(this)) 
+				&& BUILD_GLOBAL_IDENTIFIER_VALUE!=null && PERSIST_GLOBAL_IDENTIFIER!=null){
 			globalIdentifier = new GlobalIdentifier();
 			globalIdentifier.setIdentifier(BUILD_GLOBAL_IDENTIFIER_VALUE.execute(this));
+			globalIdentifier.setCreationDate(BUILD_GLOBAL_IDENTIFIER_CREATION_DATE.execute(this));
+			globalIdentifier.setCreatedBy(BUILD_GLOBAL_IDENTIFIER_CREATED_BY.execute(this));
 			PERSIST_GLOBAL_IDENTIFIER.execute(globalIdentifier);
 		}
 	}

@@ -153,7 +153,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		int step = subTreeNodesCount*2;
 		for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
 			updateBoundaries(n,-step, n.getLeftIndex()>subTreeRootNodeRightIndex?null:false);//both bounds or right only
-			//dao.update(n); // I think it is not necessary! to be confirmed
+			//dao.update(n); //TODO I think it is not necessary! to be confirmed
 			logTrace("Node indexes {} recomputed",n);
 		}
 		

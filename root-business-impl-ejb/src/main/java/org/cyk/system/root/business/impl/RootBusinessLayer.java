@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -37,6 +39,8 @@ import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
+import org.cyk.system.root.business.api.information.CommentBusiness;
+import org.cyk.system.root.business.api.information.CommentTypeBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
@@ -95,6 +99,8 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
+import org.cyk.system.root.model.information.Comment;
+import org.cyk.system.root.model.information.CommentType;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
@@ -215,6 +221,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private MovementCollectionBusiness movementCollectionBusiness;
     @Inject private MarkupLanguageBusiness markupLanguageBusiness;
     @Inject private NestedSetNodeBusiness nestedSetNodeBusiness;
+    @Inject private CommentTypeBusiness commentTypeBusiness;
+    @Inject private CommentBusiness commentBusiness;
     //@Inject private NestedSetBusiness nestedSetBusiness;
     
     @Inject private NestedSetDao nestedSetDao;
@@ -240,7 +248,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private RootBusinessTestHelper rootBusinessTestHelper;
     @Inject private ApplicationDao applicationDao;
     
-    //@Setter private Application application;
+    private Application application;
     @Setter private Long applicationIdentifier;
     
     //private Person personAdmin,personGuest;
@@ -390,6 +398,30 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				return globalIdentifier;
 			}
 		};
+		
+		AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_CREATED_BY = new AbstractMethod<Party, AbstractIdentifiable>() {
+			private static final long serialVersionUID = 153358109323471469L;
+			@Override
+			protected Party __execute__(AbstractIdentifiable identifiable) {
+				return identifiable.getProcessing().getParty() == null ? application : identifiable.getProcessing().getParty();
+			}
+		};
+		
+		AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_CREATION_DATE = new AbstractMethod<Date, AbstractIdentifiable>() {
+			private static final long serialVersionUID = 153358109323471469L;
+			@Override
+			protected Date __execute__(AbstractIdentifiable identifiable) {
+				return new Date();
+			}
+		};
+		
+		AbstractIdentifiable.GLOBAL_IDENTIFIER_BUILDABLE = new AbstractMethod<Boolean, AbstractIdentifiable>() {
+			private static final long serialVersionUID = 153358109323471469L;
+			@Override
+			protected Boolean __execute__(AbstractIdentifiable identifiable) {
+				return !ArrayUtils.contains(new Class<?>[]{/*Application.class,NestedSet.class,NestedSetNode.class*/}, identifiable.getClass());
+			}
+		};
     }
     
     @Override
@@ -405,6 +437,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         language();
         party();
         security();
+        
     }
     
     private void geography(){
@@ -542,6 +575,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)FiniteStateMachineState.class, (TypedBusiness)finiteStateMachineStateBusiness);
         beansMap.put((Class)FiniteStateMachineStateLog.class, (TypedBusiness)finiteStateMachineStateLogBusiness);
         beansMap.put((Class)NestedSetNode.class, (TypedBusiness)nestedSetNodeBusiness);
+        beansMap.put((Class)CommentType.class, (TypedBusiness)commentTypeBusiness);
+        beansMap.put((Class)Comment.class, (TypedBusiness)commentBusiness);
     }
     
     @Override
@@ -590,6 +625,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	if(applicationIdentifier==null)
     		return null;
     	return applicationDao.read(applicationIdentifier);
+    }
+    
+    public void setApplication(Application application){
+    	this.application = application;
+    	if(this.application==null)
+    		;
+    	else
+    		applicationIdentifier = this.application.getIdentifier();
     }
    
     @Override

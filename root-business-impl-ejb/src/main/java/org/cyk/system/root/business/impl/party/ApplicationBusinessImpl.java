@@ -93,7 +93,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 					smtpPropertiesBusiness.create(installation.getSmtpProperties());
 					installation.getApplication().setSmtpProperties(installation.getSmtpProperties());
 				}
-				RootBusinessLayer.getInstance().setApplicationIdentifier(dao.select().one().getIdentifier());
+				RootBusinessLayer.getInstance().setApplication(dao.select().one());
 				
 				for(AbstractIdentifiable identifiable : installation.getIdentifiables())
 					RootBusinessLayer.getInstance().getGenericBusiness().create(identifiable);

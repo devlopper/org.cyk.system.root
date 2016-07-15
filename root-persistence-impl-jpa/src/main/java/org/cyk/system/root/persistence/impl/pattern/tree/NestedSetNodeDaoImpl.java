@@ -88,16 +88,17 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 		if(nestedSetNodes==null || nestedSetNodes.isEmpty())
 			return ;
 		entityManager.createNamedQuery(executeIncrementLeftIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes))
-		.setParameter("increment", increment).executeUpdate();
+		.setParameter(PARAMETER_INCREMENT, increment).executeUpdate();
 	}
 	
 	@Override
 	public void executeIncrementRightIndex(Collection<NestedSetNode> nestedSetNodes,Long increment) {
 		if(nestedSetNodes==null || nestedSetNodes.isEmpty())
 			return ;
-		entityManager.createNamedQuery(executeIncrementRightIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes)).setParameter("increment", increment).executeUpdate();
+		entityManager.createNamedQuery(executeIncrementRightIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes)).setParameter(PARAMETER_INCREMENT, increment).executeUpdate();
 	}
 	
 	private static final String PARAMETER_NESTED_SET = "nestedSet";
+	private static final String PARAMETER_INCREMENT = "increment";
 
 }

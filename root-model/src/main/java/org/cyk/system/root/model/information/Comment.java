@@ -1,34 +1,31 @@
 package org.cyk.system.root.model.information;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.GlobalIdentifier;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Getter @Setter @Entity @NoArgsConstructor
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 public class Comment extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = 8167875049554197503L;
 
-	@ManyToOne private CommentCollection collection;
-	
 	@ManyToOne private CommentType type;
 	
-	@Column(length=1024 * 1) private String message;
+	@ManyToOne private GlobalIdentifier identifiableGlobalIdentifier;
 	
-	@Column(name="thedate") @Temporal(TemporalType.TIMESTAMP) private Date date;
-	
-	@ManyToOne private Person person;
+	@Column(nullable=false,length=1024 * 1) @NotNull private String message;
 	
 }
