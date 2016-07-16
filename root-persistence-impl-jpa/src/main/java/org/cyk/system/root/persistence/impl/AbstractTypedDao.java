@@ -5,6 +5,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.NoResultException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.GlobalIdentifier;
@@ -16,7 +18,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	private static final long serialVersionUID = -2964204372097468908L;
 
 	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
-		,readAllInclude,countAllInclude,readByGlobalIdentifiers,countByGlobalIdentifiers,executeDelete;
+		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -47,6 +49,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		registerNamedQuery(readAllInclude, _select().whereIdentifierIn());
 		registerNamedQuery(readAllExclude, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.identifier NOT IN :identifiers");
 		registerNamedQuery(readByGlobalIdentifiers, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier IN :identifiers");
+		registerNamedQuery(readByGlobalIdentifierValue, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier = :identifier");
 		
 		if(Boolean.TRUE.equals(readByClassEnabled())){
 			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy("identifier",Boolean.TRUE));
@@ -94,6 +97,11 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	public Long countByGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers) {
 		return namedQuery(countByGlobalIdentifiers,Long.class).parameterGlobalIdentifiers(globalIdentifiers).resultOne();
+	}
+	
+	@Override
+	public IDENTIFIABLE readByGlobalIdentifierValue(String globalIdentifier) {
+		return namedQuery(readByGlobalIdentifierValue).parameter(GlobalIdentifier.FIELD_IDENTIFIER,globalIdentifier).ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
 	@Override

@@ -14,12 +14,16 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class CommentDetails extends AbstractOutputDetails<Comment> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String commentType,identifiableGlobalIdentifier,message;
+	@Input @InputText private String date,party,commentType/*,identifiableGlobalIdentifier*/,message;
 	
 	public CommentDetails(Comment comment) {
 		super(comment);
+		if(comment.getGlobalIdentifier()!=null){
+			date = formatDateTime(comment.getGlobalIdentifier().getCreationDate());
+			party = formatUsingBusiness(comment.getGlobalIdentifier().getCreatedBy());
+		}
 		commentType = formatUsingBusiness(comment.getType());
-		identifiableGlobalIdentifier = comment.getIdentifiableGlobalIdentifier().getIdentifier();
+		//identifiableGlobalIdentifier = comment.getIdentifiableGlobalIdentifier().getIdentifier();
 		message = comment.getMessage();
 	}
 	

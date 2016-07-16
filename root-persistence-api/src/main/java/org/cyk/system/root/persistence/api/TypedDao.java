@@ -12,4 +12,6 @@ public interface TypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends Typ
 	
 	Collection<IDENTIFIABLE> readByGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers);
 	Long countByGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers);
+	
+	IDENTIFIABLE readByGlobalIdentifierValue(String globalIdentifier);
 }

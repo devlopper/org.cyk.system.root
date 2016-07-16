@@ -53,4 +53,5 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	public static final String LOG_FORMAT = "GID(%s,%s,%s,%s,%s,%s)";
 	
+	public static final String FIELD_IDENTIFIER = "identifier";
 }

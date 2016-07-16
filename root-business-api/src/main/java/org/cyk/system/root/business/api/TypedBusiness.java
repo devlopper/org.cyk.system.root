@@ -28,6 +28,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     Collection<IDENTIFIABLE> findByGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers);
 	Long countByGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers);
     
+	IDENTIFIABLE findByGlobalIdentifierValue(String globalIdentifier);
+	
     Collection<IDENTIFIABLE> findByClasses(Collection<Class<?>> classes);
     Long countByClasses(Collection<Class<?>> classes);
     
