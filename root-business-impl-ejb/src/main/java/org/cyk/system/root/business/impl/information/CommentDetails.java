@@ -15,7 +15,7 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class CommentDetails extends AbstractOutputDetails<Comment> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String date,party,commentType,message;
+	@Input @InputText private String date,party,type,message;
 	@Input(rendererStrategy=RendererStrategy.ADMINISTRATION) @InputText private String identifiableGlobalIdentifier;
 	
 	public CommentDetails(Comment comment) {
@@ -24,7 +24,7 @@ public class CommentDetails extends AbstractOutputDetails<Comment> implements Se
 			date = formatDateTime(comment.getGlobalIdentifier().getCreationDate());
 			party = formatUsingBusiness(comment.getGlobalIdentifier().getCreatedBy());
 		}
-		commentType = formatUsingBusiness(comment.getType());
+		type = formatUsingBusiness(comment.getType());
 		identifiableGlobalIdentifier = comment.getIdentifiableGlobalIdentifier().getIdentifier();
 		message = comment.getMessage();
 	}
