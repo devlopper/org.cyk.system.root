@@ -8,13 +8,15 @@ import lombok.Setter;
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.model.information.Comment;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.Input.RendererStrategy;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 @Getter @Setter
 public class CommentDetails extends AbstractOutputDetails<Comment> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String date,party,commentType/*,identifiableGlobalIdentifier*/,message;
+	@Input @InputText private String date,party,commentType,message;
+	@Input(rendererStrategy=RendererStrategy.ADMINISTRATION) @InputText private String identifiableGlobalIdentifier;
 	
 	public CommentDetails(Comment comment) {
 		super(comment);
@@ -23,7 +25,7 @@ public class CommentDetails extends AbstractOutputDetails<Comment> implements Se
 			party = formatUsingBusiness(comment.getGlobalIdentifier().getCreatedBy());
 		}
 		commentType = formatUsingBusiness(comment.getType());
-		//identifiableGlobalIdentifier = comment.getIdentifiableGlobalIdentifier().getIdentifier();
+		identifiableGlobalIdentifier = comment.getIdentifiableGlobalIdentifier().getIdentifier();
 		message = comment.getMessage();
 	}
 	
