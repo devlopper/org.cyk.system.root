@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,6 +27,8 @@ public class Comment extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = 8167875049554197503L;
 
+	public static final Collection<Class<? extends AbstractIdentifiable>> USER_DEFINED_COMMENTABLE_CLASSES = new HashSet<>();
+	
 	@ManyToOne private CommentType type;
 	
 	@ManyToOne private GlobalIdentifier identifiableGlobalIdentifier;
