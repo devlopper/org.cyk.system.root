@@ -3,7 +3,7 @@ package org.cyk.system.root.persistence.api;
 import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.GlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 
 public interface TypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends TypedPersistenceService<IDENTIFIABLE,Long> {
 	

@@ -10,10 +10,14 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
 	   
 	private static final long serialVersionUID = 8691254326402622637L;
 	
+	@SuppressWarnings("unused")
 	private static NestedSet setA,setB,set3;
 	private static NestedSetNode a,b;
+	@SuppressWarnings("unused")
 	private static NestedSetNode a1,a2,a3,a4,b1,b2,b3,b4;
+	@SuppressWarnings("unused")
 	private static NestedSetNode a11,a12,a13,a14,a21,a22,a23,a24,a31,a32,a33,a34,a41,a42,a43,a44;
+	@SuppressWarnings("unused")
 	private static NestedSetNode a111,a112,a113,a114,a121,a122,a123,a124,a131,a132,a133,a134,a141,a142,a143,a144
 		,a211,a212,a213,a214,a221,a222,a223,a224,a231,a232,a233,a234,a241,a242,a243,a244
 		,a311,a312,a313,a314,a321,a322,a323,a324,a331,a332,a333,a334,a341,a342,a343,a344
@@ -192,7 +196,7 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
     private NestedSetNode createChild(NestedSetNode parent){
 		return nestedSetNodeBusiness.create(new NestedSetNode(parent.getSet(), nestedSetNodeBusiness.find(parent.getIdentifier())));
 	}
-	
+    @SuppressWarnings("unused")
     private NestedSetNode delete(NestedSetNode node){
 		return nestedSetNodeBusiness.delete(nestedSetNodeBusiness.find(node.getIdentifier()));
 	}
@@ -217,7 +221,7 @@ public class NestedSetBusinessIT extends AbstractBusinessIT {
     	assertEquals("Attached node count", expectedAttachedNodeCount, attachedNodeCount);
 		assertEquals("Set node count", expectedSetNodeCount, setNodeCount);
 	}
-    
+    @SuppressWarnings("unused")
     private void showChildren(NestedSetNode node){
     	node =  nestedSetNodeBusiness.find(node.getIdentifier());
 		System.out.println("Children of "+node+" = "+nestedSetNodeBusiness.findByParent(node));

@@ -1,4 +1,4 @@
-package org.cyk.system.root.model;
+package org.cyk.system.root.model.globalidentification;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +14,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.utility.common.Constant;
 

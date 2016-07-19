@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.GlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 
 
 public class Utils {

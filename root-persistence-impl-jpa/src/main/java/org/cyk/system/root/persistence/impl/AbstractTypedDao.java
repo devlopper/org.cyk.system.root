@@ -9,7 +9,7 @@ import javax.persistence.NoResultException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.GlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
 import org.cyk.system.root.persistence.api.TypedDao;
 

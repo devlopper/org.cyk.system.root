@@ -5,10 +5,7 @@ import java.util.Collection;
 import org.cyk.system.root.business.impl.geography.PhoneNumberTypeBusinessImpl;
 import org.cyk.system.root.business.impl.mathematics.IntervalCollectionBusinessImpl;
 import org.cyk.system.root.business.impl.mathematics.MetricCollectionBusinessImpl;
-import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.PhoneNumberType;
-import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,17 +48,17 @@ public class InstanciationBusinessUT extends AbstractBusinessUT {
 	
 	@Test
 	public void locality() {
-		ObjectFieldValues objectFieldValues = new ObjectFieldValues(Locality.class).set(Locality.FIELD_CODE, "MonCOde");
+		//ObjectFieldValues objectFieldValues = new ObjectFieldValues(Locality.class).set(Locality.FIELD_CODE, "MonCOde");
 	}
 	
 	@Test
 	public void party() {
-		ObjectFieldValues objectFieldValues = new ObjectFieldValues(Party.class).set(Party.FIELD_CODE, "MonCOde");
+		//ObjectFieldValues objectFieldValues = new ObjectFieldValues(Party.class).set(Party.FIELD_CODE, "MonCOde");
 	}
 	
 	@Test
 	public void person() {
-		ObjectFieldValues objectFieldValues = new ObjectFieldValues(Person.class).set(Person.FIELD_CODE, "MonCOde");
+		//ObjectFieldValues objectFieldValues = new ObjectFieldValues(Person.class).set(Person.FIELD_CODE, "MonCOde");
 	}
 	
 	/**/

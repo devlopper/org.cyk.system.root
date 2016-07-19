@@ -22,10 +22,12 @@ public class NestedSetPersistenceIT extends AbstractPersistenceIT {
 		return deployment(new Class<?>[]{NestedSet.class,NestedSetNode.class,AbstractDataTreeNode.class}).getArchive();
 	} 
 	
+	@SuppressWarnings("unused")
 	private static NestedSet setA,set2,set3;
 	private static NestedSetNode a;
 	private static NestedSetNode a1,a2,a3,a4;
 	private static NestedSetNode a11,a12,a13,a14,a21,a22,a23,a24,a31,a32,a33,a34,a41,a42,a43,a44;
+	@SuppressWarnings("unused")
 	private static NestedSetNode a111,a112,a113,a114,a121,a122,a123,a124,a131,a132,a133,a134,a141,a142,a143,a144
 		,a211,a212,a213,a214,a221,a222,a223,a224,a231,a232,a233,a234,a241,a242,a243,a244
 		,a311,a312,a313,a314,a321,a322,a323,a324,a331,a332,a333,a334,a341,a342,a343,a344

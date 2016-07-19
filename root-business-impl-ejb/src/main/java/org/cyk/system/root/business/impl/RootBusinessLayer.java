@@ -31,6 +31,7 @@ import org.cyk.system.root.business.api.event.EventMissedReasonBusiness;
 import org.cyk.system.root.business.api.event.EventParticipationBusiness;
 import org.cyk.system.root.business.api.event.EventTypeBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
+import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.file.TagBusiness;
 import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
@@ -81,7 +82,6 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.ContentType;
-import org.cyk.system.root.model.GlobalIdentifier;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventMissed;
 import org.cyk.system.root.model.event.EventMissedReason;
@@ -89,6 +89,7 @@ import org.cyk.system.root.model.event.EventType;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.file.Tag;
 import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGenerator;
@@ -99,6 +100,7 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.information.Comment;
 import org.cyk.system.root.model.information.CommentType;
 import org.cyk.system.root.model.language.Language;
@@ -233,6 +235,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private FiniteStateMachineStateDao finiteStateMachineStateDao;
     @Inject private FiniteStateMachineStateLogBusiness finiteStateMachineStateLogBusiness;
     @Inject private FiniteStateMachineAlphabetBusiness finiteStateMachineAlphabetBusiness;
+    @Inject private FileIdentifiableGlobalIdentifierBusiness fileIdentifiableGlobalIdentifierBusiness;
     
     @Inject private RoleDao roleDao;
     @Inject private NotificationTemplateDao notificationTemplateDao;
@@ -577,6 +580,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)NestedSetNode.class, (TypedBusiness)nestedSetNodeBusiness);
         beansMap.put((Class)CommentType.class, (TypedBusiness)commentTypeBusiness);
         beansMap.put((Class)Comment.class, (TypedBusiness)commentBusiness);
+        beansMap.put((Class)FileIdentifiableGlobalIdentifier.class, (TypedBusiness)fileIdentifiableGlobalIdentifierBusiness);
     }
     
     @Override

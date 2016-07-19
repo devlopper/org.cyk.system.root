@@ -7,12 +7,9 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
-import org.junit.Assert;
 
 public class GeographyBusinessIT extends AbstractBusinessIT {
 	   
@@ -24,14 +21,20 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
 	@Inject private LocalityDao localityDao;  
 	
 	private LocalityType continent,country,state,region,department,city;
+	@SuppressWarnings("unused")
 	private Locality africa,america;
+	@SuppressWarnings("unused")
 	private Locality coteDivoire,burkinaFaso,ghana,benin;
+	@SuppressWarnings("unused")
 	private Locality coteDivoireNorthState,coteDivoireSouthState,coteDivoireEastState,coteDivoireWestState
 		,burkinanFasoNorthState,burkinanFasoSouthState,burkinanFasoEastState,burkinanFasoWestState
 		,ghanaNorthState,ghanaSouthState,ghanaEastState,ghanaWestState
 		,beninNorthState,beninSouthState,beninEastState,beninWestState;
+	@SuppressWarnings("unused")
 	private Locality coteDivoireSouthStateLaguneRegion,coteDivoireSouthStateSassandraRegion;
+	@SuppressWarnings("unused")
 	private Locality coteDivoireSouthStateLaguneRegionDepartment1,coteDivoireSouthStateLaguneRegionDepartment2,coteDivoireSouthStateLaguneRegionDepartment3;
+	@SuppressWarnings("unused")
 	private Locality abidjan,bonoua,sassandra,sanpedro;
 	
 	@Override
@@ -148,12 +151,14 @@ public class GeographyBusinessIT extends AbstractBusinessIT {
     	localityBusiness.delete(locality);
     }
     
+    @SuppressWarnings("unused")
     private void move(Locality locality,Locality parent){
     	locality = localityBusiness.find(locality.getIdentifier());
     	parent = localityBusiness.find(parent.getIdentifier());
     	localityBusiness.move(locality, parent);
     }
     
+    @SuppressWarnings("unused")
     private void showChildren(Locality locality){
     	locality = localityBusiness.find(locality.getIdentifier());
     	List<Locality> localities = new ArrayList<>(localityBusiness.findByParent(locality));
