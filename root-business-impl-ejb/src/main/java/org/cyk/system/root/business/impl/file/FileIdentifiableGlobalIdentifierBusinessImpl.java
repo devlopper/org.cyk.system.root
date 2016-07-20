@@ -28,4 +28,16 @@ public class FileIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGl
 		return super.create(fileIdentifiableGlobalIdentifier);
 	}
 	
+	@Override
+	public FileIdentifiableGlobalIdentifier update(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier) {
+		RootBusinessLayer.getInstance().getFileBusiness().update(fileIdentifiableGlobalIdentifier.getFile());
+		return super.update(fileIdentifiableGlobalIdentifier);
+	}
+	
+	@Override
+	public FileIdentifiableGlobalIdentifier delete(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier) {
+		RootBusinessLayer.getInstance().getFileBusiness().delete(fileIdentifiableGlobalIdentifier.getFile());
+		return super.delete(fileIdentifiableGlobalIdentifier);
+	}
+	
 }

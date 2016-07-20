@@ -17,7 +17,8 @@ public class FileIdentifiableGlobalIdentifierDetails extends AbstractJoinGlobalI
 	private static final long serialVersionUID = -4741435164709063863L;
 	
 	@Input @InputText private String description;
-	@Input @InputFile private File file;
+	@Input @InputFile 
+	private File file;
 	
 	public FileIdentifiableGlobalIdentifierDetails(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier) {
 		super(fileIdentifiableGlobalIdentifier);
