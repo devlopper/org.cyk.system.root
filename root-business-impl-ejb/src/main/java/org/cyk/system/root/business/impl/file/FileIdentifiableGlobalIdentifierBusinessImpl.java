@@ -37,6 +37,8 @@ public class FileIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGl
 	@Override
 	public FileIdentifiableGlobalIdentifier delete(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier) {
 		RootBusinessLayer.getInstance().getFileBusiness().delete(fileIdentifiableGlobalIdentifier.getFile());
+		fileIdentifiableGlobalIdentifier.setFile(null);
+		fileIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(null);
 		return super.delete(fileIdentifiableGlobalIdentifier);
 	}
 	
