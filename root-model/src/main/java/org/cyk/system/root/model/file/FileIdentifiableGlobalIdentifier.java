@@ -46,10 +46,10 @@ public class FileIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifi
 	public static void define(Class<? extends AbstractIdentifiable> aClass){
 		define(FileIdentifiableGlobalIdentifier.class, aClass);
 	}
-	public static Boolean isUserDefined2(Class<?> aClass){
+	public static Boolean isUserDefinedClass(Class<?> aClass){
 		return isUserDefinedClass(FileIdentifiableGlobalIdentifier.class,aClass);
 	}
-	public static Boolean isUserDefined3(Object object){
+	public static Boolean isUserDefinedObject(Object object){
 		return isUserDefinedObject(FileIdentifiableGlobalIdentifier.class,object);
 	}
 	

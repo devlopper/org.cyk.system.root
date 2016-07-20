@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.globalidentification.AbstractJoinGlobalIdentifierBusinessImpl;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
@@ -18,6 +19,13 @@ public class FileIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGl
 	@Inject
 	public FileIdentifiableGlobalIdentifierBusinessImpl(FileIdentifiableGlobalIdentifierDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	public FileIdentifiableGlobalIdentifier create(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier) {
+		if(fileIdentifiableGlobalIdentifier.getFile().getIdentifier()==null)
+			RootBusinessLayer.getInstance().getFileBusiness().create(fileIdentifiableGlobalIdentifier.getFile());
+		return super.create(fileIdentifiableGlobalIdentifier);
 	}
 	
 }

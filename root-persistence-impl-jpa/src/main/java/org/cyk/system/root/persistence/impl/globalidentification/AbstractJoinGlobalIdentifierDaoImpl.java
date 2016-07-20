@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
-import org.cyk.system.root.model.information.Comment.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdentifierDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
@@ -31,7 +30,7 @@ public abstract class AbstractJoinGlobalIdentifierDaoImpl<IDENTIFIABLE extends A
 	@Override
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
-		queryWrapper.parameter(PARAMETER_GLOBAL_IDENTIFIERS, Utils.getGlobalIdentfierValues(((SearchCriteria)searchCriteria).getGlobalIdentifiers()));
+		queryWrapper.parameter(PARAMETER_GLOBAL_IDENTIFIERS, Utils.getGlobalIdentfierValues(((AbstractJoinGlobalIdentifier.AbstractSearchCriteria)searchCriteria).getGlobalIdentifiers()));
 	}
 	
 	@SuppressWarnings("unchecked")

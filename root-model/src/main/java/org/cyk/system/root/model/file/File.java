@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -49,7 +50,7 @@ public class File extends AbstractIdentifiable implements Serializable{
 	
 	@Override
 	public String toString() {
-		return identifier==null?super.toString():((uri==null?(extension):(uri.toString()))+"("+identifier+")");
+		return identifier==null?super.toString():((uri==null?(extension+Constant.CHARACTER_LEFT_PARENTHESIS+mime+Constant.CHARACTER_RIGHT_PARENTHESIS):(uri.toString()))+"("+identifier+")");
 	}
 	
 }

@@ -66,7 +66,8 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	}
 	
 	protected static Boolean isUserDefinedClass(Class<?> moduleClass,Class<?> aClass){
-		return USER_DEFINED_JOINABLE_CLASSES.get(moduleClass).contains(aClass);
+		Collection<Class<? extends AbstractIdentifiable>> collection = USER_DEFINED_JOINABLE_CLASSES.get(moduleClass);
+		return collection!=null && collection.contains(aClass);
 	}
 	protected static Boolean isUserDefinedObject(Class<?> moduleClass,Object object){
 		return object!=null && Boolean.TRUE.equals(isUserDefinedClass(moduleClass,object.getClass()));
