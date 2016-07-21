@@ -9,12 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -65,12 +67,18 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public String findMime(String extension) {
-        try {
-            return Files.probeContentType(Paths.get("file."+extension));
+        String mime = null;
+        String fileName = "file."+extension;
+    	try {
+            mime = Files.probeContentType(Paths.get(fileName));
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
+    	if(StringUtils.isBlank(mime))
+    		mime = MimetypesFileTypeMap.getDefaultFileTypeMap().getContentType(fileName);
+    	if(StringUtils.isBlank(mime))
+    		mime = URLConnection.guessContentTypeFromName(fileName);
+    	return mime;
     }
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
