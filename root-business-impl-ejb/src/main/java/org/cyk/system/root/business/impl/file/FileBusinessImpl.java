@@ -55,8 +55,11 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	public void process(File file, byte[] bytes, String name) {
     	file.setBytes(bytes);
         file.setExtension(findExtension(name));
-        if(file.getExtension()!=null){
+        if(file.getExtension()==null){
+        	file.setMime(null);
+        }else{
             file.setExtension(file.getExtension().toLowerCase());//better use lower case because of mime type lookup
+            file.setMime(findMime(file.getExtension()));
         }
 	}
 
@@ -138,5 +141,9 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 			inputStreams.add(findInputStream(file));
 		return streamBusiness.merge(inputStreams, fileExtension);
 	}
-	
+
+	@Override
+	public Boolean isImage(File file) {
+		return file!=null && StringUtils.startsWith(file.getMime(), Mime.IMAGE);
+	}
 }

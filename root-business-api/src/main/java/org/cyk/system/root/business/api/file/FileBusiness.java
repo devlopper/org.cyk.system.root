@@ -39,4 +39,9 @@ public interface FileBusiness extends TypedBusiness<File> {
     
     URI findEmbeddedUri(File file);
 
+    Boolean isImage(File file);
+    
+    public static interface Mime {
+    	String IMAGE = "image";
+    }
 }
