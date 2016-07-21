@@ -15,25 +15,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//@Entity
 @Getter @Setter @NoArgsConstructor @MappedSuperclass
-public class AbstractDataTree<TYPE extends DataTreeType> extends AbstractDataTreeNode implements Serializable {
+public class AbstractDataTree<TYPE extends AbstractDataTreeType> extends AbstractDataTreeNode implements Serializable {
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	
-	@Input
-	@InputChoice
-	@InputOneChoice
-	@InputOneCombo
+	@Input @InputChoice @InputOneChoice @InputOneCombo
 	@ManyToOne @NotNull
 	protected TYPE type;
-	
-	//@Transient protected Class<TYPE> __typeClass__;
-	
-	{
-	    //__typeClass__ = (Class<TYPE>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-	}
-	
+
 	public AbstractDataTree(AbstractDataTree<TYPE> parent,String code) {
 		super(parent,code);
 		setParent(parent);
@@ -49,4 +39,7 @@ public class AbstractDataTree<TYPE extends DataTreeType> extends AbstractDataTre
 		return this;
 	}
 	
+	/**/
+	
+	public static final String FIELD_TYPE = "type";
 }

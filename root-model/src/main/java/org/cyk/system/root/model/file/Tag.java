@@ -8,14 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 
 @Getter @Setter @NoArgsConstructor @Entity 
-public class Tag extends DataTreeType implements Serializable  {
+public class Tag extends AbstractDataTreeType implements Serializable  {
 
 	private static final long serialVersionUID = -4876159772208660975L;
 
-	public Tag(DataTreeType parent, String code,String label) {
+	public Tag(Tag parent, String code,String label) {
         super(parent, code,label);
     }    
     

@@ -4,10 +4,10 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeDao;
 
-public abstract class AbstractDataTreeBusinessImpl<ENUMERATION extends AbstractDataTree<TYPE>,DAO extends AbstractDataTreeDao<ENUMERATION,TYPE>,TYPE extends DataTreeType>  
+public abstract class AbstractDataTreeBusinessImpl<ENUMERATION extends AbstractDataTree<TYPE>,DAO extends AbstractDataTreeDao<ENUMERATION,TYPE>,TYPE extends AbstractDataTreeType>  
     extends AbstractDataTreeNodeBusinessImpl<ENUMERATION, DAO> implements AbstractDataTreeBusiness<ENUMERATION,TYPE> {
 
 	private static final long serialVersionUID = -2471233478597735673L;

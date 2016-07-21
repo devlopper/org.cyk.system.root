@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.utility.common.annotation.user.interfaces.FieldOverride;
+import org.cyk.utility.common.annotation.FieldOverride;
 
-@Getter @Setter @NoArgsConstructor @Entity @FieldOverride(name="type",type=LocalityType.class)
+@Getter @Setter @NoArgsConstructor @Entity @FieldOverride(name=AbstractDataTree.FIELD_TYPE,type=LocalityType.class)
 public class Locality extends AbstractDataTree<LocalityType> implements Serializable  {
 
 	private static final long serialVersionUID = -6128937819261060725L;

@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.network.UniformResourceLocator;
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 
 @Getter @Setter @NoArgsConstructor @Entity 
-public class MenuItem extends DataTreeType implements Serializable  {
+public class MenuItem extends AbstractDataTreeType implements Serializable  {
 
 	private static final long serialVersionUID = -6838401709866343401L;
 
 	@ManyToOne private UniformResourceLocator uniformResourceLocator;
 	
-	public MenuItem(DataTreeType parent, String code,String label) {
+	public MenuItem(MenuItem parent, String code,String label) {
 		super(parent, code,label);
 	}
 

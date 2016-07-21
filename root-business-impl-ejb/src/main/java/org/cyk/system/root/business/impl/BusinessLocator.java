@@ -4,33 +4,23 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
+import lombok.Getter;
+
 import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import lombok.Getter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class BusinessLocator extends AbstractBean implements Serializable {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(BusinessLocator.class);
-	
 	private static final long serialVersionUID = -6705685474869857841L;
 	private static BusinessLocator INSTANCE;
     @Getter private final Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> typedBusinessBeanMap = new HashMap<>(); 
-    
-    @Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
     
     @Override
     protected void initialisation() {
@@ -42,17 +32,17 @@ public class BusinessLocator extends AbstractBean implements Serializable {
         typedBusinessBeanMap.putAll(beansMap);
     }
     
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({ })
     public TypedBusiness<AbstractIdentifiable> locate(Class<? extends AbstractIdentifiable> beanClass){
         TypedBusiness<AbstractIdentifiable> businessBean = typedBusinessBeanMap.get(beanClass);
-        if(businessBean==null){
+        /*if(businessBean==null){
             if(DataTreeType.class.isAssignableFrom(beanClass)){
             	businessBean = (AbstractEnumerationBusiness)dataTreeTypeBusiness;
             }else if(AbstractDataTree.class.isAssignableFrom(beanClass)){
                 ;
             }
-        }
-        logDebug("Business service of bean {} is {}", beanClass.getName(),businessBean==null?"NULL":businessBean.getClass().getName());
+        }*/
+        logDebug("Business service of bean {} is {}", beanClass.getName(),businessBean==null?Constant.EMPTY_STRING:businessBean.getClass().getName());
         return businessBean;
     }
     
@@ -64,10 +54,5 @@ public class BusinessLocator extends AbstractBean implements Serializable {
     public static BusinessLocator getInstance() {
         return INSTANCE;
     }
-    
-    @Override
-	protected Logger __logger__() {
-		return LOGGER;
-	}
     
 }
