@@ -14,13 +14,16 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 /**
  * A join between a data tree and an identifiable
  * @author Christian Yao Komenan
  *
  */
-@Getter @Setter @Entity  @NoArgsConstructor 
+@Getter @Setter @Entity  @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class DataTreeIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;

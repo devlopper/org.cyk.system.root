@@ -66,6 +66,9 @@ import org.cyk.system.root.business.api.party.person.JobFunctionBusiness;
 import org.cyk.system.root.business.api.party.person.JobTitleBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonTitleBusiness;
+import org.cyk.system.root.business.api.pattern.tree.DataTreeBusiness;
+import org.cyk.system.root.business.api.pattern.tree.DataTreeIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.api.security.LicenseBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
@@ -125,6 +128,9 @@ import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.root.model.pattern.tree.DataTree;
+import org.cyk.system.root.model.pattern.tree.DataTreeIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.security.License;
@@ -225,6 +231,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private NestedSetNodeBusiness nestedSetNodeBusiness;
     @Inject private CommentTypeBusiness commentTypeBusiness;
     @Inject private CommentBusiness commentBusiness;
+    @Inject private DataTreeBusiness dataTreeBusiness;
+    @Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
+    @Inject private DataTreeIdentifiableGlobalIdentifierBusiness dataTreeIdentifiableGlobalIdentifierBusiness;
     //@Inject private NestedSetBusiness nestedSetBusiness;
     
     @Inject private NestedSetDao nestedSetDao;
@@ -581,6 +590,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)CommentType.class, (TypedBusiness)commentTypeBusiness);
         beansMap.put((Class)Comment.class, (TypedBusiness)commentBusiness);
         beansMap.put((Class)FileIdentifiableGlobalIdentifier.class, (TypedBusiness)fileIdentifiableGlobalIdentifierBusiness);
+        beansMap.put((Class)DataTree.class, (TypedBusiness)dataTreeBusiness);
+        beansMap.put((Class)DataTreeType.class, (TypedBusiness)dataTreeTypeBusiness);
+        beansMap.put((Class)DataTreeIdentifiableGlobalIdentifier.class, (TypedBusiness)dataTreeIdentifiableGlobalIdentifierBusiness);
     }
     
     @Override
