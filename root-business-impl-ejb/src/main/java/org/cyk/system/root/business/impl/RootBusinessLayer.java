@@ -40,6 +40,7 @@ import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
+import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.information.CommentBusiness;
 import org.cyk.system.root.business.api.information.CommentTypeBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
@@ -234,6 +235,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private DataTreeBusiness dataTreeBusiness;
     @Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
     @Inject private DataTreeIdentifiableGlobalIdentifierBusiness dataTreeIdentifiableGlobalIdentifierBusiness;
+    @Inject private GlobalIdentifierBusiness globalIdentifierBusiness;
     //@Inject private NestedSetBusiness nestedSetBusiness;
     
     @Inject private NestedSetDao nestedSetDao;

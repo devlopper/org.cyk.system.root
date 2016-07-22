@@ -3,6 +3,7 @@ package org.cyk.system.root.business.api.security;
 import java.util.Collection;
 
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
@@ -39,6 +40,11 @@ public interface UserAccountBusiness extends TypedBusiness<UserAccount> {
 	UserAccount instanciateOne(Party party,Role...roles);
 	Collection<UserAccount> instanciateManyFromParties(Collection<Party> parties,Role...roles);
 	Collection<UserAccount> instanciateManyFromActors(Collection<? extends AbstractActor> actors,Role...roles);
+	
+	Boolean canCreate(UserAccount userAccount,Class<? extends AbstractIdentifiable> aClass);
+	Boolean canRead(UserAccount userAccount,AbstractIdentifiable identifiable);
+	Boolean canUpdate(UserAccount userAccount,AbstractIdentifiable identifiable);
+	Boolean canDelete(UserAccount userAccount,AbstractIdentifiable identifiable);
 	
 	/**/
 	
