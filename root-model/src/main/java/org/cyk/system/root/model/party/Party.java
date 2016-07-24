@@ -33,15 +33,17 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	/**
 	 * Business code
 	 */
+	/*
 	@NotNull(groups=org.cyk.utility.common.validation.System.class)
 	@Column(nullable=false,unique=true)
 	protected String code;
-	
+	*/
+	/*
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable=false)
 	@NotNull(groups={org.cyk.utility.common.validation.System.class})
 	protected Date creationDate;
-	
+	*/
 	@NotNull(groups=Client.class)
 	@Column(nullable=false)
 	protected String name;
@@ -49,9 +51,11 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	/**
 	 * This is an image which visually represent this party
 	 */
+	/*
 	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
-    protected File image;
-	
+	@Deprecated
+    protected File image;//TODO to be removed to use globalIdentifier instead
+	*/
 	@Temporal(TemporalType.DATE) protected Date birthDate;
 	
 	@OneToOne protected ContactCollection contactCollection;
@@ -66,10 +70,10 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 		return name;
 	}
 
-	public static final String FIELD_CODE = "code";
+	//public static final String FIELD_CODE = "code";
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_BIRTH_DATE = "birthDate";
-	public static final String FIELD_IMAGE = "image";
+	//public static final String FIELD_IMAGE = "image";
 	
 	/**/
 	

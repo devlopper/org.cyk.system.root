@@ -10,6 +10,8 @@ public interface GlobalIdentifierBusiness {
 	Boolean isUpdatable(AbstractIdentifiable identifiable);
 	Boolean isDeletable(AbstractIdentifiable identifiable);
 	
+	GlobalIdentifier create(GlobalIdentifier globalIdentifier);
 	GlobalIdentifier update(GlobalIdentifier globalIdentifier);
+	
 	
 }

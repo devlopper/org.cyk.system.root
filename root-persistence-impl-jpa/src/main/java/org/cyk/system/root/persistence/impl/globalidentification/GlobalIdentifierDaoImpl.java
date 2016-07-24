@@ -11,6 +11,12 @@ public class GlobalIdentifierDaoImpl implements GlobalIdentifierDao {
 	@PersistenceContext private EntityManager entityManager;
 	
 	@Override
+	public GlobalIdentifier create(GlobalIdentifier globalIdentifier) {
+		entityManager.persist(globalIdentifier);
+		return globalIdentifier;
+	}
+	
+	@Override
 	public GlobalIdentifier update(GlobalIdentifier globalIdentifier) {
 		return entityManager.merge(globalIdentifier);
 	}

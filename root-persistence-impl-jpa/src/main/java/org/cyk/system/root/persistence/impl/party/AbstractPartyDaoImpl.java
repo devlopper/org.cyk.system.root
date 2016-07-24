@@ -5,7 +5,9 @@ import java.util.Collection;
 
 import javax.persistence.NoResultException;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
@@ -21,7 +23,8 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
-		registerNamedQuery(readByCode, _select().where(Party.FIELD_CODE));
+		registerNamedQuery(readByCode, _select().where(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE),
+				GlobalIdentifier.FIELD_CODE));
 		registerNamedQuery(readByEmail, "SELECT party FROM "+clazz.getSimpleName()+" party WHERE EXISTS("
 				+ " SELECT email FROM ElectronicMail email WHERE email.address = :"+ElectronicMail.FIELD_ADDRESS+" AND email.collection = party.contactCollection"
 				+ ")");
@@ -29,7 +32,7 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 	
 	@Override
 	public PARTY readByCode(String code) {
-		return namedQuery(readByCode).parameter(Party.FIELD_CODE, code).ignoreThrowable(NoResultException.class).resultOne();
+		return namedQuery(readByCode).parameter(GlobalIdentifier.FIELD_CODE, code).ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
 	@Override

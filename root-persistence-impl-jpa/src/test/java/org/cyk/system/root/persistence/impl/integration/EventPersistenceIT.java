@@ -131,8 +131,6 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	
 	private Person person(String code,String firstName,String lastName,String email){
 		Person person = new Person(firstName, lastName);
-		person.setCode(code);
-		person.setCreationDate(new Date());
 		create(new ElectronicMail(person.getContactCollection(), email));
 		create(person.getContactCollection());
 		create(person);

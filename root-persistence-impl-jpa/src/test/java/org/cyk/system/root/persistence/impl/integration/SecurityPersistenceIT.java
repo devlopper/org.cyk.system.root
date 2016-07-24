@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
@@ -111,10 +110,6 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 	private void createAccount(String personName,String username,String password,String email,Role...roles){
 		ElectronicMail electronicMail = new ElectronicMail(email);
 		Person person = new Person(personName, null);
-		person.setCode(RandomStringUtils.randomAlphabetic(8));
-		//person.setContactCollection(null);
-		//person.getContactCollection().getElectronicMails().add(electronicMail);
-		person.setCreationDate(new Date());
 		electronicMail.setCollection(person.getContactCollection());
 		
 		create(person.getContactCollection());

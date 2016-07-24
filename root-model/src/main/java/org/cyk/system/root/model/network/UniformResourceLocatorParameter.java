@@ -183,7 +183,7 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 	public static final String FORM_MODEL = "formmodel";
 	public static final String FORM_MODEL_ACTOR = "afm";
 	public static final String CLASS = "clazz";
-	public static final String IDENTIFIABLE = "identifiable";
+	public static final String IDENTIFIABLE = "identifiable";//TODO to be changed to IDENTIFIER
 	public static final String WINDOW="windowParam";
 	public static final String FILE_EXTENSION="fileExtensionParam";
 	public static final String PRINT="print";

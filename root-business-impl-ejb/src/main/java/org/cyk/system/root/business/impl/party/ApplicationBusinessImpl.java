@@ -207,6 +207,14 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
     	return null;
     }
 
+    @Override
+    public BusinessEntityInfos findBusinessEntityInfos(String identifier) {
+    	for(BusinessEntityInfos b : findBusinessEntitiesInfos())
+    		if(b.getIdentifier().equals(identifier))
+    			return b;
+    	return null;
+    }
+    
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Collection<BusinessEntityInfos> findBusinessEntitiesInfos(CrudStrategy crudStrategy) {
         Collection<BusinessEntityInfos> l = new HashSet<>();

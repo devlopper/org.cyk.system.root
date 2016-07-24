@@ -13,9 +13,6 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -151,7 +148,6 @@ import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.persistence.api.security.RoleDao;
-import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
@@ -159,6 +155,9 @@ import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -404,12 +403,19 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}
 		};
 		
-		AbstractIdentifiable.PERSIST_GLOBAL_IDENTIFIER = new AbstractMethod<Object, GlobalIdentifier>() {
+		AbstractIdentifiable.CREATE_GLOBAL_IDENTIFIER = new AbstractMethod<Object, GlobalIdentifier>() {
 			private static final long serialVersionUID = 153358109323471469L;
 			@Override
 			protected Object __execute__(GlobalIdentifier globalIdentifier) {
-				((GenericDaoImpl)RootBusinessLayer.getInstance().getGenericDao()).getEntityManager().persist(globalIdentifier);
-				return globalIdentifier;
+				return RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().create(globalIdentifier);
+			}
+		};
+		
+		AbstractIdentifiable.UPDATE_GLOBAL_IDENTIFIER = new AbstractMethod<Object, GlobalIdentifier>() {
+			private static final long serialVersionUID = 153358109323471469L;
+			@Override
+			protected Object __execute__(GlobalIdentifier globalIdentifier) {
+				return RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().update(globalIdentifier);
 			}
 		};
 		
@@ -425,7 +431,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = 153358109323471469L;
 			@Override
 			protected Date __execute__(AbstractIdentifiable identifiable) {
-				return new Date();
+				return timeBusiness.findUniversalTimeCoordinated();
 			}
 		};
 		

@@ -23,6 +23,7 @@ public interface ApplicationBusiness extends AbstractPartyBusiness<Application,P
     Collection<BusinessEntityInfos> findBusinessEntitiesInfos();
     
     BusinessEntityInfos findBusinessEntityInfos(Class<? extends AbstractIdentifiable> aClass);
+    BusinessEntityInfos findBusinessEntityInfos(String identifier);
     
     Collection<BusinessEntityInfos> findBusinessEntitiesInfos(CrudStrategy crudStrategy);
     
@@ -40,6 +41,8 @@ public interface ApplicationBusiness extends AbstractPartyBusiness<Application,P
     ValueGenerator<?, ?> findValueGenerator(String identifier);
     
     <INPUT,OUTPUT> OUTPUT generateValue(String identifier,Class<INPUT> inputClass,Class<OUTPUT> outputClass,INPUT input);
+
+	
     
     /**/
     

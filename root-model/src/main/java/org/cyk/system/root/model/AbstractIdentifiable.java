@@ -17,13 +17,11 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.utility.common.AbstractMethod;
@@ -31,6 +29,9 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /*lombok*/
 
@@ -44,13 +45,41 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public static AbstractMethod<Party,AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_CREATED_BY;
 	public static AbstractMethod<Date,AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_CREATION_DATE;
 	public static AbstractMethod<Boolean,AbstractIdentifiable> GLOBAL_IDENTIFIER_BUILDABLE;
-	public static AbstractMethod<Object,GlobalIdentifier> PERSIST_GLOBAL_IDENTIFIER;
+	public static AbstractMethod<Object,GlobalIdentifier> CREATE_GLOBAL_IDENTIFIER;
+	public static AbstractMethod<Object,GlobalIdentifier> UPDATE_GLOBAL_IDENTIFIER;
 	
 	@Id @GeneratedValue protected Long identifier;// Generation is customizable using mapping file
 
 	@OneToOne protected GlobalIdentifier globalIdentifier;
 	
 	@Transient protected Processing processing;
+	
+	public String getCode(){
+		return globalIdentifier == null ? null : globalIdentifier.getCode();
+	}
+	public void setCode(String code){
+		if(globalIdentifier==null)
+			;
+		else
+			globalIdentifier.setCode(code);
+	}
+	
+	public void setImage(File image){
+		if(globalIdentifier==null)
+			;
+		else
+			globalIdentifier.setImage(image);
+	}
+	
+	public File getImage(){
+		return globalIdentifier == null ? null : globalIdentifier.getImage();
+	}
+	
+	public GlobalIdentifier getGlobalIdentifierCreateIfNull(){
+		if(globalIdentifier==null)
+			globalIdentifier = new GlobalIdentifier();
+		return globalIdentifier;
+	}
 	
 	public Processing getProcessing(){
 		if(processing==null)
@@ -108,13 +137,18 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 				entry.getValue().onPrePersist(this);
 			}
 		}
+		System.out.println(getClass().getSimpleName().toUpperCase());
 		if(globalIdentifier==null && GLOBAL_IDENTIFIER_BUILDABLE!=null && Boolean.TRUE.equals(GLOBAL_IDENTIFIER_BUILDABLE.execute(this)) 
-				&& BUILD_GLOBAL_IDENTIFIER_VALUE!=null && PERSIST_GLOBAL_IDENTIFIER!=null){
+				&& BUILD_GLOBAL_IDENTIFIER_VALUE!=null && CREATE_GLOBAL_IDENTIFIER!=null){
 			globalIdentifier = new GlobalIdentifier();
+		}
+		//System.out.println("   ***   ???????   *** : "+globalIdentifier);
+		if(globalIdentifier!=null){
 			globalIdentifier.setIdentifier(BUILD_GLOBAL_IDENTIFIER_VALUE.execute(this));
 			globalIdentifier.setCreationDate(BUILD_GLOBAL_IDENTIFIER_CREATION_DATE.execute(this));
 			globalIdentifier.setCreatedBy(BUILD_GLOBAL_IDENTIFIER_CREATED_BY.execute(this));
-			PERSIST_GLOBAL_IDENTIFIER.execute(globalIdentifier);
+			//System.out.println("   ***   UPDATED   *** : "+globalIdentifier);
+			CREATE_GLOBAL_IDENTIFIER.execute(globalIdentifier);
 		}
 	}
 
@@ -146,6 +180,11 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 			if(entry.getKey().equals(getClass())){
 				entry.getValue().onPreUpdate(this);
 			}
+		}
+		
+		if(globalIdentifier!=null){
+			System.out.println("AbstractIdentifiable.onPreUpdate() : "+globalIdentifier.getIdentifier());
+			UPDATE_GLOBAL_IDENTIFIER.execute(globalIdentifier);
 		}
 	}
 
@@ -182,6 +221,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	/**/
 	
 	public static final String FIELD_IDENTIFIER = "identifier";
+	public static final String FIELD_GLOBAL_IDENTIFIER = "globalIdentifier";
 	
 	protected Logger getLogger(){
 		return LoggerFactory.getLogger(getClass());
