@@ -39,12 +39,12 @@ public class Role extends AbstractEnumeration implements Serializable {
 
 	@Override
 	public boolean equals(Object object) {
-		return (object instanceof Role) && ((Role)object).code.equals(code);
+		return (object instanceof Role) && ((Role)object).getCode().equals(getCode());
 	}
 	
 	@Override
 	public int hashCode() {
-		return StringUtils.isBlank(code)?31:code.hashCode();
+		return StringUtils.isBlank(getCode())?31:getCode().hashCode();
 	}
 	
 	/**/

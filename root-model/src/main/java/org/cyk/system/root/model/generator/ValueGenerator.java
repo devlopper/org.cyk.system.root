@@ -23,9 +23,13 @@ public interface ValueGenerator<INPUT,OUTPUT>{
 		OUTPUT execute(INPUT input);
 	}
 	
+	String GLOBAL_IDENTIFIER_CODE_IDENTIFIER = "GLOBAL_IDENTIFIER_CODE_IDENTIFIER";
+	String GLOBAL_IDENTIFIER_CODE_DESCRIPTION = "generate a global identifier code";
+	/*
 	String PARTY_CODE_IDENTIFIER = "PARTY_CODE_IDENTIFIER";
 	String PARTY_CODE_DESCRIPTION = "generate a party code";
 	
 	String ACTOR_REGISTRATION_CODE_IDENTIFIER = "ACTOR_REGISTRATION_CODE";
 	String ACTOR_REGISTRATION_CODE_DESCRIPTION = "generate an actor registration code";
+	*/
 }

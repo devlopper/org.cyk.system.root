@@ -55,7 +55,7 @@ public class EventBusinessIT extends AbstractBusinessIT {
     	Person person = new Person();
     	person.setCode(code);
     	person.setName(firstName);
-    	person.setLastName(lastName);
+    	person.setLastnames(lastName);
     	person.setBirthDate(new DateTime(year, month, day, 0, 0).toDate());
     	person. setContactCollection(null);
     	return personBusiness.create(person);

@@ -46,13 +46,6 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	public UserAccountBusinessImpl(UserAccountDao dao) {
 		super(dao); 
 	}  
-
-	@Override //@Secure
-	public UserAccount create(UserAccount userAccount) {
-		userAccount.setCreationDate(universalTimeCoordinated());
-		//Use validator and externalise rules to file
-		return super.create(userAccount);
-	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public UserAccount findByCredentials(Credentials credentials) {
@@ -178,7 +171,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	public UserAccount instanciateOne(Party party,Role...roles) {
 		UserAccount userAccount = new UserAccount();
 		userAccount.setUser(party);
-		userAccount.getCredentials().setUsername(StringUtils.replace(party.getName(), Constant.CHARACTER_SPACE.toString(), Constant.EMPTY_STRING.toString()));
+		userAccount.getCredentials().setUsername(StringUtils.replace(party.getGlobalIdentifier().getName(), Constant.CHARACTER_SPACE.toString(), Constant.EMPTY_STRING.toString()));
 		userAccount.getCredentials().setPassword(RandomStringUtils.randomAlphanumeric(6));
 		if(roles!=null)
 			userAccount.getRoles().addAll(Arrays.asList(roles));
@@ -208,16 +201,16 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 
 	@Override
 	public Boolean canRead(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, roleDao.read(Role.ADMINISTRATOR)) || RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().isReadable(identifiable);
+		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().isReadable(identifiable);
 	}
 
 	@Override
 	public Boolean canUpdate(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, roleDao.read(Role.ADMINISTRATOR)) || RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().isUpdatable(identifiable);
+		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().isUpdatable(identifiable);
 	}
 
 	@Override
 	public Boolean canDelete(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, roleDao.read(Role.ADMINISTRATOR)) || RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().isDeletable(identifiable);
+		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().isDeletable(identifiable);
 	}
 }

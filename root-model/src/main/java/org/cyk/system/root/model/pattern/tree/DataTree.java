@@ -21,7 +21,7 @@ public class DataTree extends AbstractDataTree<DataTreeType> implements Serializ
 
 	public DataTree(AbstractDataTree<DataTreeType> parent, DataTreeType type, String code,String name) {
 		super(parent, type, code);
-		this.name = name;
+		setName(name);
 	}
 	
 	public DataTree(AbstractDataTree<DataTreeType> parent, DataTreeType type, String code) {

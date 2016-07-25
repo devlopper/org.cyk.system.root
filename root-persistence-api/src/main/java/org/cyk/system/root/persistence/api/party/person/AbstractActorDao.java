@@ -10,8 +10,6 @@ public interface AbstractActorDao<ACTOR extends AbstractActor,SEARCH_CRITERIA ex
 
 	ACTOR readByPerson(Person person);
 	
-	ACTOR readByRegistrationCode(String registrationCode);
-	
 	Collection<ACTOR> readByCriteria(SEARCH_CRITERIA criteria);
 	Long countByCriteria(SEARCH_CRITERIA criteria);
 	

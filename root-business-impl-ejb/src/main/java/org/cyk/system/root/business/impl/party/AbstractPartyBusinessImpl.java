@@ -13,8 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
@@ -36,16 +34,10 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		return party;
 	}
 
-
-
 	@Override
     public PARTY create(PARTY party) {
-		//if(StringUtils.isBlank(party.getCode()))
-		//	party.setCode(generateStringValue(ValueGenerator.PARTY_CODE_IDENTIFIER, party));//TODO handle duplicate by using lock write
 		if(party.getContactCollection()!=null)
 			contactCollectionBusiness.create(party.getContactCollection());
-		//if(party.getImage()!=null && party.getImage().getIdentifier()==null)
-		//	RootBusinessLayer.getInstance().getFileBusiness().create(party.getImage());
 		super.create(party);
         return party;
     }
@@ -95,10 +87,10 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		
 		if(arguments.getBirthDateIndex()!=null && StringUtils.isNotBlank(arguments.getValues()[arguments.getBirthDateIndex()]))
 			party.setBirthDate(timeBusiness.parse(arguments.getValues()[arguments.getBirthDateIndex()]));
-		/*
+		
 		if(arguments.getCreationDateIndex()!=null)
-			party.setCreationDate(timeBusiness.parse(arguments.getValues()[arguments.getCreationDateIndex()]));
-		*/
+			party.setBirthDate(timeBusiness.parse(arguments.getValues()[arguments.getCreationDateIndex()]));
+		
 		completeInstanciationOfOneFromValuesAfterProcessing(party,arguments.getValues(),arguments.getListener());
 		
 	}

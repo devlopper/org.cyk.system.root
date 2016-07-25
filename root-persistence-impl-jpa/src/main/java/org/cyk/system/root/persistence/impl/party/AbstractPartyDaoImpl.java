@@ -62,7 +62,7 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 	}
 	
 	protected void applyCriteriaParameters(QueryWrapper<?> queryWrapper,SEARCH_CRITERIA searchCriteria){
-		queryWrapper.parameter(Party.FIELD_NAME,searchCriteria.getName().getPreparedValue());
+		queryWrapper.parameter(GlobalIdentifier.FIELD_NAME,searchCriteria.getName().getPreparedValue());
 	}
 	
 	

@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -23,7 +24,7 @@ public class Person extends Party implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private String lastName;//TODO to be changed to lastnames
+	private String lastnames;
 	private String surname;
 	@ManyToOne private Sex sex;
 	@ManyToOne private Country nationality;
@@ -36,14 +37,14 @@ public class Person extends Party implements Serializable{
 	
 	@Transient private String names;
 	
-	public Person(String firstName,String lastName) {
+	public Person(String firstName,String lastnames) {
 		super(firstName);
-		this.lastName = lastName;
+		this.lastnames = lastnames;
 	}
 	
 	public String getNames(){
 		if(StringUtils.isBlank(names))
-			names = name+(StringUtils.isEmpty(lastName)?"":(" "+lastName));
+			names = globalIdentifier.getName()+(StringUtils.isEmpty(lastnames)?Constant.EMPTY_STRING:(Constant.CHARACTER_SPACE+lastnames));
 		return names;
 	}
 
@@ -59,7 +60,7 @@ public class Person extends Party implements Serializable{
 	
 	/**/
 	
-	public static final String FIELD_LASTNAME = "lastName";
+	public static final String FIELD_LASTNAME = "lastname";
 	public static final String FIELD_SURNAME = "surname";
 	public static final String FIELD_SEX = "sex";
 	public static final String FIELD_NATIONALITY = "nationality";
@@ -73,7 +74,7 @@ public class Person extends Party implements Serializable{
 
 		private static final long serialVersionUID = 6796076474234170332L;
 
-		protected StringSearchCriteria lastNameSearchCriteria = new StringSearchCriteria();
+		protected StringSearchCriteria lastnameSearchCriteria = new StringSearchCriteria();
 		
 		public SearchCriteria(){
 			this(null);
@@ -81,7 +82,7 @@ public class Person extends Party implements Serializable{
 		
 		public SearchCriteria(String name) {
 			super(name);
-			setStringSearchCriteria(lastNameSearchCriteria, name);
+			setStringSearchCriteria(lastnameSearchCriteria, name);
 			
 		}
 		

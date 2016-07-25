@@ -15,8 +15,6 @@ public interface AbstractActorBusiness<ACTOR extends AbstractActor,SEARCH_CRITER
 
 	ACTOR findByPerson(Person person);
 	
-	ACTOR findByRegistrationCode(String registrationCode);
-	
 	ACTOR instanciateOne(AbstractActor actor);
 	
 	Collection<ACTOR> findByCriteria(SEARCH_CRITERIA criteria);

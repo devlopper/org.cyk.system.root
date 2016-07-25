@@ -245,7 +245,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	public <T extends AbstractActor> void assertActorRegistrationCode(Class<T> classActor,List<T> actors,String[] registrationCodes){
 		for(int i=0;i<actors.size();i++){
 			T actor = actors.get(i);
-			assertEquals("Registration code of "+actor.getPerson(), registrationCodes[i], actor.getRegistration().getCode());
+			assertEquals("Registration code of "+actor.getPerson(), registrationCodes[i], actor.getGlobalIdentifier().getCode());
 		}
 	}
 	
@@ -256,12 +256,12 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	private <T extends AbstractActor> T _createActor_(Class<T> actorClass,String code,String[] names){
 		T actor = RootRandomDataProvider.getInstance().actor(actorClass);
-		actor.getRegistration().setCode(code);
+		actor.getGlobalIdentifierCreateIfNull().setCode(code);
 		if(names!=null){
 			if(names.length>0)
 				actor.getPerson().setName(names[0]);
 			if(names.length>1)
-				actor.getPerson().setLastName(names[1]);
+				actor.getPerson().setLastnames(names[1]);
 			if(names.length>2)
 				actor.getPerson().setSurname(names[2]);
 		}
@@ -296,14 +296,14 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		}
 		genericBusiness.create(identifiables);
 		
-		machine.setInitialState(finiteStateMachineStateDao.read(machineCode+"_"+initialStateCode));
+		machine.setInitialState(finiteStateMachineStateDao.readByGlobalIdentifierCode(machineCode+Constant.CHARACTER_UNDESCORE+initialStateCode));
 		machine.setCurrentState(machine.getInitialState());
 		genericBusiness.update(machine);
 		
 		identifiables = new ArrayList<>();
 		for(String code : finalStateCodes){
 			FiniteStateMachineFinalState state = new FiniteStateMachineFinalState();
-			state.setState(finiteStateMachineStateDao.read(machineCode+"_"+code));
+			state.setState(finiteStateMachineStateDao.readByGlobalIdentifierCode(machineCode+Constant.CHARACTER_UNDESCORE+code));
 			identifiables.add(state);
 		}
 		genericBusiness.create(identifiables);
@@ -311,9 +311,9 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		identifiables = new ArrayList<>();
 		for(String[] transitionInfos : transitions){
 			FiniteStateMachineTransition transition = new FiniteStateMachineTransition();
-			transition.setFromState(finiteStateMachineStateDao.read(machineCode+Constant.CHARACTER_UNDESCORE+transitionInfos[0]));
-			transition.setAlphabet(finiteStateMachineAlphabetDao.read(machineCode+Constant.CHARACTER_UNDESCORE+transitionInfos[1]));
-			transition.setToState(finiteStateMachineStateDao.read(machineCode+Constant.CHARACTER_UNDESCORE+transitionInfos[2]));
+			transition.setFromState(finiteStateMachineStateDao.readByGlobalIdentifierCode(machineCode+Constant.CHARACTER_UNDESCORE+transitionInfos[0]));
+			transition.setAlphabet(finiteStateMachineAlphabetDao.readByGlobalIdentifierCode(machineCode+Constant.CHARACTER_UNDESCORE+transitionInfos[1]));
+			transition.setToState(finiteStateMachineStateDao.readByGlobalIdentifierCode(machineCode+Constant.CHARACTER_UNDESCORE+transitionInfos[2]));
 			identifiables.add(transition);
 		}
 		genericBusiness.create(identifiables);
@@ -359,7 +359,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	public void set(Movement movement,String movementCollectionCode,String value){
 		movement.setValue(value==null?null : new BigDecimal(value));
-		movement.setCollection(getRootBusinessLayer().getMovementCollectionBusiness().find(movementCollectionCode));
+		movement.setCollection(getRootBusinessLayer().getMovementCollectionBusiness().findByGlobalIdentifierCode(movementCollectionCode));
 		movement.setCode(movementCollectionCode+"_"+RandomStringUtils.randomAlphabetic(3));
 		movement.setName(movement.getCode());
 		movement.setAction(movement.getValue() == null ? null : movement.getValue().signum() == 1 ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction());
@@ -370,11 +370,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	public void set(FiniteStateMachineAlphabet alphabet,String machineCode,String code){
 		setEnumeration(alphabet, machineCode+"_"+code);
-		alphabet.setMachine(getRootBusinessLayer().getFiniteStateMachineBusiness().find(machineCode));
+		alphabet.setMachine(getRootBusinessLayer().getFiniteStateMachineBusiness().findByGlobalIdentifierCode(machineCode));
 	}
 	public void set(FiniteStateMachineState state,String machineCode,String code){
 		setEnumeration(state, machineCode+"_"+code);
-		state.setMachine(getRootBusinessLayer().getFiniteStateMachineBusiness().find(machineCode));
+		state.setMachine(getRootBusinessLayer().getFiniteStateMachineBusiness().findByGlobalIdentifierCode(machineCode));
 	}
 	
 	
@@ -399,9 +399,9 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	public void readFiniteStateMachine(String machineCode,String alphabetCode,String expectedStateCode){
-		FiniteStateMachine machine = RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().find(machineCode);
+		FiniteStateMachine machine = RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().findByGlobalIdentifierCode(machineCode);
 		RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().read(machine, RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness()
-				.find(alphabetCode));
+				.findByGlobalIdentifierCode(alphabetCode));
 		assertFiniteStateMachine(machine, expectedStateCode);
 	}
 	
@@ -414,8 +414,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	public void findByFromStateByAlphabet(String machineCode,String fromStateCode,String alphabetCode,String expectedStateCode){
 		String message = fromStateCode+" and "+alphabetCode+" > "+expectedStateCode;
 		FiniteStateMachineState state = RootBusinessLayer.getInstance().getFiniteStateMachineStateBusiness()
-			.findByFromStateByAlphabet(RootBusinessLayer.getInstance().getFiniteStateMachineStateBusiness().find(fromStateCode), 
-					RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness().find(alphabetCode));
+			.findByFromStateByAlphabet(RootBusinessLayer.getInstance().getFiniteStateMachineStateBusiness().findByGlobalIdentifierCode(fromStateCode), 
+					RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness().findByGlobalIdentifierCode(alphabetCode));
 		assertEquals(message, expectedStateCode, state.getCode());
 	}
 	
@@ -436,7 +436,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	/* Exceptions */
 	
 	private void valueMustNotBeOffThanActionIntervalExtremity(String movementCollectionCode,Boolean incrementAction,Boolean lowExtemity){
-		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().find(movementCollectionCode);
+		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().findByGlobalIdentifierCode(movementCollectionCode);
 		MovementAction action = Boolean.TRUE.equals(incrementAction) ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction();
 		BigDecimal value = Boolean.TRUE.equals(lowExtemity) ? action.getInterval().getLow().getValue() : action.getInterval().getHigh().getValue();
 		if(value==null)
@@ -457,7 +457,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	private void collectionValueMustNotBeOffThanIntervalExtremity(String movementCollectionCode,Boolean incrementAction){
-		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().find(movementCollectionCode);
+		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().findByGlobalIdentifierCode(movementCollectionCode);
 		BigDecimal value = Boolean.TRUE.equals(incrementAction) 
 				? getRootBusinessLayer().getIntervalBusiness().findLowestGreatestValue(movementCollection.getInterval()).add(BigDecimal.ONE) 
 				: getRootBusinessLayer().getIntervalBusiness().findGreatestLowestValue(movementCollection.getInterval()).subtract(BigDecimal.ONE);
@@ -479,7 +479,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	
 	private String getThrowableMessage(String movementCollectionCode,Boolean increment,Integer actionId){
-		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().find(movementCollectionCode);
+		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().findByGlobalIdentifierCode(movementCollectionCode);
 		MovementAction action = Boolean.TRUE.equals(increment) ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction();
 		if(actionId==0)
 			return String.format("%s doit être supérieur à %s",action.getName(),action.getInterval().getLow().getValue());

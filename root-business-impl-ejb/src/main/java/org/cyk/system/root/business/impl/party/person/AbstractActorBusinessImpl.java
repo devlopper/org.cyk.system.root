@@ -7,14 +7,12 @@ import java.util.List;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.BusinessServiceProvider;
 import org.cyk.system.root.business.impl.BusinessServiceProvider.Service;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
@@ -32,7 +30,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	public ACTOR instanciateOne(AbstractActor actor) {
 		ACTOR myActor = instanciateOne();
 		myActor.setPerson(actor.getPerson());
-		myActor.getRegistration().setCode(actor.getRegistration().getCode());
+		//myActor.getRegistration().setCode(actor.getRegistration().getCode());
 		return myActor;
 	}
 
@@ -40,7 +38,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	public ACTOR instanciateOne() {
 		ACTOR actor = super.instanciateOne();
 		actor.setPerson(RootBusinessLayer.getInstance().getPersonBusiness().instanciateOne());
-		actor.getRegistration().setCode(RandomStringUtils.randomAlphanumeric(5));
+		//actor.getRegistration().setCode(RandomStringUtils.randomAlphanumeric(5));
 		return actor;
 	}
 	
@@ -48,9 +46,9 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	public ACTOR create(ACTOR anActor) {
 		if(anActor.getPerson().getIdentifier()==null)
 			RootBusinessLayer.getInstance().getPersonBusiness().create(anActor.getPerson());
-		anActor.getRegistration().setDate(universalTimeCoordinated()); 
-		if(StringUtils.isBlank(anActor.getRegistration().getCode()))
-			anActor.getRegistration().setCode(generateStringValue(ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER, anActor));
+		//anActor.getRegistration().setDate(universalTimeCoordinated()); 
+		//if(StringUtils.isBlank(anActor.getRegistration().getCode()))
+		//	anActor.getRegistration().setCode(generateStringValue(ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER, anActor));
 		return super.create(anActor);
 	}
 	
@@ -63,11 +61,6 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public ACTOR findByPerson(Person person) {
 		return dao.readByPerson(person);
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public ACTOR findByRegistrationCode(String registrationCode) {
-		return dao.readByRegistrationCode(registrationCode);
 	}
 	
 	protected void __load__(ACTOR actor){
@@ -90,10 +83,10 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		RootBusinessLayer.getInstance().getPersonBusiness().completeInstanciationOfOneFromValues(actor.getPerson(), arguments.getPersonInstanciationOfOneFromValuesArguments());
 		
 		if(arguments.getRegistrationCodeIndex()!=null)
-			actor.getRegistration().setCode(arguments.getValues()[arguments.getRegistrationCodeIndex()]);
+			actor.getGlobalIdentifierCreateIfNull().setCode(arguments.getValues()[arguments.getRegistrationCodeIndex()]);
 		
 		if(arguments.getRegistrationDateIndex()!=null)
-			actor.getRegistration().setDate(timeBusiness.parse(arguments.getValues()[arguments.getRegistrationDateIndex()]));
+			actor.setBirthDate(timeBusiness.parse(arguments.getValues()[arguments.getRegistrationDateIndex()]));
 		
 		completeInstanciationOfOne(actor);
 		

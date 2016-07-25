@@ -73,7 +73,7 @@ public class DefaultReportBasedOnDynamicBuilder extends AbstractReportBasedOnDyn
 			report.setCreatedBy(parameters.getCreatedBy());
 		
 		if(parameters.getOwner()!=null){
-			report.setOwnerName(parameters.getOwner().getName());
+			report.setOwnerName(parameters.getOwner().getGlobalIdentifier().getName());
 			if(parameters.getOwner().getImage()!=null)
 				report.setOwnerLogoPath(rootBusinessLayer.getFileBusiness().findSystemPath(parameters.getOwner().getImage()).toString());
 		}

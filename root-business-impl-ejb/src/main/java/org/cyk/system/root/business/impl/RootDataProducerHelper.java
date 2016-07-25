@@ -12,6 +12,9 @@ import java.util.Deque;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,12 +58,10 @@ import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachin
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.BeanAdapter;
+import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.database.DatabaseUtils;
 import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
 import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -224,7 +225,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code){
-		return (T) genericDao.use(aClass).select().where("code", code).one();
+		return (T) genericDao.use(aClass).select().where(null,"globalIdentifier.code","code", code,ArithmeticOperator.EQ).one();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -331,14 +332,14 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		}
 		genericBusiness.create(identifiables);
 		
-		machine.setInitialState(finiteStateMachineStateDao.read(initialStateCode));
+		machine.setInitialState(finiteStateMachineStateDao.readByGlobalIdentifierCode(initialStateCode));
 		machine.setCurrentState(machine.getInitialState());
 		genericBusiness.update(machine);
 		
 		identifiables = new ArrayList<>();
 		for(String code : finalStateCodes){
 			FiniteStateMachineFinalState state = new FiniteStateMachineFinalState();
-			state.setState(finiteStateMachineStateDao.read(code));
+			state.setState(finiteStateMachineStateDao.readByGlobalIdentifierCode(code));
 			identifiables.add(state);
 		}
 		genericBusiness.create(identifiables);
@@ -346,9 +347,9 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		identifiables = new ArrayList<>();
 		for(String[] transitionInfos : transitions){
 			FiniteStateMachineTransition transition = new FiniteStateMachineTransition();
-			transition.setFromState(finiteStateMachineStateDao.read(transitionInfos[0]));
-			transition.setAlphabet(finiteStateMachineAlphabetDao.read(transitionInfos[1]));
-			transition.setToState(finiteStateMachineStateDao.read(transitionInfos[2]));
+			transition.setFromState(finiteStateMachineStateDao.readByGlobalIdentifierCode(transitionInfos[0]));
+			transition.setAlphabet(finiteStateMachineAlphabetDao.readByGlobalIdentifierCode(transitionInfos[1]));
+			transition.setToState(finiteStateMachineStateDao.readByGlobalIdentifierCode(transitionInfos[2]));
 			identifiables.add(transition);
 		}
 		genericBusiness.create(identifiables);

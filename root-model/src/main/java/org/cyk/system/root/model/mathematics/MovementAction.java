@@ -31,7 +31,7 @@ public class MovementAction extends AbstractEnumeration implements Serializable 
 
 	@Override
 	public String getLogMessage() {
-		return String.format(LOG_FORMAT, code,interval.getLogMessage());
+		return String.format(LOG_FORMAT, getCode(),interval.getLogMessage());
 	}
 	
 	public static final String LOG_FORMAT = MovementAction.class.getSimpleName()+"(%s %s)";

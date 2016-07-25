@@ -5,20 +5,14 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.utility.common.computation.DataReadConfiguration;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
 
 public class PersonBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
-
-    @Deployment
-    public static Archive<?> createDeployment() {
-        return createRootDeployment(); 
-    } 
     
     @Inject private PersonBusiness personBusiness;
+    private static final String CODE = "1"; 
+    
     
     @Override
     protected void finds() {
@@ -27,8 +21,16 @@ public class PersonBusinessIT extends AbstractBusinessIT {
 
     @Override
     protected void businesses() {
-    	installApplication();
-    	for(int i=0;i<20;i++){
+    	
+    	Person person = RootRandomDataProvider.getInstance().person();
+        person.setCode(CODE);
+        personBusiness.create(person);
+        assertThat("Person created", person.getIdentifier()!=null);
+    	
+        person = personBusiness.findByGlobalIdentifierCode(CODE);
+        assertThat("Person found by global identifier code", person!=null);
+        
+    	/*for(int i=0;i<20;i++){
     		Person person = RootRandomDataProvider.getInstance().person();
     		//debug(person.getExtendedInformations());
         	//debug(person.getJobInformations());
@@ -51,7 +53,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	person = personBusiness.load(person.getIdentifier());
     	//debug(person.getExtendedInformations());
     	//debug(person.getJobInformations());
-    	
+    	*/
     }
 
     @Override
@@ -63,8 +65,6 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     protected void delete() {
         
     }
-
-    
 
     @Override
     protected void read() {

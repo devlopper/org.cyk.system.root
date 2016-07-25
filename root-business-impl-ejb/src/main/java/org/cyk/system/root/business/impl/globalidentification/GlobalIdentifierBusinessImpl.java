@@ -7,13 +7,15 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.joda.time.DateTime;
 
 @Stateless
 public class GlobalIdentifierBusinessImpl extends AbstractBean implements GlobalIdentifierBusiness,Serializable {
@@ -45,7 +47,13 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override
 	public GlobalIdentifier create(GlobalIdentifier globalIdentifier) {
 		logTrace("Creating global identifier {}", globalIdentifier);
-		System.out.println("GlobalIdentifierBusinessImpl.create() : "+ToStringBuilder.reflectionToString(globalIdentifier, ToStringStyle.DEFAULT_STYLE));
+		if(StringUtils.isBlank(globalIdentifier.getCode()))
+			globalIdentifier.setCode(RootBusinessLayer.getInstance().getStringGeneratorBusiness()
+					.generate(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER, globalIdentifier.getIdentifiable()));//TODO handle duplicate by using lock write
+		if(globalIdentifier.getExistencePeriod().getFromDate()==null)
+			globalIdentifier.getExistencePeriod().setFromDate(RootBusinessLayer.getInstance().getTimeBusiness().findUniversalTimeCoordinated());
+		globalIdentifier.getExistencePeriod().setToDate(new DateTime(9999, 12, 31, 23, 59).toDate());//TODO for now we do not care about
+		globalIdentifier.setCreationDate(RootBusinessLayer.getInstance().getTimeBusiness().findUniversalTimeCoordinated());
 		return globalIdentifierDao.create(globalIdentifier);
 	}
 	

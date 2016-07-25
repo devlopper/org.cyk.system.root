@@ -92,8 +92,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			if(person.getContactCollection()!=null)
 				set(person.getContactCollection(), report.getContact());
 			
-			report.setName(person.getName());
-			report.setLastName(person.getLastName());
+			report.setName(person.getGlobalIdentifier().getName());
+			report.setLastName(person.getLastnames());
 			report.setNames(rootBusinessLayer.getPersonBusiness().findNames(person));
 			report.setSurname(person.getSurname());
 			report.setBirthDate(format(person.getBirthDate()));
@@ -136,8 +136,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		if(actor==null){
 			
 		}else{
-			report.setRegistrationCode(actor.getRegistration().getCode());
-			report.setRegistrationDate(format(actor.getRegistration().getDate()));
+			report.setRegistrationCode(actor.getGlobalIdentifier().getCode());
+			report.setRegistrationDate(format(actor.getBirthDate()));
 		}
 	}
 	

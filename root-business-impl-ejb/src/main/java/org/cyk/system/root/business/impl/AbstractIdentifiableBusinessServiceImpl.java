@@ -17,6 +17,7 @@ import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -71,6 +72,16 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IDENTIFIABLE find(Long identifier) {
 	    return getPersistenceService().read(identifier);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public IDENTIFIABLE findByGlobalIdentifier(GlobalIdentifier globalIdentifier) {
+	    return getPersistenceService().readByGlobalIdentifier(globalIdentifier);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public IDENTIFIABLE findByGlobalIdentifierCode(String code) {
+	    return getPersistenceService().readByGlobalIdentifierCode(code);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

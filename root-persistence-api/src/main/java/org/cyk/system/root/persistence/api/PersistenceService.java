@@ -3,6 +3,7 @@ package org.cyk.system.root.persistence.api;
 import java.util.Collection;
 
 import org.cyk.system.root.model.Identifiable;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
@@ -25,7 +26,9 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	
 						PersistenceService<IDENTIFIABLE,IDENTIFIER> select();
 	
-	/* filter */		PersistenceService<IDENTIFIABLE,IDENTIFIER> where(LogicalOperator aLogicalOperator,String anAttributeName,Object aValue,ArithmeticOperator anArithmeticOperator);
+	/* filter */		PersistenceService<IDENTIFIABLE,IDENTIFIER> where(LogicalOperator aLogicalOperator,String anAttributeName,String aVarName,Object aValue,ArithmeticOperator anArithmeticOperator);
+	
+						PersistenceService<IDENTIFIABLE,IDENTIFIER> where(LogicalOperator aLogicalOperator,String anAttributeName,Object aValue,ArithmeticOperator anArithmeticOperator);
 	
 						PersistenceService<IDENTIFIABLE,IDENTIFIER> where(String anAttributeName,Object aValue,ArithmeticOperator anArithmeticOperator);
 						
@@ -37,7 +40,9 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	
 						IDENTIFIABLE one();	
 						
-						IDENTIFIABLE read(IDENTIFIER identifier);   
+						IDENTIFIABLE read(IDENTIFIER identifier);
+						IDENTIFIABLE readByGlobalIdentifier(GlobalIdentifier globalIdentifier);
+						IDENTIFIABLE readByGlobalIdentifierCode(String code);
 						
 						Long oneLong();	
 	

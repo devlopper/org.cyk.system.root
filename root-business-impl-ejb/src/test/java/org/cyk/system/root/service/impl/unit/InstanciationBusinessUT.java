@@ -5,9 +5,6 @@ import java.util.Collection;
 import org.cyk.system.root.business.impl.geography.PhoneNumberTypeBusinessImpl;
 import org.cyk.system.root.business.impl.mathematics.IntervalCollectionBusinessImpl;
 import org.cyk.system.root.business.impl.mathematics.MetricCollectionBusinessImpl;
-import org.cyk.system.root.model.geography.PhoneNumberType;
-import org.cyk.utility.common.ObjectFieldValues;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
@@ -30,7 +27,7 @@ public class InstanciationBusinessUT extends AbstractBusinessUT {
 	
 	//@Test
 	public void enumeration() {
-		Assert.assertNotNull(phoneNumberTypeBusiness.instanciateOne());
+		/*Assert.assertNotNull(phoneNumberTypeBusiness.instanciateOne());
 		assertEquals(phoneNumberTypeBusiness.instanciateOne("Land"), new ObjectFieldValues(PhoneNumberType.class)
 			.set(PhoneNumberType.FIELD_CODE, "Land").set(PhoneNumberType.FIELD_NAME, "Land"));
 		assertEquals(phoneNumberTypeBusiness.instanciateOne("My Type"), new ObjectFieldValues(PhoneNumberType.class)
@@ -44,6 +41,7 @@ public class InstanciationBusinessUT extends AbstractBusinessUT {
 				.set(PhoneNumberType.FIELD_NAME, "My Name");
 		assertEquals(phoneNumberTypeBusiness.instanciateOne(objectFieldValues), new ObjectFieldValues(PhoneNumberType.class)
 				.set(PhoneNumberType.FIELD_NAME, "My Name"));
+		*/
 	}
 	
 	@Test

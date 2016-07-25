@@ -129,8 +129,8 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		return eventMissed;
 	}
 	
-	private Person person(String code,String firstName,String lastName,String email){
-		Person person = new Person(firstName, lastName);
+	private Person person(String code,String firstName,String lastnames,String email){
+		Person person = new Person(firstName, lastnames);
 		create(new ElectronicMail(person.getContactCollection(), email));
 		create(person.getContactCollection());
 		create(person);

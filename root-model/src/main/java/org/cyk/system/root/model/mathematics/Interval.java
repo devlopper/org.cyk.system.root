@@ -167,10 +167,5 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	}
 	*/
 	
-	
-	@Override
-	public String toString() {
-		return name;
-	}
 
 }

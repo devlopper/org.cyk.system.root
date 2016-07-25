@@ -14,6 +14,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 
 @Singleton
@@ -74,14 +75,14 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             //TODO look for field with @UniqueConstraint
             //Code
             if(enumeration.getIdentifier()==null){
-            	Long countInDB = genericDao.use(enumeration.getClass()).select(Function.COUNT).where("code", enumeration.getCode()).oneLong();
+            	Long countInDB = genericDao.use(enumeration.getClass()).select(Function.COUNT).where(null,"globalIdentifier.code","code", enumeration.getCode(),ArithmeticOperator.EQ).oneLong();
             	logTrace("Check for Create. Count existing = {}",countInDB);
                 exceptionUtils().exception(countInDB>0,"exception.value.duplicate",new Object[]{"Code",enumeration.getCode()});
             }else{
                 AbstractEnumeration inDB = (AbstractEnumeration) genericDao.use(enumeration.getClass()).read(enumeration.getIdentifier());
                 if(!inDB.getCode().equals(enumeration.getCode()))
                     //Code has changed
-                    exceptionUtils().exception(genericDao.use(enumeration.getClass()).select(Function.COUNT).where("code", enumeration.getCode()).oneLong()>0,
+                    exceptionUtils().exception(genericDao.use(enumeration.getClass()).select(Function.COUNT).where(null,"globalIdentifier.code","code", enumeration.getCode(),ArithmeticOperator.EQ).oneLong()>0,
                         "exception.value.duplicate",new Object[]{"Code",enumeration.getCode()});
             }
             

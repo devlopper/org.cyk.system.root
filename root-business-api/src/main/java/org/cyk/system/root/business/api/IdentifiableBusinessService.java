@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.cyk.system.root.model.Identifiable;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
@@ -36,6 +37,10 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
 	/* select */	IdentifiableBusinessService<IDENTIFIABLE,IDENTIFIER> find();
 	
 	                IDENTIFIABLE find(IDENTIFIER identifier);
+	                
+	                IDENTIFIABLE findByGlobalIdentifier(GlobalIdentifier globalIdentifier);
+	                
+	                IDENTIFIABLE findByGlobalIdentifierCode(String code);
 	
 					IdentifiableBusinessService<IDENTIFIABLE,IDENTIFIER> find(Function function);
 	

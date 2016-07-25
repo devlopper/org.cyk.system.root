@@ -18,7 +18,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	private static final long serialVersionUID = -2964204372097468908L;
 
 	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
-		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete;
+		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete,readByGlobalIdentifier
+		,readByGlobalIdentifierCode;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -48,11 +49,13 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		
 		registerNamedQuery(readAllInclude, _select().whereIdentifierIn());
 		registerNamedQuery(readAllExclude, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.identifier NOT IN :identifiers");
+		registerNamedQuery(readByGlobalIdentifier, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier = :identifier");
 		registerNamedQuery(readByGlobalIdentifiers, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier IN :identifiers");
 		registerNamedQuery(readByGlobalIdentifierValue, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier = :identifier");
+		registerNamedQuery(readByGlobalIdentifierCode, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.code = :code");
 		
 		if(Boolean.TRUE.equals(readByClassEnabled())){
-			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy("identifier",Boolean.TRUE));
+			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy(AbstractIdentifiable.FIELD_IDENTIFIER,Boolean.TRUE));
 			registerNamedQuery(readByNotClasses, _select().whereClassNotIn());
 		}
 		
@@ -68,6 +71,17 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	}
 	
 	/**/
+	
+	@Override
+	public IDENTIFIABLE readByGlobalIdentifier(GlobalIdentifier globalIdentifier) {
+		return namedQuery(readByGlobalIdentifier).parameter(AbstractIdentifiable.FIELD_IDENTIFIER, globalIdentifier.getIdentifier())
+				.ignoreThrowable(NoResultException.class).resultOne();
+	}
+	
+	public IDENTIFIABLE readByGlobalIdentifierCode(String code) {
+		return namedQuery(readByGlobalIdentifierCode).parameter(GlobalIdentifier.FIELD_CODE, code)
+				.ignoreThrowable(NoResultException.class).resultOne();
+	}
 	
 	@Override
 	public Collection<IDENTIFIABLE> readAll() {

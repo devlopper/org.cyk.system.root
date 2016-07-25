@@ -21,7 +21,7 @@ import org.cyk.system.root.model.AbstractModelElement;
  * @author Christian Yao Komenan
  *
  */
-@Embeddable
+@Embeddable @Deprecated
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Registration extends AbstractModelElement implements Serializable{
 

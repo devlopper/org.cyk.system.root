@@ -38,7 +38,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		Class<ITEM> clazz = (Class<ITEM>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		try {
 			ITEM item = clazz.newInstance();
-			item.setCode( (StringUtils.isBlank(itemCodeSeparator) ? Constant.EMPTY_STRING : (this.code+itemCodeSeparator))+code);
+			item.setCode( (StringUtils.isBlank(itemCodeSeparator) ? Constant.EMPTY_STRING : (getCode()+itemCodeSeparator))+code);
 			item.setName(name);
 			((AbstractCollectionItem<AbstractCollection<ITEM>>)item).setCollection(this);
 			getCollection().add(item);
@@ -51,7 +51,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	@Override
 	public String getLogMessage() {
-		return String.format(LOG_MESSAGE, getClass().getSimpleName(),code,itemCodeSeparator);
+		return String.format(LOG_MESSAGE, getClass().getSimpleName(),getCode(),itemCodeSeparator);
 	}
 	
 	private static final String LOG_MESSAGE = "%s(C=%s SEP=%s)";

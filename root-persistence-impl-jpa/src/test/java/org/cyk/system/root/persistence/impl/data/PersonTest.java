@@ -25,7 +25,7 @@ public class PersonTest extends AbstractIdentifiable implements Serializable {
 	
 	private String name;
 	
-	private String lastName;
+	private String lastname;
 
 	
 	

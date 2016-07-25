@@ -18,7 +18,7 @@ public class Locality extends AbstractDataTree<LocalityType> implements Serializ
 
 	public Locality(AbstractDataTree<LocalityType> parent, LocalityType type, String code,String name) {
 		super(parent, type, code);
-		this.name = name;
+		setName(name);
 	}
 	
 	public Locality(AbstractDataTree<LocalityType> parent, LocalityType type, String code) {

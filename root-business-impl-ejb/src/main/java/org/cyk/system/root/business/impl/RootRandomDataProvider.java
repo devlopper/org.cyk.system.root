@@ -61,13 +61,13 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	
 	public Person person(Boolean male,Country country,PhoneNumberType type,Boolean genSignature){
 		RandomPerson randomPerson = Boolean.TRUE.equals(male)?randomDataProvider.getMale():randomDataProvider.getFemale();
-		
 		Person person = new Person();
+		person.getGlobalIdentifierCreateIfNull();
 		person.setExtendedInformations(new PersonExtendedInformations(person));
 		person.setJobInformations(new JobInformations(person));
 		
 		person.setName(randomPerson.firstName());
-		person.setLastName(randomPerson.lastName());
+		person.setLastnames(randomPerson.lastName());
 		person.setSex(Boolean.TRUE.equals(male)?rootBusinessLayer().getSexMale():rootBusinessLayer().getSexFemale());
 		person.setSurname(randomPerson.surName());
 		person.setBirthDate(randomDataProvider.randomDate(DateUtils.addYears(new Date(), -50), DateUtils.addYears(new Date(), -20)) );

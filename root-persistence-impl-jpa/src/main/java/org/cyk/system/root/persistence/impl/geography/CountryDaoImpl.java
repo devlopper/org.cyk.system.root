@@ -17,7 +17,7 @@ public class CountryDaoImpl extends AbstractTypedDao<Country> implements Country
     @Override
     protected void namedQueriesInitialisation() {
         super.namedQueriesInitialisation();
-        registerNamedQuery(readByLocalityCode, _select().where("locality.code",Country.FIELD_LOCALITY));
+        registerNamedQuery(readByLocalityCode, _select().where("locality.globalIdentifier.code",Country.FIELD_LOCALITY));
     }
 
 	@Override

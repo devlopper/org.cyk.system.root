@@ -13,6 +13,9 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -59,7 +62,6 @@ import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineSt
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorParameterBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
-import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.party.person.JobFunctionBusiness;
 import org.cyk.system.root.business.api.party.person.JobTitleBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
@@ -119,7 +121,6 @@ import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MaritalStatus;
@@ -155,9 +156,6 @@ import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -337,9 +335,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         rootBusinessTestHelper.setReportBusiness(reportBusiness);
         
         applicationBusiness.registerValueGenerator((ValueGenerator<?, ?>) new StringValueGenerator<Party>(
-        		ValueGenerator.PARTY_CODE_IDENTIFIER,ValueGenerator.PARTY_CODE_DESCRIPTION, Party.class));
-        applicationBusiness.registerValueGenerator((ValueGenerator<?, ?>) new StringValueGenerator<AbstractActor>(
-        		ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER,ValueGenerator.ACTOR_REGISTRATION_CODE_DESCRIPTION, AbstractActor.class));
+        		ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER,ValueGenerator.GLOBAL_IDENTIFIER_CODE_DESCRIPTION, Party.class));
         
         registerValidator(Person.class, personValidator);
         registerValidator(File.class, fileValidator);
@@ -351,48 +347,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		registerResourceBundle("org.cyk.system."+systemName+".business.impl.resources.message", getClass().getClassLoader());
         */
         
-        ValueGenerator<AbstractActor,String> actorRegistrationCodeGenerator = (ValueGenerator<AbstractActor, String>) 
-				RootBusinessLayer.getInstance().getApplicationBusiness().findValueGenerator(ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER);
-		
-		actorRegistrationCodeGenerator.setMethod(new GenerateMethod<AbstractActor, String>() {
-				@Override
-				public String execute(AbstractActor actor) {
-					String generatedCode = null;
-					for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
-						String value = listener.generateActorRegistrationCode(actor,null);
-						if(value!=null)
-							generatedCode = value;
-					}
-					if(generatedCode==null)
-						generatedCode = RandomStringUtils.randomAlphabetic(6);
-					else{
-						do{
-							AbstractActorBusiness<AbstractActor,?> business =  null;
-							for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
-								AbstractActorBusiness<AbstractActor,?> value = listener.findActorBusiness(actor);
-								if(value!=null)
-									business = value;
-							}
-							if(business==null)
-								break;
-							AbstractActor existingActor = business.findByRegistrationCode(generatedCode);
-							
-							if(existingActor==null)
-								break;
-							else{
-								String previousGeneratedCode = generatedCode;
-								for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
-									String value = listener.generateActorRegistrationCode(actor,previousGeneratedCode);
-									if(value!=null)
-										generatedCode = value;
-								}
-							}
-						}while(true);
-					}
-					
-					return generatedCode;
-				}
-			});
+        ValueGenerator<AbstractIdentifiable,String> globalIdentifierCodeGenerator = (ValueGenerator<AbstractIdentifiable, String>) 
+				RootBusinessLayer.getInstance().getApplicationBusiness().findValueGenerator(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER);
+        globalIdentifierCodeGenerator.setMethod(new GlobalIdentifierCodeGenerator());
 		
 		AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_VALUE = new StringMethod<AbstractIdentifiable>() {
 			private static final long serialVersionUID = -206221150563679476L;
@@ -610,16 +567,16 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     		applicationIdentifier = application.getIdentifier();
     	//application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
         
-    	landPhoneNumberType = phoneNumberTypeBusiness.find(PhoneNumberType.LAND);
-    	mobilePhoneNumberType = phoneNumberTypeBusiness.find(PhoneNumberType.MOBILE);
+    	landPhoneNumberType = phoneNumberTypeBusiness.findByGlobalIdentifierCode(PhoneNumberType.LAND);
+    	mobilePhoneNumberType = phoneNumberTypeBusiness.findByGlobalIdentifierCode(PhoneNumberType.MOBILE);
     	
-    	homeLocationType = locationTypeBusiness.find(LocationType.HOME);
-    	officeLocationType = locationTypeBusiness.find(LocationType.OFFICE);
+    	homeLocationType = locationTypeBusiness.findByGlobalIdentifierCode(LocationType.HOME);
+    	officeLocationType = locationTypeBusiness.findByGlobalIdentifierCode(LocationType.OFFICE);
     	
     	countryCoteDivoire = countryDao.readByCode(Country.COTE_DIVOIRE);
-    	countryLocalityType = localityTypeBusiness.find(LocalityType.COUNTRY);
-    	continentLocalityType = localityTypeBusiness.find(LocalityType.CONTINENT);
-    	cityLocalityType = localityTypeBusiness.find(LocalityType.CITY);
+    	countryLocalityType = localityTypeBusiness.findByGlobalIdentifierCode(LocalityType.COUNTRY);
+    	continentLocalityType = localityTypeBusiness.findByGlobalIdentifierCode(LocalityType.CONTINENT);
+    	cityLocalityType = localityTypeBusiness.findByGlobalIdentifierCode(LocalityType.CITY);
     	
     	roleAdministrator = getEnumeration(Role.class,Role.ADMINISTRATOR);
     	roleManager = getEnumeration(Role.class,Role.MANAGER);
@@ -638,9 +595,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	sexMale = getEnumeration(Sex.class, Sex.MALE);
     	sexFemale = getEnumeration(Sex.class, Sex.FEMALE);
     	
-    	RemoteEndPoint.USER_INTERFACE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_USER_INTERFACE);
-    	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_EMAIL);
-    	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.read(NotificationTemplate.ALARM_SMS);
+    	RemoteEndPoint.USER_INTERFACE.alarmTemplate = notificationTemplateDao.readByGlobalIdentifierCode(NotificationTemplate.ALARM_USER_INTERFACE);
+    	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.readByGlobalIdentifierCode(NotificationTemplate.ALARM_EMAIL);
+    	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.readByGlobalIdentifierCode(NotificationTemplate.ALARM_SMS);
     	
     	
     }
@@ -701,11 +658,56 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	/**/
 	
+	public static class GlobalIdentifierCodeGenerator implements GenerateMethod<AbstractIdentifiable, String> {
+
+		@Override
+		public String execute(AbstractIdentifiable input) {
+			String generatedCode = null;
+			
+			for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+				String value = listener.generateGlobalIdentifierCode(input,null);
+				if(value!=null)
+					generatedCode = value;
+			}
+			if(generatedCode==null)
+				generatedCode = RandomStringUtils.randomAlphabetic(6);
+			else{
+				do{
+					TypedBusiness<AbstractIdentifiable> business =  null;
+					for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+						TypedBusiness<AbstractIdentifiable> value = listener.findBusiness(input);
+						if(value!=null)
+							business = value;
+					}
+					if(business==null)
+						break;
+					AbstractIdentifiable existing = business.findByGlobalIdentifierCode(generatedCode);
+					
+					if(existing==null)
+						break;
+					else{
+						String previousGeneratedCode = generatedCode;
+						for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+							String value = listener.generateGlobalIdentifierCode(input,previousGeneratedCode);
+							if(value!=null)
+								generatedCode = value;
+						}
+					}
+				}while(true);
+				
+			}
+			return generatedCode;
+		}
+		
+	}
+	
+	/**/
+	
 	public interface Listener {
 
-		String generateActorRegistrationCode(AbstractActor actor,String previousCode);
+		String generateGlobalIdentifierCode(AbstractIdentifiable identifiable,String previousCode);
 		
-		<ACTOR extends AbstractActor> AbstractActorBusiness<ACTOR,?> findActorBusiness(ACTOR actor);
+		<IDENTIFIABLE extends AbstractIdentifiable> TypedBusiness<IDENTIFIABLE> findBusiness(IDENTIFIABLE identifiable);
 		
 		void populateCandidateRoles(List<Role> roles);
 		
@@ -716,12 +718,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = -7771053357545118564L;
 
 			@Override
-			public String generateActorRegistrationCode(AbstractActor actor,String previousCode) {
+			public String generateGlobalIdentifierCode(AbstractIdentifiable identifiable,String previousCode) {
 				return null;
 			}
 
 			@Override
-			public <ACTOR extends AbstractActor> AbstractActorBusiness<ACTOR,?> findActorBusiness(ACTOR actor) {
+			public <IDENTIFIABLE extends AbstractIdentifiable> TypedBusiness<IDENTIFIABLE> findBusiness(IDENTIFIABLE identifiable) {
 				return null;
 			}
 
@@ -734,10 +736,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 
 				private static final long serialVersionUID = 3580112506828375899L;
 				
+				@SuppressWarnings("unchecked")
+				@Override
+				public <IDENTIFIABLE extends AbstractIdentifiable> TypedBusiness<IDENTIFIABLE> findBusiness(IDENTIFIABLE identifiable) {
+					return (TypedBusiness<IDENTIFIABLE>) BusinessLocator.getInstance().locate(identifiable);
+				}
+				
 			}
-		}
-
-		
+		}		
 	}
 
     

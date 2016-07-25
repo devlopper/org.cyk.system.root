@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,9 +12,6 @@ import lombok.Setter;
 
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputText;
-import org.cyk.utility.common.validation.Client;
 
 /*lombok*/
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
@@ -24,7 +20,7 @@ import org.cyk.utility.common.validation.Client;
 public abstract class AbstractEnumeration  extends AbstractIdentifiable  implements Serializable,Comparable<AbstractEnumeration> {
 
 	private static final long serialVersionUID = -8639942019354737162L;
-	
+	/*
 	@Input
 	@InputText
 	@Column(nullable=false,unique=true)
@@ -35,7 +31,8 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	@InputText
 	@Column(nullable=false)
 	@NotNull(groups=Client.class)
-	protected String name;	
+	protected String name;
+	*/
 	protected String nameI18nId;
 	
 	protected String abbreviation;
@@ -50,39 +47,36 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	
 	public AbstractEnumeration(String code, String name, String abbreviation, String description) {
         super();
-        this.code = code;
-        this.name = name;
+        setCode(code);
+        setName(name);
         this.abbreviation = abbreviation;
         this.description = description;
     }
 	
 	@Override
 	public int compareTo(AbstractEnumeration o) {
-	    if(code==null)
-	        if(o.code==null)
+	    if(getCode()==null)
+	        if(o.getCode()==null)
 	            return 0;
 	        else
 	            return -1;
 	    else
-	        if(o.code==null)
+	        if(o.getCode()==null)
                 return 1;
             else
-                return code.compareTo(o.code);
+                return getCode().compareTo(o.getCode());
 	}
 	
 	@Override
 	public String toString() {
-		return name;
+		return getName();
 	}
 
     @Override
     public String getUiString() {
-    	return name;
+    	return getName();
     }
 
     /**/
-    
-    public static final String FIELD_CODE = "code";
-    public static final String FIELD_NAME = "name";
 	
 }

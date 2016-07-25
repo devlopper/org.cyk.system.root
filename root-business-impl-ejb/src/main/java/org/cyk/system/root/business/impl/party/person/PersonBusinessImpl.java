@@ -59,6 +59,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	public Person create(Person person) {
 		super.create(person);
 		//person.setBirthDateAnniversary(repeatedEventBusiness.createAnniversary(person.getBirthDate(),person.getNames()));
+		
 		if(person.getExtendedInformations()!=null){
 			if(person.getExtendedInformations().getBirthLocation()!=null)
 				contactDao.create(person.getExtendedInformations().getBirthLocation());
@@ -96,8 +97,8 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		List<String> blocks = new ArrayList<>();
 		if(StringUtils.isNotBlank(person.getName()))
 			blocks.add(person.getName());
-		if(StringUtils.isNotBlank(person.getLastName()))
-			blocks.add(person.getLastName());
+		if(StringUtils.isNotBlank(person.getLastnames()))
+			blocks.add(person.getLastnames());
 		
 		if(Boolean.TRUE.equals(options.getFirstNameIsFirst()))
 			;
@@ -163,7 +164,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		}
 		
 		if(arguments.getLastnameIndex()!=null){
-			person.setLastName(arguments.getValues()[arguments.getLastnameIndex()]);
+			person.setLastnames(arguments.getValues()[arguments.getLastnameIndex()]);
 		}
 		
 		if(arguments.getSexCodeIndex()!=null){

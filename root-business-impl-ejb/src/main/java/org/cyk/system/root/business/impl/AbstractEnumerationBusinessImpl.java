@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.AbstractEnumerationDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ObjectFieldValues;
@@ -41,8 +42,8 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ENUMERATION instanciateOne(String code,String name) {
 		ObjectFieldValues objectFieldValues = new ObjectFieldValues(clazz);
-		objectFieldValues.set(AbstractEnumeration.FIELD_CODE, code);
-		objectFieldValues.set(AbstractEnumeration.FIELD_NAME, name);
+		objectFieldValues.set(AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE, code);
+		objectFieldValues.set(AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME, name);
 		return commonUtils.instanciateOne(clazz, objectFieldValues);
 	}
 	
@@ -76,15 +77,10 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 		}
 		return instanciateMany(argumentList);
 	}
-
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-    public ENUMERATION find(String code){
-        return dao.read(code);
-    }
     
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public ENUMERATION load(String code) {
-    	ENUMERATION enumeration = find(code);
+    	ENUMERATION enumeration = findByGlobalIdentifierCode(code);
     	load(enumeration);
     	return enumeration;
     }

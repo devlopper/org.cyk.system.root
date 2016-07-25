@@ -102,7 +102,7 @@ public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends Abstr
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ENUMERATION instanciateOne(String parentCode, String code,String name) {
 		ENUMERATION enumeration = instanciateOne(code,name);
-    	enumeration.setParent(dao.read(parentCode));
+    	enumeration.setParent(dao.readByGlobalIdentifierCode(parentCode));
     	return enumeration;
 	}
 

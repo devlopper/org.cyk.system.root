@@ -36,11 +36,11 @@ public class UserAccountDaoImpl extends AbstractTypedDao<UserAccount> implements
     protected void namedQueriesInitialisation() {
         super.namedQueriesInitialisation();
         registerNamedQuery(readByCredentials, _select().where("credentials.username","username",EQ).where(LogicalOperator.AND,"credentials.password","password",EQ));
-        registerNamedQuery(readAllSortedByDate,READ_BY_CRITERIA_SELECT_FORMAT+" ORDER BY userAccount.creationDate DESC");
+        registerNamedQuery(readAllSortedByDate,READ_BY_CRITERIA_SELECT_FORMAT+" ORDER BY userAccount.globalIdentifier.creationDate DESC");
         registerNamedQuery(readAllExcludeRoles,READ_BY_CRITERIA_SELECT_FORMAT+" WHERE "+WHERE_EXCLUDE_ROLE);
         registerNamedQuery(readByCriteria,READ_BY_CRITERIA_NOTORDERED_FORMAT);
-        registerNamedQuery(readByCriteriaCreationDateAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "userAccount.creationDate ASC") );
-        registerNamedQuery(readByCriteriaCreationDateDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "userAccount.creationDate DESC") );
+        registerNamedQuery(readByCriteriaCreationDateAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "userAccount.globalIdentifier.creationDate ASC") );
+        registerNamedQuery(readByCriteriaCreationDateDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "userAccount.globalIdentifier.creationDate DESC") );
         registerNamedQuery(readByParties,"SELECT userAccount FROM UserAccount userAccount WHERE userAccount.user.identifier IN :identifiers" );
         registerNamedQuery(readByUsername,"SELECT userAccount FROM UserAccount userAccount WHERE LOWER(userAccount.credentials.username) = LOWER(:username)");
     }

@@ -22,7 +22,7 @@ public class FiniteStateMachine extends AbstractEnumeration implements Serializa
 	
 	@Override
 	public String getLogMessage() {
-		return String.format(DEBUG_FORMAT,code,initialState==null ? Constant.EMPTY_STRING:initialState.getCode()
+		return String.format(DEBUG_FORMAT,getCode(),initialState==null ? Constant.EMPTY_STRING:initialState.getCode()
 				,currentState==null ? Constant.EMPTY_STRING:currentState.getCode());
 	}
 	

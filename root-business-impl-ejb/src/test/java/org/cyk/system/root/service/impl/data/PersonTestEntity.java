@@ -21,7 +21,7 @@ public class PersonTestEntity extends AbstractIdentifiable implements Serializab
 	
 	private String name;
 	
-	private String lastName;
+	private String lastname;
 
 	
 	

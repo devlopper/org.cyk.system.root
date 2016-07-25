@@ -32,6 +32,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractPeriodSearchCriteria;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -113,6 +114,16 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
     public IDENTIFIABLE read(Long identifier) {
         return entityManager.find(clazz, identifier);
     }
+	
+	@Override
+	public IDENTIFIABLE readByGlobalIdentifier(GlobalIdentifier globalIdentifier) {
+		return null;
+	}
+	
+	@Override
+	public IDENTIFIABLE readByGlobalIdentifierCode(String code) {
+		return null;
+	}
 
     @Override
     public IDENTIFIABLE update(IDENTIFIABLE object) {
@@ -143,12 +154,17 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	}
 	
 	@Override
-	public PersistenceService<IDENTIFIABLE, Long> where(LogicalOperator aLogicalOperator,String anAttributeName,Object aValue,ArithmeticOperator anArithmeticOperator) {
-		queryStringBuilder.where(aLogicalOperator,anAttributeName,anAttributeName,anArithmeticOperator);
+	public PersistenceService<IDENTIFIABLE, Long> where(LogicalOperator aLogicalOperator,String anAttributeName,String aVarName,Object aValue,ArithmeticOperator anArithmeticOperator) {
+		queryStringBuilder.where(aLogicalOperator,anAttributeName,aVarName,anArithmeticOperator);
 		if(parameters==null) 
 			parameters = new HashMap<String, Object>();
-		parameters.put(anAttributeName, aValue);
+		parameters.put(aVarName, aValue);
 		return this;
+	}
+	
+	@Override
+	public PersistenceService<IDENTIFIABLE, Long> where(LogicalOperator aLogicalOperator,String anAttributeName,Object aValue,ArithmeticOperator anArithmeticOperator) {
+		return where(aLogicalOperator, anAttributeName, anAttributeName, aValue, anArithmeticOperator);
 	}
 	
 	@Override

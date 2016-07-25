@@ -54,30 +54,37 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	@Transient protected Processing processing;
 	
+	public void setCode(String code){
+		getGlobalIdentifierCreateIfNull().setCode(code);
+	}
 	public String getCode(){
 		return globalIdentifier == null ? null : globalIdentifier.getCode();
 	}
-	public void setCode(String code){
-		if(globalIdentifier==null)
-			;
-		else
-			globalIdentifier.setCode(code);
+	
+	public void setName(String name){
+		getGlobalIdentifierCreateIfNull().setName(name);
+	}
+	public String getName(){
+		return globalIdentifier == null ? null : globalIdentifier.getName();
 	}
 	
 	public void setImage(File image){
-		if(globalIdentifier==null)
-			;
-		else
-			globalIdentifier.setImage(image);
+		getGlobalIdentifierCreateIfNull().setImage(image);
 	}
-	
 	public File getImage(){
 		return globalIdentifier == null ? null : globalIdentifier.getImage();
 	}
 	
+	public void setBirthDate(Date date){
+		getGlobalIdentifierCreateIfNull().getExistencePeriod().setFromDate(date);
+	}
+	public Date getBirthDate(){
+		return getGlobalIdentifier().getExistencePeriod().getFromDate();
+	}
+	
 	public GlobalIdentifier getGlobalIdentifierCreateIfNull(){
 		if(globalIdentifier==null)
-			globalIdentifier = new GlobalIdentifier();
+			globalIdentifier = new GlobalIdentifier(this);
 		return globalIdentifier;
 	}
 	
@@ -123,7 +130,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	@Override
 	public String getUiString() {
-		return "?? NO UI STRING SPECIFIED ??";
+		return globalIdentifier == null ? "?? NO UI STRING SPECIFIED ??" : globalIdentifier.getIdentifier();
 	}
 	
 	/**/
@@ -137,17 +144,19 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 				entry.getValue().onPrePersist(this);
 			}
 		}
-		System.out.println(getClass().getSimpleName().toUpperCase());
 		if(globalIdentifier==null && GLOBAL_IDENTIFIER_BUILDABLE!=null && Boolean.TRUE.equals(GLOBAL_IDENTIFIER_BUILDABLE.execute(this)) 
 				&& BUILD_GLOBAL_IDENTIFIER_VALUE!=null && CREATE_GLOBAL_IDENTIFIER!=null){
-			globalIdentifier = new GlobalIdentifier();
+			globalIdentifier = getGlobalIdentifierCreateIfNull();
+		}else{
+			
 		}
-		//System.out.println("   ***   ???????   *** : "+globalIdentifier);
 		if(globalIdentifier!=null){
+			if(globalIdentifier.getIdentifiable()==null)
+				globalIdentifier.setIdentifiable(this);
 			globalIdentifier.setIdentifier(BUILD_GLOBAL_IDENTIFIER_VALUE.execute(this));
 			globalIdentifier.setCreationDate(BUILD_GLOBAL_IDENTIFIER_CREATION_DATE.execute(this));
 			globalIdentifier.setCreatedBy(BUILD_GLOBAL_IDENTIFIER_CREATED_BY.execute(this));
-			//System.out.println("   ***   UPDATED   *** : "+globalIdentifier);
+			
 			CREATE_GLOBAL_IDENTIFIER.execute(globalIdentifier);
 		}
 	}
@@ -183,7 +192,6 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		}
 		
 		if(globalIdentifier!=null){
-			System.out.println("AbstractIdentifiable.onPreUpdate() : "+globalIdentifier.getIdentifier());
 			UPDATE_GLOBAL_IDENTIFIER.execute(globalIdentifier);
 		}
 	}

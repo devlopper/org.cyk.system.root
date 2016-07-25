@@ -29,7 +29,7 @@ public class PermissionBusinessImpl extends AbstractEnumerationBusinessImpl<Perm
 
 	@Override
 	public Permission find(Class<? extends AbstractIdentifiable> aClass,Crud crud) {
-		return find(computeCode(aClass, crud));
+		return findByGlobalIdentifierCode(computeCode(aClass, crud));
 	}  
 
 	@Override

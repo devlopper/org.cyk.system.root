@@ -5,10 +5,9 @@ import java.util.Collection;
 
 import javax.persistence.NoResultException;
 
-import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.Registration;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
@@ -18,35 +17,29 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	private static final long serialVersionUID = 6306356272165070761L;
 	
 	private static final String READ_BY_CRITERIA_FORMAT = "SELECT actor FROM %s actor WHERE "
-    		+ "    ( LOCATE(LOWER(:name),LOWER(actor.person.name))                  > 0 )"
-    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.person.lastName))              > 0 )"
-    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.registration.code))            > 0 )"
+    		+ "    ( LOCATE(LOWER(:name),LOWER(actor.person.globalIdentifier.name))                  > 0 )"
+    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.person.lastname))              > 0 )"
+    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.globalIdentifier.code))            > 0 )"
     		;
 	
 	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_FORMAT+" "+ORDER_BY_FORMAT;
 	
-	private String readByPerson,readByRegistrationCode,readByCriteria,countByCriteria,readByCriteriaNameAscendingOrder,readByCriteriaNameDescendingOrder;;
+	private String readByPerson,readByCriteria,countByCriteria,readByCriteriaNameAscendingOrder,readByCriteriaNameDescendingOrder;;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByPerson, _select().where(AbstractActor.FIELD_PERSON));
-		registerNamedQuery(readByRegistrationCode, _select().where(commonUtils.attributePath(AbstractActor.FIELD_REGISTRATION, Registration.FIELD_CODE),Registration.FIELD_CODE));
-	
+		
 		registerNamedQuery(readByCriteria,String.format(READ_BY_CRITERIA_FORMAT,entityName()));
         
-        registerNamedQuery(readByCriteriaNameAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT,entityName(), "actor.person.name ASC") );
-        registerNamedQuery(readByCriteriaNameDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT,entityName(), "actor.person.name DESC") );
+        registerNamedQuery(readByCriteriaNameAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT,entityName(), "actor.person.globalIdentifier.name ASC") );
+        registerNamedQuery(readByCriteriaNameDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT,entityName(), "actor.person.globalIdentifier.name DESC") );
 	}
 	
 	@Override
 	public ACTOR readByPerson(Person person) {
 		return namedQuery(readByPerson).parameter(AbstractActor.FIELD_PERSON, person).ignoreThrowable(NoResultException.class).resultOne();
-	}
-	
-	@Override
-	public ACTOR readByRegistrationCode(String registrationCode) {
-		return namedQuery(readByRegistrationCode).parameter(Registration.FIELD_CODE, registrationCode).ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -71,7 +64,7 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	}
 	
 	protected void applyCriteriaParameters(QueryWrapper<?> queryWrapper,SEARCH_CRITERIA searchCriteria){
-		queryWrapper.parameter(Party.FIELD_NAME,searchCriteria.getPerson().getName().getPreparedValue());
+		queryWrapper.parameter(GlobalIdentifier.FIELD_NAME,searchCriteria.getPerson().getName().getPreparedValue());
 	}
 	
 	/**/
