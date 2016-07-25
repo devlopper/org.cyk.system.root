@@ -53,6 +53,8 @@ public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends Abstr
 		return enumeration;
 	}
 	
+	
+	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public ENUMERATION findParent(ENUMERATION child){
 		return dao.readParent(child);

@@ -40,7 +40,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
 
     @Override
     public void validateUpdate(Identifiable<?> anIdentifiable) {
-        checkUniqueConstraints(anIdentifiable);
+    	checkUniqueConstraints(anIdentifiable);
     }
 
     @Override

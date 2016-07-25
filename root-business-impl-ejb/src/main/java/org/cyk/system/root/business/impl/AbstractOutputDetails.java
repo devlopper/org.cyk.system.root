@@ -48,6 +48,8 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	
 	/**/
 	
+	public static final String FIELD_CODE = "code";
+	
 	public static final String IDENTIFIER_1 = RandomStringUtils.randomAlphanumeric(10);
 	public static final String IDENTIFIER_2 = RandomStringUtils.randomAlphanumeric(10);
 	public static final String IDENTIFIER_3 = RandomStringUtils.randomAlphanumeric(10);

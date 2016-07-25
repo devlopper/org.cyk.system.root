@@ -57,12 +57,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE update(IDENTIFIABLE object) {
-		object = dao.update(object);
-		 @SuppressWarnings("unchecked")
-			Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(object.getClass());
-	    	if(listener!=null)
-	    		listener.processOnUpdated(object);
-		return object;
+		IDENTIFIABLE newObject = dao.update(object);
+		@SuppressWarnings("unchecked")
+		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(object.getClass());
+	    if(listener!=null)
+	    	listener.processOnUpdated(object);
+	    if(object.getGlobalIdentifier()!=null)
+	    	RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().update(object.getGlobalIdentifier());
+		return newObject;
 	}
 	
 	@Override

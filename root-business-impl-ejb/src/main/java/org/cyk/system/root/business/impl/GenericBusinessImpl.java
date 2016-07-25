@@ -90,8 +90,8 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	@Override
 	public AbstractIdentifiable update(AbstractIdentifiable anObject) {
 	    TypedBusiness<AbstractIdentifiable> businessBean = businessLocator.locate(anObject);
-        if(businessBean==null){
-            validationPolicy.validateUpdate(anObject);
+	    if(businessBean==null){
+        	validationPolicy.validateUpdate(anObject);
             return genericDao.update(anObject);
         }else
             return businessBean.update(anObject);   

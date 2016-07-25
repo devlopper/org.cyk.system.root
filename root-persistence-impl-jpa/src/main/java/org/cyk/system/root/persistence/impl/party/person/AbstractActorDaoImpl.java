@@ -18,7 +18,7 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	
 	private static final String READ_BY_CRITERIA_FORMAT = "SELECT actor FROM %s actor WHERE "
     		+ "    ( LOCATE(LOWER(:name),LOWER(actor.person.globalIdentifier.name))                  > 0 )"
-    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.person.lastname))              > 0 )"
+    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.person.lastnames))              > 0 )"
     		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.globalIdentifier.code))            > 0 )"
     		;
 	
