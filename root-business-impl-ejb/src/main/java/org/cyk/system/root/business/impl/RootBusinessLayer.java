@@ -12,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -157,6 +158,7 @@ import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
+@Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
  
@@ -271,7 +273,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     protected void initialisation() {
     	INSTANCE = this; 
         super.initialisation();
-        
         ClazzBusiness.LISTENERS.add(new ClazzBusinessListener.Adapter() {
 			private static final long serialVersionUID = 4056356640763766384L;
 			@Override
@@ -558,6 +559,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)DataTree.class, (TypedBusiness)dataTreeBusiness);
         beansMap.put((Class)DataTreeType.class, (TypedBusiness)dataTreeTypeBusiness);
         beansMap.put((Class)DataTreeIdentifiableGlobalIdentifier.class, (TypedBusiness)dataTreeIdentifiableGlobalIdentifierBusiness);
+        beansMap.put((Class)Application.class, (TypedBusiness)applicationBusiness);
+       
     }
     
     @Override
@@ -736,10 +739,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 
 				private static final long serialVersionUID = 3580112506828375899L;
 				
-				@SuppressWarnings("unchecked")
 				@Override
 				public <IDENTIFIABLE extends AbstractIdentifiable> TypedBusiness<IDENTIFIABLE> findBusiness(IDENTIFIABLE identifiable) {
-					return (TypedBusiness<IDENTIFIABLE>) BusinessLocator.getInstance().locate(identifiable);
+					return BusinessLocator.getInstance().locate(identifiable);
 				}
 				
 			}
