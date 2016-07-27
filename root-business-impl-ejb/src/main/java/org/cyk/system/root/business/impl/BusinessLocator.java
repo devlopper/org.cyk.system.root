@@ -33,8 +33,9 @@ public class BusinessLocator extends AbstractBean implements Serializable {
     }
     
     @SuppressWarnings({ })
-    public TypedBusiness<AbstractIdentifiable> locate(Class<? extends AbstractIdentifiable> beanClass){
-        TypedBusiness<AbstractIdentifiable> businessBean = typedBusinessBeanMap.get(beanClass);
+    public <T extends AbstractIdentifiable> TypedBusiness<T> locate(Class<? extends T> beanClass){
+        @SuppressWarnings("unchecked")
+		TypedBusiness<T> businessBean = (TypedBusiness<T>) typedBusinessBeanMap.get(beanClass);
         /*if(businessBean==null){
             if(DataTreeType.class.isAssignableFrom(beanClass)){
             	businessBean = (AbstractEnumerationBusiness)dataTreeTypeBusiness;
@@ -47,8 +48,8 @@ public class BusinessLocator extends AbstractBean implements Serializable {
     }
     
     @SuppressWarnings("unchecked")
-    public TypedBusiness<AbstractIdentifiable> locate(AbstractIdentifiable bean){
-        return locate((Class<AbstractIdentifiable>) bean.getClass());
+    public <T extends AbstractIdentifiable> TypedBusiness<T> locate(T bean){
+        return locate((Class<T>) bean.getClass());
     }
     
     public static BusinessLocator getInstance() {
