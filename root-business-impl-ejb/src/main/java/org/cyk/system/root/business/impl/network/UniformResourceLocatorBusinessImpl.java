@@ -207,7 +207,8 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 			if(StringUtils.startsWith(uniformResourceLocator.getAddress().toLowerCase(), "http://"))
 				return new URL(uniformResourceLocator.getAddress()).getPath();
 			else
-				return Constant.CHARACTER_SLASH+RootBusinessLayer.getInstance().getApplication().getWebContext()+uniformResourceLocator.getAddress();
+				return Constant.CHARACTER_SLASH+RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance()
+						.getWebContext()+uniformResourceLocator.getAddress();
 		} catch (MalformedURLException e) {
 			throw new BusinessExceptionNoRollBack(e.toString());
 		}
@@ -215,13 +216,13 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isAccessible(URL url,Collection<UniformResourceLocator> uniformResourceLocators) {
-		return Boolean.TRUE.equals(RootBusinessLayer.getInstance().getApplication().getUniformResourceLocatorFilteringEnabled())
+		return Boolean.TRUE.equals(RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getUniformResourceLocatorFilteringEnabled())
 				?find(url,uniformResourceLocators)!=null:Boolean.TRUE;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isAccessible(URL url) {
-		return Boolean.TRUE.equals(RootBusinessLayer.getInstance().getApplication().getUniformResourceLocatorFilteringEnabled())?find(url)!=null:Boolean.TRUE;
+		return Boolean.TRUE.equals(RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getUniformResourceLocatorFilteringEnabled())?find(url)!=null:Boolean.TRUE;
 	}
 
 }

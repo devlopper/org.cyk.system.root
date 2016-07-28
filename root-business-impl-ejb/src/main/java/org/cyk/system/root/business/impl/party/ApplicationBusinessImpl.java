@@ -50,8 +50,6 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	
-	
 	private static Application INSTANCE;
 	private static ApplicationPropertiesProvider PROPERTIES_PROVIDER;
 	private static ShiroConfigurator SHIRO_CONFIGURATOR;
@@ -93,7 +91,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 					smtpPropertiesBusiness.create(installation.getSmtpProperties());
 					installation.getApplication().setSmtpProperties(installation.getSmtpProperties());
 				}
-				RootBusinessLayer.getInstance().setApplication(dao.select().one());
+				RootBusinessLayer.getInstance().setApplication(INSTANCE = dao.select().one());
 				
 				for(AbstractIdentifiable identifiable : installation.getIdentifiables())
 					RootBusinessLayer.getInstance().getGenericBusiness().create(identifiable);
@@ -154,16 +152,18 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void applySettings(Installation installation) {
-		// TODO Auto-generated method stub
-		
-	}  
+	public Application update(Application application) {
+		INSTANCE = super.update(application);
+		RootBusinessLayer.getInstance().setApplication(INSTANCE);
+		return INSTANCE;
+	} 
 
-    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Application findCurrentInstance() {
     	if(INSTANCE==null){
     		Collection<Application> applications = dao.readAll();
     		INSTANCE = applications.isEmpty()?null:applications.iterator().next();
+    		RootBusinessLayer.getInstance().setApplication(INSTANCE);
     	}
     	return INSTANCE;
     }

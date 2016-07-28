@@ -183,7 +183,7 @@ public abstract class AbstractReportBusinessImpl extends AbstractBusinessService
      */
     private  String buildFileName(AbstractReport<?> report){
     	StringBuilder s = new StringBuilder(String.format(FILE_NAME_FORMAT,StringUtils.isNotBlank(report.getOwnerName())?report.getOwnerName()
-    			:RootBusinessLayer.getInstance().getApplication().getGlobalIdentifier().getName(),
+    			:RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getGlobalIdentifier().getName(),
 				report.getTitle(),StringUtils.replace(report.getCreationDate(),Constant.CHARACTER_COLON.toString(),Constant.CHARACTER_H.toString()),report.getCreatedBy()));
     	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_SLASH.charValue()));
     	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_BACK_SLASH.charValue()));
@@ -198,7 +198,7 @@ public abstract class AbstractReportBusinessImpl extends AbstractBusinessService
     public void prepare(AbstractReport<?> report){
     	//logTrace("Prepare report {}", report);
     	if(StringUtils.isBlank(report.getOwnerName()))
-    		report.setOwnerName(RootBusinessLayer.getInstance().getApplication().getGlobalIdentifier().getName());
+    		report.setOwnerName(RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getGlobalIdentifier().getName());
     	
     	if(StringUtils.isBlank(report.getCreationDate()))
 			report.setCreationDate(timeBusiness.formatDateTime(new Date()));

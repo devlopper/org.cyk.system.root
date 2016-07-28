@@ -16,9 +16,7 @@ public interface ApplicationBusiness extends AbstractPartyBusiness<Application,P
 	
 	void install(Installation installation);
 	
-	void applySettings(Installation installation);
-	
-    Application findCurrentInstance();
+	Application findCurrentInstance();
     
     Collection<BusinessEntityInfos> findBusinessEntitiesInfos();
     
