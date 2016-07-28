@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.Rud;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
@@ -31,17 +32,17 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isReadable(AbstractIdentifiable identifiable) {
-		return identifiable.getGlobalIdentifier()==null || identifiable.getGlobalIdentifier().getRud().getReadable()==null || identifiable.getGlobalIdentifier().getRud().getReadable();
+		return identifiable.getGlobalIdentifier()==null || isReadable(identifiable.getGlobalIdentifier().getRud());
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isUpdatable(AbstractIdentifiable identifiable) {
-		return identifiable.getGlobalIdentifier()==null || identifiable.getGlobalIdentifier().getRud().getUpdatable()==null || identifiable.getGlobalIdentifier().getRud().getUpdatable();
+		return identifiable.getGlobalIdentifier()==null || isUpdatable(identifiable.getGlobalIdentifier().getRud());
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isDeletable(AbstractIdentifiable identifiable) {
-		return identifiable.getGlobalIdentifier()==null || identifiable.getGlobalIdentifier().getRud().getDeletable()==null || identifiable.getGlobalIdentifier().getRud().getDeletable();
+		return identifiable.getGlobalIdentifier()==null || isDeletable(identifiable.getGlobalIdentifier().getRud());
 	}
 
 	@Override
@@ -63,4 +64,17 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 		return globalIdentifierDao.update(globalIdentifier);
 	}
 
+	/**/
+	
+	public static Boolean isReadable(Rud rud) {
+		return rud.getReadable()==null || rud.getReadable();
+	}
+
+	public static Boolean isUpdatable(Rud rud) {
+		return rud.getUpdatable()==null || rud.getUpdatable();
+	}
+
+	public static Boolean isDeletable(Rud rud) {
+		return rud.getDeletable()==null || rud.getDeletable();
+	}
 }

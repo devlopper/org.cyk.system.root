@@ -6,8 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
+import org.cyk.system.root.business.impl.security.RudDetails;
+import org.cyk.system.root.business.impl.time.PeriodDetails;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
+import org.cyk.utility.common.FileExtensionGroup;
+import org.cyk.utility.common.annotation.user.interfaces.FileExtensions;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs.Layout;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputFile;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 @Getter @Setter
@@ -15,16 +23,30 @@ public class GlobalIdentifierDetails<IDENTIFIABLE extends AbstractIdentifiable> 
 
 	private static final long serialVersionUID = 1708181273704661027L;
 
-	@Input @InputText private String creationDate,createdBy,readable,updatable,deletable;
+	@Input @InputText private String code,name;
+	
+	@Input @InputFile(extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) private File image;
+	
+	@Input @InputText private String creationDate,createdBy;
+	
+	@IncludeInputs(layout=Layout.VERTICAL) private PeriodDetails period;
+	
+	@IncludeInputs(layout=Layout.VERTICAL) private RudDetails rud;
 	
 	public GlobalIdentifierDetails(IDENTIFIABLE identifiable) {
 		super(identifiable);
+		if(identifiable.getGlobalIdentifier()==null)
+			return;
+		this.code = identifiable.getGlobalIdentifier().getCode();
+		this.name = identifiable.getGlobalIdentifier().getName();
+		this.image = identifiable.getGlobalIdentifier().getImage();
+		
 		this.creationDate = formatDateTime(identifiable.getGlobalIdentifier().getCreationDate());
 		this.createdBy = formatUsingBusiness(identifiable.getGlobalIdentifier().getCreatedBy());
 		
-		this.readable = formatResponse(rootBusinessLayer.getGlobalIdentifierBusiness().isReadable(identifiable));
-		this.updatable = formatResponse(rootBusinessLayer.getGlobalIdentifierBusiness().isUpdatable(identifiable));
-		this.deletable = formatResponse(rootBusinessLayer.getGlobalIdentifierBusiness().isDeletable(identifiable));
+		this.period = new PeriodDetails(identifiable.getGlobalIdentifier().getExistencePeriod());
+		
+		this.rud = new RudDetails(identifiable.getGlobalIdentifier().getRud());
 	}
 
 }
