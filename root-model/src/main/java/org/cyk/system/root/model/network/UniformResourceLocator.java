@@ -63,6 +63,27 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	
 	/**/
 	
+	public static final String PRIVATE_FOLDER="private";
+	public static final String DYNAMIC_FOLDER="__dynamic__";
+	public static final String CRUD_FOLDER="crud";
+	public static final String SELECT_FOLDER="select";
+	public static final String PROCESS_FOLDER="process";
+	public static final String PROCESSED_FILE_EXTENSION = "jsf";
+	public static final String FILE_LIST = "list";
+	public static final String FILE_EDIT = "edit";
+	public static final String FILE_CONSULT = "consult";
+	public static final String FILE_CREATE_MANY = "createMany";
+	
+	public static final String DYNAMIC_CRUD_ONE = "/private/__dynamic__/crud/crudone.jsf";
+	public static final String DYNAMIC_CRUD_MANY = "/private/__dynamic__/crud/crudmany.jsf";
+	public static final String DYNAMIC_SELECT_ONE = "/private/__dynamic__/select/selectone.jsf";
+	public static final String DYNAMIC_SELECT_MANY = "/private/__dynamic__/select/selectmany.jsf";
+	public static final String DYNAMIC_EXPORT_FILE_JASPER = "/private/file/export/_cyk_report_/_dynamicbuilder_/_jasper_/";
+	public static final String EXPORT_FILE_JASPER = "/private/file/export/_cyk_report_/_business_/_jasper_/";
+	public static final String EXPORT_FILE = "/private/file/export/report.jsf";
+	
+	/**/
+	
 	public static class Builder extends AbstractBuilder<UniformResourceLocator> implements Serializable {
 
 		private static final long serialVersionUID = -4888461643390793029L;
@@ -132,6 +153,10 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 		public UniformResourceLocator build(){
 			return instance;
 		}
+		
+		/**/
+		
+		
 		
 		/**/
 		

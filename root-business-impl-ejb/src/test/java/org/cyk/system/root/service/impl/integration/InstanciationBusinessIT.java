@@ -140,13 +140,13 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     
     @Test
     public void uniformResourceLocator(){
-    	assertEquals("/private/__tools__/crud/crudone.jsf?clazz=Person&crud=create",
+    	assertEquals("/private/__dynamic__/crud/crudone.jsf?clazz=Person&crud=create",
     			RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateOneCrudOne(Person.class, Crud.CREATE, null).toString());
-    	assertEquals("/private/__tools__/crud/crudone.jsf?clazz=Person&crud=read",
+    	assertEquals("/private/__dynamic__/crud/crudone.jsf?clazz=Person&crud=read",
     			RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateOneCrudOne(Person.class, Crud.READ, null).toString());
-    	assertEquals("/private/__tools__/crud/crudone.jsf?clazz=Person&crud=update",
+    	assertEquals("/private/__dynamic__/crud/crudone.jsf?clazz=Person&crud=update",
     			RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateOneCrudOne(Person.class, Crud.UPDATE, null).toString());
-    	assertEquals("/private/__tools__/crud/crudone.jsf?clazz=Person&crud=delete",
+    	assertEquals("/private/__dynamic__/crud/crudone.jsf?clazz=Person&crud=delete",
     			RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateOneCrudOne(Person.class, Crud.DELETE, null).toString());
     	
     	System.out.println(StringUtils.join(RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().instanciateManyBusinessCrud(Person.class, true, true, true, null,null, null),"\r\n"));

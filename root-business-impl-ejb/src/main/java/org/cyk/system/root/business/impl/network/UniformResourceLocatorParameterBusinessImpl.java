@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.CommonBusinessAction;
 import org.cyk.system.root.business.api.Crud;
-import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorParameterBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
@@ -68,7 +67,7 @@ public class UniformResourceLocatorParameterBusinessImpl extends AbstractTypedBu
 	public static CommonBusinessAction getCommonBusinessAction(URL url,Map<String, String[]> parameters) {
 		Crud crud = getCrudAsObject(getParameter(UniformResourceLocatorParameter.CRUD,parameters));
 		if(crud==null)
-			if(StringUtils.endsWith(url.getPath(), UniformResourceLocatorBusiness.FILE_CONSULT+UniformResourceLocatorBusiness.PROCESSED_FILE_EXTENSION))
+			if(StringUtils.endsWith(url.getPath(), UniformResourceLocator.FILE_CONSULT+UniformResourceLocator.PROCESSED_FILE_EXTENSION))
 				crud = Crud.READ;
 		CommonBusinessAction commonBusinessAction = null;
 		if(crud!=null)

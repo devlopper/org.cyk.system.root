@@ -34,17 +34,6 @@ public interface UniformResourceLocatorBusiness extends AbstractEnumerationBusin
 	
 	/**/
 	
-	String DYNAMIC_CRUD_ONE = "/private/__tools__/crud/crudone.jsf";
-	String DYNAMIC_CRUD_MANY = "/private/__tools__/crud/crudmany.jsf";
-	String DYNAMIC_SELECT_ONE = "/private/__tools__/selectone.jsf";
-	String DYNAMIC_SELECT_MANY = "/private/__tools__/selectmany.jsf";
 	
-	String PRIVATE_FOLDER="private";
-	
-	String PROCESSED_FILE_EXTENSION = "jsf";
-	String FILE_LIST = "list";
-	String FILE_EDIT = "edit";
-	String FILE_CONSULT = "consult";
-	String FILE_CREATE_MANY = "createMany";
 	
 }
