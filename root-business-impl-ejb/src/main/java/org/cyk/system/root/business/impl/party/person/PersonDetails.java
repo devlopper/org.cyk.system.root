@@ -14,7 +14,7 @@ public class PersonDetails extends AbstractPersonDetails<Person> implements Seri
 
 	@Override
 	protected Person getPerson() {
-		return null;
+		return master;
 	}
 
 }

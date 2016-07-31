@@ -2,31 +2,23 @@ package org.cyk.system.root.business.impl.information;
 
 import java.io.Serializable;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.business.impl.security.RudDetails;
 import org.cyk.system.root.business.impl.time.PeriodDetails;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.File;
-import org.cyk.utility.common.FileExtensionGroup;
-import org.cyk.utility.common.annotation.user.interfaces.FileExtensions;
 import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs.Layout;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputFile;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter @Setter
 public class GlobalIdentifierDetails<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractOutputDetails<IDENTIFIABLE> implements Serializable {
 
 	private static final long serialVersionUID = 1708181273704661027L;
 
-	@Input @InputText private String code,name;
-	
-	@Input @InputFile(extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) private File image;
-	
 	@Input @InputText private String creationDate,createdBy;
 	
 	@IncludeInputs(layout=Layout.VERTICAL) private PeriodDetails period;

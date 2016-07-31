@@ -14,7 +14,7 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 
 	private static final long serialVersionUID = 1165482775425753790L;
 
-	@Input @InputText private String title,lastnames,surname,birthDate,birthLocation,sex/*,maritalStatus,nationality*/;
+	@Input @InputText private String lastnames,surname,title,birthDate,birthLocation,sex/*,maritalStatus,nationality*/;
 	
 	public AbstractPersonDetails(PERSON person) {
 		super(person);

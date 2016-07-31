@@ -152,6 +152,6 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 
 	@Override
 	public Boolean isImage(File file) {
-		return file!=null && StringUtils.startsWith(file.getMime(), Mime.IMAGE);
+		return file!=null && (StringUtils.startsWith(file.getMime(), Mime.IMAGE) || "jpg".equalsIgnoreCase(file.getExtension()));
 	}
 }
