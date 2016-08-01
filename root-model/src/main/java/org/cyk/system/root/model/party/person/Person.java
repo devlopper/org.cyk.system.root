@@ -43,7 +43,7 @@ public class Person extends Party implements Serializable{
 	}
 	
 	public String getNames(){
-		if(StringUtils.isBlank(names))
+		if(StringUtils.isBlank(names) && globalIdentifier!=null)
 			names = globalIdentifier.getName()+(StringUtils.isEmpty(lastnames)?Constant.EMPTY_STRING:(Constant.CHARACTER_SPACE+lastnames));
 		return names;
 	}
@@ -60,7 +60,7 @@ public class Person extends Party implements Serializable{
 	
 	/**/
 	
-	public static final String FIELD_LASTNAME = "lastname";
+	public static final String FIELD_LASTNAMES = "lastnames";
 	public static final String FIELD_SURNAME = "surname";
 	public static final String FIELD_SEX = "sex";
 	public static final String FIELD_NATIONALITY = "nationality";

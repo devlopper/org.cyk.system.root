@@ -44,11 +44,15 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	
 	@Override
 	public ACTOR create(ACTOR anActor) {
-		if(anActor.getPerson().getIdentifier()==null)
+		if(anActor.getPerson().getIdentifier()==null){
+			if(StringUtils.isBlank(anActor.getPerson().getCode()))
+				anActor.getPerson().setCode(anActor.getCode());
+			if(StringUtils.isBlank(anActor.getPerson().getName()))
+				anActor.getPerson().setName(anActor.getName());
+			if(anActor.getPerson().getImage()==null)
+				anActor.getPerson().setImage(anActor.getImage());
 			RootBusinessLayer.getInstance().getPersonBusiness().create(anActor.getPerson());
-		//anActor.getRegistration().setDate(universalTimeCoordinated()); 
-		//if(StringUtils.isBlank(anActor.getRegistration().getCode()))
-		//	anActor.getRegistration().setCode(generateStringValue(ValueGenerator.ACTOR_REGISTRATION_CODE_IDENTIFIER, anActor));
+		}
 		return super.create(anActor);
 	}
 	
