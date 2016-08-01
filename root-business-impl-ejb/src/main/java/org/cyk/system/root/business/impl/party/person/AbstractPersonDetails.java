@@ -14,7 +14,7 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 
 	private static final long serialVersionUID = 1165482775425753790L;
 
-	@Input @InputText private String lastnames,surname,title,birthDate,birthLocation,sex/*,maritalStatus,nationality*/;
+	@Input @InputText private String lastnames,surname,sex,birthDate,birthLocation,title,nationality/*,maritalStatus*/;
 	
 	public AbstractPersonDetails(PERSON person) {
 		super(person);
@@ -22,10 +22,10 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 		surname = getPerson().getSurname();
 		if(getPerson().getSex()!=null)
 			sex = getPerson().getSex().getName();
-		/*
-		if(person.getNationality()!=null)
-			nationality = RootBusinessLayer.getInstance().getFormatterBusiness().format(person.getNationality());
-		*/
+		
+		if(getPerson().getNationality()!=null)
+			nationality = RootBusinessLayer.getInstance().getFormatterBusiness().format(getPerson().getNationality());
+		
 		if(person.getBirthDate()!=null)
 			birthDate = RootBusinessLayer.getInstance().getTimeBusiness().formatDate(getPerson().getBirthDate());
 		
