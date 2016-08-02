@@ -49,7 +49,14 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
         return super.update(party);
     }
 	
-    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
+    @Override
+	public PARTY delete(PARTY party) {
+    	contactCollectionBusiness.delete(party.getContactCollection());
+    	party.setContactCollection(null);
+		return super.delete(party);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
     public Collection<PARTY> findByCriteria(SEARCH_CRITERIA criteria) {
     	if(StringUtils.isBlank(criteria.getName().getValue())){
     		return findAll(criteria.getReadConfig());
@@ -65,7 +72,6 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     	prepareFindByCriteria(criteria);
     	return dao.countByCriteria(criteria);
     }
-    
     
     /**/
         
@@ -105,10 +111,5 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		}
 		completeInstanciationOfManyFromValuesAfterProcessing(parties,arguments.getValues(),arguments.getListener());
 	}
-
-	
-
-	
-	
 	
 }

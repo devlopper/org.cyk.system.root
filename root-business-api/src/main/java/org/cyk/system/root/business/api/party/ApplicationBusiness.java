@@ -23,6 +23,8 @@ public interface ApplicationBusiness extends AbstractPartyBusiness<Application,P
     BusinessEntityInfos findBusinessEntityInfos(Class<? extends AbstractIdentifiable> aClass);
     BusinessEntityInfos findBusinessEntityInfos(String identifier);
     
+    BusinessEntityInfos findBusinessEntityInfosByTableName(String name);
+    
     Collection<BusinessEntityInfos> findBusinessEntitiesInfos(CrudStrategy crudStrategy);
     
     /* Security */

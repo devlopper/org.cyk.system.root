@@ -2,10 +2,12 @@ package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.PersistenceException;
 
 import lombok.Setter;
 
@@ -124,6 +126,20 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     
     public void cannotCreateMoreThan(Long value,Interval interval,Class<? extends AbstractIdentifiable> identifiableClass){
     	cannotProcessMoreThan(value, "crud.create", interval, identifiableClass);
+    }
+    
+    /**/
+    
+    public String getMessage(Throwable throwable){
+    	String message = null;
+    	Throwable cause = commonUtils.getThrowableInstanceOf(throwable, PersistenceException.class);
+    	if(cause == null){
+    		
+    	}else{
+    		List<String> tokens = DatabaseManagementSystemMessageProvider.Adapter.DEFAULT.getTokens(cause);	
+    		message = languageBusiness.findText(tokens.remove(0),tokens.toArray());	
+    	}
+    	return message;
     }
     
 }

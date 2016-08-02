@@ -207,10 +207,18 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
     	return null;
     }
 
-    @Override
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public BusinessEntityInfos findBusinessEntityInfos(String identifier) {
     	for(BusinessEntityInfos b : findBusinessEntitiesInfos())
     		if(b.getIdentifier().equals(identifier))
+    			return b;
+    	return null;
+    }
+    
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public BusinessEntityInfos findBusinessEntityInfosByTableName(String name) {
+    	for(BusinessEntityInfos b : findBusinessEntitiesInfos())
+    		if(b.getIdentifier().equalsIgnoreCase(name))
     			return b;
     	return null;
     }

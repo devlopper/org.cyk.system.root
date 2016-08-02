@@ -19,6 +19,7 @@ import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
+import org.cyk.system.root.model.party.person.MedicalInformations;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
@@ -90,6 +91,23 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		if(person.getMedicalInformations()!=null)
 			medicalInformationsDao.update(person.getMedicalInformations());
 		return p;
+	}
+	
+	@Override
+	public Person delete(Person person) {
+		PersonExtendedInformations extendedInformations = extendedInformationsDao.readByParty(person);
+		if(extendedInformations!=null){
+			extendedInformationsDao.delete(extendedInformations);
+		}
+		JobInformations jobInformations = jobInformationsDao.readByParty(person);
+		if(jobInformations!=null){
+			jobInformationsDao.delete(jobInformations);
+		}
+		MedicalInformations medicalInformations = medicalInformationsDao.readByParty(person);	
+		if(medicalInformations!=null){
+			medicalInformationsDao.delete(medicalInformations);
+		}
+		return super.delete(person);
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
