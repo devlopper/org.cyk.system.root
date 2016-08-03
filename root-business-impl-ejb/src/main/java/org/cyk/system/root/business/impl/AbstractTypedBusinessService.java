@@ -75,9 +75,11 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE delete(IDENTIFIABLE identifiable) {
-		identifiable = dao.delete(identifiable);
-		if(identifiable.getGlobalIdentifier()!=null)
+		if(identifiable.getGlobalIdentifier()!=null){
 			RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().delete(identifiable.getGlobalIdentifier());
+			identifiable.setGlobalIdentifier(null);
+		}
+		identifiable = dao.delete(identifiable);
 		@SuppressWarnings("unchecked")
 		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
 	    if(listener!=null)

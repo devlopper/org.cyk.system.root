@@ -67,6 +67,7 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override
 	public GlobalIdentifier delete(GlobalIdentifier globalIdentifier) {
 		logTrace("Deleting global identifier {}", globalIdentifier);
+		globalIdentifier.setImage(null);
 		return globalIdentifierDao.delete(globalIdentifier);
 	}
 

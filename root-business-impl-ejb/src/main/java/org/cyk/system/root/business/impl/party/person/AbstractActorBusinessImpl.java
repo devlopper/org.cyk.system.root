@@ -51,6 +51,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 				anActor.getPerson().setName(anActor.getName());
 			if(anActor.getPerson().getImage()==null)
 				anActor.getPerson().setImage(anActor.getImage());
+			anActor.getPerson().getGlobalIdentifier().setCreatedBy(anActor.getGlobalIdentifier().getCreatedBy());
 			RootBusinessLayer.getInstance().getPersonBusiness().create(anActor.getPerson());
 		}
 		return super.create(anActor);
