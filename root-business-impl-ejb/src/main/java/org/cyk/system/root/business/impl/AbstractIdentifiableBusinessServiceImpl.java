@@ -85,6 +85,11 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findByGlobalIdentifierCodes(Collection<String> codes) {
+	    return getPersistenceService().readByGlobalIdentifierCodes(codes);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IdentifiableBusinessService<IDENTIFIABLE, Long> find(Function function) {
 		getPersistenceService().select(function);
 		return this;

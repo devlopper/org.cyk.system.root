@@ -19,7 +19,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 
 	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
 		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete,readByGlobalIdentifier
-		,readByGlobalIdentifierCode;
+		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -53,6 +53,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		registerNamedQuery(readByGlobalIdentifiers, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier IN :identifiers");
 		registerNamedQuery(readByGlobalIdentifierValue, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier = :identifier");
 		registerNamedQuery(readByGlobalIdentifierCode, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.code = :code");
+		registerNamedQuery(readByGlobalIdentifierCodes, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.code IN :code");
 		
 		if(Boolean.TRUE.equals(readByClassEnabled())){
 			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy(AbstractIdentifiable.FIELD_IDENTIFIER,Boolean.TRUE));
@@ -78,13 +79,23 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 				.ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
+	@Override
 	public IDENTIFIABLE readByGlobalIdentifierCode(String globalIdentifierCode) {
 		return namedQuery(readByGlobalIdentifierCode).parameter(GlobalIdentifier.FIELD_CODE, globalIdentifierCode)
 				.ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
+	@Override
+	public Collection<IDENTIFIABLE> readByGlobalIdentifierCodes(Collection<String> globalIdentifierCodes) {
+		return namedQuery(readByGlobalIdentifierCodes).parameter(GlobalIdentifier.FIELD_CODE, globalIdentifierCodes).resultMany();
+	}
+	
 	public IDENTIFIABLE read(String globalIdentifierCode) {
 		return readByGlobalIdentifierCode(globalIdentifierCode);
+	}
+	
+	public Collection<IDENTIFIABLE> read(Collection<String> globalIdentifierCodes) {
+		return readByGlobalIdentifierCodes(globalIdentifierCodes);
 	}
 	
 	@Override

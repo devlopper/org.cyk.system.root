@@ -42,7 +42,19 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 						
 						IDENTIFIABLE read(IDENTIFIER identifier);
 						IDENTIFIABLE readByGlobalIdentifier(GlobalIdentifier globalIdentifier);
+						/**
+						 * Read the global identifier having this code
+						 * @param code of the global identifier
+						 * @return the identifiable
+						 */
 						IDENTIFIABLE readByGlobalIdentifierCode(String code);
+						
+						/**
+						 * Read the globals identifiers having their code in this codes
+						 * @param codes of the globals identifiers
+						 * @return the identifiable collection
+						 */
+						Collection<IDENTIFIABLE> readByGlobalIdentifierCodes(Collection<String> codes);
 						
 						Long oneLong();	
 	

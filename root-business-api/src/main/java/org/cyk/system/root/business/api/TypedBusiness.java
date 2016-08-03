@@ -44,5 +44,17 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     Collection<IDENTIFIABLE> findByNotClass(Class<?> aClass);
     Long countByNotClass(Class<?> aClass);
     
+    /**
+	 * {@link #findByGlobalIdentifierCode(String)}
+	 * 
+	 */
+	IDENTIFIABLE find(String globalIdentifierCode);
+	
+	/**
+	 * {@link #findByGlobalIdentifierCodes(Collection<String>)}
+	 * 
+	 */
+	Collection<IDENTIFIABLE> find(Collection<String> globalIdentifierCodes);
+    
     //TODO clone service must be implemented using reflection and listener
 }

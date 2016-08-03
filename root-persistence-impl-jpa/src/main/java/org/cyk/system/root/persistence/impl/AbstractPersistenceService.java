@@ -124,6 +124,11 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	public IDENTIFIABLE readByGlobalIdentifierCode(String code) {
 		return null;
 	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readByGlobalIdentifierCodes(Collection<String> codes) {
+		return null;
+	}
 
     @Override
     public IDENTIFIABLE update(IDENTIFIABLE object) {

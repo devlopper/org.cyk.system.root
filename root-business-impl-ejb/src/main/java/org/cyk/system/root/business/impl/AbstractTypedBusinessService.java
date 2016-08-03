@@ -162,6 +162,16 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public IDENTIFIABLE find(String globalIdentifierCode) {
+		return dao.read(globalIdentifierCode);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> find(Collection<String> globalIdentifierCodes) {
+		return dao.read(globalIdentifierCodes);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findByClasses(Collection<Class<?>> classes) {
 		return dao.readByClasses(classes);
 	}

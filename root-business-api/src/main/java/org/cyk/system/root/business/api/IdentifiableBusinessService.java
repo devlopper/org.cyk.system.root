@@ -41,6 +41,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
 	                IDENTIFIABLE findByGlobalIdentifier(GlobalIdentifier globalIdentifier);
 	                
 	                IDENTIFIABLE findByGlobalIdentifierCode(String code);
+	                Collection<IDENTIFIABLE> findByGlobalIdentifierCodes(Collection<String> codes);
 	
 					IdentifiableBusinessService<IDENTIFIABLE,IDENTIFIER> find(Function function);
 	

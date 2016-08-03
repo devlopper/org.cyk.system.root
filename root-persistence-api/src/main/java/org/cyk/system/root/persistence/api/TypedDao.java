@@ -21,9 +21,14 @@ public interface TypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends Typ
 	IDENTIFIABLE readByGlobalIdentifierValue(String globalIdentifierValue);
 	
 	/**
-	 * Read by global identifier code
-	 * @param code
-	 * @return
+	 * {@link #readByGlobalIdentifierCode(String)}
+	 * 
 	 */
 	IDENTIFIABLE read(String globalIdentifierCode);
+	
+	/**
+	 * {@link #readByGlobalIdentifierCodes(String)}
+	 * 
+	 */
+	Collection<IDENTIFIABLE> read(Collection<String> globalIdentifierCodes);
 }
