@@ -78,9 +78,13 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 				.ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
-	public IDENTIFIABLE readByGlobalIdentifierCode(String code) {
-		return namedQuery(readByGlobalIdentifierCode).parameter(GlobalIdentifier.FIELD_CODE, code)
+	public IDENTIFIABLE readByGlobalIdentifierCode(String globalIdentifierCode) {
+		return namedQuery(readByGlobalIdentifierCode).parameter(GlobalIdentifier.FIELD_CODE, globalIdentifierCode)
 				.ignoreThrowable(NoResultException.class).resultOne();
+	}
+	
+	public IDENTIFIABLE read(String globalIdentifierCode) {
+		return readByGlobalIdentifierCode(globalIdentifierCode);
 	}
 	
 	@Override
