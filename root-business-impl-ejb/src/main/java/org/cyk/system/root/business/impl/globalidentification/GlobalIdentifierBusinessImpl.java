@@ -63,6 +63,12 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 		logTrace("Updating global identifier {}", globalIdentifier);
 		return globalIdentifierDao.update(globalIdentifier);
 	}
+	
+	@Override
+	public GlobalIdentifier delete(GlobalIdentifier globalIdentifier) {
+		logTrace("Deleting global identifier {}", globalIdentifier);
+		return globalIdentifierDao.delete(globalIdentifier);
+	}
 
 	/**/
 	

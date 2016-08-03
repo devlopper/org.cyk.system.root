@@ -41,10 +41,12 @@ public interface DatabaseManagementSystemMessageProvider {
 				String message = throwable.toString();
 				if(StringUtils.contains(message, CANNOT_DELETE_OR_UPDATE_PARENT_ROW)){
 					tokens.add("exception.record.cannotdelete");
-					message = StringUtils.substringBetween(message, CANNOT_DELETE_OR_UPDATE_PARENT_ROW,Constant.CHARACTER_COMA.toString());
-					String tableName = StringUtils.substringBetween(message,".`","`");
-					String label = RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfosByTableName(tableName).getUserInterface().getLabelId();
-					tokens.add(RootBusinessLayer.getInstance().getLanguageBusiness().findText(label));
+					message = StringUtils.substringBetween(message, CANNOT_DELETE_OR_UPDATE_PARENT_ROW,Constant.CHARACTER_COMA.toString());				
+					tokens.add(RootBusinessLayer.getInstance().getLanguageBusiness().findText(
+							RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfosByTableName(
+									StringUtils.substringBetween(message,".`","`")
+									).getUserInterface().getLabelId()
+							));
 				}
 				return tokens;
 			}

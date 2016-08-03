@@ -39,14 +39,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 
 	@Override
-	public IDENTIFIABLE create(IDENTIFIABLE object) {
-	    validationPolicy.validateCreate(object);
-        object = dao.create(object);
+	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
+	    validationPolicy.validateCreate(identifiable);
+        identifiable = dao.create(identifiable);
         @SuppressWarnings("unchecked")
-		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(object.getClass());
+		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
     	if(listener!=null)
-    		listener.processOnCreated(object);
-        return object;
+    		listener.processOnCreated(identifiable);
+        return identifiable;
 	}
 	
 	@Override
@@ -56,14 +56,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 
 	@Override
-	public IDENTIFIABLE update(IDENTIFIABLE object) {
-		IDENTIFIABLE newObject = dao.update(object);
+	public IDENTIFIABLE update(IDENTIFIABLE identifiable) {
+		IDENTIFIABLE newObject = dao.update(identifiable);
 		@SuppressWarnings("unchecked")
-		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(object.getClass());
+		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
 	    if(listener!=null)
-	    	listener.processOnUpdated(object);
-	    if(object.getGlobalIdentifier()!=null)
-	    	RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().update(object.getGlobalIdentifier());
+	    	listener.processOnUpdated(identifiable);
+	    if(identifiable.getGlobalIdentifier()!=null)
+	    	RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().update(identifiable.getGlobalIdentifier());
 		return newObject;
 	}
 	
@@ -74,13 +74,15 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 
 	@Override
-	public IDENTIFIABLE delete(IDENTIFIABLE object) {
-		object = dao.delete(object);
-		 @SuppressWarnings("unchecked")
-			Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(object.getClass());
-	    	if(listener!=null)
-	    		listener.processOnDeleted(object);
-		return object;
+	public IDENTIFIABLE delete(IDENTIFIABLE identifiable) {
+		identifiable = dao.delete(identifiable);
+		if(identifiable.getGlobalIdentifier()!=null)
+			RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().delete(identifiable.getGlobalIdentifier());
+		@SuppressWarnings("unchecked")
+		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
+	    if(listener!=null)
+	    	listener.processOnDeleted(identifiable);
+		return identifiable;
 	}
 	
 	@Override

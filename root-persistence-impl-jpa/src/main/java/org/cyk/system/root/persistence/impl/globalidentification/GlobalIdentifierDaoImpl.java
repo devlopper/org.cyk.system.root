@@ -21,4 +21,10 @@ public class GlobalIdentifierDaoImpl implements GlobalIdentifierDao {
 		return entityManager.merge(globalIdentifier);
 	}
 
+	@Override
+	public GlobalIdentifier delete(GlobalIdentifier globalIdentifier) {
+		entityManager.remove(entityManager.merge(globalIdentifier));
+		return globalIdentifier;
+	}
+
 }

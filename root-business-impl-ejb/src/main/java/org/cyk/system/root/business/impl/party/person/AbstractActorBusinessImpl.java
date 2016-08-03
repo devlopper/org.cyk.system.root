@@ -62,6 +62,13 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return super.update(anActor);
 	}
 	
+	@Override
+	public ACTOR delete(ACTOR actor) {
+		RootBusinessLayer.getInstance().getPersonBusiness().delete(actor.getPerson());
+		actor.setPerson(null);
+		return super.delete(actor);
+	}
+
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public ACTOR findByPerson(Person person) {
 		return dao.readByPerson(person);

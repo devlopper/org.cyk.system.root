@@ -12,6 +12,7 @@ public interface GlobalIdentifierBusiness {
 	
 	GlobalIdentifier create(GlobalIdentifier globalIdentifier);
 	GlobalIdentifier update(GlobalIdentifier globalIdentifier);
+	GlobalIdentifier delete(GlobalIdentifier globalIdentifier);
 	
 	
 }
