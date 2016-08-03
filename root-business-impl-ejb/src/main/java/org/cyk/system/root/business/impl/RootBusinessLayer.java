@@ -67,6 +67,7 @@ import org.cyk.system.root.business.api.party.person.JobFunctionBusiness;
 import org.cyk.system.root.business.api.party.person.JobTitleBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonTitleBusiness;
+import org.cyk.system.root.business.api.party.person.SexBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
@@ -192,6 +193,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject private GenericBusiness genericBusiness;
 	@Inject private ContactCollectionBusiness contactCollectionBusiness;
 	@Inject private PhoneNumberTypeBusiness phoneNumberTypeBusiness;
+	@Inject private SexBusiness sexBusiness;
 	@Inject private LocationTypeBusiness locationTypeBusiness;
 	@Inject private LocalityBusiness localityBusiness;
 	@Inject private LocalityTypeBusiness localityTypeBusiness;
@@ -560,7 +562,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)DataTreeType.class, (TypedBusiness)dataTreeTypeBusiness);
         beansMap.put((Class)DataTreeIdentifiableGlobalIdentifier.class, (TypedBusiness)dataTreeIdentifiableGlobalIdentifierBusiness);
         beansMap.put((Class)Application.class, (TypedBusiness)applicationBusiness);
-       
+        beansMap.put((Class)Sex.class, (TypedBusiness)sexBusiness);
     }
     
     @Override
