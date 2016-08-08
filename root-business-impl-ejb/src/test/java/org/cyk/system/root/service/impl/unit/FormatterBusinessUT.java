@@ -1,10 +1,12 @@
 package org.cyk.system.root.service.impl.unit;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 
 import org.cyk.system.root.business.impl.FormatterBusinessImpl;
 import org.cyk.system.root.model.ContentType;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -37,4 +39,13 @@ public class FormatterBusinessUT extends AbstractUnitTest {
 		System.out.println(formatterBusiness.format(labelValueCollectionReport, ContentType.HTML));
 	}
 	
+	@Test
+	public void encodeUtf8(){
+		try {
+			System.out.println(new String("éè".getBytes(Constant.ENCODING_UTF8)));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

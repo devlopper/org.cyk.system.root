@@ -1,27 +1,35 @@
 package org.cyk.system.root.model.file;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractIdentifiable;
-
-
-@Getter @Setter @Entity @NoArgsConstructor
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class Script extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 129506142716551683L;
 	
-	@OneToOne
-	private File file;
+	@OneToOne private File file;
 	
-	private Set<String> variables = new HashSet<String>();
+	@Transient private Collection<ScriptVariable> variables;
 
+	public Collection<ScriptVariable> getVariables(){
+		if(variables==null)
+			variables = new ArrayList<>();
+		return variables;
+	}
+	
 }

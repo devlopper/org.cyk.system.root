@@ -1,5 +1,7 @@
 package org.cyk.system.root.business.api.globalidentification;
 
+import java.util.Collection;
+
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 
@@ -14,5 +16,5 @@ public interface GlobalIdentifierBusiness {
 	GlobalIdentifier update(GlobalIdentifier globalIdentifier);
 	GlobalIdentifier delete(GlobalIdentifier globalIdentifier);
 	
-	
+	Collection<GlobalIdentifier> findAll();
 }

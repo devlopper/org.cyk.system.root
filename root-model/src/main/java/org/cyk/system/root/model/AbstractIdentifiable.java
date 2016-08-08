@@ -22,8 +22,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
@@ -68,6 +70,20 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getName();
 	}
 	
+	public void setDescription(String description){
+		getGlobalIdentifierCreateIfNull().setDescription(description);
+	}
+	public String getDescription(){
+		return globalIdentifier == null ? null : globalIdentifier.getDescription();
+	}
+	
+	public void setAbbreviation(String abbreviation){
+		getGlobalIdentifierCreateIfNull().setAbbreviation(abbreviation);
+	}
+	public String getAbbreviation(){
+		return globalIdentifier == null ? null : globalIdentifier.getAbbreviation();
+	}
+	
 	public void setImage(File image){
 		getGlobalIdentifierCreateIfNull().setImage(image);
 	}
@@ -75,11 +91,39 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getImage();
 	}
 	
+	public void setExistencePeriod(Period period){
+		getGlobalIdentifierCreateIfNull().setExistencePeriod(period);
+	}
+	public Period getExistencePeriod(){
+		return globalIdentifier == null ? null : globalIdentifier.getExistencePeriod();
+	}
+	
 	public void setBirthDate(Date date){
 		getGlobalIdentifierCreateIfNull().getExistencePeriod().setFromDate(date);
 	}
 	public Date getBirthDate(){
 		return getGlobalIdentifier().getExistencePeriod().getFromDate();
+	}
+	
+	public void setDeathDate(Date date){
+		getGlobalIdentifierCreateIfNull().getExistencePeriod().setToDate(date);
+	}
+	public Date getDeathDate(){
+		return getGlobalIdentifier().getExistencePeriod().getToDate();
+	}
+	
+	public void setBirthLocation(Location location){
+		getGlobalIdentifierCreateIfNull().setBirthLocation(location);
+	}
+	public Location getBirthLocation(){
+		return getGlobalIdentifier().getBirthLocation();
+	}
+	
+	public void setOtherDetails(String otherDetails){
+		getGlobalIdentifierCreateIfNull().setOtherDetails(otherDetails);
+	}
+	public String getOtherDetails(){
+		return globalIdentifier == null ? null : globalIdentifier.getOtherDetails();
 	}
 	
 	public GlobalIdentifier getGlobalIdentifierCreateIfNull(){
@@ -130,7 +174,13 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	@Override
 	public String getUiString() {
-		return globalIdentifier == null ? "?? NO UI STRING SPECIFIED ??" : globalIdentifier.getIdentifier();
+		if(globalIdentifier==null)
+			return "?? NO UI STRING SPECIFIED ??" ;
+		if(StringUtils.isNotBlank(globalIdentifier.getCode()))
+			return globalIdentifier.getCode();
+		if(StringUtils.isNotBlank(globalIdentifier.getName()))
+			return globalIdentifier.getName();
+		return  globalIdentifier.getIdentifier();
 	}
 	
 	/**/

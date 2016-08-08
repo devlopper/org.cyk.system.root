@@ -42,7 +42,7 @@ public class TimeDivisionType extends AbstractEnumeration implements Serializabl
 	public TimeDivisionType(String code,String name,Long duration,Boolean constant) {
 		super(code,name, name,null);
 		this.duration = duration;
-		this.constant = constant;
+		this.getGlobalIdentifierCreateIfNull().setConstant(constant);
 	}
 }
 

@@ -40,8 +40,11 @@ public interface FileBusiness extends TypedBusiness<File> {
     URI findEmbeddedUri(File file);
 
     Boolean isImage(File file);
+    Boolean isText(File file);
     
     public static interface Mime {
     	String IMAGE = "image";
+    	String TEXT = "text";
+    	String APPLICATION_OCTET_STREAM = "application/octet-stream";
     }
 }

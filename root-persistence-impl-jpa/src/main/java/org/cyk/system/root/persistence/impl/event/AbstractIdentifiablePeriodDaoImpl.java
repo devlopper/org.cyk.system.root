@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
-import org.cyk.system.root.model.event.AbstractIdentifiablePeriod;
+import org.cyk.system.root.model.time.AbstractIdentifiablePeriod;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.AbstractIdentifiablePeriodDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
@@ -25,12 +25,12 @@ public abstract class AbstractIdentifiablePeriodDaoImpl<IDENTIFIABLE extends Abs
     @Override
     protected void namedQueriesInitialisation() {
         super.namedQueriesInitialisation();
-        registerNamedQuery(readWhereFromDateGreaterThanByDate, _select().where("period.fromDate", "fromDate",GT).orderBy("period.fromDate",Boolean.FALSE));
-        registerNamedQuery(readWhereToDateLessThanByDate, _select().where("period.toDate", "toDate",LT).orderBy("period.fromDate",Boolean.FALSE));
-        registerNamedQuery(readWhereFromDateBetweenPeriod, _select().where("period.fromDate", "startDate",GTE).where(AND,"period.fromDate", "endDate",LTE)
-        		.orderBy("period.fromDate",Boolean.FALSE));
-        registerNamedQuery(readWhereDateBetweenPeriod, _select().where("period.fromDate", "thedate",LTE).where(AND, "period.toDate","thedate",GTE)
-        		.orderBy("period.fromDate",Boolean.FALSE));
+        registerNamedQuery(readWhereFromDateGreaterThanByDate, _select().where("globalIdentifier.existencePeriod.fromDate", "fromDate",GT).orderBy("globalIdentifier.existencePeriod.fromDate",Boolean.FALSE));
+        registerNamedQuery(readWhereToDateLessThanByDate, _select().where("globalIdentifier.existencePeriod.toDate", "toDate",LT).orderBy("globalIdentifier.existencePeriod.fromDate",Boolean.FALSE));
+        registerNamedQuery(readWhereFromDateBetweenPeriod, _select().where("globalIdentifier.existencePeriod.fromDate", "startDate",GTE).where(AND,"globalIdentifier.existencePeriod.fromDate", "endDate",LTE)
+        		.orderBy("globalIdentifier.existencePeriod.fromDate",Boolean.FALSE));
+        registerNamedQuery(readWhereDateBetweenPeriod, _select().where("globalIdentifier.existencePeriod.fromDate", "thedate",LTE).where(AND, "globalIdentifier.existencePeriod.toDate","thedate",GTE)
+        		.orderBy("globalIdentifier.existencePeriod.fromDate",Boolean.FALSE));
     }
     
     @Override

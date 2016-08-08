@@ -16,12 +16,12 @@ public class Locality extends AbstractDataTree<LocalityType> implements Serializ
 
 	private static final long serialVersionUID = -6128937819261060725L;
 
-	public Locality(AbstractDataTree<LocalityType> parent, LocalityType type, String code,String name) {
+	public Locality(Locality parent, LocalityType type, String code,String name) {
 		super(parent, type, code);
 		setName(name);
 	}
 	
-	public Locality(AbstractDataTree<LocalityType> parent, LocalityType type, String code) {
+	public Locality(Locality parent, LocalityType type, String code) {
 		super(parent,type,code);
 	}
 }

@@ -36,13 +36,6 @@ public class BusinessLocator extends AbstractBean implements Serializable {
     public <T extends AbstractIdentifiable> TypedBusiness<T> locate(Class<? extends T> beanClass){
         @SuppressWarnings("unchecked")
 		TypedBusiness<T> businessBean = (TypedBusiness<T>) typedBusinessBeanMap.get(beanClass);
-        /*if(businessBean==null){
-            if(DataTreeType.class.isAssignableFrom(beanClass)){
-            	businessBean = (AbstractEnumerationBusiness)dataTreeTypeBusiness;
-            }else if(AbstractDataTree.class.isAssignableFrom(beanClass)){
-                ;
-            }
-        }*/
         logDebug("Business service of bean {} is {}", beanClass.getName(),businessBean==null?Constant.EMPTY_STRING:businessBean.getClass().getName());
         return businessBean;
     }

@@ -10,7 +10,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.event.EventParticipation;
+import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.time.Period;
@@ -55,10 +55,10 @@ public class EventPeriodBusinessIT extends AbstractBusinessIT {
     
     private Event event(Date  fromDate,Date  toDate){
         Event event = new Event();
-        event.setPeriod(new Period(fromDate, toDate));
+        event.setExistencePeriod(new Period(fromDate, toDate));
         event.setContactCollection(null);
         eventBusiness.create(event);
-        create(new EventParticipation(person));
+        create(new EventParty(person));
         return event;
     }
 

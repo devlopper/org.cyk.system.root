@@ -5,12 +5,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.cyk.system.root.model.event.RepeatedEvent;
+import org.cyk.system.root.model.event.EventRepetition;
 import org.cyk.system.root.persistence.api.event.RepeatedEventDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 
-public class RepeatedEventDaoImpl extends AbstractTypedDao<RepeatedEvent> implements RepeatedEventDao,Serializable {
+public class RepeatedEventDaoImpl extends AbstractTypedDao<EventRepetition> implements RepeatedEventDao,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
@@ -25,7 +25,7 @@ public class RepeatedEventDaoImpl extends AbstractTypedDao<RepeatedEvent> implem
     }
      
 	@Override
-	public Collection<RepeatedEvent> readByDayOfMonth(Integer dayOfMonth) {
+	public Collection<EventRepetition> readByDayOfMonth(Integer dayOfMonth) {
 		return namedQuery(readByDayOfMonth).parameter("dayOfMonthIndex", dayOfMonth).resultMany();
 	}
 	@Override
@@ -34,7 +34,7 @@ public class RepeatedEventDaoImpl extends AbstractTypedDao<RepeatedEvent> implem
 	}
 
 	@Override
-	public Collection<RepeatedEvent> readByDayOfMonthByMonth(Integer dayOfMonth,Integer month) {
+	public Collection<EventRepetition> readByDayOfMonthByMonth(Integer dayOfMonth,Integer month) {
 		return namedQuery(readByDayOfMonthByMonth).parameter("dayOfMonthIndex", dayOfMonth).parameter("monthIndex", month).resultMany();
 	}
 
@@ -44,7 +44,7 @@ public class RepeatedEventDaoImpl extends AbstractTypedDao<RepeatedEvent> implem
 	}
 
 	@Override
-	public Collection<RepeatedEvent> readByMonth(Integer month) {
+	public Collection<EventRepetition> readByMonth(Integer month) {
 		Set<Integer> set = new HashSet<>();
 		set.add(month);
 		return readByMonths(set);
@@ -58,7 +58,7 @@ public class RepeatedEventDaoImpl extends AbstractTypedDao<RepeatedEvent> implem
 	}
 
 	@Override
-	public Collection<RepeatedEvent> readByMonths(Set<Integer> months) {
+	public Collection<EventRepetition> readByMonths(Set<Integer> months) {
 		return namedQuery(readByMonths).parameter("monthIndexes", months).resultMany();
 	}
 

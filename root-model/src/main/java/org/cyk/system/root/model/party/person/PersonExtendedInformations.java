@@ -7,9 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import org.cyk.system.root.model.event.RepeatedEvent;
+import org.cyk.system.root.model.event.EventRepetition;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.geography.Location;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +19,8 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 
 	private static final long serialVersionUID = 4416245866978363658L;
 
-	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;
-	@OneToOne(cascade=CascadeType.ALL) private RepeatedEvent birthDateAnniversary;
+	@OneToOne(cascade=CascadeType.ALL) private EventRepetition birthDateAnniversary;//we can do anniversary for any date. so how to handle that ??? 
 	
-	@OneToOne(cascade=CascadeType.ALL) private PersonCredentials credentials;
 	@ManyToOne private MaritalStatus maritalStatus;
 	@ManyToOne private PersonTitle title;
 	
@@ -37,7 +34,7 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 		super(party);
 	}
 	
-	public static final String FIELD_BIRTH_LOCATION = "birthLocation";
+	public static final String FIELD_MARITAL_STATUS = "maritalStatus";
 	public static final String FIELD_TITLE = "title";
 	public static final String FIELD_SIGNATURE_SPECIMEN = "signatureSpecimen";
 	

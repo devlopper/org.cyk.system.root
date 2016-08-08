@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -32,6 +33,14 @@ public class Country extends AbstractIdentifiable implements Serializable{
 	@Column(nullable=false) @NotNull
 	private Integer phoneNumberCode;
 	
+	@Transient private Locality continent;
+	
+	public Country(Locality locality, Integer phoneNumberCode) {
+		super();
+		this.locality = locality;
+		this.phoneNumberCode = phoneNumberCode;
+	}
+	
 	/**/
 	
 	@Override
@@ -39,6 +48,8 @@ public class Country extends AbstractIdentifiable implements Serializable{
 		return "(+"+phoneNumberCode+") "+locality.getUiString();
 	}
 	
+	
+
 	public static final String FIELD_LOCALITY = "locality";
 	public static final String FIELD_PHONE_NUMBER_CODE = "phoneNumberCode";
 	

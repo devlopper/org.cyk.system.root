@@ -10,16 +10,17 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
+import org.cyk.system.root.business.impl.time.AbstractIdentifiablePeriodBusinessImpl;
 import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.event.EventParticipation;
+import org.cyk.system.root.model.event.Event.SearchCriteria;
+import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.EventReminder;
-import org.cyk.system.root.model.event.EventSearchCriteria;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
 import org.cyk.system.root.persistence.api.event.EventMissedDao;
-import org.cyk.system.root.persistence.api.event.EventParticipationDao;
+import org.cyk.system.root.persistence.api.event.EventPartyDao;
 import org.cyk.system.root.persistence.api.event.EventReminderDao;
 
 @Stateless
@@ -28,7 +29,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 	private static final long serialVersionUID = -3799482462496328200L;
 	
 	@Inject private ContactCollectionBusiness contactCollectionBusiness;
-	@Inject private EventParticipationDao eventParticipationDao;
+	@Inject private EventPartyDao eventPartyDao;
 	@Inject private EventMissedDao eventMissedDao;
 	@Inject private EventReminderDao eventReminderDao;
 	//@Inject private RepeatedEventBusiness repeatedEventBusiness;
@@ -53,11 +54,11 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     	if(event.getContactCollection()!=null)
     		contactCollectionBusiness.create(event.getContactCollection());
         super.create(event);
-        for(EventParticipation eventParticipation : event.getEventParticipations()){
-        	eventParticipation.setEvent(event);
-        	eventParticipationDao.create(eventParticipation);
-        	if(eventParticipation.getMissed()!=null){
-        		eventMissedDao.create(eventParticipation.getMissed());
+        for(EventParty eventParty : event.getEventParties()){
+        	eventParty.setEvent(event);
+        	eventPartyDao.create(eventParty);
+        	if(eventParty.getMissed()!=null){
+        		eventMissedDao.create(eventParty.getMissed());
         	}
         }
         return event;
@@ -71,8 +72,8 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     		event = dao.update(event);
     		contactCollectionBusiness.delete(contactCollection);
     	}
-    	for(EventParticipation eventParticipation : eventParticipationDao.readByEvent(event))
-        	eventParticipationDao.delete(eventParticipation);
+    	for(EventParty eventParty : eventPartyDao.readByEvent(event))
+        	eventPartyDao.delete(eventParty);
     	for(EventReminder eventReminder : eventReminderDao.readByEvent(event))
     		eventReminderDao.delete(eventReminder);
     	return super.delete(event);
@@ -103,7 +104,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     }*/
     
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Collection<Event> findByCriteria(EventSearchCriteria criteria) {
+	public Collection<Event> findByCriteria(SearchCriteria criteria) {
 		//Collection<Sale> sales = null;
 		/*if(criteria.getFromDateSearchCriteria().getValue()==null || criteria.getToDateSearchCriteria().getValue()==null)
 			sales = findAll();
@@ -114,7 +115,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Long countByCriteria(EventSearchCriteria criteria) {
+	public Long countByCriteria(SearchCriteria criteria) {
 		/*
 		if(criteria.getFromDateSearchCriteria().getValue()==null || criteria.getToDateSearchCriteria().getValue()==null)
     		return countAll();
@@ -124,7 +125,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 	}
 	
 	/*protected void __load__(Event event) {
-		event.setEventParticipations(eventParticipationDao.readByEvents(Arrays.asList(event)));
+		event.setEventPartys(eventPartyDao.readByEvents(Arrays.asList(event)));
 	}*/
 
 	@Override

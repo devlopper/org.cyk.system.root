@@ -14,7 +14,7 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class CommentDetails extends AbstractJoinGlobalIdentifierDetails<Comment> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String date,party,type,message;
+	@Input @InputText private String date,party,message;
 	
 	public CommentDetails(Comment comment) {
 		super(comment);
@@ -22,8 +22,10 @@ public class CommentDetails extends AbstractJoinGlobalIdentifierDetails<Comment>
 			date = formatDateTime(comment.getGlobalIdentifier().getCreationDate());
 			party = formatUsingBusiness(comment.getGlobalIdentifier().getCreatedBy());
 		}
-		type = formatUsingBusiness(comment.getType());
 		message = comment.getMessage();
 	}
 	
+	public static final String FIELD_DATE = "date";
+	public static final String FIELD_PARTY = "party";
+	public static final String FIELD_MESSAGE = "message";
 }

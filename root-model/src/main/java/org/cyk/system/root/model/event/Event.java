@@ -3,74 +3,65 @@ package org.cyk.system.root.model.event;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+
+import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.time.AbstractIdentifiablePeriod;
+import org.cyk.system.root.model.time.Period;
+import org.cyk.system.root.model.time.PeriodSearchCriteria;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.time.Period;
 
 /**
  * Something that happens
  * @author Christian Yao Komenan
  *
  */
-@Entity
-@Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class Event extends AbstractIdentifiablePeriod implements Serializable  {
 
 	private static final long serialVersionUID = 4094533140633110556L;
 	
-	@ManyToOne private Party owner;
-	@ManyToOne private EventCollection collection;
-	
-	 /**
-     * Type
-     */
-    @ManyToOne private EventType type;
-    /**
-     * Object
-     */
-    private String object;
-    /**
-     * Description
-     */
-    @Column(length=1024 * 1) private String comments;
+    @OneToOne private ContactCollection contactCollection = new ContactCollection();
     
-    /**
-     * Contacts
-     */
-	@OneToOne protected ContactCollection contactCollection = new ContactCollection();
-    
-    private String htmlStyle;
-    
-    /**
-     * Alarm
-     */
-    //@Embedded @Valid protected Alarm alarm = new Alarm();
-    
-    @Transient private Collection<EventParticipation> eventParticipations = new ArrayList<>();
+    @Transient private Collection<EventParty> eventParties = new ArrayList<>();
    
-    public Event(EventCollection collection,EventType type, String object, String comments, Period period) {
+    public Event(Period period) {
         super();
-        this.collection = collection;
-        this.type = type;
-        this.object = object;
-        this.comments = comments;
-        this.period = period;
+        setExistencePeriod(period);
     }
     
-    @Override
-    public String toString() {
-    	return object+" "+super.toString();
+    /**/
+    
+    @Getter @Setter
+    public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+    	private static final long serialVersionUID = 3134811510557411588L;
+
+    	private PeriodSearchCriteria periodSearchCriteria;
+    	
+    	public SearchCriteria(){
+    		this(null,null);
+    	}
+    	
+    	public SearchCriteria(SearchCriteria criteria){
+    		this.periodSearchCriteria = new PeriodSearchCriteria(criteria.periodSearchCriteria);
+    	}
+    	
+    	public SearchCriteria(Date fromDate,Date toDate){
+    		periodSearchCriteria = new PeriodSearchCriteria(fromDate,toDate);
+    	}
+    	
     }
 
 }

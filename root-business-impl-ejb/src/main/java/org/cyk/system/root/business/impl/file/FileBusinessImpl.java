@@ -44,6 +44,8 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		super(dao); 
 	}
 
+	
+	
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) //TODO is this Support and followings really needed ???
     public File process(byte[] bytes, String name) {
         if(bytes==null || bytes.length==0)
@@ -69,15 +71,18 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     public String findMime(String extension) {
         String mime = null;
         String fileName = "file."+extension;
-    	try {
+        try {
             mime = Files.probeContentType(Paths.get(fileName));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    	if(StringUtils.isBlank(mime))
+    	if(StringUtils.isBlank(mime) || mime.equalsIgnoreCase(Mime.APPLICATION_OCTET_STREAM))
     		mime = MimetypesFileTypeMap.getDefaultFileTypeMap().getContentType(fileName);
-    	if(StringUtils.isBlank(mime))
+    	if(StringUtils.isBlank(mime) || mime.equalsIgnoreCase(Mime.APPLICATION_OCTET_STREAM))
     		mime = URLConnection.guessContentTypeFromName(fileName);
+    	
+    	if(StringUtils.isBlank(mime))
+    		mime = Mime.APPLICATION_OCTET_STREAM;
     	return mime;
     }
     
@@ -153,5 +158,10 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	@Override
 	public Boolean isImage(File file) {
 		return file!=null && (StringUtils.startsWith(file.getMime(), Mime.IMAGE) || "jpg".equalsIgnoreCase(file.getExtension()));
+	}
+	
+	@Override
+	public Boolean isText(File file) {
+		return file!=null && (StringUtils.startsWith(file.getMime(), Mime.TEXT) );
 	}
 }

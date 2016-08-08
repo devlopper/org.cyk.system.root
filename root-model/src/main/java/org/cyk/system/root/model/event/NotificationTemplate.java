@@ -17,8 +17,9 @@ import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.file.File;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.INTERNAL)
+@Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE)
 public class NotificationTemplate extends AbstractEnumeration implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
@@ -27,10 +28,10 @@ public class NotificationTemplate extends AbstractEnumeration implements Seriali
 	public static final String ALARM_SMS = "ALARM_SMS_NT";
 	public static final String ALARM_USER_INTERFACE = "ALARM_USER_INTERFACE_NT";
 	
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
 	private File title;
 	
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
 	private File message;
 	
 	/**/

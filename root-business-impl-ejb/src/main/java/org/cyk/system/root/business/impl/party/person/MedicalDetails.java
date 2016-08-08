@@ -17,7 +17,7 @@ public class MedicalDetails extends AbstractOutputDetails<Person> implements Ser
 	
 	private static final long serialVersionUID = -1498269103849317057L;
 	
-	@Input @InputText private String bloodGroup/*,allergicReactionResponse,allergicReactionType*/,allergies,medications,otherInformations;
+	@Input @InputText private String bloodGroup/*,allergicReactionResponse,allergicReactionType*/,allergies,medications;
 	
 	public MedicalDetails(Person person) {
 		super(person);
@@ -26,7 +26,6 @@ public class MedicalDetails extends AbstractOutputDetails<Person> implements Ser
 				bloodGroup = person.getMedicalInformations().getBloodGroup().getName();
 			//allergicReactionResponse = person.getMedicalInformations().getAllergicReactionResponse();
 			//allergicReactionType = person.getMedicalInformations().getAllergicReactionType();
-			otherInformations = person.getMedicalInformations().getOtherInformations();
 			allergies = StringUtils.join(person.getMedicalInformations().getMedicalInformationsAllergies(),Constant.CHARACTER_COMA);
 			medications = StringUtils.join(person.getMedicalInformations().getMedications(),Constant.CHARACTER_COMA);
 		}

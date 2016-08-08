@@ -22,4 +22,5 @@ public abstract class AbstractJoinGlobalIdentifierDetails<IDENTIFIABLE extends A
 		identifiableGlobalIdentifier = identifiable.getIdentifiableGlobalIdentifier().getIdentifier();
 	}
 	
+	public static final String FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER = "identifiableGlobalIdentifier";
 }

@@ -14,9 +14,6 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -29,11 +26,12 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.event.EventMissedBusiness;
 import org.cyk.system.root.business.api.event.EventMissedReasonBusiness;
-import org.cyk.system.root.business.api.event.EventParticipationBusiness;
-import org.cyk.system.root.business.api.event.EventTypeBusiness;
+import org.cyk.system.root.business.api.event.EventPartyBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
-import org.cyk.system.root.business.api.file.TagBusiness;
+import org.cyk.system.root.business.api.file.ScriptBusiness;
+import org.cyk.system.root.business.api.file.ScriptVariableBusiness;
 import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
@@ -43,7 +41,8 @@ import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.information.CommentBusiness;
-import org.cyk.system.root.business.api.information.CommentTypeBusiness;
+import org.cyk.system.root.business.api.information.TagBusiness;
+import org.cyk.system.root.business.api.information.TagIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
@@ -90,12 +89,13 @@ import org.cyk.system.root.model.ContentType;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventMissed;
 import org.cyk.system.root.model.event.EventMissedReason;
-import org.cyk.system.root.model.event.EventType;
+import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.file.Tag;
+import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.file.ScriptVariable;
 import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
@@ -107,7 +107,8 @@ import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.information.Comment;
-import org.cyk.system.root.model.information.CommentType;
+import org.cyk.system.root.model.information.Tag;
+import org.cyk.system.root.model.information.TagIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
@@ -159,6 +160,9 @@ import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -181,9 +185,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private Country countryCoteDivoire;
 	private Role roleAdministrator,roleManager,roleSettingManager,roleSecurityManager,roleUser;
 	private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
-	private EventType anniversaryEventType,reminderEventType;
 	private Sex sexMale,sexFemale;
 	
+	@Inject private FileBusiness fileBusiness;
+	@Inject private ScriptBusiness scriptBusiness;
+	@Inject private ScriptVariableBusiness scriptVariableBusiness;
 	@Inject private LanguageBusiness languageBusiness;
 	@Inject private MathematicsBusiness mathematicsBusiness;
 	@Inject private TimeBusiness timeBusiness;
@@ -199,8 +205,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject private LocalityTypeBusiness localityTypeBusiness;
 	@Inject private CountryBusiness countryBusiness;
 	@Inject private TagBusiness tagBusiness;
+	@Inject private TagIdentifiableGlobalIdentifierBusiness tagIdentifiableGlobalIdentifierBusiness;
     @Inject private EventBusiness eventBusiness;
-    @Inject private EventParticipationBusiness eventParticipationBusiness;
+    @Inject private EventPartyBusiness eventPartyBusiness;
     @Inject private EventMissedBusiness eventMissedBusiness;
     @Inject private EventMissedReasonBusiness eventMissedReasonBusiness;
     @Inject private PersonBusiness personBusiness;
@@ -211,7 +218,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject private UserAccountBusiness userAccountBusiness;
     @Inject private TimeDivisionTypeBusiness timeDivisionTypeBusiness;
-    @Inject private EventTypeBusiness eventTypeBusiness;
     @Inject private StringGeneratorBusiness stringGeneratorBusiness;
     @Inject private ClazzBusiness clazzBusiness;
     @Inject private JobTitleBusiness jobTitleBusiness;
@@ -231,7 +237,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private MovementCollectionBusiness movementCollectionBusiness;
     @Inject private MarkupLanguageBusiness markupLanguageBusiness;
     @Inject private NestedSetNodeBusiness nestedSetNodeBusiness;
-    @Inject private CommentTypeBusiness commentTypeBusiness;
     @Inject private CommentBusiness commentBusiness;
     @Inject private DataTreeBusiness dataTreeBusiness;
     @Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
@@ -254,7 +259,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Inject private NotificationBusiness notificationBusiness;
     @Inject private CountryDao countryDao;
     @Inject private GenericDao genericDao;
-    //@Inject private EventParticipationDao eventParticipationDao;
     
     @Inject private PersonValidator personValidator;
     @Inject private FileValidator fileValidator;
@@ -317,6 +321,21 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			@Override
 			public String format(NestedSetNode nestedSetNode, ContentType contentType) {
 				return nestedSetNode.getLeftIndex()+Constant.CHARACTER_COMA.toString()+nestedSetNode.getRightIndex();
+			}
+		});
+        registerFormatter(GlobalIdentifier.class, new AbstractFormatter<GlobalIdentifier>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(GlobalIdentifier globalIdentifier, ContentType contentType) {
+				return globalIdentifier.getIdentifier()+Constant.CHARACTER_SLASH+globalIdentifier.getCode();
+			}
+		});
+        
+        registerFormatter(File.class, new AbstractFormatter<File>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(File file, ContentType contentType) {
+				return file.getCode()+Constant.CHARACTER_SLASH+file.getName();
 			}
 		});
         
@@ -452,11 +471,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void event(){ 
-    	create(new EventType(EventType.ANNIVERSARY, "Anniversaire", null));
+    	/*create(new EventType(EventType.ANNIVERSARY, "Anniversaire", null));
     	create(new EventType(EventType.APPOINTMENT, "Rendez vous", null));
         create(new EventType(EventType.MEETING, "Reunion", null));
         create(new EventType(EventType.REMINDER, "Rappel", null));
-        
+        */
         notificationTemplate(NotificationTemplate.ALARM_USER_INTERFACE,"Alarm User Interface Notification Template","alarmUITitle.txt","alarmUIMessage.html");
         notificationTemplate(NotificationTemplate.ALARM_EMAIL,"Alarm Email Notification Template","alarmEmailTitle.txt","alarmEmailMessage.html");
         notificationTemplate(NotificationTemplate.ALARM_SMS,"Alarm Sms Notification Template","alarmSmsTitle.txt","alarmSmsMessage.html");
@@ -527,13 +546,19 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Override
     public void registerTypedBusinessBean(Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> beansMap) {
         beansMap.put((Class)Event.class, (TypedBusiness)eventBusiness);
+        beansMap.put((Class)EventParty.class, (TypedBusiness)eventPartyBusiness);
         beansMap.put((Class)EventMissed.class, (TypedBusiness)eventMissedBusiness);
         beansMap.put((Class)EventMissedReason.class, (TypedBusiness)eventMissedReasonBusiness);
+        
         beansMap.put((Class)Person.class, (TypedBusiness)personBusiness);
+        
+        beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
         beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
         beansMap.put((Class)Country.class, (TypedBusiness)countryBusiness);
-        beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
+        
+        
         beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);
+        beansMap.put((Class)TagIdentifiableGlobalIdentifier.class, (TypedBusiness)tagIdentifiableGlobalIdentifierBusiness);
         beansMap.put((Class)UserAccount.class, (TypedBusiness)userAccountBusiness);
         beansMap.put((Class)StringGenerator.class, (TypedBusiness)stringGeneratorBusiness);
         beansMap.put((Class)RoleSecuredView.class, (TypedBusiness)roleSecuredViewBusiness);
@@ -555,14 +580,18 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)FiniteStateMachineState.class, (TypedBusiness)finiteStateMachineStateBusiness);
         beansMap.put((Class)FiniteStateMachineStateLog.class, (TypedBusiness)finiteStateMachineStateLogBusiness);
         beansMap.put((Class)NestedSetNode.class, (TypedBusiness)nestedSetNodeBusiness);
-        beansMap.put((Class)CommentType.class, (TypedBusiness)commentTypeBusiness);
         beansMap.put((Class)Comment.class, (TypedBusiness)commentBusiness);
-        beansMap.put((Class)FileIdentifiableGlobalIdentifier.class, (TypedBusiness)fileIdentifiableGlobalIdentifierBusiness);
+        
         beansMap.put((Class)DataTree.class, (TypedBusiness)dataTreeBusiness);
         beansMap.put((Class)DataTreeType.class, (TypedBusiness)dataTreeTypeBusiness);
         beansMap.put((Class)DataTreeIdentifiableGlobalIdentifier.class, (TypedBusiness)dataTreeIdentifiableGlobalIdentifierBusiness);
         beansMap.put((Class)Application.class, (TypedBusiness)applicationBusiness);
         beansMap.put((Class)Sex.class, (TypedBusiness)sexBusiness);
+        
+        beansMap.put((Class)File.class, (TypedBusiness)fileBusiness);
+        beansMap.put((Class)FileIdentifiableGlobalIdentifier.class, (TypedBusiness)fileIdentifiableGlobalIdentifierBusiness);
+        beansMap.put((Class)Script.class, (TypedBusiness)scriptBusiness);
+        beansMap.put((Class)ScriptVariable.class, (TypedBusiness)scriptVariableBusiness);
     }
     
     @Override
@@ -593,10 +622,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	timeDivisionTypeTrimester = getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER);
     	timeDivisionTypeSemester = getEnumeration(TimeDivisionType.class,TimeDivisionType.SEMESTER);
     	timeDivisionTypeYear = getEnumeration(TimeDivisionType.class,TimeDivisionType.YEAR);
-    	
+    	/*
     	anniversaryEventType = getEnumeration(EventType.class,EventType.ANNIVERSARY);
     	reminderEventType = getEnumeration(EventType.class,EventType.REMINDER);
-    	
+    	*/
     	sexMale = getEnumeration(Sex.class, Sex.MALE);
     	sexFemale = getEnumeration(Sex.class, Sex.FEMALE);
     	

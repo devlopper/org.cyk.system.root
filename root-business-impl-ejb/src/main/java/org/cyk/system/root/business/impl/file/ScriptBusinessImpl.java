@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.file;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,7 +17,9 @@ import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.file.ScriptVariable;
 import org.cyk.system.root.persistence.api.file.ScriptDao;
+import org.cyk.system.root.persistence.api.file.ScriptVariableDao;
 
 public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, ScriptDao> implements ScriptBusiness, Serializable {
 	private static final long serialVersionUID = 8072220305781523624L;
@@ -24,6 +27,7 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 	private static final String DEFAULT_ENGINE_NAME = "javascript";
 	
 	@Inject private FileBusiness fileBusiness;
+	@Inject private ScriptVariableDao scriptVariableDao;
 	
 	@Inject
 	public ScriptBusinessImpl(ScriptDao dao) { 
@@ -49,8 +53,9 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 			exceptionUtils().exception(e);
 		}
 		
-		for (String variable : script.getVariables())
-			variablesValue.put(variable, bindings.get(variable));
+		Collection<ScriptVariable> scriptVariables = scriptVariableDao.readByScript(script);
+		for (ScriptVariable scriptVariable : scriptVariables)
+			variablesValue.put(scriptVariable.getCode(), bindings.get(scriptVariable.getCode()));
 		return variablesValue;
 	}
 

@@ -12,9 +12,6 @@ import java.util.Deque;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +59,9 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.database.DatabaseUtils;
 import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
 import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -260,7 +260,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	public void addContacts(ContactCollection collection,String[] addresses,String[] landNumbers,String[] mobileNumbers,String[] postalBoxes,String[] emails,String[] websites){
 		if(addresses!=null)
 			for(String address : addresses){
-				Location location = new Location(collection, RootBusinessLayer.getInstance().getCountryCoteDivoire().getLocality(), address);
+				Location location = new Location(collection, RootBusinessLayer.getInstance().getCountryCoteDivoire().getLocality());
+				location.setOtherDetails(address);
 				location.setType(RootBusinessLayer.getInstance().getOfficeLocationType());
 				if(collection.getLocations()==null)
 					collection.setLocations(new ArrayList<Location>());

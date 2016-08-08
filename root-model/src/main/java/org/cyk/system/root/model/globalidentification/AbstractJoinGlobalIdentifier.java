@@ -73,4 +73,7 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 		return object!=null && Boolean.TRUE.equals(isUserDefinedClass(moduleClass,object.getClass()));
 	}
 	
+	/**/
+	
+	public static final String FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER = "identifiableGlobalIdentifier";
 }

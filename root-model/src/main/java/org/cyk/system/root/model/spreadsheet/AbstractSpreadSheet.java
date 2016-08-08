@@ -13,14 +13,14 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.cyk.system.root.model.time.AbstractIdentifiablePeriod;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.cyk.system.root.model.event.AbstractIdentifiablePeriod;
-import org.cyk.utility.common.annotation.ModelBean;
-import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
 /**
  * Storage of data in tabular form

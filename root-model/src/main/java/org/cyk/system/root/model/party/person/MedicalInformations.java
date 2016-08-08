@@ -20,7 +20,7 @@ public class MedicalInformations extends AbstractPersonExtendedInformations impl
 
 	@OneToOne(cascade=CascadeType.ALL) private BloodGroup bloodGroup;
 	
-	private String /*allergicReactionType,allergicReactionResponse,*/otherInformations;//TODO Other information should be modeled by customer : build a system to support it
+	//private String /*allergicReactionType,allergicReactionResponse,*/otherInformations;//TODO Other information should be modeled by customer : build a system to support it
 	
 	@Transient private Collection<Medication> medications = new ArrayList<>();
 	@Transient private Collection<MedicalInformationsAllergy> medicalInformationsAllergies = new ArrayList<>();

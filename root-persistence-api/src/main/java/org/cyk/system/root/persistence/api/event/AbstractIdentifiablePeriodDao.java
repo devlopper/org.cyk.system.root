@@ -3,7 +3,7 @@ package org.cyk.system.root.persistence.api.event;
 import java.util.Collection;
 import java.util.Date;
 
-import org.cyk.system.root.model.event.AbstractIdentifiablePeriod;
+import org.cyk.system.root.model.time.AbstractIdentifiablePeriod;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.TypedDao;
 

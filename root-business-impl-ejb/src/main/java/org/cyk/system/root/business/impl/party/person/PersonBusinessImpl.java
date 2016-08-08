@@ -166,7 +166,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		if(arguments.getBirthLocationOtherDetailsIndex()!=null){
 			if(getExtendedInformations(person).getBirthLocation()==null)
 				person.getExtendedInformations().setBirthLocation(new Location());
-			getExtendedInformations(person).getBirthLocation().setComment(arguments.getValues()[arguments.getBirthLocationOtherDetailsIndex()]);
+			getExtendedInformations(person).getBirthLocation().setOtherDetails(arguments.getValues()[arguments.getBirthLocationOtherDetailsIndex()]);
 		}
 		
 		if(arguments.getJobFunctionCodeIndex()!=null){

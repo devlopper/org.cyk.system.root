@@ -5,10 +5,6 @@ import java.io.Serializable;
 import javax.inject.Singleton;
 
 import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.model.event.EventType;
-import org.cyk.system.root.model.geography.Locality;
-import org.cyk.ui.api.command.AbstractCommandable.Builder;
-import org.cyk.ui.api.command.UICommandable;
 import org.cyk.ui.api.command.menu.SystemMenu;
 import org.cyk.ui.web.primefaces.AbstractPrimefacesManager;
 import org.cyk.ui.web.primefaces.UserSession;
@@ -33,6 +29,7 @@ public class RootWebManager extends AbstractPrimefacesManager implements Seriali
 	@Override
 	public SystemMenu systemMenu(UserSession userSession) {
 		SystemMenu systemMenu = new SystemMenu();
+		/*
 		UICommandable group = Builder.instanciateOne().setLabelFromId("contacts").create();
 		group.addChild(Builder.createList(Locality.class, null));
 		systemMenu.getReferenceEntities().add(group);
@@ -40,7 +37,7 @@ public class RootWebManager extends AbstractPrimefacesManager implements Seriali
 		group = Builder.instanciateOne().setLabelFromId("event").create();
 		group.addChild(Builder.createList(EventType.class, null));
 		systemMenu.getReferenceEntities().add(group);
-		
+		*/
 		return systemMenu;
 	}
 	

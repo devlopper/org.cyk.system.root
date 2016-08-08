@@ -19,6 +19,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
+import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.utility.common.Constant;
@@ -104,7 +105,9 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	
 	@Override
 	public Long findDuration(Period period) {
-		return period.getToDate().getTime()-period.getFromDate().getTime();
+		if(period.getNumberOfMillisecond()==null)
+			ExceptionUtils.getInstance().exception("unknownperiodduration");
+		return period.getNumberOfMillisecond();
 	}
 	
 	@Override
@@ -201,7 +204,7 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 			//TODO year periods
 			return null;
 		}else{
-			return findPeriods(period.getFromDate().getTime(), period.getToDate().getTime(), period.getDuration());
+			return findPeriods(period.getFromDate().getTime(), period.getToDate().getTime(), period.getNumberOfMillisecond());
 		}
 	}
 

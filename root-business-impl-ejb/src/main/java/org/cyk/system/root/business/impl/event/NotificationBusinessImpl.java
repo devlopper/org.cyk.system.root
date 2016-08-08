@@ -16,7 +16,7 @@ import org.cyk.system.root.business.api.file.TemplateEngineBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendOptions;
 import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
-import org.cyk.system.root.model.event.EventParticipation;
+import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
@@ -25,7 +25,7 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.security.UserAccount;
-import org.cyk.system.root.persistence.api.event.EventParticipationDao;
+import org.cyk.system.root.persistence.api.event.EventPartyDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.security.UserAccountDao;
 
@@ -37,7 +37,7 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
     @Inject private Event<Notification> bus;
     @Inject private EventReminderBusiness eventReminderBusiness;
     @Inject private UserAccountDao userAccountDao;
-    @Inject private EventParticipationDao eventParticipationDao;
+    @Inject private EventPartyDao eventPartyDao;
     @Inject private ContactDao contactDao;
 
     @Override
@@ -96,23 +96,23 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
     	for(EventReminder eventReminder : eventReminders)
     		events.add(eventReminder.getEvent());
 		logTrace("{} events to notify found", events.size());
-		Collection<EventParticipation> eventParticipations = eventParticipationDao.readByEvents(events);
+		Collection<EventParty> eventParties = eventPartyDao.readByEvents(events);
 		for(org.cyk.system.root.model.event.Event event : events){
 			for(RemoteEndPoint remoteEndPoint : remoteEndPoints){
 				if(remoteEndPoint.alarmTemplate==null){
 					logError("No alarm template found");
 				}else{
 					Set<Party> parties = new HashSet<>();
-					for(EventParticipation eventParticipation : eventParticipations)
-						if(eventParticipation.getEvent().equals(event))
-							if(Boolean.TRUE.equals(eventParticipation.getAlertParty()))
-								parties.add(eventParticipation.getParty());
+					for(EventParty eventParty : eventParties)
+						if(eventParty.getEvent().equals(event))
+							if(Boolean.TRUE.equals(eventParty.getAlertParty()))
+								parties.add(eventParty.getParty());
 					
 					Notification notification = new Notification();
 					notification.setRemoteEndPoint(remoteEndPoint);
 					NotificationTemplate template = remoteEndPoint.alarmTemplate;
-					template.getTitleParametersMap().put("title", event.getType().getName());
-					template.getMessageParametersMap().put("body", event.getObject());
+					template.getTitleParametersMap().put("title", event.getName());
+					template.getMessageParametersMap().put("body", event.getName());
 					fill(notification, template);
 					SendOptions sendOptions = new SendOptions();
 					

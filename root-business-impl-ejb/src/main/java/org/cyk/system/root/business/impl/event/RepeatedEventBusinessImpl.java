@@ -13,13 +13,13 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventReminder;
-import org.cyk.system.root.model.event.RepeatedEvent;
+import org.cyk.system.root.model.event.EventRepetition;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventReminderDao;
 import org.cyk.system.root.persistence.api.event.RepeatedEventDao;
 import org.joda.time.DateTime;
 
-public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<RepeatedEvent, RepeatedEventDao> implements RepeatedEventBusiness,Serializable {
+public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<EventRepetition, RepeatedEventDao> implements RepeatedEventBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
@@ -32,19 +32,17 @@ public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<Repe
 	}
 
 	@Override
-    public RepeatedEvent createAnniversary(Integer dayOfMonth,Integer month,String object) {
+    public EventRepetition createAnniversary(Integer dayOfMonth,Integer month,String object) {
     	Event event = new Event();
     	EventReminder eventReminder = new EventReminder();
-    	event.setPeriod(new Period());
-    	eventReminder.setPeriod(new Period());
+    	event.setExistencePeriod(new Period());
+    	eventReminder.setExistencePeriod(new Period());
 		
     	commonEvent(event,Arrays.asList(eventReminder),dayOfMonth,month, object);
-		event.setType(RootBusinessLayer.getInstance().getAnniversaryEventType());
 		event.setContactCollection(null); 
-		event.setOwner(null);//Nobody is owner
 		eventBusiness.create(event,Arrays.asList(eventReminder));
     	
-    	RepeatedEvent repeatedEvent = new RepeatedEvent();
+    	EventRepetition repeatedEvent = new EventRepetition();
     	repeatedEvent.setEvent(event);
     	commonRepeatedEvent(repeatedEvent, dayOfMonth, month);
     	dao.create(repeatedEvent);
@@ -52,27 +50,27 @@ public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<Repe
     }
 	
 	private void commonEvent(Event event,Collection<EventReminder> eventReminders,Integer dayOfMonth,Integer month,String object){
-		event.setObject(anniversaryName(object));
-		event.getPeriod().setFromDate(new DateTime(1900, month, dayOfMonth, 0, 0, 0, 0).toDate());
-		event.getPeriod().setToDate(event.getPeriod().getFromDate());
+		event.setName(anniversaryName(object));
+		event.getExistencePeriod().setFromDate(new DateTime(1900, month, dayOfMonth, 0, 0, 0, 0).toDate());
+		event.getExistencePeriod().setToDate(event.getExistencePeriod().getFromDate());
 		for(EventReminder eventReminder : eventReminders){
-			eventReminder.getPeriod().setFromDate(new DateTime(event.getPeriod().getFromDate()).minusDays(1).toDate());
-			eventReminder.getPeriod().setToDate(event.getPeriod().getFromDate());
+			eventReminder.getExistencePeriod().setFromDate(new DateTime(event.getExistencePeriod().getFromDate()).minusDays(1).toDate());
+			eventReminder.getExistencePeriod().setToDate(event.getExistencePeriod().getFromDate());
 		}
 	}
 	
-	private void commonRepeatedEvent(RepeatedEvent repeatedEvent,Integer dayOfMonth,Integer month){
+	private void commonRepeatedEvent(EventRepetition repeatedEvent,Integer dayOfMonth,Integer month){
 		repeatedEvent.getDate().setDay(dayOfMonth);
     	repeatedEvent.getDate().setMonth(month);
 	} 
 
 	@Override
-	public RepeatedEvent createAnniversary(Date date, String name) {
+	public EventRepetition createAnniversary(Date date, String name) {
 		return createAnniversary(timeBusiness.findDayOfMonth(date), timeBusiness.findMonth(date), name);
 	}
 
 	@Override
-	public RepeatedEvent updateAnniversary(RepeatedEvent anniversary,Integer dayOfMonth,Integer month,String name) {
+	public EventRepetition updateAnniversary(EventRepetition anniversary,Integer dayOfMonth,Integer month,String name) {
 		Collection<EventReminder> eventReminders = eventReminderDao.readByEvent(anniversary.getEvent());
 		commonEvent(anniversary.getEvent(),eventReminders,dayOfMonth,month, name);
 		commonRepeatedEvent(anniversary, dayOfMonth, month);
@@ -84,16 +82,16 @@ public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<Repe
 	}
 	
 	@Override
-	public RepeatedEvent updateAnniversary(RepeatedEvent anniversary,Date date, String name) {
+	public EventRepetition updateAnniversary(EventRepetition anniversary,Date date, String name) {
 		return updateAnniversary(anniversary, timeBusiness.findDayOfMonth(date), timeBusiness.findMonth(date), name);
 	}
 
 	private String anniversaryName(String name){
-		return RootBusinessLayer.getInstance().getAnniversaryEventType().getName()+" : "+name;
+		return null;//RootBusinessLayer.getInstance().getAnniversaryEventType().getName()+" : "+name;
 	}
 
 	@Override
-	public Collection<RepeatedEvent> findByPeriod(Period period) {
+	public Collection<EventRepetition> findByPeriod(Period period) {
 		return dao.readByMonths(timeBusiness.findMonthIndexes(period));
 	}
 
@@ -103,7 +101,7 @@ public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<Repe
 	}
 
 	@Override
-	public Collection<RepeatedEvent> findByMonth(Integer month) {
+	public Collection<EventRepetition> findByMonth(Integer month) {
 		return dao.readByMonth(month);
 	}
 
@@ -113,7 +111,7 @@ public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<Repe
 	}
 
 	@Override
-	public Collection<RepeatedEvent> findByDayOfMonth(Integer dayOfMonth) {
+	public Collection<EventRepetition> findByDayOfMonth(Integer dayOfMonth) {
 		return dao.readByDayOfMonth(dayOfMonth);
 	}
 
@@ -123,7 +121,7 @@ public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<Repe
 	}
 
 	@Override
-	public Collection<RepeatedEvent> findByDayOfMonthByMonth(Integer dayOfMonth,Integer month) {
+	public Collection<EventRepetition> findByDayOfMonthByMonth(Integer dayOfMonth,Integer month) {
 		return dao.readByDayOfMonthByMonth(dayOfMonth, month);
 	}
 

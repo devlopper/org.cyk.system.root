@@ -18,7 +18,7 @@ import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.INTERNAL,genderType=GenderType.MALE)
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class File extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 129506142716551683L;
@@ -42,11 +42,6 @@ public class File extends AbstractIdentifiable implements Serializable{
 	 * Multipurpose Internet Mail Extension
 	 */
 	private String mime;
-	
-	/**
-	 * User specific data for reading 
-	 */
-	private String description;
 	
 	@Override
 	public String toString() {

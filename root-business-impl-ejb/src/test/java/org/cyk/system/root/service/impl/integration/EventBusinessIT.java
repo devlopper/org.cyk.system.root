@@ -13,7 +13,7 @@ import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.event.EventParticipation;
+import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.PhoneNumber;
@@ -46,7 +46,7 @@ public class EventBusinessIT extends AbstractBusinessIT {
     
     private Event event(Date fromDate,Date toDate){
         Event event = new Event();
-        event.setPeriod(new Period(fromDate, toDate));
+        event.setExistencePeriod(new Period(fromDate, toDate));
         event.setContactCollection(null);
         return event;
     }
@@ -109,15 +109,15 @@ public class EventBusinessIT extends AbstractBusinessIT {
         		.phoneNumber(event.getContactCollection(),RootBusinessLayer.getInstance().getCountryCoteDivoire(),
         				RootBusinessLayer.getInstance().getLandPhoneNumberType()));
         
-        event.getEventParticipations().add(new EventParticipation(p1));
-        event.getEventParticipations().add(new EventParticipation(p2));
-        event.getEventParticipations().add(new EventParticipation(p3));
-        event.getEventParticipations().add(new EventParticipation(p4));
+        event.getEventParties().add(new EventParty(p1));
+        event.getEventParties().add(new EventParty(p2));
+        event.getEventParties().add(new EventParty(p3));
+        event.getEventParties().add(new EventParty(p4));
         Collection<EventReminder> reminders = new ArrayList<>();
         EventReminder eventReminder = new EventReminder();
         reminders.add(eventReminder);
-        eventReminder.getPeriod().setFromDate(new Date());
-        eventReminder.getPeriod().setToDate(new Date());
+        eventReminder.getExistencePeriod().setFromDate(new Date());
+        eventReminder.getExistencePeriod().setToDate(new Date());
         eventBusiness.create(event,reminders);
         eventBusiness.delete(event);
         

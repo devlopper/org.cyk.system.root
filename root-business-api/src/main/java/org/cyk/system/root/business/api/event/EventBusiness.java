@@ -2,9 +2,10 @@ package org.cyk.system.root.business.api.event;
 
 import java.util.Collection;
 
+import org.cyk.system.root.business.api.time.AbstractIdentifiablePeriodBusiness;
 import org.cyk.system.root.model.event.Event;
+import org.cyk.system.root.model.event.Event.SearchCriteria;
 import org.cyk.system.root.model.event.EventReminder;
-import org.cyk.system.root.model.event.EventSearchCriteria;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
 
@@ -13,8 +14,8 @@ public interface EventBusiness extends AbstractIdentifiablePeriodBusiness<Event>
     Collection<Event> findWhereFromDateBetweenPeriodByParties(Period period,Collection<Party> parties);
     Long countWhereFromDateBetweenPeriodByParties(Period period,Collection<Party> parties);
     
-    Collection<Event> findByCriteria(EventSearchCriteria criteria);
-    Long countByCriteria(EventSearchCriteria criteria);
+    Collection<Event> findByCriteria(SearchCriteria criteria);
+    Long countByCriteria(SearchCriteria criteria);
     
     void create(Event event,Collection<EventReminder> eventReminders);
     

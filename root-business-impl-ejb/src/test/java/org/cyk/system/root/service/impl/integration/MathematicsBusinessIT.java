@@ -64,7 +64,7 @@ public class MathematicsBusinessIT extends AbstractBusinessIT {
         script.getFile().setBytes(text.getBytes());
         if(variables!=null)
         	for(String variable : variables)
-        		script.getVariables().add(variable);
+        		;//script.getVariables().add(variable);
         
         return script;
     }

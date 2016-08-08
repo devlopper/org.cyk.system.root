@@ -5,9 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.event.EventCollection;
 import org.cyk.system.root.model.event.EventMissed;
-import org.cyk.system.root.model.event.EventParticipation;
+import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.persistence.api.event.EventMissedDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 
@@ -15,32 +14,34 @@ public class EventMissedDaoImpl extends AbstractTypedDao<EventMissed> implements
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-	private static final String SUM_DURATION_BY_COLLECTION = "SELECT SUM(em.duration) FROM EventMissed em WHERE em.participation.event.collection.identifier IN :identifiers AND "
-			+ "em.participation.event.period.fromDate BETWEEN :fromDate AND :toDate";
-	private static final String SUM_DURATION_BY_EVENTS = "SELECT SUM(em.duration) FROM EventMissed em WHERE em.participation.event.identifier IN :identifiers";
+	private static final String SUM_DURATION_BY_COLLECTION = "SELECT SUM(em.numberOfMillisecond) FROM EventMissed em WHERE em.eventParty.event.collection.identifier IN :identifiers AND "
+			+ "em.eventParty.event.globalIdentifier.existencePeriod.fromDate BETWEEN :fromDate AND :toDate";
+	private static final String SUM_DURATION_BY_EVENTS = "SELECT SUM(em.numberOfMillisecond) FROM EventMissed em WHERE em.eventParty.event.identifier IN :identifiers";
 	
-    private String sumDurationByCollection,sumDurationByCollectionByAcceptable,sumDurationByEvents,sumDurationByEventsByAcceptable,readByEventParticipations;
+    private String sumDurationByCollection,sumDurationByCollectionByAcceptable,sumDurationByEvents,sumDurationByEventsByAcceptable,readByEventParties;
     
     @Override
     protected void namedQueriesInitialisation() {
     	super.namedQueriesInitialisation();
-        registerNamedQuery(sumDurationByCollection, SUM_DURATION_BY_COLLECTION);
+        /*registerNamedQuery(sumDurationByCollection, SUM_DURATION_BY_COLLECTION);
         registerNamedQuery(sumDurationByCollectionByAcceptable, SUM_DURATION_BY_COLLECTION+" AND em.reason.acceptable = :acceptable");
         
         registerNamedQuery(sumDurationByEvents, SUM_DURATION_BY_EVENTS);
         registerNamedQuery(sumDurationByEventsByAcceptable, SUM_DURATION_BY_EVENTS+" AND em.reason.acceptable = :acceptable");
         
-        registerNamedQuery(readByEventParticipations, "SELECT em FROM EventMissed em WHERE em.participation.identifier IN :identifiers");
+        registerNamedQuery(readByEventParties, "SELECT em FROM EventMissed em WHERE em.participation.identifier IN :identifiers");
+        */
     }
      
 	@Override
-	public Long sumDuration(Collection<EventCollection> collections,Date fromDate,Date toDate, Boolean acceptable) {
-		if(acceptable==null)
+	public Long sumDuration(Date fromDate,Date toDate, Boolean acceptable) {
+		/*if(acceptable==null)
 			return sumNamedQuery(sumDurationByCollection).parameter("identifiers", ids(collections)).parameter("fromDate", fromDate).parameter("toDate", toDate)
                 .resultOne();
 		return sumNamedQuery(sumDurationByCollectionByAcceptable).parameter("identifiers", ids(collections)).parameter("fromDate", fromDate).parameter("toDate", toDate)
 				.parameter("acceptable", acceptable)
-                .resultOne();
+                .resultOne();*/
+		return null;
 	}
 
 	@Override
@@ -53,8 +54,8 @@ public class EventMissedDaoImpl extends AbstractTypedDao<EventMissed> implements
 	}
 
 	@Override
-	public Collection<EventMissed> readByEventParticipations(Collection<EventParticipation> eventParticipations) {
-		return namedQuery(readByEventParticipations).parameter("identifiers", ids(eventParticipations))
+	public Collection<EventMissed> readByEventParties(Collection<EventParty> eventParties) {
+		return namedQuery(readByEventParties).parameter("identifiers", ids(eventParties))
                 .resultMany();
 	}
 

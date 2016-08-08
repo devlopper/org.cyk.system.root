@@ -1,27 +1,20 @@
 package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.cyk.system.root.model.AbstractModelElement;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.time.DateUtils;
-import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputCalendar;
 
 /**
  * A period is a time interval from a start date to an end date
@@ -34,36 +27,33 @@ public class Period extends AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-	public static Date DATE_LOWEST;
-	public static Date DATE_HIGHEST;
-	//private String timeZone;
+	@Temporal(TemporalType.TIMESTAMP) private Date fromDate;
 	
-	static{
-		try {
-			DATE_LOWEST = DateUtils.parseDate("1/1/1", "dd/MM/yyy");
-			DATE_HIGHEST = DateUtils.parseDate("1/1/10000", "dd/MM/yyy");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	@Temporal(TemporalType.TIMESTAMP) private Date toDate;
+	
+	private Long numberOfMillisecond;
+	
+	public Period(Date fromDate, Date toDate) {
+		super();
+		setFromDate(fromDate);
+		setToDate(toDate);
 	}
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@NotNull
-	@Column(nullable=false)
-	@Input
-	@InputCalendar
-	protected Date fromDate;
+	public void setFromDate(Date date){
+		this.fromDate = date;
+		computeNumberOfMillisecond();
+	}
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@NotNull
-	@Column(nullable=false)
-	@Input
-	@InputCalendar
-	protected Date toDate;
+	public void setToDate(Date date){
+		this.toDate = date;
+		computeNumberOfMillisecond();
+	}
 	
-	public Long getDuration(){
-    	return toDate.getTime() - fromDate.getTime();
+	private void computeNumberOfMillisecond(){
+    	if(fromDate==null || toDate==null)
+    		numberOfMillisecond = null;
+    	else
+    		numberOfMillisecond = toDate.getTime() - fromDate.getTime();
     }
 	
 	public Boolean contains(Date date){
@@ -79,5 +69,7 @@ public class Period extends AbstractModelElement implements Serializable{
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);//+" , "+(getDuration()/DateUtils.MILLIS_PER_MINUTE)+" min";
 	}
+
+	
 
 }

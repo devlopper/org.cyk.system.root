@@ -5,5 +5,4 @@ import org.cyk.system.root.model.geography.Country;
 
 public interface CountryBusiness extends TypedBusiness<Country> {
 
-	Country findByCode(String code);
 }

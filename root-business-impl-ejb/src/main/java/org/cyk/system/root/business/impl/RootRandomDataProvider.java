@@ -8,8 +8,6 @@ import java.util.Date;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -36,6 +34,8 @@ import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
 
+import lombok.Getter;
+
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER+1)
 public class RootRandomDataProvider extends AbstractRandomDataProvider implements Serializable {
 
@@ -54,9 +54,8 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		super.initialisation();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <IDENTIFIABLE extends AbstractIdentifiable> IDENTIFIABLE oneFromDatabase(Class<IDENTIFIABLE> identifiableClass){
-		return (IDENTIFIABLE) BusinessLocator.getInstance().locate(identifiableClass).findOneRandomly();
+		return BusinessLocator.getInstance().locate(identifiableClass).findOneRandomly();
 	}
 	
 	public Person person(Boolean male,Country country,PhoneNumberType type,Boolean genSignature){
@@ -148,7 +147,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	public Location location(ContactCollection contactCollection){
 		Location location = new Location();
 		location.setCollection(contactCollection);
-		location.setComment(randomDataProvider.randomWord(RandomDataProvider.WORD_LOCATION, 5, 10));
+		location.setOtherDetails(randomDataProvider.randomWord(RandomDataProvider.WORD_LOCATION, 5, 10));
 		location.setLocality(rootBusinessLayer().getCountryCoteDivoire().getLocality());
 		location.setType(rootBusinessLayer().getHomeLocationType());
 		if(contactCollection!=null)

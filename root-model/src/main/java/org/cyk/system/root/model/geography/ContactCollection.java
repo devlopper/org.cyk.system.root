@@ -43,36 +43,5 @@ public class ContactCollection extends AbstractIdentifiable implements Serializa
 	    s.append(StringUtils.join(websites,","));
 	    return s.toString();
 	}
-	/*
-	public Collection<PhoneNumber> getPhoneNumbers(){
-		if(phoneNumbers==null)
-			phoneNumbers = new ArrayList<>();
-		return phoneNumbers;
-	}
-	
-	public Collection<Location> getLocations(){
-		if(locations==null)
-			locations = new ArrayList<>();
-		return locations;
-	}
-	
-	public Collection<PostalBox> getPostalBoxs(){
-		if(postalBoxs==null)
-			postalBoxs = new ArrayList<>();
-		return postalBoxs;
-	}
-	
-	public Collection<ElectronicMail> getElectronicMails(){
-		if(electronicMails==null)
-			electronicMails = new ArrayList<>();
-		return electronicMails;
-	}
-	
-	public Collection<Website> getWebsites(){
-		if(websites==null)
-			websites = new ArrayList<>();
-		return websites;
-	}
-	*/
 	
 }

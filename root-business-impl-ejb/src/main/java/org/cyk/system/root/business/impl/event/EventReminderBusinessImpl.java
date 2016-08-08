@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.event.EventReminderBusiness;
+import org.cyk.system.root.business.impl.time.AbstractIdentifiablePeriodBusinessImpl;
 import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.persistence.api.event.EventReminderDao;
 

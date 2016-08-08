@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.DateSearchCriteria;
+import org.cyk.utility.common.Constant;
 
 @Getter @Setter
 public class PeriodSearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
@@ -33,12 +34,12 @@ public class PeriodSearchCriteria extends AbstractFieldValueSearchCriteriaSet im
 	public Period getPeriod(){
 		if(fromDateSearchCriteria.getPreparedValue()==null)
 			if(toDateSearchCriteria.getPreparedValue()==null)
-				return new Period(Period.DATE_LOWEST, Period.DATE_HIGHEST);
+				return new Period(Constant.DATE_LOWEST_VALUE, Constant.DATE_HIGHEST_VALUE);
 			else
-				return new Period(Period.DATE_LOWEST, toDateSearchCriteria.getPreparedValue());
+				return new Period(Constant.DATE_LOWEST_VALUE, toDateSearchCriteria.getPreparedValue());
 		else
 			if(toDateSearchCriteria.getPreparedValue()==null)
-				return new Period(fromDateSearchCriteria.getPreparedValue(), Period.DATE_HIGHEST);
+				return new Period(fromDateSearchCriteria.getPreparedValue(), Constant.DATE_HIGHEST_VALUE);
 			else
 				return new Period(fromDateSearchCriteria.getPreparedValue(), toDateSearchCriteria.getPreparedValue());
 	}

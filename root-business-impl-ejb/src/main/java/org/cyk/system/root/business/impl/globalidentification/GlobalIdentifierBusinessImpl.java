@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.globalidentification;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -16,7 +17,6 @@ import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.utility.common.cdi.AbstractBean;
-import org.joda.time.DateTime;
 
 @Stateless
 public class GlobalIdentifierBusinessImpl extends AbstractBean implements GlobalIdentifierBusiness,Serializable {
@@ -48,12 +48,11 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override
 	public GlobalIdentifier create(GlobalIdentifier globalIdentifier) {
 		logTrace("Creating global identifier {}", globalIdentifier);
-		if(StringUtils.isBlank(globalIdentifier.getCode()))
+		/*if(StringUtils.isBlank(globalIdentifier.getCode()))
 			globalIdentifier.setCode(RootBusinessLayer.getInstance().getStringGeneratorBusiness()
-					.generate(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER, globalIdentifier.getIdentifiable()));//TODO handle duplicate by using lock write
-		if(globalIdentifier.getExistencePeriod().getFromDate()==null)
-			globalIdentifier.getExistencePeriod().setFromDate(RootBusinessLayer.getInstance().getTimeBusiness().findUniversalTimeCoordinated());
-		globalIdentifier.getExistencePeriod().setToDate(new DateTime(9999, 12, 31, 23, 59).toDate());//TODO for now we do not care about
+					.generate(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER, globalIdentifier.getIdentifiable()));*///TODO handle duplicate by using lock write
+		if(globalIdentifier.getOwner()==null)
+			globalIdentifier.setOwner(globalIdentifier.getCreatedBy());
 		globalIdentifier.setCreationDate(RootBusinessLayer.getInstance().getTimeBusiness().findUniversalTimeCoordinated());
 		return globalIdentifierDao.create(globalIdentifier);
 	}
@@ -71,6 +70,11 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 		return globalIdentifierDao.delete(globalIdentifier);
 	}
 
+	@Override
+	public Collection<GlobalIdentifier> findAll() {
+		return globalIdentifierDao.readAll();
+	}
+	
 	/**/
 	
 	public static Boolean isReadable(Rud rud) {

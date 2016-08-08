@@ -3,15 +3,17 @@ package org.cyk.system.root.business.impl.geography;
 import java.io.Serializable;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.geography.Country;
+import org.cyk.system.root.model.geography.Locality;
+import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
+import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
 
 @Stateless
 public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, CountryDao> implements CountryBusiness,Serializable {
@@ -19,6 +21,7 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 	private static final long serialVersionUID = -3799482462496328200L;
 
 	@Inject private LocalityBusiness localityBusiness;
+	@Inject private LocalityTypeDao localityTypeDao;
 	
 	@Inject
 	public CountryBusinessImpl(CountryDao dao) {
@@ -27,16 +30,34 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 
 	@Override
 	public Country create(Country country) {
-		localityBusiness.create(country.getLocality());
-		country = super.create(country);
+		Locality locality = country.getLocality();
+		if(locality==null){
+			locality = new Locality(country.getContinent(), localityTypeDao.read(LocalityType.COUNTRY), country.getCode(), country.getName());
+			country.setLocality(locality);
+		}
+		if(locality.getIdentifier()==null)
+			localityBusiness.create(locality);
+		/*
+		if(StringUtils.isBlank(country.getCode()))
+			country.setCode(country.getLocality().getCode());
+		if(StringUtils.isBlank(country.getName()))
+			country.setName(country.getLocality().getName());
+		*/
+		super.create(country);
 		return country;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Country findByCode(String code) {
-		return dao.readByCode(code);
-	}   
-	
-	
-	
+	@Override
+	public Country update(Country country) {
+		if(StringUtils.isBlank(country.getCode()))
+			country.setCode(country.getLocality().getCode());
+		else
+			country.getLocality().setCode(country.getCode());
+		if(StringUtils.isBlank(country.getName()))
+			country.setName(country.getLocality().getName());
+		else
+			country.getLocality().setName(country.getName());
+		localityBusiness.update(country.getLocality());
+		return super.update(country);
+	}
 }

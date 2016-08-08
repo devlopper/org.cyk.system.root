@@ -18,7 +18,7 @@ public class AbstractSpreadSheetDaoImpl<SPREADSHEET extends AbstractSpreadSheet<
 	private static final long serialVersionUID = 6920278182318788380L;
 	/*
 	private static final String READ_BY_CRITERIA_SELECT_FORMAT = "SELECT ps FROM Production ps ";
-	private static final String READ_BY_CRITERIA_WHERE_FORMAT = "WHERE ps.period.fromDate BETWEEN :fromDate AND :toDate ";
+	private static final String READ_BY_CRITERIA_WHERE_FORMAT = "WHERE ps.existencePeriod.fromDate BETWEEN :fromDate AND :toDate ";
 	
 	private static final String READ_BY_CRITERIA_NOTORDERED_FORMAT = READ_BY_CRITERIA_SELECT_FORMAT+READ_BY_CRITERIA_WHERE_FORMAT;
 	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_SELECT_FORMAT+READ_BY_CRITERIA_WHERE_FORMAT+ORDER_BY_FORMAT;
@@ -28,10 +28,10 @@ public class AbstractSpreadSheetDaoImpl<SPREADSHEET extends AbstractSpreadSheet<
 	@Override
     protected void namedQueriesInitialisation() {
     	super.namedQueriesInitialisation();
-    	/*registerNamedQuery(readAllSortedByDate,READ_BY_CRITERIA_SELECT_FORMAT+" ORDER BY ps.period.fromDate ASC");
-    	registerNamedQuery(readByCriteria,READ_BY_CRITERIA_NOTORDERED_FORMAT+" ORDER BY ps.period.fromDate ASC");
-        registerNamedQuery(readByCriteriaDateAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "ps.period.fromDate ASC") );
-        registerNamedQuery(readByCriteriaDateDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "ps.period.fromDate DESC") );*/
+    	/*registerNamedQuery(readAllSortedByDate,READ_BY_CRITERIA_SELECT_FORMAT+" ORDER BY ps.existencePeriod.fromDate ASC");
+    	registerNamedQuery(readByCriteria,READ_BY_CRITERIA_NOTORDERED_FORMAT+" ORDER BY ps.existencePeriod.fromDate ASC");
+        registerNamedQuery(readByCriteriaDateAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "ps.existencePeriod.fromDate ASC") );
+        registerNamedQuery(readByCriteriaDateDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT, "ps.existencePeriod.fromDate DESC") );*/
     }
 	
 	@SuppressWarnings("unchecked")

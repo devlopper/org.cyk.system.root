@@ -23,6 +23,7 @@ import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.Rud;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.Constant;
@@ -37,26 +38,44 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 */
 	
 	@Id private String identifier;
-	
 	@Transient private AbstractIdentifiable identifiable;
-	
 	@Column @Temporal(TemporalType.TIMESTAMP) private Date creationDate;
-	
 	@ManyToOne private Party createdBy;
 	
 	/**
 	 * Common business informations
 	 */
 	
+	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private File image;
+	
 	private String code;
 	
 	private String name;
+	private String nameI18nId;
 	
-	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private File image;
+	private String abbreviation;
+	private String abbreviationI18nId;
+	
+	private String description;
+	private String descriptionI18nId;
+	
+	/**
+	 * To capture non structured data
+	 */
+	private String otherDetails;
 	
 	@Embedded private Rud rud = new Rud();
 	
+	@Column(name="f_constant",nullable=false,updatable=false)
+	private Boolean constant = Boolean.FALSE;
+	
 	@Embedded private Period existencePeriod = new Period();
+	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;
+	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location deathLocation;
+	
+	@ManyToOne private Party owner;
+	
+	//private String htmlStyle;//TODO how to use it???
 	
 	public GlobalIdentifier() {}
 	
@@ -95,4 +114,5 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_CODE = "code";
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
+	public static final String FIELD_BIRTH_LOCATION = "birthLocation";
 }

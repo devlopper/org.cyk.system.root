@@ -5,16 +5,13 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.file.report.DefaultReportBasedOnDynamicBuilder;
 import org.cyk.system.root.business.impl.file.report.ReportBasedOnDynamicBuilderAdapter;
 import org.cyk.system.root.business.impl.file.report.jasper.DefaultJasperReportBasedOnDynamicBuilder;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.event.EventType;
+import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilder;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderIdentifiableConfiguration;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderListener;
@@ -29,6 +26,9 @@ import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
 
@@ -74,12 +74,12 @@ public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
         	}
         });
         ReportBasedOnDynamicBuilderListener.IDENTIFIABLE_CONFIGURATIONS.add(new ReportBasedOnDynamicBuilderIdentifiableConfiguration<AbstractIdentifiable, Object>(
-        		rootBusinessLayer.getParameterGenericReportBasedOnDynamicBuilder(),EventType.class,CustomEventTypeReportModel.class) {
+        		rootBusinessLayer.getParameterGenericReportBasedOnDynamicBuilder(),EventMissedReason.class,CustomEventTypeReportModel.class) {
 			private static final long serialVersionUID = -1966207854828857772L;
 
 			@Override
 			public Object model(AbstractIdentifiable eventType) {
-				return new CustomEventTypeReportModel((EventType) eventType);
+				return new CustomEventTypeReportModel((EventMissedReason) eventType);
 			}
 			@Override
 			public Boolean useCustomIdentifiableCollection() {
@@ -88,7 +88,7 @@ public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
 			@Override 
 			public Collection<? extends AbstractIdentifiable> identifiables(ReportBasedOnDynamicBuilderParameters<Object> parameters) {		
 				Collection<AbstractIdentifiable> r = new ArrayList<>();
-				r.addAll(rootBusinessLayer.getGenericBusiness().use(EventType.class).find().all());
+				r.addAll(rootBusinessLayer.getGenericBusiness().use(EventMissedReason.class).find().all());
 				return r;
 			}
 		});
@@ -118,7 +118,7 @@ public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
         rootBusinessTestHelper.reportBasedOnDynamicBuilderParameters(parameters);
         
         Collection<Class<? extends AbstractIdentifiable>> classes = new ArrayList<>();
-        classes.add(EventType.class);
+        classes.add(EventMissedReason.class);
         classes.add(TimeDivisionType.class);
         for(Object clazz : classes)
         	rootBusinessTestHelper.reportBasedOnDynamicBuilderParameters((Class<?>) clazz);
@@ -160,7 +160,7 @@ public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
     	@Input private String f1;
     	@Input private String f2;
     	@Input private String f3;
-    	public CustomEventTypeReportModel(EventType eventType) {
+    	public CustomEventTypeReportModel(EventMissedReason eventType) {
 			f1 = eventType.getCode();
 			f2 = eventType.getName();
 			f3 = f1+" and the "+f2;
