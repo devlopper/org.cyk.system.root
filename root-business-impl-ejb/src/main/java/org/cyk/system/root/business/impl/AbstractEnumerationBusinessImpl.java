@@ -42,8 +42,9 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ENUMERATION instanciateOne(String code,String name) {
 		ObjectFieldValues objectFieldValues = new ObjectFieldValues(clazz);
-		objectFieldValues.set(AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE, code);
-		objectFieldValues.set(AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME, name);
+		objectFieldValues.setBaseName(AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER);
+		objectFieldValues.set(GlobalIdentifier.FIELD_CODE, code);
+		objectFieldValues.set(GlobalIdentifier.FIELD_NAME, name);
 		return commonUtils.instanciateOne(clazz, objectFieldValues);
 	}
 	

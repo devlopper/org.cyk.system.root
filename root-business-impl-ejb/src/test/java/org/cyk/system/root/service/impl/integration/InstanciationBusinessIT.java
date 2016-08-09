@@ -57,7 +57,7 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	assertThat("Is loaded", metricCollectionBusiness.load("MC2").getCollection().size()==3);
     	assertThat("Is loaded and empty", metricCollectionBusiness.load("MC1").getCollection().size()==0);
     	
-    	assertThat("Has no interval collection", metricBusiness.findByGlobalIdentifierCode("1").getValueIntervalCollection()==null);
+    	assertThat("Has no interval collection", metricBusiness.find("MC2_1").getValueIntervalCollection()==null);
     	
     	metric1.setValueIntervalCollection(new IntervalCollection("IC1"));
     	metric1.getValueIntervalCollection().addItem("1", "I1","1","2");
@@ -70,7 +70,7 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	
     	assertThat("Is null", metricCollectionBusiness.findByGlobalIdentifierCode("MC0")==null);
     	assertThat("Interval collection IC1 exists", intervalCollectionBusiness.findByGlobalIdentifierCode("IC1")!=null);
-    	assertThat("Has interval collection", metricBusiness.findByGlobalIdentifierCode("1").getValueIntervalCollection()!=null);
+    	assertThat("Has interval collection", metricBusiness.findByGlobalIdentifierCode("MC2_1").getValueIntervalCollection()!=null);
     }
 
     @Test

@@ -102,21 +102,21 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		getGlobalIdentifierCreateIfNull().getExistencePeriod().setFromDate(date);
 	}
 	public Date getBirthDate(){
-		return getGlobalIdentifier().getExistencePeriod().getFromDate();
+		return globalIdentifier == null ? null : globalIdentifier.getExistencePeriod().getFromDate();
 	}
 	
 	public void setDeathDate(Date date){
 		getGlobalIdentifierCreateIfNull().getExistencePeriod().setToDate(date);
 	}
 	public Date getDeathDate(){
-		return getGlobalIdentifier().getExistencePeriod().getToDate();
+		return globalIdentifier == null ? null : globalIdentifier.getExistencePeriod().getToDate();
 	}
 	
 	public void setBirthLocation(Location location){
 		getGlobalIdentifierCreateIfNull().setBirthLocation(location);
 	}
 	public Location getBirthLocation(){
-		return getGlobalIdentifier().getBirthLocation();
+		return globalIdentifier == null ? null : globalIdentifier.getBirthLocation();
 	}
 	
 	public void setOtherDetails(String otherDetails){

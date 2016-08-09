@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +21,7 @@ import lombok.Setter;
 
 @Getter @Setter @Entity
 @AllArgsConstructor @NoArgsConstructor 
-@ModelBean(crudStrategy=CrudStrategy.INTERNAL)
+@ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class Country extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 8675998527199168142L;
