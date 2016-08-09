@@ -7,11 +7,14 @@ import javax.persistence.ManyToOne;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @Entity
+@Getter @Setter @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE)
 public class Location extends Contact implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -22,8 +25,8 @@ public class Location extends Contact implements Serializable{
 
 	public Location() {}
 	
-	public Location(ContactCollection manager,Locality locality) {
-		super(manager, null);
+	public Location(ContactCollection collection,Locality locality) {
+		super(collection, null);
 		this.locality = locality;
 	}
 	
@@ -50,5 +53,5 @@ public class Location extends Contact implements Serializable{
 	
 	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_LOCALITY = "locality";
-	public static final String FIELD_COMMENT = "comment";
+	
 }

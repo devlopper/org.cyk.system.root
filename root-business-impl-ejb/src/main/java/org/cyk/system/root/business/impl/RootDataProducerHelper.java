@@ -287,7 +287,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 					collection.setElectronicMails(new ArrayList<ElectronicMail>());
 				collection.getElectronicMails().add(electronicMail);
 			}
-		if(websites!=null)
+		/*if(websites!=null)
 			for(String websitev : websites){
 				Website website;
 				website = new Website(websitev);
@@ -295,6 +295,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 					collection.setWebsites(new ArrayList<Website>());
 				collection.getWebsites().add(website);
 			}
+		*/
 	}
 	
 	public MovementCollection createMovementCollection(String code,String incrementActionName,String decrementActionName){

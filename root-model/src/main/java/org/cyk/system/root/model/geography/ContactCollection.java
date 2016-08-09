@@ -9,12 +9,15 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.ContentType;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @Entity @NoArgsConstructor
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class ContactCollection extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 8675998527199168142L;
@@ -32,7 +35,7 @@ public class ContactCollection extends AbstractIdentifiable implements Serializa
 	    s.append("Locations : "+StringUtils.join(locations,","));
 	    return s.toString();
 	}
-	
+	/*
 	@Override
 	public String getUiString() {
 		StringBuilder s = new StringBuilder(super.toString()+ContentType.DEFAULT.getNewLineMarker());
@@ -42,6 +45,6 @@ public class ContactCollection extends AbstractIdentifiable implements Serializa
 	    s.append(StringUtils.join(postalBoxs,",")+ContentType.DEFAULT.getNewLineMarker());
 	    s.append(StringUtils.join(websites,","));
 	    return s.toString();
-	}
+	}*/
 	
 }

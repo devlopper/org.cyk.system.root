@@ -6,13 +6,12 @@ import java.util.List;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
@@ -20,8 +19,6 @@ import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
 public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends AbstractPartyDao<PARTY,SEARCH_CRITERIA>,SEARCH_CRITERIA extends PartySearchCriteria> extends AbstractTypedBusinessService<PARTY, DAO> implements AbstractPartyBusiness<PARTY,SEARCH_CRITERIA>,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
-	
-	@Inject protected ContactCollectionBusiness contactCollectionBusiness;
 	
 	public AbstractPartyBusinessImpl(DAO dao) {
 		super(dao); 
@@ -36,8 +33,11 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 
 	@Override
     public PARTY create(PARTY party) {
-		if(party.getContactCollection()!=null)
-			contactCollectionBusiness.create(party.getContactCollection());
+		if(party.getContactCollection()!=null){
+			if(StringUtils.isEmpty(party.getContactCollection().getName()))
+				party.getContactCollection().setName(party.getCode());
+			RootBusinessLayer.getInstance().getContactCollectionBusiness().create(party.getContactCollection());
+		}
 		super.create(party);
         return party;
     }
@@ -45,13 +45,13 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	@Override
     public PARTY update(PARTY party) {
 		if(party.getContactCollection()!=null)
-			contactCollectionBusiness.update(party.getContactCollection());
+			RootBusinessLayer.getInstance().getContactCollectionBusiness().update(party.getContactCollection());
         return super.update(party);
     }
 	
     @Override
 	public PARTY delete(PARTY party) {
-    	contactCollectionBusiness.delete(party.getContactCollection());
+    	RootBusinessLayer.getInstance().getContactCollectionBusiness().delete(party.getContactCollection());
     	party.setContactCollection(null);
 		return super.delete(party);
 	}
@@ -77,7 +77,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
         
 	protected void __load__(PARTY party) {
     	if(party.getContactCollection()!=null)
-    		contactCollectionBusiness.load(party.getContactCollection());
+    		RootBusinessLayer.getInstance().getContactCollectionBusiness().load(party.getContactCollection());
     }
 
 	@Override

@@ -58,7 +58,7 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	
 	/**/
 	
-	public static final String FIELD_PATH = "path";
+	public static final String FIELD_ADDRESS = "address";
 	public static final String FIELD_PARAMETERS = "parameters";
 	
 	/**/

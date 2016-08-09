@@ -26,7 +26,7 @@ public class RoleUniformResourceLocatorDaoImpl extends AbstractTypedDao<RoleUnif
 	
 	@Override
 	public RoleUniformResourceLocator readByPathByParameters(String path, Map<String, String> parameters) {
-		return namedQuery(readByPathByParameters).parameter(UniformResourceLocator.FIELD_PATH, path)
+		return namedQuery(readByPathByParameters).parameter(UniformResourceLocator.FIELD_ADDRESS, path)
 				.parameter(UniformResourceLocator.FIELD_PARAMETERS, parameters).ignoreThrowable(NoResultException.class).resultOne();
 	}
 

@@ -14,6 +14,9 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -33,11 +36,14 @@ import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBus
 import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.api.file.ScriptVariableBusiness;
 import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
+import org.cyk.system.root.business.api.geography.ContactBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
+import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
+import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.information.CommentBusiness;
@@ -100,10 +106,13 @@ import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
+import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.information.Comment;
@@ -160,9 +169,6 @@ import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -197,7 +203,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject private GraphicBusiness graphicBusiness;
 	@Inject private ApplicationBusiness applicationBusiness;
 	@Inject private GenericBusiness genericBusiness;
+	@Inject private ContactBusiness contactBusiness;
 	@Inject private ContactCollectionBusiness contactCollectionBusiness;
+	@Inject private PhoneNumberBusiness phoneNumberBusiness;
+	@Inject private ElectronicMailBusiness electronicMailBusiness;
 	@Inject private PhoneNumberTypeBusiness phoneNumberTypeBusiness;
 	@Inject private SexBusiness sexBusiness;
 	@Inject private LocationTypeBusiness locationTypeBusiness;
@@ -336,6 +345,17 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			@Override
 			public String format(File file, ContentType contentType) {
 				return file.getCode()+Constant.CHARACTER_SLASH+file.getName();
+			}
+		});
+        
+        registerFormatter(PhoneNumber.class, new AbstractFormatter<PhoneNumber>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(PhoneNumber phoneNumber, ContentType contentType) {
+				String number = phoneNumber.getNumber();
+				if(number==null || number.isEmpty())
+					return null;
+				return (phoneNumber.getCountry()==null?Constant.EMPTY_STRING:(Constant.CHARACTER_PLUS+phoneNumber.getCountry().getPhoneNumberCode()+Constant.CHARACTER_SPACE))+number;
 			}
 		});
         
@@ -555,6 +575,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
         beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
         beansMap.put((Class)Country.class, (TypedBusiness)countryBusiness);
+        beansMap.put((Class)ContactCollection.class, (TypedBusiness)contactCollectionBusiness);
+        beansMap.put((Class)ElectronicMail.class, (TypedBusiness)electronicMailBusiness);
+        beansMap.put((Class)PhoneNumber.class, (TypedBusiness)phoneNumberBusiness);
         
         
         beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);

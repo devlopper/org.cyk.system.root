@@ -9,7 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.event.EventBusiness;
-import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.time.AbstractIdentifiablePeriodBusinessImpl;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.Event.SearchCriteria;
@@ -28,7 +28,6 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private ContactCollectionBusiness contactCollectionBusiness;
 	@Inject private EventPartyDao eventPartyDao;
 	@Inject private EventMissedDao eventMissedDao;
 	@Inject private EventReminderDao eventReminderDao;
@@ -52,7 +51,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     @Override
     public Event create(Event event) {
     	if(event.getContactCollection()!=null)
-    		contactCollectionBusiness.create(event.getContactCollection());
+    		RootBusinessLayer.getInstance().getContactCollectionBusiness().create(event.getContactCollection());
         super.create(event);
         for(EventParty eventParty : event.getEventParties()){
         	eventParty.setEvent(event);
@@ -70,7 +69,7 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     		ContactCollection contactCollection = event.getContactCollection();
     		event.setContactCollection(null);
     		event = dao.update(event);
-    		contactCollectionBusiness.delete(contactCollection);
+    		RootBusinessLayer.getInstance().getContactCollectionBusiness().delete(contactCollection);
     	}
     	for(EventParty eventParty : eventPartyDao.readByEvent(event))
         	eventPartyDao.delete(eventParty);
@@ -96,12 +95,6 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     }
     */
     
-    /*@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-    public Event load(Long identifier) {
-        Event event = super.load(identifier);
-        contactCollectionBusiness.load(event.getContactCollection());
-        return event;
-    }*/
     
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<Event> findByCriteria(SearchCriteria criteria) {
