@@ -15,12 +15,14 @@ public class AbstractContactDetails<IDENTIFIABLE extends Contact> extends Abstra
 
 	private static final long serialVersionUID = 4444472169870625893L;
 
-	@Input @InputText protected String value;
+	@Input @InputText protected String value,orderNumber;
 	
 	public AbstractContactDetails(IDENTIFIABLE contact) {
 		super(contact);
 		value = formatUsingBusiness(contact);
+		orderNumber = formatNumber(contact.getOrderNumber());
 	}
 
 	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_ORDER_NUMBER = "orderNumber";
 }

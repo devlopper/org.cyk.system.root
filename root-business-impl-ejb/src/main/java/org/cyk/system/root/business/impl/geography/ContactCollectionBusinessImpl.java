@@ -79,7 +79,7 @@ public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<
         byte order = 0;
         for(Contact contact : contacts){
             contact.setCollection(collection);
-            contact.setOrderIndex(order++);
+            contact.setOrderNumber(order++);
             contactDao.create(contact);
         }
     }

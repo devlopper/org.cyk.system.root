@@ -380,7 +380,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			return findAnnotationText(field,field.getAnnotation(Input.class).label());
 		if(field.getAnnotation(IncludeInputs.class)!=null)
 			return findAnnotationText(field,field.getAnnotation(IncludeInputs.class).label());
-		return null;
+		return findText(field.getName());
 	}
     
     public static String buildEntityLabelIdentifier(Class<?> aClass){

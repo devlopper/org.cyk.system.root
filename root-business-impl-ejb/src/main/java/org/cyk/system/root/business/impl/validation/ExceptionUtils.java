@@ -48,7 +48,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     }
     
     public void exception(AbstractValidator<?> validator){
-        throw new BusinessException(validator.getMessages());
+    	throw new BusinessException(validator.getMessages());
     }
     
     public void exception(Boolean condition,String identifier,String messageId,Object[] parameters){

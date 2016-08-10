@@ -21,6 +21,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.RootValueValidator;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 
 
@@ -91,8 +92,9 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 		process(objectClass, object);
 		process(validatorClass, this);
 		processMappedFields();
-		if(!Boolean.TRUE.equals(isSuccess()))
-		    ExceptionUtils.getInstance().exception(this);
+		if(!Boolean.TRUE.equals(isSuccess())){
+			ExceptionUtils.getInstance().exception(this);
+		}
 		return this;
 	}
 	
@@ -103,8 +105,9 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 		/* collect messages */
 		if(!constraintViolationsModel.isEmpty())
         	for(ConstraintViolation<T> violation : constraintViolationsModel){
-        		logWarning("Constraint Violation : {}.{} : {} ",aObject.getClass().getName(),violation.getPropertyPath(),violation.getMessage());
-        		messages.add(formatMessage(violation));
+        		//logWarning("Constraint Violation : {}.{} : {} ",aObject.getClass().getName(),violation.getPropertyPath(),violation.getMessage());
+        		messages.add(formatMessage(aObject,violation));
+        		//messages.add(String.format("Constraint Violation : %s.%s : %s ",aObject.getClass().getName(),violation.getPropertyPath(),violation.getMessage()));
         	}
 	}
 	
@@ -119,12 +122,10 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 		}
 	}
 	
-	protected String formatMessage(ConstraintViolation<?> constraintViolation){
-		//return constraintViolation.getPropertyPath()+" "+constraintViolation.getMessage();
-		Field field = commonUtils.getFieldFromClass(object.getClass(), constraintViolation.getPropertyPath().toString());
+	protected String formatMessage(Object anObject,ConstraintViolation<?> constraintViolation){
+		Field field = commonUtils.getFieldFromClass(anObject.getClass(), constraintViolation.getPropertyPath().toString());
 		//Formating should be moved to ValidationMessageInterpolator. But how to get field ???
-		return (field==null?"":(languageBusiness.findFieldLabelText(field)+" "))+constraintViolation.getMessage();
-		//return constraintViolation.getMessage();
+		return languageBusiness.findFieldLabelText(field)+Constant.CHARACTER_SPACE+constraintViolation.getMessage();
 	}
 	
 	public Boolean isSuccess(){

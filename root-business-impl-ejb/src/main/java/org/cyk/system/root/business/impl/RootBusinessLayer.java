@@ -352,10 +352,13 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(PhoneNumber phoneNumber, ContentType contentType) {
-				String number = phoneNumber.getNumber();
-				if(number==null || number.isEmpty())
+				if(StringUtils.isBlank(phoneNumber.getNumber()))
 					return null;
-				return (phoneNumber.getCountry()==null?Constant.EMPTY_STRING:(Constant.CHARACTER_PLUS+phoneNumber.getCountry().getPhoneNumberCode()+Constant.CHARACTER_SPACE))+number;
+				StringBuilder stringBuilder = new StringBuilder();
+				if(phoneNumber.getCountry()!=null)
+					stringBuilder.append(Constant.CHARACTER_PLUS+phoneNumber.getCountry().getPhoneNumberCode().toString()+Constant.CHARACTER_SPACE);
+				stringBuilder.append(phoneNumber.getNumber());
+				return stringBuilder.toString();
 			}
 		});
         

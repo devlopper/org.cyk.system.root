@@ -31,11 +31,11 @@ public class Contact extends AbstractIdentifiable implements Serializable{
 	
 	@ManyToOne private ContactCollection collection;
 	
-	private Byte orderIndex;
+	private Byte orderNumber;
 	
 	/**/
 	
 	public static final String FIELD_COLLECTION = "collection";
-	public static final String FIELD_ORDER_INDEX = "orderIndex";
+	public static final String FIELD_ORDER_NUMBER = "orderNumber";
 	
 }

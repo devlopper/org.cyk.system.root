@@ -82,7 +82,7 @@ public class GeographyPersistenceIT extends AbstractPersistenceIT {
 			phoneNumber.setCountry(civ);
 			phoneNumber.setNumber(value);
 			phoneNumber.setType(mobile);
-			phoneNumber.setOrderIndex((byte) 0);
+			phoneNumber.setOrderNumber((byte) 0);
 			create(phoneNumber);
 		}
 	}
