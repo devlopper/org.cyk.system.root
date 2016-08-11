@@ -7,9 +7,8 @@ import java.util.Map;
 import javax.inject.Singleton;
 
 import org.cyk.system.root.business.api.FormatterBusiness;
-import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractFormatter;
-import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.ContentType;
 import org.cyk.utility.common.Constant;
 
@@ -29,11 +28,13 @@ public class FormatterBusinessImpl extends AbstractBusinessServiceImpl implement
 		if((formatter = (AbstractFormatter<T>) FORMATTER_MAP.get(object.getClass()))==null){
 			//logWarning("No formatter has been found for class {}. the toString() method will be used instead", object.getClass());
 			
-			return object instanceof AbstractIdentifiable
+			/*return object instanceof AbstractIdentifiable
 				?(object instanceof AbstractEnumeration
 					?((AbstractEnumeration)object).getName()
 					:((AbstractIdentifiable)object).getUiString())
-				:object.toString();
+				:object.toString();*/
+			
+			return object instanceof AbstractModelElement ?((AbstractModelElement)object).getUiString() : object.toString();
 			
 			//return object.toString();
 		}

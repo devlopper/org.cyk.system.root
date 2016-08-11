@@ -40,12 +40,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
-	    validationPolicy.validateCreate(identifiable);
-        identifiable = dao.create(identifiable);
-        @SuppressWarnings("unchecked")
-		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
-    	if(listener!=null)
-    		listener.processOnCreated(identifiable);
+		//if(identifiable!=null && identifiable.getIdentifier()==null){
+		    validationPolicy.validateCreate(identifiable);
+	        identifiable = dao.create(identifiable);
+	        @SuppressWarnings("unchecked")
+			Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
+	    	if(listener!=null)
+	    		listener.processOnCreated(identifiable);
+		//}
         return identifiable;
 	}
 	

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.MappedSuperclass;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
@@ -43,12 +44,14 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	
 	@Override
 	public String toString() {
-		return getName();
+		String name = getName();
+    	return StringUtils.isBlank(name) ? super.toString() : name;
 	}
 
     @Override
     public String getUiString() {
-    	return getName();
+    	String name = getName();
+    	return StringUtils.isBlank(name) ? super.getUiString() : name;
     }
 
     /**/

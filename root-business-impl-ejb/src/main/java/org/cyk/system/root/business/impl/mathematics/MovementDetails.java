@@ -6,21 +6,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.impl.AbstractEnumerationDetails;
+import org.cyk.system.root.business.impl.AbstractCollectionItemDetails;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 @Getter @Setter
-public class MovementDetails extends AbstractEnumerationDetails<Movement> implements Serializable{
+public class MovementDetails extends AbstractCollectionItemDetails<Movement> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String action,value,date,supportingDocumentIdentifier;
+	@Input @InputText private String action,value,supportingDocumentIdentifier;
 	
 	public MovementDetails(Movement movement) {
 		super(movement);
-		action = movement.getAction().getName();
-		date = formatDateTime(movement.getDate());
+		if(movement.getAction()!=null)
+			action = movement.getAction().getName();
+		
 		value = formatNumber(movement.getValue());
 		supportingDocumentIdentifier = StringUtils.defaultString(movement.getSupportingDocumentIdentifier());
 	}
@@ -28,4 +29,5 @@ public class MovementDetails extends AbstractEnumerationDetails<Movement> implem
 	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_DATE = "date";
+	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";
 }

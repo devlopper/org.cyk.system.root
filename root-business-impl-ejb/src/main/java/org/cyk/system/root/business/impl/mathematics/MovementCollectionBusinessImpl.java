@@ -54,9 +54,12 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	
 	@Override
 	public MovementCollection create(MovementCollection movementCollection) {
-		RootBusinessLayer.getInstance().getIntervalBusiness().create(movementCollection.getInterval());
-		RootBusinessLayer.getInstance().getMovementActionBusiness().create(movementCollection.getIncrementAction());
-		RootBusinessLayer.getInstance().getMovementActionBusiness().create(movementCollection.getDecrementAction());
+		if(isNotIdentified(movementCollection.getInterval()))
+			RootBusinessLayer.getInstance().getIntervalBusiness().create(movementCollection.getInterval());
+		if(isNotIdentified(movementCollection.getIncrementAction()))
+			RootBusinessLayer.getInstance().getMovementActionBusiness().create(movementCollection.getIncrementAction());
+		if(isNotIdentified(movementCollection.getDecrementAction()))
+			RootBusinessLayer.getInstance().getMovementActionBusiness().create(movementCollection.getDecrementAction());
 		return super.create(movementCollection);
 	}
 	

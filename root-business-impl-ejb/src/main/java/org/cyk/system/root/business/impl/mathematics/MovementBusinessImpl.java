@@ -39,23 +39,24 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier())!=null, "exception.supportingDocumentIdentifierAlreadyUsed");
 		MovementAction action = movement.getAction();	
 		BigDecimal increment = movement.getValue();
-		exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && increment.signum()==-1, "exception.value.mustbepositive");
-		exceptionUtils().exception(movement.getCollection().getDecrementAction().equals(action) && increment.signum()==1, "exception.value.mustbenegative");
-		exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(increment.abs())>0
-				, movement.getAction().getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
+		if(action!=null){
+			exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && increment.signum()==-1, "exception.value.mustbepositive");
+			exceptionUtils().exception(movement.getCollection().getDecrementAction().equals(action) && increment.signum()==1, "exception.value.mustbenegative");
+			exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(increment.abs())>0
+					, action.getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
+		}
 		//BigDecimal increment = movement.getValue();
 		BigDecimal current = movement.getCollection().getValue();
 		Boolean positive = increment.signum() == 0 ? null : increment.signum() == 1 ;
 		BigDecimal sign = new BigDecimal((Boolean.TRUE.equals(positive) ? Constant.EMPTY_STRING:"-")+"1");
-		exceptionUtils().comparison(positive==null || increment.multiply(sign).signum() <= 0, movement.getAction().getName(), ArithmeticOperator.GT, BigDecimal.ZERO);
-		logTrace("Current value = {}. {} = {} ", current,movement.getAction().getName(),increment);
-		current = current.add(increment);
-		exceptionUtils().comparisonBetween(current,movement.getCollection().getInterval(), movement.getCollection().getName());
-		
-		movement.getCollection().setValue(current);
+		exceptionUtils().comparison(positive==null || increment.multiply(sign).signum() <= 0, action==null?Constant.EMPTY_STRING:action.getName(), ArithmeticOperator.GT, BigDecimal.ZERO);
+		logTrace("Current value = {}. {} = {} ", current,action==null?Constant.EMPTY_STRING:action.getName(),increment);
+		if(current!=null){
+			current = current.add(increment);
+			exceptionUtils().comparisonBetween(current,movement.getCollection().getInterval(), movement.getCollection().getName());
+			movement.getCollection().setValue(current);
+		}
 		movementCollectionDao.update(movement.getCollection());
-		if(movement.getDate()==null)
-			movement.setDate(universalTimeCoordinated());
 		movement =  super.create(movement);
 		logIdentifiable("Created", movement);
 		return movement;

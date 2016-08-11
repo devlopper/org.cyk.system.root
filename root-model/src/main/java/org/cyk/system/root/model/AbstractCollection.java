@@ -21,6 +21,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	private static final long serialVersionUID = -3099832512046879464L;
 	
 	protected String itemCodeSeparator = Constant.CHARACTER_UNDESCORE.toString(); 
+	
 	@Transient protected Collection<ITEM> collection;
 
 	public AbstractCollection(String code, String name, String abbreviation,String description) {

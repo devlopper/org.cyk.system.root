@@ -3,10 +3,13 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.cyk.system.root.business.impl.time.PeriodDetails;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.utility.common.FileExtensionGroup;
 import org.cyk.utility.common.annotation.user.interfaces.FileExtensions;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs.Layout;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputFile;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
@@ -22,6 +25,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	
 	@Input @InputFile (extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) protected File image;
 	@Input @InputText protected String code,name,abbreviation,description;
+	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod;
 	
 	public AbstractOutputDetails(IDENTIFIABLE master) {
 		super(master);
@@ -34,6 +38,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 			name = this.master.getName();
 			abbreviation = this.master.getAbbreviation();
 			description = this.master.getDescription();
+			existencePeriod = new PeriodDetails(this.master.getExistencePeriod());
 		}
 	}
 	
