@@ -49,6 +49,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_ABBREVIATION = "abbreviation";
 	public static final String FIELD_DESCRIPTION = "description";
+	public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
 	
 	public static final String IDENTIFIER_1 = RandomStringUtils.randomAlphanumeric(10);
 	public static final String IDENTIFIER_2 = RandomStringUtils.randomAlphanumeric(10);
