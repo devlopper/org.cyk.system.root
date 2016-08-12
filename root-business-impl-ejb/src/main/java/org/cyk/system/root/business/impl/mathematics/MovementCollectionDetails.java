@@ -2,12 +2,12 @@ package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.business.impl.AbstractEnumerationDetails;
+import org.cyk.system.root.business.impl.AbstractCollectionDetails;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
-public class MovementCollectionDetails extends AbstractEnumerationDetails<MovementCollection> implements Serializable{
+public class MovementCollectionDetails extends AbstractCollectionDetails<MovementCollection> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
 	@Input @InputText private String value,increment,decrement;

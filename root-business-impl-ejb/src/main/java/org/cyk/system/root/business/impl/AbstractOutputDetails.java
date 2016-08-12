@@ -1,6 +1,12 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.impl.time.PeriodDetails;
@@ -13,9 +19,6 @@ import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs.Layout;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputFile;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
-
-import lombok.Getter;
-import lombok.Setter;
 
 public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractModelElementOutputDetails<IDENTIFIABLE> implements Serializable {
 
@@ -50,6 +53,19 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	public static final String FIELD_ABBREVIATION = "abbreviation";
 	public static final String FIELD_DESCRIPTION = "description";
 	public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
+	
+	public static String[] getFieldNames(Boolean isBusinessIdentified,Boolean hasImage,Boolean hasExistenceStart,Boolean hasExistenceEnd){
+		Set<String> fields = new HashSet<>();
+		if(Boolean.TRUE.equals(isBusinessIdentified))
+			fields.addAll(Arrays.asList(FIELD_CODE,FIELD_NAME));
+		if(Boolean.TRUE.equals(hasImage))
+			fields.addAll(Arrays.asList(FIELD_IMAGE));
+		if(Boolean.TRUE.equals(hasExistenceStart))
+			fields.addAll(Arrays.asList(FIELD_EXISTENCE_PERIOD,PeriodDetails.FIELD_FROM_DATE));
+		if(Boolean.TRUE.equals(hasExistenceEnd))
+			fields.addAll(Arrays.asList(FIELD_EXISTENCE_PERIOD,PeriodDetails.FIELD_TO_DATE));
+		return fields.toArray(new String[]{});
+	}
 	
 	public static final String IDENTIFIER_1 = RandomStringUtils.randomAlphanumeric(10);
 	public static final String IDENTIFIER_2 = RandomStringUtils.randomAlphanumeric(10);
