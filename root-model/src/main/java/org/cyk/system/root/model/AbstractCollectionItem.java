@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudInheritanceStrategy;
@@ -18,7 +19,7 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 
 	private static final long serialVersionUID = 5908328682512231058L;
 
-	@ManyToOne protected COLLECTION collection;
+	@ManyToOne @NotNull protected COLLECTION collection;
 	
 	public AbstractCollectionItem(COLLECTION collection,String code,String name) {
 		super(code, name, null, null);
