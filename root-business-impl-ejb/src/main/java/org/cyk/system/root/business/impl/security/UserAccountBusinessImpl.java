@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -201,16 +202,16 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 
 	@Override
 	public Boolean canRead(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().isReadable(identifiable);
+		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isReadable(identifiable);
 	}
 
 	@Override
 	public Boolean canUpdate(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().isUpdatable(identifiable);
+		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isUpdatable(identifiable);
 	}
 
 	@Override
 	public Boolean canDelete(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().isDeletable(identifiable);
+		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isDeletable(identifiable);
 	}
 }

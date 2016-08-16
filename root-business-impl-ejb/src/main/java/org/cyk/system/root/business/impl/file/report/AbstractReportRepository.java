@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -82,7 +83,7 @@ public abstract class AbstractReportRepository extends AbstractBean implements S
 	}
 	
 	protected String format(BigDecimal value){
-		return RootBusinessLayer.getInstance().getNumberBusiness().format(value);
+		return inject(NumberBusiness.class).format(value);
 	}
 	protected String formatDate(Date date) {
 		return inject(TimeBusiness.class).formatDate(date);
@@ -117,9 +118,9 @@ public abstract class AbstractReportRepository extends AbstractBean implements S
 		return totals[i][j];
 	}
 	protected String getTotal(BigDecimal[][] totals,Integer i){
-		return RootBusinessLayer.getInstance().getNumberBusiness().format(get(totals, i,0));
+		return inject(NumberBusiness.class).format(get(totals, i,0));
 	}
 	protected String getTotalOfTotals(BigDecimal[][] totals,Integer i){
-		return RootBusinessLayer.getInstance().getNumberBusiness().format(get(totals, i,1));
+		return inject(NumberBusiness.class).format(get(totals, i,1));
 	}
 }

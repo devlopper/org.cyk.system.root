@@ -17,7 +17,7 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	private static final long serialVersionUID = 7439361240545541931L;
 
 	protected RootBusinessLayer rootBusinessLayer = RootBusinessLayer.getInstance();
-	protected NumberBusiness numberBusiness = rootBusinessLayer.getNumberBusiness();
+	protected NumberBusiness numberBusiness = inject(NumberBusiness.class);
 	protected TimeBusiness timeBusiness = inject(TimeBusiness.class);
 	
 	@Getter @Setter protected MODEL_ELEMENT master;

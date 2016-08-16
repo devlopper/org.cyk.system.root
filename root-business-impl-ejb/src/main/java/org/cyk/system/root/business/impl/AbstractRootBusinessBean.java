@@ -16,7 +16,7 @@ public abstract class AbstractRootBusinessBean extends AbstractBean implements S
 
 	protected RootBusinessLayer rootBusinessLayer = RootBusinessLayer.getInstance();
 	protected LanguageBusiness languageBusiness = inject(LanguageBusiness.class);
-	protected NumberBusiness numberBusiness = RootBusinessLayer.getInstance().getNumberBusiness();
+	protected NumberBusiness numberBusiness = inject(NumberBusiness.class);
 	protected TimeBusiness timeBusiness = inject(TimeBusiness.class);
 	protected ContactCollectionBusiness contactCollectionBusiness = inject(ContactCollectionBusiness.class);
 	protected ApplicationBusiness applicationBusiness = inject(ApplicationBusiness.class);

@@ -14,9 +14,6 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -27,13 +24,11 @@ import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
-import org.cyk.system.root.business.api.geography.ContactBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
-import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
@@ -86,6 +81,9 @@ import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
 public class RootBusinessLayer extends AbstractBusinessLayer implements Serializable {
@@ -107,22 +105,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private LocalityType countryLocalityType,cityLocalityType,continentLocalityType;
 	private Country countryCoteDivoire;
 	private Role roleAdministrator,roleManager,roleSettingManager,roleSecurityManager,roleUser;
-	private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
-	private Sex sexMale,sexFemale;
+	//private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
 	
-	@Inject private NumberBusiness numberBusiness;
-	@Inject private GenericBusiness genericBusiness;
-	@Inject private ContactBusiness contactBusiness;
-    @Inject private ClazzBusiness clazzBusiness;
-    @Inject private GlobalIdentifierBusiness globalIdentifierBusiness;
-    @Inject private GenericDao genericDao;
-    
     @Inject private PersonValidator personValidator;
     @Inject private FileValidator fileValidator;
     @Inject private RootReportRepository reportRepository;
     
     @Inject private RootBusinessTestHelper rootBusinessTestHelper;
-    @Inject private ApplicationDao applicationDao;
+    //@Inject private ApplicationDao applicationDao;
     
     private Application application;
     @Setter private Long applicationIdentifier;
@@ -257,7 +247,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = 153358109323471469L;
 			@Override
 			protected Object __execute__(GlobalIdentifier globalIdentifier) {
-				return RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().create(globalIdentifier);
+				return inject(GlobalIdentifierBusiness.class).create(globalIdentifier);
 			}
 		};
 		
@@ -265,7 +255,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = 153358109323471469L;
 			@Override
 			protected Object __execute__(GlobalIdentifier globalIdentifier) {
-				return RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().update(globalIdentifier);
+				return inject(GlobalIdentifierBusiness.class).update(globalIdentifier);
 			}
 		};
 		
@@ -292,6 +282,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				return !ArrayUtils.contains(new Class<?>[]{/*Application.class,NestedSet.class,NestedSetNode.class*/}, identifiable.getClass());
 			}
 		};
+    }
+    
+    public GenericBusiness getGenericBusiness(){
+    	return inject(GenericBusiness.class);
+    }
+    
+    public GenericDao getGenericDao(){
+    	return inject(GenericDao.class);
     }
     
     @Override
@@ -471,7 +469,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     @Override
     protected void setConstants(){
-    	Application application = applicationDao.select().one();
+    	Application application = inject(ApplicationDao.class).select().one();
     	if(application!=null)
     		applicationIdentifier = application.getIdentifier();
     	//application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
@@ -492,17 +490,16 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	roleSettingManager = getEnumeration(Role.class,Role.SETTING_MANAGER);
     	roleSecurityManager = getEnumeration(Role.class,Role.SECURITY_MANAGER);
     	roleUser = getEnumeration(Role.class,Role.USER);
-    	
+    	/*
     	timeDivisionTypeDay = getEnumeration(TimeDivisionType.class,TimeDivisionType.DAY);
     	timeDivisionTypeTrimester = getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER);
     	timeDivisionTypeSemester = getEnumeration(TimeDivisionType.class,TimeDivisionType.SEMESTER);
     	timeDivisionTypeYear = getEnumeration(TimeDivisionType.class,TimeDivisionType.YEAR);
+    	*/
     	/*
     	anniversaryEventType = getEnumeration(EventType.class,EventType.ANNIVERSARY);
     	reminderEventType = getEnumeration(EventType.class,EventType.REMINDER);
     	*/
-    	sexMale = getEnumeration(Sex.class, Sex.MALE);
-    	sexFemale = getEnumeration(Sex.class, Sex.FEMALE);
     	
     	RemoteEndPoint.USER_INTERFACE.alarmTemplate = inject(NotificationTemplateDao.class).readByGlobalIdentifierCode(NotificationTemplate.ALARM_USER_INTERFACE);
     	RemoteEndPoint.MAIL_SERVER.alarmTemplate = inject(NotificationTemplateDao.class).readByGlobalIdentifierCode(NotificationTemplate.ALARM_EMAIL);
@@ -514,7 +511,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     public Application getApplication(){
     	if(applicationIdentifier==null)
     		return null;
-    	return applicationDao.read(applicationIdentifier);
+    	return inject(ApplicationDao.class).read(applicationIdentifier);
     }
     
     public void setApplication(Application application){

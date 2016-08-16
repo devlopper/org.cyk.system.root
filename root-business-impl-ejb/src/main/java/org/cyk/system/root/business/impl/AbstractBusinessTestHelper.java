@@ -15,9 +15,6 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -28,6 +25,7 @@ import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineAlphabetBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
@@ -60,6 +58,9 @@ import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -498,8 +499,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		if(actionId==3)
 			return String.format("%s doit être entre %s et %s",/*action.getName()*/ movementCollection.getName()
-				,getRootBusinessLayer().getNumberBusiness().format(movementCollection.getInterval().getLow().getValue())
-				,getRootBusinessLayer().getNumberBusiness().format(movementCollection.getInterval().getHigh().getValue()));
+				,inject(NumberBusiness.class).format(movementCollection.getInterval().getLow().getValue())
+				,inject(NumberBusiness.class).format(movementCollection.getInterval().getHigh().getValue()));
 		
 		return Constant.EMPTY_STRING;
 	}

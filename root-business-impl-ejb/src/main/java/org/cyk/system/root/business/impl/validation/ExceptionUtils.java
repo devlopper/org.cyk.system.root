@@ -9,21 +9,20 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.PersistenceException;
 
-import lombok.Setter;
-
 import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+
+import lombok.Setter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class ExceptionUtils extends AbstractBean implements Serializable {
@@ -91,8 +90,8 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     
     public void comparisonBetween(BigDecimal value,Interval interval,String valueName){
     	exception(interval!=null && !inject(IntervalBusiness.class).contains(interval, value, 2) , "exception.comparison.between",new Object[]{valueName
-    			,RootBusinessLayer.getInstance().getNumberBusiness().format(interval.getLow().getValue())
-    			,RootBusinessLayer.getInstance().getNumberBusiness().format(interval.getHigh().getValue())});
+    			,inject(NumberBusiness.class).format(interval.getLow().getValue())
+    			,inject(NumberBusiness.class).format(interval.getHigh().getValue())});
 	}
     
     public void comparison(Boolean condition,String operand1,ArithmeticOperator operator,String operand2){
@@ -107,7 +106,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     		return;
     	exception(value.compareTo(limit) >= 0 , "exception.cannotprocessmorethan",new Object[]{
     			inject(LanguageBusiness.class).findText(processNameId)
-			,RootBusinessLayer.getInstance().getNumberBusiness().format(limit)
+			,inject(NumberBusiness.class).format(limit)
     		,inject(LanguageBusiness.class).findText(subjectNameId)
 			});
     }

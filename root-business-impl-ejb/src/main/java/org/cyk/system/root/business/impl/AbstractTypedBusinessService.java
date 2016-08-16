@@ -12,6 +12,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.GenericDao;
@@ -65,7 +66,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    if(listener!=null)
 	    	listener.processOnUpdated(identifiable);
 	    if(identifiable.getGlobalIdentifier()!=null)
-	    	RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().update(identifiable.getGlobalIdentifier());
+	    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
 		return newObject;
 	}
 	
@@ -78,7 +79,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override
 	public IDENTIFIABLE delete(IDENTIFIABLE identifiable) {
 		if(identifiable.getGlobalIdentifier()!=null){
-			RootBusinessLayer.getInstance().getGlobalIdentifierBusiness().delete(identifiable.getGlobalIdentifier());
+			inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
 			identifiable.setGlobalIdentifier(null);
 		}
 		identifiable = dao.delete(identifiable);

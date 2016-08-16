@@ -22,7 +22,7 @@ public abstract class AbstractReportTableRow extends AbstractBean implements Ser
 	private static final long serialVersionUID = 6250896775642285064L;
 
 	protected RootBusinessLayer rootBusinessLayer = RootBusinessLayer.getInstance();
-	protected NumberBusiness numberBusiness = rootBusinessLayer.getNumberBusiness();
+	protected NumberBusiness numberBusiness = inject(NumberBusiness.class);
 	protected TimeBusiness timeBusiness = inject(TimeBusiness.class);
 	
 	protected String formatNumber(Number number) {

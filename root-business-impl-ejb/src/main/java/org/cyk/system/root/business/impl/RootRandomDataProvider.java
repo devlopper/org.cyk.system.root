@@ -27,6 +27,8 @@ import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonTitle;
+import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.root.persistence.api.party.person.SexDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.BeanAdapter;
@@ -67,7 +69,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		
 		person.setName(randomPerson.firstName());
 		person.setLastnames(randomPerson.lastName());
-		person.setSex(Boolean.TRUE.equals(male)?rootBusinessLayer().getSexMale():rootBusinessLayer().getSexFemale());
+		person.setSex(inject(SexDao.class).read(Boolean.TRUE.equals(male)?Sex.MALE:Sex.FEMALE));
 		person.setSurname(randomPerson.surName());
 		person.setBirthDate(randomDataProvider.randomDate(DateUtils.addYears(new Date(), -50), DateUtils.addYears(new Date(), -20)) );
 		person.setContactCollection(contactCollection(country,type));
