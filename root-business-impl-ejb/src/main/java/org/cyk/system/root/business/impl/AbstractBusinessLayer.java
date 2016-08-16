@@ -12,6 +12,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import lombok.Getter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessLayerListener;
@@ -22,9 +24,12 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.datasource.DataSource;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.security.PermissionBusiness;
 import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
+import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
+import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.datasource.JdbcDataSource;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
 import org.cyk.system.root.business.impl.file.report.jasper.JasperReportBusinessImpl;
@@ -57,8 +62,6 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractLayer;
-
-import lombok.Getter;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -131,17 +134,17 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	persistSecurityData();
     	if(RootDataProducerHelper.getInstance().getUniformResourceLocators()!=null){
     		System.out.println("Uniform resource locators : "+RootDataProducerHelper.getInstance().getUniformResourceLocators().size());
-    		RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().create(RootDataProducerHelper.getInstance().getUniformResourceLocators());
+    		inject(UniformResourceLocatorBusiness.class).create(RootDataProducerHelper.getInstance().getUniformResourceLocators());
     		RootDataProducerHelper.getInstance().setUniformResourceLocators(null);
     	}
     	if(RootDataProducerHelper.getInstance().getRoleUniformResourceLocators()!=null){
     		System.out.println("Role uniform resource locators : "+RootDataProducerHelper.getInstance().getRoleUniformResourceLocators().size());
-    		RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().create(RootDataProducerHelper.getInstance().getRoleUniformResourceLocators());
+    		inject(RoleUniformResourceLocatorBusiness.class).create(RootDataProducerHelper.getInstance().getRoleUniformResourceLocators());
     		RootDataProducerHelper.getInstance().setRoleUniformResourceLocators(null);
     	}
     	if(RootDataProducerHelper.getInstance().getUserAccounts()!=null){
     		System.out.println("User accounts : "+RootDataProducerHelper.getInstance().getUserAccounts().size());
-    		RootBusinessLayer.getInstance().getUserAccountBusiness().create(RootDataProducerHelper.getInstance().getUserAccounts());	
+    		inject(UserAccountBusiness.class).create(RootDataProducerHelper.getInstance().getUserAccounts());	
     		RootDataProducerHelper.getInstance().setUserAccounts(null);
     	}
     	

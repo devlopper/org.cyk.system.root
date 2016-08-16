@@ -16,8 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessExceptionNoRollBack;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
@@ -60,7 +60,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public UniformResourceLocator instanciateOneCrudOne(Class<? extends AbstractIdentifiable> identifiableClass,Crud crud,String[] parameters) {
 		UniformResourceLocator uniformResourceLocator = instanciateOne(UniformResourceLocator.DYNAMIC_CRUD_ONE, ArrayUtils.addAll(new String[]{UniformResourceLocatorParameter.CLASS
-				,RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getIdentifier()
+				,inject(ApplicationBusiness.class).findBusinessEntityInfos(identifiableClass).getIdentifier()
 				,UniformResourceLocatorParameter.CRUD,UniformResourceLocatorParameterBusinessImpl.getCrudAsString(crud)},parameters));
 		//System.out.println("Code = <<"+uniformResourceLocator.getCode()+">>");
 		return uniformResourceLocator;
@@ -69,7 +69,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	@Override
 	public UniformResourceLocator instanciateOneCrudMany(Class<? extends AbstractIdentifiable> identifiableClass,String[] parameters) {
 		return instanciateOne(UniformResourceLocator.DYNAMIC_CRUD_MANY, ArrayUtils.addAll(new String[]{UniformResourceLocatorParameter.CLASS
-				,RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getIdentifier()},parameters));
+				,inject(ApplicationBusiness.class).findBusinessEntityInfos(identifiableClass).getIdentifier()},parameters));
 	}
 	
 	@Override
@@ -83,14 +83,14 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	@Override
 	public UniformResourceLocator instanciateOneSelectOne(Class<? extends AbstractIdentifiable> identifiableClass,String actionIdentifier,String[] parameters) {
 		return instanciateOne(UniformResourceLocator.DYNAMIC_SELECT_ONE, ArrayUtils.addAll(new String[]{UniformResourceLocatorParameter.CLASS
-				,RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getIdentifier()
+				,inject(ApplicationBusiness.class).findBusinessEntityInfos(identifiableClass).getIdentifier()
 				,UniformResourceLocatorParameter.ACTION_IDENTIFIER,actionIdentifier},parameters));
 	}
 	
 	@Override
 	public UniformResourceLocator instanciateOneSelectMany(Class<? extends AbstractIdentifiable> identifiableClass,String actionIdentifier,String[] parameters) {
 		return instanciateOne(UniformResourceLocator.DYNAMIC_SELECT_MANY, ArrayUtils.addAll(new String[]{UniformResourceLocatorParameter.CLASS
-				,RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getIdentifier()
+				,inject(ApplicationBusiness.class).findBusinessEntityInfos(identifiableClass).getIdentifier()
 				,UniformResourceLocatorParameter.ACTION_IDENTIFIER,actionIdentifier},parameters));
 	}
 	
@@ -207,7 +207,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 			if(StringUtils.startsWith(uniformResourceLocator.getAddress().toLowerCase(), "http://"))
 				return new URL(uniformResourceLocator.getAddress()).getPath();
 			else
-				return Constant.CHARACTER_SLASH+RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance()
+				return Constant.CHARACTER_SLASH+inject(ApplicationBusiness.class).findCurrentInstance()
 						.getWebContext()+uniformResourceLocator.getAddress();
 		} catch (MalformedURLException e) {
 			throw new BusinessExceptionNoRollBack(e.toString());
@@ -216,13 +216,13 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isAccessible(URL url,Collection<UniformResourceLocator> uniformResourceLocators) {
-		return Boolean.TRUE.equals(RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getUniformResourceLocatorFilteringEnabled())
+		return Boolean.TRUE.equals(inject(ApplicationBusiness.class).findCurrentInstance().getUniformResourceLocatorFilteringEnabled())
 				?find(url,uniformResourceLocators)!=null:Boolean.TRUE;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isAccessible(URL url) {
-		return Boolean.TRUE.equals(RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getUniformResourceLocatorFilteringEnabled())?find(url)!=null:Boolean.TRUE;
+		return Boolean.TRUE.equals(inject(ApplicationBusiness.class).findCurrentInstance().getUniformResourceLocatorFilteringEnabled())?find(url)!=null:Boolean.TRUE;
 	}
 
 }

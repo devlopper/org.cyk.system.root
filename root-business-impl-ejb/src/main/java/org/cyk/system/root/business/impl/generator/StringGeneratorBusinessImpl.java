@@ -9,8 +9,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.ScriptVariable;
 import org.cyk.system.root.model.generator.StringGenerator;
@@ -52,7 +52,7 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 	
 	@Override
 	public String generate(String identifier, Object input) {
-		return RootBusinessLayer.getInstance().getApplicationBusiness().generateValue(identifier, Object.class, String.class, input);
+		return inject(ApplicationBusiness.class).generateValue(identifier, Object.class, String.class, input);
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 	public String generateIdentifier(AbstractIdentifiable identifiable,String runtimeGeneratorIdentifier,StringGenerator databaseGenerator){
 		@SuppressWarnings("unchecked")
 		StringValueGenerator<AbstractIdentifiable> runtimeGenerator = (StringValueGenerator<AbstractIdentifiable>) 
-			RootBusinessLayer.getInstance().getApplicationBusiness().findValueGenerator(runtimeGeneratorIdentifier);
+				inject(ApplicationBusiness.class).findValueGenerator(runtimeGeneratorIdentifier);
 		if(runtimeGenerator==null)
 			if(databaseGenerator==null)
 				return identifiable.getIdentifier().toString();

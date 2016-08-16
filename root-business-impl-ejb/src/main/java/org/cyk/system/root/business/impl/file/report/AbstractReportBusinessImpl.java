@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.file.File;
@@ -183,7 +184,7 @@ public abstract class AbstractReportBusinessImpl extends AbstractBusinessService
      */
     private  String buildFileName(AbstractReport<?> report){
     	StringBuilder s = new StringBuilder(String.format(FILE_NAME_FORMAT,StringUtils.isNotBlank(report.getOwnerName())?report.getOwnerName()
-    			:RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getGlobalIdentifier().getName(),
+    			:inject(ApplicationBusiness.class).findCurrentInstance().getGlobalIdentifier().getName(),
 				report.getTitle(),StringUtils.replace(report.getCreationDate(),Constant.CHARACTER_COLON.toString(),Constant.CHARACTER_H.toString()),report.getCreatedBy()));
     	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_SLASH.charValue()));
     	s = new StringBuilder(StringUtils.remove(s.toString(), Constant.CHARACTER_BACK_SLASH.charValue()));
@@ -198,7 +199,7 @@ public abstract class AbstractReportBusinessImpl extends AbstractBusinessService
     public void prepare(AbstractReport<?> report){
     	//logTrace("Prepare report {}", report);
     	if(StringUtils.isBlank(report.getOwnerName()))
-    		report.setOwnerName(RootBusinessLayer.getInstance().getApplicationBusiness().findCurrentInstance().getGlobalIdentifier().getName());
+    		report.setOwnerName(inject(ApplicationBusiness.class).findCurrentInstance().getGlobalIdentifier().getName());
     	
     	if(StringUtils.isBlank(report.getCreationDate()))
 			report.setCreationDate(timeBusiness.formatDateTime(new Date()));

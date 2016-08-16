@@ -7,6 +7,10 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.RootReportProducer;
+import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
@@ -25,6 +29,7 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonReport;
 import org.cyk.system.root.model.userinterface.style.Style;
+import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.slf4j.Logger;
@@ -48,7 +53,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected LabelValueCollectionReport labelValueCollection(String labelId){
 		currentLabelValueCollection = new LabelValueCollectionReport();
-		currentLabelValueCollection.setName(rootBusinessLayer.getLanguageBusiness().findText(labelId));
+		currentLabelValueCollection.setName(inject(LanguageBusiness.class).findText(labelId));
 		return currentLabelValueCollection;
 	}
 	
@@ -88,13 +93,13 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			report.setLastName(NOT_APPLICABLE);
 			report.setLastName(Constant.EMPTY_STRING);
 		}else{
-			rootBusinessLayer.getPersonBusiness().load(person);
+			inject(PersonBusiness.class).load(person);
 			if(person.getContactCollection()!=null)
 				set(person.getContactCollection(), report.getContact());
 			
 			report.setName(person.getGlobalIdentifier().getName());
 			report.setLastName(person.getLastnames());
-			report.setNames(rootBusinessLayer.getPersonBusiness().findNames(person));
+			report.setNames(inject(PersonBusiness.class).findNames(person));
 			report.setSurname(person.getSurname());
 			report.setBirthDate(format(person.getBirthDate()));
 			report.setCode(person.getCode());
@@ -162,7 +167,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 				if(metricValue.getMetric().equals(metric)){
 					values[i][0] = metric.getName();
 					//System.out.println(metricValue.getStringValue());
-					values[i][1] = rootBusinessLayer.getMetricValueBusiness().format(metricValue);
+					values[i][1] = inject(MetricValueBusiness.class).format(metricValue);
 				}
 			i++;
 		}
@@ -178,7 +183,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 				if(v!=null)
 					values[i][0] = v;
 			}*/
-			values[i][0] = rootBusinessLayer.getIntervalBusiness().findRelativeCode(interval);
+			values[i][0] = inject(IntervalBusiness.class).findRelativeCode(interval);
 			values[i][1] = interval.getName();
 			if(Boolean.TRUE.equals(includeExtremities))
 				values[i][2] = interval.getLow()+" - "+interval.getHigh();
@@ -189,7 +194,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected LabelValueCollectionReport addIntervalCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,Boolean ascending,Boolean includeExtremities,
 			Integer[][] columnsToSwap){
-		String[][] values =  convertToArray(rootBusinessLayer.getIntervalDao().readByCollection(intervalCollection,ascending),includeExtremities);
+		String[][] values =  convertToArray(inject(IntervalDao.class).readByCollection(intervalCollection,ascending),includeExtremities);
 		if(columnsToSwap!=null)
 			for(Integer[] index : columnsToSwap){
 				commonUtils.swapColumns(values, index[0], index[1]);

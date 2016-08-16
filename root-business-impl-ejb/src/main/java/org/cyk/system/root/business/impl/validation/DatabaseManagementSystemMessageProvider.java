@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.BeanAdapter;
 
@@ -42,8 +43,8 @@ public interface DatabaseManagementSystemMessageProvider {
 				if(StringUtils.contains(message, CANNOT_DELETE_OR_UPDATE_PARENT_ROW)){
 					tokens.add("exception.record.cannotdelete");
 					message = StringUtils.substringBetween(message, CANNOT_DELETE_OR_UPDATE_PARENT_ROW,Constant.CHARACTER_COMA.toString());				
-					tokens.add(RootBusinessLayer.getInstance().getLanguageBusiness().findText(
-							RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfosByTableName(
+					tokens.add(inject(LanguageBusiness.class).findText(
+							inject(ApplicationBusiness.class).findBusinessEntityInfosByTableName(
 									StringUtils.substringBetween(message,".`","`")
 									).getUserInterface().getLabelId()
 							));

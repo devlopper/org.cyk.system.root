@@ -9,9 +9,9 @@ import javax.ejb.TransactionAttributeType;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
@@ -36,7 +36,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		if(party.getContactCollection()!=null){
 			if(StringUtils.isEmpty(party.getContactCollection().getName()))
 				party.getContactCollection().setName(party.getCode());
-			RootBusinessLayer.getInstance().getContactCollectionBusiness().create(party.getContactCollection());
+			inject(ContactCollectionBusiness.class).create(party.getContactCollection());
 		}
 		super.create(party);
         return party;
@@ -45,13 +45,13 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	@Override
     public PARTY update(PARTY party) {
 		if(party.getContactCollection()!=null)
-			RootBusinessLayer.getInstance().getContactCollectionBusiness().update(party.getContactCollection());
+			inject(ContactCollectionBusiness.class).update(party.getContactCollection());
         return super.update(party);
     }
 	
     @Override
 	public PARTY delete(PARTY party) {
-    	RootBusinessLayer.getInstance().getContactCollectionBusiness().delete(party.getContactCollection());
+    	inject(ContactCollectionBusiness.class).delete(party.getContactCollection());
     	party.setContactCollection(null);
 		return super.delete(party);
 	}
@@ -77,7 +77,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
         
 	protected void __load__(PARTY party) {
     	if(party.getContactCollection()!=null)
-    		RootBusinessLayer.getInstance().getContactCollectionBusiness().load(party.getContactCollection());
+    		inject(ContactCollectionBusiness.class).load(party.getContactCollection());
     }
 
 	@Override

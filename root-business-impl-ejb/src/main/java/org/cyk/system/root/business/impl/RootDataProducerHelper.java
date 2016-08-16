@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
+import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractEnumeration;
@@ -430,7 +431,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	public void instanciateUserAccounts(Collection<Party> parties, Role... roles) {
 		if(this.userAccounts==null)
 			this.userAccounts = new ArrayList<>();
-		this.userAccounts = RootBusinessLayer.getInstance().getUserAccountBusiness().instanciateManyFromParties(parties, roles);
+		this.userAccounts = inject(UserAccountBusiness.class).instanciateManyFromParties(parties, roles);
 	}
 	
 	public void instanciateUserAccountsFromActors(Collection<? extends AbstractActor> actors, Role... roles) {

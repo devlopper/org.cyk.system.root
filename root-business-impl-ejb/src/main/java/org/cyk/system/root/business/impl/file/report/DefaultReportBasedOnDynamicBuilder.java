@@ -13,6 +13,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParamete
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.Border.Side;
 import org.cyk.utility.common.CommonUtils;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.ReportColumn;
 import org.cyk.utility.common.annotation.user.interfaces.style.Alignment.Horizontal;
 import org.cyk.utility.common.annotation.user.interfaces.style.Alignment.Vertical;
@@ -47,7 +48,7 @@ public class DefaultReportBasedOnDynamicBuilder extends AbstractReportBasedOnDyn
 					
 					if(fromDate!=null){
 						String pattern = TimeBusiness.DATE_SHORT_PATTERN;
-						titleBuilder.append(" "+rootBusinessLayer.getTimeBusiness().formatPeriodFromTo(new Period(fromDate, toDate), pattern));
+						titleBuilder.append(Constant.CHARACTER_SPACE+inject(TimeBusiness.class).formatPeriodFromTo(new Period(fromDate, toDate), pattern));
 					}
 				}
 				

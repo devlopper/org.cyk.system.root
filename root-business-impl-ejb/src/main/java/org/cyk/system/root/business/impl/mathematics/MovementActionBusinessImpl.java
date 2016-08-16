@@ -6,9 +6,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 
@@ -24,13 +24,13 @@ public class MovementActionBusinessImpl extends AbstractTypedBusinessService<Mov
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MovementAction instanciateOne(String code,String name) {
 		MovementAction movementAction = new MovementAction(code, name);
-		movementAction.setInterval(RootBusinessLayer.getInstance().getIntervalBusiness().instanciateOne(null, code, "0", null));
+		movementAction.setInterval(inject(IntervalBusiness.class).instanciateOne(null, code, "0", null));
 		return movementAction;
 	}
 	
 	@Override
 	public MovementAction create(MovementAction movementAction) {
-		RootBusinessLayer.getInstance().getIntervalBusiness().create(movementAction.getInterval());
+		inject(IntervalBusiness.class).create(movementAction.getInterval());
 		return super.create(movementAction);
 	}
 	

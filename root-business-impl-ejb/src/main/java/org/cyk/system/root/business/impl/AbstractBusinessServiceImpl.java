@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.BusinessService;
+import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
@@ -29,11 +30,11 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 	}
 
 	protected String generateStringValue(String generatorIdentifier,Object input){
-		return RootBusinessLayer.getInstance().getStringGeneratorBusiness().generate(generatorIdentifier, input);
+		return inject(StringGeneratorBusiness.class).generate(generatorIdentifier, input);
 	}
 	
 	protected String generateIdentifier(AbstractIdentifiable identifiable,String runtimeGeneratorIdentifier,StringGenerator databaseGenerator){
-		return RootBusinessLayer.getInstance().getStringGeneratorBusiness().generateIdentifier(identifiable, runtimeGeneratorIdentifier, databaseGenerator);
+		return inject(StringGeneratorBusiness.class).generateIdentifier(identifiable, runtimeGeneratorIdentifier, databaseGenerator);
 	}
 	
 	protected void setCallArgumentsCurrentExecutionStep(BusinessServiceCallArguments<?> callArguments,Object object){

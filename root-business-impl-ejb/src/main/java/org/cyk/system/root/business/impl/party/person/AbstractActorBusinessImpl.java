@@ -9,10 +9,10 @@ import javax.ejb.TransactionAttributeType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.BusinessServiceProvider;
 import org.cyk.system.root.business.impl.BusinessServiceProvider.Service;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
@@ -37,7 +37,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ACTOR instanciateOne() {
 		ACTOR actor = super.instanciateOne();
-		actor.setPerson(RootBusinessLayer.getInstance().getPersonBusiness().instanciateOne());
+		actor.setPerson(inject(PersonBusiness.class).instanciateOne());
 		//actor.getRegistration().setCode(RandomStringUtils.randomAlphanumeric(5));
 		return actor;
 	}
@@ -52,20 +52,20 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 			if(anActor.getPerson().getImage()==null)
 				anActor.getPerson().setImage(anActor.getImage());
 			anActor.getPerson().getGlobalIdentifier().setCreatedBy(anActor.getGlobalIdentifier().getCreatedBy());
-			RootBusinessLayer.getInstance().getPersonBusiness().create(anActor.getPerson());
+			inject(PersonBusiness.class).create(anActor.getPerson());
 		}
 		return super.create(anActor);
 	}
 	
 	@Override
 	public ACTOR update(ACTOR anActor) {
-		RootBusinessLayer.getInstance().getPersonBusiness().update(anActor.getPerson());
+		inject(PersonBusiness.class).update(anActor.getPerson());
 		return super.update(anActor);
 	}
 	
 	@Override
 	public ACTOR delete(ACTOR actor) {
-		RootBusinessLayer.getInstance().getPersonBusiness().delete(actor.getPerson());
+		inject(PersonBusiness.class).delete(actor.getPerson());
 		actor.setPerson(null);
 		return super.delete(actor);
 	}
@@ -76,13 +76,13 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	}
 	
 	protected void __load__(ACTOR actor){
-		RootBusinessLayer.getInstance().getPersonBusiness().load(actor.getPerson());
+		inject(PersonBusiness.class).load(actor.getPerson());
 	}
 
 	@Override
 	public void completeInstanciationOfOne(ACTOR actor) {
 		super.completeInstanciationOfOne(actor);
-		RootBusinessLayer.getInstance().getPersonBusiness().completeInstanciationOfOne(actor.getPerson());
+		inject(PersonBusiness.class).completeInstanciationOfOne(actor.getPerson());
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		
 		if(actor.getPerson()==null)
 			actor.setPerson(new Person());
-		RootBusinessLayer.getInstance().getPersonBusiness().completeInstanciationOfOneFromValues(actor.getPerson(), arguments.getPersonInstanciationOfOneFromValuesArguments());
+		inject(PersonBusiness.class).completeInstanciationOfOneFromValues(actor.getPerson(), arguments.getPersonInstanciationOfOneFromValuesArguments());
 		
 		if(arguments.getRegistrationCodeIndex()!=null)
 			actor.getGlobalIdentifierCreateIfNull().setCode(arguments.getValues()[arguments.getRegistrationCodeIndex()]);

@@ -7,7 +7,10 @@ import java.util.Arrays;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
+import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
+import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.network.UniformResourceLocator;
@@ -115,10 +118,10 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-    	assertThat("Path "+path+" is accessible", RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().isAccessible(_url).equals(byApplication));
+    	assertThat("Path "+path+" is accessible", BusinessInterfaceLocator.inject(UniformResourceLocatorBusiness.class).isAccessible(_url).equals(byApplication));
     	if(roles!=null && roles.length>0)
     		assertThat("Path "+path+" is accessible by "+StringUtils.join(roles,",")
-    			, RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().isAccessible(_url,Arrays.asList(roles)).equals(byRole));
+    			, BusinessInterfaceLocator.inject(RoleUniformResourceLocatorBusiness.class).isAccessible(_url,Arrays.asList(roles)).equals(byRole));
     }
     
     

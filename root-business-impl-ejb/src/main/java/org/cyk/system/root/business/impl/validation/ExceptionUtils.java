@@ -13,7 +13,9 @@ import lombok.Setter;
 
 import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -88,7 +90,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     }
     
     public void comparisonBetween(BigDecimal value,Interval interval,String valueName){
-    	exception(interval!=null && !RootBusinessLayer.getInstance().getIntervalBusiness().contains(interval, value, 2) , "exception.comparison.between",new Object[]{valueName
+    	exception(interval!=null && !inject(IntervalBusiness.class).contains(interval, value, 2) , "exception.comparison.between",new Object[]{valueName
     			,RootBusinessLayer.getInstance().getNumberBusiness().format(interval.getLow().getValue())
     			,RootBusinessLayer.getInstance().getNumberBusiness().format(interval.getHigh().getValue())});
 	}
@@ -104,9 +106,9 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     	if(value==null)
     		return;
     	exception(value.compareTo(limit) >= 0 , "exception.cannotprocessmorethan",new Object[]{
-    		RootBusinessLayer.getInstance().getLanguageBusiness().findText(processNameId)
+    			inject(LanguageBusiness.class).findText(processNameId)
 			,RootBusinessLayer.getInstance().getNumberBusiness().format(limit)
-    		,RootBusinessLayer.getInstance().getLanguageBusiness().findText(subjectNameId)
+    		,inject(LanguageBusiness.class).findText(subjectNameId)
 			});
     }
     public void cannotProcessMoreThan(Long value,String processNameId,BigDecimal limit,String subjectNameId){
@@ -116,7 +118,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     }
     public void cannotProcessMoreThan(Long value,String processNameId,BigDecimal limit,Class<? extends AbstractIdentifiable> identifiableClass){
     	cannotProcessMoreThan(value, processNameId, limit
-    			, RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(identifiableClass).getUserInterface().getLabelId());
+    			, inject(ApplicationBusiness.class).findBusinessEntityInfos(identifiableClass).getUserInterface().getLabelId());
     }
     public void cannotProcessMoreThan(Long value,String processNameId,Interval interval,Class<? extends AbstractIdentifiable> identifiableClass){
     	if(interval==null || interval.getLow()==null || interval.getLow().getValue()==null)

@@ -9,7 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Rud;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -51,7 +51,7 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 					.generate(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER, globalIdentifier.getIdentifiable()));*///TODO handle duplicate by using lock write
 		if(globalIdentifier.getOwner()==null)
 			globalIdentifier.setOwner(globalIdentifier.getCreatedBy());
-		globalIdentifier.setCreationDate(RootBusinessLayer.getInstance().getTimeBusiness().findUniversalTimeCoordinated());
+		globalIdentifier.setCreationDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
 		return globalIdentifierDao.create(globalIdentifier);
 	}
 	

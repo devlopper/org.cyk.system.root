@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
 
+import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.party.AbstractPartyDetails;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -27,7 +28,7 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 			nationality = RootBusinessLayer.getInstance().getFormatterBusiness().format(getPerson().getNationality());
 		
 		if(person.getBirthDate()!=null)
-			birthDate = RootBusinessLayer.getInstance().getTimeBusiness().formatDate(getPerson().getBirthDate());
+			birthDate = inject(TimeBusiness.class).formatDate(getPerson().getBirthDate());
 		
 		if(getPerson().getExtendedInformations()!=null){
 			if(getPerson().getExtendedInformations().getTitle()!=null)

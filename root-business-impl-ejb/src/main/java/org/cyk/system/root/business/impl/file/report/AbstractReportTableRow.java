@@ -23,7 +23,7 @@ public abstract class AbstractReportTableRow extends AbstractBean implements Ser
 
 	protected RootBusinessLayer rootBusinessLayer = RootBusinessLayer.getInstance();
 	protected NumberBusiness numberBusiness = rootBusinessLayer.getNumberBusiness();
-	protected TimeBusiness timeBusiness = rootBusinessLayer.getTimeBusiness();
+	protected TimeBusiness timeBusiness = inject(TimeBusiness.class);
 	
 	protected String formatNumber(Number number) {
 		return numberBusiness.format(number);

@@ -8,10 +8,11 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
+import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -33,7 +34,7 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	
 	@Override
 	protected MovementBusiness getItemBusiness() {
-		return RootBusinessLayer.getInstance().getMovementBusiness();
+		return inject(MovementBusiness.class);
 	}
 		
 	@Override
@@ -43,11 +44,11 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MovementCollection instanciateOne(String code,String incrementActionName,String decrementActionName) {
-		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, RootBusinessLayer.getInstance().getIntervalBusiness()
+		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, inject(IntervalBusiness.class)
 				.instanciateOne(null, code, "0", null));
-		movementCollection.setIncrementAction(RootBusinessLayer.getInstance().getMovementActionBusiness()
+		movementCollection.setIncrementAction(inject(MovementActionBusiness.class)
 				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+computeCode(incrementActionName), incrementActionName));
-		movementCollection.setDecrementAction(RootBusinessLayer.getInstance().getMovementActionBusiness()
+		movementCollection.setDecrementAction(inject(MovementActionBusiness.class)
 				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+computeCode(decrementActionName), decrementActionName));
 		return movementCollection;
 	}
@@ -55,11 +56,11 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Override
 	public MovementCollection create(MovementCollection movementCollection) {
 		if(isNotIdentified(movementCollection.getInterval()))
-			RootBusinessLayer.getInstance().getIntervalBusiness().create(movementCollection.getInterval());
+			inject(IntervalBusiness.class).create(movementCollection.getInterval());
 		if(isNotIdentified(movementCollection.getIncrementAction()))
-			RootBusinessLayer.getInstance().getMovementActionBusiness().create(movementCollection.getIncrementAction());
+			inject(MovementActionBusiness.class).create(movementCollection.getIncrementAction());
 		if(isNotIdentified(movementCollection.getDecrementAction()))
-			RootBusinessLayer.getInstance().getMovementActionBusiness().create(movementCollection.getDecrementAction());
+			inject(MovementActionBusiness.class).create(movementCollection.getDecrementAction());
 		return super.create(movementCollection);
 	}
 	

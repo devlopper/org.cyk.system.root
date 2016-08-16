@@ -33,8 +33,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.JasperReportBasedOnDynamicBuilderListener;
 import org.cyk.system.root.business.api.file.report.JasperReportBusiness;
+import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness;
 import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness.UpdateTagArguments;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.file.report.AbstractReportBusinessImpl;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.file.report.AbstractReport;
@@ -248,13 +248,13 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 				
 				updateTagArguments.getFindTagArguments().addTag(TABLE,NAMESPACE_COMPONENT,tableIndex).addTag(COLUMN,NAMESPACE_COMPONENT,columnIndex);
     			updateTagArguments.setAttributes(attributes); 
-    			jrxml = RootBusinessLayer.getInstance().getMarkupLanguageBusiness().updateTag(jrxml, updateTagArguments);
+    			jrxml = inject(MarkupLanguageBusiness.class).updateTag(jrxml, updateTagArguments);
     			if(ArrayUtils.contains(attributes, WIDTH)){
     				UpdateTagArguments textFieldUpdateTagArguments = new UpdateTagArguments();
     				textFieldUpdateTagArguments.setFindTagArguments(updateTagArguments.getFindTagArguments());
     				textFieldUpdateTagArguments.getFindTagArguments().addTag(COLUMN_HEADER,NAMESPACE_COMPONENT,0).addTag(TEXT_FIELD, 0).addTag(REPORT_ELEMENT, 0);
     				textFieldUpdateTagArguments.setAttributes(WIDTH,updateTagArguments.getAttributes().get(WIDTH));
-    				jrxml = RootBusinessLayer.getInstance().getMarkupLanguageBusiness().updateTag(jrxml, textFieldUpdateTagArguments);
+    				jrxml = inject(MarkupLanguageBusiness.class).updateTag(jrxml, textFieldUpdateTagArguments);
     			}
     			return jrxml;
 			}

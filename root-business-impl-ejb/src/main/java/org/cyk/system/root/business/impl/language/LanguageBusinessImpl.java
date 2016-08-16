@@ -29,7 +29,6 @@ import org.cyk.system.root.business.api.CommonBusinessAction;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
@@ -416,7 +415,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	@Override
 	public String findActionIdentifierText(String actionIdentifier,BusinessEntityInfos businessEntityInfos,Boolean verb){
-		return RootBusinessLayer.getInstance().getLanguageBusiness().findText("action"+Constant.CHARACTER_DOT+businessEntityInfos.getVarName().toLowerCase()
+		return findText("action"+Constant.CHARACTER_DOT+businessEntityInfos.getVarName().toLowerCase()
 				+Constant.CHARACTER_DOT+actionIdentifier+Constant.CHARACTER_DOT+(Boolean.TRUE.equals(verb)?"verb":"name"));
 	}
 	

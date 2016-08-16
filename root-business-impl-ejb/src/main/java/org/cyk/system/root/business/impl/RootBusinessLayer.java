@@ -26,64 +26,17 @@ import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.business.api.event.EventBusiness;
-import org.cyk.system.root.business.api.event.EventMissedBusiness;
-import org.cyk.system.root.business.api.event.EventMissedReasonBusiness;
-import org.cyk.system.root.business.api.event.EventPartyBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
-import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
-import org.cyk.system.root.business.api.file.ScriptBusiness;
-import org.cyk.system.root.business.api.file.ScriptVariableBusiness;
-import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.geography.ContactBusiness;
-import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
-import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
-import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
-import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
-import org.cyk.system.root.business.api.information.CommentBusiness;
-import org.cyk.system.root.business.api.information.TagBusiness;
-import org.cyk.system.root.business.api.information.TagIdentifiableGlobalIdentifierBusiness;
-import org.cyk.system.root.business.api.language.LanguageBusiness;
-import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness;
-import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
-import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
-import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
-import org.cyk.system.root.business.api.mathematics.MetricBusiness;
-import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
-import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
-import org.cyk.system.root.business.api.mathematics.MovementBusiness;
-import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
-import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineAlphabetBusiness;
-import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBusiness;
-import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
-import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateLogBusiness;
-import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
-import org.cyk.system.root.business.api.network.UniformResourceLocatorParameterBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
-import org.cyk.system.root.business.api.party.person.JobFunctionBusiness;
-import org.cyk.system.root.business.api.party.person.JobTitleBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
-import org.cyk.system.root.business.api.party.person.PersonTitleBusiness;
-import org.cyk.system.root.business.api.party.person.SexBusiness;
-import org.cyk.system.root.business.api.pattern.tree.DataTreeBusiness;
-import org.cyk.system.root.business.api.pattern.tree.DataTreeIdentifiableGlobalIdentifierBusiness;
-import org.cyk.system.root.business.api.pattern.tree.DataTreeTypeBusiness;
-import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
-import org.cyk.system.root.business.api.security.LicenseBusiness;
-import org.cyk.system.root.business.api.security.RoleBusiness;
-import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
-import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
-import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
-import org.cyk.system.root.business.api.time.TimeDivisionTypeBusiness;
-import org.cyk.system.root.business.api.userinterface.GraphicBusiness;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
@@ -91,44 +44,22 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.ContentType;
-import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.event.EventMissed;
 import org.cyk.system.root.model.event.EventMissedReason;
-import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.file.Script;
-import org.cyk.system.root.model.file.ScriptVariable;
-import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
-import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
-import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
-import org.cyk.system.root.model.information.Comment;
-import org.cyk.system.root.model.information.Tag;
-import org.cyk.system.root.model.information.TagIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.language.Language;
-import org.cyk.system.root.model.mathematics.Interval;
-import org.cyk.system.root.model.mathematics.IntervalCollection;
-import org.cyk.system.root.model.mathematics.Metric;
-import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
-import org.cyk.system.root.model.mathematics.Movement;
-import org.cyk.system.root.model.mathematics.MovementAction;
-import org.cyk.system.root.model.mathematics.MovementCollection;
-import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
-import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog;
-import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
@@ -138,28 +69,15 @@ import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
-import org.cyk.system.root.model.pattern.tree.DataTree;
-import org.cyk.system.root.model.pattern.tree.DataTreeIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.pattern.tree.DataTreeType;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
-import org.cyk.system.root.model.security.License;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleSecuredView;
-import org.cyk.system.root.model.security.RoleUniformResourceLocator;
-import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
-import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
-import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
-import org.cyk.system.root.persistence.api.mathematics.MetricDao;
-import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
-import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
-import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
-import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
@@ -192,79 +110,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
 	private Sex sexMale,sexFemale;
 	
-	@Inject private FileBusiness fileBusiness;
-	@Inject private ScriptBusiness scriptBusiness;
-	@Inject private ScriptVariableBusiness scriptVariableBusiness;
-	@Inject private LanguageBusiness languageBusiness;
-	@Inject private MathematicsBusiness mathematicsBusiness;
-	@Inject private TimeBusiness timeBusiness;
 	@Inject private NumberBusiness numberBusiness;
-	@Inject private GraphicBusiness graphicBusiness;
-	@Inject private ApplicationBusiness applicationBusiness;
 	@Inject private GenericBusiness genericBusiness;
 	@Inject private ContactBusiness contactBusiness;
-	@Inject private ContactCollectionBusiness contactCollectionBusiness;
-	@Inject private PhoneNumberBusiness phoneNumberBusiness;
-	@Inject private ElectronicMailBusiness electronicMailBusiness;
-	@Inject private PhoneNumberTypeBusiness phoneNumberTypeBusiness;
-	@Inject private SexBusiness sexBusiness;
-	@Inject private LocationTypeBusiness locationTypeBusiness;
-	@Inject private LocalityBusiness localityBusiness;
-	@Inject private LocalityTypeBusiness localityTypeBusiness;
-	@Inject private TagBusiness tagBusiness;
-	@Inject private TagIdentifiableGlobalIdentifierBusiness tagIdentifiableGlobalIdentifierBusiness;
-    @Inject private EventBusiness eventBusiness;
-    @Inject private EventPartyBusiness eventPartyBusiness;
-    @Inject private EventMissedBusiness eventMissedBusiness;
-    @Inject private EventMissedReasonBusiness eventMissedReasonBusiness;
-    @Inject private PersonBusiness personBusiness;
-    @Inject private IntervalCollectionBusiness intervalCollectionBusiness;
-    @Inject private IntervalBusiness intervalBusiness;
-    @Inject private IntervalDao intervalDao;
-    @Inject private RoleBusiness roleBusiness;
-    @Inject private RoleSecuredViewBusiness roleSecuredViewBusiness;
-    @Inject private UserAccountBusiness userAccountBusiness;
-    @Inject private TimeDivisionTypeBusiness timeDivisionTypeBusiness;
-    @Inject private StringGeneratorBusiness stringGeneratorBusiness;
     @Inject private ClazzBusiness clazzBusiness;
-    @Inject private JobTitleBusiness jobTitleBusiness;
-    @Inject private PersonTitleBusiness personTitleBusiness;
-    @Inject private JobFunctionBusiness jobFunctionBusiness;
-    @Inject private MetricCollectionBusiness metricCollectionBusiness;
-    @Inject private MetricCollectionDao metricCollectionDao;
-    @Inject private MetricBusiness metricBusiness;
-    @Inject private MetricDao metricDao;
-    @Inject private MetricValueBusiness metricValueBusiness;
-    @Inject private UniformResourceLocatorBusiness uniformResourceLocatorBusiness;
-    @Inject private UniformResourceLocatorParameterBusiness uniformResourceLocatorParameterBusiness;
-    @Inject private RoleUniformResourceLocatorBusiness roleUniformResourceLocatorBusiness;
-    @Inject private LicenseBusiness licenseBusiness;
-    @Inject private MovementBusiness movementBusiness;
-    @Inject private MovementActionBusiness movementActionBusiness;
-    @Inject private MovementCollectionBusiness movementCollectionBusiness;
-    @Inject private MarkupLanguageBusiness markupLanguageBusiness;
-    @Inject private NestedSetNodeBusiness nestedSetNodeBusiness;
-    @Inject private CommentBusiness commentBusiness;
-    @Inject private DataTreeBusiness dataTreeBusiness;
-    @Inject private DataTreeTypeBusiness dataTreeTypeBusiness;
-    @Inject private DataTreeIdentifiableGlobalIdentifierBusiness dataTreeIdentifiableGlobalIdentifierBusiness;
     @Inject private GlobalIdentifierBusiness globalIdentifierBusiness;
-    //@Inject private NestedSetBusiness nestedSetBusiness;
-    
-    @Inject private NestedSetDao nestedSetDao;
-    @Inject private NestedSetNodeDao nestedSetNodeDao;
-    
-    @Inject private FiniteStateMachineBusiness finiteStateMachineBusiness;
-    @Inject private FiniteStateMachineStateBusiness finiteStateMachineStateBusiness;
-    @Inject private FiniteStateMachineStateDao finiteStateMachineStateDao;
-    @Inject private FiniteStateMachineStateLogBusiness finiteStateMachineStateLogBusiness;
-    @Inject private FiniteStateMachineAlphabetBusiness finiteStateMachineAlphabetBusiness;
-    @Inject private FileIdentifiableGlobalIdentifierBusiness fileIdentifiableGlobalIdentifierBusiness;
-    
-    @Inject private RoleDao roleDao;
-    @Inject private NotificationTemplateDao notificationTemplateDao;
-    @Inject private NotificationBusiness notificationBusiness;
-    @Inject private CountryDao countryDao;
     @Inject private GenericDao genericDao;
     
     @Inject private PersonValidator personValidator;
@@ -300,12 +150,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			public Collection<Person> find(DataReadConfiguration configuration) {
 				Person.SearchCriteria criteria = new Person.SearchCriteria(configuration.getGlobalFilter());
 				criteria.getReadConfig().set(configuration);
-				return personBusiness.findByCriteria(criteria);
+				return inject(PersonBusiness.class).findByCriteria(criteria);
 			}
 			
 			@Override
 			public Long count(DataReadConfiguration configuration) {
-				return personBusiness.countByCriteria(new Person.SearchCriteria(configuration.getGlobalFilter()));
+				return inject(PersonBusiness.class).countByCriteria(new Person.SearchCriteria(configuration.getGlobalFilter()));
 			}
         });
          
@@ -313,7 +163,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(MetricValue metricValue, ContentType contentType) {
-				return metricValueBusiness.format(metricValue);
+				return inject(MetricValueBusiness.class).format(metricValue);
 			}
 		});
         registerFormatter(NestedSet.class, new AbstractFormatter<NestedSet>() {
@@ -366,7 +216,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         	public String getValueAsString(Object object) {
         		if(object instanceof Class<?>){
     				if(AbstractIdentifiable.class.isAssignableFrom((Class<?>) object))
-    					return RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos((Class<? extends AbstractIdentifiable>) object).getIdentifier();
+    					return inject(ApplicationBusiness.class).findBusinessEntityInfos((Class<? extends AbstractIdentifiable>) object).getIdentifier();
     			}else if(object instanceof AbstractIdentifiable)
     				return ((AbstractIdentifiable)object).getIdentifier().toString();
         		return super.getValueAsString(object);
@@ -391,7 +241,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         */
         
         ValueGenerator<AbstractIdentifiable,String> globalIdentifierCodeGenerator = (ValueGenerator<AbstractIdentifiable, String>) 
-				RootBusinessLayer.getInstance().getApplicationBusiness().findValueGenerator(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER);
+        		inject(ApplicationBusiness.class).findValueGenerator(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER);
         globalIdentifierCodeGenerator.setMethod(new GlobalIdentifierCodeGenerator());
 		
 		AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_VALUE = new StringMethod<AbstractIdentifiable>() {
@@ -431,7 +281,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = 153358109323471469L;
 			@Override
 			protected Date __execute__(AbstractIdentifiable identifiable) {
-				return timeBusiness.findUniversalTimeCoordinated();
+				return inject(TimeBusiness.class).findUniversalTimeCoordinated();
 			}
 		};
 		
@@ -566,56 +416,57 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void registerTypedBusinessBean(Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> beansMap) {
-        beansMap.put((Class)Event.class, (TypedBusiness)eventBusiness);
+        /*beansMap.put((Class)Event.class, (TypedBusiness)eventBusiness);
         beansMap.put((Class)EventParty.class, (TypedBusiness)eventPartyBusiness);
         beansMap.put((Class)EventMissed.class, (TypedBusiness)eventMissedBusiness);
-        beansMap.put((Class)EventMissedReason.class, (TypedBusiness)eventMissedReasonBusiness);
+        beansMap.put((Class)EventMissedReason.class, (TypedBusiness)eventMissedReasonBusiness);*/
         
-        beansMap.put((Class)Person.class, (TypedBusiness)personBusiness);
+        //beansMap.put((Class)Person.class, (TypedBusiness)personBusiness);
         
-        beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
-        beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
+        //beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
+        //beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
         //beansMap.put((Class)Country.class, (TypedBusiness)countryBusiness);
-        beansMap.put((Class)ContactCollection.class, (TypedBusiness)contactCollectionBusiness);
-        beansMap.put((Class)ElectronicMail.class, (TypedBusiness)electronicMailBusiness);
-        beansMap.put((Class)PhoneNumber.class, (TypedBusiness)phoneNumberBusiness);
+        //beansMap.put((Class)ContactCollection.class, (TypedBusiness)contactCollectionBusiness);
+        //beansMap.put((Class)ElectronicMail.class, (TypedBusiness)electronicMailBusiness);
+        //beansMap.put((Class)PhoneNumber.class, (TypedBusiness)phoneNumberBusiness);
         
         
-        beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);
-        beansMap.put((Class)TagIdentifiableGlobalIdentifier.class, (TypedBusiness)tagIdentifiableGlobalIdentifierBusiness);
-        beansMap.put((Class)UserAccount.class, (TypedBusiness)userAccountBusiness);
-        beansMap.put((Class)StringGenerator.class, (TypedBusiness)stringGeneratorBusiness);
+        //beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);
+        //beansMap.put((Class)TagIdentifiableGlobalIdentifier.class, (TypedBusiness)tagIdentifiableGlobalIdentifierBusiness);
+        //beansMap.put((Class)UserAccount.class, (TypedBusiness)userAccountBusiness);
+        //beansMap.put((Class)StringGenerator.class, (TypedBusiness)stringGeneratorBusiness);
         beansMap.put((Class)RoleSecuredView.class, (TypedBusiness)roleSecuredViewBusiness);
-        beansMap.put((Class)JobTitle.class, (TypedBusiness)jobTitleBusiness);
+        /*beansMap.put((Class)JobTitle.class, (TypedBusiness)jobTitleBusiness);
         beansMap.put((Class)PersonTitle.class, (TypedBusiness)personTitleBusiness);
-        beansMap.put((Class)JobFunction.class, (TypedBusiness)jobFunctionBusiness);
-        beansMap.put((Class)IntervalCollection.class, (TypedBusiness)intervalCollectionBusiness);
-        beansMap.put((Class)Interval.class, (TypedBusiness)intervalBusiness);
-        beansMap.put((Class)MetricCollection.class, (TypedBusiness)metricCollectionBusiness);
+        beansMap.put((Class)JobFunction.class, (TypedBusiness)jobFunctionBusiness);*/
+        //beansMap.put((Class)IntervalCollection.class, (TypedBusiness)intervalCollectionBusiness);
+        //beansMap.put((Class)Interval.class, (TypedBusiness)intervalBusiness);
+        /*beansMap.put((Class)MetricCollection.class, (TypedBusiness)metricCollectionBusiness);
         beansMap.put((Class)Metric.class, (TypedBusiness)metricBusiness);
         beansMap.put((Class)UniformResourceLocator.class, (TypedBusiness)uniformResourceLocatorBusiness);
         beansMap.put((Class)UniformResourceLocatorParameter.class, (TypedBusiness)uniformResourceLocatorParameterBusiness);
-        beansMap.put((Class)RoleUniformResourceLocator.class, (TypedBusiness)roleUniformResourceLocatorBusiness);
-        beansMap.put((Class)Role.class, (TypedBusiness)roleBusiness);
-        beansMap.put((Class)License.class, (TypedBusiness)licenseBusiness);
-        beansMap.put((Class)MovementCollection.class, (TypedBusiness)movementCollectionBusiness);
+        beansMap.put((Class)RoleUniformResourceLocator.class, (TypedBusiness)roleUniformResourceLocatorBusiness);*/
+        //beansMap.put((Class)Role.class, (TypedBusiness)roleBusiness);
+        //beansMap.put((Class)License.class, (TypedBusiness)licenseBusiness);
+        /*beansMap.put((Class)MovementCollection.class, (TypedBusiness)movementCollectionBusiness);
         beansMap.put((Class)Movement.class, (TypedBusiness)movementBusiness);
-        beansMap.put((Class)MovementAction.class, (TypedBusiness)movementActionBusiness);
-        beansMap.put((Class)FiniteStateMachineState.class, (TypedBusiness)finiteStateMachineStateBusiness);
-        beansMap.put((Class)FiniteStateMachineStateLog.class, (TypedBusiness)finiteStateMachineStateLogBusiness);
-        beansMap.put((Class)NestedSetNode.class, (TypedBusiness)nestedSetNodeBusiness);
-        beansMap.put((Class)Comment.class, (TypedBusiness)commentBusiness);
+        beansMap.put((Class)MovementAction.class, (TypedBusiness)movementActionBusiness);*/
+        //beansMap.put((Class)FiniteStateMachineState.class, (TypedBusiness)finiteStateMachineStateBusiness);
+        //beansMap.put((Class)FiniteStateMachineStateLog.class, (TypedBusiness)finiteStateMachineStateLogBusiness);
+        //beansMap.put((Class)NestedSetNode.class, (TypedBusiness)nestedSetNodeBusiness);
+        //beansMap.put((Class)Comment.class, (TypedBusiness)commentBusiness);
         
-        beansMap.put((Class)DataTree.class, (TypedBusiness)dataTreeBusiness);
+        /*beansMap.put((Class)DataTree.class, (TypedBusiness)dataTreeBusiness);
         beansMap.put((Class)DataTreeType.class, (TypedBusiness)dataTreeTypeBusiness);
         beansMap.put((Class)DataTreeIdentifiableGlobalIdentifier.class, (TypedBusiness)dataTreeIdentifiableGlobalIdentifierBusiness);
+        */
         beansMap.put((Class)Application.class, (TypedBusiness)applicationBusiness);
-        beansMap.put((Class)Sex.class, (TypedBusiness)sexBusiness);
+        //beansMap.put((Class)Sex.class, (TypedBusiness)sexBusiness);
         
         beansMap.put((Class)File.class, (TypedBusiness)fileBusiness);
-        beansMap.put((Class)FileIdentifiableGlobalIdentifier.class, (TypedBusiness)fileIdentifiableGlobalIdentifierBusiness);
-        beansMap.put((Class)Script.class, (TypedBusiness)scriptBusiness);
-        beansMap.put((Class)ScriptVariable.class, (TypedBusiness)scriptVariableBusiness);
+        //beansMap.put((Class)FileIdentifiableGlobalIdentifier.class, (TypedBusiness)fileIdentifiableGlobalIdentifierBusiness);
+        //beansMap.put((Class)Script.class, (TypedBusiness)scriptBusiness);
+        //beansMap.put((Class)ScriptVariable.class, (TypedBusiness)scriptVariableBusiness);
     }
     
     @Override
@@ -625,16 +476,16 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     		applicationIdentifier = application.getIdentifier();
     	//application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
         
-    	landPhoneNumberType = phoneNumberTypeBusiness.findByGlobalIdentifierCode(PhoneNumberType.LAND);
-    	mobilePhoneNumberType = phoneNumberTypeBusiness.findByGlobalIdentifierCode(PhoneNumberType.MOBILE);
+    	landPhoneNumberType = inject(PhoneNumberTypeBusiness.class).findByGlobalIdentifierCode(PhoneNumberType.LAND);
+    	mobilePhoneNumberType = inject(PhoneNumberTypeBusiness.class).findByGlobalIdentifierCode(PhoneNumberType.MOBILE);
     	
-    	homeLocationType = locationTypeBusiness.findByGlobalIdentifierCode(LocationType.HOME);
-    	officeLocationType = locationTypeBusiness.findByGlobalIdentifierCode(LocationType.OFFICE);
+    	homeLocationType = inject(LocationTypeBusiness.class).findByGlobalIdentifierCode(LocationType.HOME);
+    	officeLocationType = inject(LocationTypeBusiness.class).findByGlobalIdentifierCode(LocationType.OFFICE);
     	
-    	countryCoteDivoire = countryDao.readByCode(Country.COTE_DIVOIRE);
-    	countryLocalityType = localityTypeBusiness.findByGlobalIdentifierCode(LocalityType.COUNTRY);
-    	continentLocalityType = localityTypeBusiness.findByGlobalIdentifierCode(LocalityType.CONTINENT);
-    	cityLocalityType = localityTypeBusiness.findByGlobalIdentifierCode(LocalityType.CITY);
+    	countryCoteDivoire = inject(CountryDao.class).readByCode(Country.COTE_DIVOIRE);
+    	countryLocalityType = inject(LocalityTypeBusiness.class).findByGlobalIdentifierCode(LocalityType.COUNTRY);
+    	continentLocalityType = inject(LocalityTypeBusiness.class).findByGlobalIdentifierCode(LocalityType.CONTINENT);
+    	cityLocalityType = inject(LocalityTypeBusiness.class).findByGlobalIdentifierCode(LocalityType.CITY);
     	
     	roleAdministrator = getEnumeration(Role.class,Role.ADMINISTRATOR);
     	roleManager = getEnumeration(Role.class,Role.MANAGER);
@@ -653,9 +504,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	sexMale = getEnumeration(Sex.class, Sex.MALE);
     	sexFemale = getEnumeration(Sex.class, Sex.FEMALE);
     	
-    	RemoteEndPoint.USER_INTERFACE.alarmTemplate = notificationTemplateDao.readByGlobalIdentifierCode(NotificationTemplate.ALARM_USER_INTERFACE);
-    	RemoteEndPoint.MAIL_SERVER.alarmTemplate = notificationTemplateDao.readByGlobalIdentifierCode(NotificationTemplate.ALARM_EMAIL);
-    	RemoteEndPoint.PHONE.alarmTemplate = notificationTemplateDao.readByGlobalIdentifierCode(NotificationTemplate.ALARM_SMS);
+    	RemoteEndPoint.USER_INTERFACE.alarmTemplate = inject(NotificationTemplateDao.class).readByGlobalIdentifierCode(NotificationTemplate.ALARM_USER_INTERFACE);
+    	RemoteEndPoint.MAIL_SERVER.alarmTemplate = inject(NotificationTemplateDao.class).readByGlobalIdentifierCode(NotificationTemplate.ALARM_EMAIL);
+    	RemoteEndPoint.PHONE.alarmTemplate = inject(NotificationTemplateDao.class).readByGlobalIdentifierCode(NotificationTemplate.ALARM_SMS);
     	
     	
     }
@@ -691,7 +542,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	alarmTimer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				notificationBusiness.run(remoteEndPoints);
+				inject(NotificationBusiness.class).run(remoteEndPoints);
 			}
 		}, delay, period);
     	logInfo("Event Alarm Scanning Enabled");

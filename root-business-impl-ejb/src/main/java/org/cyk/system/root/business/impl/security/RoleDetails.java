@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.security;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationDetails;
 import org.cyk.system.root.model.ContentType;
 import org.cyk.system.root.model.security.Role;
@@ -17,7 +18,7 @@ public class RoleDetails extends AbstractEnumerationDetails<Role> implements Ser
 	
 	public RoleDetails(Role role) {
 		super(role);
-		uniformResourceLocators = StringUtils.join(rootBusinessLayer.getRoleUniformResourceLocatorBusiness().findByRole(role)
+		uniformResourceLocators = StringUtils.join(inject(RoleUniformResourceLocatorBusiness.class).findByRole(role)
 				,ContentType.TEXT.getNewLineMarker());
 	}
 }

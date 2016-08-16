@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.security;
 
 import java.io.Serializable;
 
+import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.model.security.License;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
@@ -20,7 +21,7 @@ public class LicenseDetails extends AbstractOutputDetails<License> implements Se
 		if(Boolean.TRUE.equals(license.getExpirable())){
 			expirationDate = formatDateTime(license.getPeriod().getToDate());
 		}else{
-			expirationDate = rootBusinessLayer.getLanguageBusiness().findText("never");
+			expirationDate = inject(LanguageBusiness.class).findText("never");
 		}
 		expired = formatResponse(license.getExpired());
 	}

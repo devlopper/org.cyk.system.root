@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
+import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.AbstractReport;
@@ -84,10 +85,10 @@ public abstract class AbstractReportRepository extends AbstractBean implements S
 		return RootBusinessLayer.getInstance().getNumberBusiness().format(value);
 	}
 	protected String formatDate(Date date) {
-		return RootBusinessLayer.getInstance().getTimeBusiness().formatDate(date);
+		return inject(TimeBusiness.class).formatDate(date);
 	}
 	protected String formatDateTime(Date date) {
-		return RootBusinessLayer.getInstance().getTimeBusiness().formatDateTime(date);
+		return inject(TimeBusiness.class).formatDateTime(date);
 	}
 	/**/
 	

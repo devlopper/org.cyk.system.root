@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.model.AbstractModelElement;
@@ -17,7 +18,7 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 
 	protected RootBusinessLayer rootBusinessLayer = RootBusinessLayer.getInstance();
 	protected NumberBusiness numberBusiness = rootBusinessLayer.getNumberBusiness();
-	protected TimeBusiness timeBusiness = rootBusinessLayer.getTimeBusiness();
+	protected TimeBusiness timeBusiness = inject(TimeBusiness.class);
 	
 	@Getter @Setter protected MODEL_ELEMENT master;
 	
@@ -37,7 +38,7 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	}
 	
 	protected String formatResponse(Boolean value){
-		return rootBusinessLayer.getLanguageBusiness().findResponseText(value);
+		return  inject(LanguageBusiness.class).findResponseText(value);
 	}
 	
 	protected String formatUsingBusiness(Object object) {

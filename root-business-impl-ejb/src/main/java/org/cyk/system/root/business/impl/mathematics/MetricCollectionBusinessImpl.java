@@ -7,10 +7,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -35,15 +35,15 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 	public MetricCollection create(MetricCollection metricCollection) {
 		if(metricCollection.getValueIntervalCollection()!=null)
 			if(metricCollection.getValueIntervalCollection().getIdentifier()==null){
-				RootBusinessLayer.getInstance().getIntervalCollectionBusiness().create(metricCollection.getValueIntervalCollection());
+				inject(IntervalCollectionBusiness.class).create(metricCollection.getValueIntervalCollection());
 			}else
-				RootBusinessLayer.getInstance().getIntervalCollectionBusiness().update(metricCollection.getValueIntervalCollection());
+				inject(IntervalCollectionBusiness.class).update(metricCollection.getValueIntervalCollection());
 		return super.create(metricCollection);
 	}
 	
 	@Override
 	protected MetricBusiness getItemBusiness() {
-		return RootBusinessLayer.getInstance().getMetricBusiness();
+		return inject(MetricBusiness.class);
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 		collection.setValueType(metricValueType);
 		if(intervalCollectionName==null)
 			intervalCollectionName = code+Constant.CHARACTER_UNDESCORE+collection.getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE+Interval.class.getSimpleName();
-		collection.setValueIntervalCollection(RootBusinessLayer.getInstance().getIntervalCollectionBusiness().instanciateOne(code, intervalCollectionName, intervals));
+		collection.setValueIntervalCollection(inject(IntervalCollectionBusiness.class).instanciateOne(code, intervalCollectionName, intervals));
 		return collection;
 	}
 	

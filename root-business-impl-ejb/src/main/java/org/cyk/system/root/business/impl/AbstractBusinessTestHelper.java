@@ -23,8 +23,14 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
+import org.cyk.system.root.business.api.mathematics.MovementBusiness;
+import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
+import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineAlphabetBusiness;
+import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBusiness;
+import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.AbstractReport;
@@ -359,7 +365,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	public void set(Movement movement,String movementCollectionCode,String value){
 		movement.setValue(value==null?null : new BigDecimal(value));
-		movement.setCollection(getRootBusinessLayer().getMovementCollectionBusiness().findByGlobalIdentifierCode(movementCollectionCode));
+		movement.setCollection(inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode));
 		movement.setCode(movementCollectionCode+"_"+RandomStringUtils.randomAlphabetic(3));
 		movement.setName(movement.getCode());
 		movement.setAction(movement.getValue() == null ? null : movement.getValue().signum() == 1 ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction());
@@ -370,11 +376,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	public void set(FiniteStateMachineAlphabet alphabet,String machineCode,String code){
 		setEnumeration(alphabet, machineCode+"_"+code);
-		alphabet.setMachine(getRootBusinessLayer().getFiniteStateMachineBusiness().findByGlobalIdentifierCode(machineCode));
+		alphabet.setMachine(inject(FiniteStateMachineBusiness.class).findByGlobalIdentifierCode(machineCode));
 	}
 	public void set(FiniteStateMachineState state,String machineCode,String code){
 		setEnumeration(state, machineCode+"_"+code);
-		state.setMachine(getRootBusinessLayer().getFiniteStateMachineBusiness().findByGlobalIdentifierCode(machineCode));
+		state.setMachine(inject(FiniteStateMachineBusiness.class).findByGlobalIdentifierCode(machineCode));
 	}
 	
 	
@@ -387,10 +393,10 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     	if(expectedThrowableMessage!=null){
     		new Try(expectedThrowableMessage){ 
     			private static final long serialVersionUID = -8176804174113453706L;
-    			@Override protected void code() {getRootBusinessLayer().getMovementBusiness().create(movement);}
+    			@Override protected void code() {inject(MovementBusiness.class).create(movement);}
     		}.execute();
     	}else{
-    		getRootBusinessLayer().getMovementBusiness().create(movement);
+    		inject(MovementBusiness.class).create(movement);
     		assertMovementCollection(movement.getCollection(), expectedValue);
     	}
     }
@@ -399,8 +405,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	public void readFiniteStateMachine(String machineCode,String alphabetCode,String expectedStateCode){
-		FiniteStateMachine machine = RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().findByGlobalIdentifierCode(machineCode);
-		RootBusinessLayer.getInstance().getFiniteStateMachineBusiness().read(machine, RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness()
+		FiniteStateMachine machine = inject(FiniteStateMachineBusiness.class).findByGlobalIdentifierCode(machineCode);
+		inject(FiniteStateMachineBusiness.class).read(machine, inject(FiniteStateMachineAlphabetBusiness.class)
 				.findByGlobalIdentifierCode(alphabetCode));
 		assertFiniteStateMachine(machine, expectedStateCode);
 	}
@@ -413,9 +419,9 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	public void findByFromStateByAlphabet(String machineCode,String fromStateCode,String alphabetCode,String expectedStateCode){
 		String message = fromStateCode+" and "+alphabetCode+" > "+expectedStateCode;
-		FiniteStateMachineState state = RootBusinessLayer.getInstance().getFiniteStateMachineStateBusiness()
-			.findByFromStateByAlphabet(RootBusinessLayer.getInstance().getFiniteStateMachineStateBusiness().findByGlobalIdentifierCode(fromStateCode), 
-					RootBusinessLayer.getInstance().getFiniteStateMachineAlphabetBusiness().findByGlobalIdentifierCode(alphabetCode));
+		FiniteStateMachineState state = inject(FiniteStateMachineStateBusiness.class)
+			.findByFromStateByAlphabet(inject(FiniteStateMachineStateBusiness.class).findByGlobalIdentifierCode(fromStateCode), 
+					inject(FiniteStateMachineAlphabetBusiness.class).findByGlobalIdentifierCode(alphabetCode));
 		assertEquals(message, expectedStateCode, state.getCode());
 	}
 	
@@ -436,7 +442,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	/* Exceptions */
 	
 	private void valueMustNotBeOffThanActionIntervalExtremity(String movementCollectionCode,Boolean incrementAction,Boolean lowExtemity){
-		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().findByGlobalIdentifierCode(movementCollectionCode);
+		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode);
 		MovementAction action = Boolean.TRUE.equals(incrementAction) ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction();
 		BigDecimal value = Boolean.TRUE.equals(lowExtemity) ? action.getInterval().getLow().getValue() : action.getInterval().getHigh().getValue();
 		if(value==null)
@@ -457,10 +463,10 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	private void collectionValueMustNotBeOffThanIntervalExtremity(String movementCollectionCode,Boolean incrementAction){
-		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().findByGlobalIdentifierCode(movementCollectionCode);
+		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode);
 		BigDecimal value = Boolean.TRUE.equals(incrementAction) 
-				? getRootBusinessLayer().getIntervalBusiness().findLowestGreatestValue(movementCollection.getInterval()).add(BigDecimal.ONE) 
-				: getRootBusinessLayer().getIntervalBusiness().findGreatestLowestValue(movementCollection.getInterval()).subtract(BigDecimal.ONE);
+				? inject(IntervalBusiness.class).findLowestGreatestValue(movementCollection.getInterval()).add(BigDecimal.ONE) 
+				: inject(IntervalBusiness.class).findGreatestLowestValue(movementCollection.getInterval()).subtract(BigDecimal.ONE);
 		if(value==null)
 			return;
 		createMovement(movementCollectionCode,value.toString(), null,getThrowableMessage(movementCollectionCode, isIncrementAction(value.toString()),3));
@@ -474,12 +480,12 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	public void intervalContains(Interval interval,String value,String scale){
 		assertThat("Interval "+interval+" contains "+value
-				,RootBusinessLayer.getInstance().getIntervalBusiness().contains(interval, commonUtils.getBigDecimal(value), scale==null ? 0: new Integer(scale)));
+				,inject(IntervalBusiness.class).contains(interval, commonUtils.getBigDecimal(value), scale==null ? 0: new Integer(scale)));
 	}
 	
 	
 	private String getThrowableMessage(String movementCollectionCode,Boolean increment,Integer actionId){
-		MovementCollection movementCollection = getRootBusinessLayer().getMovementCollectionBusiness().findByGlobalIdentifierCode(movementCollectionCode);
+		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode);
 		MovementAction action = Boolean.TRUE.equals(increment) ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction();
 		if(actionId==0)
 			return String.format("%s doit être supérieur à %s",action.getName(),action.getInterval().getLow().getValue());

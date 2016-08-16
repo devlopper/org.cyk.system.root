@@ -15,11 +15,11 @@ public abstract class AbstractRootBusinessBean extends AbstractBean implements S
 	private static final long serialVersionUID = 6720546413687083260L;
 
 	protected RootBusinessLayer rootBusinessLayer = RootBusinessLayer.getInstance();
-	protected LanguageBusiness languageBusiness = RootBusinessLayer.getInstance().getLanguageBusiness();
+	protected LanguageBusiness languageBusiness = inject(LanguageBusiness.class);
 	protected NumberBusiness numberBusiness = RootBusinessLayer.getInstance().getNumberBusiness();
-	protected TimeBusiness timeBusiness = RootBusinessLayer.getInstance().getTimeBusiness();
-	protected ContactCollectionBusiness contactCollectionBusiness = RootBusinessLayer.getInstance().getContactCollectionBusiness();
-	protected ApplicationBusiness applicationBusiness = RootBusinessLayer.getInstance().getApplicationBusiness();
+	protected TimeBusiness timeBusiness = inject(TimeBusiness.class);
+	protected ContactCollectionBusiness contactCollectionBusiness = inject(ContactCollectionBusiness.class);
+	protected ApplicationBusiness applicationBusiness = inject(ApplicationBusiness.class);
 	
 	protected String text(String code) {
 		return languageBusiness.findText(code);

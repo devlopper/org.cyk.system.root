@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.CommonBusinessAction;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorParameterBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -80,7 +81,7 @@ public class UniformResourceLocatorParameterBusinessImpl extends AbstractTypedBu
 		Class<? extends AbstractIdentifiable> clazz = null;
 		String classParameterValue = getParameter(UniformResourceLocatorParameter.CLASS,parameters);
 		if(StringUtils.isNotBlank(classParameterValue))
-			clazz = (Class<? extends AbstractIdentifiable>) RootBusinessLayer.getInstance().getApplicationBusiness().findBusinessEntityInfos(classParameterValue).getClazz();
+			clazz = (Class<? extends AbstractIdentifiable>) inject(ApplicationBusiness.class).findBusinessEntityInfos(classParameterValue).getClazz();
 		return clazz;
 	}
 	
