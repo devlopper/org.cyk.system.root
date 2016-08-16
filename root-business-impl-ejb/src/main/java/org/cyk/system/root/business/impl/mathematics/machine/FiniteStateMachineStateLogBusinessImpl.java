@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateLogBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.BusinessLocator;
+import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
@@ -63,7 +63,6 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 		return finiteStateMachineStateLogs;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public <IDENTIFIABLE extends AbstractIdentifiable> Collection<IDENTIFIABLE> findIdentifiablesByCriteria(final IdentifiablesSearchCriteria<IDENTIFIABLE> criteria) {
 		Collection<GlobalIdentifier> globalIdentifiers = new ArrayList<>();
@@ -82,7 +81,7 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 			}
 			
 		});
-		final Collection<IDENTIFIABLE> identifiables = (Collection<IDENTIFIABLE>) BusinessLocator.getInstance().locate(criteria.getIdentifiableClass()).findByGlobalIdentifiers(globalIdentifiers);
+		final Collection<IDENTIFIABLE> identifiables = (Collection<IDENTIFIABLE>) BusinessInterfaceLocator.getInstance().injectTyped(criteria.getIdentifiableClass()).findByGlobalIdentifiers(globalIdentifiers);
 		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>(){
 			@Override
 			public void execute(Listener listener) {

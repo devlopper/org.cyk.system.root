@@ -14,7 +14,7 @@ public class PersistenceIntegrationTestHelper {
 	    
     //FIXME those classes are ignored. WHY 
     private static Class<?>[] CLASSES = {QueryStringBuilder.class,PersistenceService.class
-    	,AbstractPersistenceService.class,GenericDao.class,GenericDaoImpl.class,QueryStringBuilder.class};
+    	,AbstractPersistenceService.class,GenericDao.class,GenericDaoImpl.class,QueryStringBuilder.class,PersistenceInterfaceLocator.class};
     
     public static Package[] packages(){
         return PACKAGES;

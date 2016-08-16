@@ -40,7 +40,7 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	} 
 	
 	@Inject private EventDao eventDao;
-	@Inject private EventMissedDao eventMissedDao,eventMissedDao1,eventMissedDao2,eventMissedDao3;
+	@Inject private EventMissedDao eventMissedDao/*,eventMissedDao1,eventMissedDao2,eventMissedDao3*/;
 	@Inject private EventReminderDao eventReminderDao;
 	@Inject private RepeatedEventDao repeatedEventDao;
 	
@@ -215,7 +215,7 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		
 		//Assert.assertEquals(4, eventDao.countWhereDateBetweenAlarmPeriod(now).intValue());
 		
-		Date toDate = DateUtils.addHours(now, 4);
+		//Date toDate = DateUtils.addHours(now, 4);
 		
 		/*Assert.assertEquals(135l * DateUtils.MILLIS_PER_MINUTE, eventMissedDao.sumDuration(Arrays.asList(eventCollection1),now,toDate, null).longValue());
 		Assert.assertEquals(205l * DateUtils.MILLIS_PER_MINUTE, eventMissedDao.sumDuration(Arrays.asList(eventCollection2),now,toDate, null).longValue());
@@ -229,13 +229,13 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		Assert.assertEquals(120l * DateUtils.MILLIS_PER_MINUTE, eventMissedDao.sumDuration(Arrays.asList(eventCollection2),now,toDate, Boolean.TRUE).longValue());
 		Assert.assertEquals(180l * DateUtils.MILLIS_PER_MINUTE, eventMissedDao.sumDuration(Arrays.asList(eventCollection1,eventCollection2),now,toDate, Boolean.TRUE).longValue());
 		*/
-		toDate = DateUtils.addMinutes(now, 30);
+		//toDate = DateUtils.addMinutes(now, 30);
 		/*Assert.assertEquals(60l * DateUtils.MILLIS_PER_MINUTE, eventMissedDao.sumDuration(Arrays.asList(eventCollection1),now,toDate, Boolean.TRUE).longValue());
 		Assert.assertEquals(0l,eventMissedDao.sumDuration(Arrays.asList(eventCollection2),now,toDate, Boolean.TRUE).longValue());
 		Assert.assertEquals(60l * DateUtils.MILLIS_PER_MINUTE, eventMissedDao.sumDuration(Arrays.asList(eventCollection1,eventCollection2),now,toDate, Boolean.TRUE).longValue());
 		*/
 		now = DateUtils.addHours(now, -14);
-		toDate = DateUtils.addHours(now, -10);
+		//toDate = DateUtils.addHours(now, -10);
 		/*Assert.assertEquals(0l,eventMissedDao1.sumDuration(Arrays.asList(eventCollection1),now,toDate, Boolean.TRUE).longValue());
 		Assert.assertEquals(0l,eventMissedDao2.sumDuration(Arrays.asList(eventCollection2),now,toDate, Boolean.TRUE).longValue());
 		Assert.assertEquals(0l,eventMissedDao3.sumDuration(Arrays.asList(eventCollection1,eventCollection2),now,toDate, Boolean.TRUE).longValue());

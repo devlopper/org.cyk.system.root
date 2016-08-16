@@ -22,7 +22,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	
 	private static final long serialVersionUID = -1042342183332719272L;
  
-	@Inject private BusinessLocator businessLocator;
+	@Inject private BusinessInterfaceLocator businessInterfaceLocator;
 	
 	@Inject private GenericDaoImpl genericDaoImpl;
 	
@@ -72,7 +72,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	    }
 	    */
 	    
-	    TypedBusiness<AbstractIdentifiable> businessBean = businessLocator.locate(anIdentifiable);
+	    TypedBusiness<AbstractIdentifiable> businessBean = businessInterfaceLocator.injectTypedByObject(anIdentifiable);
 	    if(businessBean==null){
 	        validationPolicy.validateCreate(anIdentifiable);
 	        return genericDao.create(anIdentifiable);
@@ -89,7 +89,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 
 	@Override
 	public AbstractIdentifiable update(AbstractIdentifiable anObject) {
-	    TypedBusiness<AbstractIdentifiable> businessBean = businessLocator.locate(anObject);
+	    TypedBusiness<AbstractIdentifiable> businessBean = businessInterfaceLocator.injectTypedByObject(anObject);
 	    if(businessBean==null){
         	validationPolicy.validateUpdate(anObject);
             return genericDao.update(anObject);
@@ -105,7 +105,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 
 	@Override
 	public AbstractIdentifiable delete(AbstractIdentifiable anObject) {
-	    TypedBusiness<AbstractIdentifiable> businessBean = businessLocator.locate(anObject);
+	    TypedBusiness<AbstractIdentifiable> businessBean = businessInterfaceLocator.injectTypedByObject(anObject);
         if(businessBean==null){
             validationPolicy.validateDelete(anObject);
             return genericDao.delete(anObject);
@@ -137,7 +137,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	@SuppressWarnings("unchecked")
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public <T extends AbstractIdentifiable> T load(Class<T> aClass, Long identifier) {
-	    TypedBusiness<T> businessBean = (TypedBusiness<T>) BusinessLocator.getInstance().locate((Class<AbstractIdentifiable>) aClass);
+	    TypedBusiness<T> businessBean = (TypedBusiness<T>) BusinessInterfaceLocator.getInstance().injectTyped((Class<AbstractIdentifiable>) aClass);
 	    if(businessBean==null)
 	        return (T) use(aClass).find(identifier);
 	    else

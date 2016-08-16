@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.event.RepeatedEventBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.event.EventRepetition;

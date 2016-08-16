@@ -55,7 +55,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	}
 	
 	public <IDENTIFIABLE extends AbstractIdentifiable> IDENTIFIABLE oneFromDatabase(Class<IDENTIFIABLE> identifiableClass){
-		return BusinessLocator.getInstance().locate(identifiableClass).findOneRandomly();
+		return BusinessInterfaceLocator.getInstance().injectTyped(identifiableClass).findOneRandomly();
 	}
 	
 	public Person person(Boolean male,Country country,PhoneNumberType type,Boolean genSignature){

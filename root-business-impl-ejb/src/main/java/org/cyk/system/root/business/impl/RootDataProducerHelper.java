@@ -12,6 +12,9 @@ import java.util.Deque;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +33,6 @@ import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.geography.PostalBox;
-import org.cyk.system.root.model.geography.Website;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -59,9 +61,6 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.database.DatabaseUtils;
 import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
 import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {

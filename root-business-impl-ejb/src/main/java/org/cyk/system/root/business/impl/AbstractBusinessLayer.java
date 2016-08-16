@@ -81,7 +81,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	
 	@Inject protected ApplicationBusiness applicationBusiness;
 	@Inject protected GenericBusiness genericBusiness;
-    @Inject protected BusinessLocator businessLocator;
+    @Inject protected BusinessInterfaceLocator businessInterfaceLocator;
     @Inject protected BusinessManager businessManager;
     @Inject protected LanguageBusiness languageBusiness;
     @Inject @Getter protected JasperReportBusinessImpl reportBusiness;
@@ -101,7 +101,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
         id = this.getClass().getName();
         String systemName = StringUtils.split(this.getClass().getName(), Constant.CHARACTER_DOT)[3];
         registerResourceBundles(systemName);
-        registerTypedBusinessBean(businessLocator.getTypedBusinessBeanMap());
+        //registerTypedBusinessBean(businessInterfaceLocator.getTypedBusinessBeanMap());
         
         rootDataProducerHelper.setBasePackage(this.getClass().getPackage());
        
@@ -241,13 +241,13 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		logDebug(message);
 	}
 	protected void installObject(Integer identifier,String message,AbstractIdentifiable object){
-		installObject(identifier,message, businessLocator.locate(object),object);
+		installObject(identifier,message, businessInterfaceLocator.injectTypedByObject(object),object);
 	}
 	protected <T extends AbstractIdentifiable> void installObject(Integer identifier,TypedBusiness<T> business,T object){
 		installObject(identifier,"Instance of "+object.getClass().getSimpleName()+" created", business, object);
 	}
 	protected <T extends AbstractIdentifiable> void installObject(Integer identifier,AbstractIdentifiable object){
-		installObject(identifier,businessLocator.locate(object),object);
+		installObject(identifier,businessInterfaceLocator.injectTypedByObject(object),object);
 	}
 	
 	protected Permission createPermission(String code){

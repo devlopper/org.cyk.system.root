@@ -38,7 +38,6 @@ import org.cyk.system.root.business.api.file.ScriptVariableBusiness;
 import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.geography.ContactBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
-import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
@@ -212,7 +211,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	@Inject private LocationTypeBusiness locationTypeBusiness;
 	@Inject private LocalityBusiness localityBusiness;
 	@Inject private LocalityTypeBusiness localityTypeBusiness;
-	@Inject private CountryBusiness countryBusiness;
 	@Inject private TagBusiness tagBusiness;
 	@Inject private TagIdentifiableGlobalIdentifierBusiness tagIdentifiableGlobalIdentifierBusiness;
     @Inject private EventBusiness eventBusiness;
@@ -577,7 +575,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
         beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
-        beansMap.put((Class)Country.class, (TypedBusiness)countryBusiness);
+        //beansMap.put((Class)Country.class, (TypedBusiness)countryBusiness);
         beansMap.put((Class)ContactCollection.class, (TypedBusiness)contactCollectionBusiness);
         beansMap.put((Class)ElectronicMail.class, (TypedBusiness)electronicMailBusiness);
         beansMap.put((Class)PhoneNumber.class, (TypedBusiness)phoneNumberBusiness);
@@ -798,7 +796,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				
 				@Override
 				public <IDENTIFIABLE extends AbstractIdentifiable> TypedBusiness<IDENTIFIABLE> findBusiness(IDENTIFIABLE identifiable) {
-					return BusinessLocator.getInstance().locate(identifiable);
+					return BusinessInterfaceLocator.getInstance().injectTypedByObject(identifiable);
 				}
 				
 			}

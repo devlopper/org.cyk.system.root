@@ -17,9 +17,9 @@ public class BusinessIntegrationTestHelper {
     private static Package[] PACKAGES = {ExceptionUtils.class.getPackage()};
 
     //FIXME those classes are ignored. WHY 
-    private static Class<?>[] CLASSES = {ExceptionUtils.class,BusinessLocator.class,PersonValidator.class,FileValidator.class,
+    private static Class<?>[] CLASSES = {ExceptionUtils.class,PersonValidator.class,FileValidator.class,
     	RandomDataProvider.class,RootRandomDataProvider.class,ResourceProducer.class,Logger.class,RootReportRepository.class,RootDataProducerHelper.class
-    	,DatabaseUtils.class};
+    	,DatabaseUtils.class,BusinessInterfaceLocator.class};
     
     public static Package[] packages(){
         return PACKAGES;

@@ -15,11 +15,12 @@ import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 
-@Singleton @Deployment(initialisationType=InitialisationType.EAGER)
+@Singleton @Deployment(initialisationType=InitialisationType.EAGER) @Deprecated
 public class BusinessLocator extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = -6705685474869857841L;
 	private static BusinessLocator INSTANCE;
+	
     @Getter private final Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> typedBusinessBeanMap = new HashMap<>(); 
     
     @Override

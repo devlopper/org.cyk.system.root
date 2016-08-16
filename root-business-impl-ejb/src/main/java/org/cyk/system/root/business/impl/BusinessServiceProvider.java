@@ -34,7 +34,7 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 	
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractIdentifiable> TypedBusiness<T> getBusiness(Class<T> identifiableClass){
-		return (TypedBusiness<T>) BusinessLocator.getInstance().locate(identifiableClass);
+		return (TypedBusiness<T>) BusinessInterfaceLocator.getInstance().injectLocated(identifiableClass);
 	}
 	
 	public <T extends AbstractIdentifiable> Collection<T> find(Class<T> identifiableClass,final DataReadConfiguration configuration){
@@ -65,7 +65,7 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 		return value;
 	}
 	
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ })
 	public <T extends AbstractIdentifiable> Collection<T> findAll(Class<T> identifiableClass,final DataReadConfiguration configuration){
 		Collection<T> collection = ListenerUtils.getInstance().getCollection(getListeners(identifiableClass), new ListenerUtils.CollectionMethod<Identifiable<T>, T>(){
 			@Override
@@ -75,7 +75,7 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 		});
 		
 		if(collection==null){
-			TypedBusiness<T> business = (TypedBusiness<T>) BusinessLocator.getInstance().locate(identifiableClass);
+			TypedBusiness<T> business = (TypedBusiness<T>) BusinessInterfaceLocator.getInstance().injectTyped(identifiableClass);
 			if(business==null)
 				;
 			else
@@ -85,7 +85,6 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 		return collection;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <T extends AbstractIdentifiable> Long countAll(Class<T> identifiableClass,final DataReadConfiguration configuration){
 		Long value = ListenerUtils.getInstance().getLong(getListeners(identifiableClass), new ListenerUtils.LongMethod<Identifiable<T>>(){
 			@Override
@@ -95,7 +94,7 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 		});
 		
 		if(value==null){
-			TypedBusiness<T> business = (TypedBusiness<T>) BusinessLocator.getInstance().locate(identifiableClass);
+			TypedBusiness<T> business = (TypedBusiness<T>) BusinessInterfaceLocator.getInstance().injectTyped(identifiableClass);
 			if(business==null)
 				;
 			else
@@ -182,9 +181,8 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 					super(clazz);
 				}
 				
-				@SuppressWarnings("unchecked")
 				public TypedBusiness<T> getBusiness(){
-					return (TypedBusiness<T>) BusinessLocator.getInstance().locate(clazz);
+					return (TypedBusiness<T>) BusinessInterfaceLocator.getInstance().injectTyped(clazz);
 				}
 			}
 
