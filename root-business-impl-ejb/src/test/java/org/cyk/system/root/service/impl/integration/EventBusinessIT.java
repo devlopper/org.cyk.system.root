@@ -10,13 +10,9 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
-import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.EventReminder;
-import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.time.Period;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -102,13 +98,13 @@ public class EventBusinessIT extends AbstractBusinessIT {
         */
         
         Event event = event(oneHourPast, DateUtils.addMinutes(oneHourPast, 7));
-        
+        /*
         event.setContactCollection(new ContactCollection());
         event.getContactCollection().setPhoneNumbers(new ArrayList<PhoneNumber>());
         event.getContactCollection().getPhoneNumbers().add(RootRandomDataProvider.getInstance()
         		.phoneNumber(event.getContactCollection(),RootBusinessLayer.getInstance().getCountryCoteDivoire(),
         				RootBusinessLayer.getInstance().getLandPhoneNumberType()));
-        
+        */
         event.getEventParties().add(new EventParty(p1));
         event.getEventParties().add(new EventParty(p2));
         event.getEventParties().add(new EventParty(p3));

@@ -8,10 +8,10 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
+import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.person.Person;
@@ -20,6 +20,7 @@ import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
 import org.cyk.system.root.model.security.UserAccountSearchCriteria;
+import org.cyk.utility.common.CommonUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
@@ -72,7 +73,7 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	
     	UserAccountSearchCriteria criteria = new UserAccountSearchCriteria(null);
     	//System.out.println(RootBusinessLayer.getInstance().getAdministratorRole());
-    	criteria.getRoleExcluded().add(RootBusinessLayer.getInstance().getRoleAdministrator());
+    	criteria.getRoleExcluded().add(CommonUtils.getInstance().inject(RoleBusiness.class).find(Role.ADMINISTRATOR));
     	
     	/*System.out.println(userAccountBusiness.findAll());
     	System.out.println(userAccountBusiness.findAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole())));
@@ -98,15 +99,15 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	
     	//System.out.println(RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().findAll());
     	
-    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getRoleUser(),u1));
-    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getRoleUser(),u2));
+    	create(new RoleUniformResourceLocator(CommonUtils.getInstance().inject(RoleBusiness.class).find(Role.USER),u1));
+    	create(new RoleUniformResourceLocator(CommonUtils.getInstance().inject(RoleBusiness.class).find(Role.USER),u2));
     	
-    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getRoleAdministrator(),u1));
-    	create(new RoleUniformResourceLocator(RootBusinessLayer.getInstance().getRoleAdministrator(),u3));
+    	create(new RoleUniformResourceLocator(CommonUtils.getInstance().inject(RoleBusiness.class).find(Role.ADMINISTRATOR),u1));
+    	create(new RoleUniformResourceLocator(CommonUtils.getInstance().inject(RoleBusiness.class).find(Role.ADMINISTRATOR),u3));
     	
-    	isUrlAccessible("/path",Boolean.FALSE,Boolean.FALSE, RootBusinessLayer.getInstance().getRoleUser());
-    	isUrlAccessible("/a",Boolean.TRUE,Boolean.TRUE, RootBusinessLayer.getInstance().getRoleUser());
-    	isUrlAccessible("/a/1",Boolean.TRUE,Boolean.FALSE, RootBusinessLayer.getInstance().getRoleUser());
+    	isUrlAccessible("/path",Boolean.FALSE,Boolean.FALSE, CommonUtils.getInstance().inject(RoleBusiness.class).find(Role.USER));
+    	isUrlAccessible("/a",Boolean.TRUE,Boolean.TRUE, CommonUtils.getInstance().inject(RoleBusiness.class).find(Role.USER));
+    	isUrlAccessible("/a/1",Boolean.TRUE,Boolean.FALSE, CommonUtils.getInstance().inject(RoleBusiness.class).find(Role.USER));
     	
     	//System.out.println(RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().findAll());
     }

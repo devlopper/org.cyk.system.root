@@ -20,6 +20,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.business.api.geography.CountryBusiness;
+import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
+import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.model.AbstractCollection;
@@ -31,6 +34,7 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.geography.PostalBox;
@@ -249,20 +253,20 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	
 	public PhoneNumber addPhoneNumber(ContactCollection collection,PhoneNumberType type,String number){
-		return addPhoneNumber(collection,RootBusinessLayer.getInstance().getCountryCoteDivoire(), type, number);
+		return addPhoneNumber(collection,inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), type, number);
 	}
 	public PhoneNumber addLandPhoneNumber(ContactCollection collection,String number){
-		return addPhoneNumber(collection,RootBusinessLayer.getInstance().getCountryCoteDivoire(), RootBusinessLayer.getInstance().getLandPhoneNumberType(), number);
+		return addPhoneNumber(collection,inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), inject(PhoneNumberTypeBusiness.class).find(PhoneNumberType.LAND), number);
 	}
 	public PhoneNumber addMobilePhoneNumber(ContactCollection collection,String number){
-		return addPhoneNumber(collection,RootBusinessLayer.getInstance().getCountryCoteDivoire(), RootBusinessLayer.getInstance().getMobilePhoneNumberType(), number);
+		return addPhoneNumber(collection,inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), inject(PhoneNumberTypeBusiness.class).find(PhoneNumberType.MOBILE), number);
 	}
 	public void addContacts(ContactCollection collection,String[] addresses,String[] landNumbers,String[] mobileNumbers,String[] postalBoxes,String[] emails,String[] websites){
 		if(addresses!=null)
 			for(String address : addresses){
-				Location location = new Location(collection, RootBusinessLayer.getInstance().getCountryCoteDivoire().getLocality());
+				Location location = new Location(collection, inject(CountryBusiness.class).find(Country.COTE_DIVOIRE).getLocality());
 				location.setOtherDetails(address);
-				location.setType(RootBusinessLayer.getInstance().getOfficeLocationType());
+				location.setType(inject(LocationTypeBusiness.class).find(LocationType.OFFICE));
 				if(collection.getLocations()==null)
 					collection.setLocations(new ArrayList<Location>());
 				collection.getLocations().add(location);

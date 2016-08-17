@@ -39,6 +39,8 @@ public class Country extends AbstractIdentifiable implements Serializable{
 	public Country(Locality locality, Integer phoneNumberCode) {
 		super();
 		this.locality = locality;
+		setCode(locality.getCode());
+		setName(locality.getName());
 		this.phoneNumberCode = phoneNumberCode;
 	}
 	

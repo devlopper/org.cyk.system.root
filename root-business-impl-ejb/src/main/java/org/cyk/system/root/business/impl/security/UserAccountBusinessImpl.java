@@ -16,9 +16,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.UserSessionBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Notification;
@@ -100,7 +100,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	public Collection<UserAccount> findByCriteria(UserAccountSearchCriteria criteria) {
 		Collection<UserAccount> userAccounts;
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
-			userAccounts = dao.readAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getRoleAdministrator()));
+			userAccounts = dao.readAllExcludeRoles(Arrays.asList(inject(RoleBusiness.class).find(Role.ADMINISTRATOR)));
 		else
 			userAccounts = dao.readByCriteria(criteria);
 		for(UserAccount userAccount : userAccounts)
@@ -111,7 +111,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER) //@Secure 
 	public Long countByCriteria(UserAccountSearchCriteria criteria) {
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
-			return dao.countAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getRoleAdministrator()));
+			return dao.countAllExcludeRoles(Arrays.asList(inject(RoleBusiness.class).find(Role.ADMINISTRATOR)));
 		return dao.countByCriteria(criteria);
 	}
 	

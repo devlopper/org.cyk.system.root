@@ -24,9 +24,6 @@ import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
-import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
-import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
-import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
@@ -71,7 +68,6 @@ import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
-import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
@@ -100,12 +96,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private final String parameterFromDate = "fd"; 
 	private final String parameterToDate = "td"; 
 	
-	private PhoneNumberType landPhoneNumberType,mobilePhoneNumberType;
-	private LocationType homeLocationType,officeLocationType;
-	private LocalityType countryLocalityType,cityLocalityType,continentLocalityType;
-	private Country countryCoteDivoire;
-	private Role roleAdministrator,roleManager,roleSettingManager,roleSecurityManager,roleUser;
-	//private TimeDivisionType timeDivisionTypeYear,timeDivisionTypeTrimester,timeDivisionTypeSemester,timeDivisionTypeDay;
+	//private Role roleAdministrator,roleManager,roleSettingManager,roleSecurityManager,roleUser;
 	
     @Inject private PersonValidator personValidator;
     @Inject private FileValidator fileValidator;
@@ -322,8 +313,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         create(new Locality(null, continent, "Amerique"));
         create(new Locality(null, continent, "Europe"));
         
-        create(countryCoteDivoire = new Country(new Locality(afrique, country,Country.COTE_DIVOIRE, "Cote d'Ivoire"),225));
-        create(new Locality(afrique, country, "Benin"));
+        create(new Country(new Locality(afrique, country,Country.COTE_DIVOIRE, "Côte d'Ivoire"),225));
+        create(new Locality(afrique, country, "Bénin"));
         
         create(new PhoneNumberType(PhoneNumberType.LAND, "Fixe"));
         create(new PhoneNumberType(PhoneNumberType.MOBILE, "Mobile"));
@@ -473,7 +464,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	if(application!=null)
     		applicationIdentifier = application.getIdentifier();
     	//application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
-        
+        /*
     	landPhoneNumberType = inject(PhoneNumberTypeBusiness.class).findByGlobalIdentifierCode(PhoneNumberType.LAND);
     	mobilePhoneNumberType = inject(PhoneNumberTypeBusiness.class).findByGlobalIdentifierCode(PhoneNumberType.MOBILE);
     	
@@ -484,12 +475,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	countryLocalityType = inject(LocalityTypeBusiness.class).findByGlobalIdentifierCode(LocalityType.COUNTRY);
     	continentLocalityType = inject(LocalityTypeBusiness.class).findByGlobalIdentifierCode(LocalityType.CONTINENT);
     	cityLocalityType = inject(LocalityTypeBusiness.class).findByGlobalIdentifierCode(LocalityType.CITY);
-    	
+    	*/
+    	/*
     	roleAdministrator = getEnumeration(Role.class,Role.ADMINISTRATOR);
     	roleManager = getEnumeration(Role.class,Role.MANAGER);
     	roleSettingManager = getEnumeration(Role.class,Role.SETTING_MANAGER);
     	roleSecurityManager = getEnumeration(Role.class,Role.SECURITY_MANAGER);
     	roleUser = getEnumeration(Role.class,Role.USER);
+    	*/
     	/*
     	timeDivisionTypeDay = getEnumeration(TimeDivisionType.class,TimeDivisionType.DAY);
     	timeDivisionTypeTrimester = getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER);

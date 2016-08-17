@@ -11,6 +11,9 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.geography.CountryBusiness;
+import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
+import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
@@ -18,6 +21,7 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.party.person.AbstractActor;
@@ -100,8 +104,8 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	}
 	
 	public Person person(){
-		return person(randomDataProvider.randomBoolean(), rootBusinessLayer().getCountryCoteDivoire(), 
-				rootBusinessLayer().getLandPhoneNumberType(),Boolean.TRUE);
+		return person(randomDataProvider.randomBoolean(), inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), 
+				inject(PhoneNumberTypeBusiness.class).find(PhoneNumberType.LAND),Boolean.TRUE);
 	}
 	
 	public void createPerson(Integer count){
@@ -134,7 +138,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	}
 	
 	public PhoneNumber phoneNumber(ContactCollection contactCollection){
-		return phoneNumber(contactCollection, rootBusinessLayer().getCountryCoteDivoire(), rootBusinessLayer().getLandPhoneNumberType());
+		return phoneNumber(contactCollection, inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), inject(PhoneNumberTypeBusiness.class).find(PhoneNumberType.LAND));
 	}
 	
 	public ElectronicMail email(ContactCollection contactCollection){
@@ -150,8 +154,8 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		Location location = new Location();
 		location.setCollection(contactCollection);
 		location.setOtherDetails(randomDataProvider.randomWord(RandomDataProvider.WORD_LOCATION, 5, 10));
-		location.setLocality(rootBusinessLayer().getCountryCoteDivoire().getLocality());
-		location.setType(rootBusinessLayer().getHomeLocationType());
+		location.setLocality(inject(CountryBusiness.class).find(Country.COTE_DIVOIRE).getLocality());
+		location.setType(inject(LocationTypeBusiness.class).find(LocationType.HOME));
 		if(contactCollection!=null)
 			contactCollection.getLocations().add(location);
 		return location; 
