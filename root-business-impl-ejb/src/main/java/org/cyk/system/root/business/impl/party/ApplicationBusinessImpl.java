@@ -26,7 +26,6 @@ import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.ApplicationPropertiesProvider;
 import org.cyk.system.root.business.api.security.LicenseBusiness;
-import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.ShiroConfigurator;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
@@ -139,7 +138,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		
 		//Super User : The one who use the system
 		
-		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(inject(RoleBusiness.class).find(Role.ADMINISTRATOR))));
+		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(inject(RoleDao.class).read(Role.ADMINISTRATOR))));
 		//managerAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
 		
 		userAccountBusiness.create(managerAccount);

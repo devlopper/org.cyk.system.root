@@ -4,9 +4,7 @@ import java.io.Serializable;
 
 import javax.inject.Singleton;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.ClassLocator;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -32,11 +30,19 @@ public class PersistenceInterfaceLocator extends ClassLocator implements Seriali
 			}
 		};
 		
-		listener.setGetNameMethod(new AbstractMethod<String, Class<?>>() {
+		listener.setGetNameMethod(new Listener.AbstractGetOrgCykSystem() {
 			private static final long serialVersionUID = -7213562588417233353L;
 			@Override
-			protected String __execute__(Class<?> aClass) {
-				return "org.cyk.system.root.persistence.api."+StringUtils.substringAfter(aClass.getName(), ".model.")+"Dao";
+			protected String getBaseClassPackageName() {
+				return "model";
+			}
+			@Override
+			protected String getModulePrefix() {
+				return "persistence.api";
+			}
+			@Override
+			protected String getModuleSuffix() {
+				return "Dao";
 			}
 			
 		});
