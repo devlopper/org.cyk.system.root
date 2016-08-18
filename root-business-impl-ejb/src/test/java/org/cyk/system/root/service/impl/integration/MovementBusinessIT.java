@@ -1,5 +1,10 @@
 package org.cyk.system.root.service.impl.integration;
 
+import java.math.BigDecimal;
+
+import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
+import org.cyk.system.root.model.mathematics.IntervalExtremity;
+import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.junit.Test;
 
@@ -7,19 +12,27 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
 
-    private String movementUnlimitedIdentifier="CASHIER001",movementLimitedIdentifier="CASHIER002";
+    private String movementUnlimitedIdentifier="MU",movementLimitedIdentifier="ML",movementOnlyUnlimitedIdentifier="MOL"
+    		,movementUpdatesUnlimitedIdentifier="MUPL";
+    private Movement movement;
     
     @Override
     protected void populate() {
     	super.populate();
-    	MovementCollection  movementCollection = new MovementCollection();
-    	rootBusinessTestHelper.set(movementCollection, movementUnlimitedIdentifier,"Le stock","0", null, null,"Entrée","Sortie");
+    	MovementCollection  movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementUnlimitedIdentifier, "IN", "OUT");
+    	movementCollection.getInterval().getLow().setValue(null);
     	create(movementCollection);
     	
-    	movementCollection = new MovementCollection();
-    	rootBusinessTestHelper.set(movementCollection, movementLimitedIdentifier,"Montant de caisse", "0","0", "100","Dépot","Retrait");
+    	movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementOnlyUnlimitedIdentifier, "IN", "OUT");
+    	movementCollection.getInterval().getLow().setValue(null);
+    	create(movementCollection);
+    	movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementUpdatesUnlimitedIdentifier, "IN", "OUT");
+    	movementCollection.getInterval().getLow().setValue(null);
     	create(movementCollection);
     	
+    	movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementLimitedIdentifier, "IN", "OUT");
+    	movementCollection.getInterval().setHigh(new IntervalExtremity(new BigDecimal("100")));
+    	create(movementCollection);
     }
     
     @Override
@@ -29,7 +42,32 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "300000");
     	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "-80000", "220000");
     	
-    	rootBusinessTestHelper.createMovement(movementLimitedIdentifier, "99", "99");
+    	
+    }
+    
+    @Test
+    public void doMovementsAndUpdates(){
+    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "15", "15");
+    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "10", "25");
+    	movement = rootBusinessTestHelper.updateMovement(movement,"6", "21");
+    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "1", "22");
+    	movement = rootBusinessTestHelper.updateMovement(movement, "10", "31");
+    	movement = rootBusinessTestHelper.updateMovement(movement, "15", "36");
+    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "4", "40");
+    	movement = rootBusinessTestHelper.updateMovement(movement, "-36", "0");
+    	movement = rootBusinessTestHelper.updateMovement(movement, "1", "37");
+    }
+    
+    @Test
+    public void doMovementsOnly(){
+    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "1", "1");
+    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "1", "2");
+    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "1", "3");
+    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "10", "13");
+    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "13", "26");
+    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "-20", "6");
+    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "100", "106");
+    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "-200", "-94");
     }
     
     /* Exceptions */

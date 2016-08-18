@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
+import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
@@ -38,28 +39,44 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			movement.setSupportingDocumentIdentifier(null);
 		exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier())!=null, "exception.supportingDocumentIdentifierAlreadyUsed");
 		MovementAction action = movement.getAction();	
-		BigDecimal increment = movement.getValue();
 		if(action!=null){
-			exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && increment.signum()==-1, "exception.value.mustbepositive");
-			exceptionUtils().exception(movement.getCollection().getDecrementAction().equals(action) && increment.signum()==1, "exception.value.mustbenegative");
-			exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(increment.abs())>0
+			exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && movement.getValue().signum()==-1, "exception.value.mustbepositive");
+			exceptionUtils().exception(movement.getCollection().getDecrementAction().equals(action) && movement.getValue().signum()==1, "exception.value.mustbenegative");
+			exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(movement.getValue().abs())>0
 					, action.getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
 		}
+		updateCollection(movement);
+		if(movement.getBirthDate()==null)
+			movement.setBirthDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
+		movement =  super.create(movement);
+		logIdentifiable("Created", movement);
+		return movement;
+	}
+	
+	private void updateCollection(Movement movement){
 		//BigDecimal increment = movement.getValue();
 		BigDecimal current = movement.getCollection().getValue();
-		Boolean positive = increment.signum() == 0 ? null : increment.signum() == 1 ;
+		Boolean positive = movement.getValue().signum() == 0 ? null : movement.getValue().signum() == 1 ;
 		BigDecimal sign = new BigDecimal((Boolean.TRUE.equals(positive) ? Constant.EMPTY_STRING:"-")+"1");
-		exceptionUtils().comparison(positive==null || increment.multiply(sign).signum() <= 0, action==null?Constant.EMPTY_STRING:action.getName(), ArithmeticOperator.GT, BigDecimal.ZERO);
-		logTrace("Current value = {}. {} = {} ", current,action==null?Constant.EMPTY_STRING:action.getName(),increment);
+		exceptionUtils().comparison(positive==null || movement.getValue().multiply(sign).signum() <= 0, movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName(), ArithmeticOperator.GT, BigDecimal.ZERO);
+		logTrace("Current value = {}. {} = {} ", current,movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName(),movement.getValue());
 		if(current!=null){
-			current = current.add(increment);
+			if(movement.getIdentifier()==null)
+				current = current.add(movement.getValue());
+			else{
+				Movement oldMovement = dao.read(movement.getIdentifier());
+				current = current.add(oldMovement.getValue().negate()).add(movement.getValue());
+			}
 			exceptionUtils().comparisonBetween(current,movement.getCollection().getInterval(), movement.getCollection().getName());
 			movement.getCollection().setValue(current);
 		}
 		movementCollectionDao.update(movement.getCollection());
-		movement =  super.create(movement);
-		logIdentifiable("Created", movement);
-		return movement;
+	}
+	
+	@Override
+	public Movement update(Movement movement) {
+		updateCollection(movement);
+		return super.update(movement);
 	}
 	
 	@Override
@@ -79,7 +96,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		return movement;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Movement instanciateOne(MovementCollection movementCollection,String value) {
 		BigDecimal bigDecimal = new BigDecimal(value);
 		Movement movement = instanciateOne(movementCollection, bigDecimal.compareTo(BigDecimal.ZERO) >= 0);

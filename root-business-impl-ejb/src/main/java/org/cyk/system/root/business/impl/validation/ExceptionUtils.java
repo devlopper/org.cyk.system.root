@@ -89,9 +89,11 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     }
     
     public void comparisonBetween(BigDecimal value,Interval interval,String valueName){
-    	exception(interval!=null && !inject(IntervalBusiness.class).contains(interval, value, 2) , "exception.comparison.between",new Object[]{valueName
-    			,inject(NumberBusiness.class).format(interval.getLow().getValue())
-    			,inject(NumberBusiness.class).format(interval.getHigh().getValue())});
+    	if(interval==null)
+    		return;
+    	exception(!inject(IntervalBusiness.class).contains(interval, value, 2) , "exception.comparison.between",new Object[]{valueName
+    		,inject(NumberBusiness.class).format(interval.getLow().getValue())
+    		,inject(NumberBusiness.class).format(interval.getHigh().getValue())});
 	}
     
     public void comparison(Boolean condition,String operand1,ArithmeticOperator operator,String operand2){

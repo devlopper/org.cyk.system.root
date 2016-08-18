@@ -15,8 +15,12 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
@@ -58,9 +62,6 @@ import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -387,7 +388,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	/* Businesses */
 	
-	public void createMovement(String movementCollectionCode,String value,String expectedValue,String expectedThrowableMessage){
+	public Movement createMovement(String movementCollectionCode,String value,String expectedValue,String expectedThrowableMessage){
     	final Movement movement = new Movement();
     	set(movement,movementCollectionCode, value);
     	
@@ -400,9 +401,29 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     		inject(MovementBusiness.class).create(movement);
     		assertMovementCollection(movement.getCollection(), expectedValue);
     	}
+    	return movement;
     }
-	public void createMovement(String movementCollectionCode,String value,String expectedValue){
-		createMovement(movementCollectionCode,value, expectedValue,null);
+	public Movement createMovement(String movementCollectionCode,String value,String expectedValue){
+		return createMovement(movementCollectionCode,value, expectedValue,null);
+	}
+	
+	public Movement updateMovement(Movement movement,String value,String expectedValue,String expectedThrowableMessage){
+		movement.setValue(new BigDecimal(value));
+		final Movement pMovement = movement;
+    	
+    	if(expectedThrowableMessage!=null){
+    		new Try(expectedThrowableMessage){ 
+    			private static final long serialVersionUID = -8176804174113453706L;
+    			@Override protected void code() {inject(MovementBusiness.class).update(pMovement);}
+    		}.execute();
+    	}else{
+    		inject(MovementBusiness.class).update(pMovement);
+    		assertMovementCollection(pMovement.getCollection(), expectedValue);
+    	}
+    	return pMovement;
+    }
+	public Movement updateMovement(Movement movement,String value,String expectedValue){
+		return updateMovement(movement,value, expectedValue,null);
 	}
 	
 	public void readFiniteStateMachine(String machineCode,String alphabetCode,String expectedStateCode){
@@ -486,23 +507,24 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	
 	private String getThrowableMessage(String movementCollectionCode,Boolean increment,Integer actionId){
-		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode);
+		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);
 		MovementAction action = Boolean.TRUE.equals(increment) ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction();
+		String message = Constant.EMPTY_STRING,movementCollectionName=WordUtils.capitalizeFully(movementCollection.getName()),actionName = WordUtils.capitalizeFully(action.getName());
 		if(actionId==0)
-			return String.format("%s doit être supérieur à %s",action.getName(),action.getInterval().getLow().getValue());
+			message = String.format("%s doit être supérieur à %s",actionName,action.getInterval().getLow().getValue());
 		
 		if(actionId==1)
-			return String.format("%s doit être supérieur à %s",action.getName(),action.getInterval().getLow().getValue());
+			message = String.format("%s doit être supérieur à %s",actionName,action.getInterval().getLow().getValue());
 		
 		if(actionId==2)
-			return String.format("%s doit être inférieur à %",action.getName(),action.getInterval().getHigh().getValue());
+			message = String.format("%s doit être inférieur à %",actionName,action.getInterval().getHigh().getValue());
 		
 		if(actionId==3)
-			return String.format("%s doit être entre %s et %s",/*action.getName()*/ movementCollection.getName()
+			message = String.format("%s doit être entre %s et %s",movementCollectionName 
 				,inject(NumberBusiness.class).format(movementCollection.getInterval().getLow().getValue())
 				,inject(NumberBusiness.class).format(movementCollection.getInterval().getHigh().getValue()));
 		
-		return Constant.EMPTY_STRING;
+		return message;
 	}
 	
 	private Boolean isIncrementAction(String value){
