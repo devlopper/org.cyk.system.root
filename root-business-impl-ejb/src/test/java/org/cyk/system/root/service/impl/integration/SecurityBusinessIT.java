@@ -118,10 +118,10 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
-    	assertThat("Path "+path+" is accessible", BusinessInterfaceLocator.inject(UniformResourceLocatorBusiness.class).isAccessible(_url).equals(byApplication));
+    	assertThat("Path "+path+" is accessible", inject(UniformResourceLocatorBusiness.class).isAccessible(_url).equals(byApplication));
     	if(roles!=null && roles.length>0)
     		assertThat("Path "+path+" is accessible by "+StringUtils.join(roles,",")
-    			, BusinessInterfaceLocator.inject(RoleUniformResourceLocatorBusiness.class).isAccessible(_url,Arrays.asList(roles)).equals(byRole));
+    			, inject(RoleUniformResourceLocatorBusiness.class).isAccessible(_url,Arrays.asList(roles)).equals(byRole));
     }
     
     

@@ -97,10 +97,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	//private Role roleAdministrator,roleManager,roleSettingManager,roleSecurityManager,roleUser;
 	
-    @Inject private PersonValidator personValidator;
+    /*@Inject private PersonValidator personValidator;
     @Inject private FileValidator fileValidator;
     @Inject private RootReportRepository reportRepository;
-    
+    */
     @Inject private RootBusinessTestHelper rootBusinessTestHelper;
     //@Inject private ApplicationDao applicationDao;
     
@@ -210,8 +210,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         applicationBusiness.registerValueGenerator((ValueGenerator<?, ?>) new StringValueGenerator<Party>(
         		ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER,ValueGenerator.GLOBAL_IDENTIFIER_CODE_DESCRIPTION, Party.class));
         
-        registerValidator(Person.class, personValidator);
-        registerValidator(File.class, fileValidator);
+        registerValidator(Person.class, inject(PersonValidator.class));
+        registerValidator(File.class, inject(FileValidator.class));
         
         ValueGenerator<AbstractIdentifiable,String> globalIdentifierCodeGenerator = (ValueGenerator<AbstractIdentifiable, String>) 
         		inject(ApplicationBusiness.class).findValueGenerator(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER);
@@ -277,7 +277,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     @Override
     protected AbstractReportRepository getReportRepository() {
-    	return reportRepository;
+    	return inject(RootReportRepository.class);
     }
     
     @Override

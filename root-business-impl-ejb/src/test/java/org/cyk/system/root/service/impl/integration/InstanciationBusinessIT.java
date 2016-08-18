@@ -18,7 +18,6 @@ import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfManyFromValuesArguments;
 import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfOneFromValuesArguments;
-import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -142,15 +141,15 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     @Test
     public void uniformResourceLocator(){
     	assertEquals("/private/__dynamic__/crud/crudone.jsf?clazz=Person&crud=create",
-    			BusinessInterfaceLocator.inject(UniformResourceLocatorBusiness.class).instanciateOneCrudOne(Person.class, Crud.CREATE, null).toString());
+    			inject(UniformResourceLocatorBusiness.class).instanciateOneCrudOne(Person.class, Crud.CREATE, null).toString());
     	assertEquals("/private/__dynamic__/crud/crudone.jsf?clazz=Person&crud=read",
-    			BusinessInterfaceLocator.inject(UniformResourceLocatorBusiness.class).instanciateOneCrudOne(Person.class, Crud.READ, null).toString());
+    			inject(UniformResourceLocatorBusiness.class).instanciateOneCrudOne(Person.class, Crud.READ, null).toString());
     	assertEquals("/private/__dynamic__/crud/crudone.jsf?clazz=Person&crud=update",
-    			BusinessInterfaceLocator.inject(UniformResourceLocatorBusiness.class).instanciateOneCrudOne(Person.class, Crud.UPDATE, null).toString());
+    			inject(UniformResourceLocatorBusiness.class).instanciateOneCrudOne(Person.class, Crud.UPDATE, null).toString());
     	assertEquals("/private/__dynamic__/crud/crudone.jsf?clazz=Person&crud=delete",
-    			BusinessInterfaceLocator.inject(UniformResourceLocatorBusiness.class).instanciateOneCrudOne(Person.class, Crud.DELETE, null).toString());
+    			inject(UniformResourceLocatorBusiness.class).instanciateOneCrudOne(Person.class, Crud.DELETE, null).toString());
     	
-    	System.out.println(StringUtils.join(BusinessInterfaceLocator.inject(UniformResourceLocatorBusiness.class).instanciateManyBusinessCrud(Person.class, true, true, true, null,null, null),"\r\n"));
+    	System.out.println(StringUtils.join(inject(UniformResourceLocatorBusiness.class).instanciateManyBusinessCrud(Person.class, true, true, true, null,null, null),"\r\n"));
     }
 
 }
