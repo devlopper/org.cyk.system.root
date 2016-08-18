@@ -6,13 +6,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -63,8 +65,8 @@ import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
+import org.cyk.system.root.model.security.BusinessServiceCollection;
 import org.cyk.system.root.model.security.Role;
-import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
@@ -76,9 +78,6 @@ import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
@@ -213,13 +212,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         registerValidator(Person.class, personValidator);
         registerValidator(File.class, fileValidator);
-        
-        /*
-        String systemName = StringUtils.split(this.getClass().getName(), '.')[3];
-        registerResourceBundle("org.cyk.system."+systemName+".model.resources.entity", getClass().getClassLoader());
-		registerResourceBundle("org.cyk.system."+systemName+".model.resources.message", getClass().getClassLoader());
-		registerResourceBundle("org.cyk.system."+systemName+".business.impl.resources.message", getClass().getClassLoader());
-        */
         
         ValueGenerator<AbstractIdentifiable,String> globalIdentifierCodeGenerator = (ValueGenerator<AbstractIdentifiable, String>) 
         		inject(ApplicationBusiness.class).findValueGenerator(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER);
@@ -400,62 +392,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createRole(Role.SECURITY_MANAGER, "Security Manager");
         createRole(Role.USER, "User",SHIRO_PRIVATE_FOLDER);
         
-    }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public void registerTypedBusinessBean(Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> beansMap) {
-        /*beansMap.put((Class)Event.class, (TypedBusiness)eventBusiness);
-        beansMap.put((Class)EventParty.class, (TypedBusiness)eventPartyBusiness);
-        beansMap.put((Class)EventMissed.class, (TypedBusiness)eventMissedBusiness);
-        beansMap.put((Class)EventMissedReason.class, (TypedBusiness)eventMissedReasonBusiness);*/
-        
-        //beansMap.put((Class)Person.class, (TypedBusiness)personBusiness);
-        
-        //beansMap.put((Class)LocalityType.class, (TypedBusiness)localityTypeBusiness);
-        //beansMap.put((Class)Locality.class, (TypedBusiness)localityBusiness);
-        //beansMap.put((Class)Country.class, (TypedBusiness)countryBusiness);
-        //beansMap.put((Class)ContactCollection.class, (TypedBusiness)contactCollectionBusiness);
-        //beansMap.put((Class)ElectronicMail.class, (TypedBusiness)electronicMailBusiness);
-        //beansMap.put((Class)PhoneNumber.class, (TypedBusiness)phoneNumberBusiness);
-        
-        
-        //beansMap.put((Class)Tag.class, (TypedBusiness)tagBusiness);
-        //beansMap.put((Class)TagIdentifiableGlobalIdentifier.class, (TypedBusiness)tagIdentifiableGlobalIdentifierBusiness);
-        //beansMap.put((Class)UserAccount.class, (TypedBusiness)userAccountBusiness);
-        //beansMap.put((Class)StringGenerator.class, (TypedBusiness)stringGeneratorBusiness);
-        beansMap.put((Class)RoleSecuredView.class, (TypedBusiness)roleSecuredViewBusiness);
-        /*beansMap.put((Class)JobTitle.class, (TypedBusiness)jobTitleBusiness);
-        beansMap.put((Class)PersonTitle.class, (TypedBusiness)personTitleBusiness);
-        beansMap.put((Class)JobFunction.class, (TypedBusiness)jobFunctionBusiness);*/
-        //beansMap.put((Class)IntervalCollection.class, (TypedBusiness)intervalCollectionBusiness);
-        //beansMap.put((Class)Interval.class, (TypedBusiness)intervalBusiness);
-        /*beansMap.put((Class)MetricCollection.class, (TypedBusiness)metricCollectionBusiness);
-        beansMap.put((Class)Metric.class, (TypedBusiness)metricBusiness);
-        beansMap.put((Class)UniformResourceLocator.class, (TypedBusiness)uniformResourceLocatorBusiness);
-        beansMap.put((Class)UniformResourceLocatorParameter.class, (TypedBusiness)uniformResourceLocatorParameterBusiness);
-        beansMap.put((Class)RoleUniformResourceLocator.class, (TypedBusiness)roleUniformResourceLocatorBusiness);*/
-        //beansMap.put((Class)Role.class, (TypedBusiness)roleBusiness);
-        //beansMap.put((Class)License.class, (TypedBusiness)licenseBusiness);
-        /*beansMap.put((Class)MovementCollection.class, (TypedBusiness)movementCollectionBusiness);
-        beansMap.put((Class)Movement.class, (TypedBusiness)movementBusiness);
-        beansMap.put((Class)MovementAction.class, (TypedBusiness)movementActionBusiness);*/
-        //beansMap.put((Class)FiniteStateMachineState.class, (TypedBusiness)finiteStateMachineStateBusiness);
-        //beansMap.put((Class)FiniteStateMachineStateLog.class, (TypedBusiness)finiteStateMachineStateLogBusiness);
-        //beansMap.put((Class)NestedSetNode.class, (TypedBusiness)nestedSetNodeBusiness);
-        //beansMap.put((Class)Comment.class, (TypedBusiness)commentBusiness);
-        
-        /*beansMap.put((Class)DataTree.class, (TypedBusiness)dataTreeBusiness);
-        beansMap.put((Class)DataTreeType.class, (TypedBusiness)dataTreeTypeBusiness);
-        beansMap.put((Class)DataTreeIdentifiableGlobalIdentifier.class, (TypedBusiness)dataTreeIdentifiableGlobalIdentifierBusiness);
-        */
-        beansMap.put((Class)Application.class, (TypedBusiness)applicationBusiness);
-        //beansMap.put((Class)Sex.class, (TypedBusiness)sexBusiness);
-        
-        beansMap.put((Class)File.class, (TypedBusiness)fileBusiness);
-        //beansMap.put((Class)FileIdentifiableGlobalIdentifier.class, (TypedBusiness)fileIdentifiableGlobalIdentifierBusiness);
-        //beansMap.put((Class)Script.class, (TypedBusiness)scriptBusiness);
-        //beansMap.put((Class)ScriptVariable.class, (TypedBusiness)scriptVariableBusiness);
+        for(String code : new String[]{BusinessServiceCollection.EVENT,BusinessServiceCollection.FILE,BusinessServiceCollection.GEOGRAPHY
+        		,BusinessServiceCollection.INFORMATION,BusinessServiceCollection.LANGUAGE,BusinessServiceCollection.MATHEMATICS,BusinessServiceCollection.MESSAGE
+        		,BusinessServiceCollection.NETWORK,BusinessServiceCollection.PARTY,BusinessServiceCollection.SECURITY,BusinessServiceCollection.TIME
+        		,BusinessServiceCollection.TREE})
+        	createEnumeration(BusinessServiceCollection.class,code);
     }
     
     @Override
@@ -463,42 +404,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	Application application = inject(ApplicationDao.class).select().one();
     	if(application!=null)
     		applicationIdentifier = application.getIdentifier();
-    	//application = applicationDao.select().one(); //applicationBusiness.findCurrentInstance();
-        /*
-    	landPhoneNumberType = inject(PhoneNumberTypeBusiness.class).findByGlobalIdentifierCode(PhoneNumberType.LAND);
-    	mobilePhoneNumberType = inject(PhoneNumberTypeBusiness.class).findByGlobalIdentifierCode(PhoneNumberType.MOBILE);
     	
-    	homeLocationType = inject(LocationTypeBusiness.class).findByGlobalIdentifierCode(LocationType.HOME);
-    	officeLocationType = inject(LocationTypeBusiness.class).findByGlobalIdentifierCode(LocationType.OFFICE);
-    	
-    	countryCoteDivoire = inject(CountryDao.class).readByCode(Country.COTE_DIVOIRE);
-    	countryLocalityType = inject(LocalityTypeBusiness.class).findByGlobalIdentifierCode(LocalityType.COUNTRY);
-    	continentLocalityType = inject(LocalityTypeBusiness.class).findByGlobalIdentifierCode(LocalityType.CONTINENT);
-    	cityLocalityType = inject(LocalityTypeBusiness.class).findByGlobalIdentifierCode(LocalityType.CITY);
-    	*/
-    	/*
-    	roleAdministrator = getEnumeration(Role.class,Role.ADMINISTRATOR);
-    	roleManager = getEnumeration(Role.class,Role.MANAGER);
-    	roleSettingManager = getEnumeration(Role.class,Role.SETTING_MANAGER);
-    	roleSecurityManager = getEnumeration(Role.class,Role.SECURITY_MANAGER);
-    	roleUser = getEnumeration(Role.class,Role.USER);
-    	*/
-    	/*
-    	timeDivisionTypeDay = getEnumeration(TimeDivisionType.class,TimeDivisionType.DAY);
-    	timeDivisionTypeTrimester = getEnumeration(TimeDivisionType.class,TimeDivisionType.TRIMESTER);
-    	timeDivisionTypeSemester = getEnumeration(TimeDivisionType.class,TimeDivisionType.SEMESTER);
-    	timeDivisionTypeYear = getEnumeration(TimeDivisionType.class,TimeDivisionType.YEAR);
-    	*/
-    	/*
-    	anniversaryEventType = getEnumeration(EventType.class,EventType.ANNIVERSARY);
-    	reminderEventType = getEnumeration(EventType.class,EventType.REMINDER);
-    	*/
-    	
-    	RemoteEndPoint.USER_INTERFACE.alarmTemplate = inject(NotificationTemplateDao.class).readByGlobalIdentifierCode(NotificationTemplate.ALARM_USER_INTERFACE);
-    	RemoteEndPoint.MAIL_SERVER.alarmTemplate = inject(NotificationTemplateDao.class).readByGlobalIdentifierCode(NotificationTemplate.ALARM_EMAIL);
-    	RemoteEndPoint.PHONE.alarmTemplate = inject(NotificationTemplateDao.class).readByGlobalIdentifierCode(NotificationTemplate.ALARM_SMS);
-    	
-    	
+    	RemoteEndPoint.USER_INTERFACE.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_USER_INTERFACE);
+    	RemoteEndPoint.MAIL_SERVER.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_EMAIL);
+    	RemoteEndPoint.PHONE.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_SMS);
     }
     
     public Application getApplication(){

@@ -66,6 +66,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	@Embedded private Rud rud = new Rud();
 	
+	private Boolean usable;
 	@Column(name="f_constant",nullable=false,updatable=false)
 	private Boolean constant = Boolean.FALSE;
 	

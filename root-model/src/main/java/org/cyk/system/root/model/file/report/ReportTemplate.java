@@ -2,16 +2,15 @@ package org.cyk.system.root.model.file.report;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-
-import org.cyk.system.root.model.AbstractEnumeration;
-import org.cyk.system.root.model.file.File;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.file.File;
 
 @Getter @Setter @NoArgsConstructor @Entity
 public class ReportTemplate extends AbstractEnumeration implements Serializable {
@@ -23,8 +22,6 @@ public class ReportTemplate extends AbstractEnumeration implements Serializable 
 	@ManyToOne private File backgroundImage;
 	
 	@ManyToOne private File draftBackgroundImage;
-	
-	@Column(nullable=false) private Boolean usable = Boolean.TRUE;
 	
 	public ReportTemplate(String code, File template,File headerImage,File backgroundImage,File draftBackgroundImage) {
 		super(code, code, null, null);
