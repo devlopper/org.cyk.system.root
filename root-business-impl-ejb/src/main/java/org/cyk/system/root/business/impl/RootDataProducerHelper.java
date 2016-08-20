@@ -12,17 +12,12 @@ import java.util.Deque;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
-import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.model.AbstractCollection;
@@ -57,6 +52,8 @@ import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.GenericDao;
+import org.cyk.system.root.persistence.api.geography.CountryDao;
+import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
 import org.cyk.utility.common.Constant;
@@ -66,6 +63,9 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.database.DatabaseUtils;
 import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
 import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -253,18 +253,18 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	
 	public PhoneNumber addPhoneNumber(ContactCollection collection,PhoneNumberType type,String number){
-		return addPhoneNumber(collection,inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), type, number);
+		return addPhoneNumber(collection,inject(CountryDao.class).read(Country.COTE_DIVOIRE), type, number);
 	}
 	public PhoneNumber addLandPhoneNumber(ContactCollection collection,String number){
-		return addPhoneNumber(collection,inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), inject(PhoneNumberTypeBusiness.class).find(PhoneNumberType.LAND), number);
+		return addPhoneNumber(collection,inject(CountryDao.class).read(Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class).read(PhoneNumberType.LAND), number);
 	}
 	public PhoneNumber addMobilePhoneNumber(ContactCollection collection,String number){
-		return addPhoneNumber(collection,inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), inject(PhoneNumberTypeBusiness.class).find(PhoneNumberType.MOBILE), number);
+		return addPhoneNumber(collection,inject(CountryDao.class).read(Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class).read(PhoneNumberType.MOBILE), number);
 	}
 	public void addContacts(ContactCollection collection,String[] addresses,String[] landNumbers,String[] mobileNumbers,String[] postalBoxes,String[] emails,String[] websites){
 		if(addresses!=null)
 			for(String address : addresses){
-				Location location = new Location(collection, inject(CountryBusiness.class).find(Country.COTE_DIVOIRE).getLocality());
+				Location location = new Location(collection, inject(CountryDao.class).read(Country.COTE_DIVOIRE).getLocality());
 				location.setOtherDetails(address);
 				location.setType(inject(LocationTypeBusiness.class).find(LocationType.OFFICE));
 				if(collection.getLocations()==null)
