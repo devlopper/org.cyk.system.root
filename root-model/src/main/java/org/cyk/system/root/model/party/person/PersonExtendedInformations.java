@@ -9,6 +9,7 @@ import javax.persistence.OneToOne;
 
 import org.cyk.system.root.model.event.EventRepetition;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.language.LanguageCollection;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,8 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
 	private File signatureSpecimen;
 
+	@OneToOne private LanguageCollection languageCollection;
+	
 	public PersonExtendedInformations(Person party) {
 		super(party);
 	}
@@ -37,5 +40,6 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 	public static final String FIELD_MARITAL_STATUS = "maritalStatus";
 	public static final String FIELD_TITLE = "title";
 	public static final String FIELD_SIGNATURE_SPECIMEN = "signatureSpecimen";
+	public static final String FIELD_LANGUAGE_COLLECTION = "languageCollection";
 	
 }

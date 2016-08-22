@@ -11,9 +11,6 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.geography.CountryBusiness;
-import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
-import org.cyk.system.root.business.api.geography.PhoneNumberTypeBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
@@ -32,6 +29,9 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.root.persistence.api.geography.CountryDao;
+import org.cyk.system.root.persistence.api.geography.LocationTypeDao;
+import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
 import org.cyk.system.root.persistence.api.party.person.SexDao;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -104,8 +104,8 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	}
 	
 	public Person person(){
-		return person(randomDataProvider.randomBoolean(), inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), 
-				inject(PhoneNumberTypeBusiness.class).find(PhoneNumberType.LAND),Boolean.TRUE);
+		return person(randomDataProvider.randomBoolean(), inject(CountryDao.class).read(Country.COTE_DIVOIRE), 
+				inject(PhoneNumberTypeDao.class).read(PhoneNumberType.LAND),Boolean.TRUE);
 	}
 	
 	public void createPerson(Integer count){
@@ -138,7 +138,7 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 	}
 	
 	public PhoneNumber phoneNumber(ContactCollection contactCollection){
-		return phoneNumber(contactCollection, inject(CountryBusiness.class).find(Country.COTE_DIVOIRE), inject(PhoneNumberTypeBusiness.class).find(PhoneNumberType.LAND));
+		return phoneNumber(contactCollection, inject(CountryDao.class).read(Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class).read(PhoneNumberType.LAND));
 	}
 	
 	public ElectronicMail email(ContactCollection contactCollection){
@@ -154,8 +154,8 @@ public class RootRandomDataProvider extends AbstractRandomDataProvider implement
 		Location location = new Location();
 		location.setCollection(contactCollection);
 		location.setOtherDetails(randomDataProvider.randomWord(RandomDataProvider.WORD_LOCATION, 5, 10));
-		location.setLocality(inject(CountryBusiness.class).find(Country.COTE_DIVOIRE).getLocality());
-		location.setType(inject(LocationTypeBusiness.class).find(LocationType.HOME));
+		location.setLocality(inject(CountryDao.class).read(Country.COTE_DIVOIRE).getLocality());
+		location.setType(inject(LocationTypeDao.class).read(LocationType.HOME));
 		if(contactCollection!=null)
 			contactCollection.getLocations().add(location);
 		return location; 

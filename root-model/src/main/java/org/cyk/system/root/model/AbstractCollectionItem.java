@@ -18,7 +18,12 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 
 	private static final long serialVersionUID = 5908328682512231058L;
 
+	/*
+	 * an item can be a simple attribute of another model bean. 
+	 * In that case , it might not belongs to a collection , not have an order index 
+	 */
 	@ManyToOne protected COLLECTION collection;
+	private Byte orderNumber;
 	
 	public AbstractCollectionItem(COLLECTION collection,String code,String name) {
 		super(code, name, null, null);
@@ -31,4 +36,5 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 	}
 	
 	public static final String FIELD_COLLECTION = "collection";
+	public static final String FIELD_ORDER_NUMBER = "orderNumber";
 }

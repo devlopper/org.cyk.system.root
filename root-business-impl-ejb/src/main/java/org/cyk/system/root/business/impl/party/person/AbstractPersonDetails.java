@@ -4,10 +4,13 @@ import java.io.Serializable;
 
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.business.impl.language.LanguageCollectionDetails;
 import org.cyk.system.root.business.impl.party.AbstractPartyDetails;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs.Layout;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
@@ -15,7 +18,10 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 
 	private static final long serialVersionUID = 1165482775425753790L;
 
-	@Input @InputText private String lastnames,surname,sex,birthDate,birthLocation,title,nationality/*,maritalStatus*/;
+	@Input @InputText private String lastnames,surname,sex,birthDate,birthLocation,title,nationality,bloodGroup/*,maritalStatus*/;
+	
+	@IncludeInputs(layout=Layout.VERTICAL) 
+	protected LanguageCollectionDetails languageCollection;
 	
 	public AbstractPersonDetails(PERSON person) {
 		super(person);
@@ -35,7 +41,15 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 				title = getPerson().getExtendedInformations().getTitle().getName();
 			if(getPerson().getExtendedInformations().getBirthLocation()!=null)
 				birthLocation = RootBusinessLayer.getInstance().getFormatterBusiness().format(getPerson().getExtendedInformations().getBirthLocation());
+			languageCollection = new LanguageCollectionDetails(getPerson().getExtendedInformations().getLanguageCollection());
 		}
+		
+		if(getPerson().getMedicalInformations()!=null){
+			if(getPerson().getMedicalInformations().getBloodGroup()!=null)
+				bloodGroup = getPerson().getMedicalInformations().getBloodGroup().getName();
+		}
+		
+		
 	}
 	
 	@Override
@@ -55,4 +69,7 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 	public static final String FIELD_BIRTHDATE = "birthDate";
 	public static final String FIELD_BIRTHLOCATION = "birthLocation";
 	public static final String FIELD_SEX = "sex";
+	public static final String FIELD_NATIONALITY = "nationality";
+	public static final String FIELD_BLOOD_GROUP = "bloodGroup";
+	public static final String FIELD_LANGUAGE_COLLECTION = "languageCollection";
 }

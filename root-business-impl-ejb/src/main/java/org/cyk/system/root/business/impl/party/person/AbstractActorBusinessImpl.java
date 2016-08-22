@@ -30,7 +30,6 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	public ACTOR instanciateOne(AbstractActor actor) {
 		ACTOR myActor = instanciateOne();
 		myActor.setPerson(actor.getPerson());
-		//myActor.getRegistration().setCode(actor.getRegistration().getCode());
 		return myActor;
 	}
 
@@ -38,7 +37,6 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	public ACTOR instanciateOne() {
 		ACTOR actor = super.instanciateOne();
 		actor.setPerson(inject(PersonBusiness.class).instanciateOne());
-		//actor.getRegistration().setCode(RandomStringUtils.randomAlphanumeric(5));
 		return actor;
 	}
 	
