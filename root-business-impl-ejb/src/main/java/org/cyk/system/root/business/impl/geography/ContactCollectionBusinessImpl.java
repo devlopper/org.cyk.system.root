@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,6 @@ import org.cyk.system.root.model.geography.Website;
 import org.cyk.system.root.persistence.api.geography.ContactCollectionDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 
-@Stateless
 public class ContactCollectionBusinessImpl extends AbstractTypedBusinessService<ContactCollection, ContactCollectionDao> implements ContactCollectionBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;

@@ -66,8 +66,8 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 	public static final String FIELD_TITLE = "title";
 	public static final String FIELD_LASTNAMES = "lastnames";
 	public static final String FIELD_SURNAME = "surname";
-	public static final String FIELD_BIRTHDATE = "birthDate";
-	public static final String FIELD_BIRTHLOCATION = "birthLocation";
+	public static final String FIELD_BIRTH_DATE = "birthDate";
+	public static final String FIELD_BIRTH_LOCATION = "birthLocation";
 	public static final String FIELD_SEX = "sex";
 	public static final String FIELD_NATIONALITY = "nationality";
 	public static final String FIELD_BLOOD_GROUP = "bloodGroup";

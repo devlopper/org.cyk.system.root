@@ -10,7 +10,9 @@ import javax.persistence.NoResultException;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.TypedDao;
 
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
@@ -19,7 +21,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 
 	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
 		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete,readByGlobalIdentifier
-		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes;
+		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -61,6 +63,13 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		}
 		
 		registerNamedQuery(executeDelete, "DELETE FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
+		
+		registerNamedQuery(readByGlobalIdentifierSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
+	    		+ "    ( LOCATE(LOWER(:code),LOWER(record.globalIdentifier.code))                > 0 )"
+	    		+ " OR ( LOCATE(LOWER(:name),LOWER(record.globalIdentifier.name))            > 0 )");
+		
+		
+		
 	}
 	
 	protected Boolean readByClassEnabled(){
@@ -72,6 +81,28 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	}
 	
 	/**/
+	
+	@Override
+	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
+		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
+		queryWrapper.parameter(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getPreparedValue());
+		queryWrapper.parameter(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getPreparedValue());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection<IDENTIFIABLE> readByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
+		QueryWrapper<?> queryWrapper = namedQuery(readByGlobalIdentifierSearchCriteria);
+		applySearchCriteriaParameters(queryWrapper, globalIdentifierSearchCriteria);
+		return (Collection<IDENTIFIABLE>) queryWrapper.resultMany();
+	}
+
+	@Override
+	public Long countByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
+		QueryWrapper<?> queryWrapper = countNamedQuery(readByGlobalIdentifierSearchCriteria);
+		applySearchCriteriaParameters(queryWrapper, globalIdentifierSearchCriteria);
+		return (Long) queryWrapper.resultOne();
+	}
 	
 	@Override
 	public IDENTIFIABLE readByGlobalIdentifier(GlobalIdentifier globalIdentifier) {

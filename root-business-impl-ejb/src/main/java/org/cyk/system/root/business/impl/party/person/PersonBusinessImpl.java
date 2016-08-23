@@ -11,6 +11,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.language.LanguageCollectionBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
@@ -69,7 +70,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			if(person.getExtendedInformations().getBirthLocation()!=null)
 				contactDao.create(person.getExtendedInformations().getBirthLocation());
 			if(person.getExtendedInformations().getLanguageCollection()!=null)
-				languageCollectionDao.create(person.getExtendedInformations().getLanguageCollection());
+				inject(LanguageCollectionBusiness.class).create(person.getExtendedInformations().getLanguageCollection());
 			extendedInformationsDao.create(person.getExtendedInformations());
 		}
 		if(person.getJobInformations()!=null)

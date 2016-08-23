@@ -3,7 +3,6 @@ package org.cyk.system.root.business.impl.event;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -23,7 +22,6 @@ import org.cyk.system.root.persistence.api.event.EventMissedDao;
 import org.cyk.system.root.persistence.api.event.EventPartyDao;
 import org.cyk.system.root.persistence.api.event.EventReminderDao;
 
-@Stateless
 public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Event, EventDao> implements EventBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;

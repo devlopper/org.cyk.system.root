@@ -14,10 +14,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.Identifiable;
@@ -25,8 +21,15 @@ import org.cyk.system.root.model.Rud;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.system.root.model.search.StringSearchCriteria.LocationType;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.Constant;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter @Setter @Entity @EqualsAndHashCode(callSuper=false,of="identifier")
 public class GlobalIdentifier extends AbstractModelElement implements Identifiable<String>, Serializable {
@@ -116,4 +119,20 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
 	public static final String FIELD_BIRTH_LOCATION = "birthLocation";
+	
+	/**/
+	
+	@Getter @Setter
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		protected StringSearchCriteria code=new StringSearchCriteria(),name=new StringSearchCriteria();
+		
+		public SearchCriteria(){
+			code.setLocationType(LocationType.INSIDE);
+			name.setLocationType(LocationType.INSIDE);
+		}
+		
+	}
 }

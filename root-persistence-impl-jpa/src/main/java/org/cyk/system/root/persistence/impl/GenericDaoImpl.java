@@ -1,6 +1,9 @@
 package org.cyk.system.root.persistence.impl;
 
+import java.util.Collection;
+
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.persistence.api.GenericDao;
 
 public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifiable> implements GenericDao {
@@ -22,6 +25,16 @@ public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifia
 	public GenericDao use(Class<? extends AbstractIdentifiable> aClass) {
 		clazz = (Class<AbstractIdentifiable>) aClass;
 		return this;
+	}
+
+	@Override
+	public Collection<AbstractIdentifiable> readByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
+		return null;
+	}
+
+	@Override
+	public Long countByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
+		return null;
 	}
 
    

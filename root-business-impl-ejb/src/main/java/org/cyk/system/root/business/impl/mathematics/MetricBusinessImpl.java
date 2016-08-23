@@ -2,7 +2,6 @@ package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
@@ -12,7 +11,6 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 
-@Stateless
 public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metric,MetricDao,MetricCollection> implements MetricBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;

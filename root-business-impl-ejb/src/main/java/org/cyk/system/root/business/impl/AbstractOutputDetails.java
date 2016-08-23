@@ -28,7 +28,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	
 	@Input @InputFile (extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) protected File image;
 	@Input @InputText protected String code,name,abbreviation,description;
-	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod;
+	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod = new PeriodDetails(null);
 	
 	public AbstractOutputDetails(IDENTIFIABLE master) {
 		super(master);
@@ -41,7 +41,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 			name = this.master.getName();
 			abbreviation = this.master.getAbbreviation();
 			description = this.master.getDescription();
-			existencePeriod = new PeriodDetails(this.master.getExistencePeriod());
+			existencePeriod.set(this.master.getExistencePeriod());
 		}
 	}
 	

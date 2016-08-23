@@ -3,7 +3,6 @@ package org.cyk.system.root.business.impl.mathematics.machine;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBusiness;
@@ -15,7 +14,6 @@ import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachin
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineFinalStateDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineTransitionDao;
 
-@Stateless
 public class FiniteStateMachineBusinessImpl extends AbstractEnumerationBusinessImpl<FiniteStateMachine, FiniteStateMachineDao> implements FiniteStateMachineBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;

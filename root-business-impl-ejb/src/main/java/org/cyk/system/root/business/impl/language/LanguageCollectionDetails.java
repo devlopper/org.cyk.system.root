@@ -1,10 +1,13 @@
 package org.cyk.system.root.business.impl.language;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.model.language.LanguageCollection;
+import org.cyk.system.root.model.language.LanguageCollectionItem;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
@@ -23,7 +26,10 @@ public class LanguageCollectionDetails extends AbstractOutputDetails<LanguageCol
 		if(languageCollection==null){
 			
 		}else{
-			languages = StringUtils.join(languageCollection.getCollection(),Constant.CHARACTER_COMA);
+			Set<String> values = new LinkedHashSet<>();
+			for(LanguageCollectionItem item : languageCollection.getCollection())
+				values.add(item.getLanguage().getName());
+			languages = StringUtils.join(values,Constant.CHARACTER_COMA);
 		}
 		
 	}

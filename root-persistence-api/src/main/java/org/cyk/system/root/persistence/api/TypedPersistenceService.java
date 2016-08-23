@@ -26,4 +26,6 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
     Long countByNotClass(Class<?> aClass);
     
     void executeDelete(Collection<IDENTIFIABLE> identifiables);
+    
+    
 }

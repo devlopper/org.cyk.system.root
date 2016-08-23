@@ -3,7 +3,6 @@ package org.cyk.system.root.business.impl.globalidentification;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -16,7 +15,6 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.utility.common.cdi.AbstractBean;
 
-@Stateless
 public class GlobalIdentifierBusinessImpl extends AbstractBean implements GlobalIdentifierBusiness,Serializable {
 
 	private static final long serialVersionUID = 7024534251413461778L;

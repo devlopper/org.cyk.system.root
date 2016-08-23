@@ -56,6 +56,9 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 						 */
 						Collection<IDENTIFIABLE> readByGlobalIdentifierCodes(Collection<String> codes);
 						
+						Collection<IDENTIFIABLE> readByGlobalIdentifierSearchCriteria(GlobalIdentifier.SearchCriteria globalIdentifierSearchCriteria);
+					    Long countByGlobalIdentifierSearchCriteria(GlobalIdentifier.SearchCriteria globalIdentifierSearchCriteria);
+						
 						Long oneLong();	
 	
 	/* query */			String getQueryString();

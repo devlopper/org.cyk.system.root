@@ -3,7 +3,6 @@ package org.cyk.system.root.business.impl.mathematics;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -21,7 +20,6 @@ import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 
-@Stateless
 public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Movement, MovementDao,MovementCollection> implements MovementBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;

@@ -18,6 +18,7 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -274,8 +275,18 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return identifiable!=null && identifiable.getIdentifier()==null;
 	}
 	
-	/**/
+	@Override
+	public Collection<IDENTIFIABLE> findByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
+		return getPersistenceService().readByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);
+	}
+
+	@Override
+	public Long countByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
+		return getPersistenceService().countByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);
+	}
 	
+	/**/
+
 	protected void logInstanciate(){
 		logDebug("Instanciate {}",getClazz().getSimpleName());
 	}

@@ -2,7 +2,6 @@ package org.cyk.system.root.business.impl.information;
 
 import java.io.Serializable;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.information.TagBusiness;
@@ -11,7 +10,6 @@ import org.cyk.system.root.business.impl.globalidentification.AbstractJoinGlobal
 import org.cyk.system.root.model.information.TagIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.information.TagIdentifiableGlobalIdentifierDao;
 
-@Stateless
 public class TagIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGlobalIdentifierBusinessImpl<TagIdentifiableGlobalIdentifier, TagIdentifiableGlobalIdentifierDao,TagIdentifiableGlobalIdentifier.SearchCriteria> implements TagIdentifiableGlobalIdentifierBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;

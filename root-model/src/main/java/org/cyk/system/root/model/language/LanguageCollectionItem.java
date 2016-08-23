@@ -24,4 +24,9 @@ public class LanguageCollectionItem extends AbstractCollectionItem<LanguageColle
 	}
 
 	public static final String FIELD_LANGUAGE = "language";
+	/*
+	@Override
+	public String toString() {
+		return language==null ? super.toString() : language.getName();
+	}*/
 }

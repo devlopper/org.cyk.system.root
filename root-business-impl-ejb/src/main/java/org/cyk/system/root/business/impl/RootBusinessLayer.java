@@ -13,9 +13,6 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -26,6 +23,8 @@ import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
+import org.cyk.system.root.business.api.geography.CountryBusiness;
+import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
@@ -45,7 +44,6 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
-import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
@@ -57,6 +55,7 @@ import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.BloodGroup;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MaritalStatus;
@@ -72,12 +71,16 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.AbstractMethod;
+import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
@@ -299,14 +302,28 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         LocalityType city=new LocalityType(country, LocalityType.CITY, "City");
         create(city);
         
-        Locality afrique;
+        create(new Locality(null, continent, "AFRICE","Africa"));
+        create(new Locality(null, continent, "AMERICA","America"));
+        create(new Locality(null, continent, "EUROPA","Europe"));
+        create(new Locality(null, continent, "ASIA","Asia"));
+        create(new Locality(null, continent, "AUSTRALIA","Australia"));
         
-        create(afrique = new Locality(null, continent, "Afrique"));
-        create(new Locality(null, continent, "Amerique"));
-        create(new Locality(null, continent, "Europe"));
-        
-        create(new Country(new Locality(afrique, country,Country.COTE_DIVOIRE, "Côte d'Ivoire"),225));
-        create(new Locality(afrique, country, "Bénin"));
+        ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
+		List<String[]> list;
+		try {
+			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("geography/countries.xlsx")));
+	    	readExcelSheetArguments.setSheetIndex(0);
+			list = commonUtils.readExcelSheet(readExcelSheetArguments);
+			inject(CountryBusiness.class).create(inject(CountryBusiness.class).instanciateMany(list));
+			
+			readExcelSheetArguments = new ReadExcelSheetArguments();
+			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("geography/cities.xlsx")));
+	    	readExcelSheetArguments.setSheetIndex(0);
+	    	list = commonUtils.readExcelSheet(readExcelSheetArguments);
+			inject(LocalityBusiness.class).create(inject(LocalityBusiness.class).instanciateMany(city,list));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         
         create(new PhoneNumberType(PhoneNumberType.LAND, "Fixe"));
         create(new PhoneNumberType(PhoneNumberType.MOBILE, "Mobile"));
@@ -381,6 +398,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createEnumeration(PersonTitle.class,PersonTitle.MISS, "Ms");
         createEnumeration(PersonTitle.class,PersonTitle.MADAM, "Mme");
         createEnumeration(PersonTitle.class,PersonTitle.DOCTOR, "Dr");
+        
+        createEnumeration(BloodGroup.class,"A");
+        createEnumeration(BloodGroup.class,"B");
+        createEnumeration(BloodGroup.class,"AB");
+        createEnumeration(BloodGroup.class,"O");
     }
     
     private void security(){ 

@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -25,7 +24,6 @@ import org.cyk.system.root.persistence.api.network.UniformResourceLocatorDao;
 import org.cyk.system.root.persistence.api.network.UniformResourceLocatorParameterDao;
 import org.cyk.utility.common.Constant;
 
-@Stateless
 public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusinessImpl<UniformResourceLocator, UniformResourceLocatorDao> implements UniformResourceLocatorBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
