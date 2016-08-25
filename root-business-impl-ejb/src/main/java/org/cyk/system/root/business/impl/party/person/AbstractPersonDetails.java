@@ -18,7 +18,7 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 
 	private static final long serialVersionUID = 1165482775425753790L;
 
-	@Input @InputText private String lastnames,surname,sex,birthDate,birthLocation,title,nationality,bloodGroup/*,maritalStatus*/;
+	@Input @InputText private String lastnames,surname,sex,birthDate,birthLocation,title,nationality,bloodGroup,jobFunction/*,maritalStatus*/;
 	
 	@IncludeInputs(layout=Layout.VERTICAL) 
 	protected LanguageCollectionDetails languageCollection;
@@ -42,6 +42,11 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 			if(getPerson().getExtendedInformations().getBirthLocation()!=null)
 				birthLocation = RootBusinessLayer.getInstance().getFormatterBusiness().format(getPerson().getExtendedInformations().getBirthLocation());
 			languageCollection = new LanguageCollectionDetails(getPerson().getExtendedInformations().getLanguageCollection());
+		}
+		
+		if(getPerson().getJobInformations()!=null){
+			if(getPerson().getJobInformations().getFunction()!=null)
+				jobFunction = getPerson().getJobInformations().getFunction().getName();
 		}
 		
 		if(getPerson().getMedicalInformations()!=null){
@@ -71,5 +76,6 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 	public static final String FIELD_SEX = "sex";
 	public static final String FIELD_NATIONALITY = "nationality";
 	public static final String FIELD_BLOOD_GROUP = "bloodGroup";
+	public static final String FIELD_JOB_FUNCTION = "jobFunction";
 	public static final String FIELD_LANGUAGE_COLLECTION = "languageCollection";
 }
