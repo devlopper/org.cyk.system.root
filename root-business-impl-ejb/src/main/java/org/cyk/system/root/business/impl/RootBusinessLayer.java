@@ -26,6 +26,7 @@ import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
@@ -50,7 +51,6 @@ import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
-import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
@@ -69,6 +69,7 @@ import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
+import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
@@ -98,19 +99,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private final String parameterFromDate = "fd"; 
 	private final String parameterToDate = "td"; 
 	
-	//private Role roleAdministrator,roleManager,roleSettingManager,roleSecurityManager,roleUser;
-	
-    /*@Inject private PersonValidator personValidator;
-    @Inject private FileValidator fileValidator;
-    @Inject private RootReportRepository reportRepository;
-    */
-    @Inject private RootBusinessTestHelper rootBusinessTestHelper;
-    //@Inject private ApplicationDao applicationDao;
+	@Inject private RootBusinessTestHelper rootBusinessTestHelper;
     
     private Application application;
     @Setter private Long applicationIdentifier;
-    
-    //private Person personAdmin,personGuest;
     
     private static final Collection<Listener> ROOT_BUSINESS_LAYER_LISTENERS = new ArrayList<>();
     
@@ -295,32 +287,31 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void geography(){
-        LocalityType continent=new LocalityType(null, LocalityType.CONTINENT, "Continent");
-        create(continent);
-        LocalityType country=new LocalityType(continent, LocalityType.COUNTRY, "Country");
-        create(country);
-        LocalityType city=new LocalityType(country, LocalityType.CITY, "City");
-        create(city);
+        create(new LocalityType(null, LocalityType.CONTINENT, "Continent"));
+        create(new LocalityType(inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), LocalityType.COUNTRY, "Country"));
+        create(new LocalityType(inject(LocalityTypeDao.class).read(LocalityType.COUNTRY), LocalityType.CITY, "City"));
         
-        create(new Locality(null, continent, "AFRICE","Africa"));
-        create(new Locality(null, continent, "AMERICA","America"));
-        create(new Locality(null, continent, "EUROPA","Europe"));
-        create(new Locality(null, continent, "ASIA","Asia"));
-        create(new Locality(null, continent, "AUSTRALIA","Australia"));
+        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.AFRICA,"Africa"));
+        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.AMERICA,"America"));
+        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.EUROPE,"Europe"));
+        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.ASIA,"Asia"));
+        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.AUSTRALIA,"Australia"));
         
-        ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
+        ReadExcelSheetArguments readExcelSheetArguments;
 		List<String[]> list;
 		try {
-			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("geography/countries.xlsx")));
+			readExcelSheetArguments = new ReadExcelSheetArguments();
+			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("geography/countries.xls")));
 	    	readExcelSheetArguments.setSheetIndex(0);
-			list = commonUtils.readExcelSheet(readExcelSheetArguments);
+	    	list = commonUtils.readExcelSheet(readExcelSheetArguments);
 			inject(CountryBusiness.class).create(inject(CountryBusiness.class).instanciateMany(list));
 			
 			readExcelSheetArguments = new ReadExcelSheetArguments();
-			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("geography/cities.xlsx")));
+			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("geography/cities.xls")));
 	    	readExcelSheetArguments.setSheetIndex(0);
 	    	list = commonUtils.readExcelSheet(readExcelSheetArguments);
-			inject(LocalityBusiness.class).create(inject(LocalityBusiness.class).instanciateMany(city,list));
+			inject(LocalityBusiness.class).create(inject(LocalityBusiness.class).instanciateMany(inject(LocalityTypeDao.class).read(LocalityType.CITY),list));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -334,9 +325,17 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void language(){
-    	create(new Language("fr","Francais"));
-        create(new Language("en","Anglais"));
-        create(new Language("es","Espagnol"));
+    	ReadExcelSheetArguments readExcelSheetArguments;
+		List<String[]> list;
+		try {
+			readExcelSheetArguments = new ReadExcelSheetArguments();
+			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("language/languages.xls")));
+	    	readExcelSheetArguments.setSheetIndex(0);
+	    	list = commonUtils.readExcelSheet(readExcelSheetArguments);
+			inject(LanguageBusiness.class).create(inject(LanguageBusiness.class).instanciateMany(list));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
     
     private void event(){ 
@@ -382,9 +381,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private void party(){
     	createEnumeration(Sex.class,Sex.MALE, "Masculin");
-    	createEnumeration(Sex.class,Sex.FEMALE, "Feminin");
-    	createEnumeration(MaritalStatus.class,"B", "Celibataire");
-    	createEnumeration(MaritalStatus.class,"M", "Marie");
+    	createEnumeration(Sex.class,Sex.FEMALE, "Féminin");
+    	createEnumeration(MaritalStatus.class,"B", "Célibataire");
+    	createEnumeration(MaritalStatus.class,"M", "Marié");
         
         createEnumeration(JobFunction.class,"DJ","Développeur Java");
         createEnumeration(JobFunction.class,"RV","Responsable des ventes");

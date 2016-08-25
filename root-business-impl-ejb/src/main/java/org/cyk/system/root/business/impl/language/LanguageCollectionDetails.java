@@ -27,8 +27,9 @@ public class LanguageCollectionDetails extends AbstractOutputDetails<LanguageCol
 			
 		}else{
 			Set<String> values = new LinkedHashSet<>();
-			for(LanguageCollectionItem item : languageCollection.getCollection())
+			for(LanguageCollectionItem item : languageCollection.getCollection()){
 				values.add(item.getLanguage().getName());
+			}
 			languages = StringUtils.join(values,Constant.CHARACTER_COMA);
 		}
 		

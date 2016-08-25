@@ -68,11 +68,12 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		return dao.countByDetachedIdentifier(identifier);
 	}
 
-	@Override
+	@Override 
 	public NestedSetNode create(NestedSetNode node) {
+		logTrace("Create {} with parent {}", node,node.getParent());
 		if(node.getSet().getIdentifier()==null){//set not yet created
 			nestedSetDao.create(node.getSet());
-			logTrace("Set {} auto created",node.getSet());
+			logTrace("Set {} auto created",node.getSet().getName());
 		}
 		if(node.getSet().getRoot()==null){//first node of the set
 			node.setParent(null);
@@ -83,6 +84,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			NestedSet set = node.getParent().getSet();
 			node.setSet(set);
 			NestedSetNode parent = node.getParent();
+			
 			Integer parentRightIndex = parent.getRightIndex();
 			node.setLeftIndex(parentRightIndex);
 			node.setRightIndex(node.getLeftIndex()+1);
@@ -105,7 +107,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		
 		node.setDetachedIdentifier(null);
 		if(node.getIdentifier()==null){
-			logTrace("Node indexes {} computed",node);
+			//logTrace("Node indexes {} computed",node);
 			dao.create(node);
 			if(node.getSet().getRoot()==null){//first node of the set
 				logTrace("First set node {} created",node);
@@ -116,7 +118,6 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			dao.update(node);
 			logTrace("Node {} updated",node);
 		}
-		
 		return node;
 	}
 

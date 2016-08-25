@@ -75,6 +75,15 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	}
 	
 	@Override
+	public COLLECTION update(COLLECTION collection) {
+		if(collection.getCollection()!=null)
+			for(ITEM item : collection.getCollection()){
+				getItemBusiness().update(item);
+			}
+		return super.update(collection);
+	}
+	
+	@Override
 	public COLLECTION delete(COLLECTION collection) {
 		for(ITEM item : getItemDao().readByCollection(collection)){
 			item.setCollection(null);

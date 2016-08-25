@@ -72,12 +72,12 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	
 	@Override
 	public String toString() {
-		return super.toString()+String.format(TO_STRING_FORMAT, identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier(),detachedIdentifier,set.getIdentifier());
+		return getLogMessage();// super.toString()+String.format(TO_STRING_FORMAT, identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier(),detachedIdentifier,set.getIdentifier());
 	}
 	
 	@Override
 	public String getLogMessage() {
-		return String.format(LOG_MESSAGE_FORMAT, identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier(),detachedIdentifier,set.getIdentifier());
+		return String.format(LOG_MESSAGE_FORMAT, globalIdentifier==null ? Constant.EMPTY_STRING:globalIdentifier.getName(),identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier(),detachedIdentifier,set.getIdentifier());
 	}
 	
 	/**/
@@ -88,6 +88,6 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	public static final String FIELD_RIGHT_INDEX = "rightIndex";
 	public static final String FIELD_DETACHED_IDENTIFIER = "detachedIdentifier";
 	
-	private static final String LOG_MESSAGE_FORMAT = NestedSetNode.class.getSimpleName()+"(I=%s,L=%s,R=%s,P=%s,DI=%s,S=%s)";
-	private static final String TO_STRING_FORMAT = "(I=%s,L=%s,R=%s,P=%s,DI=%s,S=%s)";
+	private static final String LOG_MESSAGE_FORMAT = /*NestedSetNode.class.getSimpleName()+*/"%s(I=%s,(%s,%s)P=%s)";
+	//private static final String TO_STRING_FORMAT = "(I=%s,L=%s,R=%s,P=%s,DI=%s,S=%s)";
 }

@@ -23,6 +23,8 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 	@ManyToOne @NotNull(groups=System.class)
 	protected NestedSetNode node;
 	
+	@Transient private Collection<AbstractDataTreeNode> parents;
+	
 	@Transient private Collection<AbstractDataTreeNode> children;
 	
 	public AbstractDataTreeNode(AbstractDataTreeNode parent,String code,String label) {

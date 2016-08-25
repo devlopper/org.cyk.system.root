@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeNodeBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
@@ -16,8 +17,8 @@ import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
 
-public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends AbstractDataTreeNode,DAO extends AbstractDataTreeNodeDao<ENUMERATION>>  
-    extends AbstractEnumerationBusinessImpl<ENUMERATION, DAO> implements AbstractDataTreeNodeBusiness<ENUMERATION> {
+public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractDataTreeNode,DAO extends AbstractDataTreeNodeDao<NODE>>  
+    extends AbstractEnumerationBusinessImpl<NODE, DAO> implements AbstractDataTreeNodeBusiness<NODE> {
 
 	private static final long serialVersionUID = 8279530282390587764L;
 
@@ -28,23 +29,30 @@ public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends Abstr
     }
 	
 	@Override
-	public ENUMERATION create(ENUMERATION enumeration) {
-		if(enumeration.getNode()==null)
+	public NODE create(NODE enumeration) {
+		if(enumeration.getNode()==null){
 			enumeration.setNode(new NestedSetNode(new NestedSet(), null));
-		if(enumeration.getNode().getIdentifier()==null)
+			enumeration.getNode().getSet().setName(enumeration.getName());
+		}
+		if(enumeration.getNode().getIdentifier()==null){
+			if(StringUtils.isBlank(enumeration.getNode().getCode()))
+				enumeration.getNode().setCode(enumeration.getCode());
+			if(StringUtils.isBlank(enumeration.getNode().getName()))
+				enumeration.getNode().setName(enumeration.getName());
 			nestedSetNodeBusiness.create(enumeration.getNode());
+		}
 		return super.create(enumeration);
 	}
 	
 	@Override
-	public ENUMERATION delete(ENUMERATION enumeration) {
+	public NODE delete(NODE enumeration) {
 		logTrace("Deleting {} on node {}. Children are the followings :", enumeration,enumeration.getNode());
 		NestedSetNode rootNode = enumeration.getNode();
-		Collection<ENUMERATION> list = dao.readByParent(enumeration);
-		for(ENUMERATION element : list)
+		Collection<NODE> list = dao.readByParent(enumeration);
+		for(NODE element : list)
 			logTrace("\tChild {} on node {}", element,element.getNode());
 		list.add(enumeration);
-		for(ENUMERATION e : list){
+		for(NODE e : list){
 			e.setNode(null);
 			dao.delete(e);
 			logTrace("\t\tElement {} deleted", e);
@@ -53,67 +61,82 @@ public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends Abstr
 		return enumeration;
 	}
 	
-	
-	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public ENUMERATION findParent(ENUMERATION child){
+	public Collection<NODE> findParentRecursively(NODE node) {
+		return dao.readParentRecursively(node);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void setParents(NODE node) {
+		node.setParents((Collection<AbstractDataTreeNode>) findParentRecursively(node));
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void setParents(Collection<NODE> nodes) {
+		for(NODE node : nodes)
+			setParents(node);
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public NODE findParent(NODE child){
 		return dao.readParent(child);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Collection<ENUMERATION> findByParent(ENUMERATION parent){
+	public Collection<NODE> findByParent(NODE parent){
 		return dao.readByParent(parent);
 	}
 	
 	@Override
-	public void move(ENUMERATION enumeration, ENUMERATION parent) {
+	public void move(NODE enumeration, NODE parent) {
 		NestedSetNode node = enumeration.getNode();
 		node = nestedSetNodeBusiness.detach(node);
 		nestedSetNodeBusiness.attach(node,parent.getNode());
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Boolean isAncestorOf(ENUMERATION ancestor,ENUMERATION child){
+	public Boolean isAncestorOf(NODE ancestor,NODE child){
 		return ancestor.getNode().getLeftIndex() < child.getNode().getLeftIndex() && ancestor.getNode().getRightIndex() > child.getNode().getRightIndex();
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Boolean isAtLeastOneAncestorOf(Collection<ENUMERATION> ancestors,ENUMERATION child){
+	public Boolean isAtLeastOneAncestorOf(Collection<NODE> ancestors,NODE child){
 		if(ancestors==null)
 			return Boolean.FALSE;
-		for(ENUMERATION node : ancestors)
+		for(NODE node : ancestors)
 			if(isAncestorOf(node, child))
 				return Boolean.TRUE;
 		return Boolean.FALSE;
 	}
 	
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public void findHierarchy(ENUMERATION anEnumeration) {
+    public void findHierarchy(NODE anEnumeration) {
         loadChildren(anEnumeration);
     }
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public Collection<ENUMERATION> findHierarchies() {
+    public Collection<NODE> findHierarchies() {
         //logStackTrace();
-        Collection<ENUMERATION> hierarchy = dao.readRoots();
-        for(ENUMERATION type : hierarchy)
+        Collection<NODE> hierarchy = dao.readRoots();
+        for(NODE type : hierarchy)
             loadChildren(type);
         return hierarchy;
     }
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public ENUMERATION instanciateOne(String parentCode, String code,String name) {
-		ENUMERATION enumeration = instanciateOne(code,name);
+	public NODE instanciateOne(String parentCode, String code,String name) {
+		NODE enumeration = instanciateOne(code,name);
     	enumeration.setParent(dao.readByGlobalIdentifierCode(parentCode));
     	return enumeration;
 	}
 
-	private void loadChildren(ENUMERATION parent){
+	private void loadChildren(NODE parent){
        buildHierarchy(parent,new ArrayList<>(dao.readByParent(parent)));
     }
     
     @SuppressWarnings("unchecked")
-    private void buildHierarchy(ENUMERATION parent,List<ENUMERATION> children){
+    private void buildHierarchy(NODE parent,List<NODE> children){
         for(int i=0;i<children.size();){
             
             if(children.get(i).getNode().getParent().equals(parent.getNode())){
@@ -124,7 +147,7 @@ public abstract class AbstractDataTreeNodeBusinessImpl<ENUMERATION extends Abstr
                 i++;
         }if(parent.getChildren()!=null)
             for(AbstractDataTreeNode child : parent.getChildren())
-                buildHierarchy((ENUMERATION) child, children);
+                buildHierarchy((NODE) child, children);
     }
     
 }

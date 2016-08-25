@@ -23,13 +23,18 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 	/* 
 	 *Named Queries Identifiers Declaration 
 	 */
-	private String readByParent,countByParent,readRoots,countRoots,readByLeftIndexByRightIndex; 
+	private String readByParent,countByParent,readRoots,countRoots,readByLeftIndexByRightIndex,readByLeftIndexLowerThanByRightIndexGreaterThan; 
 	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByLeftIndexByRightIndex, _select().where("node.set", "nestedSet")
 				.and("node.leftIndex","leftIndex",ArithmeticOperator.EQ).and("node.leftIndex","rightIndex",ArithmeticOperator.EQ));
+		
+		registerNamedQuery(readByLeftIndexLowerThanByRightIndexGreaterThan, _select().where("node.set", "nestedSet")
+				.and("node.leftIndex","leftIndex",ArithmeticOperator.LT).and("node.rightIndex","rightIndex",ArithmeticOperator.GT)
+				.orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_LEFT_INDEX), Boolean.TRUE));
+		
 		registerNamedQuery(readByParent, _select().where("node.set", "nestedSet").and("node.leftIndex","leftIndex",GT).and("node.leftIndex","rightIndex",LT)
 				.orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_LEFT_INDEX), Boolean.TRUE));
 		registerNamedQuery(readRoots, _select().where(null,"node.set.root", QueryStringBuilder.VAR+".node",ArithmeticOperator.EQ,false));
@@ -42,6 +47,12 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 			return null;
 		return namedQuery(readByLeftIndexByRightIndex).parameter("nestedSet", parentNode.getSet()).parameter("leftIndex", parentNode.getLeftIndex())
 				.parameter("rightIndex", parentNode.getLeftIndex()).resultOne();
+	}
+	
+	@Override
+	public Collection<ENUMERATION> readParentRecursively(ENUMERATION child) {
+		return namedQuery(readByLeftIndexLowerThanByRightIndexGreaterThan).parameter("nestedSet", child.getNode().getSet()).parameter("leftIndex", child.getNode().getLeftIndex())
+				.parameter("rightIndex", child.getNode().getRightIndex()).resultMany();
 	}
 		
 	@Override

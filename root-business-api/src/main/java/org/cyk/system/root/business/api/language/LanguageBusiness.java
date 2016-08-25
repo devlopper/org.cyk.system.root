@@ -2,6 +2,8 @@ package org.cyk.system.root.business.api.language;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import lombok.Getter;
@@ -120,4 +122,6 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 			return create(actionIdentifier, identifiableClass, Boolean.TRUE);
 		}
 	}
+
+	Collection<Language> instanciateMany(List<String[]> list);
 }

@@ -33,7 +33,9 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 				 	.orderBy(NestedSetNode.FIELD_LEFT_INDEX,Boolean.TRUE)
 				);
 		 registerNamedQuery(executeIncrementLeftIndex, "UPDATE NestedSetNode nestedSetNode SET nestedSetNode.leftIndex = nestedSetNode.leftIndex + :increment WHERE nestedSetNode.identifier IN :identifiers");
-		 registerNamedQuery(executeIncrementRightIndex, "UPDATE NestedSetNode nestedSetNode SET nestedSetNode.rightIndex = :increment + nestedSetNode.rightIndex  WHERE nestedSetNode.identifier IN :identifiers");
+		 registerNamedQuery(executeIncrementRightIndex, "UPDATE NestedSetNode nestedSetNode SET nestedSetNode.rightIndex = :increment + nestedSetNode.rightIndex "
+		 		+ "WHERE nestedSetNode.identifier IN :identifiers"
+		 		+ "");
 	}
 	
 	@Override
@@ -84,18 +86,27 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	}
 	
 	@Override
-	public void executeIncrementLeftIndex(Collection<NestedSetNode> nestedSetNodes,Long increment) {
+	public Integer executeIncrementLeftIndex(Collection<NestedSetNode> nestedSetNodes,Long increment) {
 		if(nestedSetNodes==null || nestedSetNodes.isEmpty())
-			return ;
-		entityManager.createNamedQuery(executeIncrementLeftIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes))
-		.setParameter(PARAMETER_INCREMENT, increment).executeUpdate();
+			return 0;
+		Integer count = entityManager.createNamedQuery(executeIncrementLeftIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes))
+				.setParameter(PARAMETER_INCREMENT, increment).executeUpdate();
+		throwExecuteUpdateExceptionIfAny(nestedSetNodes.size(), count);
+		for(NestedSetNode nestedSetNode : nestedSetNodes)
+			nestedSetNode.setLeftIndex(nestedSetNode.getLeftIndex()+increment.intValue());
+		return count;
 	}
 	
 	@Override
-	public void executeIncrementRightIndex(Collection<NestedSetNode> nestedSetNodes,Long increment) {
+	public Integer executeIncrementRightIndex(Collection<NestedSetNode> nestedSetNodes,Long increment) {
 		if(nestedSetNodes==null || nestedSetNodes.isEmpty())
-			return ;
-		entityManager.createNamedQuery(executeIncrementRightIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes)).setParameter(PARAMETER_INCREMENT, increment).executeUpdate();
+			return 0;
+		Integer count = entityManager.createNamedQuery(executeIncrementRightIndex).setParameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(nestedSetNodes))
+			.setParameter(PARAMETER_INCREMENT, increment).executeUpdate();
+		throwExecuteUpdateExceptionIfAny(nestedSetNodes.size(), count);
+		for(NestedSetNode nestedSetNode : nestedSetNodes)
+			nestedSetNode.setRightIndex(nestedSetNode.getRightIndex()+increment.intValue());
+		return count;
 	}
 	
 	private static final String PARAMETER_NESTED_SET = "nestedSet";

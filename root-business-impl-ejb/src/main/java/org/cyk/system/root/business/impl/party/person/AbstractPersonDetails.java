@@ -33,7 +33,7 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 		if(getPerson().getNationality()!=null)
 			nationality = RootBusinessLayer.getInstance().getFormatterBusiness().format(getPerson().getNationality());
 		
-		if(person.getBirthDate()!=null)
+		if(getPerson().getBirthDate()!=null)
 			birthDate = inject(TimeBusiness.class).formatDate(getPerson().getBirthDate());
 		
 		if(getPerson().getExtendedInformations()!=null){

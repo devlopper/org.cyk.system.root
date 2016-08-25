@@ -20,9 +20,6 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.CommonBusinessAction;
@@ -46,6 +43,9 @@ import org.cyk.utility.common.annotation.user.interfaces.Text;
 import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
@@ -515,6 +515,18 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			//logDebug("No match found for {}",id);
 		}
 		
+	}
+
+	@Override
+	public Collection<Language> instanciateMany(List<String[]> list) {
+		List<Language> languages = new ArrayList<>();
+		for(String[] values : list){
+			Language instance = instanciateOne();
+			instance.setCode(values[0]);
+    		instance.setName(values[1]);
+    		languages.add(instance);
+    	}
+		return languages;
 	}
 	
 }

@@ -5,20 +5,25 @@ import java.util.Collection;
 import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 
-public interface AbstractDataTreeNodeBusiness<ENUMERATION extends AbstractEnumeration> extends AbstractEnumerationBusiness<ENUMERATION> {
+public interface AbstractDataTreeNodeBusiness<NODE extends AbstractEnumeration> extends AbstractEnumerationBusiness<NODE> {
     
-    void findHierarchy(ENUMERATION anEnumeration);
+    void findHierarchy(NODE anEnumeration);
     
-    Collection<ENUMERATION> findHierarchies();
-    Collection<ENUMERATION> findByParent(ENUMERATION parent);
+    Collection<NODE> findHierarchies();
+    Collection<NODE> findByParent(NODE parent);
     
-    void move(ENUMERATION anEnumeration,ENUMERATION parent);
+    void move(NODE anEnumeration,NODE parent);
     
-    ENUMERATION findParent(ENUMERATION child);
+    NODE findParent(NODE child);
+    Collection<NODE> findParentRecursively(NODE node);
+    void setParents(NODE node);
+    void setParents(Collection<NODE> nodes);
     
-    Boolean isAncestorOf(ENUMERATION ancestor,ENUMERATION child);
-    Boolean isAtLeastOneAncestorOf(Collection<ENUMERATION> ancestors,ENUMERATION child);
+    Boolean isAncestorOf(NODE ancestor,NODE child);
+    Boolean isAtLeastOneAncestorOf(Collection<NODE> ancestors,NODE child);
 
-    ENUMERATION instanciateOne(String parentCode,String code,String name);
+    NODE instanciateOne(String parentCode,String code,String name);
+    
+    
     
 }

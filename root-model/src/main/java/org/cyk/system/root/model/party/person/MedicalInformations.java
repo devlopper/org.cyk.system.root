@@ -4,9 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import lombok.Getter;
@@ -18,7 +17,7 @@ public class MedicalInformations extends AbstractPersonExtendedInformations impl
 
 	private static final long serialVersionUID = 4416245866978363658L;
 
-	@OneToOne(cascade=CascadeType.ALL) private BloodGroup bloodGroup;
+	@ManyToOne private BloodGroup bloodGroup;
 	
 	//private String /*allergicReactionType,allergicReactionResponse,*/otherInformations;//TODO Other information should be modeled by customer : build a system to support it
 	

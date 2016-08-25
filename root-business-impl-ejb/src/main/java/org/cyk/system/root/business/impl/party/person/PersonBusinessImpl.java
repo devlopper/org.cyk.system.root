@@ -27,7 +27,6 @@ import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
-import org.cyk.system.root.persistence.api.language.LanguageCollectionDao;
 import org.cyk.system.root.persistence.api.party.person.JobInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.MedicalInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
@@ -46,7 +45,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	@Inject private MedicalInformationsDao medicalInformationsDao;
 	@Inject private ContactDao contactDao;
 	@Inject private FileDao fileDao;
-	@Inject private LanguageCollectionDao languageCollectionDao;
 	
 	@Inject
 	public PersonBusinessImpl(PersonDao dao) {
@@ -90,7 +88,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			if(person.getExtendedInformations().getBirthLocation()!=null)
 				contactDao.update(person.getExtendedInformations().getBirthLocation());
 			if(person.getExtendedInformations().getLanguageCollection()!=null)
-				languageCollectionDao.update(person.getExtendedInformations().getLanguageCollection());
+				inject(LanguageCollectionBusiness.class).update(person.getExtendedInformations().getLanguageCollection());
 			if(person.getExtendedInformations().getSignatureSpecimen()!=null && person.getExtendedInformations().getSignatureSpecimen().getIdentifier()==null)
 				fileDao.create(person.getExtendedInformations().getSignatureSpecimen());
 			extendedInformationsDao.update(person.getExtendedInformations());
@@ -106,8 +104,10 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	public Person delete(Person person) {
 		PersonExtendedInformations extendedInformations = extendedInformationsDao.readByParty(person);
 		if(extendedInformations!=null){
-			if(extendedInformations.getLanguageCollection()!=null)
-				languageCollectionDao.delete(extendedInformations.getLanguageCollection());
+			if(extendedInformations.getLanguageCollection()!=null){
+				inject(LanguageCollectionBusiness.class).delete(extendedInformations.getLanguageCollection());
+				extendedInformations.setLanguageCollection(null);
+			}
 			extendedInformationsDao.delete(extendedInformations);
 		}
 		JobInformations jobInformations = jobInformationsDao.readByParty(person);

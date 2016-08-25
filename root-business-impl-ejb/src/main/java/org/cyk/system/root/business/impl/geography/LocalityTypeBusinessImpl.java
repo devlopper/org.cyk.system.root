@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl.geography;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
@@ -7,6 +8,7 @@ import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeTypeBusine
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
 
+@Stateless
 public class LocalityTypeBusinessImpl extends AbstractDataTreeTypeBusinessImpl<LocalityType,LocalityTypeDao> implements LocalityTypeBusiness {
 
 	private static final long serialVersionUID = -5970296090669949506L;

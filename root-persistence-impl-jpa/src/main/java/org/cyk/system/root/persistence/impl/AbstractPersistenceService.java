@@ -400,5 +400,10 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	/**/
 	
+	protected void throwExecuteUpdateExceptionIfAny(Integer expectedNumberOfEntities,Integer actualNumberOfEntities){
+		if(expectedNumberOfEntities!=actualNumberOfEntities)
+			throw new RuntimeException(expectedNumberOfEntities+" entities expected to be updated but only "+actualNumberOfEntities+" updated");
+	}
+	
 	public static final String PARAMETER_INDEX = "pindex";
 }
