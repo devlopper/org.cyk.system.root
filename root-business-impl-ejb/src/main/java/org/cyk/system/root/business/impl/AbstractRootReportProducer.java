@@ -16,7 +16,7 @@ import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
 import org.cyk.system.root.model.file.report.LabelValueReport;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ContactReport;
+import org.cyk.system.root.model.geography.ContactCollectionReport;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalReport;
@@ -78,7 +78,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return currentLabelValueCollection.getById(id);
 	}
 	
-	protected void set(ContactCollection contactCollection,ContactReport report){
+	protected void set(ContactCollection contactCollection,ContactCollectionReport report){
 		report.setPhoneNumbers(StringUtils.join(contactCollection.getPhoneNumbers(),Constant.CHARACTER_COLON));
 		report.setEmails(StringUtils.join(contactCollection.getElectronicMails(),Constant.CHARACTER_COLON));
 		report.setLocations(StringUtils.join(contactCollection.getLocations(),Constant.CHARACTER_COLON));
@@ -88,24 +88,24 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected void set(Person person,PersonReport report){
 		if(person==null){
-			report.setName(NOT_APPLICABLE);
+			report.getGlobalIdentifier().setName(NOT_APPLICABLE);
 			report.setNames(NOT_APPLICABLE);
 			report.setLastName(NOT_APPLICABLE);
 			report.setLastName(Constant.EMPTY_STRING);
 		}else{
 			inject(PersonBusiness.class).load(person);
 			if(person.getContactCollection()!=null)
-				set(person.getContactCollection(), report.getContact());
+				set(person.getContactCollection(), report.getContactCollection());
 			
-			report.setName(person.getGlobalIdentifier().getName());
+			report.getGlobalIdentifier().setName(person.getGlobalIdentifier().getName());
 			report.setLastName(person.getLastnames());
 			report.setNames(inject(PersonBusiness.class).findNames(person));
 			report.setSurname(person.getSurname());
-			report.setBirthDate(format(person.getBirthDate()));
-			report.setCode(person.getCode());
+			report.getGlobalIdentifier().getExistencePeriod().setFrom(format(person.getBirthDate()));
+			report.getGlobalIdentifier().setCode(person.getCode());
 			
 			if(person.getImage()!=null){
-				report.setImage(findInputStream(person.getImage()));
+				report.getGlobalIdentifier().setImage(findInputStream(person.getImage()));
 			}
 			if(person.getNationality()!=null)
 				report.setNationality(person.getNationality().getUiString());
@@ -115,7 +115,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			if(person.getExtendedInformations()!=null){
 				PersonExtendedInformations extendedInformations = person.getExtendedInformations();
 				if(extendedInformations.getBirthLocation()!=null)
-					report.setBirthLocation(extendedInformations.getBirthLocation().getUiString());
+					report.getGlobalIdentifier().setBirthLocation(extendedInformations.getBirthLocation().getUiString());
 				if(extendedInformations.getTitle()!=null)
 					report.setTitle(extendedInformations.getTitle().getUiString());
 				if(extendedInformations.getSignatureSpecimen()!=null)
@@ -137,22 +137,22 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	protected void set(AbstractActor actor,ActorReport report){
-		set(actor==null?null:actor.getPerson(), report.getPerson());
+		set(actor==null?null:actor.getPerson(), report.getCommonActor().getPerson());
 		if(actor==null){
 			
 		}else{
-			report.setRegistrationCode(actor.getGlobalIdentifier().getCode());
-			report.setRegistrationDate(format(actor.getBirthDate()));
+			report.getGlobalIdentifier().setCode(actor.getGlobalIdentifier().getCode());
+			report.getGlobalIdentifier().getExistencePeriod().setFrom(format(actor.getBirthDate()));
 		}
 	}
 	
 	protected void set(Person person,ActorReport report){
-		set(person, report.getPerson());
+		set(person, report.getCommonActor().getPerson());
 	}
 	
 	protected void set(Interval interval,IntervalReport report){
-		report.setCode(interval==null?NOT_APPLICABLE:interval.getCode());
-		report.setName(interval==null?NOT_APPLICABLE:/*format(interval.getLow())+" - "+format(interval.getHigh())+" "+*/interval.getName());
+		report.getGlobalIdentifier().setCode(interval==null?NOT_APPLICABLE:interval.getCode());
+		report.getGlobalIdentifier().setName(interval==null?NOT_APPLICABLE:/*format(interval.getLow())+" - "+format(interval.getHigh())+" "+*/interval.getName());
 	}
 	
 	protected InputStream findInputStream(File file){

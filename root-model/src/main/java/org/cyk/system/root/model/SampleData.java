@@ -2,7 +2,7 @@ package org.cyk.system.root.model;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.model.geography.ContactReport;
+import org.cyk.system.root.model.geography.ContactCollectionReport;
 import org.cyk.system.root.model.party.person.ActorReport;
 import org.cyk.system.root.model.party.person.PersonReport;
 
@@ -12,8 +12,8 @@ public class SampleData extends AbstractSampleData implements Serializable {
 
 	public SampleData() {}
 	
-	public static ContactReport contactReport(){
-		ContactReport report = new ContactReport();
+	public static ContactCollectionReport contactReport(){
+		ContactCollectionReport report = new ContactCollectionReport();
 		report.generate();
 		return report;
 	}

@@ -3,19 +3,18 @@ package org.cyk.system.root.model.party.person;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import org.cyk.system.root.model.party.PartyReport;
+import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import org.cyk.system.root.model.party.PartyReport;
-import org.cyk.utility.common.generator.RandomDataProvider;
-import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
 
 @Getter @Setter
 public class PersonReport extends PartyReport implements Serializable {
 
 	private static final long serialVersionUID = 4273143271881011482L;
 
-	protected String lastName,surname,birthDate,birthLocation,sex,maritalStatus,nationality,names,title,jobFonction,jobTitle;
+	protected String lastName,surname,sex,maritalStatus,nationality,names,title,jobFonction,jobTitle;
 	protected InputStream signatureSpecimen;
 	
 	protected Boolean generateSignatureSpecimen=Boolean.FALSE;
@@ -25,15 +24,13 @@ public class PersonReport extends PartyReport implements Serializable {
 		super.generate();
 		Boolean male = provider.randomBoolean();
 		RandomPerson person = male ? provider.getMale() : provider.getFemale();
-		if(Boolean.TRUE.equals(generateImage))
-			image = inputStream(person.photo().getBytes());
-		name = person.firstName();
+		if(Boolean.TRUE.equals(globalIdentifier.getGenerateImage()))
+			globalIdentifier.setImage(inputStream(person.photo().getBytes()));
+		globalIdentifier.setName(person.firstName());
 		lastName = person.lastName();
 		title = male ? "Mr":provider.randomBoolean()?"Mlle":"Mme";
-		names = name+" "+lastName;
+		names = globalIdentifier.getName()+" "+lastName;
 		surname = provider.randomWord(3, 6);
-		birthDate = "01/01/2014";
-		birthLocation = provider.randomWord(RandomDataProvider.WORD_LOCATION, 10, 20);
 		sex = male ? "M":"F";
 		maritalStatus = provider.randomBoolean() ? "Marie" : "Célibataire";
 		nationality = provider.randomWord(10, 20);

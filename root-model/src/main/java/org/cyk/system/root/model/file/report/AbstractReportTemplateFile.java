@@ -4,15 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.cyk.utility.common.generator.AbstractGeneratable;
-
 @Getter @Setter @NoArgsConstructor
-public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGeneratable<TEMPLATE> implements Serializable {
+public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractIdentifiableReport<TEMPLATE> implements Serializable {
 	  
 	private static final long serialVersionUID = 5632592320990657808L;
 

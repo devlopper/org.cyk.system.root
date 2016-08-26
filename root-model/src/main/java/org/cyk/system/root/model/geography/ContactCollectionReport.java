@@ -2,16 +2,16 @@ package org.cyk.system.root.model.geography;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.model.file.report.AbstractIdentifiableReport;
+import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.generator.RandomDataProvider;
+
 import lombok.Getter;
 import lombok.Setter;
 
-import org.apache.commons.lang3.StringUtils;
-import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.generator.AbstractGeneratable;
-import org.cyk.utility.common.generator.RandomDataProvider;
-
 @Getter @Setter
-public class ContactReport extends AbstractGeneratable<ContactReport> implements Serializable {
+public class ContactCollectionReport extends AbstractIdentifiableReport<ContactCollectionReport> implements Serializable {
 
 	private static final long serialVersionUID = -5092036698872705383L;
 
