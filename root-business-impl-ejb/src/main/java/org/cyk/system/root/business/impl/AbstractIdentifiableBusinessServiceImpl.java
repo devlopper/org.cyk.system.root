@@ -3,14 +3,14 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-
-import lombok.Getter;
 
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
@@ -29,6 +29,9 @@ import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -401,10 +404,16 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		void beforeDelete(IDENTIFIABLE identifiable);
 		void afterDelete(IDENTIFIABLE identifiable);
 		
+		Collection<Class<? extends AbstractIdentifiable>> getCascadeToClasses();
+		void setCascadeToClasses(Collection<Class<? extends AbstractIdentifiable>> classes);
+		
 		/**/
 		
+		@Getter @Setter
 		public static class Adapter<IDENTIFIABLE extends AbstractIdentifiable> extends BeanAdapter implements Listener<IDENTIFIABLE>,Serializable{
 			private static final long serialVersionUID = 8213436661982661753L;
+			
+			private Collection<Class<? extends AbstractIdentifiable>> cascadeToClasses;
 			
 			@Override public void beforeCreate(IDENTIFIABLE identifiable) {}
 			@Override public void afterCreate(IDENTIFIABLE identifiable) {}
@@ -414,6 +423,22 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			
 			@Override public void beforeDelete(IDENTIFIABLE identifiable) {}
 			@Override public void afterDelete(IDENTIFIABLE identifiable) {}
+			
+			public void addCascadeToClasses(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes){
+				if(classes!=null){
+					addCascadeToClasses(Arrays.asList(classes));
+				}
+			}
+			public void addCascadeToClasses(Collection<Class<? extends AbstractIdentifiable>> classes){
+				if(classes!=null && !classes.isEmpty()){
+					if(cascadeToClasses==null)
+						cascadeToClasses = new LinkedHashSet<>();
+					cascadeToClasses.addAll(classes);
+				}
+			}
+			protected Boolean containsCascadeToClass(Class<? extends AbstractIdentifiable> aClass){
+				return cascadeToClasses!=null && cascadeToClasses.contains(aClass);
+			}
 			
 			/**/
 		}
