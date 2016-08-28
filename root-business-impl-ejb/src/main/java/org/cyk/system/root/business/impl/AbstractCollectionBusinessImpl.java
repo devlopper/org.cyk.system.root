@@ -96,7 +96,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	protected abstract ITEM_BUSINESS getItemBusiness();
 	
 	protected ITEM createItem(ITEM item){
-		return getItemDao().create(item);
+		return getItemBusiness().create(item);
 	}
 	
 	protected void __load__(COLLECTION collection) {
