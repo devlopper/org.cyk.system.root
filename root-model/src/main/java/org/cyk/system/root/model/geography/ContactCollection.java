@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.geography;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -27,6 +28,56 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 	@Transient private Collection<PostalBox> postalBoxs;
 	@Transient private Collection<ElectronicMail> electronicMails;
 	@Transient private Collection<Website> websites;
+
+	@Override
+	public Contact add(Contact item) {
+		if(item instanceof PhoneNumber)
+			addPhoneNumber((PhoneNumber) item);
+		else if(item instanceof Location)
+			addLocation((Location) item);
+		else if(item instanceof PostalBox)
+			addPostalBox((PostalBox) item);
+		else if(item instanceof ElectronicMail)
+			addElectronicMail((ElectronicMail) item);
+		else if(item instanceof Website)
+			addWebsite((Website) item);
+		return super.add(item);
+	}
+	
+	public ContactCollection addPhoneNumber(PhoneNumber phoneNumber){
+		if(phoneNumbers==null)
+			phoneNumbers = new ArrayList<>();
+		phoneNumbers.add(phoneNumber);
+		return this;
+	}
+	
+	public ContactCollection addLocation(Location location){
+		if(locations==null)
+			locations = new ArrayList<>();
+		locations.add(location);
+		return this;
+	}
+	
+	public ContactCollection addPostalBox(PostalBox postalBox){
+		if(postalBoxs==null)
+			postalBoxs = new ArrayList<>();
+		postalBoxs.add(postalBox);
+		return this;
+	}
+	
+	public ContactCollection addElectronicMail(ElectronicMail electronicMail){
+		if(electronicMails==null)
+			electronicMails = new ArrayList<>();
+		electronicMails.add(electronicMail);
+		return this;
+	}
+	
+	public ContactCollection addWebsite(Website website){
+		if(websites==null)
+			websites = new ArrayList<>();
+		websites.add(website);
+		return this;
+	}
 	
 	@Override
 	public String toString() {

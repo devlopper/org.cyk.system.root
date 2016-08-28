@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import org.cyk.system.root.model.AbstractCollection;
+import org.cyk.utility.common.CommonUtils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +27,13 @@ public class IntervalCollection extends AbstractCollection<Interval> implements 
 	}
 
 	public Interval addItem(String code, String name,String low,String high) {
-		Interval interval = super.addItem(code, name);
-		interval.getLow().setValue(new BigDecimal(low));
-		interval.getHigh().setValue(new BigDecimal(high));
+		Interval interval = super.addItem(code,name);
+		interval.getLow().setValue(CommonUtils.getInstance().getBigDecimal(low));
+		interval.getHigh().setValue(CommonUtils.getInstance().getBigDecimal(high));
 		return interval;
+	}
+	public Interval addItem(String name,String low,String high) {
+		return addItem(null, name, low, high);
 	}
 	
 	

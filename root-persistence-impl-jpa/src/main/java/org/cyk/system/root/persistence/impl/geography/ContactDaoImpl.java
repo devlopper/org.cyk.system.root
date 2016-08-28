@@ -8,9 +8,8 @@ import java.util.Collection;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
-import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 
-public class ContactDaoImpl extends AbstractTypedDao<Contact> implements ContactDao,Serializable {
+public class ContactDaoImpl extends AbstractContactDaoImpl<Contact> implements ContactDao,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
 
@@ -99,6 +98,18 @@ public class ContactDaoImpl extends AbstractTypedDao<Contact> implements Contact
 	@Override
 	public Long countByCollection(ContactCollection collection) {
 		return countByCollections(Arrays.asList(collection));
+	}
+
+	@Override
+	public Collection<Contact> readByValue(String value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Long countByValue(String value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

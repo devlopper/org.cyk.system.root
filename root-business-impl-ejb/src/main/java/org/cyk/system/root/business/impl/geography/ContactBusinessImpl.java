@@ -6,12 +6,12 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.ContactBusiness;
-import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 
-public class ContactBusinessImpl extends AbstractTypedBusinessService<Contact, ContactDao> implements ContactBusiness,Serializable {
+public class ContactBusinessImpl extends AbstractCollectionItemBusinessImpl<Contact, ContactDao,ContactCollection> implements ContactBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 
@@ -78,6 +78,18 @@ public class ContactBusinessImpl extends AbstractTypedBusinessService<Contact, C
 	@Override
 	public <T extends Contact> Long countByCollectionsByClass(Collection<ContactCollection> contactCollections, Class<T> aClass) {
 		return dao.countByCollectionsByClass(contactCollections, aClass);
+	}
+
+	@Override
+	public Collection<Contact> readByValue(String value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Long countByValue(String value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

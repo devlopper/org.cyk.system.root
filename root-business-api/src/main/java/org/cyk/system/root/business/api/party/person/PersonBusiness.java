@@ -2,22 +2,21 @@ package org.cyk.system.root.business.api.party.person;
 
 import java.io.Serializable;
 
+import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.Person.SearchCriteria;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
-import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 
 public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCriteria> {
 
 	String findNames(Person person,FindNamesOptions options);
 	String findNames(Person person);
 
-	//void completeInstanciationOfOneFromValues(Person person,CompletePersonInstanciationOfOneFromValuesArguments arguments);
-	//void completeInstanciationOfManyFromValues(List<Person> persons,CompletePersonInstanciationOfManyFromValuesArguments arguments);
+	Person instanciateOne(String code,String[] names);
 	
 	/**/
 	

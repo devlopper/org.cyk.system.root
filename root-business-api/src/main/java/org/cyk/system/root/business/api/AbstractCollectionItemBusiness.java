@@ -11,4 +11,6 @@ public interface AbstractCollectionItemBusiness<ITEM extends AbstractCollectionI
 	Collection<ITEM> findByCollection(COLLECTION collection,Boolean ascending);
     
 	String findRelativeCode(ITEM item);
+	
+	ITEM instanciateOneRandomly(COLLECTION collection);
 }

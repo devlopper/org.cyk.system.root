@@ -33,5 +33,14 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	public String findRelativeCode(ITEM item) {
 		return RootBusinessLayer.getInstance().getRelativeCode(item.getCollection(), item.getCode());
 	}
+
+	@Override
+	public ITEM instanciateOneRandomly(COLLECTION collection) {
+		ITEM item = instanciateOneRandomly();
+		item.setCollection(collection);
+		collection.add(item);
+		return item;
+	}
+	
 	
 }

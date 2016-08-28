@@ -15,11 +15,7 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -62,6 +58,9 @@ import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -257,32 +256,6 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T extends AbstractActor> T createActor(Class<T> actorClass,String code,String[] names){
-		return (T) genericBusiness.create(_createActor_(actorClass, code, names));
-	}
-	
-	private <T extends AbstractActor> T _createActor_(Class<T> actorClass,String code,String[] names){
-		T actor = RootRandomDataProvider.getInstance().actor(actorClass);
-		actor.getGlobalIdentifierCreateIfNull().setCode(code);
-		if(names!=null){
-			if(names.length>0)
-				actor.getPerson().setName(names[0]);
-			if(names.length>1)
-				actor.getPerson().setLastnames(names[1]);
-			if(names.length>2)
-				actor.getPerson().setSurname(names[2]);
-		}
-		return actor;
-	}
-	
-	public <T extends AbstractActor> List<T> createActors(Class<T> actorClass,String[] codes){
-		List<T> list = new ArrayList<>();
-		for(String code : codes)
-			list.add(createActor(actorClass,code, null));
-		return list;
-	}
-	
 	public void createFiniteStateMachine(String machineCode,String[] alphabetCodes,String[] stateCodes,String initialStateCode,String[] finalStateCodes,String[][] transitions){
 		FiniteStateMachine machine = new FiniteStateMachine();
 		set(machine, machineCode);
@@ -366,10 +339,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	public void set(Movement movement,String movementCollectionCode,String value){
-		movement.setValue(value==null?null : new BigDecimal(value));
 		movement.setCollection(inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode));
-		movement.setCode(movementCollectionCode+"_"+RandomStringUtils.randomAlphabetic(3));
-		movement.setName(movement.getCode());
+		movement.setValue(value==null?null : new BigDecimal(value));
 		movement.setAction(movement.getValue() == null ? null : movement.getValue().signum() == 1 ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction());
 	}
 	

@@ -13,17 +13,17 @@ public class ElectronicMailDaoImpl extends AbstractContactDaoImpl<ElectronicMail
     @Override
     protected void namedQueriesInitialisation() {
         super.namedQueriesInitialisation();
-        registerNamedQuery(readByValue, _select().where("address"));
+        registerNamedQuery(readByValue, _select().where(ElectronicMail.FIELD_ADDRESS));
     }
     
 	@Override
 	public Collection<ElectronicMail> readByValue(String address) {
-		return namedQuery(readByValue).parameter("address", address).resultMany();
+		return castCollection(namedQuery(readByValue).parameter(ElectronicMail.FIELD_ADDRESS, address).resultMany(),ElectronicMail.class);
 	}
 	
 	@Override
 	public Long countByValue(String address) {
-		return countNamedQuery(countByValue).parameter("address", address).resultOne();
+		return countNamedQuery(countByValue).parameter(ElectronicMail.FIELD_ADDRESS, address).resultOne();
 	}
 	
    

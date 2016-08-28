@@ -12,6 +12,7 @@ import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.utility.test.integration.AbstractIntegrationTestJpaBased;
 import org.cyk.utility.test.ArchiveBuilder;
 import org.cyk.utility.test.TestMethod;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 
 /**
@@ -29,6 +30,11 @@ public abstract class AbstractPersistenceIT extends AbstractIntegrationTestJpaBa
 		.persistence(classes);
 		return builder;
 	}
+	
+	@Deployment
+	public static Archive<?> createDeployment() {
+	    return createRootDeployment();
+	} 
 		
 	@Inject @Getter private GenericDao genericDao;
 	

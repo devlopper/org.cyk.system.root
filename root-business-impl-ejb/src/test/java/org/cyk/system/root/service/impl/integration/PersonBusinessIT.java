@@ -1,33 +1,23 @@
 package org.cyk.system.root.service.impl.integration;
 
-import javax.inject.Inject;
-
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
-import org.cyk.system.root.business.impl.RootRandomDataProvider;
 import org.cyk.system.root.model.party.person.Person;
 
 public class PersonBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
     
-    @Inject private PersonBusiness personBusiness;
     private static final String CODE = "1"; 
     
-    
-    @Override
-    protected void finds() {
-        
-    }
-
     @Override
     protected void businesses() {
     	
-    	Person person = RootRandomDataProvider.getInstance().person();
+    	Person person = inject(PersonBusiness.class).instanciateOneRandomly();
         person.setCode(CODE);
-        personBusiness.create(person);
+        inject(PersonBusiness.class).create(person);
         assertThat("Person created", person.getIdentifier()!=null);
     	
-        person = personBusiness.findByGlobalIdentifierCode(CODE);
+        person = inject(PersonBusiness.class).find(CODE);
         assertThat("Person found by global identifier code", person!=null);
         
     	/*for(int i=0;i<20;i++){

@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +38,19 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override
 	protected PersistenceService<IDENTIFIABLE, Long> getPersistenceService() {
 	    return dao;
+	}
+	
+	@Override
+	public IDENTIFIABLE instanciateOneRandomly() {
+		return instanciateOne();
+	}
+
+	@Override
+	public Collection<IDENTIFIABLE> instanciateManyRandomly(Integer count) {
+		Collection<IDENTIFIABLE> collection = new ArrayList<>();
+		for(int index = 0; index < count ; index++)
+			collection.add(instanciateOneRandomly());
+		return collection;
 	}
 
 	@Override

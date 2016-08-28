@@ -2,11 +2,10 @@ package org.cyk.system.root.business.api.geography;
 
 import java.util.Collection;
 
-import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
 
-public interface ContactBusiness extends TypedBusiness<Contact> {
+public interface ContactBusiness extends AbstractContactBusiness<Contact> {
     
 	Collection<Contact> findByCollections(Collection<ContactCollection> collections);
     Long countByCollections(Collection<ContactCollection> collections);

@@ -2,11 +2,18 @@ package org.cyk.system.root.business.impl.geography;
 
 import java.io.Serializable;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.LocationBusiness;
+import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.geography.LocationType;
+import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.LocationDao;
+import org.cyk.system.root.persistence.api.geography.LocationTypeDao;
+import org.cyk.utility.common.generator.RandomDataProvider;
 
 public class LocationBusinessImpl extends AbstractContactBusinessImpl<Location, LocationDao> implements LocationBusiness,Serializable {
 
@@ -15,6 +22,15 @@ public class LocationBusinessImpl extends AbstractContactBusinessImpl<Location, 
 	@Inject
 	public LocationBusinessImpl(LocationDao dao) {
 		super(dao); 
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Location instanciateOneRandomly() {
+		Location location = new Location();
+		location.setOtherDetails(RandomDataProvider.getInstance().randomWord(RandomDataProvider.WORD_LOCATION, 5, 10));
+		location.setLocality(inject(CountryDao.class).read(Country.COTE_DIVOIRE).getLocality());
+		location.setType(inject(LocationTypeDao.class).read(LocationType.HOME));
+		return location; 
 	}
 
 }

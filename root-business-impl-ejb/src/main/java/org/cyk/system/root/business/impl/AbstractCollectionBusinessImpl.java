@@ -66,8 +66,8 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		if(collection.getCollection()!=null){
 			for(ITEM item : collection.getCollection()){
 				item.setCollection(collection);
-				if(StringUtils.isNotBlank(item.getCollection().getItemCodeSeparator()) && !StringUtils.contains(item.getCode(), item.getCollection().getItemCodeSeparator()))
-					item.setCode(item.getCollection().getCode()+item.getCollection().getItemCodeSeparator()+item.getCode());
+				if(StringUtils.isNotBlank(collection.getItemCodeSeparator()) && !StringUtils.contains(item.getCode(), collection.getItemCodeSeparator()))
+					item.setCode(collection.getCode()+collection.getItemCodeSeparator()+item.getCode());
 				item = createItem(item);
 			}
 		}

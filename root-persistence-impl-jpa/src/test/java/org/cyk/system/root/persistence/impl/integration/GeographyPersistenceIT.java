@@ -1,7 +1,5 @@
 package org.cyk.system.root.persistence.impl.integration;
 
-import javax.inject.Inject;
-
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.ElectronicMail;
@@ -10,25 +8,12 @@ import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
 public class GeographyPersistenceIT extends AbstractPersistenceIT {
 	
 	private static final long serialVersionUID = 5955832118708678179L;
-
-	@Deployment
-	public static Archive<?> createDeployment() {
-	    return createRootDeployment();
-	} 
-	 
-	@Inject private ContactDao contactDao;
-	/*
-	@Inject private ContactCollectionDao contactCollectionDao;
-	@Inject private ElectronicMailDao electronicMailDao;
-		*/
-	
+ 
 	private ContactCollection contactCollection1,contactCollection2;
 	private PhoneNumberType mobile;
 	private LocalityType country;
@@ -54,21 +39,21 @@ public class GeographyPersistenceIT extends AbstractPersistenceIT {
 	 
 	@Override
 	protected void queries() {
-		assertContactCount("All contacts",21, contactDao.countAll());
-		assertContactCount("All collection 1 contacts",9, contactDao.countByCollection(contactCollection1));
-		assertContactCount("All collection 2 contacts",5, contactDao.countByCollection(contactCollection2));
+		assertContactCount("All contacts",21, inject(ContactDao.class).countAll());
+		assertContactCount("All collection 1 contacts",9, inject(ContactDao.class).countByCollection(contactCollection1));
+		assertContactCount("All collection 2 contacts",5, inject(ContactDao.class).countByCollection(contactCollection2));
 		
-		assertContactCount("All email contacts",9, contactDao.countByClass(ElectronicMail.class));
-		contains(ElectronicMail.class, contactDao.readByClass(ElectronicMail.class), new Object[]{"address"}, new Object[][]{
+		assertContactCount("All email contacts",9, inject(ContactDao.class).countByClass(ElectronicMail.class));
+		contains(ElectronicMail.class, inject(ContactDao.class).readByClass(ElectronicMail.class), new Object[]{"address"}, new Object[][]{
 			 {"z1@mail.com"},{"z2@mail.com"},{"z3@mail.com"},{"z4@mail.com"},{"a1@mail.com"},{"a2@mail.com"},{"b1@mail.com"},{"b2@mail.com"},{"b3@mail.com"}
 		});
 		
-		assertContactCount("All phone contacts",12, contactDao.countByClass(PhoneNumber.class));
-		assertContactCount("All collection 1 email contacts",2, contactDao.countByCollectionByClass(contactCollection1,ElectronicMail.class));
-		assertContactCount("All collection 1 phone contacts",7, contactDao.countByCollectionByClass(contactCollection1,PhoneNumber.class));
-		assertContactCount("All collection 2 email contacts",3, contactDao.countByCollectionByClass(contactCollection2,ElectronicMail.class));
-		assertContactCount("All collection 2 phone contacts",2, contactDao.countByCollectionByClass(contactCollection2,PhoneNumber.class));
-		
+		assertContactCount("All phone contacts",12, inject(ContactDao.class).countByClass(PhoneNumber.class));
+		assertContactCount("All collection 1 email contacts",2, inject(ContactDao.class).countByCollectionByClass(contactCollection1,ElectronicMail.class));
+		assertContactCount("All collection 1 phone contacts",7, inject(ContactDao.class).countByCollectionByClass(contactCollection1,PhoneNumber.class));
+		assertContactCount("All collection 2 email contacts",3, inject(ContactDao.class).countByCollectionByClass(contactCollection2,ElectronicMail.class));
+		assertContactCount("All collection 2 phone contacts",2, inject(ContactDao.class).countByCollectionByClass(contactCollection2,PhoneNumber.class));
+
 	}
 	
 	private void mails(ContactCollection collection,String...values){

@@ -15,6 +15,9 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     void load(IDENTIFIABLE identifiable);
     void load(Collection<IDENTIFIABLE> identifiables);
     
+    IDENTIFIABLE instanciateOneRandomly();
+    Collection<IDENTIFIABLE> instanciateManyRandomly(Integer count);
+    
     Collection<IDENTIFIABLE> findAll(); 
     Long countAll();
     

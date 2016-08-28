@@ -8,7 +8,6 @@ import java.util.Collection;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.Constant;
 
 import lombok.Getter;
@@ -28,26 +27,39 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		super(code, name, abbreviation, description);
 	}
 
-	public Collection<ITEM> getCollection(){
+	/*public Collection<ITEM> getCollection(){
 		if(collection==null)
 			collection = new ArrayList<>();
 		return collection;
+	}*/
+	
+	public ITEM addItem(String name){
+		ITEM item = addItem(null,name);
+		//item.setCode( (StringUtils.isBlank(itemCodeSeparator) ? Constant.EMPTY_STRING : (getCode()+itemCodeSeparator))+code);
+		return item;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public ITEM addItem(String code, String name){
+	public ITEM addItem(String code,String name){
 		Class<ITEM> clazz = (Class<ITEM>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		try {
 			ITEM item = clazz.newInstance();
-			item.setCode( (StringUtils.isBlank(itemCodeSeparator) ? Constant.EMPTY_STRING : (getCode()+itemCodeSeparator))+code);
+			item.setCode(code);
 			item.setName(name);
 			((AbstractCollectionItem<AbstractCollection<ITEM>>)item).setCollection(this);
-			getCollection().add(item);
+			add(item);
 			return item;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public ITEM add(ITEM item){
+		if(collection==null)
+			collection = new ArrayList<>();
+		collection.add(item);
+		return item;
 	}
 	
 	@Override

@@ -102,4 +102,22 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		return movement;
 	}
 	
+	@Override
+	public void completeInstanciationOfOne(Movement movement) {
+		super.completeInstanciationOfOne(movement);
+		if(movement.getCollection()!=null && movement.getCollection().getIdentifier()==null)
+			movement.setCollection(inject(MovementCollectionDao.class).read(movement.getCollection().getCode()));
+	}
+	
+	@Override
+	public void completeInstanciationOfOneFromValues(Movement movement,AbstractCompleteInstanciationOfOneFromValuesArguments<Movement> completeInstanciationOfOneFromValuesArguments) {
+		super.completeInstanciationOfOneFromValues(movement, completeInstanciationOfOneFromValuesArguments);
+		CompleteMovementInstanciationOfOneFromValuesArguments arguments = (CompleteMovementInstanciationOfOneFromValuesArguments) completeInstanciationOfOneFromValuesArguments;
+		completeInstanciationOfOneFromValuesBeforeProcessing(movement,arguments.getValues(),arguments.getListener());
+		
+		if(arguments.getMovementCollectionCodeIndex()!=null){
+			movement.setCollection(new MovementCollection());
+			movement.getCollection().setCode(arguments.getValues()[arguments.getMovementCollectionCodeIndex()]);
+		}
+	}
 }

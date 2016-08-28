@@ -81,6 +81,8 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	//private String htmlStyle;//TODO how to use it???
 	
+	@Column private String externalIdentifier;//This value is used to link to another system
+	
 	public GlobalIdentifier() {}
 	
 	public GlobalIdentifier(AbstractIdentifiable identifiable) {

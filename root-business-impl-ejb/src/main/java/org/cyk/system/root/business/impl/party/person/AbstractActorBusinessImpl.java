@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,6 +41,31 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return actor;
 	}
 	
+	@Override
+	public ACTOR instanciateOne(String code, String[] names) {
+		ACTOR actor = super.instanciateOne();
+		actor.setCode(code);
+		actor.setName(commonUtils.getValueAt(names, 0));
+		actor.getPerson().setLastnames(commonUtils.getValueAt(names, 1));
+		return actor;
+	}
+	
+
+	@Override
+	public Collection<ACTOR> instanciateMany(String[] codes) {
+		Collection<ACTOR> actors = new ArrayList<>();
+		for(String code : codes)
+			actors.add(instanciateOne(code, null));
+		return actors;
+	}
+
+	@Override
+	public ACTOR instanciateOneRandomly() {
+		ACTOR actor = super.instanciateOne();
+		actor.setPerson(inject(PersonBusiness.class).instanciateOneRandomly());
+		return actor;
+	}
+
 	@Override
 	public ACTOR create(ACTOR anActor) {
 		if(anActor.getPerson().getIdentifier()==null){

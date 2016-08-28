@@ -23,7 +23,6 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 
 	@Inject protected RootDataProducerHelper rootDataProducerHelper;
 	@Inject protected RootBusinessLayer rootBusinessLayer;
-	@Inject protected RootRandomDataProvider rootRandomDataProvider;
 	@Inject protected GenericBusiness genericBusiness;
 	protected Listener listener;
 	

@@ -18,7 +18,7 @@ public class PhoneNumberDaoImpl extends AbstractContactDaoImpl<PhoneNumber> impl
     
 	@Override
 	public Collection<PhoneNumber> readByValue(String address) {
-		return namedQuery(readByValue).parameter(PhoneNumber.FIELD_NUMBER, address).resultMany();
+		return castCollection(namedQuery(readByValue).parameter(PhoneNumber.FIELD_NUMBER, address).resultMany(),PhoneNumber.class);
 	}
 	
 	@Override

@@ -19,7 +19,7 @@ public class WebsiteDaoImpl extends AbstractContactDaoImpl<Website> implements W
     
 	@Override
 	public Collection<Website> readByValue(String address) {
-		return namedQuery(readByValue).parameter(UniformResourceLocator.FIELD_ADDRESS, address).resultMany();
+		return castCollection(namedQuery(readByValue).parameter(UniformResourceLocator.FIELD_ADDRESS, address).resultMany(),Website.class);
 	}
 	
 	@Override

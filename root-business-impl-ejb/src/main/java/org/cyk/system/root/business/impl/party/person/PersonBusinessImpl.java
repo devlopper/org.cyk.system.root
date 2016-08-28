@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.party.person;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -11,10 +12,14 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
+import org.cyk.system.root.business.api.geography.LocationBusiness;
 import org.cyk.system.root.business.api.language.LanguageCollectionBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobInformations;
@@ -27,11 +32,18 @@ import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
+import org.cyk.system.root.persistence.api.party.person.JobFunctionDao;
 import org.cyk.system.root.persistence.api.party.person.JobInformationsDao;
+import org.cyk.system.root.persistence.api.party.person.JobTitleDao;
 import org.cyk.system.root.persistence.api.party.person.MedicalInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.party.person.PersonExtendedInformationsDao;
+import org.cyk.system.root.persistence.api.party.person.PersonTitleDao;
+import org.cyk.system.root.persistence.api.party.person.SexDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
+import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
 
 @Stateless
 public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao,SearchCriteria> implements PersonBusiness,Serializable {
@@ -56,6 +68,51 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		Person person = super.instanciateOne();
 		person.setExtendedInformations(new PersonExtendedInformations(person));
 		person.setJobInformations(new JobInformations(person));
+		return person;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Person instanciateOne(String code, String[] names) {
+		Person person = instanciateOne();
+		person.setCode(code);
+		person.setName(commonUtils.getValueAt(names, 0));
+		person.setLastnames(commonUtils.getValueAt(names, 1));
+		return person;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Person instanciateOneRandomly() {
+		Boolean male = RandomDataProvider.getInstance().randomBoolean();
+		RandomPerson randomPerson = Boolean.TRUE.equals(male)?RandomDataProvider.getInstance().getMale()
+				:RandomDataProvider.getInstance().getFemale();
+		Person person = new Person();
+		person.getGlobalIdentifierCreateIfNull();
+		person.setExtendedInformations(new PersonExtendedInformations(person));
+		person.setJobInformations(new JobInformations(person));
+		
+		person.setName(randomPerson.firstName());
+		person.setLastnames(randomPerson.lastName());
+		person.setSex(inject(SexDao.class).read(Boolean.TRUE.equals(male)?Sex.MALE:Sex.FEMALE));
+		person.setSurname(randomPerson.surName());
+		person.setBirthDate(RandomDataProvider.getInstance().randomDate(DateUtils.addYears(new Date(), -50), DateUtils.addYears(new Date(), -20)) );
+		person.setContactCollection(inject(ContactCollectionBusiness.class).instanciateOneRandomly());
+		File photo = new File();
+		RandomFile randomFile = randomPerson.photo();
+		photo.setBytes(randomFile.getBytes());
+		photo.setExtension(randomFile.getExtension());
+		person.setImage(photo);
+		
+		person.getExtendedInformations().setBirthLocation((Location) inject(LocationBusiness.class).instanciateOneRandomly());
+		person.getExtendedInformations().setTitle(inject(PersonTitleDao.class).readOneRandomly());
+		person.getJobInformations().setTitle(inject(JobTitleDao.class).readOneRandomly());
+		person.getJobInformations().setFunction(inject(JobFunctionDao.class).readOneRandomly());
+		
+		File signature = new File();
+		randomFile = RandomDataProvider.getInstance().signatureSpecimen();
+		signature.setBytes(randomFile.getBytes());
+		signature.setExtension(randomFile.getExtension());
+		person.getExtendedInformations().setSignatureSpecimen(signature);
+			
 		return person;
 	}
 	

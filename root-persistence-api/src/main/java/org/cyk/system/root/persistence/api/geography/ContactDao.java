@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 
-public interface ContactDao extends TypedDao<Contact> {
+public interface ContactDao extends AbstractCollectionItemDao<Contact,ContactCollection> {
 
     //Collection<Contact> readByClasses(Collection<Class<? extends Contact>> classes);
     //Long countByClasses(Collection<Class<? extends Contact>> classes);

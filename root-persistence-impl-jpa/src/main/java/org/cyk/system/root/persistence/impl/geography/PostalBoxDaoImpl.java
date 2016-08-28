@@ -18,7 +18,7 @@ public class PostalBoxDaoImpl extends AbstractContactDaoImpl<PostalBox> implemen
     
 	@Override
 	public Collection<PostalBox> readByValue(String address) {
-		return namedQuery(readByValue).parameter(PostalBox.FIELD_VALUE, address).resultMany();
+		return castCollection(namedQuery(readByValue).parameter(PostalBox.FIELD_VALUE, address).resultMany(),PostalBox.class);
 	}
 	
 	@Override

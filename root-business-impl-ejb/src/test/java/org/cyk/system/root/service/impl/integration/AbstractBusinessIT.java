@@ -108,12 +108,14 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	
 	/* Shortcut */
     
-    protected AbstractIdentifiable create(AbstractIdentifiable object){
-        return genericBusiness.create(object);
+    @SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> T create(T object){
+        return (T) genericBusiness.create(object);
     }
     
-    protected AbstractIdentifiable update(AbstractIdentifiable object){
-        return genericBusiness.update(object);
+    @SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> T update(T object){
+        return (T) genericBusiness.update(object);
     }
     
     protected void validate(Object object){
