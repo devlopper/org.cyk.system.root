@@ -42,5 +42,11 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		return item;
 	}
 	
-	
+	@Override
+	public ITEM instanciateOne(COLLECTION collection) {
+		ITEM item = instanciateOne();
+		item.setCollection(collection);
+		collection.add(item);
+		return item;
+	}
 }
