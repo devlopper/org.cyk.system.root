@@ -11,12 +11,9 @@ import java.util.Locale;
 
 import javax.inject.Singleton;
 
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
-import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 
@@ -28,8 +25,6 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 	//private NumberFormat numberFormatter = NumberFormat.getNumberInstance(currentLocale);
 	//private DecimalFormat myFormatter = new DecimalFormat(pattern);
 
-	@Setter private LanguageBusiness languageBusiness = LanguageBusinessImpl.getInstance();
-	
 	@Override
 	public String format(Number number, Locale locale) {
 		if(number==null)
@@ -40,14 +35,14 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 	
 	@Override
 	public String format(Number number) {
-		return format(number, languageBusiness.findCurrentLocale());
+		return format(number, inject(LanguageBusiness.class).findCurrentLocale());
 	}
 	
 	@Override
 	public String format(Number number, FormatArguments arguments) {
 		StringBuilder stringBuilder = new StringBuilder();
 		if(FormatArguments.CharacterSet.DIGIT.equals(arguments.getType())){
-			NumberFormat numberFormatter = NumberFormat.getNumberInstance(arguments.getLocale()==null?languageBusiness.findCurrentLocale():arguments.getLocale());
+			NumberFormat numberFormatter = NumberFormat.getNumberInstance(arguments.getLocale()==null?inject(LanguageBusiness.class).findCurrentLocale():arguments.getLocale());
 			if(Boolean.TRUE.equals(arguments.getIsPercentage())){
 				number = new BigDecimal(number.toString()).multiply(_100);
 			}
@@ -58,7 +53,7 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 			}
 		}else if(FormatArguments.CharacterSet.LETTER.equals(arguments.getType())){
 			if(Boolean.TRUE.equals(arguments.getIsRank())){
-				return languageBusiness.findText("rank."+number+".letter");
+				return inject(LanguageBusiness.class).findText("rank."+number+".letter");
 			}else{
 				throw new RuntimeException("Not yet implemented");
 			}

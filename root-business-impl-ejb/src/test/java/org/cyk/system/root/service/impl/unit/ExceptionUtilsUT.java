@@ -31,8 +31,6 @@ public class ExceptionUtilsUT extends AbstractUnitTest {
 		exceptionUtils.setLanguageBusiness(languageBusiness);
 		exceptionUtils.setNumberBusiness(numberBusiness);
 		exceptionUtils.setTimeBusiness(timeBusiness);
-		
-		numberBusiness.setLanguageBusiness(languageBusiness);
 	}
 	
 	@Test
