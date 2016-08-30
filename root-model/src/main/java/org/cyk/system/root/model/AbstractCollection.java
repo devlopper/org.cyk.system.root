@@ -22,6 +22,8 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	protected String itemCodeSeparator = Constant.CHARACTER_UNDESCORE.toString(); 
 	
 	@Transient protected Collection<ITEM> collection;
+	
+	@Transient protected Collection<ITEM> collectionToDelete;
 
 	public AbstractCollection(String code, String name, String abbreviation,String description) {
 		super(code, name, abbreviation, description);
@@ -59,6 +61,13 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		if(collection==null)
 			collection = new ArrayList<>();
 		collection.add(item);
+		return item;
+	}
+	
+	public ITEM addToDelete(ITEM item){
+		if(collectionToDelete==null)
+			collectionToDelete = new ArrayList<>();
+		collectionToDelete.add(item);
 		return item;
 	}
 	

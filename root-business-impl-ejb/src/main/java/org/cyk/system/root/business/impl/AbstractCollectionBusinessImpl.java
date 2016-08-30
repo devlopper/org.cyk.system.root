@@ -80,6 +80,10 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 			for(ITEM item : collection.getCollection()){
 				getItemBusiness().update(item);
 			}
+		if(collection.getCollectionToDelete()!=null)
+			for(ITEM item : collection.getCollectionToDelete()){
+				getItemBusiness().delete(item);
+			}
 		return super.update(collection);
 	}
 	
