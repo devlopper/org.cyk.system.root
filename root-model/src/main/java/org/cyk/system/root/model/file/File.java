@@ -7,6 +7,7 @@ import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,8 @@ public class File extends AbstractIdentifiable implements Serializable{
 	 * Multipurpose Internet Mail Extension
 	 */
 	private String mime;
+	
+	@ManyToOne private FileRepresentationType representationType;
 	
 	@Override
 	public String toString() {

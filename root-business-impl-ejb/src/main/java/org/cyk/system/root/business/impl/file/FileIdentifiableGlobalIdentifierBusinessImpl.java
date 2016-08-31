@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.file;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
@@ -8,7 +9,9 @@ import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBus
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.globalidentification.AbstractJoinGlobalIdentifierBusinessImpl;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 
 public class FileIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGlobalIdentifierBusinessImpl<FileIdentifiableGlobalIdentifier, FileIdentifiableGlobalIdentifierDao,FileIdentifiableGlobalIdentifier.SearchCriteria> implements FileIdentifiableGlobalIdentifierBusiness,Serializable {
 
@@ -38,6 +41,13 @@ public class FileIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGl
 		fileIdentifiableGlobalIdentifier.setFile(null);
 		fileIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(null);
 		return super.delete(fileIdentifiableGlobalIdentifier);
+	}
+	
+	@Override
+	public Collection<FileIdentifiableGlobalIdentifier> findByCriteria(SearchCriteria searchCriteria) {
+		if(searchCriteria.getRepresentationTypes().isEmpty())
+			searchCriteria.setRepresentationTypes(inject(FileRepresentationTypeDao.class).readAll());
+		return super.findByCriteria(searchCriteria);
 	}
 	
 }

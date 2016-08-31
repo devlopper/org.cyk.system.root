@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemalocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
 
-	<entity name="PersonTestEntity"
+	<!--entity name="PersonTestEntity"
 		class="org.cyk.system.root.service.impl.data.PersonTestEntity" access="FIELD">
 		<attributes>
 			<id name="identifier">
@@ -13,6 +13,6 @@
 					pk-column-value="EMP_SEQ" />
 			</id>
 		</attributes>
-	</entity>
+	</entity-->
 
 </entity-mappings>

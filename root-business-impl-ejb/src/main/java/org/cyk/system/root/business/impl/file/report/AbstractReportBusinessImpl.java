@@ -43,7 +43,7 @@ public abstract class AbstractReportBusinessImpl extends AbstractBusinessService
 	public static Boolean SHOW_OWNER_LOGO = Boolean.TRUE;
 	
 	public static final String FILE_NAME_FORMAT = "%s - %s - %s - %s";
-	public static final String DEFAULT_FILE_EXTENSION = "pdf";
+	
 	public static final String DEFAULT_REPORT_FIELD_NAME = "report";
 	
 	@Inject protected LanguageBusiness languageBusiness;

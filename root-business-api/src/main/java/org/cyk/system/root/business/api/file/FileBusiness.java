@@ -33,6 +33,8 @@ public interface FileBusiness extends TypedBusiness<File> {
     
     ByteArrayOutputStream merge(Collection<File> files,FileExtension fileExtension);
     
+    void writeTo(File file,java.io.File directory,String name);
+    
     /* Media Stuff */
     
     URI findThumbnailUri(File file,ThumnailSize size);

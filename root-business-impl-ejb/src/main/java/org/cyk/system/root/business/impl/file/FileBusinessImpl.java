@@ -21,6 +21,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -30,6 +31,7 @@ import org.cyk.system.root.business.api.file.StreamBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.persistence.api.file.FileDao;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.FileExtension;
 
 public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao> implements FileBusiness,Serializable {
@@ -44,8 +46,6 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		super(dao); 
 	}
 
-	
-	
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) //TODO is this Support and followings really needed ???
     public File process(byte[] bytes, String name) {
         if(bytes==null || bytes.length==0)
@@ -66,6 +66,19 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
             file.setMime(findMime(file.getExtension()));
         }
 	}
+    
+    @Override
+    public void writeTo(File file,java.io.File directory,String name) {
+    	try {
+    		// new java.io.File(directory,aReport.getFileName()+"."+aReport.getFileExtension())
+			//FileUtils.writeByteArrayToFile(directory, file.getBytes());
+    		if(StringUtils.isNotBlank(file.getExtension()))
+    			name = name+Constant.CHARACTER_DOT+file.getExtension();
+    		FileUtils.writeByteArrayToFile(new java.io.File(directory,name), IOUtils.toByteArray(findInputStream(file)));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+    }
 
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public String findMime(String extension) {

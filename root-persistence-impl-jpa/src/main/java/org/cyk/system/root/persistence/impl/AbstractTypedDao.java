@@ -85,8 +85,10 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
-		queryWrapper.parameter(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getPreparedValue());
-		queryWrapper.parameter(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getPreparedValue());
+		if(searchCriteria instanceof GlobalIdentifier.SearchCriteria){
+			queryWrapper.parameter(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getPreparedValue());
+			queryWrapper.parameter(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getPreparedValue());
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

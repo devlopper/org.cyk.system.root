@@ -70,4 +70,6 @@ public interface ReportBusiness {
     	private String fieldNameInContainer,fileExtension,title;
     	private Boolean persist = Boolean.FALSE;
     }
+    
+    String DEFAULT_FILE_EXTENSION = "pdf";
 }

@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -258,9 +259,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		
 		return deleted;
 	}
+	
+	@Override
+	public File createFile(IDENTIFIABLE identifiable,String fileRepresentationTypeCode) {
+		throw new RuntimeException("Not yet implemented");
+	}
 
 	/**/
-	
+
 	public static interface Listener<IDENTIFIABLE extends AbstractIdentifiable> {
 		
 		Map<Class<? extends AbstractIdentifiable>,Listener<? extends AbstractIdentifiable>> MAP = new HashMap<>();

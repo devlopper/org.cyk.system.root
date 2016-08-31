@@ -42,6 +42,7 @@ import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
@@ -283,7 +284,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         language();
         party();
         security();
-        
+        file();
     }
     
     private void geography(){
@@ -367,6 +368,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private void notificationTemplate(String code,String name,String titleFileName,String bodyFileName){
     	notificationTemplate(code, name, "template", titleFileName, "template", bodyFileName);
+    }
+    
+    private void file(){ 
+    	createEnumeration(FileRepresentationType.class,FileRepresentationType.IDENTITY_IMAGE);
+        createEnumeration(FileRepresentationType.class,FileRepresentationType.POINT_OF_SALE);
     }
     
     private void time(){ 

@@ -1,6 +1,8 @@
 package org.cyk.system.root.model.file;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -32,16 +34,33 @@ public class FileIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifi
 	
 	/**/
 	
+	public FileIdentifiableGlobalIdentifier(File file,AbstractIdentifiable identifiable){
+		this.file = file;
+		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
+	}
+	
+	/**/
+	
 	@Getter @Setter
 	public static class SearchCriteria extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria implements Serializable {
 
 		private static final long serialVersionUID = 6796076474234170332L;
+		
+		private Collection<FileRepresentationType> representationTypes = new ArrayList<>();
 		
 		public SearchCriteria addGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers){
 			return (SearchCriteria) super.addGlobalIdentifiers(globalIdentifiers);
 		}
 		public SearchCriteria addGlobalIdentifier(GlobalIdentifier globalIdentifier){
 			return (SearchCriteria) super.addGlobalIdentifier(globalIdentifier);
+		}
+		
+		public SearchCriteria addRepresentationTypes(Collection<FileRepresentationType> representationTypes){
+			this.representationTypes.addAll(representationTypes);
+			return this;
+		}
+		public SearchCriteria addRepresentationType(FileRepresentationType RepresentationType){
+			return addRepresentationTypes(Arrays.asList(RepresentationType));
 		}
 		
 	}
