@@ -5,20 +5,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.cyk.utility.common.generator.AbstractGeneratable;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor
-public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractIdentifiableReport<TEMPLATE> implements Serializable {
+public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGeneratable<TEMPLATE> implements Serializable {
 	  
 	private static final long serialVersionUID = 5632592320990657808L;
 
-	protected String title;
+	protected String header,footer,title;
 	
 	protected LabelValueCollectionReport currentLabelValueCollection;
 	protected List<LabelValueCollectionReport> labelValueCollections = new ArrayList<>();
+
+	@Override
+	public void generate() {
+		header = provider.randomLine(1, 2);
+		footer = provider.randomLine(1, 2);
+		title = provider.randomLine(1, 2);
+	}
 	
 	public void labelValue(LabelValueCollectionReport collection,String labelId,String labelValue,String value,Boolean condition){
 		if(!Boolean.TRUE.equals(condition))
