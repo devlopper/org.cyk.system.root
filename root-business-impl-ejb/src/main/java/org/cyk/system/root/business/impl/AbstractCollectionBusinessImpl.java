@@ -50,7 +50,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		for(String v : items){
 			ITEM item = instanciateOneItem(new String[]{v},null);
 			item.setCollection(collection);
-			collection.getCollection().add(item);
+			collection.add(item);
 		}
 		return collection;
 	}

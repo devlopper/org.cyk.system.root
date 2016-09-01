@@ -147,7 +147,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	protected void set(AbstractActor actor,ActorReport report){
-		set(actor==null?null:actor.getPerson(), report.getCommonActor().getPerson());
+		set(actor==null?null:actor.getPerson(), report.getPerson());
 		if(actor==null){
 			
 		}else{
@@ -157,7 +157,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	protected void set(Person person,ActorReport report){
-		set(person, report.getCommonActor().getPerson());
+		set(person, report.getPerson());
 	}
 	
 	protected void set(Interval interval,IntervalReport report){

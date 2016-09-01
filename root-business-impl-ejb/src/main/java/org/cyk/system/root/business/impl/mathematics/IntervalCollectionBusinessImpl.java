@@ -71,7 +71,7 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	public IntervalCollection instanciateOne(String code,String name,String itemCodeSeparator,String[][] intervals){
 		IntervalCollection collection = instanciateOne(code,name);
 		for(String[] v : intervals){
-			collection.getCollection().add(new Interval(collection,v[0],v[1],commonUtils.getBigDecimal(v[2]),commonUtils.getBigDecimal(v[3])));
+			collection.add(new Interval(collection,v[0],v[1],commonUtils.getBigDecimal(v[2]),commonUtils.getBigDecimal(v[3])));
 		}
 		return collection;
 	}
