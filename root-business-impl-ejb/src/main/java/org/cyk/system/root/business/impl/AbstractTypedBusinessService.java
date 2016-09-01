@@ -12,10 +12,19 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.business.api.file.report.ReportBusiness;
+import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
+import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -261,8 +270,21 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	@Override
-	public File createFile(IDENTIFIABLE identifiable,String fileRepresentationTypeCode) {
+	public File createFile(IDENTIFIABLE identifiable,File file) {
 		throw new RuntimeException("Not yet implemented");
+	}
+	
+	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,File reportTemplate,AbstractIdentifiable identifiable,File file,RootReportProducer reportProducer){
+		REPORT paymentReceiptReport = reportProducer.produce(reportClass,identifiable);
+		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(paymentReceiptReport, reportTemplate
+				, file.getExtension());
+		inject(FileBusiness.class).process(file,reportBasedOnTemplateFile.getBytes(), "report."+StringUtils.defaultIfBlank(file.getExtension(),ReportBusiness.DEFAULT_FILE_EXTENSION));
+		FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier = new FileIdentifiableGlobalIdentifier(file, identifiable);
+		inject(GenericBusiness.class).create(fileIdentifiableGlobalIdentifier);
+	}
+	
+	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,File reportTemplate,AbstractIdentifiable identifiable,File file){
+		createReportFile(reportClass, reportTemplate, identifiable, file,AbstractRootReportProducer.DEFAULT);
 	}
 
 	/**/

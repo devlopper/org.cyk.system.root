@@ -69,7 +69,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 
 	//public static final Collection<TestEnvironmentListener> TEST_ENVIRONMENT_LISTENERS = TestEnvironmentListener.COLLECTION; //new ArrayList<>();
 	
-	protected String reportFolder = "target/report";
+	protected String reportFolder = "target/file/report";
+	protected String fileFolder = "target/file";
 	
 	protected RandomDataProvider randomDataProvider = RandomDataProvider.getInstance();
 	
@@ -229,6 +230,18 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+    }
+	
+	public void write(org.cyk.system.root.model.file.File file,String name){
+    	try {
+			write(file.getBytes(), System.getProperty("user.dir")+"/"+fileFolder+"/"+name+Constant.CHARACTER_DOT+file.getExtension());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+	
+	public void write(org.cyk.system.root.model.file.File file){
+    	write(file, "file"+System.currentTimeMillis());
     }
 	
 	protected void writeStream(ByteArrayOutputStream byteArrayOutputStream,String name,String extension){

@@ -58,7 +58,8 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     @Override
 	public void process(File file, byte[] bytes, String name) {
     	file.setBytes(bytes);
-        file.setExtension(findExtension(name));
+    	if(StringUtils.isBlank(file.getExtension()))
+    		file.setExtension(findExtension(name));
         if(file.getExtension()==null){
         	file.setMime(null);
         }else{

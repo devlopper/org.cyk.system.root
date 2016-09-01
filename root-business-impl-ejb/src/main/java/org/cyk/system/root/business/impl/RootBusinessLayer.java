@@ -372,7 +372,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private void file(){ 
     	createEnumeration(FileRepresentationType.class,FileRepresentationType.IDENTITY_IMAGE);
-        createEnumeration(FileRepresentationType.class,FileRepresentationType.POINT_OF_SALE);
+        createEnumeration(FileRepresentationType.class,FileRepresentationType.IDENTITY_DOCUMENT);
     }
     
     private void time(){ 

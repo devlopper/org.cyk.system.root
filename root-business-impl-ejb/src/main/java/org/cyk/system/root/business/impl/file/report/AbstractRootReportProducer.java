@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl;
+package org.cyk.system.root.business.impl.file.report;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.RootReportProducer;
+import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.impl.AbstractRootBusinessBean;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
@@ -43,8 +46,15 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	private static final String JASPER_STYLE = "<style size=\"%s\" forecolor=\"%s\">%s</style>";
 	public static String NULL_VALUE = "NA";
 	public static String NOT_APPLICABLE = "NA";
+	public static RootReportProducer DEFAULT;
+	
 	
 	protected LabelValueCollectionReport currentLabelValueCollection;
+	
+	@Override
+	public <REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass, AbstractIdentifiable identifiable) {
+		return null;
+	}
 	
 	protected String getJasperStyle(String text,Style style){
 		return String.format(JASPER_STYLE, style.getFont().getSize(),"#"+style.getText().getColor().getHexademicalCode(),text);

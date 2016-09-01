@@ -29,7 +29,7 @@ public class FileBusinessIT extends AbstractBusinessIT {
 			file1 = fileBusiness.find(file1.getIdentifier());
 			
 			File file2 = fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream("file/sequencediagram.pdf")), "sequencediagram.pdf");
-			file2.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.POINT_OF_SALE));
+			file2.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_DOCUMENT));
 			create(file2);
 			file2 = fileBusiness.find(file2.getIdentifier());
 			
@@ -53,7 +53,7 @@ public class FileBusinessIT extends AbstractBusinessIT {
 			assertEquals(4, fileIdentifiableGlobalIdentifiers.size());
 			
 			searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
-			searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.POINT_OF_SALE));
+			searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_DOCUMENT));
 			searchCriteria.addGlobalIdentifier(sexMale.getGlobalIdentifier());
 			searchCriteria.addGlobalIdentifier(sexFemale.getGlobalIdentifier());
 			fileIdentifiableGlobalIdentifiers = fileIdentifiableGlobalIdentifierBusiness.findByCriteria(searchCriteria);
@@ -61,7 +61,7 @@ public class FileBusinessIT extends AbstractBusinessIT {
 			
 			searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
 			searchCriteria.addGlobalIdentifier(sexMale.getGlobalIdentifier());
-			searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.POINT_OF_SALE));
+			searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_DOCUMENT));
 			fileIdentifiableGlobalIdentifiers = fileIdentifiableGlobalIdentifierBusiness.findByCriteria(searchCriteria);
 			assertEquals(1, fileIdentifiableGlobalIdentifiers.size());
 			

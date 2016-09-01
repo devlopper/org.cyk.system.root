@@ -60,7 +60,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	 */
 	Collection<IDENTIFIABLE> find(Collection<String> globalIdentifierCodes);
     
-	File createFile(IDENTIFIABLE identifiable,String fileRepresentationTypeCode);
+	File createFile(IDENTIFIABLE identifiable,File file);
 	
     //TODO clone service must be implemented using reflection and listener
 }
