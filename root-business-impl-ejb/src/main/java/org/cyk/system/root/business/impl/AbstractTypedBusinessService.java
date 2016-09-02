@@ -25,10 +25,12 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
+import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
@@ -50,7 +52,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    return dao;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IDENTIFIABLE instanciateOneRandomly() {
 		return instanciateOne();
 	}
@@ -274,17 +276,22 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		throw new RuntimeException("Not yet implemented");
 	}
 	
-	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,File reportTemplate,AbstractIdentifiable identifiable,File file,RootReportProducer reportProducer){
+	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,String reportTemplateCode,AbstractIdentifiable identifiable,File file,RootReportProducer reportProducer){
 		REPORT paymentReceiptReport = reportProducer.produce(reportClass,identifiable);
-		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(paymentReceiptReport, reportTemplate
+		if(paymentReceiptReport==null)
+			exceptionUtils().exception("produced report cannot be null");
+		ReportTemplate reportTemplate = inject(ReportTemplateDao.class).read(reportTemplateCode);
+		if(reportTemplate==null)
+			exceptionUtils().exception("report template cannot be null");
+		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(paymentReceiptReport, reportTemplate.getTemplate()
 				, file.getExtension());
 		inject(FileBusiness.class).process(file,reportBasedOnTemplateFile.getBytes(), "report."+StringUtils.defaultIfBlank(file.getExtension(),ReportBusiness.DEFAULT_FILE_EXTENSION));
 		FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier = new FileIdentifiableGlobalIdentifier(file, identifiable);
 		inject(GenericBusiness.class).create(fileIdentifiableGlobalIdentifier);
 	}
 	
-	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,File reportTemplate,AbstractIdentifiable identifiable,File file){
-		createReportFile(reportClass, reportTemplate, identifiable, file,AbstractRootReportProducer.DEFAULT);
+	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,String reportTemplateCode,AbstractIdentifiable identifiable,File file){
+		createReportFile(reportClass, reportTemplateCode, identifiable, file,AbstractRootReportProducer.DEFAULT);
 	}
 
 	/**/

@@ -59,7 +59,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return actors;
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public ACTOR instanciateOneRandomly() {
 		ACTOR actor = super.instanciateOne();
 		actor.setPerson(inject(PersonBusiness.class).instanciateOneRandomly());
@@ -75,7 +75,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 				anActor.getPerson().setName(anActor.getName());
 			if(anActor.getPerson().getImage()==null)
 				anActor.getPerson().setImage(anActor.getImage());
-			anActor.getPerson().getGlobalIdentifier().setCreatedBy(anActor.getGlobalIdentifier().getCreatedBy());
+			anActor.getPerson().getGlobalIdentifierCreateIfNull().setCreatedBy(anActor.getGlobalIdentifierCreateIfNull().getCreatedBy());
 			inject(PersonBusiness.class).create(anActor.getPerson());
 		}
 		return super.create(anActor);

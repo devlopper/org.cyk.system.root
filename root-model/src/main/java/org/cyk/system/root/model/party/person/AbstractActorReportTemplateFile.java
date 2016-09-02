@@ -1,16 +1,15 @@
 package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import org.cyk.system.root.model.file.report.AbstractIdentifiableReport;
+import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.utility.common.CommonUtils;
 
 @Getter @Setter
-public abstract class AbstractActorReportTemplateFile<MODEL,ACTOR_REPORT extends AbstractActorReport<?>> extends AbstractIdentifiableReport<MODEL> implements Serializable {
+public abstract class AbstractActorReportTemplateFile<MODEL,ACTOR_REPORT extends AbstractActorReport<?>> extends AbstractReportTemplateFile<MODEL> implements Serializable {
 
 	private static final long serialVersionUID = -7349146237275151269L;
 
@@ -28,7 +27,6 @@ public abstract class AbstractActorReportTemplateFile<MODEL,ACTOR_REPORT extends
 	
 	@SuppressWarnings("unchecked")
 	protected ACTOR_REPORT createActorReport(){
-		return CommonUtils.getInstance().instanciate((Class<ACTOR_REPORT>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]
-				, null, null);
+		return (ACTOR_REPORT) CommonUtils.getInstance().instanciate(CommonUtils.getInstance().getClassParameterAt(getClass(), 1), null, null);
 	}
 }
