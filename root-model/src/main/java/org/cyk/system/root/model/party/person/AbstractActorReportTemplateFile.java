@@ -27,6 +27,11 @@ public abstract class AbstractActorReportTemplateFile<MODEL,ACTOR_REPORT extends
 	
 	@SuppressWarnings("unchecked")
 	protected ACTOR_REPORT createActorReport(){
-		return (ACTOR_REPORT) CommonUtils.getInstance().instanciate(CommonUtils.getInstance().getClassParameterAt(getClass(), 1), null, null);
+		try {
+			return (ACTOR_REPORT) CommonUtils.getInstance().getClassParameterAt(getClass(), 1).newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

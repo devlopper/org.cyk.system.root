@@ -277,13 +277,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,String reportTemplateCode,AbstractIdentifiable identifiable,File file,RootReportProducer reportProducer){
-		REPORT paymentReceiptReport = reportProducer.produce(reportClass,identifiable);
-		if(paymentReceiptReport==null)
+		REPORT producedReport = reportProducer.produce(reportClass,identifiable);
+		if(producedReport==null)
 			exceptionUtils().exception("produced report cannot be null");
 		ReportTemplate reportTemplate = inject(ReportTemplateDao.class).read(reportTemplateCode);
 		if(reportTemplate==null)
 			exceptionUtils().exception("report template cannot be null");
-		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(paymentReceiptReport, reportTemplate.getTemplate()
+		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, reportTemplate.getTemplate()
 				, file.getExtension());
 		inject(FileBusiness.class).process(file,reportBasedOnTemplateFile.getBytes(), "report."+StringUtils.defaultIfBlank(file.getExtension(),ReportBusiness.DEFAULT_FILE_EXTENSION));
 		FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier = new FileIdentifiableGlobalIdentifier(file, identifiable);

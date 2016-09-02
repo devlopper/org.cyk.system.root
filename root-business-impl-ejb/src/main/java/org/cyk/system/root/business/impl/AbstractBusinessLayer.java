@@ -39,6 +39,7 @@ import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
@@ -427,6 +428,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	}
 
 	public ReportTemplate createReportTemplate(String code,String templateRelativeFileName,File headerImage,File backgroundImage,File draftBackgroundImage){
+		createEnumeration(FileRepresentationType.class,code);
 		String name = StringUtils.substringAfterLast(templateRelativeFileName, Constant.CHARACTER_SLASH.toString());
 		return create(new ReportTemplate(code,createFile(templateRelativeFileName, name),null,null,null));
 	}
