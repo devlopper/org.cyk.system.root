@@ -197,5 +197,18 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		
 	}
 	
+/**/
+	
+	public static interface Listener<ACTOR extends AbstractActor> extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<ACTOR>{
+		
+		/**/
+
+		public static class Adapter<ACTOR extends AbstractActor> extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter<ACTOR> implements Listener<ACTOR>, Serializable {
+			private static final long serialVersionUID = -1625238619828187690L;
+			
+		}
+		
+	}
+	
 	
 }
