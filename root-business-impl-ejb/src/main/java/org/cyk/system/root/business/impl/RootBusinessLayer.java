@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
@@ -24,7 +25,6 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
-import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
@@ -93,6 +93,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
  
 	public static final int DEPLOYMENT_ORDER = 0;
 	private static final long serialVersionUID = 4576531258594638L;
+	
+	public static final Collection<Class<?>> GLOBAL_IDENTIFIER_UNBUILDABLE_CLASSES = new HashSet<>();
 	
 	private static RootBusinessLayer INSTANCE;
 	
@@ -261,7 +263,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = 153358109323471469L;
 			@Override
 			protected Boolean __execute__(AbstractIdentifiable identifiable) {
-				return !ArrayUtils.contains(new Class<?>[]{/*Application.class,NestedSet.class,NestedSetNode.class*/}, identifiable.getClass());
+				return !ArrayUtils.contains(new Class<?>[]{/*Application.class,NestedSet.class,NestedSetNode.class*/}, identifiable.getClass()) && 
+						!GLOBAL_IDENTIFIER_UNBUILDABLE_CLASSES.contains(identifiable.getClass());
 			}
 		};
     }
@@ -279,10 +282,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	return inject(RootReportRepository.class);
     }
     
-    @Override
+    /*@Override
     protected RootReportProducer getReportProducer() {
     	return inject(RootReportProducer.class);
-    }
+    }*/
     
     @Override
     protected void persistData() {

@@ -16,7 +16,9 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
+import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
@@ -279,15 +281,16 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		if(arguments.getFile().getRepresentationType()==null)
 			arguments.getFile().setRepresentationType(inject(FileRepresentationTypeDao.class).read(arguments.getReportTemplateCode()));
 		exceptionUtils().exception(arguments.getFile().getRepresentationType()==null,"filerepresensationtype.mustnotbenull");	
+		RootReportProducer reportProducer = arguments.getReportProducer() == null ? AbstractRootReportProducer.DEFAULT : arguments.getReportProducer();
 		@SuppressWarnings({ "rawtypes" })
-		Class<AbstractReportTemplateFile> reportTemplateFileClass = (Class<AbstractReportTemplateFile>) arguments.getReportProducer()
-			.getReportTemplateFileClass(identifiable,arguments.getReportTemplateCode());
+		Class<AbstractReportTemplateFile> reportTemplateFileClass = (Class<AbstractReportTemplateFile>) reportProducer.getReportTemplateFileClass(identifiable,arguments.getReportTemplateCode());
 		createReportFile(reportTemplateFileClass,arguments);
 		return arguments.getFile();
 	}
 	
 	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,CreateReportFileArguments<IDENTIFIABLE> arguments){
-		REPORT producedReport = arguments.getReportProducer().produce(reportClass,arguments.getIdentifiable());
+		RootReportProducer reportProducer = arguments.getReportProducer() == null ? AbstractRootReportProducer.DEFAULT : arguments.getReportProducer();
+		REPORT producedReport = reportProducer.produce(reportClass,arguments.getIdentifiable());
 		if(producedReport==null)
 			exceptionUtils().exception("produced report cannot be null");
 		ReportTemplate reportTemplate = inject(ReportTemplateDao.class).read(arguments.getReportTemplateCode());

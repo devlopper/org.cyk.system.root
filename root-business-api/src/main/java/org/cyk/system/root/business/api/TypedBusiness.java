@@ -73,12 +73,10 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	public static class CreateReportFileArguments<IDENTIFIABLE extends AbstractIdentifiable> implements Serializable{
 		private static final long serialVersionUID = 1L;
 		
-		public static RootReportProducer DEFAULT_REPORT_PRODUCER;
-		
 		private String reportTemplateCode;
 		private IDENTIFIABLE identifiable;
 		private File file;
-		private RootReportProducer reportProducer = DEFAULT_REPORT_PRODUCER;
+		private RootReportProducer reportProducer;
 		private Boolean joinFileToIdentifiable = Boolean.TRUE;
 		
 		public CreateReportFileArguments(String reportTemplateCode, IDENTIFIABLE identifiable, File file) {
