@@ -22,7 +22,9 @@ import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
+import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
@@ -43,6 +45,7 @@ import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileRepresentationType;
+import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
@@ -274,6 +277,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Override
     protected AbstractReportRepository getReportRepository() {
     	return inject(RootReportRepository.class);
+    }
+    
+    @Override
+    protected RootReportProducer getReportProducer() {
+    	return inject(RootReportProducer.class);
     }
     
     @Override
@@ -546,6 +554,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		
 		void populateCandidateRoles(List<Role> roles);
 		
+		<REPORT extends AbstractReportTemplateFile<REPORT>> Class<REPORT> getReportTemplateFileClass(CreateReportFileArguments<?> arguments);
+		
 		/**/
 		
 		public static class Adapter extends AbstractBean implements Listener,Serializable {
@@ -564,7 +574,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 
 			@Override
 			public void populateCandidateRoles(List<Role> roles) {}
-			
+			@Override
+			public <REPORT extends AbstractReportTemplateFile<REPORT>> Class<REPORT> getReportTemplateFileClass(CreateReportFileArguments<?> arguments) {
+				return null;
+			}
 			/**/
 			
 			public static class Default extends Adapter implements Serializable {

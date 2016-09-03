@@ -48,13 +48,23 @@ public class FileIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifi
 		
 		private Collection<FileRepresentationType> representationTypes = new ArrayList<>();
 		
+		@Override
 		public SearchCriteria addGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers){
 			return (SearchCriteria) super.addGlobalIdentifiers(globalIdentifiers);
 		}
+		@Override
 		public SearchCriteria addGlobalIdentifier(GlobalIdentifier globalIdentifier){
 			return (SearchCriteria) super.addGlobalIdentifier(globalIdentifier);
 		}
-		
+		@Override
+		public SearchCriteria addIdentifiablesGlobalIdentifiers(Collection<? extends AbstractIdentifiable> identifiables) {
+			return (SearchCriteria) super.addIdentifiablesGlobalIdentifiers(identifiables);
+		}
+		@Override
+		public SearchCriteria addIdentifiableGlobalIdentifier(AbstractIdentifiable identifiable) {
+			return (SearchCriteria) super.addIdentifiableGlobalIdentifier(identifiable);
+		}
+
 		public SearchCriteria addRepresentationTypes(Collection<FileRepresentationType> representationTypes){
 			this.representationTypes.addAll(representationTypes);
 			return this;
@@ -62,6 +72,7 @@ public class FileIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifi
 		public SearchCriteria addRepresentationType(FileRepresentationType RepresentationType){
 			return addRepresentationTypes(Arrays.asList(RepresentationType));
 		}
+		
 		
 	}
 	

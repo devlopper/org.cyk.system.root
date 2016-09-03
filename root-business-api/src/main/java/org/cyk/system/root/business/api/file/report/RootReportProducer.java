@@ -5,6 +5,8 @@ import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 
 public interface RootReportProducer {
 
+	Class<?> getReportTemplateFileClass(AbstractIdentifiable identifiable,String reportTemplateCode);
+	
 	<REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass,AbstractIdentifiable identifiable);
 
 	/**/

@@ -1,11 +1,18 @@
 package org.cyk.system.root.business.api;
 
+import java.io.Serializable;
 import java.util.Collection;
 
+import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extends IdentifiableBusinessService<IDENTIFIABLE, Long> {
 
@@ -60,7 +67,31 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	 */
 	Collection<IDENTIFIABLE> find(Collection<String> globalIdentifierCodes);
     
-	File createFile(IDENTIFIABLE identifiable,File file);
+	File createReportFile(IDENTIFIABLE identifiable,CreateReportFileArguments<IDENTIFIABLE> arguments);
+	
+	@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+	public static class CreateReportFileArguments<IDENTIFIABLE extends AbstractIdentifiable> implements Serializable{
+		private static final long serialVersionUID = 1L;
+		
+		public static RootReportProducer DEFAULT_REPORT_PRODUCER;
+		
+		private String reportTemplateCode;
+		private IDENTIFIABLE identifiable;
+		private File file;
+		private RootReportProducer reportProducer = DEFAULT_REPORT_PRODUCER;
+		private Boolean joinFileToIdentifiable = Boolean.TRUE;
+		
+		public CreateReportFileArguments(String reportTemplateCode, IDENTIFIABLE identifiable, File file) {
+			super();
+			this.reportTemplateCode = reportTemplateCode;
+			this.identifiable = identifiable;
+			this.file = file;
+		}
+		
+		public CreateReportFileArguments(String reportTemplateCode, IDENTIFIABLE identifiable) {
+			this(reportTemplateCode,identifiable,new File());
+		}
+	}
 	
     //TODO clone service must be implemented using reflection and listener
 }

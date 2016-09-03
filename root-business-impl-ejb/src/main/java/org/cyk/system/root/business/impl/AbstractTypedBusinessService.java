@@ -12,14 +12,11 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
-import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
-import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
@@ -30,6 +27,8 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -271,28 +270,44 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return deleted;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public File createFile(IDENTIFIABLE identifiable,File file) {
-		throw new RuntimeException("Not yet implemented");
+	public File createReportFile(IDENTIFIABLE identifiable,CreateReportFileArguments<IDENTIFIABLE> arguments) {
+		arguments.setIdentifiable(identifiable);
+		if(arguments.getFile()==null)
+			arguments.setFile(new File());
+		if(arguments.getFile().getRepresentationType()==null)
+			arguments.getFile().setRepresentationType(inject(FileRepresentationTypeDao.class).read(arguments.getReportTemplateCode()));
+		exceptionUtils().exception(arguments.getFile().getRepresentationType()==null,"filerepresensationtype.mustnotbenull");	
+		@SuppressWarnings({ "rawtypes" })
+		Class<AbstractReportTemplateFile> reportTemplateFileClass = (Class<AbstractReportTemplateFile>) arguments.getReportProducer()
+			.getReportTemplateFileClass(identifiable,arguments.getReportTemplateCode());
+		createReportFile(reportTemplateFileClass,arguments);
+		return arguments.getFile();
 	}
 	
-	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,String reportTemplateCode,AbstractIdentifiable identifiable,File file,RootReportProducer reportProducer){
-		REPORT producedReport = reportProducer.produce(reportClass,identifiable);
+	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,CreateReportFileArguments<IDENTIFIABLE> arguments){
+		REPORT producedReport = arguments.getReportProducer().produce(reportClass,arguments.getIdentifiable());
 		if(producedReport==null)
 			exceptionUtils().exception("produced report cannot be null");
-		ReportTemplate reportTemplate = inject(ReportTemplateDao.class).read(reportTemplateCode);
+		ReportTemplate reportTemplate = inject(ReportTemplateDao.class).read(arguments.getReportTemplateCode());
 		if(reportTemplate==null)
 			exceptionUtils().exception("report template cannot be null");
 		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, reportTemplate.getTemplate()
-				, file.getExtension());
-		inject(FileBusiness.class).process(file,reportBasedOnTemplateFile.getBytes(), "report."+StringUtils.defaultIfBlank(file.getExtension(),ReportBusiness.DEFAULT_FILE_EXTENSION));
-		FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier = new FileIdentifiableGlobalIdentifier(file, identifiable);
-		inject(GenericBusiness.class).create(fileIdentifiableGlobalIdentifier);
+				, arguments.getFile().getExtension());
+		inject(FileBusiness.class).process(arguments.getFile(),reportBasedOnTemplateFile.getBytes(), ReportBusiness.DEFAULT_FILE_NAME_AND_EXTENSION);
+		inject(GenericBusiness.class).save(arguments.getFile());
+		if(Boolean.TRUE.equals(arguments.getJoinFileToIdentifiable())){
+			FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
+			searchCriteria.addIdentifiableGlobalIdentifier(arguments.getIdentifiable());
+			searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(arguments.getReportTemplateCode()));
+			Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierDao.class).readByCriteria(searchCriteria);
+			if(fileIdentifiableGlobalIdentifiers.isEmpty())
+				inject(GenericBusiness.class).create(new FileIdentifiableGlobalIdentifier(arguments.getFile(), arguments.getIdentifiable()));
+		}
 	}
 	
-	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,String reportTemplateCode,AbstractIdentifiable identifiable,File file){
-		createReportFile(reportClass, reportTemplateCode, identifiable, file,AbstractRootReportProducer.DEFAULT);
-	}
+	
 
 	/**/
 

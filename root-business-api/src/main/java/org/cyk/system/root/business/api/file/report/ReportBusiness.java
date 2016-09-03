@@ -13,6 +13,7 @@ import org.cyk.system.root.model.file.report.Column;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilder;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
+import org.cyk.utility.common.Constant;
 
 public interface ReportBusiness {
     
@@ -71,5 +72,7 @@ public interface ReportBusiness {
     	private Boolean persist = Boolean.FALSE;
     }
     
+    String DEFAULT_FILE_NAME = "report";
     String DEFAULT_FILE_EXTENSION = "pdf";
+    String DEFAULT_FILE_NAME_AND_EXTENSION = DEFAULT_FILE_NAME+Constant.CHARACTER_DOT+DEFAULT_FILE_EXTENSION;
 }

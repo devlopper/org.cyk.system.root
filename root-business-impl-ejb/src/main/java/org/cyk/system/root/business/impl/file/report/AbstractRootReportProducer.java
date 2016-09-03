@@ -61,6 +61,11 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		//return String.format(JASPER_STYLE, style.getFont().getSize(),"#0000ff",text);
 	}
 	
+	@Override
+	public Class<?> getReportTemplateFileClass(AbstractIdentifiable identifiable,String reportTemplateCode) {
+		return null;
+	}
+	
 	protected LabelValueCollectionReport labelValueCollection(String labelId){
 		currentLabelValueCollection = new LabelValueCollectionReport();
 		currentLabelValueCollection.setName(inject(LanguageBusiness.class).findText(labelId));

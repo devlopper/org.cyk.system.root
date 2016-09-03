@@ -12,8 +12,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import lombok.Getter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessLayerListener;
@@ -21,8 +19,10 @@ import org.cyk.system.root.business.api.BusinessManager;
 import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.datasource.DataSource;
 import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
@@ -64,6 +64,8 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractLayer;
+
+import lombok.Getter;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -109,7 +111,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
         //registerTypedBusinessBean(businessInterfaceLocator.getTypedBusinessBeanMap());
         
         rootDataProducerHelper.setBasePackage(this.getClass().getPackage());
-       
+        
+        CreateReportFileArguments.DEFAULT_REPORT_PRODUCER = getReportProducer();
     }
     
     @Override
@@ -194,6 +197,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	protected AbstractReportRepository getReportRepository(){
 		return null;
 	}
+	
+	protected abstract RootReportProducer getReportProducer();
 	
 	protected <T> void registerFormatter(Class<T> aClass,AbstractFormatter<T> formatter){
 		formatterBusiness.registerFormatter(aClass, formatter);
