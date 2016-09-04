@@ -22,6 +22,10 @@ public class LanguageCollectionItem extends AbstractCollectionItem<LanguageColle
 	public LanguageCollectionItem(LanguageCollection collection, String code, String name) {
 		super(collection, code, name);
 	}
+	
+	public LanguageCollectionItem(Language language) {
+		this.language = language;
+	}
 
 	public static final String FIELD_LANGUAGE = "language";
 	/*
