@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
@@ -76,6 +77,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     
                     Class<IDENTIFIABLE> getClazz();
                     IDENTIFIABLE instanciateOne();
+                    IDENTIFIABLE instanciateOne(UserAccount userAccount);
                     IDENTIFIABLE instanciateOne(ObjectFieldValues arguments);
                     void completeInstanciationOfOne(IDENTIFIABLE identifiable);
                     

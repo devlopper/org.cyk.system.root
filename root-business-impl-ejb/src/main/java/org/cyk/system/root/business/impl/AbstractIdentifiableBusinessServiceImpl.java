@@ -20,6 +20,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
@@ -169,7 +170,11 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public IDENTIFIABLE instanciateOne(){
 		return newInstance(getClazz());
 	}
-	
+	@Override
+	public IDENTIFIABLE instanciateOne(UserAccount userAccount) {
+		return instanciateOne();
+	}
+
 	@Override
 	public IDENTIFIABLE instanciateOne(ObjectFieldValues arguments) {
 		IDENTIFIABLE identifiable = instanciateOne();
@@ -404,6 +409,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		void beforeDelete(IDENTIFIABLE identifiable);
 		void afterDelete(IDENTIFIABLE identifiable);
 		
+		void beforeInstanciateOne(UserAccount userAccount);
+		void afterInstanciateOne(UserAccount userAccount,IDENTIFIABLE identifiable);
+		
 		Collection<Class<? extends AbstractIdentifiable>> getCascadeToClasses();
 		void setCascadeToClasses(Collection<Class<? extends AbstractIdentifiable>> classes);
 		
@@ -424,21 +432,32 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			@Override public void beforeDelete(IDENTIFIABLE identifiable) {}
 			@Override public void afterDelete(IDENTIFIABLE identifiable) {}
 			
-			public void addCascadeToClasses(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes){
+			@Override public void beforeInstanciateOne(UserAccount userAccount) {}
+			@Override public void afterInstanciateOne(UserAccount userAccount, IDENTIFIABLE identifiable) {}
+			
+			public Adapter<IDENTIFIABLE> addCascadeToClass(Class<? extends AbstractIdentifiable> aClass){
+				Collection<Class<? extends AbstractIdentifiable>> classes = new ArrayList<>();
+				classes.add(aClass);
+				return addCascadeToClasses(classes);
+			}
+			public Adapter<IDENTIFIABLE> addCascadeToClasses(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes){
 				if(classes!=null){
 					addCascadeToClasses(Arrays.asList(classes));
 				}
+				return this;
 			}
-			public void addCascadeToClasses(Collection<Class<? extends AbstractIdentifiable>> classes){
+			public Adapter<IDENTIFIABLE> addCascadeToClasses(Collection<Class<? extends AbstractIdentifiable>> classes){
 				if(classes!=null && !classes.isEmpty()){
 					if(cascadeToClasses==null)
 						cascadeToClasses = new LinkedHashSet<>();
 					cascadeToClasses.addAll(classes);
 				}
+				return this;
 			}
 			protected Boolean containsCascadeToClass(Class<? extends AbstractIdentifiable> aClass){
 				return cascadeToClasses!=null && cascadeToClasses.contains(aClass);
 			}
+			
 			
 			/**/
 		}
