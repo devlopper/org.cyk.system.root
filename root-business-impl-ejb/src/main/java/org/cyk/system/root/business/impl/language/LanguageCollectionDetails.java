@@ -23,7 +23,7 @@ public class LanguageCollectionDetails extends AbstractOutputDetails<LanguageCol
 	
 	public LanguageCollectionDetails(LanguageCollection languageCollection) {
 		super(languageCollection);
-		if(languageCollection==null){
+		if(languageCollection==null || languageCollection.getCollection()==null){
 			
 		}else{
 			Set<String> values = new LinkedHashSet<>();
