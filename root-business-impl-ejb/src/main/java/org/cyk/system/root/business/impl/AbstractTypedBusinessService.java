@@ -12,6 +12,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -32,6 +33,7 @@ import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
@@ -53,12 +55,22 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    return dao;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	protected String generateCode(String...tokens){
+		return StringUtils.join(tokens, Constant.CHARACTER_UNDESCORE);
+	}
+	protected void setProperty(IDENTIFIABLE identifiable,String name){}
+	
+	protected void setAutoSettedProperties(IDENTIFIABLE identifiable){
+		if(isAutoSetPropertyValueClass(GlobalIdentifier.FIELD_CODE, identifiable.getClass()))
+			setProperty(identifiable,GlobalIdentifier.FIELD_CODE);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IDENTIFIABLE instanciateOneRandomly() {
 		return instanciateOne();
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<IDENTIFIABLE> instanciateManyRandomly(Integer count) {
 		Collection<IDENTIFIABLE> collection = new ArrayList<>();
 		for(int index = 0; index < count ; index++)
@@ -68,14 +80,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
-		//if(identifiable!=null && identifiable.getIdentifier()==null){
-		    validationPolicy.validateCreate(identifiable);
-	        identifiable = dao.create(identifiable);
-	        @SuppressWarnings("unchecked")
-			Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
-	    	if(listener!=null)
-	    		listener.processOnCreated(identifiable);
-		//}
+		setAutoSettedProperties(identifiable);
+	    validationPolicy.validateCreate(identifiable);
+        identifiable = dao.create(identifiable);
+        @SuppressWarnings("unchecked")
+		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
+    	if(listener!=null)
+    		listener.processOnCreated(identifiable);
         return identifiable;
 	}
 	
@@ -87,6 +98,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE update(IDENTIFIABLE identifiable) {
+		setAutoSettedProperties(identifiable);
 		IDENTIFIABLE newObject = dao.update(identifiable);
 		@SuppressWarnings("unchecked")
 		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());

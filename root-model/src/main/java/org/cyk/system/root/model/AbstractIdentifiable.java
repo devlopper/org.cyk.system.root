@@ -55,7 +55,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@OneToOne protected GlobalIdentifier globalIdentifier;
 	
 	@Transient protected Processing processing;
-	@Transient private Boolean cascadeOperationToMaster = Boolean.FALSE;
+	@Transient protected Boolean cascadeOperationToMaster = Boolean.FALSE;
 	
 	public void setCode(String code){
 		getGlobalIdentifierCreateIfNull().setCode(code);

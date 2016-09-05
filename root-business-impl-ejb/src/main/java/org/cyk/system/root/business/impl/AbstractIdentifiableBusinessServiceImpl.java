@@ -5,12 +5,18 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
@@ -31,12 +37,11 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
 	private static final long serialVersionUID = 6437552355933877400L;
+	
+	public static final Map<String,Collection<Class<? extends AbstractIdentifiable>>> AUTO_SET_PROPERTY_VALUE_CLASSES = new HashMap<>();
 	
 	//How to resolve circular dependency AbstractBusinessService -> ValidationPolicy -> LanguageBusiness which inherits of AbstractBusinessService
 	//Singleton has been use to solve previous issue
@@ -52,6 +57,18 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return getPersistenceService().getDataReadConfig();
 	}
 	*/
+	
+	public static void addAutoSetPropertyValueClass(String property,Class<? extends AbstractIdentifiable> aClass){
+		Collection<Class<? extends AbstractIdentifiable>> collection = AUTO_SET_PROPERTY_VALUE_CLASSES.get(property);
+		if(collection==null)
+			AUTO_SET_PROPERTY_VALUE_CLASSES.put(property, collection = new HashSet<>());
+		collection.add(aClass);
+	}
+	public static Boolean isAutoSetPropertyValueClass(String property,Class<? extends AbstractIdentifiable> aClass){
+		Collection<Class<? extends AbstractIdentifiable>> collection = AUTO_SET_PROPERTY_VALUE_CLASSES.get(property);
+		return collection!=null && collection.contains(aClass);
+	}
+	
 		
 	@SuppressWarnings("unchecked")
 	@Override
