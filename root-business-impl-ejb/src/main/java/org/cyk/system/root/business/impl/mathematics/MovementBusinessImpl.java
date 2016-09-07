@@ -7,7 +7,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
@@ -86,9 +85,9 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Movement instanciateOne(MovementCollection movementCollection, Boolean increment) {
-		Movement movement = new Movement();
+		Movement movement = instanciateOne();
 		movement.setCollection(movementCollection);
-		movement.setCode(movementCollection.getCode()+"_"+System.currentTimeMillis()+"_"+RandomStringUtils.randomAlphabetic(10));
+		//movement.setCode(movementCollection.getCode()+"_"+System.currentTimeMillis()+"_"+RandomStringUtils.randomAlphabetic(10));
 		movement.setName(movementCollection.getName());
 		movement.setAction(increment==null || increment ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction());
 		return movement;

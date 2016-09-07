@@ -13,7 +13,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     protected void businesses() {
     	
     	Person person = inject(PersonBusiness.class).instanciateOneRandomly();
-        person.setCode(CODE);
+    	person.setCode(CODE);
         inject(PersonBusiness.class).create(person);
         assertThat("Person created", person.getIdentifier()!=null);
     	

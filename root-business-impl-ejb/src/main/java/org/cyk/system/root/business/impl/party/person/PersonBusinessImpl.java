@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.cyk.system.root.persistence.api.party.person.PersonExtendedInformatio
 import org.cyk.system.root.persistence.api.party.person.PersonTitleDao;
 import org.cyk.system.root.persistence.api.party.person.SexDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
@@ -117,7 +119,13 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	
 	@Override
-	public Person create(Person person) {
+	public Person create(final Person person) {
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.beforeCreate(person);
+			}
+		});
 		super.create(person);
 		//person.setBirthDateAnniversary(repeatedEventBusiness.createAnniversary(person.getBirthDate(),person.getNames()));
 		
@@ -132,13 +140,24 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			jobInformationsDao.create(person.getJobInformations());
 		if(person.getMedicalInformations()!=null)
 			medicalInformationsDao.create(person.getMedicalInformations());
-		person = dao.update(person);
-		
+		dao.update(person);
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.afterCreate(person);
+			}
+		});
 		return person;
 	}
 	
 	@Override
-	public Person update(Person person) {
+	public Person update(final Person person) {
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.beforeUpdate(person);
+			}
+		});
 		Person p = super.update(person);
 		//repeatedEventBusiness.updateAnniversary(person.getBirthDateAnniversary(),person.getBirthDate(), person.getName());
 		if(person.getExtendedInformations()!=null){
@@ -154,11 +173,23 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			jobInformationsDao.update(person.getJobInformations());
 		if(person.getMedicalInformations()!=null)
 			medicalInformationsDao.update(person.getMedicalInformations());
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.afterUpdate(person);
+			}
+		});
 		return p;
 	}
 	
 	@Override
-	public Person delete(Person person) {
+	public Person delete(final Person person) {
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.beforeDelete(person);
+			}
+		});
 		PersonExtendedInformations extendedInformations = extendedInformationsDao.readByParty(person);
 		if(extendedInformations!=null){
 			if(extendedInformations.getLanguageCollection()!=null){
@@ -175,7 +206,14 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		if(medicalInformations!=null){
 			medicalInformationsDao.delete(medicalInformations);
 		}
-		return super.delete(person);
+		super.delete(person);
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.afterDelete(person);
+			}
+		});
+		return person;
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -293,5 +331,19 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return person.getExtendedInformations();
 	}
 
+	/**/
+	
+	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Person>{
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		/**/
+
+		public static class Adapter extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter<Person> implements Listener, Serializable {
+			private static final long serialVersionUID = -1625238619828187690L;
+			
+		}
+		
+	}
 }
  
