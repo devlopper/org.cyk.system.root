@@ -7,6 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -62,7 +63,10 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override
 	public GlobalIdentifier delete(GlobalIdentifier globalIdentifier) {
 		logTrace("Deleting global identifier {}", globalIdentifier);
-		globalIdentifier.setImage(null);
+		if(globalIdentifier.getImage()!=null){
+			inject(FileBusiness.class).delete(globalIdentifier.getImage());
+			globalIdentifier.setImage(null);
+		}
 		return globalIdentifierDao.delete(globalIdentifier);
 	}
 
