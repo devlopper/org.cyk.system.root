@@ -14,9 +14,6 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputPassword;
-import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.validation.Client;
 
 @Entity @Getter @Setter @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.INTERNAL,genderType=GenderType.MALE)
@@ -24,12 +21,10 @@ public class Credentials extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -3099832512046879464L;
 	
-	@Input @InputText @Column(unique=true,nullable=false)
-	@NotNull(groups={Client.class,org.cyk.utility.common.validation.System.class})
+	@Column(unique=true,nullable=false) @NotNull(groups={Client.class,org.cyk.utility.common.validation.System.class})
 	private String username;
 	
-	@Input @InputPassword @Column(nullable=false)
-	@NotNull(groups={Client.class,org.cyk.utility.common.validation.System.class})
+	@Column(nullable=false) @NotNull(groups={Client.class,org.cyk.utility.common.validation.System.class})
 	private String password;
 	
 	public Credentials(String username, String password) {
