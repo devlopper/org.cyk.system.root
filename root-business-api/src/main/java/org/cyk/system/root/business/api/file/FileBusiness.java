@@ -23,6 +23,7 @@ public interface FileBusiness extends TypedBusiness<File> {
     
     File process(byte[] bytes, String name);
     
+    void process(File file,byte[] bytes, String name,Boolean reset);
     void process(File file,byte[] bytes, String name);
     
     InputStream findInputStream(File file);

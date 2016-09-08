@@ -56,17 +56,20 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     }
     
     @Override
-	public void process(File file, byte[] bytes, String name) {
+	public void process(File file, byte[] bytes, String name,Boolean reset) {
     	file.setBytes(bytes);
-    	if(StringUtils.isBlank(file.getExtension()))
+    	if(Boolean.TRUE.equals(reset) || StringUtils.isBlank(file.getExtension()))
     		file.setExtension(findExtension(name));
-        if(file.getExtension()==null){
-        	file.setMime(null);
-        }else{
-            file.setExtension(file.getExtension().toLowerCase());//better use lower case because of mime type lookup
-            file.setMime(findMime(file.getExtension()));
-        }
+    	file.setExtension(StringUtils.lowerCase(file.getExtension()));//better use lower case because of mime type lookup
+    	
+    	if(Boolean.TRUE.equals(reset) || StringUtils.isBlank(file.getMime()))
+    		file.setMime(findMime(file.getExtension()));
 	}
+    
+    @Override
+	public void process(File file, byte[] bytes, String name) {
+    	process(file, bytes, name, Boolean.TRUE);
+    }
     
     @Override
     public void writeTo(File file,java.io.File directory,String name) {
@@ -83,6 +86,8 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public String findMime(String extension) {
+    	if(StringUtils.isBlank(extension))
+    		return null;
         String mime = null;
         String fileName = "file."+extension;
         try {
