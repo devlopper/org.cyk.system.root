@@ -49,7 +49,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 * Common business informations
 	 */
 	
-	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private File image;
+	@OneToOne/*(cascade=CascadeType.ALL,orphanRemoval=true)*/ private File image;
 	
 	private String code;
 	

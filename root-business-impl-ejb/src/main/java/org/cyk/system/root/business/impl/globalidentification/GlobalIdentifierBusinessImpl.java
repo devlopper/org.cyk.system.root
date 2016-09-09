@@ -7,6 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
@@ -45,6 +46,9 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override
 	public GlobalIdentifier create(GlobalIdentifier globalIdentifier) {
 		logTrace("Creating global identifier {}", globalIdentifier);
+		if(inject(GenericBusiness.class).isNotIdentified(globalIdentifier.getImage())){
+			inject(FileBusiness.class).create(globalIdentifier.getImage());
+		}
 		/*if(StringUtils.isBlank(globalIdentifier.getCode()))
 			globalIdentifier.setCode(RootBusinessLayer.getInstance().getStringGeneratorBusiness()
 					.generate(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER, globalIdentifier.getIdentifiable()));*///TODO handle duplicate by using lock write
@@ -57,16 +61,24 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override
 	public GlobalIdentifier update(GlobalIdentifier globalIdentifier) {
 		logTrace("Updating global identifier {}", globalIdentifier);
+		if(inject(GenericBusiness.class).isNotIdentified(globalIdentifier.getImage())){
+			inject(FileBusiness.class).create(globalIdentifier.getImage());
+		}else if(globalIdentifier.getImage()!=null)
+			inject(FileBusiness.class).update(globalIdentifier.getImage());
 		return globalIdentifierDao.update(globalIdentifier);
 	}
 	
 	@Override
 	public GlobalIdentifier delete(GlobalIdentifier globalIdentifier) {
 		logTrace("Deleting global identifier {}", globalIdentifier);
-		if(globalIdentifier.getImage()!=null){
+		if(inject(GenericBusiness.class).isNotIdentified(globalIdentifier.getImage())){
 			inject(FileBusiness.class).delete(globalIdentifier.getImage());
 			globalIdentifier.setImage(null);
 		}
+		/*if(globalIdentifier.getImage()!=null){
+			//inject(FileBusiness.class).delete(globalIdentifier.getImage());
+			globalIdentifier.setImage(null);
+		}*/
 		return globalIdentifierDao.delete(globalIdentifier);
 	}
 

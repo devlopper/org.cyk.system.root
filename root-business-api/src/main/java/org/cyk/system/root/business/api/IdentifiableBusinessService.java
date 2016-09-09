@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.security.UserAccount;
@@ -91,6 +92,10 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     List<IDENTIFIABLE> instanciateMany(ReadExcelSheetArguments readExcelSheetArguments,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments);
                     
                     void completeInstanciationOfMany(Collection<IDENTIFIABLE> identifiables);
+                    
+                    Boolean isIdentified(AbstractIdentifiable identifiable);
+                	
+                    Boolean isNotIdentified(AbstractIdentifiable identifiable);
                     
                     /**/
                     

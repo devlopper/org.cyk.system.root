@@ -292,11 +292,13 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			callArguments.setObjects(identifiables);
 	}
 	
-	protected Boolean isIdentified(AbstractIdentifiable identifiable){
+	@Override
+	public Boolean isIdentified(AbstractIdentifiable identifiable){
 		return identifiable!=null && identifiable.getIdentifier()!=null;
 	}
 	
-	protected Boolean isNotIdentified(AbstractIdentifiable identifiable){
+	@Override
+	public Boolean isNotIdentified(AbstractIdentifiable identifiable){
 		return identifiable!=null && identifiable.getIdentifier()==null;
 	}
 	

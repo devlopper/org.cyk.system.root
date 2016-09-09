@@ -63,6 +63,9 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	public ACTOR instanciateOneRandomly() {
 		ACTOR actor = super.instanciateOne();
 		actor.setPerson(inject(PersonBusiness.class).instanciateOneRandomly());
+		actor.setImage(actor.getPerson().getImage());
+		actor.setCode(actor.getPerson().getCode());
+		actor.setName(actor.getPerson().getName());
 		return actor;
 	}
 
