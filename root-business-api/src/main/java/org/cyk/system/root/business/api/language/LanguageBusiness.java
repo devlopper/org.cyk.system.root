@@ -6,7 +6,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.business.api.BusinessEntityInfos;
@@ -40,9 +42,11 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	
     String findText(Locale locale,Locale aLocale);
 	
-    String findAnnotationText(Field field,Text text);
+    String buildIdentifierFromFieldName(String fieldName);
     
-    String findFieldLabelText(Field field);
+    FindTextResult findAnnotationText(Field field,Text text);
+    
+    FindTextResult findFieldLabelText(Field field);
     
     String findClassLabelText(FindClassLabelTextParameters parameters);
     String findClassLabelText(Class<?> aClass);
@@ -124,4 +128,10 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	}
 
 	Collection<Language> instanciateMany(List<String[]> list);
+
+	@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+    class FindTextResult{
+    	private String identifier;
+    	private String value;
+    }
 }

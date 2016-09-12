@@ -123,7 +123,7 @@ public abstract class AbstractReportBusinessImpl extends AbstractBusinessService
     	new FieldSorter(fields,aClass).sort();
     	
     	for(Field field : fields){
-    		columns.add(new Column(field,languageBusiness.findFieldLabelText(field)) );
+    		columns.add(new Column(field,languageBusiness.findFieldLabelText(field).getValue()) );
     	}
 		return columns;
 	}

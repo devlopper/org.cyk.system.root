@@ -32,6 +32,7 @@ import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.language.LanguageEntry;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
+import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -54,7 +55,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	private static final String UNKNOWN_MARKER_START = "##";
 	private static final String UNKNOWN_MARKER_END = "##";
-	private static final String FIELD_MARKER_START = "field.";
+	public static final String FIELD_MARKER_START = "field.";
 	private static final String FIELD_OF_FORMAT = "%s.of";
 	
 	private static final String COMMON_BUSINESS_ACTION_FORMAT = "commonbusinessaction.%s.%s";
@@ -260,7 +261,17 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
     /**/
     
     @Override
-	public String findAnnotationText(Field field,Text text) {
+    public String buildIdentifierFromFieldName(String fieldName) {
+    	return buildIdentifierFromFieldName(fieldName, FIELD_MARKER_START);
+    }
+    public static String buildIdentifierFromFieldName(String fieldName,String fieldMarker) {
+    	StringBuilder identifier =new StringBuilder(fieldMarker);
+    	identifier.append(CommonUtils.getInstance().addWordSeparatorToVariableName(fieldName, Constant.CHARACTER_DOT.toString()));
+    	return identifier.toString();
+    }
+    
+    @Override
+	public FindTextResult findAnnotationText(Field field,Text text) {
 		ValueType type ;
 		String specifiedValue = null;
 		if(text==null)
@@ -273,9 +284,9 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		if(StringUtils.isNotBlank(specifiedValue)){
 			logDebug("Value {} is of type {}", specifiedValue,type);	
 			if(ValueType.VALUE.equals(type))
-				return specifiedValue;
+				return new FindTextResult(null,specifiedValue);
 		}
-		
+		FindTextResult findTextResult = new FindTextResult();
 		Collection<String> values = new ArrayList<>();
 		if(ValueType.ID.equals(type))
 			if(StringUtils.isNotBlank(specifiedValue))
@@ -285,24 +296,20 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 					buildFromCompleteFieldName(field, values);
 				} catch (NoMatchFoundException e) {
 					// 1 - build the id = field.xxx.xxx.xxx.xxx....
-					StringBuilder labelId =new StringBuilder(FIELD_MARKER_START);
-					for(int i=0;i<field.getName().length();i++){
-						if(Character.isUpperCase(field.getName().charAt(i)))
-							labelId.append('.');
-						labelId.append(Character.toLowerCase(field.getName().charAt(i)));
-					}
+					String labelId = buildIdentifierFromFieldName(field.getName());
+					findTextResult.setIdentifier(labelId);
 					logDebug("Build id from field {} is {}",field.getName(),labelId);
 					// 2 - Try to match the built id
-					String value = findText(labelId.toString());
+					String value = findText(labelId);
 					if(unknown(value)){
 						// 1 - Attempt removing suffix
 						for(String fieldMarker : FIELD_TYPE_MARKERS){
-							if(fieldMarker(labelId.toString(), value, fieldMarker, values))
+							if(fieldMarker(labelId, value, fieldMarker, values))
 								break;
 						}
 						//2 - Attempt removing field.
 						if(values.isEmpty()){
-							String nvalue = findText(StringUtils.substringAfter(labelId.toString(),FIELD_MARKER_START));
+							String nvalue = findText(StringUtils.substringAfter(labelId,FIELD_MARKER_START));
 							if(unknown(nvalue)){
 								values.add(value);
 							}else
@@ -311,7 +318,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 						/*
 						if(StringUtils.endsWith(labelId, FIELD_MARKER_QUANTITY)){
 							values.add(findText("quantity"));
-							String newLabelId = StringUtils.substringBefore(labelId.toString(), FIELD_MARKER_QUANTITY);
+							String newLabelId = StringUtils.substringBefore(labelId, FIELD_MARKER_QUANTITY);
 							value = findText(newLabelId);
 							if(unknown(value)){
 								newLabelId = StringUtils.substringAfter(newLabelId.toString(), FIELD_MARKER_START);
@@ -323,10 +330,12 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 							*/
 					}else{
 						values.add(value);
+						
 					}					
 				}					
 			}
-		return StringUtils.join(values," ");
+		findTextResult.setValue(StringUtils.join(values," "));
+		return findTextResult;
 	}
     
     private String buildFromCompleteFieldName(Field field,Collection<String> values) throws NoMatchFoundException{
@@ -374,12 +383,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
     }
 	
     @Override
-	public String findFieldLabelText(Field field) {
+	public FindTextResult findFieldLabelText(Field field) {
 		if(field.getAnnotation(Input.class)!=null)
 			return findAnnotationText(field,field.getAnnotation(Input.class).label());
 		if(field.getAnnotation(IncludeInputs.class)!=null)
 			return findAnnotationText(field,field.getAnnotation(IncludeInputs.class).label());
-		return findText(field.getName());
+		FindTextResult findTextResult = new FindTextResult(field.getName(), findText(field.getName()));
+		return findTextResult;
 	}
     
     public static String buildEntityLabelIdentifier(Class<?> aClass){

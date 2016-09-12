@@ -125,7 +125,7 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 	protected String formatMessage(Object anObject,ConstraintViolation<?> constraintViolation){
 		Field field = commonUtils.getFieldFromClass(anObject.getClass(), constraintViolation.getPropertyPath().toString());
 		//Formating should be moved to ValidationMessageInterpolator. But how to get field ???
-		return languageBusiness.findFieldLabelText(field)+Constant.CHARACTER_SPACE+constraintViolation.getMessage();
+		return languageBusiness.findFieldLabelText(field).getValue()+Constant.CHARACTER_SPACE+constraintViolation.getMessage();
 	}
 	
 	public Boolean isSuccess(){
