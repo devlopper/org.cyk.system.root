@@ -66,11 +66,11 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 
 	String findDeterminantText(Boolean male, Boolean one,Boolean global);
 
-	String findDoSomethingText(FindDoSomethingTextParameters parameters);
+	FindTextResult findDoSomethingText(FindDoSomethingTextParameters parameters);
 
 	String findResponseText(Boolean value);
 	
-	String findActionIdentifierText(String actionIdentifier,BusinessEntityInfos businessEntityInfos,Boolean verb);
+	FindTextResult findActionIdentifierText(String actionIdentifier,BusinessEntityInfos businessEntityInfos,Boolean verb);
 	
 	void setCachingEnabled(Boolean aValue);
 	Boolean getCachingEnabled();

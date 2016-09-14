@@ -424,9 +424,12 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	}
 	
 	@Override
-	public String findActionIdentifierText(String actionIdentifier,BusinessEntityInfos businessEntityInfos,Boolean verb){
-		return findText("action"+Constant.CHARACTER_DOT+businessEntityInfos.getVarName().toLowerCase()
+	public FindTextResult findActionIdentifierText(String actionIdentifier,BusinessEntityInfos businessEntityInfos,Boolean verb){
+		FindTextResult findTextResult = new FindTextResult();
+		findTextResult.setIdentifier("action"+Constant.CHARACTER_DOT+businessEntityInfos.getVarName().toLowerCase()
 				+Constant.CHARACTER_DOT+actionIdentifier+Constant.CHARACTER_DOT+(Boolean.TRUE.equals(verb)?"verb":"name"));
+		findTextResult.setValue(findText(findTextResult.getIdentifier()));
+		return findTextResult;
 	}
 	
 	@Override
@@ -438,7 +441,9 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	}
 	
 	@Override
-	public String findDoSomethingText(FindDoSomethingTextParameters parameters) {
+	public FindTextResult findDoSomethingText(FindDoSomethingTextParameters parameters) {
+		FindTextResult findTextResult = new FindTextResult();
+		findTextResult.setIdentifier(StringUtils.join(parameters.getActionIdentifier())+Constant.CHARACTER_DOT+parameters.getSubjectClass().getSimpleName().toLowerCase());
 		BusinessEntityInfos businessEntityInfos = null;
 		if(ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS!=null)
 			for(BusinessEntityInfos b : ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS)
@@ -470,35 +475,37 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		else
 			actionIdentifierAsString = actionIdentifier.toString();
 		
-		if(GenderType.UNSET.equals(genderType) || parameters.getOne()==null || parameters.getGlobal()==null)
-			return findText(StringUtils.isBlank(parameters.getForWhat())?DO_SOMETHING_FORMAT:DO_SOMETHING_PLUS_FOR_FORMAT
+		if(GenderType.UNSET.equals(genderType) || parameters.getOne()==null || parameters.getGlobal()==null){
+			findTextResult.setValue(findText(StringUtils.isBlank(parameters.getForWhat())?DO_SOMETHING_FORMAT:DO_SOMETHING_PLUS_FOR_FORMAT
 					, new Object[]{findText(actionIdentifierAsString),findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass()))
-							,findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()});
-		
-		String determinant = findDeterminantText(GenderType.MALE.equals(genderType), parameters.getOne(),parameters.getGlobal());
-		if(parameters.getGlobal())
-			if(parameters.getOne())
-				if(Boolean.TRUE.equals(parameters.getVerb()))
-					;
+							,findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()}));
+		}else{
+			String determinant = findDeterminantText(GenderType.MALE.equals(genderType), parameters.getOne(),parameters.getGlobal());
+			if(parameters.getGlobal())
+				if(parameters.getOne())
+					if(Boolean.TRUE.equals(parameters.getVerb()))
+						;
+					else
+						determinant = findText("of")+" "+determinant;
 				else
-					determinant = findText("of")+" "+determinant;
-			else
-				;
-		else
-			if(parameters.getOne())
-				if(Boolean.TRUE.equals(parameters.getVerb()))
 					;
-				else
-					determinant = findText("ofprefix")+determinant;
 			else
-				;
-		//if(StringUtils.isBlank(parameters.getForWhat()))	
-		//	return findText(DO_SOMETHING_PLUS_DET_FORMAT, new Object[]{findText(actionIdentifierAsString),determinant
-		//		,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass(),parameters.getOne()))});
-		//else
-			return findText(StringUtils.isBlank(parameters.getForWhat())?DO_SOMETHING_PLUS_DET_FORMAT:DO_SOMETHING_PLUS_DET_PLUS_FOR_FORMAT
-					, new Object[]{findText(actionIdentifierAsString),determinant,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass()
-							,parameters.getOne())),findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()});
+				if(parameters.getOne())
+					if(Boolean.TRUE.equals(parameters.getVerb()))
+						;
+					else
+						determinant = findText("ofprefix")+determinant;
+				else
+					;
+			//if(StringUtils.isBlank(parameters.getForWhat()))	
+			//	return findText(DO_SOMETHING_PLUS_DET_FORMAT, new Object[]{findText(actionIdentifierAsString),determinant
+			//		,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass(),parameters.getOne()))});
+			//else
+				findTextResult.setValue(findText(StringUtils.isBlank(parameters.getForWhat())?DO_SOMETHING_PLUS_DET_FORMAT:DO_SOMETHING_PLUS_DET_PLUS_FOR_FORMAT
+						, new Object[]{findText(actionIdentifierAsString),determinant,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass()
+								,parameters.getOne())),findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()}));
+		}
+		return findTextResult;
 	}
 	
 	@Override
