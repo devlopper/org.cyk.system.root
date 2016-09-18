@@ -1,9 +1,12 @@
 package org.cyk.system.root.persistence.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 
 
@@ -21,5 +24,13 @@ public class Utils {
 		for(GlobalIdentifier globalIdentifier : globalIdentifiers)
 			ids.add(globalIdentifier.getIdentifier());
 		return ids;
+	}
+	
+	public static Collection<File>  getFiles(Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers){
+		Collection<File> files = new ArrayList<>();
+		if(fileIdentifiableGlobalIdentifiers!=null)
+			for(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier : fileIdentifiableGlobalIdentifiers)
+				files.add(fileIdentifiableGlobalIdentifier.getFile());
+		return files;
 	}
 }

@@ -305,7 +305,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		REPORT producedReport = reportProducer.produce(reportClass,arguments.getIdentifiable());
 		if(producedReport==null)
 			exceptionUtils().exception("produced report cannot be null");
-		ReportTemplate reportTemplate = inject(ReportTemplateDao.class).read(arguments.getReportTemplateCode());
+		ReportTemplate reportTemplate = arguments.getReportTemplate() == null ? inject(ReportTemplateDao.class).read(arguments.getReportTemplateCode()) 
+				: arguments.getReportTemplate();
 		if(reportTemplate==null)
 			exceptionUtils().exception("report template cannot be null");
 		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, reportTemplate.getTemplate()

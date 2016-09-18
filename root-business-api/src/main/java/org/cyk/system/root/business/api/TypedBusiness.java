@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
@@ -74,6 +75,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		private static final long serialVersionUID = 1L;
 		
 		private String reportTemplateCode;
+		private ReportTemplate reportTemplate;
 		private IDENTIFIABLE identifiable;
 		private File file;
 		private RootReportProducer reportProducer;
@@ -88,6 +90,17 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		
 		public CreateReportFileArguments(String reportTemplateCode, IDENTIFIABLE identifiable) {
 			this(reportTemplateCode,identifiable,new File());
+		}
+		
+		public CreateReportFileArguments(ReportTemplate reportTemplate, IDENTIFIABLE identifiable, File file) {
+			super();
+			this.reportTemplate = reportTemplate;
+			this.identifiable = identifiable;
+			this.file = file;
+		}
+		
+		public CreateReportFileArguments(ReportTemplate reportTemplate, IDENTIFIABLE identifiable) {
+			this(reportTemplate,identifiable,new File());
 		}
 	}
 	
