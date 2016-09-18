@@ -15,14 +15,16 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
+import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
+import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
@@ -30,12 +32,16 @@ import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -421,6 +427,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		
 		void beforeCreate(IDENTIFIABLE identifiable);
 		void afterCreate(IDENTIFIABLE identifiable);
+		void createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean updateExisting);
 		
 		void beforeUpdate(IDENTIFIABLE identifiable);
 		void afterUpdate(IDENTIFIABLE identifiable);
@@ -434,6 +441,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		Collection<Class<? extends AbstractIdentifiable>> getCascadeToClasses();
 		void setCascadeToClasses(Collection<Class<? extends AbstractIdentifiable>> classes);
 		
+		Listener<IDENTIFIABLE> addCascadeToClass(Class<? extends AbstractIdentifiable> aClass);
+		Listener<IDENTIFIABLE> addCascadeToClasses(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes);
+				
 		/**/
 		
 		@Getter @Setter
@@ -454,11 +464,14 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			@Override public void beforeInstanciateOne(UserAccount userAccount) {}
 			@Override public void afterInstanciateOne(UserAccount userAccount, IDENTIFIABLE identifiable) {}
 			
+			@Override
 			public Adapter<IDENTIFIABLE> addCascadeToClass(Class<? extends AbstractIdentifiable> aClass){
 				Collection<Class<? extends AbstractIdentifiable>> classes = new ArrayList<>();
 				classes.add(aClass);
 				return addCascadeToClasses(classes);
 			}
+			
+			@Override
 			public Adapter<IDENTIFIABLE> addCascadeToClasses(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes){
 				if(classes!=null){
 					addCascadeToClasses(Arrays.asList(classes));
@@ -477,6 +490,27 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				return cascadeToClasses!=null && cascadeToClasses.contains(aClass);
 			}
 			
+			@Override
+			public void createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode,Boolean updateExisting) {
+				FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
+		    	searchCriteria.addIdentifiableGlobalIdentifier(identifiable);
+		    	searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(reportTemplateCode));
+		    	Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
+		    	
+		    	CreateReportFileArguments<IDENTIFIABLE> arguments;
+				
+				File file = null;
+		    	if(Boolean.TRUE.equals(updateExisting)){
+		    		ExceptionUtils.getInstance().exception(fileIdentifiableGlobalIdentifiers.size() > 1, "too.much.filereport.found.for.update");
+		    		if(!fileIdentifiableGlobalIdentifiers.isEmpty())
+		    			file = fileIdentifiableGlobalIdentifiers.iterator().next().getFile();
+		    	}else{
+		    		
+		    	}
+		    	arguments = new CreateReportFileArguments<IDENTIFIABLE>(reportTemplateCode, identifiable,file);
+				inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, arguments);
+				
+			}
 			
 			/**/
 		}
