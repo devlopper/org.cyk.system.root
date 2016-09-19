@@ -97,11 +97,15 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 			this.reportTemplate = reportTemplate;
 			this.identifiable = identifiable;
 			this.file = file;
+			if(this.reportTemplate != null)
+				reportTemplateCode = reportTemplate.getCode();
 		}
 		
 		public CreateReportFileArguments(ReportTemplate reportTemplate, IDENTIFIABLE identifiable) {
 			this(reportTemplate,identifiable,new File());
 		}
+		
+		
 	}
 	
     //TODO clone service must be implemented using reflection and listener

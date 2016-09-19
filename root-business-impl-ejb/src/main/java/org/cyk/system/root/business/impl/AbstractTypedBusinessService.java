@@ -17,6 +17,7 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
+import org.cyk.system.root.business.api.file.report.ReportFileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
@@ -25,6 +26,7 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
+import org.cyk.system.root.model.file.report.ReportFile;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.GenericDao;
@@ -312,11 +314,16 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, reportTemplate.getTemplate()
 				, arguments.getFile().getExtension());
 		inject(FileBusiness.class).process(arguments.getFile(),reportBasedOnTemplateFile.getBytes(), ReportBusiness.DEFAULT_FILE_NAME_AND_EXTENSION);
+		Boolean isNewFile = isNotIdentified(arguments.getFile());
 		inject(GenericBusiness.class).save(arguments.getFile());
+		if(Boolean.TRUE.equals(isNewFile)){
+			inject(ReportFileBusiness.class).create(new ReportFile(reportTemplate, arguments.getFile()));
+		}
 		if(Boolean.TRUE.equals(arguments.getJoinFileToIdentifiable())){
 			FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
 			searchCriteria.addIdentifiableGlobalIdentifier(arguments.getIdentifiable());
-			searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(arguments.getReportTemplateCode()));
+			searchCriteria.addRepresentationType(arguments.getFile().getRepresentationType() == null 
+					? inject(FileRepresentationTypeDao.class).read(arguments.getReportTemplateCode()) : arguments.getFile().getRepresentationType());
 			Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierDao.class).readByCriteria(searchCriteria);
 			if(fileIdentifiableGlobalIdentifiers.isEmpty())
 				inject(GenericBusiness.class).create(new FileIdentifiableGlobalIdentifier(arguments.getFile(), arguments.getIdentifiable()));
