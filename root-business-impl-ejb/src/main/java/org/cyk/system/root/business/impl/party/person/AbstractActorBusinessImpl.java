@@ -86,6 +86,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	
 	@Override
 	public ACTOR update(ACTOR anActor) {
+		anActor.getPerson().setName(anActor.getName());//TODO i think it is better to align those names because there are same concept . is it ?
 		inject(PersonBusiness.class).update(anActor.getPerson());
 		return super.update(anActor);
 	}

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.Column;
@@ -76,7 +77,7 @@ public class DefaultReportBasedOnDynamicBuilder extends AbstractReportBasedOnDyn
 		if(parameters.getOwner()!=null){
 			report.setOwnerName(parameters.getOwner().getGlobalIdentifier().getName());
 			if(parameters.getOwner().getImage()!=null)
-				report.setOwnerLogoPath(rootBusinessLayer.getFileBusiness().findSystemPath(parameters.getOwner().getImage()).toString());
+				report.setOwnerLogoPath(inject(FileBusiness.class).findSystemPath(parameters.getOwner().getImage()).toString());
 		}
 		
 		//File ownerNameImageFile = rootBusinessLayer.getFileBusiness()

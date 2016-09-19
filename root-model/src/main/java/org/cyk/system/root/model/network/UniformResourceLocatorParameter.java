@@ -179,6 +179,7 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 	public static final String GLOBAL_IDENTIFIER = "globalid";
 	public static final String GLOBAL_IDENTIFIER_OWNER_CLASS = GLOBAL_IDENTIFIER+"ownerclass";
 	public static final String USER_ACCOUNT = "ridp";
+	public static final String FILE_IDENTIFIER = "fileidentifier";
 	public static final String REPORT_IDENTIFIER = "ridp";
 	public static final String FORM_MODEL = "formmodel";
 	public static final String FORM_MODEL_ACTOR = "afm";

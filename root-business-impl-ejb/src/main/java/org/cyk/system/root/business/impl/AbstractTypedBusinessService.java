@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.file.report.ReportFileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
@@ -330,9 +331,24 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}
 	}
 	
-	
+	@Override
+	public File findReportFile(IDENTIFIABLE identifiable,ReportTemplate reportTemplate,Boolean createIfNull) {
+		FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
+    	searchCriteria.addIdentifiableGlobalIdentifier(identifiable);
+    	searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(reportTemplate.getCode()));
+    	Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
+		if(fileIdentifiableGlobalIdentifiers.isEmpty() && Boolean.TRUE.equals(createIfNull))
+			return createReportFile(identifiable, new CreateReportFileArguments<IDENTIFIABLE>(reportTemplate, identifiable));	
+		return fileIdentifiableGlobalIdentifiers.iterator().next().getFile();
+	}
+
+	@Override
+	public File findReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean createIfNull) {
+		return findReportFile(identifiable, inject(ReportTemplateDao.class).read(reportTemplateCode), createIfNull);
+	}
 
 	/**/
+
 
 	public static interface Listener<IDENTIFIABLE extends AbstractIdentifiable> {
 		

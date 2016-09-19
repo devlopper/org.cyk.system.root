@@ -15,11 +15,11 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
@@ -282,10 +282,10 @@ public abstract class AbstractReportBusinessImpl extends AbstractBusinessService
 		file.setBytes(report.getBytes());
 		file.setExtension(report.getFileExtension());
 		if(file.getIdentifier()==null){
-			RootBusinessLayer.getInstance().getFileBusiness().create(file);
+			inject(FileBusiness.class).create(file);
 			logTrace("Report file {} created",report);
 		}else{
-			RootBusinessLayer.getInstance().getFileBusiness().update(file);
+			inject(FileBusiness.class).update(file);
 			logTrace("Report file {} updated",report);
 		}
 	}

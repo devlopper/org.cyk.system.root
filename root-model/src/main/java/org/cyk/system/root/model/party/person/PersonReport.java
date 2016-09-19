@@ -14,7 +14,7 @@ public class PersonReport extends PartyReport implements Serializable {
 
 	private static final long serialVersionUID = 4273143271881011482L;
 
-	protected String lastName,surname,sex,maritalStatus,nationality,names,title,jobFonction,jobTitle;
+	protected String lastnames,surname,sex,maritalStatus,nationality,names,title,jobFonction,jobTitle;
 	protected InputStream signatureSpecimen;
 	
 	protected Boolean generateSignatureSpecimen=Boolean.FALSE;
@@ -27,9 +27,9 @@ public class PersonReport extends PartyReport implements Serializable {
 		if(Boolean.TRUE.equals(globalIdentifier.getGenerateImage()))
 			globalIdentifier.setImage(inputStream(person.photo().getBytes()));
 		globalIdentifier.setName(person.firstName());
-		lastName = person.lastName();
+		lastnames = person.lastName();
 		title = male ? "Mr":provider.randomBoolean()?"Mlle":"Mme";
-		names = globalIdentifier.getName()+" "+lastName;
+		names = globalIdentifier.getName()+" "+lastnames;
 		surname = provider.randomWord(3, 6);
 		sex = male ? "M":"F";
 		maritalStatus = provider.randomBoolean() ? "Marie" : "Célibataire";

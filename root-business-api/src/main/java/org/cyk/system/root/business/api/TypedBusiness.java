@@ -69,6 +69,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	Collection<IDENTIFIABLE> find(Collection<String> globalIdentifierCodes);
     
 	File createReportFile(IDENTIFIABLE identifiable,CreateReportFileArguments<IDENTIFIABLE> arguments);
+	File findReportFile(IDENTIFIABLE identifiable,ReportTemplate reportTemplate,Boolean createIfNull);
+	File findReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean createIfNull);
 	
 	@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 	public static class CreateReportFileArguments<IDENTIFIABLE extends AbstractIdentifiable> implements Serializable{

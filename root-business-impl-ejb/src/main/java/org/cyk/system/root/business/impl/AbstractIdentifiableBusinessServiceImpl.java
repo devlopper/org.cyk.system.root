@@ -443,7 +443,13 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		
 		Listener<IDENTIFIABLE> addCascadeToClass(Class<? extends AbstractIdentifiable> aClass);
 		Listener<IDENTIFIABLE> addCascadeToClasses(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes);
-				
+		
+		Collection<String> getCascadeToReportTemplateCodes();
+		void setCascadeToReportTemplateCodes(Collection<String> reportTemplateCodes);
+		
+		Listener<IDENTIFIABLE> addCascadeToReportTemplateCode(String reportTemplateCode);
+		Listener<IDENTIFIABLE> addCascadeToReportTemplateCodes(String...reportTemplateCodes);
+		
 		/**/
 		
 		@Getter @Setter
@@ -451,6 +457,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			private static final long serialVersionUID = 8213436661982661753L;
 			
 			private Collection<Class<? extends AbstractIdentifiable>> cascadeToClasses;
+			private Collection<String> cascadeToReportTemplateCodes;
 			
 			@Override public void beforeCreate(IDENTIFIABLE identifiable) {}
 			@Override public void afterCreate(IDENTIFIABLE identifiable) {}
@@ -478,6 +485,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				}
 				return this;
 			}
+			
 			public Adapter<IDENTIFIABLE> addCascadeToClasses(Collection<Class<? extends AbstractIdentifiable>> classes){
 				if(classes!=null && !classes.isEmpty()){
 					if(cascadeToClasses==null)
@@ -488,6 +496,33 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			}
 			protected Boolean containsCascadeToClass(Class<? extends AbstractIdentifiable> aClass){
 				return cascadeToClasses!=null && cascadeToClasses.contains(aClass);
+			}
+			
+			@Override
+			public Adapter<IDENTIFIABLE> addCascadeToReportTemplateCode(String reportTemplateCode){
+				Collection<String> reportTemplateCodes = new ArrayList<>();
+				reportTemplateCodes.add(reportTemplateCode);
+				return addCascadeToReportTemplateCodes(reportTemplateCodes);
+			}
+			
+			@Override
+			public Adapter<IDENTIFIABLE> addCascadeToReportTemplateCodes(String...reportTemplateCodes){
+				if(reportTemplateCodes!=null){
+					addCascadeToReportTemplateCodes(Arrays.asList(reportTemplateCodes));
+				}
+				return this;
+			}
+			
+			public Adapter<IDENTIFIABLE> addCascadeToReportTemplateCodes(Collection<String> reportTemplateCodes){
+				if(reportTemplateCodes!=null && !reportTemplateCodes.isEmpty()){
+					if(this.cascadeToReportTemplateCodes==null)
+						this.cascadeToReportTemplateCodes = new LinkedHashSet<>();
+					this.cascadeToReportTemplateCodes.addAll(reportTemplateCodes);
+				}
+				return this;
+			}
+			protected Boolean containsCascadeToReportTemplateCode(String reportTemplateCode){
+				return cascadeToReportTemplateCodes!=null && cascadeToReportTemplateCodes.contains(reportTemplateCode);
 			}
 			
 			@Override
@@ -513,6 +548,35 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			}
 			
 			/**/
+			
+			public static class Default<IDENTIFIABLE extends AbstractIdentifiable> extends Adapter<IDENTIFIABLE> implements Serializable{
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void afterUpdate(IDENTIFIABLE identifiable) {
+					super.afterUpdate(identifiable);
+					//Update related reports
+					for(String reportTemplateCode : getCascadeToReportTemplateCodes()){
+						FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
+						searchCriteria.addIdentifiableGlobalIdentifier(identifiable);
+						searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(reportTemplateCode));
+						Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
+						if(fileIdentifiableGlobalIdentifiers.isEmpty()){
+							
+						}else{
+							@SuppressWarnings("unchecked")
+							Class<AbstractIdentifiable> clazz = (Class<AbstractIdentifiable>) identifiable.getClass();
+							TypedBusiness<AbstractIdentifiable> business = inject(BusinessInterfaceLocator.class).injectTyped(clazz);							
+							for(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier : fileIdentifiableGlobalIdentifiers){
+								CreateReportFileArguments<AbstractIdentifiable> arguments = new CreateReportFileArguments<AbstractIdentifiable>(reportTemplateCode,identifiable,fileIdentifiableGlobalIdentifier.getFile());
+								business.createReportFile(identifiable, arguments);
+							}
+						}
+					}
+				}
+			}
+			
 		}
 		
 		/**/

@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractRootBusinessBean;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
@@ -26,6 +26,7 @@ import org.cyk.system.root.model.mathematics.IntervalReport;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.party.person.AbstractActorReport;
 import org.cyk.system.root.model.party.person.ActorReport;
 import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.Person;
@@ -105,15 +106,15 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		if(person==null){
 			report.getGlobalIdentifier().setName(NOT_APPLICABLE);
 			report.setNames(NOT_APPLICABLE);
-			report.setLastName(NOT_APPLICABLE);
-			report.setLastName(Constant.EMPTY_STRING);
+			report.setLastnames(NOT_APPLICABLE);
+			report.setLastnames(Constant.EMPTY_STRING);
 		}else{
 			inject(PersonBusiness.class).load(person);
 			if(person.getContactCollection()!=null)
 				set(person.getContactCollection(), report.getContactCollection());
 			
 			report.getGlobalIdentifier().setName(person.getGlobalIdentifier().getName());
-			report.setLastName(person.getLastnames());
+			report.setLastnames(person.getLastnames());
 			report.setNames(inject(PersonBusiness.class).findNames(person));
 			report.setSurname(person.getSurname());
 			report.getGlobalIdentifier().getExistencePeriod().setFrom(format(person.getBirthDate()));
@@ -151,7 +152,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		}
 	}
 	
-	protected void set(AbstractActor actor,ActorReport report){
+	protected void set(AbstractActor actor,AbstractActorReport<?> report){
 		set(actor==null?null:actor.getPerson(), report.getPerson());
 		if(actor==null){
 			
@@ -171,7 +172,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	protected InputStream findInputStream(File file){
-		return RootBusinessLayer.getInstance().getFileBusiness().findInputStream(file);
+		return inject(FileBusiness.class).findInputStream(file);
 	}
 	
 	protected String[][] convertToArray(Collection<Metric> metrics,Collection<MetricValue> metricValues){

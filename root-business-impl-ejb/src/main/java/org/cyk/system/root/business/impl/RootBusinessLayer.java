@@ -25,6 +25,7 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
@@ -369,8 +370,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         notificationTemplate.setCode(code);
         notificationTemplate.setName(name);
         try {
-        	notificationTemplate.setTitle(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream(titleFileFolder+"/"+titleFileName)), titleFileName));
-        	notificationTemplate.setMessage(fileBusiness.process(IOUtils.toByteArray(getClass().getResourceAsStream(bodyFileFolder+"/"+bodyFileName)), bodyFileName));
+        	notificationTemplate.setTitle(inject(FileBusiness.class).process(IOUtils.toByteArray(getClass().getResourceAsStream(titleFileFolder+"/"+titleFileName)), titleFileName));
+        	notificationTemplate.setMessage(inject(FileBusiness.class).process(IOUtils.toByteArray(getClass().getResourceAsStream(bodyFileFolder+"/"+bodyFileName)), bodyFileName));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

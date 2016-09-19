@@ -92,7 +92,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     @Inject @Getter protected JasperReportBusinessImpl reportBusiness;
     @Inject protected PermissionBusiness permissionBusiness;
     @Inject protected RoleSecuredViewBusiness roleSecuredViewBusiness;
-    @Inject @Getter protected FileBusiness fileBusiness;
     @Inject @Getter protected FormatterBusiness formatterBusiness;
     
     @Inject protected RootDataProducerHelper rootDataProducerHelper;
@@ -353,7 +352,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     
     protected Script script(String text,String name){
     	Script script = new Script();
-    	script.setFile(fileBusiness.process(text.getBytes(), name+".txt"));
+    	script.setFile(inject(FileBusiness.class).process(text.getBytes(), name+".txt"));
     	return script;
     }
 
