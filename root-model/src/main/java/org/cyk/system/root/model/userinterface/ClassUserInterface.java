@@ -15,7 +15,7 @@ public class ClassUserInterface extends AbstractModelElement implements Serializ
 
 	@Getter @Setter private Class<?> clazz,hierarchyHighestAncestorClass,detailsClass;
 	@Getter @Setter private String labelId,label,iconName,iconExtension;
-    @Getter @Setter private String consultViewId,listViewId,editViewId,createManyViewId,selectOneViewId,selectManyViewId,processManyViewId;
+    @Getter @Setter private String consultViewId,listViewId,editViewId,createManyViewId,selectOneViewId,selectManyViewId,processManyViewId,printViewId;
 	
 	@Override
 	public String getUiString() {
