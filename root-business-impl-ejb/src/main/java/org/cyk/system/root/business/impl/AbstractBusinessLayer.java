@@ -428,10 +428,11 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		return rootDataProducerHelper.createMovementCollection(code, incrementActionName, decrementActionName);
 	}
 
-	public ReportTemplate createReportTemplate(String code,String templateRelativeFileName,File headerImage,File backgroundImage,File draftBackgroundImage){
-		createEnumeration(FileRepresentationType.class,code);
-		String name = StringUtils.substringAfterLast(templateRelativeFileName, Constant.CHARACTER_SLASH.toString());
-		return create(new ReportTemplate(code,createFile(templateRelativeFileName, name),null,null,null));
+	public ReportTemplate createReportTemplate(String code,String name,Boolean male,String templateRelativeFileName,File headerImage,File backgroundImage,File draftBackgroundImage){
+		if(StringUtils.isBlank(name))
+			name = StringUtils.substringAfterLast(templateRelativeFileName, Constant.CHARACTER_SLASH.toString());
+		createEnumeration(FileRepresentationType.class,code,name);
+		return create(new ReportTemplate(code,name,male,createFile(templateRelativeFileName, name),null,null,null));
 	}
 	
 	protected void instanciateRoleUniformResourceLocator(Collection<Role> roles,Object...uniformResourceLocatorArray){

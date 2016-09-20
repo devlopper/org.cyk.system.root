@@ -23,8 +23,9 @@ public class ReportTemplate extends AbstractEnumeration implements Serializable 
 	
 	@ManyToOne private File draftBackgroundImage;
 	
-	public ReportTemplate(String code, File template,File headerImage,File backgroundImage,File draftBackgroundImage) {
-		super(code, code, null, null);
+	public ReportTemplate(String code,String name,Boolean male, File template,File headerImage,File backgroundImage,File draftBackgroundImage) {
+		super(code, name, null, null);
+		getGlobalIdentifierCreateIfNull().setMale(male);
 		this.template = template;
 		this.headerImage = headerImage;
 		this.backgroundImage = backgroundImage;

@@ -15,6 +15,8 @@ import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.language.Language;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import org.cyk.utility.common.annotation.user.interfaces.Text;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
 
@@ -93,6 +95,7 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 		private static final long serialVersionUID = 6396335973589816204L;
 		private Class<?> clazz;
 		private Boolean one=Boolean.TRUE;
+		private GenderType genderType;
 		private FindTextResult result = new FindTextResult();
 		public FindClassLabelTextParameters(Class<?> clazz, Boolean one) {
 			super();
@@ -101,6 +104,19 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 		}
 		public FindClassLabelTextParameters(Class<?> clazz) {
 			this(clazz,Boolean.TRUE);
+		}
+		
+		public GenderType getGenderType(){
+			if(genderType==null){
+				if(this.clazz!=null){
+					ModelBean modelBean = this.clazz.getAnnotation(ModelBean.class);
+					if(modelBean!=null)
+						genderType = modelBean.genderType();
+				}
+				if(genderType == null)
+					genderType = GenderType.UNSET;
+			}
+			return genderType;
 		}
 	}
 	

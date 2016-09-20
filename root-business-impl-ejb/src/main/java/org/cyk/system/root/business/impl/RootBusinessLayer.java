@@ -106,6 +106,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	private final String parameterFromDate = "fd"; 
 	private final String parameterToDate = "td"; 
 	
+	private final String actionPrint = "print";
+	
 	@Inject private RootBusinessTestHelper rootBusinessTestHelper;
     
     private Application application;

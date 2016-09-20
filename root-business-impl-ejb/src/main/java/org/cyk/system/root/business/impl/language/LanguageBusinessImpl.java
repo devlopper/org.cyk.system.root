@@ -458,14 +458,20 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	    		}
 		
 		GenderType genderType = GenderType.UNSET;
-		if(businessEntityInfos==null){
-			ModelBean modelBean = null;
-			if(parameters.getSubjectClassLabelTextParameters().getClazz()!=null)
-				modelBean = parameters.getSubjectClassLabelTextParameters().getClazz().getAnnotation(ModelBean.class);
-			if(modelBean!=null)
-				genderType = modelBean.genderType();
-		}else
-			genderType = businessEntityInfos.getGenderType();
+		
+		if(GenderType.UNSET.equals(genderType)){
+			if(businessEntityInfos==null){
+				ModelBean modelBean = null;
+				if(parameters.getSubjectClassLabelTextParameters().getClazz()!=null)
+					modelBean = parameters.getSubjectClassLabelTextParameters().getClazz().getAnnotation(ModelBean.class);
+				if(modelBean!=null)
+					genderType = modelBean.genderType();
+				System.out.println("LanguageBusinessImpl.findDoSomethingText() 1 : "+parameters.getSubjectClassLabelTextParameters().getClazz().getSimpleName()+" "+genderType);
+				genderType = parameters.getSubjectClassLabelTextParameters().getGenderType();
+				System.out.println("LanguageBusinessImpl.findDoSomethingText() 2 : "+parameters.getSubjectClassLabelTextParameters().getClazz().getSimpleName()+" "+genderType);
+			}else
+				genderType = businessEntityInfos.getGenderType();
+		}
 		Object actionIdentifier = null;
 		String actionIdentifierAsString = null;
 		if(parameters.getActionIdentifier() instanceof Crud)
