@@ -83,6 +83,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     public void findDoSomethingText() {
 		FindDoSomethingTextParameters parameters = new FindDoSomethingTextParameters();
 		parameters.setActionIdentifier(CommonBusinessAction.CREATE);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.getSubjectClassLabelTextParameters().setClazz(Person.class);
 		parameters.setOne(Boolean.TRUE);
 		parameters.setGlobal(Boolean.TRUE);
@@ -95,12 +96,14 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
 		parameters.setActionIdentifier(CommonBusinessAction.READ);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setOne(Boolean.TRUE);
 		parameters.setGlobal(Boolean.FALSE);
 		parameters.setVerb(Boolean.TRUE);
 		assertEquals("Lire une personne", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.READ);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.FALSE);
@@ -108,6 +111,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Lire des personnes", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.UPDATE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.TRUE);
@@ -115,6 +119,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Mettre à jour les personnes", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.DELETE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.FALSE);
@@ -127,6 +132,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		
 		/**/
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.CREATE);
 		parameters.getSubjectClassLabelTextParameters().setClazz(PhoneNumber.class);
 		parameters.setOne(Boolean.TRUE);
@@ -135,6 +141,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Créer le numéro de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.READ);
 		parameters.setOne(Boolean.TRUE);
 		parameters.setGlobal(Boolean.FALSE);
@@ -142,6 +149,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Lire un numéro de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.UPDATE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.TRUE);
@@ -149,6 +157,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Mettre à jour les numéros de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.DELETE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.FALSE);
@@ -156,6 +165,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Supprimer des numéros de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
 		parameters.setOne(Boolean.TRUE);
 		parameters.setGlobal(Boolean.FALSE);
@@ -163,6 +173,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Imprimer un numéro de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
 		parameters.getSubjectClassLabelTextParameters().setClazz(File.class);
 		parameters.setOne(Boolean.TRUE);
@@ -171,6 +182,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Imprimer un fichier", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue("certificat de travail");
 		parameters.setOne(Boolean.TRUE);
@@ -179,6 +191,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Imprimer un certificat de travail", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue("certificats de travail");
 		parameters.setOne(Boolean.FALSE);
@@ -187,6 +200,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Imprimer des certificats de travail", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue("bon de livraison");
 		parameters.setOne(Boolean.TRUE);
@@ -195,6 +209,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 		assertEquals("Imprimer le bon de livraison", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.getSubjectClassLabelTextParameters().setGenderType(null);
 		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
 		parameters.getSubjectClassLabelTextParameters().getResult().setValue("bon de livraison");
 		parameters.setOne(Boolean.TRUE);

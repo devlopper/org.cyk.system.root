@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -69,6 +70,10 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	String findDeterminantText(Boolean male, Boolean one,Boolean global);
 
 	FindTextResult findDoSomethingText(FindDoSomethingTextParameters parameters);
+	FindTextResult findDoPrintReportText(FindDoSomethingTextParameters parameters,ReportTemplate reportTemplate);
+	FindTextResult findDoPrintReportText(ReportTemplate reportTemplate);
+	FindTextResult findDoPrintReportText(FindDoSomethingTextParameters parameters,String reportTemplateCode);
+	FindTextResult findDoPrintReportText(String reportTemplateCode);
 
 	String findResponseText(Boolean value);
 	
@@ -110,11 +115,13 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 			if(genderType==null){
 				if(this.clazz!=null){
 					ModelBean modelBean = this.clazz.getAnnotation(ModelBean.class);
-					if(modelBean!=null)
+					if(modelBean!=null){
 						genderType = modelBean.genderType();
+					}
 				}
-				if(genderType == null)
+				if(genderType == null){
 					genderType = GenderType.UNSET;
+				}
 			}
 			return genderType;
 		}

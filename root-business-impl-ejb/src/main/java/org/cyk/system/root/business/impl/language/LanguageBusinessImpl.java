@@ -20,6 +20,9 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.CommonBusinessAction;
@@ -29,14 +32,16 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.language.LanguageEntry;
+import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
-import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
@@ -44,9 +49,6 @@ import org.cyk.utility.common.annotation.user.interfaces.Text;
 import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
 public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
@@ -461,14 +463,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		
 		if(GenderType.UNSET.equals(genderType)){
 			if(businessEntityInfos==null){
-				ModelBean modelBean = null;
+				/*ModelBean modelBean = null;
 				if(parameters.getSubjectClassLabelTextParameters().getClazz()!=null)
 					modelBean = parameters.getSubjectClassLabelTextParameters().getClazz().getAnnotation(ModelBean.class);
 				if(modelBean!=null)
 					genderType = modelBean.genderType();
-				System.out.println("LanguageBusinessImpl.findDoSomethingText() 1 : "+parameters.getSubjectClassLabelTextParameters().getClazz().getSimpleName()+" "+genderType);
+				*/
 				genderType = parameters.getSubjectClassLabelTextParameters().getGenderType();
-				System.out.println("LanguageBusinessImpl.findDoSomethingText() 2 : "+parameters.getSubjectClassLabelTextParameters().getClazz().getSimpleName()+" "+genderType);
 			}else
 				genderType = businessEntityInfos.getGenderType();
 		}
@@ -519,6 +520,39 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 						, new Object[]{findText(actionIdentifierAsString),determinant,subject,findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()}));
 		}
 		return findTextResult;
+	}
+	
+	@Override
+	public FindTextResult findDoPrintReportText(FindDoSomethingTextParameters parameters,ReportTemplate reportTemplate) {
+		if(parameters==null){
+			parameters = new FindDoSomethingTextParameters();
+			parameters.getSubjectClassLabelTextParameters().setClazz(File.class);//TODO null should be possible ?
+			parameters.getSubjectClassLabelTextParameters().getResult().setValue(reportTemplate.getName());
+			parameters.getSubjectClassLabelTextParameters().setGenderType(reportTemplate.getGlobalIdentifier().getMale() == null ? GenderType.UNSET : 
+				Boolean.TRUE.equals(reportTemplate.getGlobalIdentifier().getMale()) ? GenderType.MALE : GenderType.FEMALE);
+			parameters.setActionIdentifier(CommonBusinessAction.PRINT);
+			parameters.setOne(Boolean.TRUE);
+			parameters.setGlobal(Boolean.FALSE);
+			parameters.setVerb(Boolean.TRUE);
+		}
+		if(parameters.getVerb()==null)
+			parameters.setVerb(Boolean.TRUE);
+		return findDoSomethingText(parameters);
+	}
+	
+	@Override
+	public FindTextResult findDoPrintReportText(ReportTemplate reportTemplate) {
+		return findDoPrintReportText(null, reportTemplate);
+	}
+	
+	@Override
+	public FindTextResult findDoPrintReportText(FindDoSomethingTextParameters parameters, String reportTemplateCode) {
+		return findDoPrintReportText(parameters, inject(ReportTemplateDao.class).read(reportTemplateCode));
+	}
+	
+	@Override
+	public FindTextResult findDoPrintReportText(String reportTemplateCode) {
+		return findDoPrintReportText(null, reportTemplateCode);
 	}
 	
 	@Override
