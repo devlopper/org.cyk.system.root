@@ -88,11 +88,12 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	String DO_SOMETHING_PLUS_FOR_FORMAT = "dosomethingformatplusfor";
 	
 	/**/
-	@Getter @Setter
+	@Getter @Setter @NoArgsConstructor
 	public static class FindClassLabelTextParameters implements Serializable{
 		private static final long serialVersionUID = 6396335973589816204L;
 		private Class<?> clazz;
 		private Boolean one=Boolean.TRUE;
+		private FindTextResult result = new FindTextResult();
 		public FindClassLabelTextParameters(Class<?> clazz, Boolean one) {
 			super();
 			this.clazz = clazz;
@@ -103,28 +104,38 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 		}
 	}
 	
-	@Getter @Setter
+	@Getter @Setter 
 	public static class FindDoSomethingTextParameters implements Serializable{
 		private static final long serialVersionUID = 6396335973589816204L;
 		private Object actionIdentifier;
-		private Class<? extends AbstractIdentifiable> subjectClass;
-		private Boolean one,global,verb=Boolean.TRUE;
+		private FindClassLabelTextParameters subjectClassLabelTextParameters = new FindClassLabelTextParameters();
+		private Boolean global,verb=Boolean.TRUE;
 		private String forWhat;
-		
+		private FindTextResult result = new FindTextResult();
 		/**/
 		
 		public static FindDoSomethingTextParameters create(Object actionIdentifier,Class<? extends AbstractIdentifiable> identifiableClass,Boolean verb){
 			FindDoSomethingTextParameters labelParameters = new FindDoSomethingTextParameters();
 			labelParameters = new FindDoSomethingTextParameters();
 			labelParameters.setActionIdentifier(actionIdentifier);
-			labelParameters.setSubjectClass(identifiableClass);
+			labelParameters.subjectClassLabelTextParameters.clazz = identifiableClass;
 			labelParameters.setVerb(verb);
 			return labelParameters;
+		}
+		
+		public Boolean getOne() {
+			return subjectClassLabelTextParameters.getOne();
+		}
+
+		public void setOne(Boolean one) {
+			subjectClassLabelTextParameters.setOne(one);
 		}
 		
 		public static FindDoSomethingTextParameters create(Object actionIdentifier,Class<? extends AbstractIdentifiable> identifiableClass){
 			return create(actionIdentifier, identifiableClass, Boolean.TRUE);
 		}
+
+		
 	}
 
 	Collection<Language> instanciateMany(List<String[]> list);

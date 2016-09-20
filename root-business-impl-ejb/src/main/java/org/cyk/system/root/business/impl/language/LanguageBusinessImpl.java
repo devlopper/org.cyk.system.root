@@ -398,10 +398,15 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
     
     @Override
     public String findClassLabelText(FindClassLabelTextParameters parameters) {
-    	if(AbstractModelElement.class.isAssignableFrom(parameters.getClazz()))
-    		return findText(buildEntityLabelIdentifier(parameters.getClazz())
-    		+( (parameters.getOne()==null || parameters.getOne()) ? Constant.EMPTY_STRING : MANY_MARKER));
-    	return findText(StringUtils.replace(parameters.getClazz().getName(), Constant.CHARACTER_DOLLAR.toString(), Constant.CHARACTER_DOT.toString()));
+    	//if(StringUtils.isBlank(parameters.getResult().getValue())){
+    		if(AbstractModelElement.class.isAssignableFrom(parameters.getClazz()))
+    			parameters.getResult().setValue(findText(buildEntityLabelIdentifier(parameters.getClazz())
+    					+( (parameters.getOne()==null || parameters.getOne()) ? Constant.EMPTY_STRING : MANY_MARKER)));
+    		else
+    			parameters.getResult().setValue(findText(StringUtils.replace(parameters.getClazz().getName(), Constant.CHARACTER_DOLLAR.toString()
+    				, Constant.CHARACTER_DOT.toString())));
+    	//}
+    	return parameters.getResult().getValue();
     }
     
     @Override
@@ -443,11 +448,11 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	@Override
 	public FindTextResult findDoSomethingText(FindDoSomethingTextParameters parameters) {
 		FindTextResult findTextResult = new FindTextResult();
-		findTextResult.setIdentifier(StringUtils.join(parameters.getActionIdentifier())+Constant.CHARACTER_DOT+parameters.getSubjectClass().getSimpleName().toLowerCase());
+		findTextResult.setIdentifier(StringUtils.join(parameters.getActionIdentifier())+Constant.CHARACTER_DOT+parameters.getSubjectClassLabelTextParameters().getClazz().getSimpleName().toLowerCase());
 		BusinessEntityInfos businessEntityInfos = null;
 		if(ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS!=null)
 			for(BusinessEntityInfos b : ApplicationBusinessImpl.BUSINESS_ENTITIES_INFOS)
-	    		if(b.getClazz().equals(parameters.getSubjectClass())){
+	    		if(b.getClazz().equals(parameters.getSubjectClassLabelTextParameters().getClazz())){
 	    			businessEntityInfos = b;
 	    			break;
 	    		}
@@ -455,8 +460,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		GenderType genderType = GenderType.UNSET;
 		if(businessEntityInfos==null){
 			ModelBean modelBean = null;
-			if(parameters.getSubjectClass()!=null)
-				modelBean = parameters.getSubjectClass().getAnnotation(ModelBean.class);
+			if(parameters.getSubjectClassLabelTextParameters().getClazz()!=null)
+				modelBean = parameters.getSubjectClassLabelTextParameters().getClazz().getAnnotation(ModelBean.class);
 			if(modelBean!=null)
 				genderType = modelBean.genderType();
 		}else
@@ -475,9 +480,12 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		else
 			actionIdentifierAsString = actionIdentifier.toString();
 		
+		String subject = StringUtils.defaultIfBlank(parameters.getSubjectClassLabelTextParameters().getResult().getValue()
+				, findClassLabelText(parameters.getSubjectClassLabelTextParameters())); 
+		
 		if(GenderType.UNSET.equals(genderType) || parameters.getOne()==null || parameters.getGlobal()==null){
 			findTextResult.setValue(findText(StringUtils.isBlank(parameters.getForWhat())?DO_SOMETHING_FORMAT:DO_SOMETHING_PLUS_FOR_FORMAT
-					, new Object[]{findText(actionIdentifierAsString),findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass()))
+					, new Object[]{findText(actionIdentifierAsString),subject
 							,findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()}));
 		}else{
 			String determinant = findDeterminantText(GenderType.MALE.equals(genderType), parameters.getOne(),parameters.getGlobal());
@@ -502,8 +510,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			//		,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass(),parameters.getOne()))});
 			//else
 				findTextResult.setValue(findText(StringUtils.isBlank(parameters.getForWhat())?DO_SOMETHING_PLUS_DET_FORMAT:DO_SOMETHING_PLUS_DET_PLUS_FOR_FORMAT
-						, new Object[]{findText(actionIdentifierAsString),determinant,findClassLabelText(new FindClassLabelTextParameters(parameters.getSubjectClass()
-								,parameters.getOne())),findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()}));
+						, new Object[]{findText(actionIdentifierAsString),determinant,subject,findText("inorderto")+Constant.CHARACTER_SPACE+parameters.getForWhat()}));
 		}
 		return findTextResult;
 	}

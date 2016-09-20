@@ -10,11 +10,15 @@ import org.cyk.system.root.business.api.CommonBusinessAction;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindClassLabelTextParameters;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindDoSomethingTextParameters;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.ApplicationAccount;
 import org.cyk.system.root.model.security.UserAccount;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.Text;
+import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -46,13 +50,13 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 
 	@Test
     public void findFieldLabelText() {
-		assertEquals("Nombre de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userCount", Boolean.TRUE)));
-	    assertEquals("Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "user", Boolean.TRUE))); 
-	    assertEquals("Quantite de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userQuantity", Boolean.TRUE))); 
-	    assertEquals("Prix de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userPrice", Boolean.TRUE))); 
-	    assertEquals("Prix unitaire de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userUnitPrice", Boolean.TRUE))); 
-	    assertEquals("Couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color", Boolean.TRUE)));
-	    assertEquals("Une autre couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color2", Boolean.TRUE)));
+		assertEquals("Nombre de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userCount", Boolean.TRUE)).getValue());
+	    assertEquals("Utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "user", Boolean.TRUE)).getValue()); 
+	    assertEquals("Quantite de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userQuantity", Boolean.TRUE)).getValue()); 
+	    assertEquals("Prix de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userPrice", Boolean.TRUE)).getValue()); 
+	    assertEquals("Prix unitaire de utilisateur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "userUnitPrice", Boolean.TRUE)).getValue()); 
+	    assertEquals("Couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color", Boolean.TRUE)).getValue());
+	    assertEquals("Une autre couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color2", Boolean.TRUE)).getValue());
     }
 	
 	@Test
@@ -79,73 +83,126 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     public void findDoSomethingText() {
 		FindDoSomethingTextParameters parameters = new FindDoSomethingTextParameters();
 		parameters.setActionIdentifier(CommonBusinessAction.CREATE);
-		parameters.setSubjectClass(Person.class);
+		parameters.getSubjectClassLabelTextParameters().setClazz(Person.class);
 		parameters.setOne(Boolean.TRUE);
 		parameters.setGlobal(Boolean.TRUE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Créer la personne", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Créer la personne", languageBusiness.findDoSomethingText(parameters).getValue());
 		parameters.setVerb(Boolean.FALSE);
-		assertEquals("Création de la personne", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Création de la personne", languageBusiness.findDoSomethingText(parameters).getValue());
 		parameters.setGlobal(Boolean.FALSE);
-		assertEquals("Création d'une personne", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Création d'une personne", languageBusiness.findDoSomethingText(parameters).getValue());
 		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
 		parameters.setActionIdentifier(CommonBusinessAction.READ);
 		parameters.setOne(Boolean.TRUE);
 		parameters.setGlobal(Boolean.FALSE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Lire une personne", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Lire une personne", languageBusiness.findDoSomethingText(parameters).getValue());
 		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
 		parameters.setActionIdentifier(CommonBusinessAction.READ);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.FALSE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Lire des personnes", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Lire des personnes", languageBusiness.findDoSomethingText(parameters).getValue());
 		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
 		parameters.setActionIdentifier(CommonBusinessAction.UPDATE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.TRUE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Mettre à jour les personnes", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Mettre à jour les personnes", languageBusiness.findDoSomethingText(parameters).getValue());
 		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
 		parameters.setActionIdentifier(CommonBusinessAction.DELETE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.FALSE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Supprimer des personnes", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Supprimer des personnes", languageBusiness.findDoSomethingText(parameters).getValue());
 		
 		//assertEquals("Lire personne", languageBusiness.findDoSomethingText(Crud.READ, Person.class,Boolean.TRUE,Boolean.FALSE));
 		//assertEquals("Mettre à jour personne", languageBusiness.findDoSomethingText(Crud.UPDATE, Person.class,Boolean.TRUE,Boolean.FALSE));
 		//assertEquals("Supprimer personne", languageBusiness.findDoSomethingText(Crud.DELETE, Person.class,Boolean.TRUE,Boolean.FALSE));
 		
 		/**/
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
 		parameters.setActionIdentifier(CommonBusinessAction.CREATE);
-		parameters.setSubjectClass(PhoneNumber.class);
+		parameters.getSubjectClassLabelTextParameters().setClazz(PhoneNumber.class);
 		parameters.setOne(Boolean.TRUE);
 		parameters.setGlobal(Boolean.TRUE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Créer numéro de téléphone", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Créer le numéro de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
 		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
 		parameters.setActionIdentifier(CommonBusinessAction.READ);
 		parameters.setOne(Boolean.TRUE);
 		parameters.setGlobal(Boolean.FALSE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Lire numéro de téléphone", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Lire un numéro de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
 		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
 		parameters.setActionIdentifier(CommonBusinessAction.UPDATE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.TRUE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Mettre à jour numéro de téléphone", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Mettre à jour les numéros de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
 		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
 		parameters.setActionIdentifier(CommonBusinessAction.DELETE);
 		parameters.setOne(Boolean.FALSE);
 		parameters.setGlobal(Boolean.FALSE);
 		parameters.setVerb(Boolean.TRUE);
-		assertEquals("Supprimer numéro de téléphone", languageBusiness.findDoSomethingText(parameters));
+		assertEquals("Supprimer des numéros de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
 		
-		//assertEquals("Lire personne", languageBusiness.findDoSomethingText(Crud.READ, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
-		//assertEquals("Mettre à jour personne", languageBusiness.findDoSomethingText(Crud.UPDATE, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
-		//assertEquals("Supprimer personne", languageBusiness.findDoSomethingText(Crud.DELETE, PhoneNumber.class,Boolean.TRUE,Boolean.FALSE));
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
+		parameters.setOne(Boolean.TRUE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Imprimer un numéro de téléphone", languageBusiness.findDoSomethingText(parameters).getValue());
+		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
+		parameters.getSubjectClassLabelTextParameters().setClazz(File.class);
+		parameters.setOne(Boolean.TRUE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Imprimer un fichier", languageBusiness.findDoSomethingText(parameters).getValue());
+		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue("certificat de travail");
+		parameters.setOne(Boolean.TRUE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Imprimer un certificat de travail", languageBusiness.findDoSomethingText(parameters).getValue());
+		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue("certificats de travail");
+		parameters.setOne(Boolean.FALSE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Imprimer des certificats de travail", languageBusiness.findDoSomethingText(parameters).getValue());
+		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue("bon de livraison");
+		parameters.setOne(Boolean.TRUE);
+		parameters.setGlobal(Boolean.TRUE);
+		parameters.setVerb(Boolean.TRUE);
+		assertEquals("Imprimer le bon de livraison", languageBusiness.findDoSomethingText(parameters).getValue());
+		
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue(Constant.EMPTY_STRING);
+		parameters.setActionIdentifier(CommonBusinessAction.PRINT);
+		parameters.getSubjectClassLabelTextParameters().getResult().setValue("bon de livraison");
+		parameters.setOne(Boolean.TRUE);
+		parameters.setGlobal(Boolean.FALSE);
+		parameters.setVerb(Boolean.FALSE);
+		assertEquals("Impression d'un bon de livraison", languageBusiness.findDoSomethingText(parameters).getValue());
+		
+		
 	}
 
 	//@Test
@@ -173,7 +230,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     	@Input private String userUnitPrice;
     	@Input private String userCount;
     	@Input private String color;
-    	@Input private String color2;
+    	@Input(label=@Text(type=ValueType.VALUE,value="Une autre couleur")) private String color2;
     	
     }
 

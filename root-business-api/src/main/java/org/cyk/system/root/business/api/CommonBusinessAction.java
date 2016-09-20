@@ -9,4 +9,5 @@ public enum CommonBusinessAction {
     ,SEARCH
     ,CONSULT
     ,LIST
+    ,PRINT
 }
