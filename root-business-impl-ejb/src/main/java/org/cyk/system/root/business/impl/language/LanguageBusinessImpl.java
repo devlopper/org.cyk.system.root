@@ -366,8 +366,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
     }
     
     private Boolean fieldMarker(String labelId,String value,String fieldMarker,Collection<String> values){
-    	if(StringUtils.endsWith(labelId, fieldMarker)){
-			String newLabelId = StringUtils.substringBefore(labelId, fieldMarker);
+    	if(StringUtils.endsWith(labelId, fieldMarker) && !(StringUtils.substringBefore(labelId, fieldMarker)+Constant.CHARACTER_DOT).equals(FIELD_MARKER_START)){
+    		String newLabelId = StringUtils.substringBefore(labelId, fieldMarker);
 			value = findText(newLabelId);
 			if(unknown(value)){
 				newLabelId = StringUtils.substringAfter(newLabelId, FIELD_MARKER_START);
