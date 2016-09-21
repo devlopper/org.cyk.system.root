@@ -58,14 +58,53 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    return dao;
 	}
 	
-	protected String generateCode(String...tokens){
-		return StringUtils.join(tokens, Constant.CHARACTER_UNDESCORE);
+	protected String generateCode(Object...tokens){
+		Collection<String> collection = new ArrayList<>();
+		for(Object token : tokens)
+			if(token==null){
+			
+			}else
+				if(token instanceof AbstractIdentifiable)
+					collection.add(((AbstractIdentifiable)token).getCode());
+				else
+					collection.add(token.toString());	
+		return StringUtils.join(collection, Constant.CHARACTER_UNDESCORE);
 	}
-	protected void setProperty(IDENTIFIABLE identifiable,String name){}
+	
+	protected String generateName(Object...tokens){
+		Collection<String> collection = new ArrayList<>();
+		for(Object token : tokens)
+			if(token==null){
+			
+			}else
+				if(token instanceof AbstractIdentifiable)
+					collection.add(((AbstractIdentifiable)token).getName());
+				else
+					collection.add(token.toString());	
+		return StringUtils.join(collection, Constant.CHARACTER_SPACE);
+	}
+	
+	protected Object[] getPropertyValueTokens(IDENTIFIABLE identifiable,String name){
+		return null;
+	}
+
+	protected void setProperty(IDENTIFIABLE identifiable,String name){
+		Object[] tokens = getPropertyValueTokens(identifiable, name);
+		if(tokens==null){
+			logWarning("tokens , for automatically build value of property {} in object {}, should not be null", name,identifiable);
+		}else{
+			if(GlobalIdentifier.FIELD_CODE.equals(name))
+				identifiable.setCode(generateCode(tokens));
+			else if(GlobalIdentifier.FIELD_NAME.equals(name))
+				identifiable.setName(generateName(tokens));
+		}
+	}
 	
 	protected void setAutoSettedProperties(IDENTIFIABLE identifiable){
 		if(isAutoSetPropertyValueClass(GlobalIdentifier.FIELD_CODE, identifiable.getClass()))
 			setProperty(identifiable,GlobalIdentifier.FIELD_CODE);
+		if(isAutoSetPropertyValueClass(GlobalIdentifier.FIELD_NAME, identifiable.getClass()))
+			setProperty(identifiable,GlobalIdentifier.FIELD_NAME);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

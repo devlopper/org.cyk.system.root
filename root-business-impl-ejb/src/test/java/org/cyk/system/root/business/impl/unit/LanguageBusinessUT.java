@@ -58,6 +58,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
 	    assertEquals("Couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color", Boolean.TRUE)).getValue());
 	    assertEquals("Une autre couleur",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "color2", Boolean.TRUE)).getValue());
 	    assertEquals("Index",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "index", Boolean.TRUE)).getValue());
+	    assertEquals("Type d'unité",languageBusiness.findFieldLabelText(FieldUtils.getDeclaredField(MyClass.class, "unitType", Boolean.TRUE)).getValue());
     }
 	
 	@Test
@@ -248,6 +249,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     	@Input private String color;
     	@Input(label=@Text(type=ValueType.VALUE,value="Une autre couleur")) private String color2;
     	@Input private String index;
+    	@Input private String unitType;
     	
     }
 
