@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.globalidentification;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -61,6 +62,9 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	private String description;
 	private String descriptionI18nId;
+
+	@Column(precision=COEFFICIENT_PRECISION,scale=FLOAT_SCALE) private BigDecimal weight;
+	private Long orderNumber; //TODO remove all index properties declare in other class
 	
 	/**
 	 * To capture non structured data
@@ -121,6 +125,8 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
 	public static final String FIELD_BIRTH_LOCATION = "birthLocation";
+	public static final String FIELD_WEIGHT = "weight";
+	public static final String FIELD_ORDER_NUMBER = "orderNumber";
 	
 	/**/
 	

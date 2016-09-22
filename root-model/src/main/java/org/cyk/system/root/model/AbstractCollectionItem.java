@@ -23,7 +23,6 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 	 * In that case , it might not belongs to a collection , not have an order index 
 	 */
 	@ManyToOne protected COLLECTION collection;
-	private Byte orderNumber;
 	
 	public AbstractCollectionItem(COLLECTION collection,String code,String name) {
 		super(code, name, null, null);

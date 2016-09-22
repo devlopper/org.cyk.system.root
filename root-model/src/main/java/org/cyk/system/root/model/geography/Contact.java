@@ -24,7 +24,7 @@ public class Contact extends AbstractCollectionItem<ContactCollection> implement
 		super();
 	}
 
-	public Contact(ContactCollection collection, Byte orderNumber) {
+	public Contact(ContactCollection collection, Long orderNumber) {
 		super(collection, null, null);
 		setOrderNumber(orderNumber);
 	}

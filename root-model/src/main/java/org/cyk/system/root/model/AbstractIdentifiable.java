@@ -1,6 +1,7 @@
 package org.cyk.system.root.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map.Entry;
 
@@ -56,6 +57,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	@Transient protected Processing processing;
 	@Transient protected Boolean cascadeOperationToMaster = Boolean.FALSE;
+	@Transient protected Boolean cascadeOperationToChildren = Boolean.FALSE;
 	
 	public void setCode(String code){
 		getGlobalIdentifierCreateIfNull().setCode(code);
@@ -118,6 +120,20 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	}
 	public Location getBirthLocation(){
 		return globalIdentifier == null ? null : globalIdentifier.getBirthLocation();
+	}
+	
+	public void setWeight(BigDecimal weight){
+		getGlobalIdentifierCreateIfNull().setWeight(weight);
+	}
+	public BigDecimal getWeight(){
+		return globalIdentifier == null ? null : globalIdentifier.getWeight();
+	}
+	
+	public void setOrderNumber(Long orderNumber){
+		getGlobalIdentifierCreateIfNull().setOrderNumber(orderNumber);
+	}
+	public Long getOrderNumber(){
+		return globalIdentifier == null ? null : globalIdentifier.getOrderNumber();
 	}
 	
 	public void setOtherDetails(String otherDetails){

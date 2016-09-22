@@ -42,6 +42,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     
 	IDENTIFIABLE findByGlobalIdentifierValue(String globalIdentifier);
 	
+	Collection<IDENTIFIABLE> findByGlobalIdentifierOrderNumber(Long orderNumber);
+	
     Collection<IDENTIFIABLE> findByClasses(Collection<Class<?>> classes);
     Long countByClasses(Collection<Class<?>> classes);
     

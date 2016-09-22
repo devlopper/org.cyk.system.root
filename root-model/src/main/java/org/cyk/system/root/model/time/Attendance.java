@@ -22,7 +22,7 @@ public class Attendance extends AbstractModelElement implements Serializable{
 	/**
 	 * All duration are in millisecond
 	 */
-	
+	//TODO name suffix should be changed to NumberOfMillisecond
 	private Long attendedDuration;
 	
 	private Long missedDuration;

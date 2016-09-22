@@ -27,7 +27,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	@Getter @Setter protected String identifier;
 	
 	@Input @InputFile (extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) protected File image;
-	@Input @InputText protected String code,name,abbreviation,description;
+	@Input @InputText protected String code,name,abbreviation,description,weight,orderNumber;
 	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod = new PeriodDetails(null);
 	
 	public AbstractOutputDetails(IDENTIFIABLE master) {
@@ -42,6 +42,8 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 			abbreviation = this.master.getAbbreviation();
 			description = this.master.getDescription();
 			existencePeriod.set(this.master.getExistencePeriod());
+			weight = formatNumber(this.master.getWeight());
+			orderNumber = formatNumber(this.master.getOrderNumber());
 		}
 	}
 	
@@ -53,6 +55,8 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	public static final String FIELD_ABBREVIATION = "abbreviation";
 	public static final String FIELD_DESCRIPTION = "description";
 	public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
+	public static final String FIELD_WEIGHT = "weight";
+	public static final String FIELD_ORDER_NUMBER = "orderNumber";
 	
 	public static String[] getFieldNames(Boolean isBusinessIdentified,Boolean hasImage,Boolean hasExistenceStart,Boolean hasExistenceEnd){
 		Set<String> fields = new HashSet<>();

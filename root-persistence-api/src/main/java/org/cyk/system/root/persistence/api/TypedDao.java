@@ -20,6 +20,8 @@ public interface TypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends Typ
 	 */
 	IDENTIFIABLE readByGlobalIdentifierValue(String globalIdentifierValue);
 	
+	Collection<IDENTIFIABLE> readByGlobalIdentifierOrderNumber(Long orderNumber);
+	
 	/**
 	 * {@link #readByGlobalIdentifierCode(String)}
 	 * 

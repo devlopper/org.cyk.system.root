@@ -94,7 +94,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 			;
 		else{
 			namedQueriesInitialisation();
-			NAMED_QUERIES_INITIALIZED.add(getClass());
+			NAMED_QUERIES_INITIALIZED.add(getClass());//TODO i think synchronization is needed to avoid concurrent add
 		}
 	}
 	
@@ -403,6 +403,10 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	protected void throwExecuteUpdateExceptionIfAny(Integer expectedNumberOfEntities,Integer actualNumberOfEntities){
 		if(expectedNumberOfEntities!=actualNumberOfEntities)
 			throw new RuntimeException(expectedNumberOfEntities+" entities expected to be updated but only "+actualNumberOfEntities+" updated");
+	}
+	
+	protected String getGlobalIdentifierFieldPath(String...fieldNames){
+		return commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, fieldNames);
 	}
 	
 	public static final String PARAMETER_INDEX = "pindex";

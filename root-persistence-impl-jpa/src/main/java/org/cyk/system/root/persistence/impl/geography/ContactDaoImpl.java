@@ -20,13 +20,9 @@ public class ContactDaoImpl extends AbstractContactDaoImpl<Contact> implements C
         super.namedQueriesInitialisation();
         registerNamedQuery(readByCollections, _select().whereIdentifierIn(Contact.FIELD_COLLECTION).orderBy("identifier", Boolean.TRUE));
         registerNamedQuery(readByCollectionsByClasses, _select().whereIdentifierIn(Contact.FIELD_COLLECTION).and().whereClassIn().orderBy("identifier", Boolean.TRUE));
+        getConfiguration().setReadByClasses(Boolean.TRUE).setReadByNotClasses(Boolean.TRUE);
     }
     
-    @Override
-    protected Boolean readByClassEnabled() {
-    	return Boolean.TRUE;
-    }
-    	
 	private Collection<Class<?>> classes(Collection<Class<? extends Contact>> classes){
 		Collection<Class<?>> lclasses = new ArrayList<>();
 		for(Class<?> cls : classes)

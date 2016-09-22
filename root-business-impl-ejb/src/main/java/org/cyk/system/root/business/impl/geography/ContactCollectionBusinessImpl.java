@@ -91,7 +91,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
     private void configure(Collection<? extends Contact> contacts,ContactCollection collection){
         if(contacts==null)
             return;
-        byte order = 0;
+        long order = 0;
         for(Contact contact : contacts){
             contact.setCollection(collection);
             contact.setOrderNumber(order++);
