@@ -19,13 +19,4 @@ public abstract class AbstractIdentifiablePeriod extends AbstractIdentifiable im
 
 	private static final long serialVersionUID = 4094533140633110556L;
 	
-    /**
-     * The total time of continuous activity
-     */
-    protected Long numberOfMillisecond;
-  
-    /**/
-    
-    public static final String FIELD_NUMBER_OF_MILLISECOND = "numberOfMillisecond";
-
 }
