@@ -5,7 +5,9 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 
@@ -54,35 +56,38 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		Configuration configuration = getConfiguration();
-		if(Boolean.TRUE.equals(configuration.getReadAll()))
+		if(Boolean.TRUE.equals(Configuration.isDisallowAll(clazz)))
+			return;
+		Boolean allowAll = Configuration.isAllowAll(clazz);
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadAll()))
 			registerNamedQuery(readAll, _select()+(StringUtils.isEmpty(readAllOrderByString())?"":" "+readAllOrderByString()));
-		if(Boolean.TRUE.equals(configuration.getReadAllInclude()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadAllInclude()))
 			registerNamedQuery(readAllInclude, _select().whereIdentifierIn());
-		if(Boolean.TRUE.equals(configuration.getReadAllExclude()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadAllExclude()))
 			registerNamedQuery(readAllExclude, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.identifier NOT IN :identifiers");
-		if(Boolean.TRUE.equals(configuration.getReadByGlobalIdentifier()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifier()))
 			registerNamedQuery(readByGlobalIdentifier, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier = :identifier");
-		if(Boolean.TRUE.equals(configuration.getReadByGlobalIdentifiers()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifiers()))
 			registerNamedQuery(readByGlobalIdentifiers, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier IN :identifiers");
-		if(Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierValue()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierValue()))
 			registerNamedQuery(readByGlobalIdentifierValue, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.identifier = :identifier");
-		if(Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierCode()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierCode()))
 			registerNamedQuery(readByGlobalIdentifierCode, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.code = :code");
-		if(Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierCodes()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierCodes()))
 			registerNamedQuery(readByGlobalIdentifierCodes, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.code IN :code");
 		
-		if(Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierOrderNumber()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierOrderNumber()))
 			registerNamedQuery(readByGlobalIdentifierOrderNumber, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.orderNumber = :orderNumber");
 		
-		if(Boolean.TRUE.equals(configuration.getReadByClasses()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByClasses()))
 			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy(AbstractIdentifiable.FIELD_IDENTIFIER,Boolean.TRUE));
-		if(Boolean.TRUE.equals(configuration.getReadByNotClasses()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByNotClasses()))
 			registerNamedQuery(readByNotClasses, _select().whereClassNotIn());
 		
-		if(Boolean.TRUE.equals(configuration.getExecuteDelete()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getExecuteDelete()))
 			registerNamedQuery(executeDelete, "DELETE FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
 		
-		if(Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierSearchCriteria()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierSearchCriteria()))
 			registerNamedQuery(readByGlobalIdentifierSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
 	    		+ "    ( LOCATE(LOWER(:code),LOWER(record.globalIdentifier.code))                > 0 )"
 	    		+ " OR ( LOCATE(LOWER(:name),LOWER(record.globalIdentifier.name))            > 0 )");
@@ -257,6 +262,10 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		
 		private static final Map<Class<?>, Configuration> MAP = new HashMap<>();
 		
+		private static final Set<Class<?>> DISALLOWED_ALL_CLASSES = new HashSet<>();
+		private static final Set<Package> DISALLOWED_ALL_PACKAGES = new HashSet<>();
+		private static final Set<Class<?>> ALLOWED_ALL_CLASSES = new HashSet<>();
+		
 		private Boolean readAll = Boolean.TRUE;
 		private Boolean readAllInclude = Boolean.TRUE;
 		private Boolean readAllExclude = Boolean.TRUE;
@@ -352,6 +361,22 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			return configuration;
 		}
 		
+		public static void disallowAll(Class<?>[] classes){
+			for(Class<?> aClass : classes)
+				Configuration.DISALLOWED_ALL_CLASSES.add(aClass);
+		}
+		public static void disallowAll(Package[] packages){
+			for(Package aPackage : packages)
+				Configuration.DISALLOWED_ALL_PACKAGES.add(aPackage);
+		}
+		
+		public static Boolean isAllowAll(Class<?> aClass){
+			return ALLOWED_ALL_CLASSES.contains(aClass) ? Boolean.TRUE : null;
+		}
+		
+		public static Boolean isDisallowAll(Class<?> aClass){
+			return DISALLOWED_ALL_PACKAGES.contains(aClass.getPackage()) || DISALLOWED_ALL_CLASSES.contains(aClass) ? Boolean.TRUE : null;
+		}
 	}
 	
 }

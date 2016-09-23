@@ -52,7 +52,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	//private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistenceService.class);
 	
-	private final static Set<Class<?>> NAMED_QUERIES_INITIALIZED = new HashSet<>();
+	public final static Set<Class<?>> NAMED_QUERIES_INITIALIZED = new HashSet<>();
 	private final static String SELECT_IDENTIFIER_FORMAT = "SELECT record.identifier FROM %s record";
 	//private final static String SELECT_BYIDENTIFIER_FORMAT = "SELECT record FROM %s record WHERE record.identifier IN :identifiers";
 	
@@ -95,6 +95,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		else{
 			namedQueriesInitialisation();
 			NAMED_QUERIES_INITIALIZED.add(getClass());//TODO i think synchronization is needed to avoid concurrent add
+			//System.out.println("AbstractPersistenceService.initialisation() : "+this.getClass());
 		}
 	}
 	
