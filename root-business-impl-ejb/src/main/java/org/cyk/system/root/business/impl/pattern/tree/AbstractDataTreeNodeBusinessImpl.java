@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeNodeBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
@@ -62,15 +63,18 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Collection<NODE> findParentRecursively(NODE node) {
-		return dao.readParentRecursively(node);
+	public Collection<AbstractIdentifiable> findParentRecursively(NODE node) {
+		Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+		for(NODE n : dao.readParentRecursively(node))
+			identifiables.add(n);
+		return identifiables;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public void setParents(NODE node) {
-		node.setParents((Collection<AbstractDataTreeNode>) findParentRecursively(node));
-	}
+		for(AbstractIdentifiable identifiable : findParentRecursively(node))
+			node.getParents().add(identifiable);
+	} 
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public void setParents(Collection<NODE> nodes) {
@@ -141,12 +145,12 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
             
             if(children.get(i).getNode().getParent().equals(parent.getNode())){
                 if(parent.getChildren()==null)
-                    parent.setChildren(new ArrayList<AbstractDataTreeNode>());
+                    parent.setChildren(new ArrayList<AbstractIdentifiable>());
                 parent.getChildren().add(children.remove(i));
             }else
                 i++;
         }if(parent.getChildren()!=null)
-            for(AbstractDataTreeNode child : parent.getChildren())
+            for(AbstractIdentifiable child : parent.getChildren())
                 buildHierarchy((NODE) child, children);
     }
     

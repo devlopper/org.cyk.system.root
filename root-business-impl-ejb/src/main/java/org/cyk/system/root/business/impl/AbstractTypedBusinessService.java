@@ -390,9 +390,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public File findReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean createIfNull) {
 		return findReportFile(identifiable, inject(ReportTemplateDao.class).read(reportTemplateCode), createIfNull);
 	}
-
+	
 	/**/
-
 
 	public static interface Listener<IDENTIFIABLE extends AbstractIdentifiable> {
 		

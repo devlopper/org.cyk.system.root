@@ -186,6 +186,23 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			return new ArrayList<>();
 		return getPersistenceService().readByIdentifiers(identifiers);
 	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public AbstractIdentifiable findParent(IDENTIFIABLE identifiable) {
+		return null;
+	}
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<AbstractIdentifiable> findParentRecursively(IDENTIFIABLE identifiable) {
+		return null;
+	}
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void setParents(IDENTIFIABLE identifiable) {
+
+	}
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void setParents(Collection<IDENTIFIABLE> identifiables) {
+		
+	}
 	/**
 	 * Utilities methods
 	 */
@@ -450,6 +467,11 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		Listener<IDENTIFIABLE> addCascadeToReportTemplateCode(String reportTemplateCode);
 		Listener<IDENTIFIABLE> addCascadeToReportTemplateCodes(String...reportTemplateCodes);
 		
+		AbstractIdentifiable findParent(IDENTIFIABLE identifiable);
+	    Collection<AbstractIdentifiable> findParentRecursively(IDENTIFIABLE identifiable);
+	    void setParents(IDENTIFIABLE identifiable);
+	    void setParents(Collection<? extends AbstractIdentifiable> identifiables);
+		
 		/**/
 		
 		@Getter @Setter
@@ -546,6 +568,19 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, arguments);
 				
 			}
+			
+			@Override
+			public AbstractIdentifiable findParent(IDENTIFIABLE identifiable) {
+				return null;
+			}
+			@Override
+			public Collection<AbstractIdentifiable> findParentRecursively(IDENTIFIABLE identifiable) {
+				return null;
+			}
+			@Override
+			public void setParents(IDENTIFIABLE identifiable) {}
+			@Override
+			public void setParents(Collection<? extends AbstractIdentifiable> identifiables) {}
 			
 			/**/
 			

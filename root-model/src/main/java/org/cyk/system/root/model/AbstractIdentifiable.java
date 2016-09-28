@@ -2,6 +2,8 @@ package org.cyk.system.root.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map.Entry;
 
@@ -18,6 +20,9 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -32,9 +37,6 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /*lombok*/
 
@@ -58,6 +60,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@Transient protected Processing processing;
 	@Transient protected Boolean cascadeOperationToMaster = Boolean.FALSE;
 	@Transient protected Boolean cascadeOperationToChildren = Boolean.FALSE;
+	
+	@Transient private Collection<AbstractIdentifiable> parents;
+	@Transient private Collection<AbstractIdentifiable> children;
 	
 	public void setCode(String code){
 		getGlobalIdentifierCreateIfNull().setCode(code);
@@ -141,6 +146,18 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	}
 	public String getOtherDetails(){
 		return globalIdentifier == null ? null : globalIdentifier.getOtherDetails();
+	}
+	
+	public Collection<AbstractIdentifiable> getParents(){
+		if(parents==null)
+			parents =  new ArrayList<>();
+		return parents;
+	}
+	
+	public Collection<AbstractIdentifiable> getChildren(){
+		if(children==null)
+			children =  new ArrayList<>();
+		return children;
 	}
 	
 	public GlobalIdentifier getGlobalIdentifierCreateIfNull(){

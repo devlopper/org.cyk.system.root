@@ -97,6 +97,11 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                 	
                     Boolean isNotIdentified(AbstractIdentifiable identifiable);
                     
+                    AbstractIdentifiable findParent(IDENTIFIABLE identifiable);
+                    Collection<AbstractIdentifiable> findParentRecursively(IDENTIFIABLE identifiable);
+                    void setParents(IDENTIFIABLE identifiable);
+                    void setParents(Collection<IDENTIFIABLE> identifiables);
+                    
                     /**/
                     
                 	public static interface CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE extends Identifiable<?>>{

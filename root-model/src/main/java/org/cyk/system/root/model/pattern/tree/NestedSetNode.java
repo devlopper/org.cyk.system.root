@@ -1,14 +1,11 @@
 package org.cyk.system.root.model.pattern.tree;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -44,7 +41,7 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	
 	private String detachedIdentifier;
 	
-	@Transient private Collection<NestedSetNode> children;
+	//@Transient private Collection<NestedSetNode> children;
 	
 	public NestedSetNode() {}
 	
@@ -62,12 +59,6 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	
 	public Boolean isLeaf(){
 		return leftIndex+1==rightIndex;
-	}
-	
-	public Collection<NestedSetNode> getChildren(){
-		if(this.children==null)
-			this.children = new ArrayList<>();
-		return this.children;
 	}
 	
 	@Override
