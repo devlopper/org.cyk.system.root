@@ -1,7 +1,15 @@
 package org.cyk.system.root.business.impl.integration;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
+import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeBusiness;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonRelationship;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.junit.Test;
 
 public class PersonBusinessIT extends AbstractBusinessIT {
 
@@ -12,9 +20,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     @Override
     protected void businesses() {
     	
-    	Person person = inject(PersonBusiness.class).instanciateOneRandomly();
-    	person.setCode(CODE);
-        inject(PersonBusiness.class).create(person);
+    	Person person = create(inject(PersonBusiness.class).instanciateOneRandomly(CODE));
         assertThat("Person created", person.getIdentifier()!=null);
     	
         person = inject(PersonBusiness.class).find(CODE);
@@ -46,24 +52,21 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	*/
     }
 
-    @Override
-    protected void create() {
-        
-    }
-
-    @Override
-    protected void delete() {
-        
-    }
-
-    @Override
-    protected void read() {
-        
-    }
-
-    @Override
-    protected void update() {
-        
+    @Test
+    public void relationship(){
+    	String p1="p1",p2="p2";
+    	Set<String> codes = new LinkedHashSet<>();
+    	codes.add(p1);
+    	codes.add(p2);
+    	inject(PersonBusiness.class).create(inject(PersonBusiness.class).instanciateManyRandomly(codes));
+    	
+    	PersonRelationship personRelationship1;
+    	create( personRelationship1 = new PersonRelationship(inject(PersonBusiness.class).find(p1),inject(PersonRelationshipTypeBusiness.class).find(PersonRelationshipType.FAMILY_FATHER)
+    			,inject(PersonBusiness.class).find(p1)));
+    	
+    	System.out.println(personRelationship1);
+    	
+    	inject(PersonRelationshipBusiness.class).delete(personRelationship1);
     }
 
 }

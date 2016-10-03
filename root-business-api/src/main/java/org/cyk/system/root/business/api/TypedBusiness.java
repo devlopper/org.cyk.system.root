@@ -2,6 +2,12 @@ package org.cyk.system.root.business.api;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -9,11 +15,6 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.utility.common.computation.DataReadConfiguration;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extends IdentifiableBusinessService<IDENTIFIABLE, Long> {
 
@@ -24,8 +25,13 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     void load(IDENTIFIABLE identifiable);
     void load(Collection<IDENTIFIABLE> identifiables);
     
+    IDENTIFIABLE delete(String code);
+    Collection<IDENTIFIABLE> delete(Set<String> codes);
+    
     IDENTIFIABLE instanciateOneRandomly();
+    IDENTIFIABLE instanciateOneRandomly(String code);
     Collection<IDENTIFIABLE> instanciateManyRandomly(Integer count);
+    Collection<IDENTIFIABLE> instanciateManyRandomly(Set<String> codes);
     
     Collection<IDENTIFIABLE> findAll(); 
     Long countAll();

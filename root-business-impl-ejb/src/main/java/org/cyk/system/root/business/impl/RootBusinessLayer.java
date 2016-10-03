@@ -65,6 +65,8 @@ import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
@@ -76,6 +78,7 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeGroupDao;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
@@ -422,6 +425,17 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createEnumeration(BloodGroup.class,"B");
         createEnumeration(BloodGroup.class,"AB");
         createEnumeration(BloodGroup.class,"O");
+        
+        createEnumeration(PersonRelationshipTypeGroup.class,PersonRelationshipTypeGroup.FAMILY);
+        createEnumeration(PersonRelationshipTypeGroup.class,PersonRelationshipTypeGroup.SOCIETY);
+        
+        create(new PersonRelationshipType(null, inject(PersonRelationshipTypeGroupDao.class).read(PersonRelationshipTypeGroup.FAMILY), PersonRelationshipType.FAMILY_FATHER,"Père"));
+        create(new PersonRelationshipType(null, inject(PersonRelationshipTypeGroupDao.class).read(PersonRelationshipTypeGroup.FAMILY), PersonRelationshipType.FAMILY_MOTHER,"Mère"));
+        
+        create(new PersonRelationshipType(null, inject(PersonRelationshipTypeGroupDao.class).read(PersonRelationshipTypeGroup.SOCIETY)
+        		, PersonRelationshipType.SOCIETY_DOCTOR,"Docteur"));
+        create(new PersonRelationshipType(null, inject(PersonRelationshipTypeGroupDao.class).read(PersonRelationshipTypeGroup.SOCIETY)
+        		, PersonRelationshipType.SOCIETY_TO_CONTACT_IN_EMERGENCY_CASE,"Personne à contacter en cas d'urgence"));
     }
     
     private void security(){ 

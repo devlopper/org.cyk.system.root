@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,6 +54,24 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		this.dao = dao;
 	}
 	
+	@Override
+	public IDENTIFIABLE delete(String code) {
+		return delete(dao.read(code));
+	}
+	
+
+
+
+	@Override
+	public Collection<IDENTIFIABLE> delete(Set<String> codes) {
+		Collection<IDENTIFIABLE> collection = new ArrayList<>();
+		for(String code : codes)
+			collection.add(delete(code));
+		return collection;
+	}
+
+
+
 	@Override
 	protected PersistenceService<IDENTIFIABLE, Long> getPersistenceService() {
 	    return dao;
@@ -111,6 +130,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public IDENTIFIABLE instanciateOneRandomly() {
 		return instanciateOne();
 	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public IDENTIFIABLE instanciateOneRandomly(String code) {
+		IDENTIFIABLE identifiable = instanciateOneRandomly();
+		identifiable.setCode(code);
+		return identifiable;
+	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<IDENTIFIABLE> instanciateManyRandomly(Integer count) {
@@ -118,6 +144,15 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		for(int index = 0; index < count ; index++)
 			collection.add(instanciateOneRandomly());
 		return collection;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<IDENTIFIABLE> instanciateManyRandomly(Set<String> codes) {
+		List<IDENTIFIABLE> list = new ArrayList<>(instanciateManyRandomly(codes.size()));
+		List<String> codeList = new ArrayList<>(codes);
+		for(int index = 0; index < codes.size() ; index++)
+			list.get(index).setCode(codeList.get(index));
+		return list;
 	}
 
 	@Override

@@ -24,8 +24,13 @@ public class AbstractDataTree<TYPE extends AbstractDataTreeType> extends Abstrac
 	}
 	
 	public AbstractDataTree(AbstractDataTree<TYPE> parent,TYPE type,String code) {
+		this(parent,type,code,null);
+	}
+	
+	public AbstractDataTree(AbstractDataTree<TYPE> parent,TYPE type,String code,String name) {
 		this(parent,code);
 		this.type=type;
+		setName(name);
 	}
 	
 	public AbstractDataTree<TYPE> setType(TYPE type){

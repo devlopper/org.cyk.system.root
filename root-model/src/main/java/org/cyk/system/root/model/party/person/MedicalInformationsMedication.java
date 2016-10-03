@@ -3,7 +3,6 @@ package org.cyk.system.root.model.party.person;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -18,8 +17,12 @@ public class MedicalInformationsMedication extends AbstractEnumeration implement
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne @JoinColumn(nullable=false) @NotNull private MedicalInformations informations;
+	@ManyToOne @NotNull private MedicalInformations informations;
 	
-	@ManyToOne @JoinColumn(nullable=false) @NotNull private Medication medication;
+	@ManyToOne @NotNull private Medication medication;
+	
+	private Boolean mustBeAvailable;
+	
+	private Boolean mustBeGiven;
 	
 }
