@@ -16,7 +16,7 @@ import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 @Getter @Setter @NoArgsConstructor @Entity @FieldOverride(name=AbstractDataTree.FIELD_TYPE,type=PersonRelationshipTypeGroup.class)
-@ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
+@ModelBean(crudStrategy=CrudStrategy.ENUMERATION,genderType=GenderType.MALE)
 public class PersonRelationshipType extends AbstractDataTree<PersonRelationshipTypeGroup> implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;

@@ -13,15 +13,16 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS)
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class PersonRelationship extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = 2742833783679362737L;
 
-	@ManyToOne @NotNull protected Person person1;
-	@ManyToOne @NotNull protected PersonRelationshipType type;
-	@ManyToOne @NotNull protected Person person2;
+	@ManyToOne @NotNull private Person person1;
+	@ManyToOne @NotNull private PersonRelationshipType type;
+	@ManyToOne @NotNull private Person person2;
 	
 	public PersonRelationship(Person person1, PersonRelationshipType type,
 			Person person2) {
@@ -41,5 +42,8 @@ public class PersonRelationship extends AbstractIdentifiable implements Serializ
 		return person1+" "+type.getCode()+" of "+person2;
 	}
 
+	public static final String FIELD_PERSON1 = "person1";
+	public static final String FIELD_TYPE = "type";
+	public static final String FIELD_PERSON2 = "person2";
 	
 }

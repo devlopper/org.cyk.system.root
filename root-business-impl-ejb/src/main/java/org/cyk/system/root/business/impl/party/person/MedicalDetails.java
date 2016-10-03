@@ -30,4 +30,10 @@ public class MedicalDetails extends AbstractOutputDetails<Person> implements Ser
 			medications = StringUtils.join(person.getMedicalInformations().getMedications(),Constant.CHARACTER_COMA);
 		}
 	}
+	
+	public static final String LABEL_IDENTIFIER = "medical";
+	
+	public static final String FIELD_BLOOD_GROUP = "bloodGroup";
+	public static final String FIELD_ALLERGIES = "allergies";
+	public static final String FIELD_MEDICATIONS = "medications";
 }

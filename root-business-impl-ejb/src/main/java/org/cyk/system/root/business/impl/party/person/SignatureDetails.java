@@ -28,4 +28,6 @@ public class SignatureDetails extends AbstractOutputDetails<Person> implements S
 	}
 	
 	public static final String LABEL_IDENTIFIER = "signature";
+	
+	public static final String FIELD_SPECIMEN = "specimen";
 }

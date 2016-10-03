@@ -22,11 +22,11 @@ public class JobDetails extends AbstractOutputDetails<Person> implements Seriali
 	public JobDetails(Person person) {
 		super(person);
 		if(person.getJobInformations()!=null){
-			company = person.getJobInformations().getCompany();
+			company = formatUsingBusiness(person.getJobInformations().getCompany());
 			if(person.getJobInformations().getFunction()!=null)
-				function = person.getJobInformations().getFunction().getName();
+				function = formatUsingBusiness(person.getJobInformations().getFunction());
 			if(person.getJobInformations().getTitle()!=null)
-				title = person.getJobInformations().getTitle().getName();
+				title = formatUsingBusiness(person.getJobInformations().getTitle());
 			if(person.getJobInformations().getContactCollection()!=null)
 				contacts = StringUtils.join(person.getJobInformations().getContactCollection().getPhoneNumbers(),Constant.CHARACTER_COMA);
 		}
@@ -34,5 +34,8 @@ public class JobDetails extends AbstractOutputDetails<Person> implements Seriali
 	
 	public static final String LABEL_IDENTIFIER = "job";
 	
+	public static final String FIELD_COMPANY = "company";
+	public static final String FIELD_FUNCTION = "function";
 	public static final String FIELD_TITLE = "title";
+	public static final String FIELD_CONTACTS = "contacts";
 }
