@@ -60,12 +60,18 @@ public class Period extends AbstractModelElement implements Serializable{
 		computeNumberOfMillisecond();
 	}
 	
+	public Value getNumberOfMillisecond(){
+		if(numberOfMillisecond==null)
+			numberOfMillisecond=new Value();
+		return numberOfMillisecond;
+	}
+	
 	private void computeNumberOfMillisecond(){
     	if(fromDate==null || toDate==null)
-    		numberOfMillisecond.setSystem(null);
+    		getNumberOfMillisecond().setSystem(null);
     	else
-    		numberOfMillisecond.setSystem(new BigDecimal(toDate.getTime() - fromDate.getTime()));
-    	numberOfMillisecond.computeGap();
+    		getNumberOfMillisecond().setSystem(new BigDecimal(toDate.getTime() - fromDate.getTime()));
+    	getNumberOfMillisecond().computeGap();
     }
 	
 	public Boolean contains(Date date){

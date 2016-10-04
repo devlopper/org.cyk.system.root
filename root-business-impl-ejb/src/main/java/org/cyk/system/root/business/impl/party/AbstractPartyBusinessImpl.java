@@ -43,7 +43,8 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	
     @Override
 	public PARTY delete(PARTY party) {
-    	inject(ContactCollectionBusiness.class).delete(party.getContactCollection());
+    	if(party.getContactCollection()!=null)
+    		inject(ContactCollectionBusiness.class).delete(party.getContactCollection());
     	party.setContactCollection(null);
 		return super.delete(party);
 	}

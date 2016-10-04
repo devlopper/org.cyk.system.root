@@ -122,7 +122,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
         		logDebug("Database contact will be deleted {}",databaseContact);
         	}
         }
-        
+    
         for(Contact contact : deletes){
         	contact.setCollection(null);
         	contactDao.delete(contact);

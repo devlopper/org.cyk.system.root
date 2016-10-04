@@ -136,8 +136,15 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 				inject(LanguageCollectionBusiness.class).create(person.getExtendedInformations().getLanguageCollection());
 			extendedInformationsDao.create(person.getExtendedInformations());
 		}
-		if(person.getJobInformations()!=null)
+		if(person.getJobInformations()!=null){
+			if(person.getJobInformations().getContactCollection()!=null){
+				if(StringUtils.isEmpty(person.getJobInformations().getContactCollection().getName()))
+					person.getJobInformations().getContactCollection().setName(person.getName()+Constant.CHARACTER_UNDESCORE+StringUtils.defaultIfBlank(person.getJobInformations().getCompany()
+							,Constant.EMPTY_STRING));
+				inject(ContactCollectionBusiness.class).create(person.getJobInformations().getContactCollection());
+			}
 			jobInformationsDao.create(person.getJobInformations());
+		}
 		if(person.getMedicalInformations()!=null)
 			medicalInformationsDao.create(person.getMedicalInformations());
 		dao.update(person);
@@ -169,8 +176,14 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 				fileDao.create(person.getExtendedInformations().getSignatureSpecimen());
 			extendedInformationsDao.update(person.getExtendedInformations());
 		}
-		if(person.getJobInformations()!=null)
+		if(person.getJobInformations()!=null){
+			if(person.getJobInformations().getContactCollection()!=null){
+				person.getJobInformations().getContactCollection().setName(person.getName()+Constant.CHARACTER_UNDESCORE+StringUtils.defaultIfBlank(person.getJobInformations().getCompany()
+						,Constant.EMPTY_STRING));
+				inject(ContactCollectionBusiness.class).update(person.getJobInformations().getContactCollection());
+			}
 			jobInformationsDao.update(person.getJobInformations());
+		}
 		if(person.getMedicalInformations()!=null)
 			medicalInformationsDao.update(person.getMedicalInformations());
 		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
@@ -200,6 +213,9 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		}
 		JobInformations jobInformations = jobInformationsDao.readByParty(person);
 		if(jobInformations!=null){
+			if(jobInformations.getContactCollection()!=null)
+	    		inject(ContactCollectionBusiness.class).delete(jobInformations.getContactCollection());
+			jobInformations.setContactCollection(null);
 			jobInformationsDao.delete(jobInformations);
 		}
 		MedicalInformations medicalInformations = medicalInformationsDao.readByParty(person);	
