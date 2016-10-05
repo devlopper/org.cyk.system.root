@@ -24,7 +24,12 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 	protected LanguageCollectionDetails languageCollection;
 	
 	public AbstractPersonDetails(PERSON person) {
-		super(person);
+		super(person);	
+	}
+	
+	@Override
+	public void setMaster(PERSON person) {
+		super.setMaster(person);
 		lastnames = getPerson().getLastnames();
 		surname = getPerson().getSurname();
 		if(getPerson().getSex()!=null)
@@ -41,7 +46,7 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 				title = getPerson().getExtendedInformations().getTitle().getName();
 			if(getPerson().getExtendedInformations().getBirthLocation()!=null)
 				birthLocation = RootBusinessLayer.getInstance().getFormatterBusiness().format(getPerson().getExtendedInformations().getBirthLocation());
-			languageCollection = new LanguageCollectionDetails(getPerson().getExtendedInformations().getLanguageCollection());
+			getLanguageCollection().setMaster(getPerson().getExtendedInformations().getLanguageCollection());
 		}
 		
 		if(getPerson().getJobInformations()!=null){
@@ -53,8 +58,12 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 			if(getPerson().getMedicalInformations().getBloodGroup()!=null)
 				bloodGroup = getPerson().getMedicalInformations().getBloodGroup().getName();
 		}
-		
-		
+	}
+	
+	public LanguageCollectionDetails getLanguageCollection(){
+		if(languageCollection == null)
+			languageCollection = new LanguageCollectionDetails();
+		return languageCollection;
 	}
 	
 	@Override

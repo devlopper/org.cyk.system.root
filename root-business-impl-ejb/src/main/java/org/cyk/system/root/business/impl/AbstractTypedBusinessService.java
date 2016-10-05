@@ -221,7 +221,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(IDENTIFIABLE identifiable) {
-		__load__(identifiable);
+		if(isIdentified(identifiable))
+			__load__(identifiable);
 	}
 	
 	protected void __load__(IDENTIFIABLE identifiable) {}

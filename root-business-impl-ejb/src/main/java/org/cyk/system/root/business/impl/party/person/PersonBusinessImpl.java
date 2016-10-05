@@ -174,6 +174,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 				inject(LanguageCollectionBusiness.class).update(person.getExtendedInformations().getLanguageCollection());
 			if(person.getExtendedInformations().getSignatureSpecimen()!=null && person.getExtendedInformations().getSignatureSpecimen().getIdentifier()==null)
 				fileDao.create(person.getExtendedInformations().getSignatureSpecimen());
+			debug(person.getExtendedInformations());
 			extendedInformationsDao.update(person.getExtendedInformations());
 		}
 		if(person.getJobInformations()!=null){

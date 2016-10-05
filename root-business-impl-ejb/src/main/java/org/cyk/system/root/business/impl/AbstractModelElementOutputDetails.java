@@ -3,15 +3,16 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.utility.common.cdi.AbstractBean;
 
-import lombok.Getter;
-import lombok.Setter;
-
+@NoArgsConstructor
 public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends AbstractModelElement> extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 7439361240545541931L;
@@ -20,10 +21,14 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	protected NumberBusiness numberBusiness = inject(NumberBusiness.class);
 	protected TimeBusiness timeBusiness = inject(TimeBusiness.class);
 	
-	@Getter @Setter protected MODEL_ELEMENT master;
+	@Getter protected MODEL_ELEMENT master;
 	
 	public AbstractModelElementOutputDetails(MODEL_ELEMENT master) {
 		super();
+		setMaster(master);
+	}
+	
+	public void setMaster(MODEL_ELEMENT master){
 		this.master = master;
 	}
 	

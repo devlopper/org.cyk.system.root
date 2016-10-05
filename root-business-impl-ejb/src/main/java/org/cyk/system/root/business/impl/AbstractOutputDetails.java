@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -20,6 +21,7 @@ import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputFile;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
+@NoArgsConstructor
 public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractModelElementOutputDetails<IDENTIFIABLE> implements Serializable {
 
 	private static final long serialVersionUID = 7439361240545541931L;
@@ -28,11 +30,14 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	
 	@Input @InputFile (extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) protected File image;
 	@Input @InputText protected String code,name,abbreviation,description,weight,orderNumber;
-	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod = new PeriodDetails(null);
+	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod;
 	
 	public AbstractOutputDetails(IDENTIFIABLE master) {
 		super(master);
-		this.master = master;
+	}
+	
+	public void setMaster(IDENTIFIABLE master){
+		super.setMaster(master);
 		if(this.master==null){
 			
 		}else if(this.master.getGlobalIdentifier()!=null) {
@@ -41,10 +46,16 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 			name = this.master.getName();
 			abbreviation = this.master.getAbbreviation();
 			description = this.master.getDescription();
-			existencePeriod.set(this.master.getExistencePeriod());
+			getExistencePeriod().set(this.master.getExistencePeriod());
 			weight = formatNumber(this.master.getWeight());
 			orderNumber = formatNumber(this.master.getOrderNumber());
 		}
+	}
+	
+	public PeriodDetails getExistencePeriod(){
+		if(existencePeriod == null)
+			existencePeriod = new PeriodDetails();
+		return existencePeriod;
 	}
 	
 	/**/

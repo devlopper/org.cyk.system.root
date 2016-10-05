@@ -10,9 +10,10 @@ import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
 public class MedicalDetails extends AbstractOutputDetails<Person> implements Serializable {
 	
 	private static final long serialVersionUID = -1498269103849317057L;
@@ -21,6 +22,11 @@ public class MedicalDetails extends AbstractOutputDetails<Person> implements Ser
 	
 	public MedicalDetails(Person person) {
 		super(person);
+	}
+	
+	@Override
+	public void setMaster(Person person) {
+		super.setMaster(person);
 		if(person.getMedicalInformations()!=null){
 			if(person.getMedicalInformations().getBloodGroup()!=null)
 				bloodGroup = person.getMedicalInformations().getBloodGroup().getName();

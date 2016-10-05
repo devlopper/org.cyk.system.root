@@ -27,6 +27,11 @@ public class GlobalIdentifierDetails<IDENTIFIABLE extends AbstractIdentifiable> 
 	
 	public GlobalIdentifierDetails(IDENTIFIABLE identifiable) {
 		super(identifiable);
+	}
+	
+	@Override
+	public void setMaster(IDENTIFIABLE identifiable) {
+		super.setMaster(identifiable);
 		if(identifiable.getGlobalIdentifier()==null)
 			return;
 		this.code = identifiable.getGlobalIdentifier().getCode();

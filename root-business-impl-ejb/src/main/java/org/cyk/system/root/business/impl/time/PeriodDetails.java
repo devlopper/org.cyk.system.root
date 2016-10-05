@@ -8,9 +8,10 @@ import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
 public class PeriodDetails extends AbstractModelElementOutputDetails<Period> implements Serializable {
 
 	private static final long serialVersionUID = 1307822857551633645L;
@@ -19,12 +20,16 @@ public class PeriodDetails extends AbstractModelElementOutputDetails<Period> imp
 	
 	public PeriodDetails(Period period) {
 		super(period);
+	}
+	
+	@Override
+	public void setMaster(Period period) {
+		super.setMaster(period);
 		if(period==null){
 			
 		}else{
 			set(period);
 		}
-		
 	}
 	
 	public PeriodDetails set(Period period){

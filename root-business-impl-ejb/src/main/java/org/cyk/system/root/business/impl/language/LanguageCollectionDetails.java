@@ -13,9 +13,10 @@ import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter @Setter @NoArgsConstructor
 public class LanguageCollectionDetails extends AbstractOutputDetails<LanguageCollection> implements Serializable {
 	private static final long serialVersionUID = -1498269103849317057L;
 	
@@ -23,6 +24,11 @@ public class LanguageCollectionDetails extends AbstractOutputDetails<LanguageCol
 	
 	public LanguageCollectionDetails(LanguageCollection languageCollection) {
 		super(languageCollection);
+	}
+	
+	@Override
+	public void setMaster(LanguageCollection languageCollection) {
+		super.setMaster(languageCollection);
 		if(languageCollection==null || languageCollection.getCollection()==null){
 			
 		}else{
@@ -32,7 +38,6 @@ public class LanguageCollectionDetails extends AbstractOutputDetails<LanguageCol
 			}
 			languages = StringUtils.join(values,Constant.CHARACTER_COMA);
 		}
-		
 	}
 	
 	/**/

@@ -21,6 +21,11 @@ public class JobDetails extends AbstractOutputDetails<Person> implements Seriali
 	
 	public JobDetails(Person person) {
 		super(person);
+	}
+	
+	@Override
+	public void setMaster(Person person) {
+		super.setMaster(person);
 		if(person.getJobInformations()!=null){
 			company = formatUsingBusiness(person.getJobInformations().getCompany());
 			if(person.getJobInformations().getFunction()!=null)
