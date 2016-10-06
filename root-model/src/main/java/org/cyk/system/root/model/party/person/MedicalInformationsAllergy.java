@@ -10,15 +10,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractEnumeration;
-
 @Getter @Setter @NoArgsConstructor @Entity
-public class MedicalInformationsAllergy extends AbstractEnumeration implements Serializable {
+public class MedicalInformationsAllergy extends AbstractMedicalInformationsJoin implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne @NotNull private MedicalInformations informations;
-	
 	@ManyToOne @NotNull private Allergy allergy;
 	
 	private String reactionType,reactionResponse;

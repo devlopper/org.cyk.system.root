@@ -10,15 +10,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractEnumeration;
-
 @Getter @Setter @NoArgsConstructor @Entity
-public class MedicalInformationsMedication extends AbstractEnumeration implements Serializable {
+public class MedicalInformationsMedication extends AbstractMedicalInformationsJoin implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne @NotNull private MedicalInformations informations;
-	
 	@ManyToOne @NotNull private Medication medication;
 	
 	private Boolean mustBeAvailable;

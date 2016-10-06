@@ -60,10 +60,12 @@ import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.Allergy;
 import org.cyk.system.root.model.party.person.BloodGroup;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MaritalStatus;
+import org.cyk.system.root.model.party.person.Medication;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
@@ -425,6 +427,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createEnumeration(BloodGroup.class,"B");
         createEnumeration(BloodGroup.class,"AB");
         createEnumeration(BloodGroup.class,"O");
+        
+        createEnumeration(Allergy.class,"FOOD");
+        createEnumeration(Allergy.class,"INSECT");
+        createEnumeration(Allergy.class,"MEDICINE");
+     
+        createEnumeration(Medication.class,"Acetaminophen");
+        createEnumeration(Medication.class,"Adderall");
+        createEnumeration(Medication.class,"Alprazolam");
         
         createEnumeration(PersonRelationshipTypeGroup.class,PersonRelationshipTypeGroup.FAMILY);
         createEnumeration(PersonRelationshipTypeGroup.class,PersonRelationshipTypeGroup.SOCIETY);

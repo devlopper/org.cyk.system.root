@@ -2,23 +2,21 @@ package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.impl.AbstractOutputDetails;
-import org.cyk.system.root.model.party.person.Person;
-import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputText;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.cyk.system.root.business.impl.AbstractOutputDetails;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 @Getter @Setter @NoArgsConstructor
 public class MedicalDetails extends AbstractOutputDetails<Person> implements Serializable {
 	
 	private static final long serialVersionUID = -1498269103849317057L;
 	
-	@Input @InputText private String bloodGroup/*,allergicReactionResponse,allergicReactionType*/,allergies,medications;
+	@Input @InputText private String bloodGroup,otherMedicalInformations;
 	
 	public MedicalDetails(Person person) {
 		super(person);
@@ -30,16 +28,13 @@ public class MedicalDetails extends AbstractOutputDetails<Person> implements Ser
 		if(person.getMedicalInformations()!=null){
 			if(person.getMedicalInformations().getBloodGroup()!=null)
 				bloodGroup = person.getMedicalInformations().getBloodGroup().getName();
-			//allergicReactionResponse = person.getMedicalInformations().getAllergicReactionResponse();
-			//allergicReactionType = person.getMedicalInformations().getAllergicReactionType();
-			allergies = StringUtils.join(person.getMedicalInformations().getMedicalInformationsAllergies(),Constant.CHARACTER_COMA);
-			medications = StringUtils.join(person.getMedicalInformations().getMedications(),Constant.CHARACTER_COMA);
+			otherMedicalInformations = person.getMedicalInformations().getOtherDetails();
 		}
 	}
 	
 	public static final String LABEL_IDENTIFIER = "medical";
 	
 	public static final String FIELD_BLOOD_GROUP = "bloodGroup";
-	public static final String FIELD_ALLERGIES = "allergies";
-	public static final String FIELD_MEDICATIONS = "medications";
+	public static final String FIELD_OTHER_MEDICAL_INFORMATIONS = "otherMedicalInformations";
+
 }
