@@ -58,9 +58,6 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public IDENTIFIABLE delete(String code) {
 		return delete(dao.read(code));
 	}
-	
-
-
 
 	@Override
 	public Collection<IDENTIFIABLE> delete(Set<String> codes) {
@@ -69,8 +66,6 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			collection.add(delete(code));
 		return collection;
 	}
-
-
 
 	@Override
 	protected PersistenceService<IDENTIFIABLE, Long> getPersistenceService() {
@@ -159,7 +154,9 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
 		setAutoSettedProperties(identifiable);
 	    validationPolicy.validateCreate(identifiable);
+	    beforeCreate(getListeners(), identifiable);
         identifiable = dao.create(identifiable);
+        afterCreate(getListeners(), identifiable);
         @SuppressWarnings("unchecked")
 		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
     	if(listener!=null)
@@ -176,7 +173,9 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override
 	public IDENTIFIABLE update(IDENTIFIABLE identifiable) {
 		setAutoSettedProperties(identifiable);
+		beforeUpdate(getListeners(), identifiable);
 		IDENTIFIABLE newObject = dao.update(identifiable);
+		afterUpdate(getListeners(), identifiable);
 		@SuppressWarnings("unchecked")
 		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
 	    if(listener!=null)
@@ -198,7 +197,9 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
 			identifiable.setGlobalIdentifier(null);
 		}
+		beforeDelete(getListeners(), identifiable);
 		identifiable = dao.delete(identifiable);
+		afterDelete(getListeners(), identifiable);
 		@SuppressWarnings("unchecked")
 		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
 	    if(listener!=null)
@@ -428,7 +429,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	/**/
-
+	@Deprecated
 	public static interface Listener<IDENTIFIABLE extends AbstractIdentifiable> {
 		
 		Map<Class<? extends AbstractIdentifiable>,Listener<? extends AbstractIdentifiable>> MAP = new HashMap<>();
@@ -438,7 +439,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		void processOnDeleted(IDENTIFIABLE identifiable);
 		Class<?> getEntityClass();
 		/**/
-		
+		@Deprecated
 		public static class Adapter<IDENTIFIABLE extends AbstractIdentifiable> extends BeanAdapter implements Listener<IDENTIFIABLE> , Serializable {
 			private static final long serialVersionUID = -8937406338204006055L;
 			
@@ -451,7 +452,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			@Override public void processOnDeleted(IDENTIFIABLE identifiable) {}
 			
 			/**/
-			
+			@Deprecated
 			public static class Default<IDENTIFIABLE extends AbstractIdentifiable> extends Adapter<IDENTIFIABLE> implements Serializable {
 
 				private static final long serialVersionUID = -42928448720961203L;
