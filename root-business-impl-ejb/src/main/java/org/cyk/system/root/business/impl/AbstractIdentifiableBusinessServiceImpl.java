@@ -448,7 +448,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return null;
 	}
 	
-	public static void beforeInstanciateOne(Collection<? extends Listener<?> > listeners,final UserAccount userAccount){
+	@SuppressWarnings("unchecked")
+	public static void beforeInstanciateOne(@SuppressWarnings("rawtypes") Collection listeners,final UserAccount userAccount){
 		Listener.Adapter.beforeInstanciateOne(listeners, userAccount);
 	}
 	
@@ -459,7 +460,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	@SuppressWarnings("unchecked")
 	public static void beforeCreate(Collection<? extends Listener<?> > listeners,final AbstractIdentifiable identifiable){
-		Listener.Adapter.beforeCreate((Collection<? extends Listener<AbstractIdentifiable>>) listeners, identifiable);
+		Listener.Adapter.beforeCreate((Collection<Listener<AbstractIdentifiable>>) listeners, identifiable);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -469,7 +470,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	@SuppressWarnings("unchecked")
 	public static void beforeUpdate(Collection<? extends Listener<?> > listeners,final AbstractIdentifiable identifiable){
-		Listener.Adapter.beforeUpdate((Collection<? extends Listener<AbstractIdentifiable>>) listeners, identifiable);
+		Listener.Adapter.beforeUpdate((Collection<Listener<AbstractIdentifiable>>) listeners, identifiable);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -479,7 +480,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	@SuppressWarnings("unchecked")
 	public static void beforeDelete(Collection<? extends Listener<?> > listeners,final AbstractIdentifiable identifiable){
-		Listener.Adapter.beforeDelete((Collection<? extends Listener<AbstractIdentifiable>>) listeners, identifiable);
+		Listener.Adapter.beforeDelete((Collection<Listener<AbstractIdentifiable>>) listeners, identifiable);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -633,16 +634,16 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			
 			/**/
 			
-			public static void beforeInstanciateOne(Collection<? extends Listener<?> > listeners,final UserAccount userAccount){
-				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<?>>() {
+			public static void beforeInstanciateOne(Collection<Listener<AbstractIdentifiable> > listeners,final UserAccount userAccount){
+				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
 					@Override
-					public void execute(Listener<?> listener) {
+					public void execute(Listener<AbstractIdentifiable> listener) {
 						listener.beforeInstanciateOne(userAccount);
 					}
 				});
 			}
 			
-			public static void afterInstanciateOne(Collection<? extends Listener<AbstractIdentifiable> > listeners,final UserAccount userAccount,final AbstractIdentifiable identifiable){
+			public static void afterInstanciateOne(Collection<Listener<AbstractIdentifiable> > listeners,final UserAccount userAccount,final AbstractIdentifiable identifiable){
 				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
 					@Override
 					public void execute(Listener<AbstractIdentifiable> listener) {
@@ -651,7 +652,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				});
 			}
 			
-			public static void beforeCreate(Collection<? extends Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
+			public static void beforeCreate(Collection<Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
 				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
 					@Override
 					public void execute(Listener<AbstractIdentifiable> listener) {
@@ -660,7 +661,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				});
 			}
 			
-			public static void afterCreate(Collection<? extends Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
+			public static void afterCreate(Collection<Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
 				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
 					@Override
 					public void execute(Listener<AbstractIdentifiable> listener) {
@@ -669,7 +670,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				});
 			}
 			
-			public static void beforeUpdate(Collection<? extends Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
+			public static void beforeUpdate(Collection<Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
 				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
 					@Override
 					public void execute(Listener<AbstractIdentifiable> listener) {
@@ -678,7 +679,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				});
 			}
 			
-			public static void afterUpdate(Collection<? extends Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
+			public static void afterUpdate(Collection<Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
 				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
 					@Override
 					public void execute(Listener<AbstractIdentifiable> listener) {
@@ -687,7 +688,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				});
 			}
 			
-			public static void beforeDelete(Collection<? extends Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
+			public static void beforeDelete(Collection<Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
 				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
 					@Override
 					public void execute(Listener<AbstractIdentifiable> listener) {
@@ -696,7 +697,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				});
 			}
 			
-			public static void afterDelete(Collection<? extends Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
+			public static void afterDelete(Collection<Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable){
 				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
 					@Override
 					public void execute(Listener<AbstractIdentifiable> listener) {
