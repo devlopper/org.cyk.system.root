@@ -52,17 +52,12 @@ public abstract class AbstractActorDetails<ACTOR extends AbstractIdentifiable> e
 		/**/
 		
 		public static class Default extends AbstractDefault<AbstractActor> implements Serializable {
-
 			private static final long serialVersionUID = -5041861481576596267L;
 
 			public Default(AbstractActor actor) {
 				super(actor);
 			}
-
-		}
-		
+		}	
 	}
 	
-	
-
 }
