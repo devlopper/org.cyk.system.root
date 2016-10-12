@@ -16,6 +16,8 @@ import org.cyk.system.root.business.impl.BusinessServiceProvider;
 import org.cyk.system.root.business.impl.BusinessServiceProvider.Service;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonExtendedInformations;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
@@ -209,6 +211,18 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 
 		public static class Adapter<ACTOR extends AbstractActor> extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter<ACTOR> implements Listener<ACTOR>, Serializable {
 			private static final long serialVersionUID = -1625238619828187690L;
+		
+			public static class Default<ACTOR extends AbstractActor> extends Listener.Adapter<ACTOR> implements Serializable {
+
+				private static final long serialVersionUID = 2428586349249113529L;
+				
+				@Override
+				public void afterInstanciateOne(UserAccount userAccount,ACTOR actor) {
+					super.afterInstanciateOne(userAccount, actor);
+					actor.getPerson().setExtendedInformations(new PersonExtendedInformations(actor.getPerson()));
+				}
+				
+			}
 			
 		}
 		
