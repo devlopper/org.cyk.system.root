@@ -15,6 +15,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.Identifiable;
@@ -27,10 +31,6 @@ import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria.LocationType;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.Constant;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter @Setter @Entity @EqualsAndHashCode(callSuper=false,of="identifier")
 public class GlobalIdentifier extends AbstractModelElement implements Identifiable<String>, Serializable {
@@ -143,4 +143,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		}
 		
 	}
+	
+	/**/
+	
 }

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.inject.Singleton;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.utility.common.ClassLocator;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -49,6 +50,15 @@ public class PersistenceInterfaceLocator extends ClassLocator implements Seriali
 		getClassLocatorListeners().add(listener);
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractIdentifiable> TypedDao<T> injectTyped(Class<T> aClass) {
+		return (TypedDao<T>) super.injectLocated(aClass);
+	}
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractIdentifiable> TypedDao<T> injectTypedByObject(T object) {
+		return (TypedDao<T>) injectTyped(object.getClass());
+	}
+	
 	public static PersistenceInterfaceLocator getInstance() {
 		return INSTANCE;
 	}

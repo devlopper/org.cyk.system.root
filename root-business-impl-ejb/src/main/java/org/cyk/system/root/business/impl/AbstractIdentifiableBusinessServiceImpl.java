@@ -492,6 +492,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	public static interface Listener<IDENTIFIABLE extends AbstractIdentifiable> {
 		
+		void beforeInstanciateOne(UserAccount userAccount);
+		void afterInstanciateOne(UserAccount userAccount,IDENTIFIABLE identifiable);
+		
 		void beforeCreate(IDENTIFIABLE identifiable);
 		void afterCreate(IDENTIFIABLE identifiable);
 		void createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean updateExisting);
@@ -501,9 +504,6 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		
 		void beforeDelete(IDENTIFIABLE identifiable);
 		void afterDelete(IDENTIFIABLE identifiable);
-		
-		void beforeInstanciateOne(UserAccount userAccount);
-		void afterInstanciateOne(UserAccount userAccount,IDENTIFIABLE identifiable);
 		
 		Collection<Class<? extends AbstractIdentifiable>> getCascadeToClasses();
 		void setCascadeToClasses(Collection<Class<? extends AbstractIdentifiable>> classes);

@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.Column;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -81,6 +83,8 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeGroupDao;
+import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration;
+import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration.Property;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
@@ -132,6 +136,23 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				clazz.setUiLabel(languageBusiness.findText(clazz.getUiLabelId()));
 			}
 		}); 
+        
+        GlobalIdentifierPersistenceMappingConfiguration configuration = new GlobalIdentifierPersistenceMappingConfiguration();
+        Property property = new Property(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE),new Column() {
+			@Override public Class<? extends Annotation> annotationType() {return null;}
+			@Override public boolean updatable() {return false;}	
+			@Override public boolean unique() {return Boolean.TRUE;}
+			@Override public String table() {return null;}
+			@Override public int scale() {return 0;}
+			@Override public int precision() {return 0;}
+			@Override public boolean nullable() {return false;}
+			@Override public String name() {return null;}
+			@Override public int length() {return 0;}
+			@Override public boolean insertable() {return false;}
+			@Override public String columnDefinition() {return null;}
+		});
+        configuration.addProperties(property);
+        GlobalIdentifierPersistenceMappingConfiguration.register(Person.class, configuration);
         
         BusinessServiceProvider.Identifiable.COLLECTION.add(new BusinessServiceProvider.Identifiable.Adapter.Default<Person>(Person.class){
 			private static final long serialVersionUID = 1322416788278558869L;

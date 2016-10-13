@@ -26,6 +26,11 @@ public class PersonBusinessIT extends AbstractBusinessIT {
         person = inject(PersonBusiness.class).find(CODE);
         assertThat("Person found by global identifier code", person!=null);
         
+        new org.cyk.utility.common.test.TestEnvironmentListener.Try("Un enregistrement avec pour code = 1 existe deja"){ 
+			private static final long serialVersionUID = -8176804174113453706L;
+			@Override protected void code() {create(inject(PersonBusiness.class).instanciateOneRandomly(CODE));}
+		}.execute();
+        
     	/*for(int i=0;i<20;i++){
     		Person person = RootRandomDataProvider.getInstance().person();
     		//debug(person.getExtendedInformations());
