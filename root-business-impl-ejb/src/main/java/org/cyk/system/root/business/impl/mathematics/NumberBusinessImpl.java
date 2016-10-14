@@ -51,6 +51,9 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 				if(StringUtils.isNotBlank(arguments.getPercentageSymbol()))
 					stringBuilder.append(Constant.CHARACTER_SPACE+arguments.getPercentageSymbol());
 			}
+			if(arguments.getWidth()!=null){
+				stringBuilder = new StringBuilder(StringUtils.leftPad(stringBuilder.toString(), arguments.getWidth(), arguments.getLeftPadding()));
+			}
 		}else if(FormatArguments.CharacterSet.LETTER.equals(arguments.getType())){
 			if(Boolean.TRUE.equals(arguments.getIsRank())){
 				return inject(LanguageBusiness.class).findText("rank."+number+".letter");

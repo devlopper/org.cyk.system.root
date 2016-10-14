@@ -59,7 +59,8 @@ public interface NumberBusiness {
 		private CharacterSet type = CharacterSet.DIGIT;
 		private Boolean isRank = Boolean.FALSE;
 		private Boolean isPercentage = Boolean.FALSE;
-		private String percentageSymbol = Constant.CHARACTER_PERCENT.toString();
+		private String percentageSymbol = Constant.CHARACTER_PERCENT.toString(),leftPadding=Constant.CHARACTER_ZERO.toString();
+		private Integer width;
 	}
 	
 	@Getter @Setter

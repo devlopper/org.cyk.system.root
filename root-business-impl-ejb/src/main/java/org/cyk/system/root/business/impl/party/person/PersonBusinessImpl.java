@@ -269,6 +269,20 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public String findInitials(Person person, FindInitialsArguments arguments) {
+		Collection<String> collection = new ArrayList<>();
+		String names = findNames(person);
+		for(String string : StringUtils.split(names,Constant.CHARACTER_SPACE))
+			collection.add(string.substring(0, 1));
+		return StringUtils.join(collection,arguments.getSeparator()).toUpperCase();
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public String findInitials(Person person) {
+		return findInitials(person, new FindInitialsArguments());
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(Person person) {
 		super.load(person);
 		person.setExtendedInformations(extendedInformationsDao.readByParty(person));

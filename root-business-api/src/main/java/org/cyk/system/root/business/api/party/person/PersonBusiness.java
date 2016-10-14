@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
+import org.cyk.utility.common.Constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,9 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCrite
 	String findNames(Person person,FindNamesOptions options);
 	String findNames(Person person);
 
+	String findInitials(Person person,FindInitialsArguments arguments);
+	String findInitials(Person person);
+	
 	Person instanciateOne(String code,String[] names);
 	
 	/**/
@@ -26,6 +30,14 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCrite
 		public static Boolean FIRST_NAME_IS_FIRST=Boolean.TRUE;
 		
 		private Boolean useTitle = Boolean.FALSE,firstNameIsFirst=FIRST_NAME_IS_FIRST;
+		
+	}
+	
+	@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+	public static class FindInitialsArguments implements Serializable{
+		private static final long serialVersionUID = 5198052741650985781L;
+		
+		private String separator = Constant.EMPTY_STRING;
 		
 	}
 	
