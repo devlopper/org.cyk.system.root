@@ -12,9 +12,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import lombok.Getter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
-import org.cyk.system.root.business.api.BusinessLayerListener;
 import org.cyk.system.root.business.api.BusinessManager;
 import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -61,9 +62,8 @@ import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.AbstractLayer;
-
-import lombok.Getter;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -97,7 +97,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     @Inject protected RootDataProducerHelper rootDataProducerHelper;
     
     protected ValidatorMap validatorMap = ValidatorMap.getInstance();
-    @Getter protected Collection<BusinessLayerListener> businessLayerListeners = new ArrayList<>();
+    //@Getter protected Collection<BusinessLayerListener> businessLayerListeners = new ArrayList<>();
     
     @Override
     protected void initialisation() {
@@ -234,11 +234,9 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		installApplication(installation);
 	}
 	
-	
-	
 	protected void handleObjectToInstall(Object object){
-		for(BusinessLayerListener listener : businessLayerListeners)
-			listener.handleObjectToInstall(this, object);
+		//for(BusinessLayerListener listener : businessLayerListeners)
+		//	listener.handleObjectToInstall(this, object);
 	}
 	
 	protected <T extends AbstractIdentifiable> void installObject(Integer identifier,String message,TypedBusiness<T> business,T object){
@@ -434,7 +432,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 			name = fileName;
 		createEnumeration(FileRepresentationType.class,code, name);
 		File file = createFile(templateRelativeFileName, fileName);
-		return create(new ReportTemplate(code,name,male,file,null,null,null));
+		return create(new ReportTemplate(code,name,male,file,headerImage,backgroundImage,draftBackgroundImage));
 	}
 	
 	protected void instanciateRoleUniformResourceLocator(Collection<Role> roles,Object...uniformResourceLocatorArray){
@@ -451,6 +449,33 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	
 	protected void instanciateUserAccountsFromActors(Collection<? extends AbstractActor> actors, Role... roles) {
 		rootDataProducerHelper.instanciateUserAccountsFromActors(actors, roles);
+	}
+	
+	/**/
+	
+	public static interface Listener {
+
+		void handleObjectToInstall(BusinessLayer businessLayer,Object object);
+		
+		/**/
+		
+		public static class Adapter extends AbstractBean implements Serializable, Listener {
+
+			private static final long serialVersionUID = -3142367274228861058L;
+
+			@Override
+			public void handleObjectToInstall(BusinessLayer businessLayer,Object object) {}
+
+			
+			/**/
+			
+			public static class Default extends Adapter implements Serializable {
+
+				private static final long serialVersionUID = 8396655646771082967L;
+				
+			}
+		}
+
 	}
 	
 }

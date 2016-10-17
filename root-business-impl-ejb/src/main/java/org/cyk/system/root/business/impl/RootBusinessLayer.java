@@ -16,6 +16,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.Column;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -91,11 +94,7 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
-import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
@@ -121,8 +120,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private Application application;
     @Setter private Long applicationIdentifier;
-    
-    private static final Collection<Listener> ROOT_BUSINESS_LAYER_LISTENERS = new ArrayList<>();
     
     @SuppressWarnings("unchecked")
 	@Override
@@ -539,11 +536,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     		logInfo("Event Alarm Scanning disabled");
     	}
     }
-    
-    public Collection<Listener> getRootBusinessLayerListeners() {
-		return ROOT_BUSINESS_LAYER_LISTENERS;
-	}
-	
+    	
 	public String getRelativeCode(AbstractCollection<?> collection,String code){
 		logTrace("Get relative code. {} , code={}", collection.getLogMessage(),code);
 		return StringUtils.isBlank(collection.getItemCodeSeparator()) ? code 
@@ -558,7 +551,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		public String execute(AbstractIdentifiable input) {
 			String generatedCode = null;
 			
-			for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+			for(Listener listener : Listener.COLLECTION){
 				String value = listener.generateGlobalIdentifierCode(input,null);
 				if(value!=null)
 					generatedCode = value;
@@ -568,7 +561,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			else{
 				do{
 					TypedBusiness<AbstractIdentifiable> business =  null;
-					for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+					for(Listener listener : Listener.COLLECTION){
 						TypedBusiness<AbstractIdentifiable> value = listener.findBusiness(input);
 						if(value!=null)
 							business = value;
@@ -581,7 +574,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 						break;
 					else{
 						String previousGeneratedCode = generatedCode;
-						for(Listener listener : ROOT_BUSINESS_LAYER_LISTENERS){
+						for(Listener listener : Listener.COLLECTION){
 							String value = listener.generateGlobalIdentifierCode(input,previousGeneratedCode);
 							if(value!=null)
 								generatedCode = value;
@@ -597,8 +590,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	
 	/**/
 	
-	public interface Listener {
+	public interface Listener extends AbstractBusinessLayer.Listener {
 
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
 		String generateGlobalIdentifierCode(AbstractIdentifiable identifiable,String previousCode);
 		
 		<IDENTIFIABLE extends AbstractIdentifiable> TypedBusiness<IDENTIFIABLE> findBusiness(IDENTIFIABLE identifiable);
@@ -609,7 +604,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		
 		/**/
 		
-		public static class Adapter extends AbstractBean implements Listener,Serializable {
+		public static class Adapter extends AbstractBusinessLayer.Listener.Adapter implements Listener,Serializable {
 			
 			private static final long serialVersionUID = -7771053357545118564L;
 
@@ -625,13 +620,15 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 
 			@Override
 			public void populateCandidateRoles(List<Role> roles) {}
+			
 			@Override
 			public <REPORT extends AbstractReportTemplateFile<REPORT>> Class<REPORT> getReportTemplateFileClass(CreateReportFileArguments<?> arguments) {
 				return null;
 			}
 			/**/
 			
-			public static class Default extends Adapter implements Serializable {
+			@Deprecated
+			public static class Default extends Listener.Adapter implements Serializable {
 
 				private static final long serialVersionUID = 3580112506828375899L;
 				

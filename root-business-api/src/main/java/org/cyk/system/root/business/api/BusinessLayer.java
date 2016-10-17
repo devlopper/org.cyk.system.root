@@ -1,6 +1,5 @@
 package org.cyk.system.root.business.api;
 
-import java.util.Collection;
 import java.util.Map;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -25,7 +24,5 @@ public interface BusinessLayer {
     void installApplication(Installation installation);
     void installApplication(Boolean fake);
     void installApplication();
-    
-    Collection<BusinessLayerListener> getBusinessLayerListeners();
     
 }
