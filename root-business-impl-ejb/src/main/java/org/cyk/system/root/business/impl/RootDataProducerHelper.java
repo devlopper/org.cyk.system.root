@@ -218,10 +218,12 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	public byte[] getResourceAsBytes(Package basePackage,String relativePath){
     	String path = "/"+StringUtils.replace( (basePackage==null?(this.basePackage==null?this.getClass().getPackage():this.basePackage):basePackage).getName(), ".", "/")+"/";
+    	path += relativePath;
     	try {
-    		logDebug("Getting resource as bytes {}", path+relativePath);
-    		return IOUtils.toByteArray(this.getClass().getResourceAsStream(path+relativePath));
+    		logDebug("Getting resource as bytes {}", path);
+    		return IOUtils.toByteArray(this.getClass().getResourceAsStream(path));
 		} catch (IOException e) {
+			logError("Cannot get resource as bytes using path {}", path);
 			e.printStackTrace();
 			return null;
 		}

@@ -41,6 +41,9 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	@Inject private MediaBusiness mediaBusiness;
 	@Inject private StreamBusiness streamBusiness;
 	
+	private static final String FILE = "file";
+	private static final String FILE_DOT = FILE+Constant.CHARACTER_DOT;
+	
 	@Inject
 	public FileBusinessImpl(FileDao dao) {
 		super(dao); 
@@ -83,13 +86,12 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 			throw new RuntimeException(e);
 		}
     }
-
-    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public String findMime(String extension) {
+    
+    private String getMime(String extension){
     	if(StringUtils.isBlank(extension))
     		return null;
         String mime = null;
-        String fileName = "file."+extension;
+        String fileName = FILE_DOT+extension;
         try {
             mime = Files.probeContentType(Paths.get(fileName));
         } catch (IOException e) {
@@ -100,16 +102,29 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     	if(StringUtils.isBlank(mime) || mime.equalsIgnoreCase(Mime.APPLICATION_OCTET_STREAM))
     		mime = URLConnection.guessContentTypeFromName(fileName);
     	
-    	if(StringUtils.isBlank(mime))
+    	return mime;
+    }
+
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public String findMime(String extension) {
+    	String mime = getMime(extension);
+    	
+    	if(StringUtils.isBlank(mime) && FileExtension.JRXML.name().equalsIgnoreCase(extension))
+    		mime = getMime(FileExtension.XML.name());
+    	
+    	if(StringUtils.isBlank(mime)){
+    		logWarning("Cannot find mime for extension {}. {} will be used instead", extension,Mime.APPLICATION_OCTET_STREAM);
     		mime = Mime.APPLICATION_OCTET_STREAM;
+    	}
     	return mime;
     }
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public String findExtension(String name) {
-    	int i = name.lastIndexOf('.');
+    	int i = name.lastIndexOf(Constant.CHARACTER_DOT);
         if (i > 0)
             return name.substring(i+1);
+        logWarning("Cannot find extension on file named {}", name);
     	return null;
     }
     
@@ -119,7 +134,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
             if(file.getUri()==null)
                 exceptionUtils().exception("exception.file.nocontentnouri");
             else
-                if("file".equals(file.getUri().getScheme()))
+                if(FILE.equals(file.getUri().getScheme()))
                     try {
                         return new FileInputStream(StringUtils.substring(file.getUri().getPath(), 1));
                     } catch (FileNotFoundException e) {

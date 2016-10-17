@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -37,6 +38,7 @@ import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.BeanAdapter;
@@ -355,6 +357,11 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	/**/
 	
+	public static String computeCodeFromName(String name){
+    	return StringUtils.remove(StringUtils.remove(name, Constant.CHARACTER_SPACE),Constant.CHARACTER_DOT);
+    }
+	
+	/**/
 	public static interface CascadeOperationListener<IDENTIFIABLE extends AbstractIdentifiable,DAO extends TypedDao<IDENTIFIABLE>,BUSINESS extends TypedBusiness<IDENTIFIABLE>>{
     	
 		DAO getDao();

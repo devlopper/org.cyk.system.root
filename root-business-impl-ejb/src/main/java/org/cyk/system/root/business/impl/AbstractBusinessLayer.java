@@ -429,10 +429,12 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	}
 
 	public ReportTemplate createReportTemplate(String code,String name,Boolean male,String templateRelativeFileName,File headerImage,File backgroundImage,File draftBackgroundImage){
+		String fileName = StringUtils.substringAfterLast(templateRelativeFileName, Constant.CHARACTER_SLASH.toString());
 		if(StringUtils.isBlank(name))
-			name = StringUtils.substringAfterLast(templateRelativeFileName, Constant.CHARACTER_SLASH.toString());
-		createEnumeration(FileRepresentationType.class,code,name);
-		return create(new ReportTemplate(code,name,male,createFile(templateRelativeFileName, name),null,null,null));
+			name = fileName;
+		createEnumeration(FileRepresentationType.class,code, name);
+		File file = createFile(templateRelativeFileName, fileName);
+		return create(new ReportTemplate(code,name,male,file,null,null,null));
 	}
 	
 	protected void instanciateRoleUniformResourceLocator(Collection<Role> roles,Object...uniformResourceLocatorArray){
