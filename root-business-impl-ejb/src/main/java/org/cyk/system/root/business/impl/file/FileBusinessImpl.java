@@ -29,8 +29,13 @@ import org.cyk.system.root.business.api.file.MediaBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
 import org.cyk.system.root.business.api.file.StreamBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.file.FileRepresentationType;
+import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.persistence.api.file.FileDao;
+import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.FileExtension;
 
@@ -49,6 +54,23 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		super(dao); 
 	}
 
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<File> findByFileIdentifiableGlobalIdentifierSearchCriteria(SearchCriteria searchCriteria) {
+    	Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierDao.class).readByCriteria(searchCriteria);
+		Collection<File> files = new ArrayList<>();
+		for(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier : fileIdentifiableGlobalIdentifiers)
+			files.add(fileIdentifiableGlobalIdentifier.getFile());
+		return files;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<File> findByRepresentationTypeByIdentifiables(FileRepresentationType fileRepresentationType,Collection<? extends AbstractIdentifiable> identifiables) {
+		FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
+    	searchCriteria.addIdentifiablesGlobalIdentifiers(identifiables);
+    	searchCriteria.addRepresentationType(fileRepresentationType);
+		return findByFileIdentifiableGlobalIdentifierSearchCriteria(searchCriteria);
+	}
+	
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) //TODO is this Support and followings really needed ???
     public File process(byte[] bytes, String name) {
         if(bytes==null || bytes.length==0)

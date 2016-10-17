@@ -8,7 +8,10 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.utility.common.FileExtension;
 
 public interface FileBusiness extends TypedBusiness<File> {
@@ -35,6 +38,9 @@ public interface FileBusiness extends TypedBusiness<File> {
     ByteArrayOutputStream merge(Collection<File> files,FileExtension fileExtension);
     
     void writeTo(File file,java.io.File directory,String name);
+    
+    Collection<File> findByFileIdentifiableGlobalIdentifierSearchCriteria(FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria);
+    Collection<File> findByRepresentationTypeByIdentifiables(FileRepresentationType fileRepresentationType,Collection<? extends AbstractIdentifiable> identifiables);
     
     /* Media Stuff */
     
