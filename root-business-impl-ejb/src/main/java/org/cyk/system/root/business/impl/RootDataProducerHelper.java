@@ -25,6 +25,8 @@ import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileRepresentationType;
+import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.ElectronicMail;
@@ -86,7 +88,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	private Deque<Package> basePackageQueue = new ArrayDeque<>();
 	private Boolean basePackageQueueingEnabled = Boolean.FALSE;
 	
-	@Getter private Collection<RootDataProducerHelperListener> rootDataProducerHelperListeners = new ArrayList<>();
+	@Getter private Collection<Listener> rootDataProducerHelperListeners = new ArrayList<>();
 	
 	@Getter @Setter private Collection<UniformResourceLocator> uniformResourceLocators;
 	@Getter @Setter private Collection<RoleUniformResourceLocator> roleUniformResourceLocators;
@@ -124,7 +126,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		T data = newInstance(aClass);
 		data.setCode(code);
 		data.setName(name);
-		for(RootDataProducerHelperListener listener : rootDataProducerHelperListeners)
+		for(Listener listener : rootDataProducerHelperListeners)
 			listener.set(data);
 		return (T) genericBusiness.create(data);
 	}
@@ -133,7 +135,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	public <T extends AbstractEnumeration> T updateEnumeration(Class<T> aClass,String code,String name){
 		T data = getEnumeration(aClass, code);
 		data.setName(name);
-		for(RootDataProducerHelperListener listener : rootDataProducerHelperListeners)
+		for(Listener listener : rootDataProducerHelperListeners)
 			listener.set(data);
 		return (T) genericBusiness.update(data);
 	}
@@ -160,7 +162,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			T data = newInstance(aClass);
 			data.setCode(getCode((String)value));
 			data.setName((String)value);
-			for(RootDataProducerHelperListener listener : rootDataProducerHelperListeners)
+			for(Listener listener : rootDataProducerHelperListeners)
 				listener.set(data);
 			collection.add(data);
 		}
@@ -208,19 +210,32 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return metricCollection;
 	}
 	
-	public File createFile(Package basePackage,String relativePath,String name){
-		return fileBusiness.create(fileBusiness.process(getResourceAsBytes(basePackage,relativePath),name));
+	public File createFile(Package basePackage,String relativePath,String code,String name){
+		relativePath = PersistDataListener.Adapter.process(File.class, code, PersistDataListener.RELATIVE_PATH, relativePath);
+		//System.out.println("RootDataProducerHelper.createFile() : "+relativePath);
+		File file = null;
+		if(StringUtils.isNotBlank(relativePath)){
+			if(StringUtils.isBlank(name))
+				name = FilenameUtils.getName(relativePath);
+			System.out.println(relativePath+" ::: "+name);
+			file = fileBusiness.process(getResourceAsBytes(basePackage,relativePath),name);
+			if(StringUtils.isNotBlank(code))
+				file.setCode(code);
+			file = fileBusiness.create(file);
+		}
+		return file;
 	}
-	public File createFile(Package basePackage,String relativePath){
+	
+	public File createFile(Package basePackage,String relativePath,String code){
 		String name = FilenameUtils.getName(relativePath);
-		return createFile(basePackage, relativePath, name);
+		return createFile(basePackage, relativePath,code, name);
 	}
 	
 	public byte[] getResourceAsBytes(Package basePackage,String relativePath){
     	String path = "/"+StringUtils.replace( (basePackage==null?(this.basePackage==null?this.getClass().getPackage():this.basePackage):basePackage).getName(), ".", "/")+"/";
     	path += relativePath;
     	try {
-    		logDebug("Getting resource as bytes {}", path);
+    		logDebug("Getting resource as bytes {}", path);System.out.println(path);
     		return IOUtils.toByteArray(this.getClass().getResourceAsStream(path));
 		} catch (IOException e) {
 			logError("Cannot get resource as bytes using path {}", path);
@@ -446,6 +461,18 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			parties.add(actor.getPerson());
 		instanciateUserAccounts(parties, roles);
 	}
+
+	public ReportTemplate createReportTemplate(String code,String name,Boolean male,String templateRelativeFileName,File headerImage,File backgroundImage,File draftBackgroundImage){
+		templateRelativeFileName = PersistDataListener.Adapter.process(ReportTemplate.class, code,PersistDataListener.RELATIVE_PATH, templateRelativeFileName);
+		
+		String fileName = StringUtils.substringAfterLast(templateRelativeFileName, Constant.CHARACTER_SLASH.toString());
+		if(StringUtils.isBlank(name))
+			name = fileName;
+		createEnumeration(FileRepresentationType.class,code, name);
+		File file = createFile(basePackage,templateRelativeFileName, fileName);
+		
+		return create(new ReportTemplate(code,name,male,file,headerImage,backgroundImage,draftBackgroundImage));
+	}
 	
 	/**/
 	
@@ -479,12 +506,12 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 
 	/**/
 	
-	public static interface RootDataProducerHelperListener{
+	public static interface Listener{
 		void set(Object object);
 		
 		/**/
 		
-		public static class Adapter extends BeanAdapter implements RootDataProducerHelperListener,Serializable{
+		public static class Adapter extends BeanAdapter implements Listener,Serializable{
 			private static final long serialVersionUID = 581887995233346336L;
 			@Override
 			public void set(Object object) {}

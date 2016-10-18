@@ -38,7 +38,6 @@ import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
@@ -391,18 +390,19 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		rootDataProducerHelper.createMany(objects);
 	}
 
-	public File createFile(Package basePackage,String relativePath, String name) {
-		return rootDataProducerHelper.createFile(basePackage,relativePath, name);
+	public File createFile(Package basePackage,String relativePath,String code, String name) {
+		return rootDataProducerHelper.createFile(basePackage,relativePath, code,name);
 	}
-	public File createFile(String relativePath, String name) {
-		return createFile(this.getClass().getPackage(),relativePath, name);
+	public File createFile(String relativePath, String code,String name) {
+		return createFile(this.getClass().getPackage(),relativePath, code,name);
 	}
-	public File createFile(Package basePackage,String relativePath){
-		return rootDataProducerHelper.createFile(basePackage, relativePath);
+	public File createFile(Package basePackage,String relativePath,String code){
+		return rootDataProducerHelper.createFile(basePackage, relativePath,code);
 	}
-	public File createFile(String relativePath){
-		return rootDataProducerHelper.createFile(this.getClass().getPackage(), relativePath);
+	public File createFile(String code,String relativePath){
+		return rootDataProducerHelper.createFile(this.getClass().getPackage(), relativePath,code);
 	}
+	
 
 	public byte[] getResourceAsBytes(Package basePackage,String relativePath) {
 		return rootDataProducerHelper.getResourceAsBytes(basePackage,relativePath);
@@ -427,12 +427,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	}
 
 	public ReportTemplate createReportTemplate(String code,String name,Boolean male,String templateRelativeFileName,File headerImage,File backgroundImage,File draftBackgroundImage){
-		String fileName = StringUtils.substringAfterLast(templateRelativeFileName, Constant.CHARACTER_SLASH.toString());
-		if(StringUtils.isBlank(name))
-			name = fileName;
-		createEnumeration(FileRepresentationType.class,code, name);
-		File file = createFile(templateRelativeFileName, fileName);
-		return create(new ReportTemplate(code,name,male,file,headerImage,backgroundImage,draftBackgroundImage));
+		return rootDataProducerHelper.createReportTemplate(code, name, male, templateRelativeFileName, headerImage, backgroundImage, draftBackgroundImage);
 	}
 	
 	protected void instanciateRoleUniformResourceLocator(Collection<Role> roles,Object...uniformResourceLocatorArray){
@@ -450,6 +445,9 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	protected void instanciateUserAccountsFromActors(Collection<? extends AbstractActor> actors, Role... roles) {
 		rootDataProducerHelper.instanciateUserAccountsFromActors(actors, roles);
 	}
+	
+	/**/
+	
 	
 	/**/
 	
@@ -477,5 +475,9 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		}
 
 	}
+	
+	/**/
+	
+	
 	
 }
