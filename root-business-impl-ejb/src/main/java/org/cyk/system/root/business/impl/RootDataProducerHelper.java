@@ -211,13 +211,13 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	
 	public File createFile(Package basePackage,String relativePath,String code,String name){
+		basePackage = PersistDataListener.Adapter.process(File.class, code,PersistDataListener.BASE_PACKAGE, basePackage);
 		relativePath = PersistDataListener.Adapter.process(File.class, code, PersistDataListener.RELATIVE_PATH, relativePath);
-		//System.out.println("RootDataProducerHelper.createFile() : "+relativePath);
+		
 		File file = null;
 		if(StringUtils.isNotBlank(relativePath)){
 			if(StringUtils.isBlank(name))
 				name = FilenameUtils.getName(relativePath);
-			System.out.println(relativePath+" ::: "+name);
 			file = fileBusiness.process(getResourceAsBytes(basePackage,relativePath),name);
 			if(StringUtils.isNotBlank(code))
 				file.setCode(code);
@@ -235,7 +235,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
     	String path = "/"+StringUtils.replace( (basePackage==null?(this.basePackage==null?this.getClass().getPackage():this.basePackage):basePackage).getName(), ".", "/")+"/";
     	path += relativePath;
     	try {
-    		logDebug("Getting resource as bytes {}", path);System.out.println(path);
+    		logDebug("Getting resource as bytes {}", path);System.out.println(this.getClass()+" ::: "+path);
     		return IOUtils.toByteArray(this.getClass().getResourceAsStream(path));
 		} catch (IOException e) {
 			logError("Cannot get resource as bytes using path {}", path);

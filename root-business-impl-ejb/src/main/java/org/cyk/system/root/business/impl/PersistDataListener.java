@@ -40,7 +40,6 @@ public interface PersistDataListener {
 		
 		@SuppressWarnings("unchecked")
 		public static <T> T process(final Class<?> instanceClass,final String instanceCode,final String name,final T value){
-			//System.out.println("PersistDataListener.Adapter.process() : "+instanceClass+" ::: "+instanceCode+" ::: "+name+" ::: "+value);
 			return ListenerUtils.getInstance().getValue((Class<T>) instanceClass,PersistDataListener.COLLECTION, new ListenerUtils.ResultMethod<PersistDataListener,T>() {
 
 				@Override
@@ -92,5 +91,6 @@ public interface PersistDataListener {
 	/**/
 	
 	public static final String RELATIVE_PATH = "RELATIVE_PATH";
+	public static final String BASE_PACKAGE = "BASE_PACKAGE";
 	
 }

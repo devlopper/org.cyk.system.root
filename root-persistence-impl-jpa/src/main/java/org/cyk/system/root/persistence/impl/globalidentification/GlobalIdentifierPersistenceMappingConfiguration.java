@@ -31,7 +31,7 @@ public class GlobalIdentifierPersistenceMappingConfiguration implements Serializ
 			if(this.properties == null)
 				this.properties = new ArrayList<>();
 			this.properties.addAll(Arrays.asList(properties));
-			System.out.println("GlobalIdentifierPersistenceMappingConfiguration.addProperties() : "+this);
+			//System.out.println("GlobalIdentifierPersistenceMappingConfiguration.addProperties() : "+this);
 		}
 		return this;
 	}
