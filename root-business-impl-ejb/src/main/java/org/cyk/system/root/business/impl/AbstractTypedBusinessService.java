@@ -107,9 +107,9 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		if(tokens==null){
 			logWarning("tokens , for automatically build value of property {} in object {}, should not be null", name,identifiable);
 		}else{
-			if(GlobalIdentifier.FIELD_CODE.equals(name))
+			if(GlobalIdentifier.FIELD_CODE.equals(name) && StringUtils.isBlank(identifiable.getCode()))
 				identifiable.setCode(generateCode(tokens));
-			else if(GlobalIdentifier.FIELD_NAME.equals(name))
+			else if(GlobalIdentifier.FIELD_NAME.equals(name) && StringUtils.isBlank(identifiable.getName()))
 				identifiable.setName(generateName(tokens));
 		}
 	}
@@ -397,6 +397,9 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				, arguments.getFile().getExtension());
 		inject(FileBusiness.class).process(arguments.getFile(),reportBasedOnTemplateFile.getBytes(), ReportBusiness.DEFAULT_FILE_NAME_AND_EXTENSION);
 		Boolean isNewFile = isNotIdentified(arguments.getFile());
+		if(Boolean.TRUE.equals(isNewFile)){
+			arguments.getFile().setName(arguments.getFile().getRepresentationType().getName());
+		}
 		inject(GenericBusiness.class).save(arguments.getFile());
 		if(Boolean.TRUE.equals(isNewFile)){
 			inject(ReportFileBusiness.class).create(new ReportFile(reportTemplate, arguments.getFile()));
@@ -420,7 +423,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
     	Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
 		if(fileIdentifiableGlobalIdentifiers.isEmpty() && Boolean.TRUE.equals(createIfNull))
 			return createReportFile(identifiable, new CreateReportFileArguments<IDENTIFIABLE>(reportTemplate, identifiable));	
-		return fileIdentifiableGlobalIdentifiers.iterator().next().getFile();
+		return fileIdentifiableGlobalIdentifiers.isEmpty() ? null : fileIdentifiableGlobalIdentifiers.iterator().next().getFile();
 	}
 
 	@Override

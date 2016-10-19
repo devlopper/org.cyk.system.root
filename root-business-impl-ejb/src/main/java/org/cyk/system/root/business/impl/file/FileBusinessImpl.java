@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness;
@@ -34,6 +35,7 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier.SearchCriteria;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
 import org.cyk.utility.common.Constant;
@@ -48,10 +50,18 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	
 	private static final String FILE = "file";
 	private static final String FILE_DOT = FILE+Constant.CHARACTER_DOT;
+
 	
 	@Inject
 	public FileBusinessImpl(FileDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected Object[] getPropertyValueTokens(File file, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_NAME}, name) && file.getRepresentationType()!=null)
+			return new Object[]{file.getRepresentationType()};
+		return super.getPropertyValueTokens(file, name);
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

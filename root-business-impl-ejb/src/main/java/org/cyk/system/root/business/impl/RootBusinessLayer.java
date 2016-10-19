@@ -199,7 +199,16 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(File file, ContentType contentType) {
-				return file.getCode()+Constant.CHARACTER_SLASH+file.getName();
+				if(StringUtils.isBlank(file.getCode()))
+					if(StringUtils.isBlank(file.getName()))
+						return file.getUiString();
+					else
+						return file.getName();
+				else
+					if(StringUtils.isBlank(file.getName()))
+						return file.getCode();
+					else
+						return file.getCode()+Constant.CHARACTER_SLASH+file.getName();
 			}
 		});
         
