@@ -247,14 +247,14 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public String findNames(Person person,FindNamesOptions options) {
+	public String findNames(Person person,FindNamesArguments arguments) {
 		List<String> blocks = new ArrayList<>();
 		if(StringUtils.isNotBlank(person.getName()))
 			blocks.add(person.getName());
 		if(StringUtils.isNotBlank(person.getLastnames()))
 			blocks.add(person.getLastnames());
 		
-		if(Boolean.TRUE.equals(options.getFirstNameIsFirst()))
+		if(Boolean.TRUE.equals(arguments.getFirstNameIsFirst()))
 			;
 		else
 			Collections.reverse(blocks);
@@ -265,13 +265,13 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public String findNames(Person person) {
-		return findNames(person, new FindNamesOptions());
+		return findNames(person, new FindNamesArguments());
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public String findInitials(Person person, FindInitialsArguments arguments) {
 		Collection<String> collection = new ArrayList<>();
-		String names = findNames(person);
+		String names = findNames(person,arguments.getFindNamesArguments());
 		for(String string : StringUtils.split(names,Constant.CHARACTER_SPACE))
 			collection.add(string.substring(0, 1));
 		return StringUtils.join(collection,arguments.getSeparator()).toUpperCase();

@@ -73,6 +73,14 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			AUTO_SET_PROPERTY_VALUE_CLASSES.put(property, collection = new HashSet<>());
 		collection.add(aClass);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static void addAutoSetPropertyValueClass(String[] properties,Class<?>...classes){
+		for(String property : properties)
+			for(Class<?> aClass : classes)
+				addAutoSetPropertyValueClass(property, (Class<? extends AbstractIdentifiable>) aClass);
+	}
+	
 	public static Boolean isAutoSetPropertyValueClass(String property,Class<? extends AbstractIdentifiable> aClass){
 		Collection<Class<? extends AbstractIdentifiable>> collection = AUTO_SET_PROPERTY_VALUE_CLASSES.get(property);
 		return collection!=null && collection.contains(aClass);
