@@ -30,6 +30,7 @@ public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable>
 	@Override
 	public void setMaster(PERSON person) {
 		super.setMaster(person);
+		name = getPerson().getName();
 		lastnames = getPerson().getLastnames();
 		surname = getPerson().getSurname();
 		if(getPerson().getSex()!=null)

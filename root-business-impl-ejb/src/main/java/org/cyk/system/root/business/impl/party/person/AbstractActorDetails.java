@@ -17,11 +17,16 @@ public abstract class AbstractActorDetails<ACTOR extends AbstractIdentifiable> e
 	
 	public AbstractActorDetails(ACTOR actor) {
 		super(actor);
-		if(actor.getBirthDate()!=null)
-			registrationDate = inject(TimeBusiness.class).formatDate(actor.getBirthDate());
 	}
 
 	/**/
+	
+	@Override
+	public void setMaster(ACTOR actor) {
+		super.setMaster(actor);
+		if(actor.getBirthDate()!=null)
+			registrationDate = inject(TimeBusiness.class).formatDate(actor.getBirthDate());
+	}
 	
 	@Override
 	protected Person getPerson() {
