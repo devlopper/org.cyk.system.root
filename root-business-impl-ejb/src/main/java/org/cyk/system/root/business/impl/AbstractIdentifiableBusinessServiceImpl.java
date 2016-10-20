@@ -289,7 +289,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public List<IDENTIFIABLE> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments) {
 		List<IDENTIFIABLE> identifiables = new ArrayList<>();
 		for(int index = 0; index < arguments.getValues().size(); index++ ){
-			IDENTIFIABLE identifiable = newInstance(getClazz());
+			IDENTIFIABLE identifiable =  instanciateOne((UserAccount)null); //newInstance(getClazz());
 			identifiables.add(identifiable);
 		}
 		completeInstanciationOfManyFromValues(identifiables,arguments);
