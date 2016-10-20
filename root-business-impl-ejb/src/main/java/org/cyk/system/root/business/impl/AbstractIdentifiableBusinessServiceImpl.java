@@ -464,6 +464,16 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static void beforeGetPropertyValueTokens(@SuppressWarnings("rawtypes") Collection listeners,final AbstractIdentifiable identifiable,final String name){
+		Listener.Adapter.beforeGetPropertyValueTokens(listeners, identifiable, name);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static Object[] afterGetPropertyValueTokens(@SuppressWarnings("rawtypes") Collection listeners,final AbstractIdentifiable identifiable,final String name, final Object[] tokens){
+		return Listener.Adapter.afterGetPropertyValueTokens(listeners, identifiable, name, tokens);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static void beforeInstanciateOne(@SuppressWarnings("rawtypes") Collection listeners,final UserAccount userAccount){
 		Listener.Adapter.beforeInstanciateOne(listeners, userAccount);
 	}
@@ -510,6 +520,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		void beforeInstanciateOne(UserAccount userAccount);
 		void afterInstanciateOne(UserAccount userAccount,IDENTIFIABLE identifiable);
 		
+		void beforeGetPropertyValueTokens(IDENTIFIABLE identifiable,String name);
+		Object[] afterGetPropertyValueTokens(IDENTIFIABLE identifiable,String name,Object[] tokens);
+		
 		void beforeCreate(IDENTIFIABLE identifiable);
 		void afterCreate(IDENTIFIABLE identifiable);
 		void createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean updateExisting);
@@ -545,6 +558,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			
 			private Collection<Class<? extends AbstractIdentifiable>> cascadeToClasses;
 			private Collection<String> cascadeToReportTemplateCodes;
+			
+			@Override public void beforeGetPropertyValueTokens(IDENTIFIABLE identifiable, String name) {}
+			@Override public Object[] afterGetPropertyValueTokens(IDENTIFIABLE identifiable,String name, Object[] tokens) {return tokens;}
 			
 			@Override public void beforeCreate(IDENTIFIABLE identifiable) {}
 			@Override public void afterCreate(IDENTIFIABLE identifiable) {}
@@ -649,6 +665,29 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			
 			/**/
 			
+			public static void beforeGetPropertyValueTokens(Collection<Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable,final String name){
+				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
+					@Override
+					public void execute(Listener<AbstractIdentifiable> listener) {
+						listener.beforeGetPropertyValueTokens(identifiable, name);
+					}
+				});
+			}
+			
+			public static Object[] afterGetPropertyValueTokens(Collection<Listener<AbstractIdentifiable> > listeners,final AbstractIdentifiable identifiable,final String name, final Object[] tokens){
+				return ListenerUtils.getInstance().getValue(Object[].class,listeners, new ListenerUtils.ResultMethod<Listener<AbstractIdentifiable>,Object[]>() {
+					@Override
+					public Object[] execute(Listener<AbstractIdentifiable> listener) {
+						return listener.afterGetPropertyValueTokens(identifiable, name, tokens);
+					}
+
+					@Override
+					public Object[] getNullValue() {
+						return null;
+					}
+				});
+			}
+			
 			public static void beforeInstanciateOne(Collection<Listener<AbstractIdentifiable> > listeners,final UserAccount userAccount){
 				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<Listener<AbstractIdentifiable>>() {
 					@Override
@@ -729,6 +768,11 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 
 				private static final long serialVersionUID = 1L;
 
+				@Override
+				public Object[] afterGetPropertyValueTokens(IDENTIFIABLE identifiable, String name, Object[] tokens) {
+					return tokens;
+				}
+				
 				@Override
 				public void afterUpdate(IDENTIFIABLE identifiable) {
 					super.afterUpdate(identifiable);

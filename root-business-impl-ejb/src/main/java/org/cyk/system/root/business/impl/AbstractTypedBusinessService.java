@@ -103,7 +103,9 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 
 	protected void setProperty(IDENTIFIABLE identifiable,String name){
+		//beforeGetPropertyValueTokens(getListeners(), identifiable, name);
 		Object[] tokens = getPropertyValueTokens(identifiable, name);
+		//tokens = afterGetPropertyValueTokens(getListeners(), identifiable, name, tokens);
 		if(tokens==null){
 			logWarning("tokens , for automatically build value of property {} in object {}, should not be null", name,identifiable);
 		}else{
