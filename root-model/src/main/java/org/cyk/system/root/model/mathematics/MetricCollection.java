@@ -37,4 +37,8 @@ public class MetricCollection extends AbstractCollection<Metric> implements Seri
 		return this;
 	}
 	
+	public static final String FIELD_VALUE_INTERVAL_COLLECTION = "valueIntervalCollection";
+	public static final String FIELD_VALUE_TYPE = "valueType";
+	public static final String FIELD_VALUE_INPUTTED = "valueInputted";
+	
 }

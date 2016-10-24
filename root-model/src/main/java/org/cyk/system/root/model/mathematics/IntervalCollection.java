@@ -20,7 +20,7 @@ public class IntervalCollection extends AbstractCollection<Interval> implements 
 
 	@Column(precision=IntervalExtremity.COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal lowestValue;
 	@Column(precision=IntervalExtremity.COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal highestValue;
-	@Column(nullable=false) private Byte numberOfDecimalAfterDot = new Byte("2");
+	@Column private Byte numberOfDecimalAfterDot = new Byte("2");//TODO can be null , so no need to initialize
 	
 	public IntervalCollection(String code) {
 		super(code, code,null,null);
@@ -36,6 +36,8 @@ public class IntervalCollection extends AbstractCollection<Interval> implements 
 		return addItem(null, name, low, high);
 	}
 	
-	
+	public static final String FIELD_LOWEST_LOWEST_VALUE = "lowestValue";
+	public static final String FIELD_LOWEST_HIGHEST_VALUE = "highestValue";
+	public static final String FIELD_LOWEST_NUMBER_OF_DECIMAL_AFTER_DOT = "numberOfDecimalAfterDot";
 	
 }

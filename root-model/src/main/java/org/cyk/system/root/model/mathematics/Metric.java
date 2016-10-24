@@ -26,4 +26,5 @@ public class Metric extends AbstractCollectionItem<MetricCollection> implements 
 		return valueIntervalCollection==null?(collection==null?null:collection.getValueIntervalCollection()):valueIntervalCollection;
 	}
 	
+	public static final String FIELD_VALUE_INTERVAL_COLLECTION = "valueIntervalCollection";
 }
