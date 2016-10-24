@@ -8,12 +8,15 @@ import javax.persistence.Entity;
 
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.utility.common.CommonUtils;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @Entity  @NoArgsConstructor
+@Getter @Setter @Entity  @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 public class IntervalCollection extends AbstractCollection<Interval> implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;

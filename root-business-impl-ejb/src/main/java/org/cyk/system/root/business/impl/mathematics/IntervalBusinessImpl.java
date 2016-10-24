@@ -14,6 +14,7 @@ import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 
 public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Interval, IntervalDao,IntervalCollection> implements IntervalBusiness,Serializable {
@@ -29,6 +30,13 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
 		Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
 		
+		return interval;
+	}
+	
+	@Override
+	public Interval instanciateOne(UserAccount userAccount) {
+		Interval interval = super.instanciateOne(userAccount);
+		System.out.println("IntervalBusinessImpl.instanciateOne()");
 		return interval;
 	}
 	

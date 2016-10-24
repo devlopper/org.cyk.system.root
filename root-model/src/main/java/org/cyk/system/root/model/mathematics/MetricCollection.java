@@ -9,12 +9,15 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractCollection;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity @Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 public class MetricCollection extends AbstractCollection<Metric> implements Serializable {
 
 	private static final long serialVersionUID = -3099832512046879464L;

@@ -9,13 +9,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 /**
  * Quantifiable measure that is used to track and assess the status of a specific business process.
  * @author Christian Yao Komenan
  *
  */
-@Getter @Setter /*@NoArgsConstructor @AllArgsConstructor*/ @Entity
+@Getter @Setter /*@NoArgsConstructor @AllArgsConstructor*/ @Entity @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS)
 public class Metric extends AbstractCollectionItem<MetricCollection> implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;

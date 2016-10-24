@@ -15,8 +15,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Getter @Setter @Entity @Table(name="TABLE_INTERVAL") @NoArgsConstructor
+@Getter @Setter @Entity @Table(name="TABLE_INTERVAL") @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 public class Interval extends AbstractCollectionItem<IntervalCollection> implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
