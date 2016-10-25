@@ -14,7 +14,7 @@ import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
-import org.cyk.system.root.model.security.UserAccount;
+import org.cyk.system.root.persistence.api.mathematics.IntervalCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 
 public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Interval, IntervalDao,IntervalCollection> implements IntervalBusiness,Serializable {
@@ -25,18 +25,35 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	public IntervalBusinessImpl(IntervalDao dao) {
 		super(dao); 
 	}
-		
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
-		Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
-		
+	
+	@Override
+	public Interval create(Interval interval) {
+		super.create(interval);
+		updateCollection(interval);
 		return interval;
 	}
 	
 	@Override
-	public Interval instanciateOne(UserAccount userAccount) {
-		Interval interval = super.instanciateOne(userAccount);
-		System.out.println("IntervalBusinessImpl.instanciateOne()");
+	public Interval update(Interval interval) {
+		interval = super.update(interval);
+		updateCollection(interval);
+		return interval;
+	}
+	
+	private void updateCollection(Interval interval){
+		if(interval.getCollection()==null)
+			return;
+		IntervalCollection collection = interval.getCollection();
+		IntervalCollectionDao intervalCollectionDao = inject(IntervalCollectionDao.class);
+		collection.setLowestValue(intervalCollectionDao.readLowestValue(collection));
+		collection.setHighestValue(intervalCollectionDao.readHighestValue(collection));
+		intervalCollectionDao.update(collection);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
+		Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
+		
 		return interval;
 	}
 	

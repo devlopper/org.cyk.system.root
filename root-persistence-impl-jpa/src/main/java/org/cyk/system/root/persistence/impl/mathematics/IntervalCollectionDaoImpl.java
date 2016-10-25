@@ -20,7 +20,7 @@ public class IntervalCollectionDaoImpl extends AbstractCollectionDaoImpl<Interva
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readLowestValue, "SELECT MIN(interval.low.value) FROM Interval interval WHERE interval.collection = :collection");
-		registerNamedQuery(readHighestValue, "SELECT MAX(interval.low.value) FROM Interval interval WHERE interval.collection = :collection");
+		registerNamedQuery(readHighestValue, "SELECT MAX(interval.high.value) FROM Interval interval WHERE interval.collection = :collection");
 	}
 	
 	@Override

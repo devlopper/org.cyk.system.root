@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,8 @@ public class IntervalExtremity extends AbstractModelElement implements Serializa
 	private BigDecimal value;
 	
 	private Boolean excluded=Boolean.FALSE;
+	//TODO add an attribute to keep final value
+	@Transient private Boolean isLow;
 	
 	public IntervalExtremity(BigDecimal value) {
 		super();
@@ -41,5 +44,8 @@ public class IntervalExtremity extends AbstractModelElement implements Serializa
 	
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_EXCLUDED = "excluded";
+	
+	public static final String FORMAT = "%s%s";
 
+	public static final String INFINITE = "INFINTE";
 }

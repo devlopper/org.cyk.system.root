@@ -30,4 +30,7 @@ public interface IntervalBusiness extends AbstractCollectionItemBusiness<Interva
 		
     }
     */
+    
+    
+    
 }

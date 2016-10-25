@@ -14,21 +14,21 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class IntervalDetails extends AbstractCollectionItemDetails<Interval> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String low,high;
+	@Input @InputText private String lowExtremity,highExtremity;
 	
 	public IntervalDetails(Interval interval) {
 		super(interval);
 		if(interval==null){
 			
 		}else{
-			if(interval.getLow()!=null && interval.getLow().getValue()!=null)
-				low = formatNumber(interval.getLow().getValue());
-			if(interval.getHigh()!=null && interval.getHigh().getValue()!=null)
-				high = formatNumber(interval.getHigh().getValue());
+			if(interval.getLow()!=null)
+				lowExtremity = formatUsingBusiness(interval.getLow());
+			if(interval.getHigh()!=null)
+				highExtremity = formatUsingBusiness(interval.getHigh());
 		}
 	}
 	
-	public static final String FIELD_LOW = "low";
-	public static final String FIELD_HIGH = "high";
+	public static final String FIELD_LOW_EXTREMITY = "lowExtremity";
+	public static final String FIELD_HIGH_EXTREMITY = "highExtremity";
 	
 }

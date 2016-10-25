@@ -36,6 +36,7 @@ import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
@@ -61,6 +62,8 @@ import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
@@ -165,7 +168,25 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				return inject(PersonBusiness.class).countByCriteria(new Person.SearchCriteria(configuration.getGlobalFilter()));
 			}
         });
-         
+        
+        registerFormatter(IntervalExtremity.class, new AbstractFormatter<IntervalExtremity>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(IntervalExtremity intervalExtremity, ContentType contentType) {
+				String marker = Boolean.TRUE.equals(intervalExtremity.getExcluded()) ? (Boolean.TRUE.equals(intervalExtremity.getIsLow())?"]":"[")
+						:(Boolean.TRUE.equals(intervalExtremity.getIsLow())?"[":"]")
+						,number=intervalExtremity.getValue()==null ? IntervalExtremity.INFINITE : inject(NumberBusiness.class).format(intervalExtremity.getValue());
+				return String.format(IntervalExtremity.FORMAT, Boolean.TRUE.equals(intervalExtremity.getIsLow())?marker:number
+						,Boolean.TRUE.equals(intervalExtremity.getIsLow())?number:marker);
+			}
+		});
+        registerFormatter(Interval.class, new AbstractFormatter<Interval>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(Interval interval, ContentType contentType) {
+				return String.format(Interval.FORMAT,formatterBusiness.format(interval.getLow()),formatterBusiness.format(interval.getHigh()));
+			}
+		});
         registerFormatter(MetricValue.class, new AbstractFormatter<MetricValue>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override

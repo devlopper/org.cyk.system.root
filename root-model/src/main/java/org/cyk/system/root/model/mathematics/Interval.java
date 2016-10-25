@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -39,10 +40,29 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	/* color support right now */
 	private String style;
 	
+	{
+		if(low!=null)
+			low.setIsLow(Boolean.TRUE);
+		if(high!=null)
+			high.setIsLow(Boolean.FALSE);
+	}
+	
 	public Interval(IntervalCollection collection, String code, String name,BigDecimal low,BigDecimal high) {
 		super(collection, code, name);
 		this.low = new IntervalExtremity(low);
 		this.high = new IntervalExtremity(high);
+	}
+	
+	public IntervalExtremity getLow(){
+		if(low!=null)
+			low.setIsLow(Boolean.TRUE);
+		return low;
+	}
+	
+	public IntervalExtremity getHigh(){
+		if(high!=null)
+			high.setIsLow(Boolean.FALSE);
+		return high;
 	}
 	
 	public static final String FIELD_LOW = "low";
@@ -60,6 +80,9 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	}
 	
 	public static final String LOG_FORMAT = Interval.class.getSimpleName()+"(%s%s , %s%s)";
+	
+	public static final String EXTREMITY_SEPARATOR = Constant.CHARACTER_SPACE+Constant.CHARACTER_COMA+Constant.CHARACTER_SPACE.toString();
+	public static final String FORMAT = "%s"+EXTREMITY_SEPARATOR+"%s";
 	
 	/*
 	public Interval(IntervalManager manager) {
