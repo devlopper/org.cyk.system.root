@@ -1,6 +1,8 @@
 package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
@@ -15,23 +17,56 @@ public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metri
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private IntervalCollectionBusiness intervalCollectionBusiness;
-	
 	@Inject
 	public MetricBusinessImpl(MetricDao dao) {
 		super(dao); 
 	} 
 	
 	@Override
+	protected Collection<? extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<?>> getListeners() {
+		return Listener.COLLECTION;
+	}
+	
+	@Override
 	public Metric update(Metric metric) {
 		if(metric.getValueIntervalCollection()!=null)
 			if(metric.getValueIntervalCollection().getIdentifier()==null){
-				intervalCollectionBusiness.create(metric.getValueIntervalCollection());
+				inject(IntervalCollectionBusiness.class).create(metric.getValueIntervalCollection());
 			}else
-				intervalCollectionBusiness.update(metric.getValueIntervalCollection());
+				inject(IntervalCollectionBusiness.class).update(metric.getValueIntervalCollection());
 		super.update(metric);
 		
 		return metric;
+	}
+	
+	/**/
+	
+	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Metric> {
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		/**/
+		
+		public static class Adapter extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter.Default<Metric> implements Listener,Serializable{
+			private static final long serialVersionUID = 1L;
+			
+			/**/
+			
+			public static class Default extends Listener.Adapter implements Serializable{
+				private static final long serialVersionUID = 1L;
+				
+				/**/
+			
+				
+				public static class EnterpriseResourcePlanning extends Listener.Adapter.Default implements Serializable{
+					private static final long serialVersionUID = 1L;
+					
+					/**/
+					
+					
+				}
+			}
+		}
 	}
 	
 }
