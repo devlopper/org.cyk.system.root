@@ -42,6 +42,8 @@ public interface FileBusiness extends TypedBusiness<File> {
     Collection<File> findByFileIdentifiableGlobalIdentifierSearchCriteria(FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria);
     Collection<File> findByRepresentationTypeByIdentifiables(FileRepresentationType fileRepresentationType,Collection<? extends AbstractIdentifiable> identifiables);
     
+    String convertToFileName(String string);
+    
     /* Media Stuff */
     
     URI findThumbnailUri(File file,ThumnailSize size);
@@ -56,4 +58,6 @@ public interface FileBusiness extends TypedBusiness<File> {
     	String TEXT = "text";
     	String APPLICATION_OCTET_STREAM = "application/octet-stream";
     }
+    
+    String ILLEGAL_FILE_NAME_CHARACTERS = "\\/.,;:!?";
 }

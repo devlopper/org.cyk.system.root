@@ -33,8 +33,8 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier.SearchCriteria;
+import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
@@ -104,6 +104,19 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     @Override
 	public void process(File file, byte[] bytes, String name) {
     	process(file, bytes, name, Boolean.TRUE);
+    }
+    
+    @Override
+    public String convertToFileName(String string) {
+    	/*StringBuilder stringBuilder = new StringBuilder();
+    	for(int i=0;i<string.length();i++){
+    		char character = string.charAt(i);
+    		if(!StringUtils.contains(stringBuilder, character) && (Character.isAlphabetic(character) || Character.isDigit(character)))
+    			stringBuilder.append(character);
+    	}
+    	return stringBuilder.toString();
+    	*/
+    	return StringUtils.replaceChars(string, ILLEGAL_FILE_NAME_CHARACTERS, null);
     }
     
     @Override
@@ -229,5 +242,35 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	@Override
 	public Boolean isText(File file) {
 		return file!=null && (StringUtils.startsWith(file.getMime(), Mime.TEXT) );
+	}
+	
+	/**/
+	
+	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<File> {
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		/**/
+		
+		public static class Adapter extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter.Default<File> implements Listener,Serializable{
+			private static final long serialVersionUID = 1L;
+			
+			/**/
+			
+			public static class Default extends Listener.Adapter implements Serializable{
+				private static final long serialVersionUID = 1L;
+				
+				/**/
+			
+				
+				public static class EnterpriseResourcePlanning extends Listener.Adapter.Default implements Serializable{
+					private static final long serialVersionUID = 1L;
+					
+					/**/
+					
+					
+				}
+			}
+		}
 	}
 }

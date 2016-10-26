@@ -39,12 +39,6 @@ public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metri
 		return metric;
 	}
 	
-	@Override
-	public Metric delete(Metric identifiable) {
-		System.out.println("MetricBusinessImpl.delete()");
-		return super.delete(identifiable);
-	}
-	
 	/**/
 	
 	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Metric> {
