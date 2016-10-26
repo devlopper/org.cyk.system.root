@@ -38,7 +38,6 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     @Override
     public void validateRead(Identifiable<?> anIdentifiable) {
         // TODO Auto-generated method stub
-        
     }
 
     @Override
@@ -49,7 +48,6 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     @Override
     public void validateDelete(Identifiable<?> anIdentifiable) {
         // TODO Auto-generated method stub
-        
     }
     
     /**/
@@ -80,25 +78,6 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     		for(Property property : configuration.getUniqueProperties())
     			checkUniqueConstraints(identifiable, property.getName());
     	}
-    	/*logTrace("Check fields unique constraints for an instance of {} , {}",anIdentifiable.getClass().getSimpleName(),anIdentifiable);
-    	if(anIdentifiable instanceof AbstractEnumeration) {
-            AbstractEnumeration enumeration = (AbstractEnumeration) anIdentifiable;
-            //TODO look for field with @UniqueConstraint
-            //Code
-            if(enumeration.getIdentifier()==null){
-            	Long countInDB = genericDao.use(enumeration.getClass()).select(Function.COUNT).where(null,"globalIdentifier.code","code", enumeration.getCode(),ArithmeticOperator.EQ).oneLong();
-            	logTrace("Check for Create. Count existing = {}",countInDB);
-                exceptionUtils().exception(countInDB>0,"exception.value.duplicate",new Object[]{"Code",enumeration.getCode()});
-            }else{
-                AbstractEnumeration inDB = (AbstractEnumeration) genericDao.use(enumeration.getClass()).read(enumeration.getIdentifier());
-                if(!inDB.getCode().equals(enumeration.getCode()))
-                    //Code has changed
-                    exceptionUtils().exception(genericDao.use(enumeration.getClass()).select(Function.COUNT).where(null,"globalIdentifier.code","code", enumeration.getCode(),ArithmeticOperator.EQ).oneLong()>0,
-                        "exception.value.duplicate",new Object[]{"Code",enumeration.getCode()});
-            }
-            
-            
-        }*/
     }
     
     protected void checkUniqueConstraints(AbstractIdentifiable identifiable,String fieldName){

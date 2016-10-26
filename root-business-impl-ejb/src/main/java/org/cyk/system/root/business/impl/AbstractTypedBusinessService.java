@@ -3,10 +3,8 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.TransactionAttribute;
@@ -22,6 +20,7 @@ import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.file.report.ReportFileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
@@ -38,7 +37,6 @@ import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifier
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
@@ -155,14 +153,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override
 	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
 		setAutoSettedProperties(identifiable);
-	    validationPolicy.validateCreate(identifiable);
+	    inject(ValidationPolicy.class).validateCreate(identifiable);
 	    beforeCreate(getListeners(), identifiable);
         identifiable = dao.create(identifiable);
         afterCreate(getListeners(), identifiable);
-        @SuppressWarnings("unchecked")
-		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
-    	if(listener!=null)
-    		listener.processOnCreated(identifiable);
         return identifiable;
 	}
 	
@@ -175,15 +169,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override
 	public IDENTIFIABLE update(IDENTIFIABLE identifiable) {
 		setAutoSettedProperties(identifiable);
+		inject(ValidationPolicy.class).validateUpdate(identifiable);
 		beforeUpdate(getListeners(), identifiable);
 		IDENTIFIABLE newObject = dao.update(identifiable);
-		afterUpdate(getListeners(), identifiable);
-		@SuppressWarnings("unchecked")
-		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
-	    if(listener!=null)
-	    	listener.processOnUpdated(identifiable);
 	    if(identifiable.getGlobalIdentifier()!=null)
 	    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
+	    afterUpdate(getListeners(), identifiable);
 		return newObject;
 	}
 	
@@ -195,17 +186,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE delete(IDENTIFIABLE identifiable) {
+		inject(ValidationPolicy.class).validateDelete(identifiable);
+		beforeDelete(getListeners(), identifiable);
 		if(identifiable.getGlobalIdentifier()!=null){
 			inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
 			identifiable.setGlobalIdentifier(null);
-		}
-		beforeDelete(getListeners(), identifiable);
+		}		
 		identifiable = dao.delete(identifiable);
 		afterDelete(getListeners(), identifiable);
-		@SuppressWarnings("unchecked")
-		Listener<AbstractIdentifiable> listener = (Listener<AbstractIdentifiable>) Listener.MAP.get(identifiable.getClass());
-	    if(listener!=null)
-	    	listener.processOnDeleted(identifiable);
 		return identifiable;
 	}
 	
@@ -434,37 +422,5 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	/**/
-	@Deprecated
-	public static interface Listener<IDENTIFIABLE extends AbstractIdentifiable> {
-		
-		Map<Class<? extends AbstractIdentifiable>,Listener<? extends AbstractIdentifiable>> MAP = new HashMap<>();
-		
-		void processOnCreated(IDENTIFIABLE identifiable);
-		void processOnUpdated(IDENTIFIABLE identifiable);
-		void processOnDeleted(IDENTIFIABLE identifiable);
-		Class<?> getEntityClass();
-		/**/
-		@Deprecated
-		public static class Adapter<IDENTIFIABLE extends AbstractIdentifiable> extends BeanAdapter implements Listener<IDENTIFIABLE> , Serializable {
-			private static final long serialVersionUID = -8937406338204006055L;
-			
-			@Override
-			public Class<?> getEntityClass() {
-				return null;
-			}
-			@Override public void processOnCreated(IDENTIFIABLE identifiable) {}
-			@Override public void processOnUpdated(IDENTIFIABLE identifiable) {}
-			@Override public void processOnDeleted(IDENTIFIABLE identifiable) {}
-			
-			/**/
-			@Deprecated
-			public static class Default<IDENTIFIABLE extends AbstractIdentifiable> extends Adapter<IDENTIFIABLE> implements Serializable {
-
-				private static final long serialVersionUID = -42928448720961203L;
-				
-			}
-			
-		}
-	}
-
+	
 }

@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.AbstractGenericBusinessService;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
@@ -32,49 +33,10 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	}
 	
 	@Override
-	public AbstractIdentifiable create(AbstractIdentifiable anIdentifiable) {
-	    //TODO logic has to be merged : Find associated typed business bean and do the job 
-	    /*
-	    TypedBusiness<AbstractIdentifiable> typedBusiness = typedBusinessBean(anIdentifiable);
-        if(typedBusiness==null){
-            if(anIdentifiable instanceof DataTreeType)
-                typedBusiness = dataTreeTypeBusiness;
-            else if(anIdentifiable instanceof AbstractDataTree){
-                AbstractDataTree<DataTreeType> dataTree =(AbstractDataTree<DataTreeType>) anIdentifiable;
-                //return typedBusinessBean(dataTree).create(dataTree);
-                return typedBusinessBean((Class<AbstractIdentifiable>) anIdentifiable.getClass())
-        }
-	    
-	    
-	    if(typedBusiness==null){
-            validationPolicy.validateCreate(anIdentifiable);
-            return dao.create(anIdentifiable);
-        }else
-            return typedBusiness.create(anIdentifiable);
-	    */
-	    
-	    /*
-	    if(anIdentifiable instanceof DataTreeType){
-            return dataTreeTypeBusiness.create((DataTreeType) anIdentifiable);
-	    }else if(anIdentifiable instanceof AbstractDataTree){
-	        AbstractDataTree<DataTreeType> dataTree =(AbstractDataTree<DataTreeType>) anIdentifiable;
-            //return typedBusinessBean(dataTree).create(dataTree);
-	        return BusinessLocator.getInstance().locate((Class<AbstractIdentifiable>) anIdentifiable.getClass()).create(dataTree);
-	    }else if(anIdentifiable instanceof Event)
-	        return eventBusiness.create((Event) anIdentifiable);
-	    else{
-	        TypedBusiness<AbstractIdentifiable> typedBusiness = BusinessLocator.getInstance().locate((Class<AbstractIdentifiable>) anIdentifiable.getClass());
-	        if(typedBusiness==null){
-	            validationPolicy.validateCreate(anIdentifiable);
-	            return genericDao.create(anIdentifiable);
-	        }else
-	            return typedBusiness.create(anIdentifiable);
-	    }
-	    */
-	    
+	public AbstractIdentifiable create(AbstractIdentifiable anIdentifiable) {	    
 	    TypedBusiness<AbstractIdentifiable> businessBean = businessInterfaceLocator.injectTypedByObject(anIdentifiable);
 	    if(businessBean==null){
-	        validationPolicy.validateCreate(anIdentifiable);
+	    	inject(ValidationPolicy.class).validateCreate(anIdentifiable);
 	        return genericDao.create(anIdentifiable);
         }else{
         	return businessBean.create(anIdentifiable); 
@@ -91,7 +53,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public AbstractIdentifiable update(AbstractIdentifiable anObject) {
 	    TypedBusiness<AbstractIdentifiable> businessBean = businessInterfaceLocator.injectTypedByObject(anObject);
 	    if(businessBean==null){
-        	validationPolicy.validateUpdate(anObject);
+	    	inject(ValidationPolicy.class).validateUpdate(anObject);
             return genericDao.update(anObject);
         }else
             return businessBean.update(anObject);   
@@ -107,7 +69,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public AbstractIdentifiable delete(AbstractIdentifiable anObject) {
 	    TypedBusiness<AbstractIdentifiable> businessBean = businessInterfaceLocator.injectTypedByObject(anObject);
         if(businessBean==null){
-            validationPolicy.validateDelete(anObject);
+        	inject(ValidationPolicy.class).validateDelete(anObject);
             return genericDao.delete(anObject);
         }else
             return businessBean.delete(anObject);   
