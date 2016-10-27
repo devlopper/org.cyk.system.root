@@ -49,6 +49,7 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
     
     FindTextResult findAnnotationText(Field field,Text text);
     
+    FindTextResult findFieldLabelText(Object object,Field field);
     FindTextResult findFieldLabelText(Field field);
     
     String findClassLabelText(FindClassLabelTextParameters parameters);

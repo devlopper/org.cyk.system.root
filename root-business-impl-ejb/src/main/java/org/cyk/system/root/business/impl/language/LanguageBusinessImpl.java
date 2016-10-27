@@ -40,6 +40,7 @@ import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -394,6 +395,24 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		return findTextResult;
 	}
     
+    @Override
+    public FindTextResult findFieldLabelText(final Object object, final Field field) {
+    	ListenerUtils.getInstance().execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.beforeFindFieldLabelText(object, field);
+			}
+		});
+    	final FindTextResult findTextResult = findFieldLabelText(field);
+    	ListenerUtils.getInstance().execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.afterFindFieldLabelText(object, field,findTextResult);
+			}
+		});
+    	return findTextResult;
+    }
+    
     public static String buildEntityLabelIdentifier(Class<?> aClass){
     	return "model.entity."+StringUtils.uncapitalize(aClass.getSimpleName());
     }
@@ -593,4 +612,50 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		return languages;
 	}
 	
+	/**/
+	
+	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Language> {
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		/**/
+		
+		void beforeFindFieldLabelText(Object object, Field field);
+		FindTextResult afterFindFieldLabelText(Object object, Field field,FindTextResult findTextResult);
+		
+		public static class Adapter extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter.Default<Language> implements Listener,Serializable{
+			private static final long serialVersionUID = 1L;
+			
+			/**/
+			@Override
+			public void beforeFindFieldLabelText(Object object, Field field) {}
+			@Override
+			public FindTextResult afterFindFieldLabelText(Object object,Field field, FindTextResult findTextResult) {
+				return null;
+			}
+			
+			public static class Default extends Listener.Adapter implements Serializable{
+				private static final long serialVersionUID = 1L;
+				
+				/**/
+				
+				@Override
+				public void beforeFindFieldLabelText(Object object, Field field) {
+					super.beforeFindFieldLabelText(object, field);
+				}
+				
+				@Override
+				public FindTextResult afterFindFieldLabelText(Object object,Field field, FindTextResult findTextResult) {
+					return inject(LanguageBusiness.class).findFieldLabelText(field);
+				}
+				
+				public static class EnterpriseResourcePlanning extends Listener.Adapter.Default implements Serializable{
+					private static final long serialVersionUID = 1L;
+					
+					/**/
+					
+				}
+			}
+		}
+	}
 }
