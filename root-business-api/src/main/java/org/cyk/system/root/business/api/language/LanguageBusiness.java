@@ -165,7 +165,7 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 	Collection<Language> instanciateMany(List<String[]> list);
 
 	@Getter @Setter @NoArgsConstructor @AllArgsConstructor
-    class FindTextResult{
+    public static class FindTextResult{
     	private String identifier;
     	private String value;
     }
