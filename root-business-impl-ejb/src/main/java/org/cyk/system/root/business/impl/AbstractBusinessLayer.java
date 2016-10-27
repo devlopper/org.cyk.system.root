@@ -156,6 +156,10 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	
     }
     
+    public void enableEnterpriseResourcePlanning(){
+		
+	}
+    
     protected abstract void setConstants();
     protected abstract void fakeTransactions();
     

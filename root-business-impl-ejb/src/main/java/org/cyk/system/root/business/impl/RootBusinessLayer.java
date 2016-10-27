@@ -325,6 +325,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		};
     }
     
+    
+    
     public GenericBusiness getGenericBusiness(){
     	return inject(GenericBusiness.class);
     }
