@@ -396,6 +396,24 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	}
     
     @Override
+    public FindTextResult findFieldLabelText(final Class<?> aClass, final Field field) {
+    	ListenerUtils.getInstance().execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.beforeFindFieldLabelText(aClass, field);
+			}
+		});
+    	final FindTextResult findTextResult = findFieldLabelText(field);
+    	ListenerUtils.getInstance().execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.afterFindFieldLabelText(aClass, field,findTextResult);
+			}
+		});
+    	return findTextResult;
+    }
+    
+    @Override
     public FindTextResult findFieldLabelText(final Object object, final Field field) {
     	ListenerUtils.getInstance().execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
 			@Override
@@ -623,6 +641,9 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		void beforeFindFieldLabelText(Object object, Field field);
 		FindTextResult afterFindFieldLabelText(Object object, Field field,FindTextResult findTextResult);
 		
+		void beforeFindFieldLabelText(Class<?> aClass, Field field);
+		FindTextResult afterFindFieldLabelText(Class<?> aClass, Field field,FindTextResult findTextResult);
+		
 		public static class Adapter extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter.Default<Language> implements Listener,Serializable{
 			private static final long serialVersionUID = 1L;
 			
@@ -631,6 +652,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			public void beforeFindFieldLabelText(Object object, Field field) {}
 			@Override
 			public FindTextResult afterFindFieldLabelText(Object object,Field field, FindTextResult findTextResult) {
+				return null;
+			}
+			
+			@Override
+			public void beforeFindFieldLabelText(Class<?> aClass, Field field) {}
+			@Override
+			public FindTextResult afterFindFieldLabelText(Class<?> aClass,Field field, FindTextResult findTextResult) {
 				return null;
 			}
 			
