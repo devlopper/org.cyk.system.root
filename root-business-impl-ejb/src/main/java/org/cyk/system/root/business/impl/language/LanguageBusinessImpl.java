@@ -421,7 +421,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 				listener.beforeFindFieldLabelText(object, field);
 			}
 		});
-    	final FindTextResult findTextResult = findFieldLabelText(field);
+    	final FindTextResult findTextResult = object == null ? findFieldLabelText(field) : findFieldLabelText(object.getClass(),field);
     	ListenerUtils.getInstance().execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
 			@Override
 			public void execute(Listener listener) {
