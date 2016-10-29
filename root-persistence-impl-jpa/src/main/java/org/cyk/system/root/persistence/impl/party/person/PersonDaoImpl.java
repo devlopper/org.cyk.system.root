@@ -14,7 +14,8 @@ public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,SearchCriteria> i
 	private static final long serialVersionUID = 6306356272165070761L;
 	
 	private static final String READ_BY_CRITERIA_FORMAT = "SELECT person FROM Person person WHERE "
-    		+ "    ( LOCATE(LOWER(:name),LOWER(person.globalIdentifier.name))                > 0 )"
+			+ "    ( LOCATE(LOWER(:name),LOWER(person.globalIdentifier.code))                > 0 )"
+			+ " OR ( LOCATE(LOWER(:name),LOWER(person.globalIdentifier.name))                > 0 )"
     		+ " OR ( LOCATE(LOWER(:name),LOWER(person.lastnames))            > 0 )"
     		;
 	
