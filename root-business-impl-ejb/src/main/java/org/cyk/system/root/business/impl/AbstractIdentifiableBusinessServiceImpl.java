@@ -24,6 +24,7 @@ import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
@@ -31,6 +32,7 @@ import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -50,6 +52,11 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	private static final long serialVersionUID = 6437552355933877400L;
 	
 	public static final Map<String,Collection<Class<? extends AbstractIdentifiable>>> AUTO_SET_PROPERTY_VALUE_CLASSES = new HashMap<>();
+	
+	//How to resolve circular dependency AbstractBusinessService -> ValidationPolicy -> LanguageBusiness which inherits of AbstractBusinessService
+	//Singleton has been use to solve previous issue
+	@Inject protected ValidationPolicy validationPolicy;	
+	//@Getter private DataReadConfig dataReadConfig = new DataReadConfig();
 	
 	@Inject protected GenericDao genericDao;
 	protected Class<IDENTIFIABLE>  clazz;
@@ -164,7 +171,15 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public Long oneLong() {
 		return getPersistenceService().oneLong();
 	}
-	
+
+	@Override
+	public Collection<IDENTIFIABLE> findByString(StringSearchCriteria string) {
+		GlobalIdentifier.SearchCriteria searchCriteria = new GlobalIdentifier.SearchCriteria();
+		searchCriteria.setCode(new StringSearchCriteria(string));
+		searchCriteria.setName(new StringSearchCriteria(string));
+		return (List<IDENTIFIABLE>) inject(BusinessInterfaceLocator.class).injectTyped(((Class<AbstractIdentifiable>)clazz)).findByGlobalIdentifierSearchCriteria(searchCriteria);
+	}
+
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Long findOneIdentifierRandomly() {
 		return getPersistenceService().readOneIdentifierRandomly();
@@ -771,30 +786,26 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				public void afterUpdate(IDENTIFIABLE identifiable) {
 					super.afterUpdate(identifiable);
 					//Update related reports
-					Collection<String> cascadeToReportTemplateCodes = getCascadeToReportTemplateCodes();
-					if(cascadeToReportTemplateCodes==null){
-						
-					}else{
-						for(String reportTemplateCode : cascadeToReportTemplateCodes){
-							FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
-							searchCriteria.addIdentifiableGlobalIdentifier(identifiable);
-							searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(reportTemplateCode));
-							Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
-							if(fileIdentifiableGlobalIdentifiers.isEmpty()){
-								
-							}else{
-								@SuppressWarnings("unchecked")
-								Class<AbstractIdentifiable> clazz = (Class<AbstractIdentifiable>) identifiable.getClass();
-								TypedBusiness<AbstractIdentifiable> business = inject(BusinessInterfaceLocator.class).injectTyped(clazz);							
-								for(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier : fileIdentifiableGlobalIdentifiers){
-									CreateReportFileArguments<AbstractIdentifiable> arguments = new CreateReportFileArguments<AbstractIdentifiable>(reportTemplateCode,identifiable,fileIdentifiableGlobalIdentifier.getFile());
-									business.createReportFile(identifiable, arguments);
-								}
+					for(String reportTemplateCode : getCascadeToReportTemplateCodes()){
+						FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
+						searchCriteria.addIdentifiableGlobalIdentifier(identifiable);
+						searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(reportTemplateCode));
+						Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
+						if(fileIdentifiableGlobalIdentifiers.isEmpty()){
+							
+						}else{
+							@SuppressWarnings("unchecked")
+							Class<AbstractIdentifiable> clazz = (Class<AbstractIdentifiable>) identifiable.getClass();
+							TypedBusiness<AbstractIdentifiable> business = inject(BusinessInterfaceLocator.class).injectTyped(clazz);							
+							for(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier : fileIdentifiableGlobalIdentifiers){
+								CreateReportFileArguments<AbstractIdentifiable> arguments = new CreateReportFileArguments<AbstractIdentifiable>(reportTemplateCode,identifiable,fileIdentifiableGlobalIdentifier.getFile());
+								business.createReportFile(identifiable, arguments);
 							}
 						}
 					}
 				}
 			}
+			
 		}
 		
 		/**/
