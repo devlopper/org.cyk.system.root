@@ -74,7 +74,7 @@ public class Person extends Party implements Serializable{
 
 		private static final long serialVersionUID = 6796076474234170332L;
 
-		protected StringSearchCriteria lastnameSearchCriteria = new StringSearchCriteria();
+		protected StringSearchCriteria lastnames = new StringSearchCriteria();
 		
 		public SearchCriteria(){
 			this(null);
@@ -82,7 +82,7 @@ public class Person extends Party implements Serializable{
 		
 		public SearchCriteria(String name) {
 			super(name);
-			setStringSearchCriteria(lastnameSearchCriteria, name);
+			setStringSearchCriteria(lastnames, name);
 			
 		}
 		
