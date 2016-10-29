@@ -7,6 +7,7 @@ import java.util.List;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.ObjectFieldValues;
@@ -73,6 +74,8 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     IDENTIFIABLE findOneRandomly();
                     Collection<IDENTIFIABLE> findManyRandomly(Integer count);
                     Collection<IDENTIFIABLE> findByIdentifiers(Collection<IDENTIFIER> identifiers);
+                    
+                    Collection<IDENTIFIABLE> findByString(StringSearchCriteria string);
                     
                     /**/
                     
