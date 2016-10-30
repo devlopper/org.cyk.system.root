@@ -173,11 +173,18 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 
 	@Override
-	public Collection<IDENTIFIABLE> findByString(StringSearchCriteria string) {
+	public Collection<IDENTIFIABLE> findByString(String string) {
+		StringSearchCriteria stringSearchCriteria = new StringSearchCriteria(string, StringSearchCriteria.LocationType.INSIDE);
+		return findByString(stringSearchCriteria);
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> findByString(StringSearchCriteria stringSearchCriteria) {
 		GlobalIdentifier.SearchCriteria searchCriteria = new GlobalIdentifier.SearchCriteria();
-		searchCriteria.setCode(new StringSearchCriteria(string));
-		searchCriteria.setName(new StringSearchCriteria(string));
-		return (List<IDENTIFIABLE>) inject(BusinessInterfaceLocator.class).injectTyped(((Class<AbstractIdentifiable>)clazz)).findByGlobalIdentifierSearchCriteria(searchCriteria);
+		searchCriteria.setCode(new StringSearchCriteria(stringSearchCriteria));
+		searchCriteria.setName(new StringSearchCriteria(stringSearchCriteria));
+		//return (List<IDENTIFIABLE>) inject(BusinessInterfaceLocator.class).injectTyped(((Class<AbstractIdentifiable>)clazz)).findByGlobalIdentifierSearchCriteria(searchCriteria);
+		return findByGlobalIdentifierSearchCriteria(searchCriteria);
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

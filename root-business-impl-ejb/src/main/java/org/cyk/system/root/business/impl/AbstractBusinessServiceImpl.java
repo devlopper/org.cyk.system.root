@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.BusinessService;
+import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
@@ -23,6 +24,10 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 	
 	protected ExceptionUtils exceptionUtils(){
 	    return ExceptionUtils.getInstance();
+	}
+	
+	protected <IDENTIFIABLE extends AbstractIdentifiable> TypedBusiness<IDENTIFIABLE> injectBusinessInterface(Class<IDENTIFIABLE> aClass){
+		return inject(BusinessInterfaceLocator.class).injectTyped(aClass);
 	}
 	
 	protected Date universalTimeCoordinated(){

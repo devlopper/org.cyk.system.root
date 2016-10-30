@@ -16,6 +16,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
 
 public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractDataTreeNode,DAO extends AbstractDataTreeNodeDao<NODE>>  
@@ -92,6 +93,13 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		return dao.readByParent(parent);
 	}
 	
+	@Override
+	public Collection<NODE> findByString(StringSearchCriteria stringSearchCriteria) {
+		Collection<NODE> nodes = super.findByString(stringSearchCriteria);
+		setParents(nodes);
+		return nodes;
+	}
+
 	@Override
 	public void move(NODE enumeration, NODE parent) {
 		NestedSetNode node = enumeration.getNode();

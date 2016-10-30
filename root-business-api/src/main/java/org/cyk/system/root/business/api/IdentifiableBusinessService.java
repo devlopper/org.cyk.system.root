@@ -75,7 +75,8 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     Collection<IDENTIFIABLE> findManyRandomly(Integer count);
                     Collection<IDENTIFIABLE> findByIdentifiers(Collection<IDENTIFIER> identifiers);
                     
-                    Collection<IDENTIFIABLE> findByString(StringSearchCriteria string);
+                    Collection<IDENTIFIABLE> findByString(String string);
+                    Collection<IDENTIFIABLE> findByString(StringSearchCriteria stringSearchCriteria);
                     
                     /**/
                     
