@@ -5,8 +5,8 @@
 
 	<parent>
 		<groupId>org.cyk.system.root</groupId>
-		<artifactId>pom</artifactId>
 		<version>0.0.1</version>
+		<artifactId>root-_pom</artifactId>
 	</parent>
 
 	<name>Business Service Implementation based on EJB</name>

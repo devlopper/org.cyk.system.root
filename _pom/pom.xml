@@ -10,7 +10,7 @@
 	</parent> 
 
 	<groupId>org.cyk.system.root</groupId>
-	<artifactId>pom</artifactId>
+	<artifactId>root-_pom</artifactId>
 	<version>0.0.1</version>
 	<packaging>pom</packaging>
  
@@ -26,7 +26,7 @@
 		<module>../root-ui-web-primefaces-api</module>
 		<module>../root-ui-web-primefaces</module>
 		<module>../root-application-resources</module>
-		<module>../application</module>
+		<module>../root-application</module>
 	</modules> 
 
 	<properties>
