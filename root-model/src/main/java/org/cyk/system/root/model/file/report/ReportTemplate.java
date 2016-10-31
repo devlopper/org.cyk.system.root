@@ -11,8 +11,11 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.file.File;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Getter @Setter @NoArgsConstructor @Entity
+@Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class ReportTemplate extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = -6245201590820068337L;
