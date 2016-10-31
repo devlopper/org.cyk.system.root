@@ -19,7 +19,7 @@
 
         <dependency>
             <groupId>org.cyk.ui.web</groupId>
-            <artifactId>web-primefaces-api</artifactId>
+            <artifactId>ui-web-primefaces-api</artifactId>
             <version>0.0.1</version>
         </dependency>
         
