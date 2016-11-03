@@ -8,12 +8,15 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity @Getter @Setter @NoArgsConstructor
+@Entity @Getter @Setter @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE)
 public class MovementAction extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = -8646753247708396439L;
@@ -26,9 +29,9 @@ public class MovementAction extends AbstractEnumeration implements Serializable 
 	public MovementAction(String code, String name) {
 		super(code, name, null, null);
 	}
-	public static final String FIELD_MINIMUM_VALUE = "minimumValue";
-	public static final String FIELD_MAXIMUM_VALUE = "maximumValue";
-
+	
+	public static final String FIELD_INTERVAL = "interval";
+	
 	@Override
 	public String getLogMessage() {
 		return String.format(LOG_FORMAT, getCode(),interval.getLogMessage());

@@ -571,8 +571,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	
 	public String getRelativeCode(AbstractCollection<?> collection,String code){
 		logTrace("Get relative code. {} , code={}", collection.getLogMessage(),code);
-		return StringUtils.isBlank(collection.getItemCodeSeparator()) ? code 
-				: StringUtils.split(code,collection.getItemCodeSeparator())[1];
+		return AbstractCollectionItemBusinessImpl.getRelativeCode(collection, code);
 	}
 	
 	/**/

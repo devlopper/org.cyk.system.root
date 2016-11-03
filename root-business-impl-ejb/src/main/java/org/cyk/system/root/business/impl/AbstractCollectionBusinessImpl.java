@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.AbstractCollectionBusiness;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.model.AbstractCollection;
@@ -66,9 +65,6 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		if(collection.getCollection()!=null){
 			for(ITEM item : collection.getCollection()){
 				item.setCollection(collection);
-				if(StringUtils.isNotBlank(collection.getCode()) && StringUtils.isNotBlank(collection.getItemCodeSeparator()) 
-						&& !StringUtils.contains(item.getCode(), collection.getItemCodeSeparator()))
-					item.setCode(collection.getCode()+collection.getItemCodeSeparator()+item.getCode());
 				item = createItem(item);
 			}
 		}

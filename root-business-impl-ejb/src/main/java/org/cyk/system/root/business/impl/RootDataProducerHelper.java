@@ -141,10 +141,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	public <T extends AbstractCollectionItem<COLLECTION>,COLLECTION extends AbstractCollection<T>> T updateCollectionItem(Class<T> aClass,Class<COLLECTION> collectionClass,String collectionCode,String code,String name){
 		AbstractCollection<T> collection = getEnumeration(collectionClass, collectionCode);
-		if(StringUtils.isBlank(collection.getItemCodeSeparator()))
-			;
-		else
-			code = collectionCode+ collection.getItemCodeSeparator()+ code;
+		code = AbstractCollectionItemBusinessImpl.buildCode(collection, code);
 		return updateEnumeration(aClass, code, name);
 	}
 	

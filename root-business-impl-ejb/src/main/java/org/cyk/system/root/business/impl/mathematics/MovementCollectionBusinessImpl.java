@@ -64,12 +64,13 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public BigDecimal computeValue(MovementCollection movementCollection, MovementAction movementAction,BigDecimal increment) {
+		BigDecimal temp = increment;
 		increment = increment.abs();
-		if(movementCollection.getIncrementAction().equals(movementAction))
+		if(movementCollection.getIncrementAction()!=null && movementCollection.getIncrementAction().equals(movementAction))
 			return movementCollection.getValue().add(increment);
-		else if(movementCollection.getDecrementAction().equals(movementAction))
+		else if(movementCollection.getDecrementAction()!=null && movementCollection.getDecrementAction().equals(movementAction))
 			return movementCollection.getValue().subtract(increment);
-		return null;
+		return movementCollection.getValue().add(temp);
 	}
 
 }

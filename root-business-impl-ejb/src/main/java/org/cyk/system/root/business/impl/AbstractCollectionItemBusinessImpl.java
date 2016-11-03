@@ -6,13 +6,11 @@ import java.util.Collection;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
-import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 
 public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,COLLECTION extends AbstractCollection<ITEM>> extends AbstractEnumerationBusinessImpl<ITEM, DAO> implements AbstractCollectionItemBusiness<ITEM,COLLECTION>,Serializable {
@@ -24,12 +22,14 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	}   
 	
 	@Override
-	protected Object[] getPropertyValueTokens(ITEM item, String name) {
-		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE}, name))
-			return new Object[]{item.getCollection(),StringUtils.defaultIfBlank(item.getCode(), RandomStringUtils.randomAlphanumeric(5))};
-		return super.getPropertyValueTokens(item, name);
+	protected void setAutoSettedProperties(ITEM item) {
+		super.setAutoSettedProperties(item);
+		item.setCode(StringUtils.defaultIfBlank(item.getCode(), RandomStringUtils.randomAlphanumeric(5)));
+		if(StringUtils.isNotBlank(item.getCollection().getCode()) && StringUtils.isNotBlank(item.getCollection().getItemCodeSeparator()) 
+				&& !StringUtils.contains(item.getCode(), item.getCollection().getItemCodeSeparator()))
+			item.setCode(item.getCollection().getCode()+item.getCollection().getItemCodeSeparator()+item.getCode());
 	}
-	
+
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<ITEM> findByCollection(COLLECTION collection) {
 		return dao.readByCollection(collection);
@@ -59,5 +59,18 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		item.setCollection(collection);
 		collection.add(item);
 		return item;
+	}
+	
+	/**/
+	
+	public static String getRelativeCode(AbstractCollection<?> collection,String code){
+		return StringUtils.isBlank(collection.getItemCodeSeparator()) ? code : StringUtils.split(code,collection.getItemCodeSeparator())[1];
+	}
+	
+	public static String buildCode(AbstractCollection<?> collection,String code){
+		if(StringUtils.isBlank(collection.getItemCodeSeparator()))
+			return code;
+		else
+			return collection.getCode()+collection.getItemCodeSeparator()+ code;
 	}
 }
