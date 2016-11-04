@@ -10,16 +10,20 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class MovementCollectionDetails extends AbstractCollectionDetails<MovementCollection> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String value,increment,decrement;
+	@Input @InputText private String value,interval,incrementAction,decrementAction,supportDocumentIdentifier;
 	
 	public MovementCollectionDetails(MovementCollection movementCollection) {
 		super(movementCollection);
 		value = formatNumber(movementCollection.getValue());
-		increment = formatUsingBusiness(movementCollection.getIncrementAction());
-		decrement = formatUsingBusiness(movementCollection.getDecrementAction());
+		interval = formatUsingBusiness(movementCollection.getInterval());
+		incrementAction = formatUsingBusiness(movementCollection.getIncrementAction());
+		decrementAction = formatUsingBusiness(movementCollection.getDecrementAction());
+		supportDocumentIdentifier = formatResponse(movementCollection.getSupportDocumentIdentifier());
 	}
 	
 	public static final String FIELD_VALUE = "value";
-	public static final String FIELD_INCREMENT = "increment";
-	public static final String FIELD_DECREMENT = "decrement";
+	public static final String FIELD_INTERVAL = "interval";
+	public static final String FIELD_INCREMENT_ACTION = "incrementAction";
+	public static final String FIELD_DECREMENT_ACTION = "decrementAction";
+	public static final String FIELD_SUPPORT_DOCUMENT_IDENTIFIER = "supportDocumentIdentifier";
 }
