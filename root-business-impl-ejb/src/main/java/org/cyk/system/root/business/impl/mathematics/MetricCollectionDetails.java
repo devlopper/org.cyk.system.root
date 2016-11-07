@@ -7,7 +7,7 @@ import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
-public class MetricCollectionDetails extends AbstractCollectionDetails<MetricCollection> implements Serializable{
+public class MetricCollectionDetails extends AbstractCollectionDetails.Extends<MetricCollection> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
 	@Input @InputText private String valueIntervalCollection,valueType,valueInputted;

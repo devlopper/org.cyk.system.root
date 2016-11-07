@@ -7,7 +7,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
-public class IntervalCollectionDetails extends AbstractCollectionDetails<IntervalCollection> implements Serializable{
+public class IntervalCollectionDetails extends AbstractCollectionDetails.Extends<IntervalCollection> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
 	@Input @InputText private String lowestValue,highestValue,numberOfDecimalAfterDot;

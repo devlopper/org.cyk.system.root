@@ -7,7 +7,7 @@ import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
-public class MovementCollectionDetails extends AbstractCollectionDetails<MovementCollection> implements Serializable{
+public class MovementCollectionDetails extends AbstractCollectionDetails.Extends<MovementCollection> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
 	@Input @InputText private String value,interval,incrementAction,decrementAction,supportDocumentIdentifier;
