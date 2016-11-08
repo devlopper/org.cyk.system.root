@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -32,6 +33,24 @@ public class MovementActionBusinessImpl extends AbstractTypedBusinessService<Mov
 	public MovementAction create(MovementAction movementAction) {
 		inject(IntervalBusiness.class).create(movementAction.getInterval());
 		return super.create(movementAction);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public BigDecimal computeValue(String movementActionCode,BigDecimal value,BigDecimal increment) {
+		if(increment==null)
+			return value;
+		BigDecimal temp = increment;
+		increment = increment.abs();
+		if(MovementAction.INCREMENT.equals(movementActionCode))
+			return value.add(increment);
+		else if(MovementAction.DECREMENT.equals(movementActionCode))
+			return value.subtract(increment);
+		return value.add(temp);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public BigDecimal computeValue(MovementAction movementAction,BigDecimal value,BigDecimal increment) {
+		return computeValue(movementAction == null ? null : movementAction.getCode(), value, increment);
 	}
 	
 }
