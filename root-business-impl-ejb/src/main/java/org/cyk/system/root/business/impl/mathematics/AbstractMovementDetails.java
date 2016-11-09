@@ -31,20 +31,21 @@ public abstract class AbstractMovementDetails<ITEM extends AbstractIdentifiable,
 	
 	protected abstract Movement getMovement();
 	
+	/**/
 	
+	public static final String FIELD_ACTION = "action";
+	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";
 	
 	/**/
 	
-	public static abstract class AbstractDefault<ITEM extends AbstractCollectionItem<COLLECTION>,COLLECTION extends AbstractCollection<ITEM>> extends AbstractMovementDetails<ITEM, COLLECTION> implements Serializable {
+	public static abstract class Extends<ITEM extends AbstractCollectionItem<COLLECTION>,COLLECTION extends AbstractCollection<ITEM>> extends AbstractMovementDetails<ITEM, COLLECTION> implements Serializable {
 		private static final long serialVersionUID = 1L;
 
-		public AbstractDefault(ITEM item) {
+		public Extends(ITEM item) {
 			super(item);
 		}
 		
 	}
 	
-	public static final String FIELD_ACTION = "action";
-	public static final String FIELD_VALUE = "value";
-	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";
 }

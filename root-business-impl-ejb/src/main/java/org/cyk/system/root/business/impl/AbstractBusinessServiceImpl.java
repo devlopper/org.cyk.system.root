@@ -38,6 +38,7 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		return inject(StringGeneratorBusiness.class).generate(generatorIdentifier, input);
 	}
 	
+	@Deprecated
 	protected String generateIdentifier(AbstractIdentifiable identifiable,String runtimeGeneratorIdentifier,StringGenerator databaseGenerator){
 		return inject(StringGeneratorBusiness.class).generateIdentifier(identifiable, runtimeGeneratorIdentifier, databaseGenerator);
 	}

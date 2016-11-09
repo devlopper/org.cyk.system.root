@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportFile;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
@@ -96,7 +98,20 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return StringUtils.join(collection, Constant.CHARACTER_SPACE);
 	}
 	
+	protected Date generateExistencePeriodBirthDate(Object...tokens){
+		if(tokens == null || tokens.length == 0){
+			logWarning("No tokens for existence period date specified");
+			return null;
+		}else if(tokens.length > 1){
+			logWarning("Too much tokens for existence period date specified", StringUtils.join(tokens,Constant.CHARACTER_COMA.toString()));
+			return null;
+		}
+		return (Date)tokens[0];
+	}
+	
 	protected Object[] getPropertyValueTokens(IDENTIFIABLE identifiable,String name){
+		if(commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE).equals(name))
+			return new Object[]{universalTimeCoordinated()};
 		return null;
 	}
 
@@ -111,14 +126,20 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				identifiable.setCode(generateCode(tokens));
 			else if(GlobalIdentifier.FIELD_NAME.equals(name) && StringUtils.isBlank(identifiable.getName()))
 				identifiable.setName(generateName(tokens));
+			else if(commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE).equals(name) && (identifiable.getExistencePeriod()!=null 
+					|| identifiable.getGlobalIdentifierCreateIfNull().getExistencePeriod().getFromDate()==null))
+				identifiable.getGlobalIdentifierCreateIfNull().getExistencePeriod().setFromDate(generateExistencePeriodBirthDate(tokens));
 		}
 	}
 	
 	protected void setAutoSettedProperties(IDENTIFIABLE identifiable){
-		if(isAutoSetPropertyValueClass(GlobalIdentifier.FIELD_CODE, identifiable.getClass()))
-			setProperty(identifiable,GlobalIdentifier.FIELD_CODE);
-		if(isAutoSetPropertyValueClass(GlobalIdentifier.FIELD_NAME, identifiable.getClass()))
-			setProperty(identifiable,GlobalIdentifier.FIELD_NAME);
+		String property;
+		if(isAutoSetPropertyValueClass(property = GlobalIdentifier.FIELD_CODE, identifiable.getClass()))
+			setProperty(identifiable,property);
+		if(isAutoSetPropertyValueClass(property = GlobalIdentifier.FIELD_NAME, identifiable.getClass()))
+			setProperty(identifiable,property);
+		if(isAutoSetPropertyValueClass(property = commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE), identifiable.getClass()))
+			setProperty(identifiable,property);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -149,12 +170,16 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			list.get(index).setCode(codeList.get(index));
 		return list;
 	}
-
-	@Override
-	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
+	
+	protected void beforeCreate(IDENTIFIABLE identifiable){
 		setAutoSettedProperties(identifiable);
 	    inject(ValidationPolicy.class).validateCreate(identifiable);
 	    beforeCreate(getListeners(), identifiable);
+	}
+
+	@Override
+	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
+		beforeCreate(identifiable);
         identifiable = dao.create(identifiable);
         afterCreate(getListeners(), identifiable);
         return identifiable;

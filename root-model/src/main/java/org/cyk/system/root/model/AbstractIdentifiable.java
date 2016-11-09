@@ -219,6 +219,25 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/**/
 	
+	public void set(AbstractIdentifiable component,String...fieldNames){
+		for(String fieldName : fieldNames){
+			if(GlobalIdentifier.FIELD_CODE.equals(fieldName)){
+				if(StringUtils.isBlank(component.getCode()))
+					component.setCode(getCode());
+			}else if(GlobalIdentifier.FIELD_NAME.equals(fieldName)){
+				if(StringUtils.isBlank(component.getName()))
+					component.setName(getName());
+			}else if(GlobalIdentifier.FIELD_EXISTENCE_PERIOD.equals(fieldName)){
+				if(component.getExistencePeriod().getFromDate()==null)
+					component.getExistencePeriod().setFromDate(getExistencePeriod().getFromDate());
+				if(component.getExistencePeriod().getToDate()==null)
+					component.getExistencePeriod().setToDate(getExistencePeriod().getToDate());
+			}
+		}
+	}
+	
+	/**/
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PrePersist
 	private void onPrePersist() {

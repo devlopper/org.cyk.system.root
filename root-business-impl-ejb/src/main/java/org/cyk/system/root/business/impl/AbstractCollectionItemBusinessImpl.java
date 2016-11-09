@@ -25,7 +25,7 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	protected void setAutoSettedProperties(ITEM item) {
 		super.setAutoSettedProperties(item);
 		item.setCode(StringUtils.defaultIfBlank(item.getCode(), RandomStringUtils.randomAlphanumeric(5)));
-		if(StringUtils.isNotBlank(item.getCollection().getCode()) && StringUtils.isNotBlank(item.getCollection().getItemCodeSeparator()) 
+		if(item.getCollection()!=null && StringUtils.isNotBlank(item.getCollection().getCode()) && StringUtils.isNotBlank(item.getCollection().getItemCodeSeparator()) 
 				&& !StringUtils.contains(item.getCode(), item.getCollection().getItemCodeSeparator()))
 			item.setCode(item.getCollection().getCode()+item.getCollection().getItemCodeSeparator()+item.getCode());
 	}

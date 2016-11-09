@@ -66,5 +66,10 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	public BigDecimal computeValue(MovementCollection movementCollection, MovementAction movementAction,BigDecimal increment) {
 		return inject(MovementActionBusiness.class).computeValue(movementAction, movementCollection.getValue(), increment);
 	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public MovementCollection instanciateOneRandomly(String code) {
+		return instanciateOne(code, MovementAction.INCREMENT,MovementAction.DECREMENT);
+	}
 
 }

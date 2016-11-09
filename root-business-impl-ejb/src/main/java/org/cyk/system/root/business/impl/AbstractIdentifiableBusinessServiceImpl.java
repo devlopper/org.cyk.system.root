@@ -364,7 +364,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public Long countByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
 		return getPersistenceService().countByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);
 	}
-	
+
 	/**/
 
 	protected void logInstanciate(){
