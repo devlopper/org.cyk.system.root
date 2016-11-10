@@ -42,6 +42,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	
 	@Override
 	public Movement create(Movement movement) {
+		exceptionUtils().exception(movement.getValue()==null, "exception.value.mustnotbenull");
 		exceptionUtils().exception(BigDecimal.ZERO.equals(movement.getValue()), "exception.value.mustnotbezero");
 		if(StringUtils.isBlank(movement.getSupportingDocumentIdentifier()))
 			movement.setSupportingDocumentIdentifier(null);

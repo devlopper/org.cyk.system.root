@@ -459,8 +459,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	/* Assertions */
 	
-	private void assertMovementCollection(MovementCollection movementCollection,String expectedValue){
-    	movementCollection = (MovementCollection) genericBusiness.use(MovementCollection.class).find(movementCollection.getIdentifier());
+	public void assertMovementCollection(MovementCollection movementCollection,String expectedValue){
+    	movementCollection = inject(MovementCollectionBusiness.class).find(movementCollection.getIdentifier());
     	assertEquals("Value",new BigDecimal(expectedValue), movementCollection.getValue());
     }
 	
