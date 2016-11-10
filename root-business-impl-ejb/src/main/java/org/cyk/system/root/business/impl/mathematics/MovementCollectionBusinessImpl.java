@@ -48,6 +48,9 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+computeCode(incrementActionName), incrementActionName));
 		movementCollection.setDecrementAction(inject(MovementActionBusiness.class)
 				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+computeCode(decrementActionName), decrementActionName));
+		movementCollection.getDecrementAction().getInterval().getHigh().setValue(new BigDecimal("-0.001"));
+		movementCollection.getDecrementAction().getInterval().getLow().setValue(null);
+		movementCollection.getDecrementAction().getInterval().getLow().setExcluded(Boolean.TRUE);
 		return movementCollection;
 	}
 	

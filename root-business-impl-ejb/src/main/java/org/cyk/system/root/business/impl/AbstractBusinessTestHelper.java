@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -80,6 +81,21 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	@Inject protected MetricCollectionBusiness metricCollectionBusiness;
 	@Inject protected FiniteStateMachineStateDao finiteStateMachineStateDao;
 	@Inject protected FiniteStateMachineAlphabetDao finiteStateMachineAlphabetDao;
+	
+	@SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> T create(T identifiable){
+		return (T) inject(GenericBusiness.class).create(identifiable);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> T update(T identifiable){
+		return (T) inject(GenericBusiness.class).update(identifiable);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> T delete(T identifiable){
+		return (T) inject(GenericBusiness.class).delete(identifiable);
+	}
 	
 	public <T extends AbstractIdentifiable> void reportBasedOnTemplateFile(Class<T> aClass,Collection<T> collection,Map<String, String[]> map,String reportIdentifier){
         AbstractReportConfiguration<T, ReportBasedOnTemplateFile<T>> c = reportBusiness.findConfiguration(reportIdentifier);
@@ -350,13 +366,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		movementAction.setInterval(new Interval());
 		set(movementAction.getInterval(),code, name, low,high);
 	}
-	
-	public void set(Movement movement,String movementCollectionCode,String value){
-		movement.setCollection(inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode));
-		movement.setValue(value==null?null : new BigDecimal(value));
-		movement.setAction(movement.getValue() == null ? null : movement.getValue().signum() == 1 ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction());
-	}
-	
+		
 	public void set(FiniteStateMachine machine,String code){
 		setEnumeration(machine, code);
 	}
@@ -373,16 +383,16 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	/* Businesses */
 	
 	public Movement createMovement(String movementCollectionCode,String value,String expectedValue,String expectedThrowableMessage){
-    	final Movement movement = new Movement();
-    	set(movement,movementCollectionCode, value);
-    	
+		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);
+    	final Movement movement = inject(MovementBusiness.class).instanciateOne(movementCollection
+    			,StringUtils.startsWith(value, Constant.CHARACTER_MINUS.toString()) ? movementCollection.getDecrementAction():movementCollection.getIncrementAction(), value);
     	if(expectedThrowableMessage!=null){
     		new Try(expectedThrowableMessage){ 
     			private static final long serialVersionUID = -8176804174113453706L;
-    			@Override protected void code() {inject(MovementBusiness.class).create(movement);}
+    			@Override protected void code() {create(movement);}
     		}.execute();
     	}else{
-    		inject(MovementBusiness.class).create(movement);
+    		create(movement);
     		assertMovementCollection(movement.getCollection(), expectedValue);
     	}
     	return movement;
@@ -392,22 +402,38 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	public Movement updateMovement(Movement movement,String value,String expectedValue,String expectedThrowableMessage){
-		movement.setValue(new BigDecimal(value));
+		movement.setValue(commonUtils.getBigDecimal(value));
 		final Movement pMovement = movement;
     	
     	if(expectedThrowableMessage!=null){
     		new Try(expectedThrowableMessage){ 
     			private static final long serialVersionUID = -8176804174113453706L;
-    			@Override protected void code() {inject(MovementBusiness.class).update(pMovement);}
+    			@Override protected void code() {update(pMovement);}
     		}.execute();
     	}else{
-    		inject(MovementBusiness.class).update(pMovement);
+    		update(pMovement);
     		assertMovementCollection(pMovement.getCollection(), expectedValue);
     	}
     	return pMovement;
     }
 	public Movement updateMovement(Movement movement,String value,String expectedValue){
 		return updateMovement(movement,value, expectedValue,null);
+	}
+	
+	public Movement deleteMovement(final Movement movement,String expectedValue,String expectedThrowableMessage){
+    	if(expectedThrowableMessage!=null){
+    		new Try(expectedThrowableMessage){ 
+    			private static final long serialVersionUID = -8176804174113453706L;
+    			@Override protected void code() {delete(movement);}
+    		}.execute();
+    	}else{
+    		delete(movement);
+    		assertMovementCollection(movement.getCollection(), expectedValue);
+    	}
+    	return movement;
+    }
+	public Movement deleteMovement(final Movement movement,String expectedValue){
+		return deleteMovement(movement, expectedValue,null);
 	}
 	
 	public void readFiniteStateMachine(String machineCode,String alphabetCode,String expectedStateCode){
@@ -448,25 +474,28 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	/* Exceptions */
 	
 	private void valueMustNotBeOffThanActionIntervalExtremity(String movementCollectionCode,Boolean incrementAction,Boolean lowExtemity){
-		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode);
+		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);
 		MovementAction action = Boolean.TRUE.equals(incrementAction) ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction();
 		BigDecimal value = Boolean.TRUE.equals(lowExtemity) ? action.getInterval().getLow().getValue() : action.getInterval().getHigh().getValue();
+		if(BigDecimal.ZERO.equals(value))
+			value = Boolean.TRUE.equals(lowExtemity) ? value.subtract(new BigDecimal("0.1")) : value.add(new BigDecimal("0.1"));
 		if(value==null)
 			return;
 		createMovement(movementCollectionCode,value.toString(), null,getThrowableMessage(movementCollectionCode, isIncrementAction(value.toString()),0));
 	}
-	public void incrementValueMustNotBeLessThanIntervalLow(String movementCollectionCode){
+	/*public void incrementValueMustNotBeLessThanIntervalLow(String movementCollectionCode){
 		valueMustNotBeOffThanActionIntervalExtremity(movementCollectionCode, Boolean.TRUE, Boolean.TRUE);
-	}
+	}*/
 	public void incrementValueMustNotBeGreaterThanIntervalHigh(String movementCollectionCode){
 		valueMustNotBeOffThanActionIntervalExtremity(movementCollectionCode, Boolean.TRUE, Boolean.FALSE);
 	}
 	public void decrementValueMustNotBeLessThanIntervalLow(String movementCollectionCode){
 		valueMustNotBeOffThanActionIntervalExtremity(movementCollectionCode, Boolean.FALSE, Boolean.TRUE);
 	}
+	/*
 	public void decrementValueMustNotBeGreaterThanIntervalHigh(String movementCollectionCode){
 		valueMustNotBeOffThanActionIntervalExtremity(movementCollectionCode, Boolean.FALSE, Boolean.FALSE);
-	}
+	}*/
 	
 	private void collectionValueMustNotBeOffThanIntervalExtremity(String movementCollectionCode,Boolean incrementAction){
 		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode);

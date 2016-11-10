@@ -7,10 +7,13 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -31,7 +34,15 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
+	protected Object[] getPropertyValueTokens(Movement movement, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_NAME}, name))
+			return new Object[]{movement.getCollection(),movement.getAction()};
+		return super.getPropertyValueTokens(movement, name);
+	}
+	
+	@Override
 	public Movement create(Movement movement) {
+		exceptionUtils().exception(BigDecimal.ZERO.equals(movement.getValue()), "exception.value.mustnotbezero");
 		if(StringUtils.isBlank(movement.getSupportingDocumentIdentifier()))
 			movement.setSupportingDocumentIdentifier(null);
 		exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier())!=null, "exception.supportingDocumentIdentifierAlreadyUsed");
@@ -39,7 +50,9 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		if(action!=null){
 			exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && movement.getValue().signum()==-1, "exception.value.mustbepositive");
 			exceptionUtils().exception(movement.getCollection().getDecrementAction().equals(action) && movement.getValue().signum()==1, "exception.value.mustbenegative");
-			exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(movement.getValue().abs())>0
+			//exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(movement.getValue().abs())>0
+			//		, action.getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
+			exceptionUtils().comparison( !inject(IntervalBusiness.class).contains(action.getInterval(), movement.getValue(), 2)
 					, action.getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
 		}
 		updateCollection(movement);
@@ -84,20 +97,11 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Movement instanciateOne(MovementCollection movementCollection, Boolean increment) {
-		Movement movement = instanciateOne();
-		movement.setCollection(movementCollection);
-		//movement.setCode(movementCollection.getCode()+"_"+System.currentTimeMillis()+"_"+RandomStringUtils.randomAlphabetic(10));
-		movement.setName(movementCollection.getName());
-		movement.setAction(increment==null || increment ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction());
-		return movement;
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Movement instanciateOne(MovementCollection movementCollection,String value) {
-		BigDecimal bigDecimal = new BigDecimal(value);
-		Movement movement = instanciateOne(movementCollection, bigDecimal.compareTo(BigDecimal.ZERO) >= 0);
-		movement.setValue(bigDecimal);
+	public Movement instanciateOne(MovementCollection movementCollection,MovementAction movementAction,String value) {
+		Movement movement = instanciateOne(movementCollection);
+		movement.setValue(commonUtils.getBigDecimal(value));
+		movement.setAction(movementAction);
+		//movement.setAction(bigDecimal==null || bigDecimal.signum() == 0 ? null : bigDecimal.signum() == 1 ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction());
 		return movement;
 	}
 	

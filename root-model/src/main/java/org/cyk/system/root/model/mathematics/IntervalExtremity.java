@@ -27,9 +27,13 @@ public class IntervalExtremity extends AbstractModelElement implements Serializa
 	//TODO add an attribute to keep final value
 	@Transient private Boolean isLow;
 	
-	public IntervalExtremity(BigDecimal value) {
+	public IntervalExtremity(BigDecimal value,Boolean excluded) {
 		super();
 		this.value = value;
+		this.excluded = excluded;
+	}
+	public IntervalExtremity(BigDecimal value) {
+		this(value,Boolean.FALSE);
 	}
 	
 	@Override

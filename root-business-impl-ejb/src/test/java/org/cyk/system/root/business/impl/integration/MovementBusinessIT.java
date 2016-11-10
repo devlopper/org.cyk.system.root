@@ -13,7 +13,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     private static final long serialVersionUID = -6691092648665798471L;
 
     private String movementUnlimitedIdentifier="MU",movementLimitedIdentifier="ML",movementOnlyUnlimitedIdentifier="MOL"
-    		,movementUpdatesUnlimitedIdentifier="MUPL";
+    		,movementUpdatesUnlimitedIdentifier="MUPL",movementLimitedIdentifier_Low_100_8_High_2_10_Total_0_150="ML10082100150";
     private Movement movement;
     
     @Override
@@ -32,6 +32,14 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	
     	movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementLimitedIdentifier, "IN", "OUT");
     	movementCollection.getInterval().setHigh(new IntervalExtremity(new BigDecimal("100")));
+    	create(movementCollection);
+    	
+    	movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementLimitedIdentifier_Low_100_8_High_2_10_Total_0_150, "IN", "OUT");
+    	movementCollection.getInterval().setHigh(new IntervalExtremity(new BigDecimal("150")));
+    	movementCollection.getDecrementAction().getInterval().getLow().setValue(new BigDecimal("-100"));
+    	movementCollection.getDecrementAction().getInterval().getHigh().setValue(new BigDecimal("-8"));
+    	movementCollection.getIncrementAction().getInterval().getLow().setValue(new BigDecimal("2"));
+    	movementCollection.getIncrementAction().getInterval().getHigh().setValue(new BigDecimal("10"));
     	create(movementCollection);
     }
     
@@ -56,6 +64,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "4", "40");
     	movement = rootBusinessTestHelper.updateMovement(movement, "-36", "0");
     	movement = rootBusinessTestHelper.updateMovement(movement, "1", "37");
+    	movement = rootBusinessTestHelper.deleteMovement(movement, "1", "36");
     }
     
     @Test
@@ -72,10 +81,11 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     
     /* Exceptions */
     
-    @Test
+    /*@Test
     public void incrementValueMustNotBeLessThanIntervalLow(){
     	rootBusinessTestHelper.incrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
-    }
+    }*/
+    
     @Test
     public void incrementValueMustNotBeGreaterThanIntervalHigh(){
     	rootBusinessTestHelper.incrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
@@ -84,10 +94,11 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void decrementValueMustNotBeLessThanIntervalLow(){
     	rootBusinessTestHelper.decrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
     }
+    /*
     @Test
     public void decrementValueMustNotBeGreaterThanIntervalHigh(){
     	rootBusinessTestHelper.decrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
-    }
+    }*/
     
     @Test
     public void collectionValueMustNotBeLessThanIntervalLow(){
