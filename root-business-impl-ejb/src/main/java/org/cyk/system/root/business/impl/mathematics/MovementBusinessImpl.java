@@ -2,6 +2,8 @@ package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -22,6 +24,7 @@ import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
+import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 
 public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Movement, MovementDao,MovementCollection> implements MovementBusiness,Serializable {
@@ -33,6 +36,11 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Inject
 	public MovementBusinessImpl(MovementDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected Collection<? extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<?>> getListeners() {
+		return Listener.COLLECTION;
 	}
 	
 	@Override
@@ -140,5 +148,55 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			movement.setCollection(new MovementCollection());
 			movement.getCollection().setCode(arguments.getValues()[arguments.getMovementCollectionCodeIndex()]);
 		}
+	}
+	
+	/**/
+	
+	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Movement>{
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		/**/
+		
+		public static class Adapter extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter<Movement> implements Listener, Serializable {
+			private static final long serialVersionUID = -1625238619828187690L;
+			
+			/**/
+			
+			public static class Default extends Listener.Adapter implements Serializable {
+				private static final long serialVersionUID = -1625238619828187690L;
+				
+				/**/
+				
+				public static class EnterpriseResourcePlanning extends Listener.Adapter.Default implements Serializable {
+					private static final long serialVersionUID = -1625238619828187690L;
+					
+					/**/
+					
+					
+				}
+			}
+		}
+		
+	}
+	
+	public static interface CrudListener {
+		
+		public static class Adapter extends BeanAdapter implements CrudListener, Serializable {
+			private static final long serialVersionUID = -1625238619828187690L;
+			/**/
+			
+		}
+		
+	}
+	
+	public static interface UpdateListener extends CrudListener {
+		
+		public static class Adapter extends CrudListener.Adapter implements UpdateListener, Serializable {
+			private static final long serialVersionUID = -1625238619828187690L;
+			/**/
+			
+		}
+		
 	}
 }
