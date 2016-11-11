@@ -65,6 +65,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	movement = rootBusinessTestHelper.updateMovement(movement, "-36", "0");
     	movement = rootBusinessTestHelper.updateMovement(movement, "1", "37");
     	movement = rootBusinessTestHelper.deleteMovement(movement, "1", "36");
+    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "-6", "30");
     }
     
     @Test
