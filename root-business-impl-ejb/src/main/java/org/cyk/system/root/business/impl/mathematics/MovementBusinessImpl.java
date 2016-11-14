@@ -107,7 +107,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		if(newValue!=null)
 			movementCollectionDao.update(movement.getCollection());
 		logMessageBuilder.addParameters("collection.newValue",newValue);
-		logTrace(logMessageBuilder.build());
+		logTrace(logMessageBuilder);
 	}
 	
 	@Override

@@ -15,9 +15,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
@@ -41,11 +38,15 @@ import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
+import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -527,6 +528,16 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@SuppressWarnings("unchecked")
 	public static void afterDelete(@SuppressWarnings("rawtypes") Collection listeners,final AbstractIdentifiable identifiable){
 		Listener.Adapter.afterDelete(listeners, identifiable);
+	}
+	
+	protected LogMessage.Builder createLogMessageBuilder(Object action){
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder(action,clazz);
+		return logMessageBuilder;
+	}
+	
+	protected void addLogMessageBuilderParameters(LogMessage.Builder logMessageBuilder,Object...objects){
+		if(logMessageBuilder!=null)
+			logMessageBuilder.addParameters(objects);
 	}
 	
 	/**/

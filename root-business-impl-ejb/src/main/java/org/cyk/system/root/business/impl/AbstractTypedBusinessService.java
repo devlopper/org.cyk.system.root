@@ -208,17 +208,25 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    for(IDENTIFIABLE identifiable : identifiables)
 	    	update(identifiable);
 	}
+	
+	protected void beforeDelete(IDENTIFIABLE identifiable){
+		inject(ValidationPolicy.class).validateDelete(identifiable);
+		beforeDelete(getListeners(), identifiable);
+	}
+	
+	protected void afterDelete(IDENTIFIABLE identifiable){
+		afterDelete(getListeners(), identifiable);
+	}
 
 	@Override
 	public IDENTIFIABLE delete(IDENTIFIABLE identifiable) {
-		inject(ValidationPolicy.class).validateDelete(identifiable);
-		beforeDelete(getListeners(), identifiable);
+		beforeDelete(identifiable);
 		if(identifiable.getGlobalIdentifier()!=null){
 			inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
 			identifiable.setGlobalIdentifier(null);
 		}		
-		identifiable = dao.delete(identifiable);
-		afterDelete(getListeners(), identifiable);
+		/*identifiable = */dao.delete(identifiable);
+		afterDelete(identifiable);
 		return identifiable;
 	}
 	
