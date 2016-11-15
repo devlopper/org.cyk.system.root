@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +30,11 @@ public class Notification implements Serializable  {
 	 * Message. Rich text
 	 */
 	private String message;
+	
+	private String mime="text/html";
+	
+	private Collection<Attachement> attachements;
+	
 	/**
 	 * Remote end point
 	 */
@@ -41,6 +47,12 @@ public class Notification implements Serializable  {
 	private Collection<UserAccount> userAccounts = new ArrayList<>();
 	
 	private Boolean all = Boolean.FALSE;
+	
+	public void addAttachement(Attachement attachement){
+		if(attachements==null)
+			attachements = new ArrayList<>();
+		attachements.add(attachement); 
+	}
 	
 	@Override
 	public String toString() {
@@ -64,6 +76,16 @@ public class Notification implements Serializable  {
 		public NotificationTemplate alarmTemplate;
 		
 		private RemoteEndPoint(){}
+		
+	}
+	
+	@Getter @Setter @AllArgsConstructor
+	public static class Attachement implements Serializable {
+		private static final long serialVersionUID = -97798334240584174L;
+		
+		private String name;
+		private byte[] bytes;
+		private String mime;
 		
 	}
 }

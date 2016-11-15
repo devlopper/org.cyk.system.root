@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
+import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.utility.common.Constant;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +22,8 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCrite
 	String findInitials(Person person);
 	
 	Person instanciateOne(String code,String[] names);
+	
+	PersonRelationship addRelationship(Person person,String relationshipTypeCode);
 	
 	/**/
 	

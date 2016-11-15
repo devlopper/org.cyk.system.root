@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.integration;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -112,10 +113,19 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	protected <T extends AbstractIdentifiable> T create(T object){
         return (T) genericBusiness.create(object);
     }
+    @SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> void create(Collection<T> objects){
+        genericBusiness.create((Collection<AbstractIdentifiable>) objects);
+    }
     
     @SuppressWarnings("unchecked")
 	protected <T extends AbstractIdentifiable> T update(T object){
         return (T) genericBusiness.update(object);
+    }
+    
+    @SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> T delete(T object){
+        return (T) genericBusiness.delete(object);
     }
     
     protected void validate(Object object){

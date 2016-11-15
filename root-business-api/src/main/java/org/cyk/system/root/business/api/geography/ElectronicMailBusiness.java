@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.api.geography;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.cyk.system.root.model.geography.ContactCollection;
@@ -11,5 +12,5 @@ public interface ElectronicMailBusiness extends AbstractContactBusiness<Electron
 	List<ElectronicMail> instanciateMany(ContactCollection collection,List<String[]> values);
 	List<ElectronicMail> instanciateMany(ContactCollection collection,String[] addresses);
 	
-    
+	Collection<String> findAddresses(Collection<ElectronicMail> electronicMails);
 }

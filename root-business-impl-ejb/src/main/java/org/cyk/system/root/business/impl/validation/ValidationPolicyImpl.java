@@ -89,7 +89,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         if(identifiable.getIdentifier()==null){
         	Long countInDB = inject(GenericDao.class).use(identifiable.getClass()).select(Function.COUNT).where(null,fieldName,"uniqueValue", fieldValue,ArithmeticOperator.EQ).oneLong();
         	logTrace("Check for Create. Count existing = {}",countInDB);
-            exceptionUtils().exception(countInDB>0,"exception.value.duplicate",new Object[]{inject(LanguageBusiness.class).findText(fieldLabelId),fieldValue});
+        	exceptionUtils().exception(countInDB>0,"exception.value.duplicate",new Object[]{inject(LanguageBusiness.class).findText(fieldLabelId),fieldValue});
         }else{
         	AbstractIdentifiable inDB = genericDao.use(identifiable.getClass()).read(identifiable.getIdentifier());
             if(!commonUtils.readProperty(inDB, fieldName).equals(fieldValue))

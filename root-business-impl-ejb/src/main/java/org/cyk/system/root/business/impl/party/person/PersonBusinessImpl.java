@@ -21,6 +21,7 @@ import org.cyk.system.root.business.api.party.person.JobInformationsBusiness;
 import org.cyk.system.root.business.api.party.person.MedicalInformationsBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonExtendedInformationsBusiness;
+import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.file.File;
@@ -32,9 +33,9 @@ import org.cyk.system.root.model.party.person.MedicalInformations;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
+import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
-import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.party.person.JobFunctionDao;
@@ -43,10 +44,10 @@ import org.cyk.system.root.persistence.api.party.person.JobTitleDao;
 import org.cyk.system.root.persistence.api.party.person.MedicalInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.party.person.PersonExtendedInformationsDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
 import org.cyk.system.root.persistence.api.party.person.PersonTitleDao;
 import org.cyk.system.root.persistence.api.party.person.SexDao;
 import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
@@ -69,24 +70,18 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		super(dao); 
 	}  
 	
+	@Override
+	protected Collection<? extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<?>> getListeners() {
+		return Listener.COLLECTION;
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Person instanciateOne() {
 		Person person = super.instanciateOne();
 		person.setExtendedInformations(new PersonExtendedInformations(person));
-		/*person.setJobInformations(new JobInformations(person));
-		person.setMedicalInformations(new MedicalInformations(person));
-		*/
 		return person;
 	}
-	
-	@Override
-	public Person instanciateOne(final UserAccount userAccount) {
-		beforeInstanciateOne(Listener.COLLECTION, userAccount);
-		Person person = super.instanciateOne(userAccount);
-		afterInstanciateOne(Listener.COLLECTION, userAccount, person);
-		return person;
-	}
-	
+		
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Person instanciateOne(String code, String[] names) {
 		Person person = instanciateOne();
@@ -133,16 +128,22 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	
 	@Override
-	public Person create(final Person person) {
-		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
-			@Override
-			public void execute(Listener listener) {
-				listener.beforeCreate(person);
-			}
-		});
-		super.create(person);
-		//person.setBirthDateAnniversary(repeatedEventBusiness.createAnniversary(person.getBirthDate(),person.getNames()));
-		
+	public PersonRelationship addRelationship(Person person, String relationshipTypeCode) {
+		if(person.getRelationships()==null)
+			person.setRelationships(new ArrayList<PersonRelationship>());
+		else
+			for(PersonRelationship personRelationship : person.getRelationships())
+				if(personRelationship.getType().getCode().equals(relationshipTypeCode))
+					return personRelationship;
+		PersonRelationship personRelationship = new PersonRelationship(instanciateOne(), inject(PersonRelationshipTypeDao.class).read(relationshipTypeCode), 
+				person);
+		person.getRelationships().add(personRelationship);
+		return personRelationship;
+	}
+	
+	@Override
+	protected void afterCreate(Person person) {
+		super.afterCreate(person);
 		if(person.getExtendedInformations()!=null){
 			if(person.getExtendedInformations().getBirthLocation()!=null)
 				contactDao.create(person.getExtendedInformations().getBirthLocation());
@@ -161,25 +162,16 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		}
 		if(person.getMedicalInformations()!=null)
 			medicalInformationsDao.create(person.getMedicalInformations());
-		dao.update(person);
-		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
-			@Override
-			public void execute(Listener listener) {
-				listener.afterCreate(person);
-			}
-		});
-		return person;
+		
+		if(person.getRelationships()!=null)
+			for(PersonRelationship personRelationship : person.getRelationships())
+				if(isNotIdentified(personRelationship))
+					inject(PersonRelationshipBusiness.class).create(personRelationship);
 	}
 	
 	@Override
-	public Person update(final Person person) {
-		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
-			@Override
-			public void execute(Listener listener) {
-				listener.beforeUpdate(person);
-			}
-		});
-		Person p = super.update(person);
+	protected void beforeUpdate(Person person) {
+		super.beforeUpdate(person);
 		//repeatedEventBusiness.updateAnniversary(person.getBirthDateAnniversary(),person.getBirthDate(), person.getName());
 		if(person.getExtendedInformations()!=null){
 			if(person.getExtendedInformations().getBirthLocation()!=null)
@@ -200,23 +192,20 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		}
 		if(person.getMedicalInformations()!=null)
 			inject(MedicalInformationsBusiness.class).update(person.getMedicalInformations());
-		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
-			@Override
-			public void execute(Listener listener) {
-				listener.afterUpdate(person);
-			}
-		});
-		return p;
+		
+		if(person.getRelationships()!=null)
+			for(PersonRelationship personRelationship : person.getRelationships())
+				if(isNotIdentified(personRelationship))
+					inject(PersonRelationshipBusiness.class).create(personRelationship);
+				else{
+					update(personRelationship.getPerson1().equals(person)?personRelationship.getPerson2():personRelationship.getPerson1());
+				}
+					
 	}
-	
+		
 	@Override
-	public Person delete(final Person person) {
-		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
-			@Override
-			public void execute(Listener listener) {
-				listener.beforeDelete(person);
-			}
-		});
+	protected void beforeDelete(Person person) {
+		super.beforeDelete(person);
 		PersonExtendedInformations extendedInformations = extendedInformationsDao.readByParty(person);
 		if(extendedInformations!=null){
 			if(extendedInformations.getLanguageCollection()!=null){
@@ -236,16 +225,8 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		if(medicalInformations!=null){
 			medicalInformationsDao.delete(medicalInformations);
 		}
-		super.delete(person);
-		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
-			@Override
-			public void execute(Listener listener) {
-				listener.afterDelete(person);
-			}
-		});
-		return person;
 	}
-
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public String findNames(Person person,FindNamesArguments arguments) {
 		List<String> blocks = new ArrayList<>();

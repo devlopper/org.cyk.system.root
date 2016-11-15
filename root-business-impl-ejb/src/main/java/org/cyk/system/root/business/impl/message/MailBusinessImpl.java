@@ -6,21 +6,28 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
 import javax.inject.Inject;
 import javax.mail.Authenticator;
+import javax.mail.BodyPart;
 import javax.mail.Message;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 import org.cyk.system.root.model.event.Notification;
+import org.cyk.system.root.model.event.Notification.Attachement;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.party.Party;
@@ -33,28 +40,7 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
 	public static final String PROPERTY_FORMAT = "mail.smtp.%s";
 	
 	public static SmtpProperties SMTP_PROPERTIES;
-	/*
-	public static final String PROPERTY_USER = String.format(PROPERTY_FORMAT, "user");
-	public static final String PROPERTY_PASSWORD = String.format(PROPERTY_FORMAT, "password");
 	
-	private static final Properties PROPERTIES = new Properties();
-	static{
-		
-		PROPERTIES.put(String.format(PROPERTY_FORMAT, "host"), "smtp.gmail.com");
-    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "from"), "kycdev@gmail.com");
-    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "user"), "kycdev@gmail.com");
-    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "password"), "p@ssw0rd*");
-    	
-    	//setProperties("smtp.gmail.com", "kycdev@gmail.com", "kycdev@gmail.com", "p@ssw0rd*");
-    	
-    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "socketFactory.port"), "465");
-    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "port"), "465");
-    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "socketFactory.fallback"), "false");
-    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "auth"), "true");
-    	PROPERTIES.put(String.format(PROPERTY_FORMAT, "socketFactory.class"), "javax.net.ssl.SSLSocketFactory");
-	}
-	*/
-	//@Resource(name="java:app/mail/cyk_root" /*lookup = "mail/cyk_root"*/ )
     private Session session;
 
     @Inject private ApplicationBusiness applicationBusiness;
@@ -76,7 +62,30 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
                     message.setRecipients(Message.RecipientType.TO, addresses);
                     message.setSubject(notification.getTitle());
                     message.setSentDate(new Date());
-                    message.setContent(notification.getMessage(), "text/html; charset=utf-8");
+                    String type = notification.getMime()+"; charset=utf-8";
+                    if(notification.getAttachements()==null){
+                    	message.setContent(notification.getMessage(), type);
+                    }else{
+                    	//message.setText(notification.getMessage(), type);
+                    	//message.setContent(notification.getMessage(), type);
+                    	
+                        Multipart multipart = new MimeMultipart();
+                        if(notification.getAttachements()!=null)
+                        	for(Attachement attachement : notification.getAttachements()){
+                        		MimeBodyPart bodyPart = new MimeBodyPart();
+                                bodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(attachement.getBytes(), attachement.getMime())));
+                                bodyPart.setFileName(attachement.getName());
+                                multipart.addBodyPart(bodyPart);
+                        	}
+                        
+                        
+                        BodyPart htmlBodyPart = new MimeBodyPart();
+                        htmlBodyPart.setContent(notification.getMessage() , notification.getMime());
+                        multipart.addBodyPart(htmlBodyPart);
+                        
+                        message.setContent(multipart);
+                    }
+                     
                     logDebug("Sending mail to {}", StringUtils.join(addresses));
                     logTrace("From {} , Recipients {} , Subject {} , Date {} , Blocking {}",message.getFrom(),message.getRecipients(Message.RecipientType.TO),
                     		message.getSubject(),message.getSentDate(),options.getBlocking());

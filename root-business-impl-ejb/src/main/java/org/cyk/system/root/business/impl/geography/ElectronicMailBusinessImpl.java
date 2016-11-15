@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.geography;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -49,6 +50,14 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 			for(String address : addresses)
 				list.add(instanciateOne(collection,address));
 		return list;
+	}
+	
+	@Override
+	public Collection<String> findAddresses(Collection<ElectronicMail> electronicMails) {
+		Collection<String> addresses = new ArrayList<>();
+		for(ElectronicMail electronicMail : electronicMails)
+			addresses.add(electronicMail.getAddress());
+		return addresses;
 	}
 	
 	protected static final ContactCollection NULL_CONTACT_COLLECTION = null;

@@ -40,6 +40,16 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		return dao.readByCollection(collection, ascending);
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<ITEM> findByCollections(Collection<COLLECTION> collections) {
+		return dao.readByCollections(collections);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<ITEM> findByCollections(Collection<COLLECTION> collections, Boolean ascending) {
+		return dao.readByCollections(collections, ascending);
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public String findRelativeCode(ITEM item) {
 		return RootBusinessLayer.getInstance().getRelativeCode(item.getCollection(), item.getCode());

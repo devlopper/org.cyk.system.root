@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -36,6 +37,8 @@ public class Person extends Party implements Serializable{
 	@Transient private MedicalInformations medicalInformations;
 	
 	@Transient private String names;
+	
+	@Transient protected Collection<PersonRelationship> relationships;
 	
 	public Person(String firstName,String lastnames) {
 		super(firstName);

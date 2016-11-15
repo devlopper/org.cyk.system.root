@@ -12,13 +12,17 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 
 	private static final long serialVersionUID = 6920278182318788380L;
 
-	private String readByPerson,readByType;
+	private String readByPerson,readByType,readByPersonByType,readByPerson1ByType,readByPerson2ByType;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByPerson, _select().where(PersonRelationship.FIELD_PERSON1).or(PersonRelationship.FIELD_PERSON2));
 		registerNamedQuery(readByType, _select().where(PersonRelationship.FIELD_TYPE));
+		registerNamedQuery(readByPersonByType, _select().where().parenthesis(Boolean.TRUE).where(PersonRelationship.FIELD_PERSON1).or(PersonRelationship.FIELD_PERSON2)
+				.parenthesis(Boolean.FALSE).and(PersonRelationship.FIELD_TYPE));
+		registerNamedQuery(readByPerson1ByType, _select().where(PersonRelationship.FIELD_PERSON1).and(PersonRelationship.FIELD_TYPE));
+		registerNamedQuery(readByPerson2ByType, _select().where(PersonRelationship.FIELD_PERSON2).and(PersonRelationship.FIELD_TYPE));
 	}
 	
 	@Override
@@ -29,6 +33,22 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 	@Override
 	public Collection<PersonRelationship> readByType(PersonRelationshipType type) {
 		return namedQuery(readByType).parameter(PersonRelationship.FIELD_TYPE, type).resultMany();
+	}
+
+	@Override
+	public Collection<PersonRelationship> readByPersonByType(Person person, PersonRelationshipType type) {
+		return namedQuery(readByType).parameter(PersonRelationship.FIELD_PERSON1, person).parameter(PersonRelationship.FIELD_PERSON2, person)
+				.parameter(PersonRelationship.FIELD_TYPE, type).resultMany();
+	}
+
+	@Override
+	public Collection<PersonRelationship> readByPerson1ByType(Person person, PersonRelationshipType type) {
+		return namedQuery(readByPerson1ByType).parameter(PersonRelationship.FIELD_PERSON1, person).parameter(PersonRelationship.FIELD_TYPE, type).resultMany();
+	}
+
+	@Override
+	public Collection<PersonRelationship> readByPerson2ByType(Person person, PersonRelationshipType type) {
+		return namedQuery(readByPerson2ByType).parameter(PersonRelationship.FIELD_PERSON2, person).parameter(PersonRelationship.FIELD_TYPE, type).resultMany();
 	}
 
 }

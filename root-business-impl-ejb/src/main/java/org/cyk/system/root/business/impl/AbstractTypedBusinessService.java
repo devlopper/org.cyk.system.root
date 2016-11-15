@@ -181,8 +181,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
 		beforeCreate(identifiable);
         identifiable = dao.create(identifiable);
-        afterCreate(getListeners(), identifiable);
+        afterCreate(identifiable);
         return identifiable;
+	}
+	
+	protected void afterCreate(IDENTIFIABLE identifiable){
+		afterCreate(getListeners(), identifiable);
 	}
 	
 	@Override
@@ -190,17 +194,25 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    for(IDENTIFIABLE identifiable : identifiables)
 	    	create(identifiable);
 	}
-
-	@Override
-	public IDENTIFIABLE update(IDENTIFIABLE identifiable) {
+	
+	protected void beforeUpdate(IDENTIFIABLE identifiable){
 		setAutoSettedProperties(identifiable);
 		inject(ValidationPolicy.class).validateUpdate(identifiable);
 		beforeUpdate(getListeners(), identifiable);
+	}
+
+	@Override
+	public IDENTIFIABLE update(IDENTIFIABLE identifiable) {
+		beforeUpdate(identifiable);
 		IDENTIFIABLE newObject = dao.update(identifiable);
 	    if(identifiable.getGlobalIdentifier()!=null)
 	    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
-	    afterUpdate(getListeners(), identifiable);
+	    afterUpdate(identifiable);
 		return newObject;
+	}
+	
+	protected void afterUpdate(IDENTIFIABLE identifiable){
+		afterUpdate(getListeners(), identifiable);
 	}
 	
 	@Override

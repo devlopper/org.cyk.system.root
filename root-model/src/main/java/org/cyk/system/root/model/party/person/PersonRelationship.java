@@ -39,7 +39,7 @@ public class PersonRelationship extends AbstractIdentifiable implements Serializ
 	
 	@Override
 	public String getUiString() {
-		return person1+" "+type.getCode()+" of "+person2;
+		return person1+" "+type.getName()+" of "+person2;
 	}
 
 	public static final String FIELD_PERSON1 = "person1";

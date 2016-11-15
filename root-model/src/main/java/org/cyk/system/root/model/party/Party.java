@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
@@ -28,6 +29,12 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	public Party(String name) {
 		super();
 		setName(name);
+	}
+	
+	public void addContact(Contact contact) {
+		if(contactCollection==null)
+			contactCollection = new ContactCollection();
+		contactCollection.add(contact);
 	}
 	
 	@Override
