@@ -110,6 +110,7 @@ public class MailBusinessUT extends AbstractUnitTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		notifications.add(notification);
 		
 		notification = new Notification();
 		notification.setDate(new Date());
@@ -121,6 +122,7 @@ public class MailBusinessUT extends AbstractUnitTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		notifications.add(notification);
 		
 		mailBusiness.send(notifications);
 	}
