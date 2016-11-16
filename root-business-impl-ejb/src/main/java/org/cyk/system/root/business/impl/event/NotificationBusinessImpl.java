@@ -16,6 +16,7 @@ import org.cyk.system.root.business.api.file.TemplateEngineBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendOptions;
 import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.event.Notification;
@@ -121,5 +122,23 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
 			}
 		}
     }
+    
+    @Override
+    public void notify(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint,NotifyListener listener) {
+    	notify(listener.getNotifications(identifiables, remoteEndPoint), listener.getSendOptions());
+    	
+    }
+
+	@Override
+	public void notify(Collection<Notification> notifications, SendOptions sendOptions) {
+		for(Notification notification : notifications)
+			notify(notification, notification.getReceiverIdentifiers().toArray(new String[]{}), sendOptions);
+	}
+	
+	@Override
+	public void notify(Collection<Notification> notifications) {
+		for(Notification notification : notifications)
+			notify(notification, notification.getReceiverIdentifiers().toArray(new String[]{}), new SendOptions());
+	}
     
 }
