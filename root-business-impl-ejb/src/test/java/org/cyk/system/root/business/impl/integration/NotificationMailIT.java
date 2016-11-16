@@ -31,12 +31,7 @@ public class NotificationMailIT extends AbstractBusinessIT {
     @Inject private MailBusiness mailBusiness;
     
     private NotificationTemplate notificationTemplate1,notificationTemplate2;
-    
-    @Override
-    protected void populate() {
-    	
-    }
-    
+        
     @Override
     protected void _execute_() {
         super._execute_();
@@ -75,37 +70,10 @@ public class NotificationMailIT extends AbstractBusinessIT {
         mailBusiness.send(notification, "kycdev@gmail.com");
     }
 
-    @Override
-    protected void finds() {
-        
-        
-    }
-
-    @Override
-    protected void businesses() {
-        
-    }
-
-    @Override
-    protected void create() {
-        
-    }
-
-    @Override
-    protected void delete() {
-        
-    }
-
-    
-
-    @Override
-    protected void read() {
-        
-    }
-
-    @Override
-    protected void update() {
-        
-    }
+	@Override
+	protected void businesses() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

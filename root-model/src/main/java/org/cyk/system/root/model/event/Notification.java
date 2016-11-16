@@ -8,11 +8,15 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.security.UserAccount;
+import org.cyk.utility.common.AbstractBuilder;
+import org.cyk.utility.common.ListenerUtils;
+import org.cyk.utility.common.cdi.BeanAdapter;
 
 /**
  * Notification
@@ -36,7 +40,7 @@ public class Notification implements Serializable  {
 	
 	private String mime="text/html";
 	
-	private Collection<Attachement> attachements;
+	private Collection<File> files;
 	
 	/**
 	 * Remote end point
@@ -52,10 +56,14 @@ public class Notification implements Serializable  {
 	
 	private Boolean all = Boolean.FALSE;
 	
-	public Notification addAttachement(Attachement attachement){
-		if(attachements==null)
-			attachements = new ArrayList<>();
-		attachements.add(attachement); 
+	public Notification addFile(String name, byte[] bytes,String mime){
+		if(files==null)
+			files = new ArrayList<>();
+		File file = new File();
+		file.setName(name);
+		file.setBytes(bytes);
+		file.setMime(mime);
+		files.add(file); 
 		return this;
 	}
 	
@@ -72,11 +80,89 @@ public class Notification implements Serializable  {
 	}
 	
 	/**/
-	/*
+	
 	@Getter @Setter
-	public class SendOptions{
-		private Boolean blocking=Boolean.FALSE;
-	}*/
+	public static class Builder extends AbstractBuilder<Notification> implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
+		private Collection<AbstractIdentifiable> identifiables;
+		private RemoteEndPoint remoteEndPoint;
+		
+		public Builder() {
+			super(Notification.class);
+		}
+
+		@Override
+		public Notification build() {
+			Notification notification = new Notification();
+			notification.setTitle(listenerUtils.getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
+				@Override
+				public String execute(Listener listener) {
+					return listener.getTitle(identifiables, remoteEndPoint);
+				}
+			}));
+			notification.setMessage(listenerUtils.getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
+				@Override
+				public String execute(Listener listener) {
+					return listener.getMessage(identifiables, remoteEndPoint);
+				}
+			}));
+			return notification;
+		}
+		
+		public Builder addIdentifiable(AbstractIdentifiable identifiable){
+			if(identifiables==null)
+				identifiables = new ArrayList<>();
+			identifiables.add(identifiable);
+			return this;
+		}
+		public Builder setRemoteEndPoint(RemoteEndPoint remoteEndPoint){
+			this.remoteEndPoint = remoteEndPoint;
+			return this;
+		}
+		
+		/**/
+		
+		public static interface Listener {
+			
+			public Collection<Listener> COLLECTION = new ArrayList<>();
+			
+			String getTitle(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
+			String getMessage(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
+			Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
+			
+			public static class Adapter extends BeanAdapter implements Listener,Serializable {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public String getTitle(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
+					return null;
+				}
+
+				@Override
+				public String getMessage(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
+					return null;
+				}
+				
+				@Override
+				public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
+					return null;
+				}
+				
+				/**/
+				
+				public static class Default extends Adapter implements Serializable {
+					private static final long serialVersionUID = 1L;
+					
+					
+					
+				}
+			}
+		}
+		
+	}
+	
+	/**/
 	
 	public static enum RemoteEndPoint{
 		USER_INTERFACE,
@@ -91,13 +177,4 @@ public class Notification implements Serializable  {
 		
 	}
 	
-	@Getter @Setter @AllArgsConstructor
-	public static class Attachement implements Serializable {
-		private static final long serialVersionUID = -97798334240584174L;
-		
-		private String name;
-		private byte[] bytes;
-		private String mime;
-		
-	}
 }

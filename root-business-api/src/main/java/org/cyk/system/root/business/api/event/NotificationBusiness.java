@@ -27,53 +27,22 @@ public interface NotificationBusiness extends BusinessService {
 	
 	void run(Set<RemoteEndPoint> remoteEndPoints);
 	
-	void notify(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,NotifyListener listener);
+	void notify(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
 	
-	public static interface NotifyListener {
-		Collection<Notification> getNotifications(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
-		Notification getNotification(AbstractIdentifiable identifiable,RemoteEndPoint remoteEndPoint);
-		SendOptions getSendOptions();
+	public static interface Listener {
 		
-		public static class Adapter extends BeanAdapter implements NotifyListener,Serializable {
+		public Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		public static class Adapter extends BeanAdapter implements Listener,Serializable {
 			private static final long serialVersionUID = 1L;
 
-			@Override
-			public Collection<Notification> getNotifications(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
-				return null;
-			}
-
-			@Override
-			public Notification getNotification(AbstractIdentifiable identifiable, RemoteEndPoint remoteEndPoint) {
-				return null;
-			}
-			
-			@Override
-			public SendOptions getSendOptions() {
-				return null;
-			}
 			
 			/**/
 			
 			public static class Default extends Adapter implements Serializable {
 				private static final long serialVersionUID = 1L;
 				
-				@Override
-				public Collection<Notification> getNotifications(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
-					Collection<Notification> notifications = new ArrayList<>();
-					for(AbstractIdentifiable identifiable : identifiables)
-						notifications.add(getNotification(identifiable, remoteEndPoint));
-					return notifications;
-				}
-
-				@Override
-				public Notification getNotification(AbstractIdentifiable identifiable, RemoteEndPoint remoteEndPoint) {
-					return null;
-				}
 				
-				@Override
-				public SendOptions getSendOptions() {
-					return new SendOptions();
-				}
 				
 			}
 		}

@@ -23,11 +23,12 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 import org.cyk.system.root.model.event.Notification;
-import org.cyk.system.root.model.event.Notification.Attachement;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.party.Party;
@@ -61,20 +62,17 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
                     message.setFrom(new InternetAddress(SMTP_PROPERTIES.getFrom()));
                     message.setRecipients(Message.RecipientType.TO, addresses);
                     message.setSubject(notification.getTitle());
-                    message.setSentDate(new Date());
+                    message.setSentDate(notification.getDate() == null ? new Date() : notification.getDate());
                     String type = notification.getMime()+"; charset=utf-8";
-                    if(notification.getAttachements()==null){
+                    if(notification.getFiles()==null){
                     	message.setContent(notification.getMessage(), type);
                     }else{
-                    	//message.setText(notification.getMessage(), type);
-                    	//message.setContent(notification.getMessage(), type);
-                    	
-                        Multipart multipart = new MimeMultipart();
-                        if(notification.getAttachements()!=null)
-                        	for(Attachement attachement : notification.getAttachements()){
+                    	Multipart multipart = new MimeMultipart();
+                        if(notification.getFiles()!=null)
+                        	for(File file : notification.getFiles()){
                         		MimeBodyPart bodyPart = new MimeBodyPart();
-                                bodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(attachement.getBytes(), attachement.getMime())));
-                                bodyPart.setFileName(attachement.getName());
+                                bodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(inject(FileBusiness.class).findBytes(file), file.getMime())));
+                                bodyPart.setFileName(file.getName());
                                 multipart.addBodyPart(bodyPart);
                         	}
                         

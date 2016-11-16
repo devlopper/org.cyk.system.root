@@ -124,8 +124,8 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
     }
     
     @Override
-    public void notify(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint,NotifyListener listener) {
-    	notify(listener.getNotifications(identifiables, remoteEndPoint), listener.getSendOptions());
+    public void notify(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint) {
+    	//notify(listener.getNotifications(identifiables, remoteEndPoint), listener.getSendOptions());
     	
     }
 

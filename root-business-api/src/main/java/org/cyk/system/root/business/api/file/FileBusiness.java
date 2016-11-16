@@ -30,6 +30,7 @@ public interface FileBusiness extends TypedBusiness<File> {
     void process(File file,byte[] bytes, String name);
     
     InputStream findInputStream(File file);
+    byte[] findBytes(File file);
     
     Path findSystemPath(File file,Boolean createTemporaryIfNotExist);
     
@@ -60,4 +61,6 @@ public interface FileBusiness extends TypedBusiness<File> {
     }
     
     String ILLEGAL_FILE_NAME_CHARACTERS = "\\/.,;:!?";
+
+	
 }
