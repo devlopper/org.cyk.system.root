@@ -2,8 +2,11 @@ package org.cyk.system.root.model.event;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,6 +43,7 @@ public class Notification implements Serializable  {
 	 */
 	private RemoteEndPoint remoteEndPoint;
 	
+	private Set<String> receiverIdentifiers = new LinkedHashSet<>();
 	
 	/**
 	 * Registered user accounts to which notification has been delivered
@@ -48,10 +52,18 @@ public class Notification implements Serializable  {
 	
 	private Boolean all = Boolean.FALSE;
 	
-	public void addAttachement(Attachement attachement){
+	public Notification addAttachement(Attachement attachement){
 		if(attachements==null)
 			attachements = new ArrayList<>();
 		attachements.add(attachement); 
+		return this;
+	}
+	
+	public Notification addReceiverIdentifiers(String identifier,String...identifiers){
+		receiverIdentifiers.add(identifier);
+		if(identifiers!=null)
+			receiverIdentifiers.addAll(Arrays.asList(identifiers));
+		return this;
 	}
 	
 	@Override

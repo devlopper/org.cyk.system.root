@@ -150,6 +150,25 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
     public void send(Notification notification, Collection<String> theReceiverIds) {
         send(notification, theReceiverIds.toArray(new String[]{}),new SendOptions());
     }
+    
+    @Override
+    public void send(Notification notification,SendOptions options) {
+        send(notification, notification.getReceiverIdentifiers().toArray(new String[]{}),options);
+    }
+    @Override
+    public void send(Notification notification) {
+        send(notification,new SendOptions());
+    }
+    
+    @Override
+    public void send(Collection<Notification> notifications,SendOptions options) {
+    	for(Notification notification : notifications)
+    		send(notification,options);
+    }
+    @Override
+    public void send(Collection<Notification> notifications) {
+        send(notifications,new SendOptions());
+    }
 
     @Override
     public void send(Notification notification, Party[] theReceiverIds,SendOptions options) {

@@ -29,6 +29,12 @@ public interface MessageSendingBusiness extends BusinessService {
 	void sendParty(Notification notification,Collection<Party> theReceiverIds,SendOptions options);
 	void sendParty(Notification notification,Collection<Party> theReceiverIds);
 
+	void send(Notification notification,SendOptions options);
+	void send(Notification notification);
+	
+	void send(Collection<Notification> notifications,SendOptions options);
+	void send(Collection<Notification> notifications);
+	
 	/**/
 	
 	@Getter @Setter
