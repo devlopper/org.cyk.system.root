@@ -24,6 +24,7 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.BusinessExceptionNoRollBack;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
@@ -34,6 +35,7 @@ import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.security.Credentials;
+import org.cyk.utility.common.LogMessage;
 
 public class MailBusinessImpl extends AbstractBusinessServiceImpl implements MailBusiness , Serializable {
     
@@ -48,6 +50,9 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
     @Inject private ApplicationBusiness applicationBusiness;
     
     private void send(final Notification notification,final InternetAddress[] addresses,final SendOptions options) {
+    	exceptionUtils().exception(StringUtils.isBlank(notification.getTitle()), "notification.title.required");
+    	exceptionUtils().exception(StringUtils.isBlank(notification.getMessage()) && (notification.getFiles()==null || notification.getFiles().isEmpty())
+    			, "notification.messageorattachement.required");
     	Properties properties = convert(getSmtpProperties());
     	session = Session.getInstance(properties,new Authenticator() {
     		@Override
@@ -58,6 +63,9 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
     	
     	Thread thread = new Thread(){
             public void run() {
+            	LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Send","mail");
+            	logMessageBuilder.addParameters("title",notification.getTitle(),"message",notification.getMessage(),"#attachements",notification.getFiles()==null?0:notification.getFiles().size()
+            			,"from",SMTP_PROPERTIES.getFrom(),"to",notification.getReceiverIdentifiers(),"blocking",options.getBlocking());
                 MimeMessage message = new MimeMessage(session);
                 try {
                     message.setFrom(new InternetAddress(SMTP_PROPERTIES.getFrom()));
@@ -71,7 +79,7 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
                     	Multipart multipart = new MimeMultipart();
                         if(notification.getFiles()!=null)
                         	for(File file : notification.getFiles()){
-                        		exceptionUtils().exception(StringUtils.isBlank(file.getMime()), "Mime is required on file : "+file);
+                        		exceptionUtils().exception(StringUtils.isBlank(file.getMime()), "mail.file.mime.required");
                         		MimeBodyPart bodyPart = new MimeBodyPart();
                                 bodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(file.getBytes()==null ? inject(FileBusiness.class).findBytes(file) 
                                 		: file.getBytes(), file.getMime())));
@@ -88,15 +96,21 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
                         message.setContent(multipart);
                     }
                      
-                    logDebug("Sending mail to {}", StringUtils.join(addresses));
+                    /*logDebug("Sending mail to {}", StringUtils.join(addresses));
                     logTrace("From {} , Recipients {} , Subject {} , Date {} , Blocking {}",message.getFrom(),message.getRecipients(Message.RecipientType.TO),
                     		message.getSubject(),message.getSentDate(),options.getBlocking());
                     logTrace("Content = {}", message.getContent());
+                    */
                     Transport.send(message);
-                    logDebug("Mail sent to {}", StringUtils.join(addresses));
+                    logMessageBuilder.addParameters("status","succeed");
                 } catch (Exception e) {
-                	e.printStackTrace();
-                    logThrowable(e);
+                	logMessageBuilder.addParameters("status","failed");
+                	throw new BusinessExceptionNoRollBack(e.toString());
+                	//exceptionUtils().exception(exception);
+                	//e.printStackTrace();
+                    //logThrowable(e);
+                } finally {
+                	logTrace(logMessageBuilder);
                 }
             };
         };

@@ -1,12 +1,11 @@
 package org.cyk.system.root.business.impl.event;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.cyk.system.root.business.api.geography.ContactBusiness;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Notification;
@@ -16,6 +15,13 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonRelationship;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
+import org.cyk.system.root.persistence.api.geography.ContactDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
 
 public class NotificationBuilderAdapter extends Notification.Builder.Listener.Adapter.Default implements Serializable {
 
@@ -24,39 +30,60 @@ public class NotificationBuilderAdapter extends Notification.Builder.Listener.Ad
 	public static Notification.Builder.Listener DEFAULT = new NotificationBuilderAdapter();
 	
 	@Override
-	public String getTitle(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint) {
-		return "TITLE";//super.getTitle(identifiables, remoteEndPoint);
-	}
-	
-	@Override
-	public String getMessage(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint) {
-		return "";//super.getMessage(identifiables, remoteEndPoint);
-	}
-	
-	@Override
-	public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Collection<String> partyCodes,Collection<String> personRelationshipCodes) {
-		if(identifiables.size()==1){
-			AbstractIdentifiable identifiable = identifiables.iterator().next();
-			ContactCollection contactCollection = null;
+	public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Boolean areIdentifiablesReceivers,Collection<String> partyCodes,Collection<String> personRelationshipTypeCodes) {
+		Set<String> receiverIdentifiers = super.getReceiverIdentifiers(identifiables, remoteEndPoint,areIdentifiablesReceivers,partyCodes,personRelationshipTypeCodes);
+		Collection<Party> parties = new LinkedHashSet<>();
+		Collection<Person> persons = new LinkedHashSet<>(),relatedPersons = new LinkedHashSet<>();;
+		for(AbstractIdentifiable identifiable : identifiables)
 			if(identifiable instanceof Party){
-				contactCollection = ((Party)identifiable).getContactCollection();
-			}else if(identifiable instanceof AbstractActor){
-				contactCollection = ((AbstractActor)identifiable).getPerson().getContactCollection();
-			}
-			if(contactCollection==null)
-				;
-			else{
-				Collection<ElectronicMail> electronicMails = inject(ContactBusiness.class).findByCollectionsByClass(Arrays.asList(contactCollection)
-		    			, ElectronicMail.class);
-				return new LinkedHashSet<>(inject(ElectronicMailBusiness.class).findAddresses(electronicMails));
+				parties.add((Party) identifiable);
+				if(identifiable instanceof Person)
+					persons.add((Person)identifiable);
+			}else if(identifiable instanceof AbstractActor)
+				persons.add( ((AbstractActor)identifiable).getPerson());
+				
+		if(personRelationshipTypeCodes!=null){
+			Collection<PersonRelationshipType> personRelationshipTypes = inject(PersonRelationshipTypeDao.class).readByGlobalIdentifierCodes(personRelationshipTypeCodes);
+			for(PersonRelationship personRelationship : inject(PersonRelationshipDao.class).readByPerson2ByTypes(persons, personRelationshipTypes))
+				relatedPersons.add(personRelationship.getPerson1());
+		}
+		
+		if(!Boolean.TRUE.equals(areIdentifiablesReceivers)){
+			parties.clear();
+			persons.clear();
+		}
+		
+		parties.addAll(relatedPersons);
+		persons.addAll(relatedPersons);
+		
+		Collection<ContactCollection> contactCollections = new LinkedHashSet<>();
+		for(Party party : parties)
+			contactCollections.add(party.getContactCollection());
+		Collection<ElectronicMail> electronicMails = inject(ContactDao.class).readByCollectionsByClass(contactCollections, ElectronicMail.class);	
+		if(!electronicMails.isEmpty()){
+			if(receiverIdentifiers==null)
+				receiverIdentifiers = new LinkedHashSet<>();
+			receiverIdentifiers.addAll(inject(ElectronicMailBusiness.class).findAddresses(electronicMails));
+		}
+		return receiverIdentifiers;
+	}
+	
+	@Override
+	public Set<File> getFiles(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Set<String> fileRepresentationTypeCodes) {
+		Set<File> files = super.getFiles(identifiables, remoteEndPoint,fileRepresentationTypeCodes);
+		if(fileRepresentationTypeCodes!=null){
+			Collection<File> identifiablesFiles = inject(FileBusiness.class)
+					.findByRepresentationTypesByIdentifiables(inject(FileRepresentationTypeDao.class).readByGlobalIdentifierCodes(fileRepresentationTypeCodes), identifiables);
+			if(identifiablesFiles.isEmpty()){
+				
+			}else{
+				if(files==null)
+					files = new LinkedHashSet<>();
+				files.addAll(identifiablesFiles);
 			}
 		}
-		return super.getReceiverIdentifiers(identifiables, remoteEndPoint,partyCodes,personRelationshipCodes);
-	}
-	
-	@Override
-	public Set<File> getFiles(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
-		return super.getFiles(identifiables, remoteEndPoint);
+		
+		return files;
 	}
 	
 }

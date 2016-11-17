@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -49,9 +50,9 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	@Inject private MediaBusiness mediaBusiness;
 	@Inject private StreamBusiness streamBusiness;
 	
+	private static final String NAME_EXTENSION_SEPARATOR = Constant.CHARACTER_DOT.toString();
 	private static final String FILE = "file";
-	private static final String FILE_DOT = FILE+Constant.CHARACTER_DOT;
-
+	private static final String FILE_DOT = FILE+NAME_EXTENSION_SEPARATOR;
 	
 	@Inject
 	public FileBusinessImpl(FileDao dao) {
@@ -74,12 +75,18 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		return files;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<File> findByRepresentationTypesByIdentifiables(Collection<FileRepresentationType> fileRepresentationTypes,Collection<? extends AbstractIdentifiable> identifiables) {
+		FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
+    	searchCriteria.addIdentifiablesGlobalIdentifiers((Collection<AbstractIdentifiable>) identifiables);
+    	searchCriteria.addRepresentationTypes(fileRepresentationTypes);
+		return findByFileIdentifiableGlobalIdentifierSearchCriteria(searchCriteria);
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<File> findByRepresentationTypeByIdentifiables(FileRepresentationType fileRepresentationType,Collection<? extends AbstractIdentifiable> identifiables) {
-		FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
-    	searchCriteria.addIdentifiablesGlobalIdentifiers(identifiables);
-    	searchCriteria.addRepresentationType(fileRepresentationType);
-		return findByFileIdentifiableGlobalIdentifierSearchCriteria(searchCriteria);
+		return findByRepresentationTypesByIdentifiables(Arrays.asList(fileRepresentationType),identifiables);
 	}
 	
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) //TODO is this Support and followings really needed ???
@@ -100,6 +107,13 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     	
     	if(Boolean.TRUE.equals(reset) || StringUtils.isBlank(file.getMime()))
     		file.setMime(findMime(file.getExtension()));
+    	
+    	if(Boolean.TRUE.equals(reset) || StringUtils.isBlank(file.getName())){
+    		if(StringUtils.contains(name, NAME_EXTENSION_SEPARATOR))
+    			file.setName(StringUtils.split(name,NAME_EXTENSION_SEPARATOR)[0]);
+    		else
+    			file.setName(name);
+    	}
 	}
     
     @Override
@@ -126,7 +140,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     		// new java.io.File(directory,aReport.getFileName()+"."+aReport.getFileExtension())
 			//FileUtils.writeByteArrayToFile(directory, file.getBytes());
     		if(StringUtils.isNotBlank(file.getExtension()))
-    			name = name+Constant.CHARACTER_DOT+file.getExtension();
+    			name = name+NAME_EXTENSION_SEPARATOR+file.getExtension();
     		FileUtils.writeByteArrayToFile(new java.io.File(directory,name), IOUtils.toByteArray(findInputStream(file)));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -167,7 +181,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public String findExtension(String name) {
-    	int i = name.lastIndexOf(Constant.CHARACTER_DOT);
+    	int i = name.lastIndexOf(NAME_EXTENSION_SEPARATOR);
         if (i > 0)
             return name.substring(i+1);
         logWarning("Cannot find extension on file named {}", name);

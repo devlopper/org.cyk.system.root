@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.integration;
 
 import java.io.FileInputStream;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -14,13 +15,15 @@ import org.cyk.system.root.business.api.message.MessageSendingBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.data.Data;
 import org.cyk.system.root.model.event.Notification;
-import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
+import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.junit.Test;
 
 public class MailBusinessIT extends AbstractBusinessIT {
@@ -37,6 +40,44 @@ public class MailBusinessIT extends AbstractBusinessIT {
     protected void populate() {
     	super.populate();
     	inject(MailBusiness.class).setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
+    	
+    	Person son = inject(PersonBusiness.class).instanciateOneRandomly("P002");
+    	son.setName("Komenan");
+    	son.setLastnames("Yao Christian");
+    	son.getContactCollection().getElectronicMails().clear();
+    	son.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "kycdev@gmail.com"));
+    	
+    	Person father = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_FATHER).getPerson1();
+    	father.setName("Kouagni");
+    	father.setLastnames("N'Dri Jean");
+    	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup@gmail.com"));
+    	
+    	Person mother = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_MOTHER).getPerson1();
+    	mother.setName("Tchimou");
+    	mother.setLastnames("Ahou odette");
+    	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup0@gmail.com"));
+    	
+    	create(son);
+    	
+    	java.io.File directory = new java.io.File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\pdf");
+    	File file = null;
+    	try {
+    		file = inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(new java.io.File(directory, "1.pdf"))), "carte d'identité de komenan yao christian.pdf");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_DOCUMENT));
+		create(file);
+		create(new FileIdentifiableGlobalIdentifier(file,son));
+		
+		try {
+    		file = inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(new java.io.File(directory, "2.pdf"))), "image identité de komenan yao christian.pdf");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_IMAGE));
+		create(file);
+		create(new FileIdentifiableGlobalIdentifier(file,son));
     }
     
     @Override
@@ -83,35 +124,30 @@ public class MailBusinessIT extends AbstractBusinessIT {
 	}
 	
 	@Test
-    public void sendMailToParents(){
-		java.io.File directory = new java.io.File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\pdf");
-    	Person son = inject(PersonBusiness.class).instanciateOneRandomly("P002");
-    	son.setName("Komenan");
-    	son.setLastnames("Yao Christian");
-    	son.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "kycdev@gmail.com"));
-    	
-    	Person father = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_FATHER).getPerson1();
-    	father.setName("Kouagni");
-    	father.setLastnames("N'Dri Jean");
-    	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup@gmail.com"));
-    	
-    	Person mother = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_MOTHER).getPerson1();
-    	mother.setName("Tchimou");
-    	mother.setLastnames("Ahou odette");
-    	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup0@gmail.com"));
-    	
-    	create(son);
-    	
-    	File file = null;
-    	try {
-    		file = inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(new java.io.File(directory, "1.pdf"))), "bulletin de bryan.pdf");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    public void sendMailToFather(){
+		Person son = inject(PersonBusiness.class).find("P002");
     	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
-		Notification notification = new Notification.Builder().setRemoteEndPoint(RemoteEndPoint.MAIL_SERVER).addIdentifiables(son).addFile(file)
-				.build();
-		inject(MailBusiness.class).send(notification);
+		inject(MailBusiness.class).send(Notification.Builder.buildMail(son, FileRepresentationType.IDENTITY_DOCUMENT
+				,Arrays.asList(PersonRelationshipType.FAMILY_FATHER),Boolean.FALSE));
+		/*
+		inject(MailBusiness.class).send(new Notification.Builder().setRemoteEndPoint(RemoteEndPoint.MAIL_SERVER)
+				.addIdentifiables(son)
+				.addFileRepresentationTypeCodes(FileRepresentationType.IDENTITY_IMAGE)
+				.build());
+		
+		inject(MailBusiness.class).send(new Notification.Builder().setRemoteEndPoint(RemoteEndPoint.MAIL_SERVER)
+				.addIdentifiables(son)
+				.addFileRepresentationTypeCodes(FileRepresentationType.IDENTITY_DOCUMENT,FileRepresentationType.IDENTITY_IMAGE)
+				.build());
+				*/
+    }
+	
+	@Test
+    public void sendMailToMother(){
+		Person son = inject(PersonBusiness.class).find("P002");
+    	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+    	inject(MailBusiness.class).send(Notification.Builder.buildMail(son, FileRepresentationType.IDENTITY_IMAGE,Arrays.asList(PersonRelationshipType.FAMILY_MOTHER
+    			),Boolean.FALSE));
     }
 
 }

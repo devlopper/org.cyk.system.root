@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
@@ -188,14 +189,23 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 		return where(anAttributeName,anAttributeName,ArithmeticOperator.EQ);
 	}
 	
+	public QueryStringBuilder whereIdentifier(String anAttributeName,String varName,Boolean in) {
+		String fieldName = (StringUtils.isBlank(anAttributeName)?Constant.EMPTY_STRING:(anAttributeName+Constant.CHARACTER_DOT))+AbstractIdentifiable.FIELD_IDENTIFIER;
+		return where(fieldName,varName,Boolean.TRUE.equals(in)?ArithmeticOperator.IN:ArithmeticOperator.NOT_IN);
+	}
+	
 	public QueryStringBuilder whereIdentifier(String anAttributeName,Boolean in) {
-		String fieldName = (StringUtils.isBlank(anAttributeName)?"":(anAttributeName+"."))+AbstractIdentifiable.FIELD_IDENTIFIER;
-		return where(fieldName,VAR_IDENTIFIERS,Boolean.TRUE.equals(in)?ArithmeticOperator.IN:ArithmeticOperator.NOT_IN);
+		return whereIdentifier(anAttributeName, VAR_IDENTIFIERS, in);
+	}
+	
+	public QueryStringBuilder whereIdentifierIn(String anAttributeName,String varName) {
+		return whereIdentifier(anAttributeName,varName, Boolean.TRUE);
 	}
 	
 	public QueryStringBuilder whereIdentifierIn(String anAttributeName) {
 		return whereIdentifier(anAttributeName, Boolean.TRUE);
 	}
+	
 	public QueryStringBuilder whereIdentifierIn() {
 		return whereIdentifierIn(null);
 	}

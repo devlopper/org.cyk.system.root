@@ -41,6 +41,7 @@ public interface FileBusiness extends TypedBusiness<File> {
     void writeTo(File file,java.io.File directory,String name);
     
     Collection<File> findByFileIdentifiableGlobalIdentifierSearchCriteria(FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria);
+    Collection<File> findByRepresentationTypesByIdentifiables(Collection<FileRepresentationType> fileRepresentationTypes,Collection<? extends AbstractIdentifiable> identifiables);
     Collection<File> findByRepresentationTypeByIdentifiables(FileRepresentationType fileRepresentationType,Collection<? extends AbstractIdentifiable> identifiables);
     
     String convertToFileName(String string);

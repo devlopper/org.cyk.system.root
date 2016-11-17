@@ -8,16 +8,18 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.AbstractBuilder;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.cdi.BeanAdapter;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Notification
@@ -99,11 +101,12 @@ public class Notification implements Serializable  {
 		private RemoteEndPoint remoteEndPoint;
 		private Date date;
 		/* Files */
-		private Set<String> reportTemplateCodes;
+		private Set<String> fileRepresentationTypeCodes;
 		private Collection<File> files;
 		/* ContactCollections */
-		private Set<String> personRelationshipCodes;
+		private Set<String> personRelationshipTypeCodes;
 		private Set<String> partyCodes;
+		private Boolean areIdentifiablesReceivers = Boolean.TRUE;
 		private Set<ContactCollection> contactCollections;
 		
 		public Builder() {
@@ -128,7 +131,7 @@ public class Notification implements Serializable  {
 			notification.setReceiverIdentifiers(listenerUtils.getSet(Listener.COLLECTION, new ListenerUtils.CollectionMethod.Set<Listener,String>() {
 				@Override
 				public Set<String> execute(Listener listener) {
-					return listener.getReceiverIdentifiers(identifiables, remoteEndPoint,partyCodes,personRelationshipCodes);
+					return listener.getReceiverIdentifiers(identifiables, remoteEndPoint,areIdentifiablesReceivers,partyCodes,personRelationshipTypeCodes);
 				}
 			}));
 			
@@ -136,27 +139,43 @@ public class Notification implements Serializable  {
 			notification.addFiles(listenerUtils.getCollection(Listener.COLLECTION, new ListenerUtils.CollectionMethod<Listener, File>() {
 				@Override
 				public Collection<File> execute(Listener listener) {
-					return listener.getFiles(identifiables, remoteEndPoint);
+					return listener.getFiles(identifiables, remoteEndPoint,fileRepresentationTypeCodes);
 				}
 			}));
 			
+			if(StringUtils.isBlank(notification.getTitle())){
+				if(notification.getFiles()!=null){
+					Set<String> titles = new LinkedHashSet<>();
+					for(File file : notification.getFiles())
+						titles.add(file.getName());
+					notification.setTitle(StringUtils.join(titles,Constant.CHARACTER_COMA.toString()));
+				}
+			}
 			notification.setRemoteEndPoint(remoteEndPoint);
 			notification.setDate(date);
 			return notification;
 		}
 		
-		public Builder addIdentifiables(AbstractIdentifiable...identifiables){
+		public Builder addIdentifiables(Collection<AbstractIdentifiable> identifiables){
 			if(this.identifiables==null)
 				this.identifiables = new ArrayList<>();
-			this.identifiables.addAll(Arrays.asList(identifiables));
+			this.identifiables.addAll(identifiables);
 			return this;
 		}
 		
-		public Builder addReportTemplateCodes(String...reportTemplateCodes){
-			if(this.reportTemplateCodes==null)
-				this.reportTemplateCodes = new LinkedHashSet<>();
-			this.reportTemplateCodes.addAll(Arrays.asList(reportTemplateCodes));
+		public Builder addIdentifiables(AbstractIdentifiable...identifiables){
+			return addIdentifiables(Arrays.asList(identifiables));
+		}
+		
+		public Builder addFileRepresentationTypeCodes(Collection<String> fileRepresentationTypeCodes){
+			if(this.fileRepresentationTypeCodes==null)
+				this.fileRepresentationTypeCodes = new LinkedHashSet<>();
+			this.fileRepresentationTypeCodes.addAll(fileRepresentationTypeCodes);
 			return this;
+		}
+		
+		public Builder addFileRepresentationTypeCodes(String...fileRepresentationTypeCodes){
+			return addFileRepresentationTypeCodes(Arrays.asList(fileRepresentationTypeCodes));
 		}
 		
 		public Builder addFile(File file){
@@ -171,11 +190,22 @@ public class Notification implements Serializable  {
 			return this;
 		}
 		
-		public Builder addPersonRelationshipCodes(String...codes){
-			if(this.personRelationshipCodes==null)
-				this.personRelationshipCodes = new LinkedHashSet<>();
-			this.personRelationshipCodes.addAll(Arrays.asList(codes));
+		public Builder setAreIdentifiablesReceivers(Boolean areIdentifiablesReceivers){
+			this.areIdentifiablesReceivers = areIdentifiablesReceivers;
 			return this;
+		}
+		
+		public Builder addPersonRelationshipTypeCodes(Collection<String> personRelationshipTypeCodes){
+			if(personRelationshipTypeCodes!=null){
+				if(this.personRelationshipTypeCodes==null)
+					this.personRelationshipTypeCodes = new LinkedHashSet<>();
+				this.personRelationshipTypeCodes.addAll(personRelationshipTypeCodes);
+			}
+			return this;
+		}
+		
+		public Builder addPersonRelationshipTypeCodes(String...personRelationshipTypeCodes){
+			return addPersonRelationshipTypeCodes(Arrays.asList(personRelationshipTypeCodes));
 		}
 		
 		public Builder addPartyCodes(String...codes){
@@ -194,14 +224,45 @@ public class Notification implements Serializable  {
 		
 		/**/
 		
+		public static Notification build(RemoteEndPoint remoteEndPoint,Collection<AbstractIdentifiable> identifiables,Collection<String> fileRepresentationTypeCodes,Collection<String> personRelationshipTypeCodes,Boolean areIdentifiablesReceivers){
+			return new Notification.Builder().setRemoteEndPoint(remoteEndPoint)
+					.addIdentifiables(identifiables)
+					.addFileRepresentationTypeCodes(fileRepresentationTypeCodes)
+					.setAreIdentifiablesReceivers(areIdentifiablesReceivers)
+					.addPersonRelationshipTypeCodes(personRelationshipTypeCodes)
+					.build();
+		}
+		
+		public static Notification build(RemoteEndPoint remoteEndPoint,AbstractIdentifiable identifiable,String fileRepresentationTypeCode,Collection<String> personRelationshipTypeCodes,Boolean isIdentifiableReceiver){
+			return build(remoteEndPoint,Arrays.asList(identifiable), Arrays.asList(fileRepresentationTypeCode),personRelationshipTypeCodes, isIdentifiableReceiver);
+		}
+		
+		public static Notification build(RemoteEndPoint remoteEndPoint,AbstractIdentifiable identifiable,String fileRepresentationTypeCode,Collection<String> personRelationshipTypeCodes){
+			return build(remoteEndPoint,identifiable, fileRepresentationTypeCode,personRelationshipTypeCodes, Boolean.TRUE);
+		}
+		
+		public static Notification buildMail(AbstractIdentifiable identifiable,String fileRepresentationTypeCode,Collection<String> personRelationshipTypeCodes,Boolean isIdentifiableReceiver){
+			return build(RemoteEndPoint.MAIL_SERVER,identifiable, fileRepresentationTypeCode,personRelationshipTypeCodes,isIdentifiableReceiver);
+		}
+		
+		public static Notification buildMail(AbstractIdentifiable identifiable,String fileRepresentationTypeCode,Collection<String> personRelationshipTypeCodes){
+			return buildMail(identifiable, fileRepresentationTypeCode,personRelationshipTypeCodes,Boolean.TRUE);
+		}
+		
+		public static Notification buildMail(AbstractIdentifiable identifiable,String fileRepresentationTypeCode){
+			return build(RemoteEndPoint.MAIL_SERVER,identifiable, fileRepresentationTypeCode,null);
+		}
+		
+		/**/
+		
 		public static interface Listener {
 			
 			public Collection<Listener> COLLECTION = new ArrayList<>();
 			
 			String getTitle(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
 			String getMessage(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
-			Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Collection<String> partyCodes,Collection<String> personRelationshipCodes);
-			Set<File> getFiles(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
+			Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Boolean areIdentifiablesReceivers,Collection<String> partyCodes,Collection<String> personRelationshipTypeCodes);
+			Set<File> getFiles(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Set<String> fileRepresentationTypeCodes);
 			Set<ContactCollection> getContactCollections(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
 			Set<String> getReportTemplateCodes(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
 			
@@ -219,12 +280,12 @@ public class Notification implements Serializable  {
 				}
 				
 				@Override
-				public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Collection<String> partyCodes,Collection<String> personRelationshipCodes) {
+				public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Boolean areIdentifiablesReceivers,Collection<String> partyCodes,Collection<String> personRelationshipCodes) {
 					return null;
 				}
 				
 				@Override
-				public Set<File> getFiles(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
+				public Set<File> getFiles(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Set<String> fileRepresentationTypeCodes) {
 					return null;
 				}
 				

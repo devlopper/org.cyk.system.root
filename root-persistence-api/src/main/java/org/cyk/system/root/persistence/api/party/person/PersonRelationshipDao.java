@@ -14,4 +14,5 @@ public interface PersonRelationshipDao extends TypedDao<PersonRelationship> {
 	Collection<PersonRelationship> readByPersonByType(Person person,PersonRelationshipType type);
 	Collection<PersonRelationship> readByPerson1ByType(Person person,PersonRelationshipType type);
 	Collection<PersonRelationship> readByPerson2ByType(Person person,PersonRelationshipType type);
+	Collection<PersonRelationship> readByPerson2ByTypes(Collection<Person> persons,Collection<PersonRelationshipType> types);
 }

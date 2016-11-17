@@ -12,7 +12,7 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 
 	private static final long serialVersionUID = 6920278182318788380L;
 
-	private String readByPerson,readByType,readByPersonByType,readByPerson1ByType,readByPerson2ByType;
+	private String readByPerson,readByType,readByPersonByType,readByPerson1ByType,readByPerson2ByType,readByPerson2ByTypes;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -23,6 +23,8 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 				.parenthesis(Boolean.FALSE).and(PersonRelationship.FIELD_TYPE));
 		registerNamedQuery(readByPerson1ByType, _select().where(PersonRelationship.FIELD_PERSON1).and(PersonRelationship.FIELD_TYPE));
 		registerNamedQuery(readByPerson2ByType, _select().where(PersonRelationship.FIELD_PERSON2).and(PersonRelationship.FIELD_TYPE));
+		registerNamedQuery(readByPerson2ByTypes, _select().whereIdentifierIn(PersonRelationship.FIELD_PERSON2,PersonRelationship.FIELD_PERSON2)
+				.and().whereIdentifierIn(PersonRelationship.FIELD_TYPE,PersonRelationship.FIELD_TYPE));
 	}
 	
 	@Override
@@ -49,6 +51,12 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 	@Override
 	public Collection<PersonRelationship> readByPerson2ByType(Person person, PersonRelationshipType type) {
 		return namedQuery(readByPerson2ByType).parameter(PersonRelationship.FIELD_PERSON2, person).parameter(PersonRelationship.FIELD_TYPE, type).resultMany();
+	}
+	
+	@Override
+	public Collection<PersonRelationship> readByPerson2ByTypes(Collection<Person> persons, Collection<PersonRelationshipType> types) {
+		return namedQuery(readByPerson2ByTypes).parameterIdentifiers(PersonRelationship.FIELD_PERSON2, persons)
+				.parameterIdentifiers(PersonRelationship.FIELD_TYPE, types).resultMany();
 	}
 
 }

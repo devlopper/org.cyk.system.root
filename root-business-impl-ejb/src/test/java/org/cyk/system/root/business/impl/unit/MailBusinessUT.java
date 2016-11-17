@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness;
+import org.cyk.system.root.business.impl.file.FileBusinessImpl;
 import org.cyk.system.root.business.impl.message.MailBusinessImpl;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.utility.test.unit.AbstractUnitTest;
@@ -18,11 +19,13 @@ public class MailBusinessUT extends AbstractUnitTest {
 	private static final long serialVersionUID = 124355073578123984L;
 
 	@InjectMocks private MailBusinessImpl mailBusiness;
+	@InjectMocks private FileBusinessImpl fileBusiness;
 	
 	@Override
 	protected void registerBeans(Collection<Object> collection) {
 		super.registerBeans(collection);
 		collection.add(mailBusiness);
+		collection.add(fileBusiness);
 		mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
 	}
 	
@@ -116,5 +119,37 @@ public class MailBusinessUT extends AbstractUnitTest {
 		
 		mailBusiness.send(notifications);
 	}
+	
+	/*@Test
+    public void sendMailToParents(){
+		File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\pdf");
+    	Person son = inject(PersonBusiness.class).instanciateOneRandomly("P002");
+    	son.setName("Komenan");
+    	son.setLastnames("Yao Christian");
+    	son.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "kycdev@gmail.com"));
+    	
+    	Person father = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_FATHER).getPerson1();
+    	father.setName("Kouagni");
+    	father.setLastnames("N'Dri Jean");
+    	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup@gmail.com"));
+    	
+    	Person mother = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_MOTHER).getPerson1();
+    	mother.setName("Tchimou");
+    	mother.setLastnames("Ahou odette");
+    	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup0@gmail.com"));
+    	
+    	create(son);
+    	
+    	org.cyk.system.root.model.file.File file = null;
+    	try {
+    		file = fileBusiness.process(IOUtils.toByteArray(new FileInputStream(new File(directory, "1.pdf"))), "bulletin de bryan.pdf");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+		Notification notification = new Notification.Builder().setRemoteEndPoint(RemoteEndPoint.MAIL_SERVER).addIdentifiables(son).addFile(file)
+				.build();
+		inject(MailBusiness.class).send(notification);
+    }*/
 
 }
