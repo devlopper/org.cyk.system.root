@@ -13,6 +13,7 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.AbstractBuilder;
 import org.cyk.utility.common.ListenerUtils;
@@ -57,13 +58,22 @@ public class Notification implements Serializable  {
 	private Boolean all = Boolean.FALSE;
 	
 	public Notification addFile(String name, byte[] bytes,String mime){
-		if(files==null)
-			files = new ArrayList<>();
 		File file = new File();
 		file.setName(name);
 		file.setBytes(bytes);
 		file.setMime(mime);
-		files.add(file); 
+		return addFile(file); 
+	}
+	public Notification addFile(File file){
+		addFiles(Arrays.asList(file)); 
+		return this;
+	}
+	public Notification addFiles(Collection<File> files){
+		if(files!=null){
+			if(this.files==null)
+				this.files = new ArrayList<>();
+			this.files.addAll(files); 
+		}
 		return this;
 	}
 	
@@ -87,6 +97,14 @@ public class Notification implements Serializable  {
 		
 		private Collection<AbstractIdentifiable> identifiables;
 		private RemoteEndPoint remoteEndPoint;
+		private Date date;
+		/* Files */
+		private Set<String> reportTemplateCodes;
+		private Collection<File> files;
+		/* ContactCollections */
+		private Set<String> personRelationshipCodes;
+		private Set<String> partyCodes;
+		private Set<ContactCollection> contactCollections;
 		
 		public Builder() {
 			super(Notification.class);
@@ -107,17 +125,70 @@ public class Notification implements Serializable  {
 					return listener.getMessage(identifiables, remoteEndPoint);
 				}
 			}));
+			notification.setReceiverIdentifiers(listenerUtils.getSet(Listener.COLLECTION, new ListenerUtils.CollectionMethod.Set<Listener,String>() {
+				@Override
+				public Set<String> execute(Listener listener) {
+					return listener.getReceiverIdentifiers(identifiables, remoteEndPoint,partyCodes,personRelationshipCodes);
+				}
+			}));
+			
+			notification.addFiles(files);
+			notification.addFiles(listenerUtils.getCollection(Listener.COLLECTION, new ListenerUtils.CollectionMethod<Listener, File>() {
+				@Override
+				public Collection<File> execute(Listener listener) {
+					return listener.getFiles(identifiables, remoteEndPoint);
+				}
+			}));
+			
+			notification.setRemoteEndPoint(remoteEndPoint);
+			notification.setDate(date);
 			return notification;
 		}
 		
-		public Builder addIdentifiable(AbstractIdentifiable identifiable){
-			if(identifiables==null)
-				identifiables = new ArrayList<>();
-			identifiables.add(identifiable);
+		public Builder addIdentifiables(AbstractIdentifiable...identifiables){
+			if(this.identifiables==null)
+				this.identifiables = new ArrayList<>();
+			this.identifiables.addAll(Arrays.asList(identifiables));
 			return this;
 		}
+		
+		public Builder addReportTemplateCodes(String...reportTemplateCodes){
+			if(this.reportTemplateCodes==null)
+				this.reportTemplateCodes = new LinkedHashSet<>();
+			this.reportTemplateCodes.addAll(Arrays.asList(reportTemplateCodes));
+			return this;
+		}
+		
+		public Builder addFile(File file){
+			if(files==null)
+				files = new ArrayList<>();
+			files.add(file); 
+			return this;
+		}
+		
 		public Builder setRemoteEndPoint(RemoteEndPoint remoteEndPoint){
 			this.remoteEndPoint = remoteEndPoint;
+			return this;
+		}
+		
+		public Builder addPersonRelationshipCodes(String...codes){
+			if(this.personRelationshipCodes==null)
+				this.personRelationshipCodes = new LinkedHashSet<>();
+			this.personRelationshipCodes.addAll(Arrays.asList(codes));
+			return this;
+		}
+		
+		public Builder addPartyCodes(String...codes){
+			if(this.partyCodes==null)
+				this.partyCodes = new LinkedHashSet<>();
+			this.partyCodes.addAll(Arrays.asList(codes));
+			return this;
+		}
+		
+		public Builder addContactCollections(ContactCollection...contactCollections){
+			if(this.contactCollections==null)
+				this.contactCollections = new LinkedHashSet<>();
+			this.contactCollections.addAll(Arrays.asList(contactCollections));
 			return this;
 		}
 		
@@ -129,7 +200,10 @@ public class Notification implements Serializable  {
 			
 			String getTitle(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
 			String getMessage(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
-			Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
+			Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Collection<String> partyCodes,Collection<String> personRelationshipCodes);
+			Set<File> getFiles(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
+			Set<ContactCollection> getContactCollections(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
+			Set<String> getReportTemplateCodes(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
 			
 			public static class Adapter extends BeanAdapter implements Listener,Serializable {
 				private static final long serialVersionUID = 1L;
@@ -145,15 +219,28 @@ public class Notification implements Serializable  {
 				}
 				
 				@Override
-				public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
+				public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Collection<String> partyCodes,Collection<String> personRelationshipCodes) {
 					return null;
 				}
 				
+				@Override
+				public Set<File> getFiles(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
+					return null;
+				}
+				
+				@Override
+				public Set<ContactCollection> getContactCollections(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint) {
+					return null;
+				}
+				
+				@Override
+				public Set<String> getReportTemplateCodes(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint) {
+					return null;
+				}
 				/**/
 				
 				public static class Default extends Adapter implements Serializable {
 					private static final long serialVersionUID = 1L;
-					
 					
 					
 				}
@@ -176,5 +263,7 @@ public class Notification implements Serializable  {
 		private RemoteEndPoint(){}
 		
 	}
+	
+	/**/
 	
 }

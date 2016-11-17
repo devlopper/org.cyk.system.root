@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.geography.LocationBusiness;
 import org.cyk.system.root.business.api.language.LanguageCollectionBusiness;
@@ -109,8 +110,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		person.setContactCollection(inject(ContactCollectionBusiness.class).instanciateOneRandomly());
 		File photo = new File();
 		RandomFile randomFile = randomPerson.photo();
-		photo.setBytes(randomFile.getBytes());
-		photo.setExtension(randomFile.getExtension());
+		inject(FileBusiness.class).process(photo, randomFile.getBytes(), "photo."+randomFile.getExtension());
 		person.setImage(photo);
 		
 		person.getExtendedInformations().setBirthLocation((Location) inject(LocationBusiness.class).instanciateOneRandomly());
@@ -120,8 +120,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 		File signature = new File();
 		randomFile = RandomDataProvider.getInstance().signatureSpecimen();
-		signature.setBytes(randomFile.getBytes());
-		signature.setExtension(randomFile.getExtension());
+		inject(FileBusiness.class).process(signature, randomFile.getBytes(), "signature."+randomFile.getExtension());
 		person.getExtendedInformations().setSignatureSpecimen(signature);
 			
 		return person;

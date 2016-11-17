@@ -2,17 +2,14 @@ package org.cyk.system.root.business.impl.integration;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.cyk.system.root.business.api.geography.ContactBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
-import org.cyk.system.root.business.api.message.MessageSendingBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeBusiness;
-import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.person.Person;
@@ -118,37 +115,6 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     }
     
     @Test
-    public void sendMailToParents(){
-    	Person son = inject(PersonBusiness.class).instanciateOne();
-    	son.setCode("P002");
-    	son.setName("Komenan");
-    	son.setLastnames("Yao Christian");
-    	son.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "kycdev1@gmail.com"));
-    	
-    	Person father = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_FATHER).getPerson1();
-    	father.setName("Kouagni");
-    	father.setLastnames("N'Dri Jean");
-    	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "kycdev2@gmail.com"));
-    	
-    	Person mother = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_MOTHER).getPerson1();
-    	mother.setName("Tchimou");
-    	mother.setLastnames("Ahou odette");
-    	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "kycdev@gmail.com"));
-    	
-    	create(son);
-    	
-    	Collection<ElectronicMail> parentElectronicMails = inject(ContactBusiness.class).findByCollectionsByClass(Arrays.asList(father.getContactCollection(),mother.getContactCollection())
-    			, ElectronicMail.class);
-    	
-    	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
-		Notification notification = new Notification();
-		notification.setDate(new Date());
-		notification.setTitle("TestTitle");
-		notification.setMessage("TestMessage");
-		inject(MailBusiness.class).send(notification, inject(ElectronicMailBusiness.class).findAddresses(parentElectronicMails));
-    }
-    
-    //@Test
     public void exceptionCodeExist(){
     	Person person = inject(PersonBusiness.class).instanciateOne();
     	person.setCode("ABC");

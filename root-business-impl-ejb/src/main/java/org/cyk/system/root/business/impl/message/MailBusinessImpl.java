@@ -22,6 +22,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
@@ -70,16 +71,19 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
                     	Multipart multipart = new MimeMultipart();
                         if(notification.getFiles()!=null)
                         	for(File file : notification.getFiles()){
+                        		exceptionUtils().exception(StringUtils.isBlank(file.getMime()), "Mime is required on file : "+file);
                         		MimeBodyPart bodyPart = new MimeBodyPart();
-                                bodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(inject(FileBusiness.class).findBytes(file), file.getMime())));
-                                bodyPart.setFileName(file.getName());
+                                bodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(file.getBytes()==null ? inject(FileBusiness.class).findBytes(file) 
+                                		: file.getBytes(), file.getMime())));
+                                bodyPart.setFileName(StringUtils.defaultString(file.getName(),RandomStringUtils.randomAlphabetic(5)));
                                 multipart.addBodyPart(bodyPart);
                         	}
                         
-                        
-                        BodyPart htmlBodyPart = new MimeBodyPart();
-                        htmlBodyPart.setContent(notification.getMessage() , notification.getMime());
-                        multipart.addBodyPart(htmlBodyPart);
+                        if(StringUtils.isNotBlank(notification.getMessage())){
+	                        BodyPart htmlBodyPart = new MimeBodyPart();
+	                        htmlBodyPart.setContent(notification.getMessage() , notification.getMime());
+	                        multipart.addBodyPart(htmlBodyPart);
+                        }
                         
                         message.setContent(multipart);
                     }
