@@ -24,6 +24,9 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
+import org.cyk.utility.common.generator.RandomDataProvider;
 import org.junit.Test;
 
 public class MailBusinessIT extends AbstractBusinessIT {
@@ -78,6 +81,24 @@ public class MailBusinessIT extends AbstractBusinessIT {
     	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_IMAGE));
 		create(file);
 		create(new FileIdentifiableGlobalIdentifier(file,son));
+		
+		try {
+    		file = inject(FileBusiness.class).process(RandomDataProvider.getInstance().getMale().photo().getBytes(), "image identité de papa.pdf");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_IMAGE));
+		create(file);
+		create(new FileIdentifiableGlobalIdentifier(file,father));
+		
+		try {
+    		file = inject(FileBusiness.class).process(RandomDataProvider.getInstance().getFemale().photo().getBytes(), "image identité de maman.pdf");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_IMAGE));
+		create(file);
+		create(new FileIdentifiableGlobalIdentifier(file,mother));
     }
     
     @Override
@@ -123,7 +144,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 		
 	}
 	
-	@Test
+	//@Test
     public void sendMailToFather(){
 		Person son = inject(PersonBusiness.class).find("P002");
     	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
@@ -142,12 +163,24 @@ public class MailBusinessIT extends AbstractBusinessIT {
 				*/
     }
 	
-	@Test
+	//@Test
     public void sendMailToMother(){
 		Person son = inject(PersonBusiness.class).find("P002");
     	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
     	inject(MailBusiness.class).send(Notification.Builder.buildMail(son, FileRepresentationType.IDENTITY_IMAGE,Arrays.asList(PersonRelationshipType.FAMILY_MOTHER
     			),Boolean.FALSE));
+    }
+	
+	@Test
+    public void sendMultipleMails(){
+		Person son = inject(PersonBusiness.class).find("P002");
+		Person father = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_FATHER))
+				.iterator().next().getPerson1();
+		Person mother = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_MOTHER))
+				.iterator().next().getPerson1();
+    	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+    	inject(MailBusiness.class).send(Notification.Builder.buildMails(Arrays.asList(father,mother,son), FileRepresentationType.IDENTITY_IMAGE,Arrays.asList(PersonRelationshipType.FAMILY_FATHER,PersonRelationshipType.FAMILY_MOTHER
+    			),Boolean.TRUE));
     }
 
 }

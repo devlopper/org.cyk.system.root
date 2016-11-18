@@ -11,18 +11,4 @@ public interface RootReportProducer {
 	<REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass
 			,CreateReportFileArguments<?> createReportFileArguments);
 	
-	//<REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass,AbstractIdentifiable identifiable);
-
-	//<REPORT extends AbstractReportTemplateFile<REPORT>> ProduceArguments<REPORT> getDefaultProduceArguments(Class<REPORT> reportClass,AbstractIdentifiable identifiable);
-	
-	/**/
-	/*
-	@Getter @Setter @NoArgsConstructor
-	public static class ProduceArguments<REPORT extends AbstractReportTemplateFile<REPORT>> implements Serializable{
-		private static final long serialVersionUID = 1446488904290411180L;
-		
-		public ProduceArguments(ProduceArguments<REPORT> parameters){
-		
-		}
-	}*/
 }

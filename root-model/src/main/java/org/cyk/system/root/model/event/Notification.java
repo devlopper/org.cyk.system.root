@@ -253,6 +253,13 @@ public class Notification implements Serializable  {
 			return build(RemoteEndPoint.MAIL_SERVER,identifiable, fileRepresentationTypeCode,null);
 		}
 		
+		public static Collection<Notification> buildMails(Collection<? extends AbstractIdentifiable> identifiables,String fileRepresentationTypeCode,Collection<String> personRelationshipTypeCodes,Boolean isIdentifiableReceiver){
+			Collection<Notification> notifications = new ArrayList<>();
+			for(AbstractIdentifiable identifiable : identifiables)
+				notifications.add(buildMail(identifiable, fileRepresentationTypeCode, personRelationshipTypeCodes, isIdentifiableReceiver));
+			return notifications;
+		}
+		
 		/**/
 		
 		public static interface Listener {
