@@ -22,9 +22,7 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
-import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
@@ -552,7 +550,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		
 		void beforeCreate(IDENTIFIABLE identifiable);
 		void afterCreate(IDENTIFIABLE identifiable);
-		void createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean updateExisting);
+		void createReportFile(CreateReportFileArguments<IDENTIFIABLE> arguments);
 		
 		void beforeUpdate(IDENTIFIABLE identifiable);
 		void afterUpdate(IDENTIFIABLE identifiable);
@@ -656,9 +654,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			}
 			
 			@Override
-			public void createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode,Boolean updateExisting) {
-				FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
-		    	searchCriteria.addIdentifiableGlobalIdentifier(identifiable);
+			public void createReportFile(CreateReportFileArguments<IDENTIFIABLE> arguments) {
+				/*FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
+		    	searchCriteria.addIdentifiableGlobalIdentifier(arguments.getIdentifiable());
 		    	searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(reportTemplateCode));
 		    	Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
 		    	
@@ -673,7 +671,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		    		
 		    	}
 		    	arguments = new CreateReportFileArguments<IDENTIFIABLE>(reportTemplateCode, identifiable,file);
-				inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, arguments);
+		    	*/
+				inject(BusinessInterfaceLocator.class).injectTypedByObject(arguments.getIdentifiable()).createReportFile(arguments);
 				
 			}
 			
@@ -813,11 +812,13 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 							
 						}else{
 							@SuppressWarnings("unchecked")
-							Class<AbstractIdentifiable> clazz = (Class<AbstractIdentifiable>) identifiable.getClass();
-							TypedBusiness<AbstractIdentifiable> business = inject(BusinessInterfaceLocator.class).injectTyped(clazz);							
+							Class<IDENTIFIABLE> clazz = (Class<IDENTIFIABLE>) identifiable.getClass();
+							TypedBusiness<IDENTIFIABLE> business = inject(BusinessInterfaceLocator.class).injectTyped(clazz);							
 							for(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier : fileIdentifiableGlobalIdentifiers){
-								CreateReportFileArguments<AbstractIdentifiable> arguments = new CreateReportFileArguments<AbstractIdentifiable>(reportTemplateCode,identifiable,fileIdentifiableGlobalIdentifier.getFile());
-								business.createReportFile(identifiable, arguments);
+								CreateReportFileArguments<IDENTIFIABLE> arguments = 
+										new CreateReportFileArguments.Builder<IDENTIFIABLE>(identifiable)
+										.setReportTemplate(reportTemplateCode).setFile(fileIdentifiableGlobalIdentifier.getFile()).build(); 
+								business.createReportFile(arguments);
 							}
 						}
 					}

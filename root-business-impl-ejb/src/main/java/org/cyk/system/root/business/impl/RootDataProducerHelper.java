@@ -219,7 +219,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			if(StringUtils.isNotBlank(code))
 				file.setCode(code);
 			file = fileBusiness.create(file);
-		}
+		}else
+			;//System.out.println("Relative path is blank : "+relativePath+" : "+code+" , "+name+" , "+basePackage);
 		return file;
 	}
 	

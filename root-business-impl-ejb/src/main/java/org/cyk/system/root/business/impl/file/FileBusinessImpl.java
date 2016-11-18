@@ -89,6 +89,11 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		return findByRepresentationTypesByIdentifiables(Arrays.asList(fileRepresentationType),identifiables);
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<File> findByRepresentationTypeByIdentifiable(FileRepresentationType fileRepresentationType,AbstractIdentifiable identifiable) {
+		return findByRepresentationTypeByIdentifiables(fileRepresentationType, Arrays.asList(identifiable));
+	}
+	
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) //TODO is this Support and followings really needed ???
     public File process(byte[] bytes, String name) {
         if(bytes==null || bytes.length==0)

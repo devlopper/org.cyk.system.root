@@ -405,30 +405,29 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public File createReportFile(IDENTIFIABLE identifiable,CreateReportFileArguments<IDENTIFIABLE> arguments) {
-		arguments.setIdentifiable(identifiable);
+	public File createReportFile(CreateReportFileArguments<IDENTIFIABLE> arguments) {
 		if(arguments.getFile()==null)
 			arguments.setFile(new File());
 		if(arguments.getFile().getRepresentationType()==null)
-			arguments.getFile().setRepresentationType(inject(FileRepresentationTypeDao.class).read(arguments.getReportTemplateCode()));
+			arguments.getFile().setRepresentationType(inject(FileRepresentationTypeDao.class).read(arguments.getReportTemplate().getCode()));
+		if(arguments.getJoinFileToIdentifiable()==null)
+			arguments.setJoinFileToIdentifiable(Boolean.TRUE);
 		exceptionUtils().exception(arguments.getFile().getRepresentationType()==null,"filerepresensationtype.mustnotbenull");	
 		RootReportProducer reportProducer = arguments.getReportProducer() == null ? AbstractRootReportProducer.DEFAULT : arguments.getReportProducer();
 		@SuppressWarnings({ "rawtypes" })
-		Class<AbstractReportTemplateFile> reportTemplateFileClass = (Class<AbstractReportTemplateFile>) reportProducer.getReportTemplateFileClass(identifiable,arguments.getReportTemplateCode());
+		Class<AbstractReportTemplateFile> reportTemplateFileClass = (Class<AbstractReportTemplateFile>) reportProducer.getReportTemplateFileClass(arguments.getIdentifiable(),arguments.getReportTemplate().getCode());
 		createReportFile(reportTemplateFileClass,arguments);
 		return arguments.getFile();
 	}
 	
 	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,CreateReportFileArguments<IDENTIFIABLE> arguments){
 		RootReportProducer reportProducer = arguments.getReportProducer() == null ? AbstractRootReportProducer.DEFAULT : arguments.getReportProducer();
-		REPORT producedReport = reportProducer.produce(reportClass,arguments.getIdentifiable());
-		if(producedReport==null)
-			exceptionUtils().exception("produced report cannot be null");
-		ReportTemplate reportTemplate = arguments.getReportTemplate() == null ? inject(ReportTemplateDao.class).read(arguments.getReportTemplateCode()) 
-				: arguments.getReportTemplate();
-		if(reportTemplate==null)
-			exceptionUtils().exception("report template cannot be null");
-		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, reportTemplate.getTemplate()
+		REPORT producedReport = reportProducer.produce(reportClass,arguments);
+		exceptionUtils().exception(producedReport==null,"produced report cannot be null");
+		exceptionUtils().exception(arguments.getReportTemplate()==null,"report template cannot be null");
+		exceptionUtils().exception(arguments.getReportTemplate().getTemplate()==null,"template file cannot be null");
+		exceptionUtils().exception(arguments.getFile()==null,"output file cannot be null");
+		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, arguments.getReportTemplate().getTemplate()
 				, arguments.getFile().getExtension());
 		inject(FileBusiness.class).process(arguments.getFile(),reportBasedOnTemplateFile.getBytes(), ReportBusiness.DEFAULT_FILE_NAME_AND_EXTENSION);
 		Boolean isNewFile = isNotIdentified(arguments.getFile());
@@ -437,13 +436,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}
 		inject(GenericBusiness.class).save(arguments.getFile());
 		if(Boolean.TRUE.equals(isNewFile)){
-			inject(ReportFileBusiness.class).create(new ReportFile(reportTemplate, arguments.getFile()));
+			inject(ReportFileBusiness.class).create(new ReportFile(arguments.getReportTemplate(), arguments.getFile()));
 		}
 		if(Boolean.TRUE.equals(arguments.getJoinFileToIdentifiable())){
 			FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
 			searchCriteria.addIdentifiableGlobalIdentifier(arguments.getIdentifiable());
 			searchCriteria.addRepresentationType(arguments.getFile().getRepresentationType() == null 
-					? inject(FileRepresentationTypeDao.class).read(arguments.getReportTemplateCode()) : arguments.getFile().getRepresentationType());
+					? inject(FileRepresentationTypeDao.class).read(arguments.getReportTemplate().getCode()) : arguments.getFile().getRepresentationType());
 			Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierDao.class).readByCriteria(searchCriteria);
 			if(fileIdentifiableGlobalIdentifiers.isEmpty())
 				inject(GenericBusiness.class).create(new FileIdentifiableGlobalIdentifier(arguments.getFile(), arguments.getIdentifiable()));
@@ -456,8 +455,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
     	searchCriteria.addIdentifiableGlobalIdentifier(identifiable);
     	searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(reportTemplate.getCode()));
     	Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
-		if(fileIdentifiableGlobalIdentifiers.isEmpty() && Boolean.TRUE.equals(createIfNull))
-			return createReportFile(identifiable, new CreateReportFileArguments<IDENTIFIABLE>(reportTemplate, identifiable));	
+		if(fileIdentifiableGlobalIdentifiers.isEmpty() && Boolean.TRUE.equals(createIfNull)){
+			CreateReportFileArguments<IDENTIFIABLE> arguments = new CreateReportFileArguments.Builder<IDENTIFIABLE>(identifiable).setReportTemplate(reportTemplate).build();
+			return createReportFile(arguments);
+		}
 		return fileIdentifiableGlobalIdentifiers.isEmpty() ? null : fileIdentifiableGlobalIdentifiers.iterator().next().getFile();
 	}
 

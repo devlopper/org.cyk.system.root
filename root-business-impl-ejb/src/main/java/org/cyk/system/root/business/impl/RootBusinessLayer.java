@@ -327,6 +327,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		};
 		
 		Notification.Builder.Listener.COLLECTION.add(NotificationBuilderAdapter.DEFAULT);
+		TypedBusiness.CreateReportFileArguments.Builder.Listener.COLLECTION.add(new CreateReportFileArgumentsAdapter());
     }
     
     

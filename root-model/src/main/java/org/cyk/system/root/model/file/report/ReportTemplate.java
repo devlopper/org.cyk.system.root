@@ -35,6 +35,9 @@ public class ReportTemplate extends AbstractEnumeration implements Serializable 
 		this.draftBackgroundImage = draftBackgroundImage;
 	}
 	
-	
+	public static final String FIELD_TEMPLATE = "template";
+	public static final String FIELD_HEADER_IMAGE = "headerImage";
+	public static final String FIELD_BACKGROUND_IMAGE = "backgroundImage";
+	public static final String FIELD_DRAFT_BACKGROUND_IMAGE = "draftBackgroundImage";
 	
 }

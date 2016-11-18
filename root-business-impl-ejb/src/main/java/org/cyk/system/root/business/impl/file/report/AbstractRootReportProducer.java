@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
@@ -53,10 +54,20 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	protected LabelValueCollectionReport currentLabelValueCollection;
 	
 	@Override
-	public <REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass, AbstractIdentifiable identifiable) {
+	public <REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass,CreateReportFileArguments<?> arguments) {
 		return null;
 	}
+	/*
+	@Override
+	public <REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass, AbstractIdentifiable identifiable) {
+		return produce(reportClass,identifiable);
+	}
 	
+	@Override
+	public <REPORT extends AbstractReportTemplateFile<REPORT>> ProduceArguments<REPORT> getDefaultProduceArguments(Class<REPORT> reportClass, AbstractIdentifiable identifiable) {
+		return new ProduceArguments<REPORT>();
+	}
+	*/
 	protected String getJasperStyle(String text,Style style){
 		return String.format(JASPER_STYLE, style.getFont().getSize(),"#"+style.getText().getColor().getHexademicalCode(),text);
 		//return String.format(JASPER_STYLE, style.getFont().getSize(),"#0000ff",text);

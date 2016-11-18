@@ -43,6 +43,7 @@ public interface FileBusiness extends TypedBusiness<File> {
     Collection<File> findByFileIdentifiableGlobalIdentifierSearchCriteria(FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria);
     Collection<File> findByRepresentationTypesByIdentifiables(Collection<FileRepresentationType> fileRepresentationTypes,Collection<? extends AbstractIdentifiable> identifiables);
     Collection<File> findByRepresentationTypeByIdentifiables(FileRepresentationType fileRepresentationType,Collection<? extends AbstractIdentifiable> identifiables);
+    Collection<File> findByRepresentationTypeByIdentifiable(FileRepresentationType fileRepresentationType,AbstractIdentifiable identifiable);
     
     String convertToFileName(String string);
     
@@ -62,6 +63,8 @@ public interface FileBusiness extends TypedBusiness<File> {
     }
     
     String ILLEGAL_FILE_NAME_CHARACTERS = "\\/.,;:!?";
+
+	
 
 	
 }
