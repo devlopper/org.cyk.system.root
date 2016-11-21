@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
@@ -30,17 +31,25 @@ public class NotificationBuilderAdapter extends Notification.Builder.Listener.Ad
 	public static Notification.Builder.Listener DEFAULT = new NotificationBuilderAdapter();
 	
 	@Override
+	public String getSenderIdentifier(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint) {
+		if(RemoteEndPoint.MAIL_SERVER.equals(remoteEndPoint))
+			return inject(ApplicationBusiness.class).findCurrentInstance().getSmtpProperties().getFrom();
+		return super.getSenderIdentifier(identifiables, remoteEndPoint);
+	}
+	
+	@Override
 	public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Boolean areIdentifiablesReceivers,Collection<String> partyCodes,Collection<String> personRelationshipTypeCodes) {
 		Set<String> receiverIdentifiers = super.getReceiverIdentifiers(identifiables, remoteEndPoint,areIdentifiablesReceivers,partyCodes,personRelationshipTypeCodes);
 		Collection<Party> parties = new LinkedHashSet<>();
-		Collection<Person> persons = new LinkedHashSet<>(),relatedPersons = new LinkedHashSet<>();;
-		for(AbstractIdentifiable identifiable : identifiables)
-			if(identifiable instanceof Party){
-				parties.add((Party) identifiable);
-				if(identifiable instanceof Person)
-					persons.add((Person)identifiable);
-			}else if(identifiable instanceof AbstractActor)
-				persons.add( ((AbstractActor)identifiable).getPerson());
+		Collection<Person> persons = new LinkedHashSet<>(),relatedPersons = new LinkedHashSet<>();
+		if(identifiables!=null)
+			for(AbstractIdentifiable identifiable : identifiables)
+				if(identifiable instanceof Party){
+					parties.add((Party) identifiable);
+					if(identifiable instanceof Person)
+						persons.add((Person)identifiable);
+				}else if(identifiable instanceof AbstractActor)
+					persons.add( ((AbstractActor)identifiable).getPerson());
 				
 		if(personRelationshipTypeCodes!=null){
 			Collection<PersonRelationshipType> personRelationshipTypes = inject(PersonRelationshipTypeDao.class).readByGlobalIdentifierCodes(personRelationshipTypeCodes);

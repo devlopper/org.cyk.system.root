@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.cyk.system.root.business.api.BusinessService;
-import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendOptions;
+import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendArguments;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
@@ -18,11 +18,11 @@ public interface NotificationBusiness extends BusinessService {
 	
 	void fill(Notification notification,NotificationTemplate template);
 	
-	void notify(Notification notification,Set<Party> receiver,SendOptions sendOptions);
+	void notify(Notification notification,Set<Party> receiver,SendArguments sendOptions);
 	
-	void notify(Notification notification,String receiverEmail,SendOptions sendOptions);
+	void notify(Notification notification,String receiverEmail,SendArguments sendOptions);
 
-	void notify(Collection<Notification> notifications,SendOptions sendOptions);
+	void notify(Collection<Notification> notifications,SendArguments sendOptions);
 	void notify(Collection<Notification> notifications);
 	
 	void run(Set<RemoteEndPoint> remoteEndPoints);

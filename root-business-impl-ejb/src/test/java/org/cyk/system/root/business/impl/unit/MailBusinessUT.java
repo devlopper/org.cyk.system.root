@@ -7,9 +7,13 @@ import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness;
+import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendArguments;
+import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendListener;
 import org.cyk.system.root.business.impl.file.FileBusinessImpl;
 import org.cyk.system.root.business.impl.message.MailBusinessImpl;
+import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.event.Notification;
+import org.cyk.utility.common.ThreadPoolExecutor;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +23,10 @@ public class MailBusinessUT extends AbstractUnitTest {
 	private static final long serialVersionUID = 124355073578123984L;
 
 	@InjectMocks private MailBusinessImpl mailBusiness;
+	@InjectMocks private ExceptionUtils exceptionUtils;
+	//@InjectMocks protected LanguageBusiness languageBusiness;
+	//@InjectMocks protected NumberBusiness numberBusiness;
+    //@InjectMocks protected TimeBusiness timeBusiness;
 	@InjectMocks private FileBusinessImpl fileBusiness;
 	
 	@Override
@@ -26,12 +34,13 @@ public class MailBusinessUT extends AbstractUnitTest {
 		super.registerBeans(collection);
 		collection.add(mailBusiness);
 		collection.add(fileBusiness);
+		collection.add(exceptionUtils);
 		mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
 	}
 	
 	@Test
 	public void sendSameMessageToOneBlocking() {
-		MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+		MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
 		Notification notification = new Notification();
 		notification.setTitle("A message to one");
 		notification.setMessage("TestMessage");
@@ -40,7 +49,7 @@ public class MailBusinessUT extends AbstractUnitTest {
 	
 	@Test
 	public void sendSameMessageToManyBlockingWithUnknownId() {
-		MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+		MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
 		Notification notification = new Notification();
 		notification.setTitle("A message to many with some undelivered");
 		notification.setMessage("TestMessage");
@@ -48,35 +57,47 @@ public class MailBusinessUT extends AbstractUnitTest {
 	}
 	
 	@Test
-	public void sendDifferentMessageToManyBlocking() {
-		MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+	public void sendDifferentMessageToMany() {
+		File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\pdf");
 		Collection<Notification> notifications = new ArrayList<>();
 		
-		Notification notification = new Notification();
-		notification.setTitle("A message title to receiver 1");
-		notification.setMessage("Message to reveiver 1");
-		notification.addReceiverIdentifiers("kycdev@gmail.com");
-		notifications.add(notification);
-		
-		notification = new Notification();
-		notification.setTitle("A message title to receiver 2");
-		notification.setMessage("Message to reveiver 2");
-		notification.addReceiverIdentifiers("kycdev@gmail.com");
-		notifications.add(notification);
-		
-		notification = new Notification();
-		notification.setTitle("A message title to receiver 3");
-		notification.setMessage("Message to reveiver 3");
-		notification.addReceiverIdentifiers("kycdev@gmail.com");
-		notifications.add(notification);
-		
-		mailBusiness.send(notifications);
+		for(int i = 0 ; i < 10 ; i++){
+			Notification notification = new Notification();
+			notification.setTitle("A message title to receiver "+i);
+			notification.setMessage("Message to reveiver "+i);
+			notification.addReceiverIdentifiers("kycdev@gmail.com");
+			try {
+				notification.addFile("fichier 1 de personne "+i,IOUtils.toByteArray(new FileInputStream(new File(directory, "1.pdf"))), "application/pdf");
+				notification.addFile("fichier 2 de personne "+i,IOUtils.toByteArray(new FileInputStream(new File(directory, "2.pdf"))), "application/pdf");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			notifications.add(notification);
+		}
+		SendListener listener = new SendListener.Adapter.Default(){
+			private static final long serialVersionUID = 1L;
+			
+		};
+		SendArguments sendArguments = new SendArguments();
+		sendArguments.setNumberOfRetry(30l);
+		sendArguments.setNumberOfMillisecondBeforeRetry(1000l * 10);
+		sendArguments.setCorePoolSize(10);
+		sendArguments.setMaximumPoolSize(50);
+		sendArguments.setThreadPoolExecutorListener(new ThreadPoolExecutor.Listener.Adapter.Default() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Throwable getThrowable(Throwable throwable) {
+				return throwable instanceof RuntimeException ? throwable.getCause() : throwable;
+			}
+		});
+		//sendArguments.setDebug(Boolean.TRUE);
+		mailBusiness.send(notifications,listener,sendArguments);
 	}
 	
 	@Test
 	public void sendSameMessageToOneBlockingWithAttachements() {
 		File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\pdf");
-		MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+		MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
 		Notification notification = new Notification();
 		notification.setTitle("A message with attachements");
 		notification.setMessage("TestMessage");
@@ -92,7 +113,7 @@ public class MailBusinessUT extends AbstractUnitTest {
 	@Test
 	public void sendDifferentMessageToManyBlockingWithAttachements() {
 		File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\pdf");
-		MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+		MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
 		Collection<Notification> notifications = new ArrayList<>();
 		
 		Notification notification = new Notification();
@@ -117,7 +138,7 @@ public class MailBusinessUT extends AbstractUnitTest {
 		}
 		notifications.add(notification);
 		
-		mailBusiness.send(notifications);
+		mailBusiness.send(notifications,null);
 	}
 	
 	/*@Test

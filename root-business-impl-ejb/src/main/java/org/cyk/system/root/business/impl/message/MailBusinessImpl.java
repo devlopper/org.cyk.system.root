@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.message;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -24,35 +25,37 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.BusinessExceptionNoRollBack;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
-import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.security.Credentials;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
+import org.cyk.utility.common.ThreadPoolExecutor;
 
-public class MailBusinessImpl extends AbstractBusinessServiceImpl implements MailBusiness , Serializable {
+import com.sun.mail.util.MailConnectException;
+
+import lombok.Getter;
+import lombok.Setter;
+
+public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAddress> implements MailBusiness , Serializable {
     
 	private static final long serialVersionUID = 4468167686499924200L;
 	
-	public static final String PROPERTY_FORMAT = "mail.smtp.%s";
+	public static final String SMTP = "smtp";
+	public static final String PROPERTY_FORMAT = "mail."+SMTP+"%s.%s";
 	
 	public static SmtpProperties SMTP_PROPERTIES;
 	
-    private Session session;
-
     @Inject private ApplicationBusiness applicationBusiness;
     
-    private void send(final Notification notification,final InternetAddress[] addresses,final SendOptions options) {
-    	exceptionUtils().exception(StringUtils.isBlank(notification.getTitle()), "notification.title.required");
-    	exceptionUtils().exception(StringUtils.isBlank(notification.getMessage()) && (notification.getFiles()==null || notification.getFiles().isEmpty())
-    			, "notification.messageorattachement.required");
+    private Session getSession(Boolean debug) {
+    	Session session = null;
     	Properties properties = convert(getSmtpProperties());
     	session = Session.getInstance(properties,new Authenticator() {
     		@Override
@@ -60,68 +63,22 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
     			return new PasswordAuthentication(getSmtpProperties().getCredentials().getUsername(), getSmtpProperties().getCredentials().getPassword());
     		}
 		});
+    	session.setDebug(debug);
+    	return session;
+		
+    }
+    
+    private void send(final Session session,final Notification notification,final InternetAddress[] addresses) {
+    	/*exceptionUtils().exception(StringUtils.isBlank(notification.getTitle()), "notification.title.required");
+    	exceptionUtils().exception(StringUtils.isBlank(notification.getMessage()) && (notification.getFiles()==null || notification.getFiles().isEmpty())
+    			, "notification.messageorattachement.required");
+    	*/
     	
-    	Thread thread = new Thread(){
-            public void run() {
-            	LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Send","mail");
-            	logMessageBuilder.addParameters("title",notification.getTitle(),"message",notification.getMessage(),"#attachements",notification.getFiles()==null?0:notification.getFiles().size()
-            			,"from",SMTP_PROPERTIES.getFrom(),"to",notification.getReceiverIdentifiers(),"blocking",options.getBlocking());
-                MimeMessage message = new MimeMessage(session);
-                try {
-                    message.setFrom(new InternetAddress(SMTP_PROPERTIES.getFrom()));
-                    message.setRecipients(Message.RecipientType.TO, addresses);
-                    message.setSubject(notification.getTitle());
-                    message.setSentDate(notification.getDate() == null ? new Date() : notification.getDate());
-                    String type = notification.getMime()+"; charset=utf-8";
-                    if(notification.getFiles()==null){
-                    	message.setContent(notification.getMessage(), type);
-                    }else{
-                    	Multipart multipart = new MimeMultipart();
-                        if(notification.getFiles()!=null)
-                        	for(File file : notification.getFiles()){
-                        		exceptionUtils().exception(StringUtils.isBlank(file.getMime()), "mail.file.mime.required");
-                        		MimeBodyPart bodyPart = new MimeBodyPart();
-                                bodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(file.getBytes()==null ? inject(FileBusiness.class).findBytes(file) 
-                                		: file.getBytes(), file.getMime())));
-                                bodyPart.setFileName(StringUtils.defaultString(file.getName(),RandomStringUtils.randomAlphabetic(5)));
-                                multipart.addBodyPart(bodyPart);
-                        	}
-                        
-                        if(StringUtils.isNotBlank(notification.getMessage())){
-	                        BodyPart htmlBodyPart = new MimeBodyPart();
-	                        htmlBodyPart.setContent(notification.getMessage() , notification.getMime());
-	                        multipart.addBodyPart(htmlBodyPart);
-                        }
-                        
-                        message.setContent(multipart);
-                    }
-                     
-                    /*logDebug("Sending mail to {}", StringUtils.join(addresses));
-                    logTrace("From {} , Recipients {} , Subject {} , Date {} , Blocking {}",message.getFrom(),message.getRecipients(Message.RecipientType.TO),
-                    		message.getSubject(),message.getSentDate(),options.getBlocking());
-                    logTrace("Content = {}", message.getContent());
-                    */
-                    Transport.send(message);
-                    logMessageBuilder.addParameters("status","succeed");
-                } catch (Exception e) {
-                	logMessageBuilder.addParameters("status","failed");
-                	throw new BusinessExceptionNoRollBack(e.toString());
-                	//exceptionUtils().exception(exception);
-                	//e.printStackTrace();
-                    //logThrowable(e);
-                } finally {
-                	logTrace(logMessageBuilder);
-                }
-            };
-        };
-        if(Boolean.TRUE.equals(options.getBlocking()))
-        	thread.run();
-        else
-        	thread.start();
+    	new Sender(session, notification).run();
         
     }
     
-    private InternetAddress[] addresses(String...theAddresses){
+    private InternetAddress[] getAddresses(String...theAddresses){
         Collection<InternetAddress> receiverAddresses = new LinkedList<>();
         for(String adrress : theAddresses)
             try {
@@ -131,63 +88,75 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
             }
         return receiverAddresses.toArray(new InternetAddress[]{});
     }
-    
-    /*
-    private InternetAddress[] addressesParty(Party...parties){
-        Collection<String> receiverAddresses = new LinkedList<>();
-        for(Party party : parties)
-            receiverAddresses.add(party.getContact().getEmail());
-        return addresses(receiverAddresses);
-    }*/
-    
+        
     @Override
-    public void send(Notification notification, String[] theReceiverIds,SendOptions options) {
-        send(notification, addresses(theReceiverIds),options);
+    public void send(Notification notification, String[] theReceiverIds,SendArguments arguments) {
+        Session session = getSession(arguments.getDebug());
+        send(session,notification, getAddresses(theReceiverIds));
     }
+    
     @Override
     public void send(Notification notification, String[] theReceiverIds) {
-        send(notification, addresses(theReceiverIds),new SendOptions());
+    	send(notification, theReceiverIds,new SendArguments());
     }
 
     @Override
-    public void send(Notification notification, String aReceiverId,SendOptions options) {
+    public void send(Notification notification, String aReceiverId,SendArguments options) {
         send(notification, new String[]{aReceiverId},options);
     }
+    
     @Override
     public void send(Notification notification, String aReceiverId) {
-        send(notification, new String[]{aReceiverId},new SendOptions());
+        send(notification, new String[]{aReceiverId},new SendArguments());
     }
 
     @Override
-    public void send(Notification notification, Collection<String> theReceiverIds,SendOptions options) {
+    public void send(Notification notification, Collection<String> theReceiverIds,SendArguments options) {
         send(notification, theReceiverIds.toArray(new String[]{}),options);
     }
+    
     @Override
     public void send(Notification notification, Collection<String> theReceiverIds) {
-        send(notification, theReceiverIds.toArray(new String[]{}),new SendOptions());
+        send(notification, theReceiverIds.toArray(new String[]{}),new SendArguments());
     }
     
     @Override
-    public void send(Notification notification,SendOptions options) {
+    public void send(Notification notification,SendArguments options) {
         send(notification, notification.getReceiverIdentifiers().toArray(new String[]{}),options);
     }
+    
     @Override
     public void send(Notification notification) {
-        send(notification,new SendOptions());
+        send(notification,new SendArguments());
     }
     
     @Override
-    public void send(Collection<Notification> notifications,SendOptions options) {
-    	for(Notification notification : notifications)
-    		send(notification,options);
+    public void send(Collection<Notification> notifications,SendListener listener,SendArguments arguments) {
+    	Collection<Class<?>> classes = new ArrayList<>();
+		//classes.add(MessagingException.class);
+		classes.add(MailConnectException.class);
+    	ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(arguments.getCorePoolSize(), arguments.getMaximumPoolSize(), arguments.getKeepAliveTime()
+    			, arguments.getKeepAliveTimeUnit(), notifications.size(),arguments.getTimeout(), arguments.getTimeoutUnit(),classes);
+    	threadPoolExecutor.addListener(arguments.getThreadPoolExecutorListener());
+    	Session session = getSession(arguments.getDebug());
+        for(Notification notification : notifications)
+        	threadPoolExecutor.execute(new Sender(session, notification,listener));
+    		
+        ThreadPoolExecutor.execute(threadPoolExecutor,arguments.getNumberOfRetry(),arguments.getNumberOfMillisecondBeforeRetry());
     }
+    
+    @Override
+    public void send(Collection<Notification> notifications,SendListener listener) {
+        send(notifications,listener,new SendArguments());
+    }
+    
     @Override
     public void send(Collection<Notification> notifications) {
-        send(notifications,new SendOptions());
+        send(notifications,null,new SendArguments());
     }
 
     @Override
-    public void send(Notification notification, Party[] theReceiverIds,SendOptions options) {
+    public void send(Notification notification, Party[] theReceiverIds,SendArguments options) {
         
     }
     @Override
@@ -196,7 +165,7 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
     }
 
     @Override
-    public void send(Notification notification, Party aReceiverId,SendOptions options) {
+    public void send(Notification notification, Party aReceiverId,SendArguments options) {
            
     }
     @Override
@@ -205,7 +174,7 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
     }
 
     @Override
-    public void sendParty(Notification notification, Collection<Party> theReceiverIds,SendOptions options) {
+    public void sendParty(Notification notification, Collection<Party> theReceiverIds,SendArguments options) {
         
     }
     @Override
@@ -218,20 +187,23 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
     @Override
 	public Properties convert(SmtpProperties smtpProperties) {
 		Properties properties = new Properties();
+		addProperty(properties, "host", smtpProperties.getHost());
+		addProperty(properties, "from", smtpProperties.getFrom());
+		addProperty(properties, "user", smtpProperties.getCredentials().getUsername());
+		addProperty(properties, "password", smtpProperties.getCredentials().getPassword());
 		
-		properties.put(String.format(PROPERTY_FORMAT, "host"), smtpProperties.getHost());
-		properties.put(String.format(PROPERTY_FORMAT, "from"), smtpProperties.getFrom());
-		properties.put(String.format(PROPERTY_FORMAT, "user"), smtpProperties.getCredentials().getUsername());
-		properties.put(String.format(PROPERTY_FORMAT, "password"), smtpProperties.getCredentials().getPassword());
-    	
-		properties.put(String.format(PROPERTY_FORMAT, "socketFactory.port"), smtpProperties.getSocketFactory().getPort());
-		properties.put(String.format(PROPERTY_FORMAT, "port"), smtpProperties.getPort());
-		properties.put(String.format(PROPERTY_FORMAT, "socketFactory.fallback"), smtpProperties.getSocketFactory().getFallback());
-		properties.put(String.format(PROPERTY_FORMAT, "auth"), smtpProperties.getAuthenticated());
-		properties.put(String.format(PROPERTY_FORMAT, "socketFactory.class"), smtpProperties.getSocketFactory().getClazz());
-		
+		addProperty(properties, "socketFactory.port", smtpProperties.getSocketFactory().getPort());
+		addProperty(properties, "port", smtpProperties.getPort());
+		addProperty(properties, "socketFactory.fallback", smtpProperties.getSocketFactory().getFallback());
+		addProperty(properties, "auth", smtpProperties.getAuthenticated());
+		addProperty(properties, "socketFactory.class", smtpProperties.getSocketFactory().getClazz());
 		return properties;
 	}
+    
+    private void addProperty(Properties properties,String name,Object value){
+    	properties.put(String.format(PROPERTY_FORMAT, Constant.EMPTY_STRING,name), value);
+    	properties.put(String.format(PROPERTY_FORMAT, "s",name), value);
+    }
     
 	@Override
 	public SmtpProperties getSmtpProperties() {
@@ -269,4 +241,68 @@ public class MailBusinessImpl extends AbstractBusinessServiceImpl implements Mai
 		smtpProperties.getSocketFactory().setPort(port);
 	}
     
+	/**/
+	
+	@Getter @Setter
+	public static class Sender extends AbstractSender<InternetAddress> implements Runnable, Serializable {
+		private static final long serialVersionUID = 1L;
+		
+		private Session session;
+		
+		public Sender(Session session, Notification notification,SendListener listener) {
+			super(notification,listener);
+			this.session = session;
+		}
+		
+		public Sender(Session session, Notification notification) {
+			this(session, notification, null);
+		}
+				
+		@Override
+		protected void __run__(LogMessage.Builder logMessageBuilder) throws Exception{
+			InternetAddress[] addresses = getReceiverAddresses(notification).toArray(new InternetAddress[]{});
+			MimeMessage message = new MimeMessage(session);
+            
+            message.setFrom(new InternetAddress(SMTP_PROPERTIES.getFrom()));
+            message.setRecipients(Message.RecipientType.TO, addresses);
+            message.setSubject(notification.getTitle());
+            message.setSentDate(notification.getDate() == null ? new Date() : notification.getDate());
+            String type = notification.getMime()+"; charset=utf-8";
+            if(notification.getFiles()==null){
+            	message.setContent(notification.getMessage(), type);
+            }else{
+            	Multipart multipart = new MimeMultipart();
+                if(notification.getFiles()!=null)
+                	for(File file : notification.getFiles()){
+                		if(StringUtils.isBlank(file.getMime())){
+                			logMessageBuilder.addParameters("mime file empty , id",file.getIdentifier());
+                		}else{
+                			MimeBodyPart bodyPart = new MimeBodyPart();
+                            bodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(file.getBytes()==null ? inject(FileBusiness.class).findBytes(file) 
+                            		: file.getBytes(), file.getMime())));
+                            bodyPart.setFileName(StringUtils.defaultString(file.getName(),RandomStringUtils.randomAlphabetic(5)));
+                            multipart.addBodyPart(bodyPart);
+                		}
+                	}
+                if(StringUtils.isNotBlank(notification.getMessage())){
+                    BodyPart htmlBodyPart = new MimeBodyPart();
+                    htmlBodyPart.setContent(notification.getMessage() , notification.getMime());
+                    multipart.addBodyPart(htmlBodyPart);
+                }
+                
+                message.setContent(multipart);
+            }
+            Transport.send(message);
+       
+            
+        }		
+		
+		@Override
+		public InternetAddress getAddress(String identifier) throws Exception{
+			return new InternetAddress(identifier);
+		}
+		
+        /**/
+        
+	}
 }

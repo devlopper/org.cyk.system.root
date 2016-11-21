@@ -66,7 +66,7 @@ public class NotificationBusinessIT extends AbstractBusinessIT {
         //System.setProperty("socksProxyPort", "3128");
         //System.out.println(System.getProperty("http.proxyHost"));
         //System.out.println(System.getProperty("http.proxyPort"));
-        MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+        MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
         mailBusiness.send(notification, "kycdev@gmail.com");
     }
 

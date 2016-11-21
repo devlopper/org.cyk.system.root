@@ -14,7 +14,7 @@ import org.cyk.system.root.business.api.event.EventReminderBusiness;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.TemplateEngineBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
-import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendOptions;
+import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendArguments;
 import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.EventParty;
@@ -47,7 +47,7 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
         notification.setMessage(templateEngineBusiness.process(aNotificationTemplate.getMessage(), aNotificationTemplate.getMessageParametersMap()));
     }
     
-    private void notify(Notification notification, String[] theReceiverIds,SendOptions sendOptions) {
+    private void notify(Notification notification, String[] theReceiverIds,SendArguments sendOptions) {
     	logTrace("Notification to be send to {} to end point {}", StringUtils.join(theReceiverIds,","),notification.getRemoteEndPoint());
     	notification.setDate(timeBusiness.findUniversalTimeCoordinated());
         if(RemoteEndPoint.MAIL_SERVER.equals(notification.getRemoteEndPoint())){
@@ -64,7 +64,7 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
     }
     
     @Override
-    public void notify(Notification notification, Set<Party> theReceivers,SendOptions sendOptions) {
+    public void notify(Notification notification, Set<Party> theReceivers,SendArguments sendOptions) {
     	notification.getUserAccounts().clear();
     	for(UserAccount userAccount : userAccountDao.readByParties(theReceivers)){
     		notification.getUserAccounts().add(userAccount);
@@ -85,7 +85,7 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
     }
 
     @Override
-    public void notify(Notification notification, String receiverEmail,SendOptions sendOptions) {
+    public void notify(Notification notification, String receiverEmail,SendArguments sendOptions) {
         
     	notify(notification, new String[]{receiverEmail}, sendOptions);
     }
@@ -115,7 +115,7 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
 					template.getTitleParametersMap().put("title", event.getName());
 					template.getMessageParametersMap().put("body", event.getName());
 					fill(notification, template);
-					SendOptions sendOptions = new SendOptions();
+					SendArguments sendOptions = new SendArguments();
 					
 					notify(notification, parties, sendOptions);
 				}
@@ -130,7 +130,7 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
     }
 
 	@Override
-	public void notify(Collection<Notification> notifications, SendOptions sendOptions) {
+	public void notify(Collection<Notification> notifications, SendArguments sendOptions) {
 		for(Notification notification : notifications)
 			notify(notification, notification.getReceiverIdentifiers().toArray(new String[]{}), sendOptions);
 	}
@@ -138,7 +138,7 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
 	@Override
 	public void notify(Collection<Notification> notifications) {
 		for(Notification notification : notifications)
-			notify(notification, notification.getReceiverIdentifiers().toArray(new String[]{}), new SendOptions());
+			notify(notification, notification.getReceiverIdentifiers().toArray(new String[]{}), new SendArguments());
 	}
     
 }

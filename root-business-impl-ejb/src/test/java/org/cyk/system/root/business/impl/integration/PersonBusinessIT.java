@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.cyk.system.root.business.api.geography.ContactBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
-import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeBusiness;
 import org.cyk.system.root.model.geography.ContactCollection;
@@ -25,38 +24,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     private static final long serialVersionUID = -6691092648665798471L;
     
     @Override
-    protected void populate() {
-    	super.populate();
-    	inject(MailBusiness.class).setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
-    }
-    
-    @Override
-    protected void businesses() {
-    	/*for(int i=0;i<20;i++){
-    		Person person = RootRandomDataProvider.getInstance().person();
-    		//debug(person.getExtendedInformations());
-        	//debug(person.getJobInformations());
-    		create(person);
-    	}
-    	
-    	DataReadConfiguration dataReadConfig = new DataReadConfiguration();
-    	dataReadConfig.setMaximumResultCount(3l);
-    	assertEquals("Count", 3, personBusiness.findAll(dataReadConfig).size());
-    	
-    	dataReadConfig = new DataReadConfiguration();
-    	dataReadConfig.setMaximumResultCount(4l);
-    	assertEquals("Count", 4, personBusiness.findAll(dataReadConfig).size());
-    	
-    	dataReadConfig = new DataReadConfiguration();
-    	assertEquals("Count", 21, personBusiness.findAll(dataReadConfig).size());
-    	
-    	
-    	Person person = RootRandomDataProvider.getInstance().oneFromDatabase(Person.class);
-    	person = personBusiness.load(person.getIdentifier());
-    	//debug(person.getExtendedInformations());
-    	//debug(person.getJobInformations());
-    	*/
-    }
+    protected void businesses() {}
 
     @Test
     public void relationship(){
@@ -112,6 +80,59 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     			, ElectronicMail.class);
     	contains(ElectronicMail.class, parentElectronicMails, new Object[]{"address"}, new Object[][]{ {"dad@gmail.com"},{"mom@gmail.com"} });
     
+    }
+    
+    @Test
+    public void crudPersonFatherAndMother(){
+    	Person son = inject(PersonBusiness.class).instanciateOne();
+    	son.setCode("P002");
+    	son.setName("Komenan");
+    	son.setLastnames("Yao Christian");
+    	son.setFatherElectronicMail("f@m.com");
+    	son.setMotherElectronicMail("mom@c.com");
+    	
+    	create(son);
+    	
+    	assertThat("P002 exists", (son=inject(PersonBusiness.class).find("P002"))!=null);
+    	Collection<PersonRelationship> fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
+    			.read(PersonRelationshipType.FAMILY_FATHER));
+    	assertEquals("Number of father", 1, fathers.size());
+    	Person father = fathers.iterator().next().getPerson1();
+    	
+    	Collection<PersonRelationship> mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
+    			.read(PersonRelationshipType.FAMILY_MOTHER));
+    	assertEquals("Number of mother", 1, mothers.size());
+    	Person mother = mothers.iterator().next().getPerson1();
+    	
+    	assertEquals("Father email", "f@m.com", inject(ContactDao.class).readByCollectionByClass(father.getContactCollection(), ElectronicMail.class).iterator().next().getAddress());
+    	assertEquals("Mother email", "mom@c.com", inject(ContactDao.class).readByCollectionByClass(mother.getContactCollection(), ElectronicMail.class).iterator().next().getAddress());
+    	
+    	Collection<ElectronicMail> parentElectronicMails = inject(ContactBusiness.class).findByCollectionsByClass(Arrays.asList(father.getContactCollection(),mother.getContactCollection())
+    			, ElectronicMail.class);
+    	contains(ElectronicMail.class, parentElectronicMails, new Object[]{"address"}, new Object[][]{ {"f@m.com"},{"mom@c.com"} });
+    
+    	son = inject(PersonBusiness.class).find("P002");
+    	assertEquals("Father email", "f@m.com", son.getFatherElectronicMail());
+    	assertEquals("Mother email", "mom@c.com", son.getMotherElectronicMail());
+    	son.setFatherElectronicMail("f2@m.com");
+    	update(son);
+    	
+    	fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
+    			.read(PersonRelationshipType.FAMILY_FATHER));
+    	assertEquals("Number of father", 1, fathers.size());
+    	father = fathers.iterator().next().getPerson1();
+    	
+    	mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
+    			.read(PersonRelationshipType.FAMILY_MOTHER));
+    	assertEquals("Number of mother", 1, mothers.size());
+    	mother = mothers.iterator().next().getPerson1();
+    	
+    	assertEquals("Father email", "f2@m.com", inject(ContactDao.class).readByCollectionByClass(father.getContactCollection(), ElectronicMail.class).iterator().next().getAddress());
+    	assertEquals("Mother email", "mom@c.com", inject(ContactDao.class).readByCollectionByClass(mother.getContactCollection(), ElectronicMail.class).iterator().next().getAddress());
+    	
+    	parentElectronicMails = inject(ContactBusiness.class).findByCollectionsByClass(Arrays.asList(father.getContactCollection(),mother.getContactCollection())
+    			, ElectronicMail.class);
+    	contains(ElectronicMail.class, parentElectronicMails, new Object[]{"address"}, new Object[][]{ {"f2@m.com"},{"mom@c.com"} });
     }
     
     @Test

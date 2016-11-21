@@ -2,7 +2,9 @@ package org.cyk.system.root.business.impl.integration;
 
 import java.io.FileInputStream;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
@@ -15,6 +17,7 @@ import org.cyk.system.root.business.api.message.MessageSendingBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.data.Data;
 import org.cyk.system.root.model.event.Notification;
+import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
@@ -135,7 +138,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
         //System.setProperty("socksProxyPort", "3128");
         //System.out.println(System.getProperty("http.proxyHost"));
         //System.out.println(System.getProperty("http.proxyPort"));
-        MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+        MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
         //inject(MailBusiness.class).send(notification, "kycdev@gmail.com");
     }
 
@@ -147,7 +150,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 	//@Test
     public void sendMailToFather(){
 		Person son = inject(PersonBusiness.class).find("P002");
-    	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+    	MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
 		inject(MailBusiness.class).send(Notification.Builder.buildMail(son, FileRepresentationType.IDENTITY_DOCUMENT
 				,Arrays.asList(PersonRelationshipType.FAMILY_FATHER),Boolean.FALSE));
 		/*
@@ -166,21 +169,34 @@ public class MailBusinessIT extends AbstractBusinessIT {
 	//@Test
     public void sendMailToMother(){
 		Person son = inject(PersonBusiness.class).find("P002");
-    	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+    	MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
     	inject(MailBusiness.class).send(Notification.Builder.buildMail(son, FileRepresentationType.IDENTITY_IMAGE,Arrays.asList(PersonRelationshipType.FAMILY_MOTHER
     			),Boolean.FALSE));
     }
 	
-	@Test
+	//@Test
     public void sendMultipleMails(){
 		Person son = inject(PersonBusiness.class).find("P002");
 		Person father = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_FATHER))
 				.iterator().next().getPerson1();
 		Person mother = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_MOTHER))
 				.iterator().next().getPerson1();
-    	MessageSendingBusiness.SendOptions.BLOCKING=Boolean.TRUE;
+    	MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
     	inject(MailBusiness.class).send(Notification.Builder.buildMails(Arrays.asList(father,mother,son), FileRepresentationType.IDENTITY_IMAGE,Arrays.asList(PersonRelationshipType.FAMILY_FATHER,PersonRelationshipType.FAMILY_MOTHER
     			),Boolean.TRUE));
+    }
+	
+	@Test
+    public void sendMultipleMailsUsingSingleConnection(){
+		Collection<Notification> notifications = new ArrayList<>();
+		notifications.add(new Notification.Builder().setRemoteEndPoint(RemoteEndPoint.MAIL_SERVER).setTitle("T1").setMessage("M1")
+				.addReceiverIdentifiers("kycdev@gmail.com").build());
+		notifications.add(new Notification.Builder().setRemoteEndPoint(RemoteEndPoint.MAIL_SERVER).setTitle("T2").setMessage("M2")
+				.addReceiverIdentifiers("kycdev@gmail.com").build());
+		notifications.add(new Notification.Builder().setRemoteEndPoint(RemoteEndPoint.MAIL_SERVER).setTitle("T3").setMessage("M3")
+				.addReceiverIdentifiers("kycdev@gmail.com").build());
+    	MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
+    	inject(MailBusiness.class).send(notifications);
     }
 
 }

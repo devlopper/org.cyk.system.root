@@ -49,7 +49,7 @@ public class Notification implements Serializable  {
 	 * Remote end point
 	 */
 	private RemoteEndPoint remoteEndPoint;
-	
+	private String senderIdentifier;
 	private Set<String> receiverIdentifiers = new LinkedHashSet<>();
 	
 	/**
@@ -82,7 +82,14 @@ public class Notification implements Serializable  {
 	public Notification addReceiverIdentifiers(String identifier,String...identifiers){
 		receiverIdentifiers.add(identifier);
 		if(identifiers!=null)
-			receiverIdentifiers.addAll(Arrays.asList(identifiers));
+			addReceiverIdentifiers(Arrays.asList(identifiers));
+		return this;
+	}
+	
+	public Notification addReceiverIdentifiers(Collection<String> identifiers){
+		if(identifiers!=null && receiverIdentifiers==null)
+			receiverIdentifiers = new LinkedHashSet<>();
+		receiverIdentifiers.addAll(identifiers);
 		return this;
 	}
 	
@@ -97,6 +104,7 @@ public class Notification implements Serializable  {
 	public static class Builder extends AbstractBuilder<Notification> implements Serializable {
 		private static final long serialVersionUID = 1L;
 		
+		private String title,message;
 		private Collection<AbstractIdentifiable> identifiables;
 		private RemoteEndPoint remoteEndPoint;
 		private Date date;
@@ -108,6 +116,7 @@ public class Notification implements Serializable  {
 		private Set<String> partyCodes;
 		private Boolean areIdentifiablesReceivers = Boolean.TRUE;
 		private Set<ContactCollection> contactCollections;
+		private Set<String> receiverIdentifiers;
 		
 		public Builder() {
 			super(Notification.class);
@@ -121,11 +130,25 @@ public class Notification implements Serializable  {
 				public String execute(Listener listener) {
 					return listener.getTitle(identifiables, remoteEndPoint);
 				}
+				@Override
+				public String getNullValue() {
+					return title;
+				}
 			}));
 			notification.setMessage(listenerUtils.getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
 				@Override
 				public String execute(Listener listener) {
 					return listener.getMessage(identifiables, remoteEndPoint);
+				}
+				@Override
+				public String getNullValue() {
+					return message;
+				}
+			}));
+			notification.setSenderIdentifier(listenerUtils.getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
+				@Override
+				public String execute(Listener listener) {
+					return listener.getSenderIdentifier(identifiables, remoteEndPoint);
 				}
 			}));
 			notification.setReceiverIdentifiers(listenerUtils.getSet(Listener.COLLECTION, new ListenerUtils.CollectionMethod.Set<Listener,String>() {
@@ -134,6 +157,8 @@ public class Notification implements Serializable  {
 					return listener.getReceiverIdentifiers(identifiables, remoteEndPoint,areIdentifiablesReceivers,partyCodes,personRelationshipTypeCodes);
 				}
 			}));
+			
+			notification.addReceiverIdentifiers(receiverIdentifiers);
 			
 			notification.addFiles(files);
 			notification.addFiles(listenerUtils.getCollection(Listener.COLLECTION, new ListenerUtils.CollectionMethod<Listener, File>() {
@@ -174,6 +199,17 @@ public class Notification implements Serializable  {
 			return this;
 		}
 		
+		public Builder addReceiverIdentifiers(Collection<String> receiverIdentifiers){
+			if(this.receiverIdentifiers==null)
+				this.receiverIdentifiers = new LinkedHashSet<>();
+			this.receiverIdentifiers.addAll(receiverIdentifiers);
+			return this;
+		}
+		
+		public Builder addReceiverIdentifiers(String...receiverIdentifiers){
+			return addReceiverIdentifiers(Arrays.asList(receiverIdentifiers));
+		}
+		
 		public Builder addFileRepresentationTypeCodes(String...fileRepresentationTypeCodes){
 			return addFileRepresentationTypeCodes(Arrays.asList(fileRepresentationTypeCodes));
 		}
@@ -187,6 +223,16 @@ public class Notification implements Serializable  {
 		
 		public Builder setRemoteEndPoint(RemoteEndPoint remoteEndPoint){
 			this.remoteEndPoint = remoteEndPoint;
+			return this;
+		}
+		
+		public Builder setTitle(String title){
+			this.title = title;
+			return this;
+		}
+		
+		public Builder setMessage(String message){
+			this.message = message;
 			return this;
 		}
 		
@@ -268,6 +314,7 @@ public class Notification implements Serializable  {
 			
 			String getTitle(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
 			String getMessage(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
+			String getSenderIdentifier(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
 			Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Boolean areIdentifiablesReceivers,Collection<String> partyCodes,Collection<String> personRelationshipTypeCodes);
 			Set<File> getFiles(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Set<String> fileRepresentationTypeCodes);
 			Set<ContactCollection> getContactCollections(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint);
@@ -283,6 +330,11 @@ public class Notification implements Serializable  {
 
 				@Override
 				public String getMessage(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
+					return null;
+				}
+				
+				@Override
+				public String getSenderIdentifier(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint) {
 					return null;
 				}
 				

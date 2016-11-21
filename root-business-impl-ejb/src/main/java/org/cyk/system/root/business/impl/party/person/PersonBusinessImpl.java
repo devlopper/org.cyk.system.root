@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
+import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.geography.LocationBusiness;
 import org.cyk.system.root.business.api.language.LanguageCollectionBusiness;
 import org.cyk.system.root.business.api.party.person.JobInformationsBusiness;
@@ -26,6 +27,8 @@ import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobInformations;
@@ -35,6 +38,7 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonRelationship;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.file.FileDao;
@@ -45,6 +49,7 @@ import org.cyk.system.root.persistence.api.party.person.JobTitleDao;
 import org.cyk.system.root.persistence.api.party.person.MedicalInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.party.person.PersonExtendedInformationsDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
 import org.cyk.system.root.persistence.api.party.person.PersonTitleDao;
 import org.cyk.system.root.persistence.api.party.person.SexDao;
@@ -162,10 +167,21 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		if(person.getMedicalInformations()!=null)
 			medicalInformationsDao.create(person.getMedicalInformations());
 		
+		if(StringUtils.isNotBlank(person.getFatherElectronicMail())){
+			Person father = inject(PersonBusiness.class).addRelationship(person, PersonRelationshipType.FAMILY_FATHER).getPerson1();
+	    	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, person.getFatherElectronicMail()));
+		}
+		
+		if(StringUtils.isNotBlank(person.getMotherElectronicMail())){
+			Person mother = inject(PersonBusiness.class).addRelationship(person, PersonRelationshipType.FAMILY_MOTHER).getPerson1();
+	    	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, person.getMotherElectronicMail()));
+		}
+		
 		if(person.getRelationships()!=null)
 			for(PersonRelationship personRelationship : person.getRelationships())
 				if(isNotIdentified(personRelationship))
 					inject(PersonRelationshipBusiness.class).create(personRelationship);
+		
 	}
 	
 	@Override
@@ -268,6 +284,19 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		person.setExtendedInformations(extendedInformationsDao.readByParty(person));
 		person.setJobInformations(jobInformationsDao.readByParty(person));
 		person.setMedicalInformations(medicalInformationsDao.readByParty(person));
+		
+		//TODO to be refactored
+		Collection<PersonRelationship> parents = inject(PersonRelationshipDao.class).readByPerson2ByType(person,inject(PersonRelationshipTypeDao.class)
+    			.read(PersonRelationshipType.FAMILY_FATHER));
+    	Person father = parents.iterator().next().getPerson1();
+		Collection<ElectronicMail> electronicMails = inject(ContactDao.class).readByCollectionByClass(father.getContactCollection(), ElectronicMail.class);
+		person.setFatherElectronicMail(electronicMails.isEmpty() ? null : electronicMails.iterator().next().getAddress());
+		
+		parents = inject(PersonRelationshipDao.class).readByPerson2ByType(person,inject(PersonRelationshipTypeDao.class)
+    			.read(PersonRelationshipType.FAMILY_MOTHER));
+    	Person mother = parents.iterator().next().getPerson1();
+		electronicMails = inject(ContactDao.class).readByCollectionByClass(mother.getContactCollection(), ElectronicMail.class);
+		person.setMotherElectronicMail(electronicMails.isEmpty() ? null : electronicMails.iterator().next().getAddress());
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
