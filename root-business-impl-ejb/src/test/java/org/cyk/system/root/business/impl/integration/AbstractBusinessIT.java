@@ -11,6 +11,7 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
+import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessTestHelper;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
@@ -44,6 +45,12 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     		@Override
     		public String formatBigDecimal(BigDecimal value) {
     			return inject(NumberBusiness.class).format(value);
+    		}
+    		
+    		@SuppressWarnings("unchecked")
+			@Override
+    		public void assertCodeExists(Class<?> aClass, String code) {
+    			assertThat(code+" exists", inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find(code)!=null);
     		}
     	});
 	}
@@ -121,6 +128,11 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     @SuppressWarnings("unchecked")
 	protected <T extends AbstractIdentifiable> T update(T object){
         return (T) genericBusiness.update(object);
+    }
+    
+    @SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> T update(T object,Collection<? extends AbstractIdentifiable> identifiables){
+        return (T) genericBusiness.update(object,identifiables);
     }
     
     @SuppressWarnings("unchecked")

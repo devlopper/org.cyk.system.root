@@ -43,8 +43,18 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
         }
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public AbstractIdentifiable create(AbstractIdentifiable identifiable, Collection<? extends AbstractIdentifiable> identifiables) {
+		create(identifiable);
+		create((Collection<AbstractIdentifiable>)identifiables);
+		return identifiable;
+	}
+	
 	@Override
 	public void create(Collection<AbstractIdentifiable> identifiables) {
+		if(identifiables==null)
+			return;
 		for(AbstractIdentifiable identifiable : identifiables)
 			create(identifiable);
 	}
@@ -59,8 +69,18 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
             return businessBean.update(anObject);   
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public AbstractIdentifiable update(AbstractIdentifiable identifiable, Collection<? extends AbstractIdentifiable> identifiables) {
+		update(identifiable);
+		update((Collection<AbstractIdentifiable>)identifiables);
+		return identifiable;
+	}
+	
 	@Override
 	public void update(Collection<AbstractIdentifiable> identifiables) {
+		if(identifiables==null)
+			return;
 		for(AbstractIdentifiable identifiable : identifiables)
 			update(identifiable);
 	}
@@ -75,8 +95,18 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
             return businessBean.delete(anObject);   
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public AbstractIdentifiable delete(AbstractIdentifiable identifiable,Collection<? extends AbstractIdentifiable> identifiables) {
+		delete(identifiable);
+		delete((Collection<AbstractIdentifiable>)identifiables);
+		return identifiable;
+	}
+	
 	@Override
 	public void delete(Collection<AbstractIdentifiable> identifiables) {
+		if(identifiables==null)
+			return;
 		for(AbstractIdentifiable identifiable : identifiables)
 			delete(identifiable);
 	}

@@ -39,7 +39,7 @@ public class Person extends Party implements Serializable{
 	@Transient private String names;
 	
 	@Transient protected Collection<PersonRelationship> relationships;
-	@Transient private String fatherElectronicMail,motherElectronicMail;
+	//@Transient private String fatherElectronicMail,motherElectronicMail;
 	
 	public Person(String firstName,String lastnames) {
 		super(firstName);
@@ -70,9 +70,9 @@ public class Person extends Party implements Serializable{
 	public static final String FIELD_NATIONALITY = "nationality";
 	public static final String FIELD_EXTENDED_INFORMATIONS = "extendedInformations";
 	public static final String FIELD_JOB_INFORMATIONS = "jobInformations";
-	public static final String FIELD_FATHER_ELECTRONIC_MAIL = "fatherElectronicMail";
+	/*public static final String FIELD_FATHER_ELECTRONIC_MAIL = "fatherElectronicMail";
 	public static final String FIELD_MOTHER_ELECTRONIC_MAIL = "motherElectronicMail";
-	
+	*/
 	/**/
 	
 	@Getter @Setter

@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl.party.person;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -58,5 +59,21 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 	@Override
 	public Collection<PersonRelationship> findByPerson2ByType(Person person, PersonRelationshipType type) {
 		return dao.readByPerson2ByType(person, type);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findByType(Collection<PersonRelationship> personRelationships,PersonRelationshipType type) {
+		Collection<PersonRelationship> collection = new ArrayList<>();
+		for(PersonRelationship personRelationship : personRelationships)
+			if(personRelationship.getType().equals(type))
+				collection.add(personRelationship);
+		return collection;
+	}
+
+	@Override
+	public PersonRelationship findOneByType(Collection<PersonRelationship> personRelationships,PersonRelationshipType type) {
+		Collection<PersonRelationship> collection = findByType(personRelationships, type);
+		exceptionUtils().exception(collection.size()>1, "toomuch.PersonRelationship.found");
+		return collection.isEmpty() ? null : collection.iterator().next();
 	} 
 }

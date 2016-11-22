@@ -191,6 +191,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			listener.assertEquals(message, expected, actual);
 	}
 	
+	public void assertCodeExists(Class<? extends AbstractIdentifiable> aClass,String code){
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
+			listener.assertCodeExists(aClass, code);
+	}
+	
 	protected void assertBigDecimalEquals(String message,BigDecimal expected,BigDecimal actual){
 		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertBigDecimalEquals(message, expected, actual);

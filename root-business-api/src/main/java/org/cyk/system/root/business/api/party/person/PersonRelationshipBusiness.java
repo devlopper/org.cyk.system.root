@@ -11,6 +11,8 @@ public interface PersonRelationshipBusiness extends TypedBusiness<PersonRelation
 
 	Collection<PersonRelationship> findByPerson(Person person);
 	Collection<PersonRelationship> findByType(PersonRelationshipType type);
+	Collection<PersonRelationship> findByType(Collection<PersonRelationship> personRelationships,PersonRelationshipType type);
+	PersonRelationship findOneByType(Collection<PersonRelationship> personRelationships,PersonRelationshipType type);
 	Collection<PersonRelationship> findByPersonByType(Person person,PersonRelationshipType type);
 	Collection<PersonRelationship> findByPerson1ByType(Person person,PersonRelationshipType type);
 	Collection<PersonRelationship> findByPerson2ByType(Person person,PersonRelationshipType type);

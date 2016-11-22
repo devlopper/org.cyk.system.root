@@ -72,6 +72,13 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 		return this;
 	}
 	
+	public ContactCollection setElectronicMail(String address){
+		if(electronicMails==null || electronicMails.isEmpty())
+			return addElectronicMail(new ElectronicMail(this,address));
+		electronicMails.iterator().next().setAddress(address);
+		return this;
+	}
+	
 	public ContactCollection addWebsite(Website website){
 		if(websites==null)
 			websites = new ArrayList<>();

@@ -12,11 +12,11 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
-import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.geography.LocationBusiness;
 import org.cyk.system.root.business.api.language.LanguageCollectionBusiness;
 import org.cyk.system.root.business.api.party.person.JobInformationsBusiness;
@@ -27,8 +27,6 @@ import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobInformations;
@@ -38,7 +36,6 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonRelationship;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.file.FileDao;
@@ -131,7 +128,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return person;
 	}
 	
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public PersonRelationship addRelationship(Person person, String relationshipTypeCode) {
 		if(person.getRelationships()==null)
 			person.setRelationships(new ArrayList<PersonRelationship>());
@@ -139,10 +136,25 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			for(PersonRelationship personRelationship : person.getRelationships())
 				if(personRelationship.getType().getCode().equals(relationshipTypeCode))
 					return personRelationship;
-		PersonRelationship personRelationship = new PersonRelationship(instanciateOne(), inject(PersonRelationshipTypeDao.class).read(relationshipTypeCode), 
-				person);
+		PersonRelationship personRelationship = new PersonRelationship(instanciateOne(), inject(PersonRelationshipTypeDao.class).read(relationshipTypeCode), person);
 		person.getRelationships().add(personRelationship);
 		return personRelationship;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public void addRelationships(Person person, Collection<String> relationshipTypeCodes) {
+		for(String relationshipTypeCode : relationshipTypeCodes){
+			addRelationship(person, relationshipTypeCode);
+		}
+	}
+	
+	@Override
+	protected void beforeCreate(Person person) {
+		super.beforeCreate(person);
+		if(StringUtils.isEmpty(person.getCode()))
+			person.setCode(RandomStringUtils.randomAlphanumeric(5));
+		
+		//exceptionUtils().exception(StringUtils.isBlank(person.getCode()), "person.code.required");
 	}
 	
 	@Override
@@ -166,16 +178,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		}
 		if(person.getMedicalInformations()!=null)
 			medicalInformationsDao.create(person.getMedicalInformations());
-		
-		if(StringUtils.isNotBlank(person.getFatherElectronicMail())){
-			Person father = inject(PersonBusiness.class).addRelationship(person, PersonRelationshipType.FAMILY_FATHER).getPerson1();
-	    	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, person.getFatherElectronicMail()));
-		}
-		
-		if(StringUtils.isNotBlank(person.getMotherElectronicMail())){
-			Person mother = inject(PersonBusiness.class).addRelationship(person, PersonRelationshipType.FAMILY_MOTHER).getPerson1();
-	    	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, person.getMotherElectronicMail()));
-		}
 		
 		if(person.getRelationships()!=null)
 			for(PersonRelationship personRelationship : person.getRelationships())
@@ -279,24 +281,27 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<Person> findByPersonByRelationshipType(Person person, String personRelationshipTypeCode) {
+		Collection<Person> persons = new ArrayList<>();
+		for(PersonRelationship personRelationship : inject(PersonRelationshipDao.class).readByPerson2ByType(person, inject(PersonRelationshipTypeDao.class)
+				.read(personRelationshipTypeCode)))
+			persons.add(personRelationship.getPerson1());	
+		return persons;
+	}
+	
+	@Override
+	public Person findOneByPersonByRelationshipType(Person person, String personRelationshipTypeCode) {
+		Collection<Person> persons = findByPersonByRelationshipType(person, personRelationshipTypeCode);
+		exceptionUtils().exception(persons.size() > 1, "toomuch.person.found");
+		return persons.isEmpty() ? null : persons.iterator().next();
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(Person person) {
 		super.load(person);
 		person.setExtendedInformations(extendedInformationsDao.readByParty(person));
 		person.setJobInformations(jobInformationsDao.readByParty(person));
 		person.setMedicalInformations(medicalInformationsDao.readByParty(person));
-		
-		//TODO to be refactored
-		Collection<PersonRelationship> parents = inject(PersonRelationshipDao.class).readByPerson2ByType(person,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_FATHER));
-    	Person father = parents.iterator().next().getPerson1();
-		Collection<ElectronicMail> electronicMails = inject(ContactDao.class).readByCollectionByClass(father.getContactCollection(), ElectronicMail.class);
-		person.setFatherElectronicMail(electronicMails.isEmpty() ? null : electronicMails.iterator().next().getAddress());
-		
-		parents = inject(PersonRelationshipDao.class).readByPerson2ByType(person,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_MOTHER));
-    	Person mother = parents.iterator().next().getPerson1();
-		electronicMails = inject(ContactDao.class).readByCollectionByClass(mother.getContactCollection(), ElectronicMail.class);
-		person.setMotherElectronicMail(electronicMails.isEmpty() ? null : electronicMails.iterator().next().getAddress());
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

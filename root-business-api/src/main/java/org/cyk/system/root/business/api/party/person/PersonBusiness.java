@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.api.party.person;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.model.party.person.Person;
@@ -24,6 +25,10 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCrite
 	Person instanciateOne(String code,String[] names);
 	
 	PersonRelationship addRelationship(Person person,String relationshipTypeCode);
+	void addRelationships(Person person,Collection<String> relationshipTypeCodes);
+	
+	Collection<Person> findByPersonByRelationshipType(Person person,String personRelationshipTypeCode);
+	Person findOneByPersonByRelationshipType(Person person,String personRelationshipTypeCode);
 	
 	/**/
 	

@@ -82,7 +82,13 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
     public ContactCollection update(ContactCollection collection) {
     	update(contactDao.readByCollectionByClass(collection,PhoneNumber.class), collection.getPhoneNumbers(), collection);
     	update(contactDao.readByCollectionByClass(collection,Location.class), collection.getLocations(), collection);
-    	update(contactDao.readByCollectionByClass(collection,ElectronicMail.class), collection.getElectronicMails(), collection);
+    	Collection<ElectronicMail> electronicMails = new ArrayList<>();
+    	if(collection.getElectronicMails()!=null)
+    		for(ElectronicMail electronicMail : collection.getElectronicMails())
+    			if(StringUtils.isNotBlank(electronicMail.getAddress()))
+    				electronicMails.add(electronicMail);
+    	update(contactDao.readByCollectionByClass(collection,ElectronicMail.class), electronicMails, collection);
+    	
     	update(contactDao.readByCollectionByClass(collection,PostalBox.class), collection.getPostalBoxs(), collection);
     	update(contactDao.readByCollectionByClass(collection,Website.class), collection.getWebsites(), collection);
     	return super.update(collection);
@@ -130,7 +136,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
         }
         
     }
-    
+        
     private void delete(Collection<? extends Contact> contacts,ContactCollection collection){
         if(contacts==null)
             return;
@@ -158,6 +164,23 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 		//contactCollection.setPostalBoxes(inject(Postalb.class).instanciateMany(contactCollection, phoneNumbers));
 		//contactCollection.setWebsites(inject(PhoneNumberBusiness.class).instanciateMany(contactCollection, phoneNumbers));
 		return contactCollection;
+	}
+	
+	@Override
+	public void setElectronicMail(ContactCollection collection, String address) {
+		if(collection.getElectronicMails()==null || collection.getElectronicMails().isEmpty())
+			collection.addElectronicMail(new ElectronicMail(collection,address));
+		exceptionUtils().exception(collection.getElectronicMails().size() > 1, "toomuchelectronicmailsfound");
+		collection.getElectronicMails().iterator().next().setAddress(address);
+	
+	}
+	
+	@Override
+	public String getElectronicMail(ContactCollection collection) {
+		if(collection.getElectronicMails()==null || collection.getElectronicMails().isEmpty())
+			return null;
+		exceptionUtils().exception(collection.getElectronicMails().size() > 1, "toomuchelectronicmailsfound");
+		return collection.getElectronicMails().iterator().next().getAddress();
 	}
 	
 }

@@ -8,4 +8,6 @@ public interface ContactCollectionBusiness extends AbstractCollectionBusiness<Co
 
 	ContactCollection instanciateOne(String[] phoneNumbers,String[] electronicMail,String[] postalBoxes,String[] websites);
 	
+	void setElectronicMail(ContactCollection collection,String address);
+	String getElectronicMail(ContactCollection collection);
 }

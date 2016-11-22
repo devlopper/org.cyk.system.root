@@ -23,14 +23,17 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     /* ------------------------ Static methods ---------------------------- */
     
     /* Create */    IDENTIFIABLE create(IDENTIFIABLE identifiable);
+    				IDENTIFIABLE create(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);
     				void create(Collection<IDENTIFIABLE> identifiables);
     
     /* Read */      //IDENTIFIABLE read(IDENTIFIER identifier);
     
     /* Update */    IDENTIFIABLE update(IDENTIFIABLE identifiable);
+    				IDENTIFIABLE update(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);
     				void update(Collection<IDENTIFIABLE> identifiables);
     
     /* Delete */    IDENTIFIABLE delete(IDENTIFIABLE identifiable);
+    				IDENTIFIABLE delete(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);
     				void delete(Collection<IDENTIFIABLE> identifiables);
     
     /* ------------------------ Dynamic methods ---------------------------- */

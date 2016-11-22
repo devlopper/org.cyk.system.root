@@ -189,6 +189,30 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		afterCreate(getListeners(), identifiable);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public IDENTIFIABLE create(IDENTIFIABLE identifiable, Collection<? extends AbstractIdentifiable> identifiables) {
+		create(identifiable);
+		inject(GenericBusiness.class).create((Collection<AbstractIdentifiable>)identifiables);
+		return identifiable;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public IDENTIFIABLE update(IDENTIFIABLE identifiable, Collection<? extends AbstractIdentifiable> identifiables) {
+		update(identifiable);
+		inject(GenericBusiness.class).update((Collection<AbstractIdentifiable>)identifiables);
+		return identifiable;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public IDENTIFIABLE delete(IDENTIFIABLE identifiable, Collection<? extends AbstractIdentifiable> identifiables) {
+		inject(GenericBusiness.class).delete((Collection<AbstractIdentifiable>)identifiables);
+		delete(identifiable);
+		return identifiable;
+	}
+
 	@Override
 	public void create(Collection<IDENTIFIABLE> identifiables) {
 	    for(IDENTIFIABLE identifiable : identifiables)

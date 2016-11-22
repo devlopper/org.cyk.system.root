@@ -8,10 +8,19 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonRelationship;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
 import org.cyk.utility.common.generator.RandomDataProvider;
 
 public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<ElectronicMail, ElectronicMailDao> implements ElectronicMailBusiness,Serializable {
@@ -60,6 +69,43 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 		return addresses;
 	}
 	
+	@Override
+	public void setAddress(Party party, String value) {
+		if(party.getContactCollection()==null)
+			party.setContactCollection(new ContactCollection());
+		party.getContactCollection().setElectronicMail(value);
+	}
+	
+	@Override
+	public void setAddress(Person person, String personRelationshipTypeCode, String value) {
+		PersonRelationshipType personRelationshipType = inject(PersonRelationshipTypeDao.class).read(personRelationshipTypeCode);
+		Collection<PersonRelationship> personRelationships = inject(PersonRelationshipDao.class).readByPerson2ByType(person, personRelationshipType);
+		if(personRelationships.isEmpty()){
+			inject(PersonBusiness.class).addRelationship(person, personRelationshipTypeCode);
+		}
+		Person parent = inject(PersonRelationshipBusiness.class).findOneByType(person.getRelationships(), personRelationshipType).getPerson1();
+		setAddress(parent, value);
+	}
+	
 	protected static final ContactCollection NULL_CONTACT_COLLECTION = null;
+
+	@Override
+	public String findAddress(Party party) {
+		if(party.getContactCollection()==null)
+			return null;
+		Collection<ElectronicMail> electronicMails = inject(ContactDao.class).readByCollectionByClass(party.getContactCollection(), ElectronicMail.class);
+		exceptionUtils().exception(electronicMails.size()>1, "toomuch.electronicmail.found");
+		return electronicMails.iterator().next().getAddress();
+	}
+
+	@Override
+	public String findAddress(Person person, String personRelationshipTypeCode) {
+		PersonRelationshipType personRelationshipType = inject(PersonRelationshipTypeDao.class).read(personRelationshipTypeCode);
+		Collection<PersonRelationship> personRelationships = inject(PersonRelationshipDao.class).readByPerson2ByType(person, personRelationshipType);
+		if(personRelationships.isEmpty())
+			return null;
+		Person parent = inject(PersonRelationshipBusiness.class).findOneByType(person.getRelationships(), personRelationshipType).getPerson1();
+		return findAddress(parent);
+	}
 
 }
