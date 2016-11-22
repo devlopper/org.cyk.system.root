@@ -95,7 +95,7 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 			return null;
 		Collection<ElectronicMail> electronicMails = inject(ContactDao.class).readByCollectionByClass(party.getContactCollection(), ElectronicMail.class);
 		exceptionUtils().exception(electronicMails.size()>1, "toomuch.electronicmail.found");
-		return electronicMails.iterator().next().getAddress();
+		return electronicMails.isEmpty() ? null : electronicMails.iterator().next().getAddress();
 	}
 
 	@Override
