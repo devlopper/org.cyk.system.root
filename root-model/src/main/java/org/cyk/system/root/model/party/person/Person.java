@@ -47,19 +47,20 @@ public class Person extends Party implements Serializable{
 	}
 	
 	public String getNames(){
-		if(StringUtils.isBlank(names) && globalIdentifier!=null)
+		if(StringUtils.isBlank(names) && globalIdentifier!=null && StringUtils.isNotBlank(getName()))
 			names = globalIdentifier.getName()+(StringUtils.isEmpty(lastnames)?Constant.EMPTY_STRING:(Constant.CHARACTER_SPACE+lastnames));
 		return names;
 	}
 
 	@Override
 	public String toString() {
-		return getNames();
+		return getUiString();
 	}
 
 	@Override
 	public String getUiString() {
-		return getNames();
+		String names = getNames();
+		return StringUtils.isBlank(names) ? getCode() : names;
 	}
 	
 	/**/

@@ -34,7 +34,7 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 	
 	@Override
 	public Contact instanciateOneRandomly() {
-		return instanciateOne(NULL_CONTACT_COLLECTION,RandomDataProvider.getInstance().randomWord(RandomDataProvider.WORD_EMAIL, 5, 10));
+		return instanciateOne((ContactCollection)null,RandomDataProvider.getInstance().randomWord(RandomDataProvider.WORD_EMAIL, 5, 10));
 	}
 
 	@Override
@@ -87,8 +87,6 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 		setAddress(parent, value);
 	}
 	
-	protected static final ContactCollection NULL_CONTACT_COLLECTION = null;
-
 	@Override
 	public String findAddress(Party party) {
 		if(party.getContactCollection()==null)

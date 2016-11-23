@@ -16,12 +16,14 @@ public class PersonRelationshipDetails extends AbstractOutputDetails<PersonRelat
 	private static final long serialVersionUID = -1498269103849317057L;
 	
 	@Input @InputText private String person1,type,person2;
+	private String __url__person1____;
 	
 	public PersonRelationshipDetails(PersonRelationship personRelationship) {
 		super(personRelationship);
 		person1 = formatUsingBusiness(personRelationship.getPerson1());
 		type = formatUsingBusiness(personRelationship.getType());
 		person2 = formatUsingBusiness(personRelationship.getPerson2());
+		
 	}
 	
 	public static final String FIELD_PERSON1 = "person1";

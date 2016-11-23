@@ -203,6 +203,7 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 	public static final String WINDOW_MODE_NORMAL = "windowmodenormal";
 	public static final String PREVIOUS_URL = "previousurl";
 	public static final String TAB_ID = "tabid";
+	public static final String FORM_IDENTIFIER = "formid";
 	public static final String TITLE = "title";
 	public static final String ATTACHMENT = "attachment";
 	
