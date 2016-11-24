@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.geography;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -104,6 +105,19 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 			return null;
 		Person parent = inject(PersonRelationshipBusiness.class).findOneByType(person.getRelationships(), personRelationshipType).getPerson1();
 		return findAddress(parent);
+	}
+	
+	@Override
+	public Collection<String> findAddresses(Person person, Collection<String> personRelationshipTypeCodes) {
+		Collection<PersonRelationshipType> personRelationshipTypes = inject(PersonRelationshipTypeDao.class).read(personRelationshipTypeCodes);
+		Collection<PersonRelationship> personRelationships = inject(PersonRelationshipDao.class).readByPerson2ByTypes(Arrays.asList(person), personRelationshipTypes);
+		Collection<String> addresses = new ArrayList<>();
+		Collection<ContactCollection> contactCollections = new ArrayList<>();
+		for(PersonRelationship personRelationship : personRelationships)
+			contactCollections.add(personRelationship.getPerson1().getContactCollection());
+		for(ElectronicMail electronicMail : inject(ContactDao.class).readByCollectionsByClass(contactCollections, ElectronicMail.class))
+			addresses.add(electronicMail.getAddress());
+		return addresses;
 	}
 
 }

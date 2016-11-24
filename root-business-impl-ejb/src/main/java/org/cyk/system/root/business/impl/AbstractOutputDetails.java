@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +9,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.impl.time.PeriodDetails;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
-import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.FileExtensionGroup;
 import org.cyk.utility.common.annotation.user.interfaces.FileExtensions;
 import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
@@ -95,7 +93,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	public static final String IDENTIFIER_7 = RandomStringUtils.randomAlphanumeric(10);
 	public static final String IDENTIFIER_8 = RandomStringUtils.randomAlphanumeric(10);
 	public static final String IDENTIFIER_9 = RandomStringUtils.randomAlphanumeric(10);
-	
+	/*
 	public static final String URL_FIELD_NAME_FORMAT = "__url__%s____";
 	
 	public static String getUrlFieldName(String fieldName){
@@ -112,4 +110,5 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 			return CommonUtils.getInstance().readProperty(object, getUrlFieldName(fieldName));
 		return null;
 	}
+	*/
 }

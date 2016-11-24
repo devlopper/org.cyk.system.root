@@ -21,4 +21,5 @@ public interface ElectronicMailBusiness extends AbstractContactBusiness<Electron
 	
 	String findAddress(Party party);
 	String findAddress(Person person, String personRelationshipTypeCode);
+	Collection<String> findAddresses(Person person, Collection<String> personRelationshipTypeCodes);
 }

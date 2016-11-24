@@ -15,8 +15,10 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.CommonBusinessAction;
 import org.cyk.utility.common.AbstractBuilder;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
@@ -46,8 +48,14 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	public void addParameter(String name,String value){
 		parameters.add(new UniformResourceLocatorParameter(this, name, value));
 	}
+	
 	public void addParameter(String name){
 		addParameter(name, null);
+	}
+	
+	public void addParameters(Collection<UniformResourceLocatorParameter> parameters){
+		if(parameters!=null)
+			this.parameters.addAll(parameters);
 	}
 	
 	@Override
@@ -115,6 +123,12 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 			return this;
 		}
 		
+		public Builder addParameters(Collection<UniformResourceLocatorParameter> parameters){
+			if(parameters!=null)
+				instance.addParameters(parameters);
+			return this;
+		}
+		
 		public Builder addClassParameter(Class<? extends AbstractIdentifiable> aClass){
 			addParameters(UniformResourceLocatorParameter.Builder.createClass(aClass));
 			return this;
@@ -143,20 +157,32 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 		
 		/**/
 		
-		public static UniformResourceLocator create(String address,Object...parameters){
-			return instanciateOne().setAddress(address).addParameters(parameters).build();
-		}
-		
-		
-		/**/
-		
 		public UniformResourceLocator build(){
 			return instance;
 		}
 		
 		/**/
 		
+		public static UniformResourceLocator create(String address,Object...parameters){
+			return instanciateOne().setAddress(address).addParameters(parameters).build();
+		}
 		
+		public static UniformResourceLocator create(final CommonBusinessAction commonBusinessAction,final Object object){
+			if(object instanceof AbstractIdentifiable){
+				return instanciateOne().setAddress(ListenerUtils.getInstance().getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
+					@Override
+					public String execute(Listener listener) {
+						return listener.getAddress(commonBusinessAction, object);
+					}
+				})).addParameters(ListenerUtils.getInstance().getCollection(Listener.COLLECTION,new ListenerUtils.CollectionMethod<Listener,UniformResourceLocatorParameter>() {
+					@Override
+					public Collection<UniformResourceLocatorParameter> execute(Listener listener) {
+						return listener.getParameters(commonBusinessAction, object);
+					}
+				})).build();
+			}
+			return null;
+		}
 		
 		/**/
 		
@@ -164,13 +190,28 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 			
 			Collection<Listener> COLLECTION = new ArrayList<>();
 			
+			String getAddress(CommonBusinessAction commonBusinessAction,Object object);
+			Collection<UniformResourceLocatorParameter> getParameters(CommonBusinessAction commonBusinessAction,Object object);
+			
 			public static class Adapter extends BeanAdapter implements Listener,Serializable{
 				private static final long serialVersionUID = -1259531075221759261L;
+				
+				@Override
+				public String getAddress(CommonBusinessAction commonBusinessAction, Object object) {
+					return null;
+				}
+				
+				@Override
+				public Collection<UniformResourceLocatorParameter> getParameters(CommonBusinessAction commonBusinessAction, Object object) {
+					return null;
+				}
 				
 				/**/
 				
 				public static class Default extends Adapter implements Serializable{
 					private static final long serialVersionUID = -5558988592648009882L;
+					
+					
 					
 				}
 

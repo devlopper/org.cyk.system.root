@@ -88,39 +88,19 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 		}
 		
 		public static UniformResourceLocatorParameter createClass(Class<? extends AbstractIdentifiable> aClass){
-			return instanciateOne().setName(ListenerUtils.getInstance().getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
-				@Override
-				public String execute(Listener listener) {
-					return listener.getClassParameter();
-				}
-			})).setValue(aClass).build();
+			return instanciateOne().setName(CLASS).setValue(aClass).build();
 		}
 		
 		public static UniformResourceLocatorParameter createIdentifiable(AbstractIdentifiable identifiable){
-			return instanciateOne().setName(ListenerUtils.getInstance().getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
-				@Override
-				public String execute(Listener listener) {
-					return listener.getIdentifiableParameter();
-				}
-			})).setValue(identifiable).build();
+			return instanciateOne().setName(IDENTIFIABLE).setValue(identifiable).build();
 		}
 		
 		public static UniformResourceLocatorParameter createIdentifiable(Long identifier){
-			return instanciateOne().setName(ListenerUtils.getInstance().getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
-				@Override
-				public String execute(Listener listener) {
-					return listener.getIdentifiableParameter();
-				}
-			})).setValue(identifier).build();
+			return instanciateOne().setName(IDENTIFIABLE).setValue(identifier).build();
 		}
 		
 		public static UniformResourceLocatorParameter createIdentifiable(){
-			return instanciateOne().setName(ListenerUtils.getInstance().getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
-				@Override
-				public String execute(Listener listener) {
-					return listener.getIdentifiableParameter();
-				}
-			})).setValue(Constant.EMPTY_STRING).build();
+			return instanciateOne().setName(IDENTIFIABLE).setValue(Constant.EMPTY_STRING).build();
 		}
 		
 		/**/
@@ -136,8 +116,8 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 			Collection<Listener> COLLECTION = new ArrayList<>();
 			
 			String getValueAsString(Object object);
-			String getIdentifiableParameter();
-			String getClassParameter();
+			@Deprecated String getIdentifiableParameter();
+			@Deprecated String getClassParameter();
 			
 			public static class Adapter extends BeanAdapter implements Listener,Serializable{
 				private static final long serialVersionUID = -1259531075221759261L;

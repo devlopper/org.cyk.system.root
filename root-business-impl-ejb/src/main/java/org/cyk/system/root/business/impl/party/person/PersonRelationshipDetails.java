@@ -15,14 +15,15 @@ public class PersonRelationshipDetails extends AbstractOutputDetails<PersonRelat
 	
 	private static final long serialVersionUID = -1498269103849317057L;
 	
-	@Input @InputText private String person1,type,person2;
-	private String __url__person1____;
+	@Input @InputText private FieldValue type;
+	@Input @InputText private FieldValue person1;
+	@Input @InputText private FieldValue person2;
 	
 	public PersonRelationshipDetails(PersonRelationship personRelationship) {
 		super(personRelationship);
-		person1 = formatUsingBusiness(personRelationship.getPerson1());
-		type = formatUsingBusiness(personRelationship.getType());
-		person2 = formatUsingBusiness(personRelationship.getPerson2());
+		person1 = new FieldValue(personRelationship.getPerson1());
+		type = new FieldValue(personRelationship.getType());
+		person2 = new FieldValue(personRelationship.getPerson2());
 		
 	}
 	

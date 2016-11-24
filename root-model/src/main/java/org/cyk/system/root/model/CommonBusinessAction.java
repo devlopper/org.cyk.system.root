@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.api;
+package org.cyk.system.root.model;
 
 public enum CommonBusinessAction {
     CREATE

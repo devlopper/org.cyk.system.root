@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.cyk.system.root.business.api.CommonBusinessAction;
+import org.cyk.system.root.model.CommonBusinessAction;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindClassLabelTextParameters;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindDoSomethingTextParameters;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
