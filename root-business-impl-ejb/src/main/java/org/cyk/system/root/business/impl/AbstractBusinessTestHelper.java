@@ -262,7 +262,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     }
 	
 	public void write(org.cyk.system.root.model.file.File file){
-    	write(file, "file"+System.currentTimeMillis());
+    	write(file, StringUtils.defaultIfBlank(file.getName(), "file")+System.currentTimeMillis());
     }
 	
 	protected void writeStream(ByteArrayOutputStream byteArrayOutputStream,String name,String extension){

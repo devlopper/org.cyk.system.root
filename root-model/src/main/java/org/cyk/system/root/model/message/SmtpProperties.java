@@ -21,6 +21,8 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 
 	private static final long serialVersionUID = -5516162693913912313L;
 
+	public static final String DEFAULT = "default";
+	
 	@Column(name="csender",nullable=false) @NotNull  @Email
 	private String from;
 	
@@ -36,5 +38,10 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 	
 	@Column(nullable=false) @NotNull 
 	private Boolean authenticated = Boolean.TRUE,secured = Boolean.FALSE;
+	
+	public static final String FIELD_FROM = "from";
+	public static final String FIELD_CREDENTIALS = "credentials";
+	public static final String FIELD_HOST = "host";
+	public static final String FIELD_PORT = "port";
 	
 }

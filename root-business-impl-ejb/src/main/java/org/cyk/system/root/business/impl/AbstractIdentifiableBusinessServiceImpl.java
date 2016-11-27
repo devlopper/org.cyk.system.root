@@ -113,6 +113,27 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	    return getPersistenceService().read(identifier);
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<IDENTIFIABLE> find(Collection<IDENTIFIABLE> identifiables, Collection<String> codes) {
+		Collection<IDENTIFIABLE> collection = new ArrayList<>();
+		for(IDENTIFIABLE identifiable : identifiables)
+			for(String code: codes)
+				if(code.equals(identifiable.getCode()))
+					collection.add(identifiable);
+		return collection;
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<IDENTIFIABLE> find(Collection<IDENTIFIABLE> identifiables, String code) {
+		return find(identifiables,Arrays.asList(code));
+	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public IDENTIFIABLE findOne(Collection<IDENTIFIABLE> identifiables, String code) {
+		Collection<IDENTIFIABLE> collection = find(identifiables, code);
+		return collection.isEmpty() ? null : collection.iterator().next();
+	}
+
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IDENTIFIABLE findByGlobalIdentifier(GlobalIdentifier globalIdentifier) {
 	    return getPersistenceService().readByGlobalIdentifier(globalIdentifier);
@@ -803,25 +824,27 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				public void afterUpdate(IDENTIFIABLE identifiable) {
 					super.afterUpdate(identifiable);
 					//Update related reports
-					for(String reportTemplateCode : getCascadeToReportTemplateCodes()){
-						FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
-						searchCriteria.addIdentifiableGlobalIdentifier(identifiable);
-						searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(reportTemplateCode));
-						Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
-						if(fileIdentifiableGlobalIdentifiers.isEmpty()){
-							
-						}else{
-							@SuppressWarnings("unchecked")
-							Class<IDENTIFIABLE> clazz = (Class<IDENTIFIABLE>) identifiable.getClass();
-							TypedBusiness<IDENTIFIABLE> business = inject(BusinessInterfaceLocator.class).injectTyped(clazz);							
-							for(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier : fileIdentifiableGlobalIdentifiers){
-								CreateReportFileArguments<IDENTIFIABLE> arguments = 
-										new CreateReportFileArguments.Builder<IDENTIFIABLE>(identifiable)
-										.setReportTemplate(reportTemplateCode).setFile(fileIdentifiableGlobalIdentifier.getFile()).build(); 
-								business.createReportFile(arguments);
+					Collection<String> reportTemplateCodes = getCascadeToReportTemplateCodes();
+					if(reportTemplateCodes!=null)
+						for(String reportTemplateCode : getCascadeToReportTemplateCodes()){
+							FileIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new FileIdentifiableGlobalIdentifier.SearchCriteria();
+							searchCriteria.addIdentifiableGlobalIdentifier(identifiable);
+							searchCriteria.addRepresentationType(inject(FileRepresentationTypeDao.class).read(reportTemplateCode));
+							Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
+							if(fileIdentifiableGlobalIdentifiers.isEmpty()){
+								
+							}else{
+								@SuppressWarnings("unchecked")
+								Class<IDENTIFIABLE> clazz = (Class<IDENTIFIABLE>) identifiable.getClass();
+								TypedBusiness<IDENTIFIABLE> business = inject(BusinessInterfaceLocator.class).injectTyped(clazz);							
+								for(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier : fileIdentifiableGlobalIdentifiers){
+									CreateReportFileArguments<IDENTIFIABLE> arguments = 
+											new CreateReportFileArguments.Builder<IDENTIFIABLE>(identifiable)
+											.setReportTemplate(reportTemplateCode).setFile(fileIdentifiableGlobalIdentifier.getFile()).build(); 
+									business.createReportFile(arguments);
+								}
 							}
 						}
-					}
 				}
 			}
 			

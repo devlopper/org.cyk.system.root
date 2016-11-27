@@ -11,6 +11,29 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.business.api.file.report.JasperReportBasedOnDynamicBuilderListener;
+import org.cyk.system.root.business.api.file.report.JasperReportBusiness;
+import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness;
+import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness.UpdateTagArguments;
+import org.cyk.system.root.business.impl.file.report.AbstractReportBusinessImpl;
+import org.cyk.system.root.business.impl.validation.ExceptionUtils;
+import org.cyk.system.root.model.file.report.AbstractReport;
+import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
+import org.cyk.system.root.model.file.report.Column;
+import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderListener;
+import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
+import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
+import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.LogMessage;
+import org.cyk.utility.common.cdi.BeanAdapter;
+
+import ar.com.fdvs.dj.core.DynamicJasperHelper;
+import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
+import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
+import ar.com.fdvs.dj.domain.builders.DynamicReportBuilder;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -28,30 +51,6 @@ import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import net.sf.jasperreports.export.SimpleXmlExporterOutput;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.file.report.JasperReportBasedOnDynamicBuilderListener;
-import org.cyk.system.root.business.api.file.report.JasperReportBusiness;
-import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness;
-import org.cyk.system.root.business.api.markuplanguage.MarkupLanguageBusiness.UpdateTagArguments;
-import org.cyk.system.root.business.impl.file.report.AbstractReportBusinessImpl;
-import org.cyk.system.root.business.impl.validation.ExceptionUtils;
-import org.cyk.system.root.model.file.report.AbstractReport;
-import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
-import org.cyk.system.root.model.file.report.Column;
-import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderListener;
-import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
-import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
-import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.ListenerUtils;
-import org.cyk.utility.common.cdi.BeanAdapter;
-
-import ar.com.fdvs.dj.core.DynamicJasperHelper;
-import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
-import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
-import ar.com.fdvs.dj.domain.builders.DynamicReportBuilder;
-
 public class JasperReportBusinessImpl extends AbstractReportBusinessImpl implements JasperReportBusiness , Serializable {
 
 	private static final long serialVersionUID = -3596293198479369047L;
@@ -62,12 +61,15 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 	
 	@Override
 	public void build(final ReportBasedOnTemplateFile<?> aReport, Boolean print) {
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("build","jasper report");
+		logMessageBuilder.addParameters("template file",aReport.getTemplateFile().getName());
 		JRBeanCollectionDataSource datasource = new JRBeanCollectionDataSource(aReport.getDataSource());
 		InputStream inputStream = fileBusiness.findInputStream(aReport.getTemplateFile());
 		try {
 			final StringBuilder jrxmlBuilder = new StringBuilder(IOUtils.toString(inputStream));
-			
-			listenerUtils.getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
+			logTrace("template file content : {}", jrxmlBuilder.toString());
+			logMessageBuilder.addParameters("jrxml number of characters",jrxmlBuilder.length());
+			/*listenerUtils.getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
 				@Override
 				public String execute(Listener listener) {
 					jrxmlBuilder.delete(0, jrxmlBuilder.length());
@@ -75,19 +77,20 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 					return jrxmlBuilder.toString();
 				}
 			});
-			/*
+			
 			for(Listener listener : Listener.COLLECTION)
 				if(Boolean.TRUE.equals(listener.isJrxmlProcessable(aReport)))
 					jrxml = listener.processJrxml(aReport,jrxml);
 			*/
 			
 			final ByteArrayInputStream bais = new ByteArrayInputStream(jrxmlBuilder.toString().getBytes(Constant.ENCODING_UTF8));
-			listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			
+			/*listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
 				@Override
 				public void execute(Listener listener) {
 					listener.processInputStream(aReport,bais);
 				}
-			});
+			});*/
 			
 			
 			JasperDesign jasperDesign = JRXmlLoader.load(bais);
@@ -110,6 +113,8 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 		} catch (Exception e) {
 			//e.printStackTrace();
 			throw new RuntimeException(e);
+		} finally {
+			logTrace(logMessageBuilder);
 		}
 	}
 		

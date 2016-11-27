@@ -27,6 +27,9 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				void create(Collection<IDENTIFIABLE> identifiables);
     
     /* Read */      //IDENTIFIABLE read(IDENTIFIER identifier);
+    				Collection<IDENTIFIABLE> find(Collection<IDENTIFIABLE> identifiables,Collection<String> codes);
+    				Collection<IDENTIFIABLE> find(Collection<IDENTIFIABLE> identifiables,String code);
+    				IDENTIFIABLE findOne(Collection<IDENTIFIABLE> identifiables,String code);
     
     /* Update */    IDENTIFIABLE update(IDENTIFIABLE identifiable);
     				IDENTIFIABLE update(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);

@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
-import javax.inject.Inject;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -27,7 +26,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
-import org.cyk.system.root.business.api.party.ApplicationBusiness;
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.message.SmtpProperties;
@@ -52,8 +51,6 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 	
 	public static SmtpProperties SMTP_PROPERTIES;
 	
-    @Inject private ApplicationBusiness applicationBusiness;
-    
     private Session getSession(Boolean debug) {
     	Session session = null;
     	Properties properties = convert(getSmtpProperties());
@@ -207,25 +204,22 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     
 	@Override
 	public SmtpProperties getSmtpProperties() {
+		SMTP_PROPERTIES = RootBusinessLayer.getInstance().getDefaultSmtpProperties();
 		if(SMTP_PROPERTIES==null){
-			SMTP_PROPERTIES = applicationBusiness==null?null:applicationBusiness.findCurrentInstance().getSmtpProperties();
-			if(SMTP_PROPERTIES==null){
-				SMTP_PROPERTIES = new SmtpProperties();
-				SMTP_PROPERTIES.setHost(null);
-				SMTP_PROPERTIES.setFrom(null);
-				
-				SMTP_PROPERTIES.setCredentials(new Credentials());
-				SMTP_PROPERTIES.getCredentials().setUsername(null);
-				SMTP_PROPERTIES.getCredentials().setPassword(null);
-				SMTP_PROPERTIES.setPort(null);
-				
-				SMTP_PROPERTIES.setSocketFactory(new SmtpSocketFactory());
-				SMTP_PROPERTIES.getSocketFactory().setClazz("javax.net.ssl.SSLSocketFactory");
-				SMTP_PROPERTIES.getSocketFactory().setFallback(Boolean.FALSE);
-				SMTP_PROPERTIES.getSocketFactory().setPort(null);
-				SMTP_PROPERTIES.setAuthenticated(Boolean.TRUE);
-			}
+			SMTP_PROPERTIES = new SmtpProperties();
+			SMTP_PROPERTIES.setHost(null);
+			SMTP_PROPERTIES.setFrom(null);
 			
+			SMTP_PROPERTIES.setCredentials(new Credentials());
+			SMTP_PROPERTIES.getCredentials().setUsername(null);
+			SMTP_PROPERTIES.getCredentials().setPassword(null);
+			SMTP_PROPERTIES.setPort(null);
+			
+			SMTP_PROPERTIES.setSocketFactory(new SmtpSocketFactory());
+			SMTP_PROPERTIES.getSocketFactory().setClazz("javax.net.ssl.SSLSocketFactory");
+			SMTP_PROPERTIES.getSocketFactory().setFallback(Boolean.FALSE);
+			SMTP_PROPERTIES.getSocketFactory().setPort(null);
+			SMTP_PROPERTIES.setAuthenticated(Boolean.TRUE);
 		}
 		return SMTP_PROPERTIES;
 	}

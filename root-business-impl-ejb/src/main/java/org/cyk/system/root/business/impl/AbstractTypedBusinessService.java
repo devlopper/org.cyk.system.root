@@ -13,6 +13,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -455,9 +456,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				, arguments.getFile().getExtension());
 		inject(FileBusiness.class).process(arguments.getFile(),reportBasedOnTemplateFile.getBytes(), ReportBusiness.DEFAULT_FILE_NAME_AND_EXTENSION);
 		Boolean isNewFile = isNotIdentified(arguments.getFile());
-		if(Boolean.TRUE.equals(isNewFile)){
-			arguments.getFile().setName(arguments.getFile().getRepresentationType().getName());
-		}
+		StringBuilder fileNameBuilder = new StringBuilder(arguments.getFile().getRepresentationType().getName());
+		fileNameBuilder.append(Constant.CHARACTER_SPACE);
+		fileNameBuilder.append(StringUtils.defaultIfBlank(arguments.getIdentifiableName(), inject(FormatterBusiness.class).format(arguments.getIdentifiable())));
+		arguments.getFile().setName(fileNameBuilder.toString());	
 		inject(GenericBusiness.class).save(arguments.getFile());
 		if(Boolean.TRUE.equals(isNewFile)){
 			inject(ReportFileBusiness.class).create(new ReportFile(arguments.getReportTemplate(), arguments.getFile()));

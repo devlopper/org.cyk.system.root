@@ -17,5 +17,21 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
 	public SmtpPropertiesBusinessImpl(SmtpPropertiesDao dao) {
 		super(dao);
 	}
+	
+	@Override
+	public SmtpProperties create(SmtpProperties smtpProperties) {
+		if(isNotIdentified(smtpProperties.getCredentials()))
+			genericDao.create(smtpProperties.getCredentials());
+		return super.create(smtpProperties);
+	}
+	
+	@Override
+	public SmtpProperties update(SmtpProperties smtpProperties) {
+		if(isIdentified(smtpProperties.getCredentials()))
+			genericDao.update(smtpProperties.getCredentials());
+		else if(isNotIdentified(smtpProperties.getCredentials()))
+			genericDao.create(smtpProperties.getCredentials());
+		return super.update(smtpProperties);
+	}
 
 }

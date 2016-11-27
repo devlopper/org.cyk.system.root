@@ -93,7 +93,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		private File file,backgroundImageFile;
 		private RootReportProducer reportProducer;
 		private Boolean joinFileToIdentifiable = Boolean.TRUE;
-		
+		private String identifiableName;
 		/**/
 		
 		public CreateReportFileArguments(IDENTIFIABLE identifiable){

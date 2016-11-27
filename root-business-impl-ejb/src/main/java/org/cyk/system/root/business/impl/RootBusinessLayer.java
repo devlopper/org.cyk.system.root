@@ -65,6 +65,8 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.MetricValue;
+import org.cyk.system.root.model.message.SmtpProperties;
+import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
@@ -83,11 +85,13 @@ import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.security.BusinessServiceCollection;
+import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
+import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeGroupDao;
 import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration;
@@ -127,6 +131,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private Application application;
     @Setter private Long applicationIdentifier;
+    @Setter @Getter private SmtpProperties defaultSmtpProperties;
     
     @SuppressWarnings("unchecked")
 	@Override
@@ -331,6 +336,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		Notification.Builder.Listener.COLLECTION.add(NotificationBuilderAdapter.DEFAULT);
 		UniformResourceLocator.Builder.Listener.COLLECTION.add(UniformResourceLocatorBuilderAdapter.DEFAULT);
 		TypedBusiness.CreateReportFileArguments.Builder.Listener.COLLECTION.add(new CreateReportFileArgumentsAdapter());
+		
+		defaultSmtpProperties = inject(SmtpPropertiesDao.class).read(SmtpProperties.DEFAULT);
     }
     
     
@@ -362,6 +369,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         party();
         security();
         file();
+        message();
     }
     
     private void geography(){
@@ -522,6 +530,28 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         	createEnumeration(BusinessServiceCollection.class,code);
     }
     
+    private void message(){ 
+    	SmtpProperties smtpProperties = new SmtpProperties();
+    	smtpProperties.setCode(SmtpProperties.DEFAULT);
+    	smtpProperties.setFrom(PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT,SmtpProperties.FIELD_FROM, "yoursender@email.here"));
+    	smtpProperties.setCredentials(new Credentials(PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT
+    			,commonUtils.attributePath(SmtpProperties.FIELD_CREDENTIALS,Credentials.FIELD_USERNAME), "yourusername")
+    			,PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT
+    			,commonUtils.attributePath(SmtpProperties.FIELD_CREDENTIALS,Credentials.FIELD_PASSWORD), "yourpassword") ));
+    	smtpProperties.setHost(PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT,SmtpProperties.FIELD_HOST, "yourhost"));
+    	smtpProperties.setPort(PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT,SmtpProperties.FIELD_PORT, -9999));
+    	
+		smtpProperties.setSocketFactory(new SmtpSocketFactory());
+		smtpProperties.getSocketFactory().setClazz("javax.net.ssl.SSLSocketFactory");
+		smtpProperties.getSocketFactory().setFallback(Boolean.FALSE);
+		smtpProperties.getSocketFactory().setPort(-9999);
+		smtpProperties.setAuthenticated(Boolean.TRUE);
+		
+		
+		
+    	create(smtpProperties);
+    }
+    
     @Override
     protected void setConstants(){
     	Application application = inject(ApplicationDao.class).select().one();
@@ -531,6 +561,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	RemoteEndPoint.USER_INTERFACE.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_USER_INTERFACE);
     	RemoteEndPoint.MAIL_SERVER.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_EMAIL);
     	RemoteEndPoint.PHONE.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_SMS);
+    	setDefaultSmtpProperties(inject(SmtpPropertiesDao.class).read(SmtpProperties.DEFAULT));
     }
     
     public Application getApplication(){
@@ -546,7 +577,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	else
     		applicationIdentifier = this.application.getIdentifier();
     }
-   
+    
     @Override
     protected void fakeTransactions() {
     	

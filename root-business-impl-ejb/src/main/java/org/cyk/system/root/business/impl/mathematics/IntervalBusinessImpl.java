@@ -146,12 +146,16 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public BigDecimal findLowestGreatestValue(Interval interval) {
+    	/*if(interval==null)
+    		return null;*/
     	return interval.getHigh().getValue()==null ? null 
     			: Boolean.FALSE.equals(interval.getHigh().getExcluded()) ? interval.getHigh().getValue() : interval.getHigh().getValue().add(BigDecimal.ONE);
     }
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public BigDecimal findGreatestLowestValue(Interval interval) {
+    	/*if(interval==null)
+    		return null;*/
     	return interval.getLow().getValue()==null ? null 
     			: Boolean.FALSE.equals(interval.getLow().getExcluded()) ? interval.getLow().getValue() : interval.getLow().getValue().subtract(BigDecimal.ONE);
     }
