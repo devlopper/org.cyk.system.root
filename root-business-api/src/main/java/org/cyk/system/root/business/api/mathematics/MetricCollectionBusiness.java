@@ -17,7 +17,7 @@ public interface MetricCollectionBusiness extends AbstractCollectionBusiness<Met
 
 	Collection<MetricCollection> findByMetricCollectionIdentifiableGlobalIdentifierSearchCriteria(SearchCriteria searchCriteria);
 	Collection<MetricCollection> findByTypesByIdentifiables(Collection<MetricCollectionType> metricCollectionTypes,Collection<? extends AbstractIdentifiable> identifiables);
-	Collection<MetricCollection> findByTypesByIdentifiables(Collection<MetricCollectionType> metricCollectionTypes,AbstractIdentifiable identifiable);
+	Collection<MetricCollection> findByTypesByIdentifiable(Collection<MetricCollectionType> metricCollectionTypes,AbstractIdentifiable identifiable);
     Collection<MetricCollection> findByTypeByIdentifiables(MetricCollectionType metricCollectionType,Collection<? extends AbstractIdentifiable> identifiables);
     Collection<MetricCollection> findByTypeByIdentifiable(MetricCollectionType metricCollectionType,AbstractIdentifiable identifiable);
 

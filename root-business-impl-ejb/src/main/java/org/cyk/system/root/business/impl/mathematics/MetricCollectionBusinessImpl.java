@@ -92,7 +92,7 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 	}
 
 	@Override
-	public Collection<MetricCollection> findByTypesByIdentifiables(Collection<MetricCollectionType> metricCollectionTypes, AbstractIdentifiable identifiable) {
+	public Collection<MetricCollection> findByTypesByIdentifiable(Collection<MetricCollectionType> metricCollectionTypes, AbstractIdentifiable identifiable) {
 		return findByTypesByIdentifiables(metricCollectionTypes,Arrays.asList(identifiable));
 	}
 
