@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
-import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractRootBusinessBean;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -194,7 +194,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 				if(metricValue.getMetric().equals(metric)){
 					values[i][0] = metric.getName();
 					//System.out.println(metricValue.getStringValue());
-					values[i][1] = inject(MetricValueBusiness.class).format(metricValue);
+					values[i][1] = inject(FormatterBusiness.class).format(metricValue);
 				}
 			i++;
 		}

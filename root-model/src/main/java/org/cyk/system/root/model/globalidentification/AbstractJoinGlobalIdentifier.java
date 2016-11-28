@@ -12,12 +12,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 
 /**
  * A join between an identifiable and a global identifier
@@ -34,6 +34,10 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	
 	@ManyToOne @NotNull
 	protected GlobalIdentifier identifiableGlobalIdentifier;
+	
+	public AbstractJoinGlobalIdentifier(AbstractIdentifiable identifiable){
+		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
+	}
 	
 	/**/
 	

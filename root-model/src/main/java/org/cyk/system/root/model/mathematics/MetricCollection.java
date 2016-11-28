@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
@@ -26,6 +28,8 @@ public class MetricCollection extends AbstractCollection<Metric> implements Seri
 	@Enumerated(EnumType.ORDINAL) @NotNull private MetricValueType valueType = MetricValueType.NUMBER;
 	@Enumerated(EnumType.ORDINAL) @NotNull private MetricValueInputted valueInputted = MetricValueInputted.VALUE_INTERVAL_VALUE;
 	
+	@ManyToOne @JoinColumn(name="metricCollectionType") private MetricCollectionType type;
+	
 	public MetricCollection(String code, String name) {
 		super(code, name, null, null);
 	}
@@ -40,8 +44,13 @@ public class MetricCollection extends AbstractCollection<Metric> implements Seri
 		return this;
 	}
 	
+	public MetricCollection setType(MetricCollectionType type){
+		this.type = type;
+		return this;
+	}
+	
 	public static final String FIELD_VALUE_INTERVAL_COLLECTION = "valueIntervalCollection";
 	public static final String FIELD_VALUE_TYPE = "valueType";
 	public static final String FIELD_VALUE_INPUTTED = "valueInputted";
-	
+	public static final String FIELD_TYPE = "type";
 }

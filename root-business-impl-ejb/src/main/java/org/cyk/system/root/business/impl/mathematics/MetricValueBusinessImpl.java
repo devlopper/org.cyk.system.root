@@ -1,14 +1,18 @@
 package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricValueIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricValue;
-import org.cyk.system.root.model.mathematics.MetricValueInputted;
+import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueDao;
 
 public class MetricValueBusinessImpl extends AbstractTypedBusinessService<MetricValue, MetricValueDao> implements MetricValueBusiness,Serializable {
@@ -19,21 +23,15 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 	public MetricValueBusinessImpl(MetricValueDao dao) {
 		super(dao); 
 	}
-	
+
 	@Override
-	public String format(MetricValue metricValue) {
-		String value = null;
-		switch(metricValue.getMetric().getCollection().getValueType()){
-		case NUMBER:
-			value = numberBusiness.format(metricValue.getNumberValue());
-			break;
-		case STRING:
-			if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
-				value = RootBusinessLayer.getInstance().getRelativeCode(metricValue.getMetric().getCollection(), metricValue.getStringValue());
-			else
-				value = metricValue.getStringValue();//TODO must depends on string value type
-			break;
-		}
-		return value;
+	public Collection<MetricValue> findByMetricsByIdentifiables(Collection<Metric> metrics,Collection<? extends AbstractIdentifiable> identifiables) {
+		MetricValueIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new MetricValueIdentifiableGlobalIdentifier.SearchCriteria();
+		searchCriteria.addIdentifiablesGlobalIdentifiers(identifiables).addMetrics(metrics);
+		Collection<MetricValue> metricValues = new ArrayList<>();
+		for(MetricValueIdentifiableGlobalIdentifier metricValueIdentifiableGlobalIdentifier : inject(MetricValueIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria))
+			metricValues.add(metricValueIdentifiableGlobalIdentifier.getMetricValue());
+		return metricValues;
 	}
+
 }

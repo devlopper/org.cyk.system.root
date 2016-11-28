@@ -55,7 +55,7 @@ public class CollectionBusinessIT extends AbstractBusinessIT {
     	assertThat("Interval collection IC1 exists", intervalCollectionBusiness.findByGlobalIdentifierCode("IC1")!=null);
     	assertThat("Has interval collection", metricBusiness.findByGlobalIdentifierCode("1").getValueIntervalCollection()!=null);
     	
-    	metricCollection = metricCollectionBusiness.instanciateOne("MC1", "NAME", MetricValueType.NUMBER
+    	metricCollection = metricCollectionBusiness.instanciateOne("MC1", "NAME",null, MetricValueType.NUMBER
 			, new String[]{"MV1","MV2","MV3"}
 			, new String[][]{ {"E", "Excellent", "1", "1"},{"G", "Good", "2", "2"},{"S", "Satisfactory", "3", "3"},{"N", "Needs Improvement", "4", "4"}
 	    	,{"H", "Has no regard", "5", "5"} });

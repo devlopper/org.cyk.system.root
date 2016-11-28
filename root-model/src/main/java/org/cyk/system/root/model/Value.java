@@ -32,6 +32,24 @@ public class Value extends AbstractModelElement implements Serializable {
 		this.user = user;
 	}
 	
+	public BigDecimal get(Boolean isUserFirst){
+		if(Boolean.TRUE.equals(isUserFirst))
+			return user == null ? system : user;
+		return system == null ? user : system;
+	}
+	
+	public BigDecimal get(){
+		return get(Boolean.FALSE);
+	}
+	
+	public void addUser(BigDecimal value){
+		if(value!=null){
+			if(this.user == null)
+				this.user = BigDecimal.ZERO;
+			this.user = this.user.add(value);
+		}
+	}
+	
 	public <NUMBER extends Number> NUMBER getSystemAs(Class<NUMBER> numberClass){
 		return CommonUtils.getInstance().getBigDecimalAs(system, numberClass);
 	}

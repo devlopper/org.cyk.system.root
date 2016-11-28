@@ -8,6 +8,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -37,6 +38,7 @@ public class Period extends AbstractModelElement implements Serializable{
 	
 	@Temporal(TemporalType.TIMESTAMP) private Date toDate;
 	
+	@Embedded
 	@AttributeOverrides(value={
 			@AttributeOverride(name=Value.FIELD_USER,column=@Column(name="user_numberofmillisecond"))
 			,@AttributeOverride(name=Value.FIELD_SYSTEM,column=@Column(name="system_numberofmillisecond"))

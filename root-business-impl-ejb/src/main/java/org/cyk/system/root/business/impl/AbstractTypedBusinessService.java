@@ -22,6 +22,8 @@ import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.file.report.ReportFileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -32,6 +34,9 @@ import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportFile;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.mathematics.Metric;
+import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -39,7 +44,10 @@ import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
@@ -187,6 +195,31 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void afterCreate(IDENTIFIABLE identifiable){
+		Collection<String> metricValueMetricCollectionCodes = null;
+		/*metricValueMetricCollectionCodes = listenerUtils.getCollection(getListeners(), new ListenerUtils.CollectionMethod<Listener<AbstractIdentifiable>, String>(){
+
+			@Override
+			public Collection<String> execute(AbstractIdentifiableBusinessServiceImpl.Listener<AbstractIdentifiable> listener) {
+				return listener.getMetricValueMetricCollectionCodes();
+			}});*/
+		Collection listeners =  getListeners();
+		if(listeners!=null)
+			for(Object listener : listeners){
+				Collection<String> v = ((Listener)listener).getMetricValueMetricCollectionCodes();
+				if(v!=null)
+					metricValueMetricCollectionCodes = v;
+			}
+		if(metricValueMetricCollectionCodes!=null){
+			Collection<MetricValue> metricValues = new ArrayList<>();
+			Collection<MetricCollection> metricCollections = inject(MetricCollectionDao.class).read(metricValueMetricCollectionCodes);
+			for(MetricCollection metricCollection : metricCollections){
+				for(Metric metric : inject(MetricDao.class).readByCollection(metricCollection)){
+					MetricValue metricValue = new MetricValue(metric);
+					metricValues.add(metricValue);
+				}
+			}
+			inject(MetricValueBusiness.class).create(metricValues);
+		}
 		afterCreate(getListeners(), identifiable);
 	}
 	

@@ -32,7 +32,6 @@ import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
-import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
@@ -64,7 +63,9 @@ import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
+import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.mathematics.MetricValue;
+import org.cyk.system.root.model.mathematics.MetricValueInputted;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.network.UniformResourceLocator;
@@ -200,7 +201,19 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(MetricValue metricValue, ContentType contentType) {
-				return inject(MetricValueBusiness.class).format(metricValue);
+				String value = null;
+				switch(metricValue.getMetric().getCollection().getValueType()){
+				case NUMBER:
+					value = inject(NumberBusiness.class).format(metricValue.getNumberValue().get());
+					break;
+				case STRING:
+					if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
+						value = RootBusinessLayer.getInstance().getRelativeCode(metricValue.getMetric().getCollection(), metricValue.getStringValue());
+					else
+						value = metricValue.getStringValue();//TODO must depends on string value type
+					break;
+				}
+				return value;
 			}
 		});
         registerFormatter(NestedSet.class, new AbstractFormatter<NestedSet>() {
@@ -370,6 +383,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         security();
         file();
         message();
+        mathematics();
     }
     
     private void geography(){
@@ -547,9 +561,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		smtpProperties.getSocketFactory().setPort(-9999);
 		smtpProperties.setAuthenticated(Boolean.TRUE);
 		
-		
-		
     	create(smtpProperties);
+    }
+    
+    private void mathematics(){ 
+    	createEnumeration(MetricCollectionType.class,MetricCollectionType.ATTENDANCE);
+    	createEnumeration(MetricCollectionType.class,MetricCollectionType.BEHAVIOUR);
     }
     
     @Override

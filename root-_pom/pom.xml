@@ -26,7 +26,7 @@
 		<module>../root-ui-web-primefaces-api</module>
 		<module>../root-ui-web-primefaces</module>
 		<module>../root-application-resources</module>
-		<module>../root-application</module>
+		<!--module>../root-application</module-->
 	</modules> 
 
 	<properties>

@@ -591,6 +591,12 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		Listener<IDENTIFIABLE> addCascadeToReportTemplateCode(String reportTemplateCode);
 		Listener<IDENTIFIABLE> addCascadeToReportTemplateCodes(String...reportTemplateCodes);
 		
+		Collection<String> getMetricValueMetricCollectionCodes();
+		void setMetricValueMetricCollectionCodes(Collection<String> codes);
+		
+		Listener<IDENTIFIABLE> addMetricValueMetricCollectionCodes(Collection<String> codes);
+		Listener<IDENTIFIABLE> addMetricValueMetricCollectionCodes(String...codes);
+		
 		AbstractIdentifiable findParent(IDENTIFIABLE identifiable);
 	    Collection<AbstractIdentifiable> findParentRecursively(IDENTIFIABLE identifiable);
 	    void setParents(IDENTIFIABLE identifiable);
@@ -603,7 +609,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			private static final long serialVersionUID = 8213436661982661753L;
 			
 			private Collection<Class<? extends AbstractIdentifiable>> cascadeToClasses;
-			private Collection<String> cascadeToReportTemplateCodes;
+			private Collection<String> cascadeToReportTemplateCodes,metricValueMetricCollectionCodes;
 			
 			@Override public void beforeGetPropertyValueTokens(IDENTIFIABLE identifiable, String name) {}
 			@Override public Object[] afterGetPropertyValueTokens(IDENTIFIABLE identifiable,String name, Object[] tokens) {return tokens;}
@@ -670,6 +676,25 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				}
 				return this;
 			}
+			
+			@Override
+			public Adapter<IDENTIFIABLE> addMetricValueMetricCollectionCodes(Collection<String> codes){
+				if(codes!=null && !codes.isEmpty()){
+					if(this.metricValueMetricCollectionCodes==null)
+						this.metricValueMetricCollectionCodes = new LinkedHashSet<>();
+					this.metricValueMetricCollectionCodes.addAll(codes);
+				}
+				return this;
+			}
+			
+			@Override
+			public Adapter<IDENTIFIABLE> addMetricValueMetricCollectionCodes(String...codes){
+				if(codes!=null){
+					addMetricValueMetricCollectionCodes(Arrays.asList(codes));
+				}
+				return this;
+			}
+			
 			protected Boolean containsCascadeToReportTemplateCode(String reportTemplateCode){
 				return cascadeToReportTemplateCodes!=null && cascadeToReportTemplateCodes.contains(reportTemplateCode);
 			}

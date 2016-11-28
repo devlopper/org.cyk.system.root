@@ -10,15 +10,17 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class MetricCollectionDetails extends AbstractCollectionDetails.Extends<MetricCollection> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String valueIntervalCollection,valueType,valueInputted;
+	@Input @InputText private String type,valueIntervalCollection,valueType,valueInputted;
 	
 	public MetricCollectionDetails(MetricCollection metricCollection) {
 		super(metricCollection);
+		type = formatUsingBusiness(metricCollection.getType());
 		valueIntervalCollection = formatUsingBusiness(metricCollection.getValueIntervalCollection());
 		valueType = metricCollection.getValueType().toString();
 		valueInputted = metricCollection.getValueInputted().toString();
 	}
 	
+	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_VALUE_INTERVAL_COLLECTION = "valueIntervalCollection";
 	public static final String FIELD_VALUE_TYPE = "valueType";
 	public static final String FIELD_VALUE_INPUTTED = "valueInputted";

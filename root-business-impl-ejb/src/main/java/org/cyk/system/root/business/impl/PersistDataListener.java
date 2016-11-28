@@ -49,7 +49,7 @@ public interface PersistDataListener {
 
 				@Override
 				public T getNullValue() {
-					return null;
+					return value;
 				}
 			});
 		}
@@ -65,7 +65,7 @@ public interface PersistDataListener {
 
 				@Override
 				public T getNullValue() {
-					return null;
+					return identifiable;
 				}
 			});
 		}
