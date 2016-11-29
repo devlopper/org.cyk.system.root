@@ -9,7 +9,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
 import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.system.root.model.Value;
+import org.cyk.system.root.model.BigDecimalValue;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,15 +52,15 @@ public class Attendance extends AbstractModelElement implements Serializable{
 	*/
 	@Embedded
 	@AttributeOverrides(value={
-			@AttributeOverride(name=Value.FIELD_USER,column=@Column(name="rate_user"))
-			,@AttributeOverride(name=Value.FIELD_SYSTEM,column=@Column(name="rate_system"))
-			,@AttributeOverride(name=Value.FIELD_GAP,column=@Column(name="rate_gap"))
+			@AttributeOverride(name=BigDecimalValue.FIELD_USER,column=@Column(name="rate_user"))
+			,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="rate_system"))
+			,@AttributeOverride(name=BigDecimalValue.FIELD_GAP,column=@Column(name="rate_gap"))
 	})
-	private Value rate = new Value();
+	private BigDecimalValue rate = new BigDecimalValue();
 
-	public Value getRate(){
+	public BigDecimalValue getRate(){
 		if(this.rate == null)
-			this.rate = new Value();
+			this.rate = new BigDecimalValue();
 		return this.rate;
 	}
 	

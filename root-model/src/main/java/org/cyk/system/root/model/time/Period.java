@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.system.root.model.Value;
+import org.cyk.system.root.model.BigDecimalValue;
 import org.cyk.utility.common.Constant;
 
 import lombok.AllArgsConstructor;
@@ -40,11 +40,11 @@ public class Period extends AbstractModelElement implements Serializable{
 	
 	@Embedded
 	@AttributeOverrides(value={
-			@AttributeOverride(name=Value.FIELD_USER,column=@Column(name="user_numberofmillisecond"))
-			,@AttributeOverride(name=Value.FIELD_SYSTEM,column=@Column(name="system_numberofmillisecond"))
-			,@AttributeOverride(name=Value.FIELD_GAP,column=@Column(name="gap_numberofmillisecond"))
+			@AttributeOverride(name=BigDecimalValue.FIELD_USER,column=@Column(name="user_numberofmillisecond"))
+			,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="system_numberofmillisecond"))
+			,@AttributeOverride(name=BigDecimalValue.FIELD_GAP,column=@Column(name="gap_numberofmillisecond"))
 	})
-	private Value numberOfMillisecond = new Value();
+	private BigDecimalValue numberOfMillisecond = new BigDecimalValue();
 	
 	public Period(Date fromDate, Date toDate) {
 		super();
@@ -62,9 +62,9 @@ public class Period extends AbstractModelElement implements Serializable{
 		computeNumberOfMillisecond();
 	}
 	
-	public Value getNumberOfMillisecond(){
+	public BigDecimalValue getNumberOfMillisecond(){
 		if(numberOfMillisecond==null)
-			numberOfMillisecond=new Value();
+			numberOfMillisecond=new BigDecimalValue();
 		return numberOfMillisecond;
 	}
 	
@@ -94,8 +94,8 @@ public class Period extends AbstractModelElement implements Serializable{
 	public static final String FIELD_TO_DATE = "toDate";
 	public static final String FIELD_NUMBER_OF_MILLISECOND = "numberOfMillisecond";
 	
-	public static final String COLUMN_USER_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+Constant.CHARACTER_UNDESCORE+Value.FIELD_USER;
-	public static final String COLUMN_SYSTEM_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+Constant.CHARACTER_UNDESCORE+Value.FIELD_SYSTEM;
-	public static final String COLUMN_GAP_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+Constant.CHARACTER_UNDESCORE+Value.FIELD_GAP;
+	public static final String COLUMN_USER_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+Constant.CHARACTER_UNDESCORE+BigDecimalValue.FIELD_USER;
+	public static final String COLUMN_SYSTEM_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+Constant.CHARACTER_UNDESCORE+BigDecimalValue.FIELD_SYSTEM;
+	public static final String COLUMN_GAP_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+Constant.CHARACTER_UNDESCORE+BigDecimalValue.FIELD_GAP;
 	
 }

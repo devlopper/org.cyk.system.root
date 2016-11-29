@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.Value;
+import org.cyk.system.root.model.BigDecimalValue;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,17 +30,14 @@ public class MetricValue extends AbstractIdentifiable implements Serializable {
 	 * Depending on the business anyone of those value fields can be filled.
 	 * A value field will be named as xxxValue where xxx is the type of value
 	 */
-	/*
-	@Column(precision=20,scale=FLOAT_SCALE) 
-	private BigDecimal numberValue;
-	*/
+	
 	@Embedded
 	@AttributeOverrides(value={
-			@AttributeOverride(name=Value.FIELD_USER,column=@Column(name="number_value_user"))
-			,@AttributeOverride(name=Value.FIELD_SYSTEM,column=@Column(name="number_value_system"))
-			,@AttributeOverride(name=Value.FIELD_GAP,column=@Column(name="number_value_gap"))
+			@AttributeOverride(name=BigDecimalValue.FIELD_USER,column=@Column(name="number_value_user"))
+			,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="number_value_system"))
+			,@AttributeOverride(name=BigDecimalValue.FIELD_GAP,column=@Column(name="number_value_gap"))
 	})
-	private Value numberValue = new Value();
+	private BigDecimalValue numberValue = new BigDecimalValue();
 	
 	private String stringValue;
 	
@@ -55,9 +52,9 @@ public class MetricValue extends AbstractIdentifiable implements Serializable {
 		this.metric = metric;
 	}
 	
-	public Value getNumberValue(){
+	public BigDecimalValue getNumberValue(){
 		if(numberValue==null)
-			numberValue = new Value();
+			numberValue = new BigDecimalValue();
 		return numberValue;
 	}
 
