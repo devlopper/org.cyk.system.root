@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -76,10 +77,10 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 	@Override
 	public Collection<MetricCollection> findByMetricCollectionIdentifiableGlobalIdentifierSearchCriteria(SearchCriteria searchCriteria) {
 		Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = inject(MetricCollectionIdentifiableGlobalIdentifierDao.class).readByCriteria(searchCriteria);
-		Collection<MetricCollection> metricCollections = new ArrayList<>();
+		Collection<MetricCollection> metricCollections = new LinkedHashSet<>();
 		for(MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier : metricCollectionIdentifiableGlobalIdentifiers)
 			metricCollections.add(metricCollectionIdentifiableGlobalIdentifier.getMetricCollection());
-		return metricCollections;
+		return new ArrayList<>(metricCollections);
 	}
 	
 	@SuppressWarnings("unchecked")

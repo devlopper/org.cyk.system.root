@@ -32,6 +32,18 @@ public class Value extends AbstractModelElement implements Serializable {
 		this.user = user;
 	}
 	
+	public Value set(BigDecimal value,Boolean isUser){
+		if(Boolean.TRUE.equals(isUser))
+			user = value;
+		else
+			system = value;
+		return this;
+	}
+	
+	public Value set(BigDecimal value){
+		return set(value,Boolean.TRUE);
+	}
+	
 	public BigDecimal get(Boolean isUserFirst){
 		if(Boolean.TRUE.equals(isUserFirst))
 			return user == null ? system : user;

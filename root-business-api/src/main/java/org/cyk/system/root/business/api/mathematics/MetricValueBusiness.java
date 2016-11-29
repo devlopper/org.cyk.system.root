@@ -11,4 +11,7 @@ public interface MetricValueBusiness extends TypedBusiness<MetricValue> {
 
 	Collection<MetricValue> findByMetricsByIdentifiables(Collection<Metric> metrics,Collection<? extends AbstractIdentifiable> identifiables);
 	
+	void updateManyRandomly(Collection<String> metricCollectionCodes,Collection<? extends AbstractIdentifiable> metricCollectionIdentifiables
+			,Collection<? extends AbstractIdentifiable> metricValueIdentifiables);
+	
 }
