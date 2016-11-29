@@ -10,6 +10,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
@@ -63,9 +64,11 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 		MetricCollection collection = instanciateOne(code,name,items);
 		collection.setType(type);
 		collection.setValueType(metricValueType);
-		if(intervalCollectionName==null)
-			intervalCollectionName = code+Constant.CHARACTER_UNDESCORE+collection.getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE+Interval.class.getSimpleName();
-		collection.setValueIntervalCollection(inject(IntervalCollectionBusiness.class).instanciateOne(code, intervalCollectionName, intervals));
+		if(StringUtils.isNotBlank(intervalCollectionName) && intervals!=null){
+			if(intervalCollectionName==null)
+				intervalCollectionName = code+Constant.CHARACTER_UNDESCORE+collection.getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE+Interval.class.getSimpleName();
+			collection.setValueIntervalCollection(inject(IntervalCollectionBusiness.class).instanciateOne(code, intervalCollectionName, intervals));
+		}
 		return collection;
 	}
 	
