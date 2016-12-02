@@ -190,12 +190,13 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		String[][] values = new String[metrics.size()][2];
 		Integer i = 0;
 		for(Metric metric : metrics){
-			for(MetricValue metricValue : metricValues)
+			for(MetricValue metricValue : metricValues){
 				if(metricValue.getMetric().equals(metric)){
 					values[i][0] = metric.getName();
 					//System.out.println(metricValue.getStringValue());
 					values[i][1] = inject(FormatterBusiness.class).format(metricValue);
 				}
+			}
 			i++;
 		}
 		return values;
@@ -205,11 +206,6 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		String[][] values = new String[intervals.size()][2+(Boolean.TRUE.equals(includeExtremities)?1:0)];
 		Integer i = 0;
 		for(Interval interval : intervals){
-			/*for(Listener listener : Listener.COLLECTION){
-				String v = listener.getCollectionItemCode(interval);
-				if(v!=null)
-					values[i][0] = v;
-			}*/
 			values[i][0] = inject(IntervalBusiness.class).findRelativeCode(interval);
 			values[i][1] = interval.getName();
 			if(Boolean.TRUE.equals(includeExtremities))

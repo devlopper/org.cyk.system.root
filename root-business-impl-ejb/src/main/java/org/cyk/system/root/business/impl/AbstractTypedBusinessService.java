@@ -22,7 +22,6 @@ import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.file.report.ReportFileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
-import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
@@ -47,7 +46,6 @@ import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
@@ -194,6 +192,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
         return identifiable;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void afterCreate(IDENTIFIABLE identifiable){
 		Collection<String> metricValueMetricCollectionCodes = null;
 		/*metricValueMetricCollectionCodes = listenerUtils.getCollection(getListeners(), new ListenerUtils.CollectionMethod<Listener<AbstractIdentifiable>, String>(){

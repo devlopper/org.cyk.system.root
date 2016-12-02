@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.AbstractCollectionBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria;
@@ -14,6 +15,7 @@ public interface MetricCollectionBusiness extends AbstractCollectionBusiness<Met
     
 	MetricCollection instanciateOne(String code,String name,MetricCollectionType type,MetricValueType metricValueType,String[] items,String intervalCollectionName,String[][] intervals);
 	MetricCollection instanciateOne(String code,String name,MetricCollectionType type,MetricValueType metricValueType,String[] items,String[][] intervals);
+	MetricCollection instanciateOne(String code,String name,MetricCollectionType type,MetricValueType metricValueType,String[] items,IntervalCollection valueIntervalCollection);
 
 	Collection<MetricCollection> findByMetricCollectionIdentifiableGlobalIdentifierSearchCriteria(SearchCriteria searchCriteria);
 	Collection<MetricCollection> findByTypesByIdentifiables(Collection<MetricCollectionType> metricCollectionTypes,Collection<? extends AbstractIdentifiable> identifiables);

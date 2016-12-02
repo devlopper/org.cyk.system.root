@@ -15,9 +15,6 @@ public class MetricCollectionType extends AbstractEnumeration implements Seriali
 	
 	private static final long serialVersionUID = 374208919427476791L;
 	
-	public static final String BEHAVIOUR = "BEHAVIOUR";
-	public static final String ATTENDANCE = "ATTENDANCE";
-	
 	public MetricCollectionType() {}
 
 	public MetricCollectionType(String code,String name, String abbreviation) {

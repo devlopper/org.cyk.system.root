@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -32,6 +34,7 @@ import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueDao;
 import org.cyk.utility.common.generator.RandomDataProvider;
 
+@Stateless
 public class MetricValueBusinessImpl extends AbstractTypedBusinessService<MetricValue, MetricValueDao> implements MetricValueBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -41,7 +44,7 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 		super(dao); 
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<MetricValue> findByMetricsByIdentifiables(Collection<Metric> metrics,Collection<? extends AbstractIdentifiable> identifiables) {
 		MetricValueIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new MetricValueIdentifiableGlobalIdentifier.SearchCriteria();
 		searchCriteria.addIdentifiablesGlobalIdentifiers(identifiables).addMetrics(metrics);
@@ -58,24 +61,69 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 					.read(metricCollectionCodes), metricCollectionIdentifiables);
 			for(MetricCollection metricCollection : metricCollections){
 				Collection<Metric> metrics = inject(MetricBusiness.class).findByCollection(metricCollection);
-				IntervalCollection intervalCollection = metricCollection.getValueIntervalCollection();
-				inject(IntervalCollectionBusiness.class).load(intervalCollection);
-				List<Interval> intervals = new ArrayList<>(inject(IntervalBusiness.class).findByCollection(intervalCollection));
 				Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable));
-				Collection<AbstractIdentifiable> c = new ArrayList<>();
-				for(MetricValue metricValue : metricValues){
-					if(MetricValueType.NUMBER.equals(metricCollection.getValueType())){
-						metricValue.getNumberValue().setUser(new BigDecimal(RandomDataProvider.getInstance().randomInt(intervalCollection.getLowestValue().intValue(), intervalCollection.getHighestValue().intValue())));
-					}else
-						if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
-							metricValue.setStringValue( ((Interval)RandomDataProvider.getInstance().randomFromList(intervals)).getCode() );
-						else
-							metricValue.setStringValue(RandomStringUtils.randomAlphabetic(1));
-					c.add(metricValue);
+				IntervalCollection intervalCollection = null;
+				List<Interval> intervals = null;
+				if(metricCollection.getValueIntervalCollection()!=null){
+					intervalCollection = metricCollection.getValueIntervalCollection();
+					inject(IntervalCollectionBusiness.class).load(intervalCollection);
+					intervals = new ArrayList<>(inject(IntervalBusiness.class).findByCollection(intervalCollection));
 				}
-				inject(GenericBusiness.class).update(c);
+					
+				for(MetricValue metricValue : metricValues){
+					if(MetricValueType.BOOLEAN.equals(metricCollection.getValueType())){
+						metricValue.getBooleanValue().set(RandomDataProvider.getInstance().randomBoolean());
+					}else if(MetricValueType.NUMBER.equals(metricCollection.getValueType())){
+						if(metricCollection.getValueIntervalCollection()!=null)
+							metricValue.getNumberValue().setUser(new BigDecimal(RandomDataProvider.getInstance().randomInt(intervalCollection.getLowestValue().intValue(), intervalCollection.getHighestValue().intValue())));
+					}else if(MetricValueType.STRING.equals(metricCollection.getValueType())){
+						if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
+							if(metricCollection.getValueIntervalCollection()!=null)
+								metricValue.getStringValue().set( ((Interval)RandomDataProvider.getInstance().randomFromList(intervals)).getCode() );
+							else
+									;
+						else
+							metricValue.getStringValue().set( RandomStringUtils.randomAlphabetic(1));
+					}
+				}	
+				inject(GenericBusiness.class).update(commonUtils.castCollection(metricValues, AbstractIdentifiable.class));
+				//logTrace("Random metrics values : {}", metricValues);
+				
 			}
 		}
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public MetricValueType getValueType(MetricValue metricValue) {
+		return inject(MetricBusiness.class).getValueType(metricValue.getMetric());
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public void setValue(MetricValue metricValue, Object value) {
+		switch(getValueType(metricValue)){
+		case BOOLEAN:
+			metricValue.getBooleanValue().set(value == null ? null :  (Boolean) value);
+			break;
+		case NUMBER:
+			metricValue.getNumberValue().set(value == null ? null : new BigDecimal(value.toString()));
+			break;
+		case STRING:
+			metricValue.getStringValue().set(value == null ? null : value.toString());
+			break;
+		}
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Object getValue(MetricValue metricValue) {
+		switch(getValueType(metricValue)){
+		case BOOLEAN:
+			return metricValue.getBooleanValue().get();
+		case NUMBER:
+			return metricValue.getNumberValue().get();
+		case STRING:
+			return metricValue.getStringValue().get();
+		}
+		return null;
 	}
 
 }

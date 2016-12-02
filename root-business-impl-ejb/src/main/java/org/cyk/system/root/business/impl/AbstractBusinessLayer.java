@@ -367,6 +367,11 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		return rootDataProducerHelper.createEnumeration(aClass, name);
 	}
 	
+	public <T extends AbstractEnumeration> void createEnumerations(Class<T> aClass,String...names) {
+		for(String name : names)
+			rootDataProducerHelper.createEnumeration(aClass, name);
+	}
+	
 	public <T extends AbstractEnumeration> T updateEnumeration(Class<T> aClass,String code,String name){
 		return rootDataProducerHelper.updateEnumeration(aClass, code, name);
 	}

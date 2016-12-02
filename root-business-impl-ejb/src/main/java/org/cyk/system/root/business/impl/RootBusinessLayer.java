@@ -45,6 +45,7 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.ContentType;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
@@ -206,11 +207,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				case NUMBER:
 					value = inject(NumberBusiness.class).format(metricValue.getNumberValue().get());
 					break;
+				case BOOLEAN:
+					value = inject(LanguageBusiness.class).findResponseText(metricValue.getBooleanValue().get());
+					break;
 				case STRING:
 					if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
-						value = RootBusinessLayer.getInstance().getRelativeCode(metricValue.getMetric().getCollection(), metricValue.getStringValue());
+						value = RootBusinessLayer.getInstance().getRelativeCode(metricValue.getMetric().getCollection(), metricValue.getStringValue().get());
 					else
-						value = metricValue.getStringValue();//TODO must depends on string value type
+						value = metricValue.getStringValue().get();//TODO must depends on string value type
 					break;
 				}
 				return value;
@@ -565,8 +569,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void mathematics(){ 
-    	createEnumeration(MetricCollectionType.class,MetricCollectionType.ATTENDANCE);
-    	createEnumeration(MetricCollectionType.class,MetricCollectionType.BEHAVIOUR);
+    	createEnumerations(MetricCollectionType.class,RootConstant.Code.MetricCollectionType.ATTENDANCE,RootConstant.Code.MetricCollectionType.BEHAVIOUR
+    			,RootConstant.Code.MetricCollectionType.COMMUNICATION);
+    	
     }
     
     @Override

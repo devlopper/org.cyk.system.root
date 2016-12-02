@@ -17,12 +17,8 @@ public class BooleanValue extends AbstractValue<Boolean> implements Serializable
 		super(user);
 	}
 	
-	public BooleanValue set(Boolean value,Boolean isUser){
-		return set(value,isUser);
-	}
-	
 	public BooleanValue set(Boolean value){
-		return set(value);
+		return (BooleanValue) set(value,Boolean.TRUE);
 	}
 	
 	@Override

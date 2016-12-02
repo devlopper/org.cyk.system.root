@@ -17,6 +17,7 @@ import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
@@ -75,6 +76,13 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 	@Override
 	public MetricCollection instanciateOne(String code, String name,MetricCollectionType type, MetricValueType metricValueType, String[] items,String[][] intervals) {
 		return instanciateOne(code, name,type, metricValueType, items, null, intervals);
+	}
+	
+	@Override
+	public MetricCollection instanciateOne(String code, String name, MetricCollectionType type,MetricValueType metricValueType, String[] items, IntervalCollection valueIntervalCollection) {
+		MetricCollection metricCollection = instanciateOne(code, name,type, metricValueType, items, null, null);
+		metricCollection.setValueIntervalCollection(valueIntervalCollection);
+		return metricCollection;
 	}
 
 	@Override
