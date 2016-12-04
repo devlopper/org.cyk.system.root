@@ -205,12 +205,18 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				String value = null;
 				switch(metricValue.getMetric().getCollection().getValueType()){
 				case NUMBER:
+					if(metricValue.getNumberValue().get()==null && Boolean.TRUE.equals(metricValue.getMetric().getCollection().getValueIsNullable()))
+						return metricValue.getMetric().getCollection().getNullValueAbbreviation();
 					value = inject(NumberBusiness.class).format(metricValue.getNumberValue().get());
 					break;
 				case BOOLEAN:
+					if(metricValue.getBooleanValue().get()==null && Boolean.TRUE.equals(metricValue.getMetric().getCollection().getValueIsNullable()))
+						return metricValue.getMetric().getCollection().getNullValueAbbreviation();
 					value = inject(LanguageBusiness.class).findResponseText(metricValue.getBooleanValue().get());
 					break;
 				case STRING:
+					if(metricValue.getStringValue().get()==null && Boolean.TRUE.equals(metricValue.getMetric().getCollection().getValueIsNullable()))
+						return metricValue.getMetric().getCollection().getNullValueAbbreviation();
 					if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
 						value = RootBusinessLayer.getInstance().getRelativeCode(metricValue.getMetric().getCollection(), metricValue.getStringValue().get());
 					else

@@ -71,17 +71,25 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 				}
 					
 				for(MetricValue metricValue : metricValues){
+					Boolean setNull = Boolean.TRUE.equals(metricValue.getMetric().getCollection().getValueIsNullable()) 
+							? RandomDataProvider.getInstance().randomBoolean() : Boolean.FALSE;
 					if(MetricValueType.BOOLEAN.equals(metricCollection.getValueType())){
-						metricValue.getBooleanValue().set(RandomDataProvider.getInstance().randomBoolean());
+						metricValue.getBooleanValue().set(Boolean.TRUE.equals(setNull) ? null : RandomDataProvider.getInstance().randomBoolean());
 					}else if(MetricValueType.NUMBER.equals(metricCollection.getValueType())){
-						if(metricCollection.getValueIntervalCollection()!=null)
-							metricValue.getNumberValue().setUser(new BigDecimal(RandomDataProvider.getInstance().randomInt(intervalCollection.getLowestValue().intValue(), intervalCollection.getHighestValue().intValue())));
+						if(Boolean.TRUE.equals(setNull))
+							metricValue.getNumberValue().set(null);
+						else if(metricCollection.getValueIntervalCollection()==null)
+							metricValue.getNumberValue().set(new BigDecimal(RandomDataProvider.getInstance().randomInt(0, 100)));
+						else
+							metricValue.getNumberValue().set(new BigDecimal(RandomDataProvider.getInstance().randomInt(intervalCollection.getLowestValue().intValue(), intervalCollection.getHighestValue().intValue())));
 					}else if(MetricValueType.STRING.equals(metricCollection.getValueType())){
-						if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
+						if(Boolean.TRUE.equals(setNull))
+							metricValue.getStringValue().set(null);
+						else if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
 							if(metricCollection.getValueIntervalCollection()!=null)
 								metricValue.getStringValue().set( ((Interval)RandomDataProvider.getInstance().randomFromList(intervals)).getCode() );
 							else
-									;
+								;
 						else
 							metricValue.getStringValue().set( RandomStringUtils.randomAlphabetic(1));
 					}

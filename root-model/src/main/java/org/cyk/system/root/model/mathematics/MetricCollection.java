@@ -30,6 +30,10 @@ public class MetricCollection extends AbstractCollection<Metric> implements Seri
 	
 	@ManyToOne @JoinColumn(name="metricCollectionType") private MetricCollectionType type;
 	
+	private Boolean valueIsNullable;
+	private String nullValueString;
+	private String nullValueAbbreviation;
+	
 	public MetricCollection(String code, String name) {
 		super(code, name, null, null);
 	}
@@ -46,6 +50,21 @@ public class MetricCollection extends AbstractCollection<Metric> implements Seri
 	
 	public MetricCollection setType(MetricCollectionType type){
 		this.type = type;
+		return this;
+	}
+	
+	public MetricCollection setValueIsNullable(Boolean valueIsNullable){
+		this.valueIsNullable = valueIsNullable;
+		return this;
+	}
+	
+	public MetricCollection setNullValueString(String nullValueString){
+		this.nullValueString = nullValueString;
+		return this;
+	}
+	
+	public MetricCollection setNullValueAbbreviation(String nullValueAbbreviation){
+		this.nullValueAbbreviation = nullValueAbbreviation;
 		return this;
 	}
 	

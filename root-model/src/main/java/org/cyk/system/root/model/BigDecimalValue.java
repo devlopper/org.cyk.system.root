@@ -19,14 +19,14 @@ public class BigDecimalValue extends AbstractValue<BigDecimal> implements Serial
 	public BigDecimalValue(BigDecimal user) {
 		super(user);
 	}
-	
+	/*
 	public BigDecimalValue set(BigDecimal value,Boolean isUser){
 		return set(value,isUser);
 	}
 	
 	public BigDecimalValue set(BigDecimal value){
 		return set(value,Boolean.TRUE);
-	}
+	}*/
 	
 	public void addUser(BigDecimal value){
 		if(value!=null){

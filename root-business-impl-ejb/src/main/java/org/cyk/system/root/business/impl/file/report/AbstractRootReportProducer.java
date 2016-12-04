@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.file.report;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractRootBusinessBean;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -25,6 +27,7 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalReport;
 import org.cyk.system.root.model.mathematics.Metric;
+import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.AbstractActorReport;
@@ -35,16 +38,15 @@ import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonReport;
 import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.BeanAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class AbstractRootReportProducer extends AbstractRootBusinessBean implements RootReportProducer,Serializable {
 
 	private static final long serialVersionUID = 7126711234011563710L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRootReportProducer.class);
 	private static final String JASPER_STYLE = "<style size=\"%s\" forecolor=\"%s\">%s</style>";
 	public static String NULL_VALUE = "NA";
 	public static String NOT_APPLICABLE = "NA";
@@ -103,6 +105,26 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected LabelValueReport getLabelValue(String id){
 		return currentLabelValueCollection.getById(id);
+	}
+	
+	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String metricCollectionCode,String defaultValue){
+		MetricCollection metricCollection = inject(MetricCollectionDao.class).read(metricCollectionCode);
+		Collection<Metric> metrics = inject(MetricDao.class).readByCollection(metricCollection);
+		Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable)); 
+		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(metricCollection.getName().toUpperCase() ,convertToArray(metrics, metricValues));
+		for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection())
+			if(StringUtils.isBlank(labelValueReport.getValue()))
+				labelValueReport.setValue(defaultValue);
+		return labelValueCollectionReport;
+	}
+	
+	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String metricCollectionCode){
+		return addMetricsLabelValueCollection(report, identifiable, metricCollectionCode, Constant.EMPTY_STRING);
+	}
+	
+	protected void addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String[][] metricCollections){
+		for(String[] metricCollection : metricCollections)
+			addMetricsLabelValueCollection(report, identifiable, metricCollection[0],metricCollection[1]);
 	}
 	
 	protected void set(ContactCollection contactCollection,ContactCollectionReport report){
@@ -215,14 +237,17 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return values;
 	}
 	
-	protected LabelValueCollectionReport addIntervalCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,Boolean ascending,Boolean includeExtremities,
+	protected LabelValueCollectionReport addIntervalCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,MetricCollection metricCollection,Boolean ascending,Boolean includeExtremities,
 			Integer[][] columnsToSwap){
 		String[][] values =  convertToArray(inject(IntervalDao.class).readByCollection(intervalCollection,ascending),includeExtremities);
 		if(columnsToSwap!=null)
 			for(Integer[] index : columnsToSwap){
 				commonUtils.swapColumns(values, index[0], index[1]);
 			}
-		return report.addLabelValueCollection(intervalCollection.getName(),values);
+		LabelValueCollectionReport labelValueCollectionReport = report.addLabelValueCollection(intervalCollection.getName(),values);
+		if(metricCollection!=null && Boolean.TRUE.equals(metricCollection.getValueIsNullable()))
+			labelValueCollectionReport.add(metricCollection.getNullValueAbbreviation(), metricCollection.getNullValueString());
+		return labelValueCollectionReport;
 	}
 	
 	/*protected LabelValueCollectionReport addMetricCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,MetricCollection metricCollection){
@@ -231,12 +256,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		for(MetricValue metricValue : rootBusinessLayer.getMetricDao().fin)
 	}*/
 			
-	
-	@Override
-	protected Logger __logger__() {
-		return LOGGER;
-	}
-	
+		
 	/**/
 	
 	public static interface Listener {
