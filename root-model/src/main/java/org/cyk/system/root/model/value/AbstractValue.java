@@ -1,8 +1,10 @@
-package org.cyk.system.root.model;
+package org.cyk.system.root.model.value;
 
 import java.io.Serializable;
 
 import javax.persistence.MappedSuperclass;
+
+import org.cyk.system.root.model.AbstractModelElement;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +19,6 @@ public abstract class AbstractValue<TYPE> extends AbstractModelElement implement
 	protected TYPE user;
 	
 	protected TYPE system;
-	
-	protected TYPE gap;
 	
 	public AbstractValue(TYPE user) {
 		super();
@@ -47,19 +47,17 @@ public abstract class AbstractValue<TYPE> extends AbstractModelElement implement
 		return get(Boolean.FALSE);
 	}
 	
-	public abstract void computeGap();
-	
 	@Override
 	public String getUiString() {
-		return "U="+user+" , S="+system+" , G="+gap;
+		return toString();
 	}
 
 	@Override
 	public String toString() {
-		return "U="+user+" , S="+system+" , G="+gap;
+		return "U="+user+" , S="+system;
 	}
 	
 	public static final String FIELD_USER = "user";
 	public static final String FIELD_SYSTEM = "system";
-	public static final String FIELD_GAP = "gap";
+	
 }

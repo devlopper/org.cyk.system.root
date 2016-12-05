@@ -1,38 +1,30 @@
 package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
-import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.value.ValueBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.mathematics.Interval;
-import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.mathematics.MetricValueInputted;
-import org.cyk.system.root.model.mathematics.MetricValueType;
+import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueDao;
-import org.cyk.utility.common.generator.RandomDataProvider;
 
 @Stateless
 public class MetricValueBusinessImpl extends AbstractTypedBusinessService<MetricValue, MetricValueDao> implements MetricValueBusiness,Serializable {
@@ -42,6 +34,17 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 	@Inject
 	public MetricValueBusinessImpl(MetricValueDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected void beforeCreate(MetricValue metricValue) {
+		createIfNotIdentified(metricValue.getValue());
+		super.beforeCreate(metricValue);
+	}
+	
+	@Override
+	public MetricValue create(MetricValue metricValue) {
+		return super.create(metricValue);
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -56,82 +59,28 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 	
 	@Override
 	public void updateManyRandomly(Collection<String> metricCollectionCodes,Collection<? extends AbstractIdentifiable> metricCollectionIdentifiables,Collection<? extends AbstractIdentifiable> metricValueIdentifiables) {
+		Collection<Value> values = new ArrayList<>();
 		for(AbstractIdentifiable identifiable : metricValueIdentifiables){
 			Collection<MetricCollection> metricCollections = inject(MetricCollectionBusiness.class).findByTypesByIdentifiables(inject(MetricCollectionTypeDao.class)
 					.read(metricCollectionCodes), metricCollectionIdentifiables);
 			for(MetricCollection metricCollection : metricCollections){
 				Collection<Metric> metrics = inject(MetricBusiness.class).findByCollection(metricCollection);
 				Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable));
-				IntervalCollection intervalCollection = null;
+				/*IntervalCollection intervalCollection = null;
 				List<Interval> intervals = null;
 				if(metricCollection.getValueIntervalCollection()!=null){
 					intervalCollection = metricCollection.getValueIntervalCollection();
 					inject(IntervalCollectionBusiness.class).load(intervalCollection);
 					intervals = new ArrayList<>(inject(IntervalBusiness.class).findByCollection(intervalCollection));
 				}
+				*/	
+				for(MetricValue metricValue : metricValues)
+					values.add(metricValue.getValue());
 					
-				for(MetricValue metricValue : metricValues){
-					Boolean setNull = Boolean.TRUE.equals(metricValue.getMetric().getCollection().getValueIsNullable()) 
-							? RandomDataProvider.getInstance().randomBoolean() : Boolean.FALSE;
-					if(MetricValueType.BOOLEAN.equals(metricCollection.getValueType())){
-						metricValue.getBooleanValue().set(Boolean.TRUE.equals(setNull) ? null : RandomDataProvider.getInstance().randomBoolean());
-					}else if(MetricValueType.NUMBER.equals(metricCollection.getValueType())){
-						if(Boolean.TRUE.equals(setNull))
-							metricValue.getNumberValue().set(null);
-						else if(metricCollection.getValueIntervalCollection()==null)
-							metricValue.getNumberValue().set(new BigDecimal(RandomDataProvider.getInstance().randomInt(0, 100)));
-						else
-							metricValue.getNumberValue().set(new BigDecimal(RandomDataProvider.getInstance().randomInt(intervalCollection.getLowestValue().intValue(), intervalCollection.getHighestValue().intValue())));
-					}else if(MetricValueType.STRING.equals(metricCollection.getValueType())){
-						if(Boolean.TRUE.equals(setNull))
-							metricValue.getStringValue().set(null);
-						else if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
-							if(metricCollection.getValueIntervalCollection()!=null)
-								metricValue.getStringValue().set( ((Interval)RandomDataProvider.getInstance().randomFromList(intervals)).getCode() );
-							else
-								;
-						else
-							metricValue.getStringValue().set( RandomStringUtils.randomAlphabetic(1));
-					}
-				}	
-				inject(GenericBusiness.class).update(commonUtils.castCollection(metricValues, AbstractIdentifiable.class));
-				//logTrace("Random metrics values : {}", metricValues);
-				
 			}
 		}
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public MetricValueType getValueType(MetricValue metricValue) {
-		return inject(MetricBusiness.class).getValueType(metricValue.getMetric());
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public void setValue(MetricValue metricValue, Object value) {
-		switch(getValueType(metricValue)){
-		case BOOLEAN:
-			metricValue.getBooleanValue().set(value == null ? null :  (Boolean) value);
-			break;
-		case NUMBER:
-			metricValue.getNumberValue().set(value == null ? null : new BigDecimal(value.toString()));
-			break;
-		case STRING:
-			metricValue.getStringValue().set(value == null ? null : value.toString());
-			break;
-		}
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Object getValue(MetricValue metricValue) {
-		switch(getValueType(metricValue)){
-		case BOOLEAN:
-			return metricValue.getBooleanValue().get();
-		case NUMBER:
-			return metricValue.getNumberValue().get();
-		case STRING:
-			return metricValue.getStringValue().get();
-		}
-		return null;
+		inject(ValueBusiness.class).setManyRandomly(values);
+		inject(GenericBusiness.class).update(commonUtils.castCollection(values, AbstractIdentifiable.class));
 	}
 
 }

@@ -34,4 +34,8 @@ public class GlobalIdentifierDaoImpl implements GlobalIdentifierDao {
 		return entityManager.createQuery("SELECT r FROM GlobalIdentifier r",GlobalIdentifier.class).getResultList();
 	}
 
+	@Override
+	public Long countAll() {
+		return entityManager.createQuery("SELECT COUNT(r) FROM GlobalIdentifier r",Long.class).getSingleResult();
+	}
 }

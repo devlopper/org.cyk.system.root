@@ -37,6 +37,7 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.time.Period;
+import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
@@ -213,7 +214,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			Collection<MetricCollection> metricCollections = inject(MetricCollectionDao.class).read(metricValueMetricCollectionCodes);
 			for(MetricCollection metricCollection : metricCollections){
 				for(Metric metric : inject(MetricDao.class).readByCollection(metricCollection)){
-					MetricValue metricValue = new MetricValue(metric);
+					MetricValue metricValue = new MetricValue(metric,new Value());
 					metricValues.add(metricValue);
 				}
 			}

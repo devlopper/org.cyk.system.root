@@ -1,7 +1,6 @@
 package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.AttributeOverride;
@@ -15,7 +14,8 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.system.root.model.BigDecimalValue;
+import org.cyk.system.root.model.value.BigDecimalValue;
+import org.cyk.system.root.model.value.LongValue;
 import org.cyk.utility.common.Constant;
 
 import lombok.AllArgsConstructor;
@@ -44,7 +44,7 @@ public class Period extends AbstractModelElement implements Serializable{
 			,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="system_numberofmillisecond"))
 			,@AttributeOverride(name=BigDecimalValue.FIELD_GAP,column=@Column(name="gap_numberofmillisecond"))
 	})
-	private BigDecimalValue numberOfMillisecond = new BigDecimalValue();
+	private LongValue numberOfMillisecond = new LongValue();
 	
 	public Period(Date fromDate, Date toDate) {
 		super();
@@ -62,9 +62,9 @@ public class Period extends AbstractModelElement implements Serializable{
 		computeNumberOfMillisecond();
 	}
 	
-	public BigDecimalValue getNumberOfMillisecond(){
+	public LongValue getNumberOfMillisecond(){
 		if(numberOfMillisecond==null)
-			numberOfMillisecond=new BigDecimalValue();
+			numberOfMillisecond=new LongValue();
 		return numberOfMillisecond;
 	}
 	
@@ -72,7 +72,7 @@ public class Period extends AbstractModelElement implements Serializable{
     	if(fromDate==null || toDate==null)
     		getNumberOfMillisecond().setSystem(null);
     	else
-    		getNumberOfMillisecond().setSystem(new BigDecimal(toDate.getTime() - fromDate.getTime()));
+    		getNumberOfMillisecond().setSystem(toDate.getTime() - fromDate.getTime());
     	getNumberOfMillisecond().computeGap();
     }
 	

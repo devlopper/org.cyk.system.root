@@ -1,8 +1,10 @@
-package org.cyk.system.root.model;
+package org.cyk.system.root.model.value;
 
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
+
+import org.cyk.system.root.model.value.AbstractValue;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,13 +19,8 @@ public class BooleanValue extends AbstractValue<Boolean> implements Serializable
 		super(user);
 	}
 	
-	public BooleanValue set(Boolean value){
+	/*public BooleanValue set(Boolean value){
 		return (BooleanValue) set(value,Boolean.TRUE);
-	}
-	
-	@Override
-	public void computeGap(){
+	}*/
 		
-	}
-	
 }

@@ -2,6 +2,8 @@ package org.cyk.system.root.model.globalidentification;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -143,6 +145,10 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		}
 		
 	}
+	
+	/**/
+	
+	public static final Collection<Class<?>> EXCLUDED = new ArrayList<>();
 	
 	/**/
 	

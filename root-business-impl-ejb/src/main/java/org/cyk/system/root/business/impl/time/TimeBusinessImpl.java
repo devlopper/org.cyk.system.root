@@ -204,7 +204,7 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 			//TODO year periods
 			return null;
 		}else{
-			return findPeriods(period.getFromDate().getTime(), period.getToDate().getTime(), period.getNumberOfMillisecond().getSystemAs(Long.class));
+			return findPeriods(period.getFromDate().getTime(), period.getToDate().getTime(), period.getNumberOfMillisecond().getSystem());
 		}
 	}
 

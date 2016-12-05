@@ -245,8 +245,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 				commonUtils.swapColumns(values, index[0], index[1]);
 			}
 		LabelValueCollectionReport labelValueCollectionReport = report.addLabelValueCollection(intervalCollection.getName(),values);
-		if(metricCollection!=null && Boolean.TRUE.equals(metricCollection.getValueIsNullable()))
-			labelValueCollectionReport.add(metricCollection.getNullValueAbbreviation(), metricCollection.getNullValueString());
+		if(metricCollection!=null && metricCollection.getValueProperties()!=null && Boolean.TRUE.equals(metricCollection.getValueProperties().getNullable()))
+			labelValueCollectionReport.add(metricCollection.getValueProperties().getNullAbbreviation(), metricCollection.getValueProperties().getNullString());
 		return labelValueCollectionReport;
 	}
 	

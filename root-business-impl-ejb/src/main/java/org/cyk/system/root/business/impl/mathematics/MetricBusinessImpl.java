@@ -11,7 +11,6 @@ import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
-import org.cyk.system.root.model.mathematics.MetricValueType;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 
 public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metric,MetricDao,MetricCollection> implements MetricBusiness,Serializable {
@@ -38,13 +37,6 @@ public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metri
 				inject(IntervalCollectionBusiness.class).update(metric.getValueIntervalCollection());
 	}
 		
-	@Override
-	public MetricValueType getValueType(Metric metric) {
-		if(metric.getValueType()!=null)
-			return metric.getValueType();
-		return metric.getCollection().getValueType();
-	}
-	
 	/**/
 	
 	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Metric> {

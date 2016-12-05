@@ -5,10 +5,8 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
-import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
-import org.cyk.system.root.model.mathematics.MetricValueType;
 
 public class CollectionBusinessIT extends AbstractBusinessIT {
 
@@ -42,7 +40,7 @@ public class CollectionBusinessIT extends AbstractBusinessIT {
     	
     	assertThat("Has no interval collection", metricBusiness.findByGlobalIdentifierCode("1").getValueIntervalCollection()==null);
     	
-    	metric1.setValueIntervalCollection(new IntervalCollection("IC1"));
+    	//metric1.setValueIntervalCollection(new IntervalCollection("IC1"));
     	metric1.getValueIntervalCollection().addItem("1", "I1","1","2"); 
     	metric1.getValueIntervalCollection().addItem("2", "I2","3","4");
     	metric1.getValueIntervalCollection().addItem("3", "I3","5","6");
@@ -55,10 +53,10 @@ public class CollectionBusinessIT extends AbstractBusinessIT {
     	assertThat("Interval collection IC1 exists", intervalCollectionBusiness.findByGlobalIdentifierCode("IC1")!=null);
     	assertThat("Has interval collection", metricBusiness.findByGlobalIdentifierCode("1").getValueIntervalCollection()!=null);
     	
-    	metricCollection = metricCollectionBusiness.instanciateOne("MC1", "NAME",null, MetricValueType.NUMBER
+    	/*metricCollection = metricCollectionBusiness.instanciateOne("MC1", "NAME",null
 			, new String[]{"MV1","MV2","MV3"}
 			, new String[][]{ {"E", "Excellent", "1", "1"},{"G", "Good", "2", "2"},{"S", "Satisfactory", "3", "3"},{"N", "Needs Improvement", "4", "4"}
-	    	,{"H", "Has no regard", "5", "5"} });
+	    	,{"H", "Has no regard", "5", "5"} });*/
 		//assertEquals(metricCollection, new ObjectFieldValues(MetricCollection.class)
 		//	.set(MetricCollection.FIELD_CODE, "MC1"));
 		

@@ -45,7 +45,6 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 
 	@Override
 	public GlobalIdentifier create(GlobalIdentifier globalIdentifier) {
-		logTrace("Creating global identifier {}", globalIdentifier);
 		if(inject(GenericBusiness.class).isNotIdentified(globalIdentifier.getImage())){
 			inject(FileBusiness.class).create(globalIdentifier.getImage());
 		}

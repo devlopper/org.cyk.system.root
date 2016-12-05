@@ -9,7 +9,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
 import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.system.root.model.BigDecimalValue;
+import org.cyk.system.root.model.value.BigDecimalValue;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

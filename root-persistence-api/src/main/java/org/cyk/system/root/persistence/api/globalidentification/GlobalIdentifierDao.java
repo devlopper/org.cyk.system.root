@@ -10,5 +10,5 @@ public interface GlobalIdentifierDao {
 	GlobalIdentifier update(GlobalIdentifier globalIdentifier);
 	GlobalIdentifier delete(GlobalIdentifier globalIdentifier);
 	Collection<GlobalIdentifier> readAll();
-
+	Long countAll();
 }

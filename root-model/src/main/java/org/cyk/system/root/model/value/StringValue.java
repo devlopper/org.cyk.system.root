@@ -1,9 +1,11 @@
-package org.cyk.system.root.model;
+package org.cyk.system.root.model.value;
 
 import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+
+import org.cyk.system.root.model.value.AbstractValue;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,19 +25,6 @@ public class StringValue extends AbstractValue<String> implements Serializable {
 	
 	public StringValue(String user) {
 		super(user);
-	}
-	
-	public StringValue set(String value,Boolean isUser){
-		return set(value,isUser);
-	}
-	
-	public StringValue set(String value){
-		return set(value,Boolean.TRUE);
-	}
-	
-	@Override
-	public void computeGap(){
-		
 	}
 	
 }

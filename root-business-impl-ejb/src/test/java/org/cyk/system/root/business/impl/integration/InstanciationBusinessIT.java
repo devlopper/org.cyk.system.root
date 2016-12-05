@@ -18,7 +18,6 @@ import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfManyFromValuesArguments;
 import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfOneFromValuesArguments;
-import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.party.person.Person;
@@ -59,7 +58,7 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	
     	assertThat("Has no interval collection", metricBusiness.find("MC2_1").getValueIntervalCollection()==null);
     	
-    	metric1.setValueIntervalCollection(new IntervalCollection("IC1"));
+    	//metric1.setValueIntervalCollection(new IntervalCollection("IC1"));
     	metric1.getValueIntervalCollection().addItem("1", "I1","1","2");
     	metric1.getValueIntervalCollection().addItem("2", "I2","3","4");
     	metric1.getValueIntervalCollection().addItem("3", "I3","5","6");

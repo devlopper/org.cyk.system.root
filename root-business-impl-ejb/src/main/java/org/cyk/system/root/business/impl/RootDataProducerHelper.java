@@ -37,9 +37,6 @@ import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.geography.PostalBox;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
-import org.cyk.system.root.model.mathematics.MetricCollection;
-import org.cyk.system.root.model.mathematics.MetricValueInputted;
-import org.cyk.system.root.model.mathematics.MetricValueType;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachine;
@@ -189,7 +186,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return interval;
 	}
 	
-	public MetricCollection createMetricCollection(String code,String name,MetricValueType metricValueType,MetricValueInputted metricValueInputted
+	/*public MetricCollection createMetricCollection(String code,String name,MetricValueType metricValueType,MetricValueInputted metricValueInputted
 			,Byte numberOfDecimalAfterDot,String[] items,String[][] intervals){
 		MetricCollection metricCollection = new MetricCollection(code,name);
 		metricCollection.setValueInputted(metricValueInputted);
@@ -205,7 +202,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		}
 		create(metricCollection);
 		return metricCollection;
-	}
+	}*/
 	
 	public File createFile(Package basePackage,String relativePath,String code,String name){
 		basePackage = PersistDataListener.Adapter.process(File.class, code,PersistDataListener.BASE_PACKAGE, basePackage);

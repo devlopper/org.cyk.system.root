@@ -3,11 +3,10 @@ package org.cyk.system.root.model.mathematics;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -25,16 +24,15 @@ public class Metric extends AbstractCollectionItem<MetricCollection> implements 
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@OneToOne private IntervalCollection valueIntervalCollection;
+	@ManyToOne private ValueProperties valueProperties;
 	
-	/**
-	 * If not null then use it else use MetricCollection.valueType
-	 */
-	@Enumerated(EnumType.ORDINAL) private MetricValueType valueType = MetricValueType.NUMBER;
-	
-	public IntervalCollection getValueIntervalCollection(){
-		return valueIntervalCollection==null?(collection==null?null:collection.getValueIntervalCollection()):valueIntervalCollection;
+	public ValueProperties getValueProperties(){
+		return valueProperties == null ? collection.getValueProperties() : valueProperties;
 	}
 	
-	public static final String FIELD_VALUE_INTERVAL_COLLECTION = "valueIntervalCollection";
+	public IntervalCollection getValueIntervalCollection(){
+		return valueProperties == null ? null : valueProperties.getIntervalCollection();
+	}
+	
+	public static final String FIELD_VALUE_PROPERTIES = "valueProperties";
 }

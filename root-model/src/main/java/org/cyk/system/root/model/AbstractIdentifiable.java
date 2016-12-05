@@ -262,10 +262,16 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 				globalIdentifier.setCreationDate(BUILD_GLOBAL_IDENTIFIER_CREATION_DATE.execute(this));
 			if(BUILD_GLOBAL_IDENTIFIER_CREATED_BY!=null)
 				globalIdentifier.setCreatedBy(BUILD_GLOBAL_IDENTIFIER_CREATED_BY.execute(this));
+			
 			if(CREATE_GLOBAL_IDENTIFIER==null)
 				globalIdentifier = null;
-			else
-				CREATE_GLOBAL_IDENTIFIER.execute(globalIdentifier);
+			else{ 
+				if(GlobalIdentifier.EXCLUDED.contains(getClass())){
+					globalIdentifier = null;
+				}else{
+					CREATE_GLOBAL_IDENTIFIER.execute(globalIdentifier);
+				}
+			}
 		}
 	}
 

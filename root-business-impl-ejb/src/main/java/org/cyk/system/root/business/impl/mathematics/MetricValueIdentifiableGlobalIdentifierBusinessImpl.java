@@ -15,6 +15,7 @@ import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdentifier.SearchCriteria;
+import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueIdentifiableGlobalIdentifierDao;
 
@@ -34,7 +35,7 @@ public class MetricValueIdentifiableGlobalIdentifierBusinessImpl extends Abstrac
 		for(MetricCollection metricCollection : metricCollections){
 			for(Metric metric : inject(MetricDao.class).readByCollection(metricCollection)){
 				for(AbstractIdentifiable identifiable : identifiables){
-					MetricValue metricValue = new MetricValue(metric);
+					MetricValue metricValue = new MetricValue(metric,new Value(metric.getValueProperties()));
 					metricValues.add(metricValue);
 					metricValueIdentifiableGlobalIdentifiers.add(new MetricValueIdentifiableGlobalIdentifier(metricValue, identifiable));
 				}

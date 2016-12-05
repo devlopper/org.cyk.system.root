@@ -43,9 +43,10 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public COLLECTION instanciateOne(String code,String name,String itemCodeSeparator,String[] items){
+	public COLLECTION instanciateOne(String code,String name,String[] items){
 		COLLECTION collection = instanciateOne(code,name);
-		collection.setItemCodeSeparator(itemCodeSeparator);
+		if(collection.getItemCodeSeparator()==null)
+			collection.setItemCodeSeparator(Constant.CHARACTER_UNDESCORE.toString());
 		for(String v : items){
 			ITEM item = instanciateOneItem(new String[]{v},null);
 			item.setCollection(collection);
@@ -53,12 +54,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		}
 		return collection;
 	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public COLLECTION instanciateOne(String code,String name,String[] items){
-		return instanciateOne(code, name, Constant.CHARACTER_UNDESCORE.toString(), items);
-	}
-	
+		
 	@Override
 	public COLLECTION create(COLLECTION collection) {
 		super.create(collection);

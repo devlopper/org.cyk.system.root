@@ -13,5 +13,5 @@ public interface IntervalCollectionBusiness extends AbstractCollectionBusiness<I
     
     Boolean isAllIntervalLowerEqualsToHigher(IntervalCollection intervalCollection);
     
-    
+    BigDecimal generateRandomValue(IntervalCollection intervalCollection);
 }

@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
+import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
@@ -66,7 +67,6 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.mathematics.MetricValue;
-import org.cyk.system.root.model.mathematics.MetricValueInputted;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.network.UniformResourceLocator;
@@ -90,6 +90,8 @@ import org.cyk.system.root.model.security.BusinessServiceCollection;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
+import org.cyk.system.root.model.value.Value;
+import org.cyk.system.root.model.value.ValueSet;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
@@ -198,32 +200,32 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				return String.format(Interval.FORMAT,formatterBusiness.format(interval.getLow()),formatterBusiness.format(interval.getHigh()));
 			}
 		});
+        registerFormatter(Value.class, new AbstractFormatter<Value>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(Value value, ContentType contentType) {
+				if(value.get()==null && Boolean.TRUE.equals(value.getNullable()))
+					return value.getNullAbbreviation();
+				switch(value.getType()){
+				case BOOLEAN:
+					return inject(LanguageBusiness.class).findResponseText(value.getBooleanValue().get());
+				case NUMBER:
+					return inject(NumberBusiness.class).format(value.getNumberValue().get());
+				case STRING:
+					if(ValueSet.INTERVAL_CODE.equals(value.getSet()))
+						return RootBusinessLayer.getInstance().getRelativeCode(value.getIntervalCollection(), value.getStringValue().get());
+					else
+						return value.getStringValue().get();//TODO must depends on string value type
+				}
+				return null;
+			}
+		});
         registerFormatter(MetricValue.class, new AbstractFormatter<MetricValue>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(MetricValue metricValue, ContentType contentType) {
-				String value = null;
-				switch(metricValue.getMetric().getCollection().getValueType()){
-				case NUMBER:
-					if(metricValue.getNumberValue().get()==null && Boolean.TRUE.equals(metricValue.getMetric().getCollection().getValueIsNullable()))
-						return metricValue.getMetric().getCollection().getNullValueAbbreviation();
-					value = inject(NumberBusiness.class).format(metricValue.getNumberValue().get());
-					break;
-				case BOOLEAN:
-					if(metricValue.getBooleanValue().get()==null && Boolean.TRUE.equals(metricValue.getMetric().getCollection().getValueIsNullable()))
-						return metricValue.getMetric().getCollection().getNullValueAbbreviation();
-					value = inject(LanguageBusiness.class).findResponseText(metricValue.getBooleanValue().get());
-					break;
-				case STRING:
-					if(metricValue.getStringValue().get()==null && Boolean.TRUE.equals(metricValue.getMetric().getCollection().getValueIsNullable()))
-						return metricValue.getMetric().getCollection().getNullValueAbbreviation();
-					if(MetricValueInputted.VALUE_INTERVAL_CODE.equals(metricValue.getMetric().getCollection().getValueInputted()))
-						value = RootBusinessLayer.getInstance().getRelativeCode(metricValue.getMetric().getCollection(), metricValue.getStringValue().get());
-					else
-						value = metricValue.getStringValue().get();//TODO must depends on string value type
-					break;
-				}
-				return value;
+				return inject(FormatterBusiness.class).format(metricValue.getMetric(), contentType)+Constant.CHARACTER_SPACE
+						+inject(FormatterBusiness.class).format(metricValue.getMetric(), contentType);
 			}
 		});
         registerFormatter(NestedSet.class, new AbstractFormatter<NestedSet>() {

@@ -6,28 +6,21 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.mathematics.Interval;
-import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
-import org.cyk.system.root.model.mathematics.MetricValueType;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
-import org.cyk.utility.common.Constant;
 
 public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MetricCollection, Metric,MetricCollectionDao,MetricDao,MetricBusiness> implements MetricCollectionBusiness,Serializable {
 
@@ -42,11 +35,7 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 	
 	@Override
 	public MetricCollection create(MetricCollection metricCollection) {
-		if(metricCollection.getValueIntervalCollection()!=null)
-			if(metricCollection.getValueIntervalCollection().getIdentifier()==null){
-				inject(IntervalCollectionBusiness.class).create(metricCollection.getValueIntervalCollection());
-			}else
-				inject(IntervalCollectionBusiness.class).update(metricCollection.getValueIntervalCollection());
+		createIfNotIdentified(metricCollection.getValueProperties());
 		return super.create(metricCollection);
 	}
 	
@@ -60,7 +49,7 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 		return metricDao;
 	}
 	 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	/*@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MetricCollection instanciateOne(String code,String name,MetricCollectionType type,MetricValueType metricValueType,String[] items,String intervalCollectionName,String[][] intervals){
 		MetricCollection collection = instanciateOne(code,name,items);
 		collection.setType(type);
@@ -76,13 +65,13 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 	@Override
 	public MetricCollection instanciateOne(String code, String name,MetricCollectionType type, MetricValueType metricValueType, String[] items,String[][] intervals) {
 		return instanciateOne(code, name,type, metricValueType, items, null, intervals);
-	}
+	}*/
 	
 	@Override
-	public MetricCollection instanciateOne(String code, String name, MetricCollectionType type,MetricValueType metricValueType, String[] items, IntervalCollection valueIntervalCollection) {
-		MetricCollection metricCollection = instanciateOne(code, name,type, metricValueType, items, null, null);
-		metricCollection.setValueIntervalCollection(valueIntervalCollection);
-		return metricCollection;
+	public MetricCollection instanciateOne(String code, String name, String metricCollectionTypeCode, String[] items) {
+		MetricCollection collection = instanciateOne(code,name,items);
+		collection.setType(inject(MetricCollectionTypeDao.class).read(metricCollectionTypeCode));
+		return collection;
 	}
 
 	@Override

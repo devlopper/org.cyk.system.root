@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
@@ -373,6 +374,18 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@Override
 	public Boolean isNotIdentified(AbstractIdentifiable identifiable){
 		return identifiable!=null && identifiable.getIdentifier()==null;
+	}
+	
+	protected void createIfNotIdentified(AbstractIdentifiable identifiable){
+		if(isNotIdentified(identifiable))
+			inject(GenericBusiness.class).create(identifiable);
+	}
+	
+	protected void updateIfNotIdentified(AbstractIdentifiable identifiable){
+		if(isNotIdentified(identifiable))
+			inject(GenericBusiness.class).create(identifiable);
+		else
+			inject(GenericBusiness.class).update(identifiable);
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.persistence.api.mathematics.IntervalCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
+import org.cyk.utility.common.generator.RandomDataProvider;
 
 public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessImpl<IntervalCollection,Interval, IntervalCollectionDao,IntervalDao,IntervalBusiness> implements IntervalCollectionBusiness,Serializable {
 
@@ -74,6 +75,11 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 			collection.add(new Interval(collection,v[0],v[1],commonUtils.getBigDecimal(v[2]),commonUtils.getBigDecimal(v[3])));
 		}
 		return collection;
+	}
+	
+	@Override
+	public BigDecimal generateRandomValue(IntervalCollection intervalCollection) {
+		return new BigDecimal(RandomDataProvider.getInstance().randomInt(intervalCollection.getLowestValue().intValue(), intervalCollection.getHighestValue().intValue()));
 	}
 	
 	@Override

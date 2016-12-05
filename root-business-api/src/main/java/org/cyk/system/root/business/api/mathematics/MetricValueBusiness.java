@@ -6,7 +6,6 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricValue;
-import org.cyk.system.root.model.mathematics.MetricValueType;
 
 public interface MetricValueBusiness extends TypedBusiness<MetricValue> {
 
@@ -15,8 +14,4 @@ public interface MetricValueBusiness extends TypedBusiness<MetricValue> {
 	void updateManyRandomly(Collection<String> metricCollectionCodes,Collection<? extends AbstractIdentifiable> metricCollectionIdentifiables
 			,Collection<? extends AbstractIdentifiable> metricValueIdentifiables);
 	
-	void setValue(MetricValue metricValue,Object value);
-	Object getValue(MetricValue metricValue);
-	
-	MetricValueType getValueType(MetricValue metricValue);
 }
