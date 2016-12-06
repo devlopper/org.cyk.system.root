@@ -50,6 +50,14 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		intervalCollectionDao.update(collection);
 	}
 	
+	@Override
+	public Interval instanciateOne(String[] values,InstanciateOneListener listener) {
+		Interval interval = super.instanciateOne(values, listener);
+		interval.getLow().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 2)));
+		interval.getHigh().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 3)));
+		return interval;
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
 		Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));

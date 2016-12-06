@@ -38,13 +38,10 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 	
 	@Override
 	protected void beforeCreate(MetricValue metricValue) {
-		createIfNotIdentified(metricValue.getValue());
 		super.beforeCreate(metricValue);
-	}
-	
-	@Override
-	public MetricValue create(MetricValue metricValue) {
-		return super.create(metricValue);
+		//if(metricValue.getValue()==null)
+		//	metricValue.setValue(new Value(metricValue.getValueProperties()));
+		createIfNotIdentified(metricValue.getValue());
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -81,6 +78,11 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 		}
 		inject(ValueBusiness.class).setManyRandomly(values);
 		inject(GenericBusiness.class).update(commonUtils.castCollection(values, AbstractIdentifiable.class));
+	}
+
+	@Override
+	public Collection<MetricValue> findByMetrics(Collection<Metric> metrics) {
+		return dao.readByMetrics(metrics);
 	}
 
 }

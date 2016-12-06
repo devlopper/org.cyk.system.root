@@ -212,9 +212,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				case NUMBER:
 					return inject(NumberBusiness.class).format(value.getNumberValue().get());
 				case STRING:
-					if(ValueSet.INTERVAL_CODE.equals(value.getSet()))
-						return RootBusinessLayer.getInstance().getRelativeCode(value.getIntervalCollection(), value.getStringValue().get());
-					else
+					if(ValueSet.INTERVAL_RELATIVE_CODE.equals(value.getSet())){
+						return value.getStringValue().get();
+					}else
 						return value.getStringValue().get();//TODO must depends on string value type
 				}
 				return null;

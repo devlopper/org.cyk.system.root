@@ -8,5 +8,5 @@ public enum ValueType {
 	
 	;
 	
-	public static ValueType DEFAULT = STRING;
+	public static ValueType DEFAULT = NUMBER;
 }

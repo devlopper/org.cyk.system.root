@@ -37,6 +37,7 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonReport;
 import org.cyk.system.root.model.userinterface.style.Style;
+import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
@@ -111,6 +112,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		MetricCollection metricCollection = inject(MetricCollectionDao.class).read(metricCollectionCode);
 		Collection<Metric> metrics = inject(MetricDao.class).readByCollection(metricCollection);
 		Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable)); 
+		//System.out.println(metricCollectionCode+" : "+metricValues);
 		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(metricCollection.getName().toUpperCase() ,convertToArray(metrics, metricValues));
 		for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection())
 			if(StringUtils.isBlank(labelValueReport.getValue()))
@@ -211,12 +213,11 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	protected String[][] convertToArray(Collection<Metric> metrics,Collection<MetricValue> metricValues){
 		String[][] values = new String[metrics.size()][2];
 		Integer i = 0;
-		for(Metric metric : metrics){
+		for(Metric metric : metrics){//TODO is it really necessary to do double loop
 			for(MetricValue metricValue : metricValues){
 				if(metricValue.getMetric().equals(metric)){
-					values[i][0] = metric.getName();
-					//System.out.println(metricValue.getStringValue());
-					values[i][1] = inject(FormatterBusiness.class).format(metricValue);
+					values[i][0] = metricValue.getMetric().getName();
+					values[i][1] = inject(FormatterBusiness.class).format(metricValue.getValue());
 				}
 			}
 			i++;
@@ -237,7 +238,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return values;
 	}
 	
-	protected LabelValueCollectionReport addIntervalCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,MetricCollection metricCollection,Boolean ascending,Boolean includeExtremities,
+	protected LabelValueCollectionReport addIntervalCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,ValueProperties valueProperties,Boolean ascending,Boolean includeExtremities,
 			Integer[][] columnsToSwap){
 		String[][] values =  convertToArray(inject(IntervalDao.class).readByCollection(intervalCollection,ascending),includeExtremities);
 		if(columnsToSwap!=null)
@@ -245,8 +246,9 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 				commonUtils.swapColumns(values, index[0], index[1]);
 			}
 		LabelValueCollectionReport labelValueCollectionReport = report.addLabelValueCollection(intervalCollection.getName(),values);
-		if(metricCollection!=null && metricCollection.getValueProperties()!=null && Boolean.TRUE.equals(metricCollection.getValueProperties().getNullable()))
-			labelValueCollectionReport.add(metricCollection.getValueProperties().getNullAbbreviation(), metricCollection.getValueProperties().getNullString());
+		if(valueProperties!=null && Boolean.TRUE.equals(valueProperties.getNullable())){
+			labelValueCollectionReport.add(valueProperties.getNullAbbreviation(), valueProperties.getNullString());
+		}
 		return labelValueCollectionReport;
 	}
 	

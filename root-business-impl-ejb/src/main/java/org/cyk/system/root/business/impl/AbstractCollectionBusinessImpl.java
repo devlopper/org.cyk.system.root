@@ -26,26 +26,21 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public COLLECTION instanciateOne(String code,String name,String itemCodeSeparator,String[][] items){
+	public COLLECTION instanciateOne(String code,String name,String[][] items){
 		COLLECTION collection = instanciateOne(code,name);
-		collection.setItemCodeSeparator(itemCodeSeparator);
+		collection.setItemCodeSeparator(Constant.CHARACTER_UNDESCORE.toString());
 		for(String[] v : items){
 			ITEM item = instanciateOneItem(v,null);
 			item.setCollection(collection);
-			collection.getCollection().add(item);
+			collection.add(item);
 		}
 		return collection;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public COLLECTION instanciateOne(String code,String name,String[][] items){
-		return instanciateOne(code, name, Constant.CHARACTER_UNDESCORE.toString(), items);
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public COLLECTION instanciateOne(String code,String name,String[] items){
 		COLLECTION collection = instanciateOne(code,name);
-		if(collection.getItemCodeSeparator()==null)
+		//if(collection.getItemCodeSeparator()==null)
 			collection.setItemCodeSeparator(Constant.CHARACTER_UNDESCORE.toString());
 		for(String v : items){
 			ITEM item = instanciateOneItem(new String[]{v},null);

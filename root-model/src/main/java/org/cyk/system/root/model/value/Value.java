@@ -85,11 +85,11 @@ public class Value extends AbstractIdentifiable implements Serializable {
 	}
 	
 	public ValueType getType(){
-		return properties == null ? ValueType.STRING : properties.getType();
+		return properties == null ? ValueType.DEFAULT : properties.getType();
 	}
 	
 	public ValueSet getSet(){
-		return properties == null ? ValueSet.INTERVAL_VALUE : properties.getSet();
+		return properties == null ? ValueSet.DEFAULT : properties.getSet();
 	}
 
 	public Boolean getNullable(){

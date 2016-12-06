@@ -62,20 +62,20 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 				return Boolean.FALSE;
 		return Boolean.TRUE;
 	}
-	
+	/*
 	@Override
 	protected Interval instanciateOneItem(String[] values,InstanciateOneListener listener) {
 		return inject(IntervalBusiness.class).instanciateOne(null, values[0],values[1],values[2]);
-	}
-	
+	}*/
+	/*
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public IntervalCollection instanciateOne(String code,String name,String itemCodeSeparator,String[][] intervals){
+	public IntervalCollection instanciateOne(String code,String name,String[][] intervals){
 		IntervalCollection collection = instanciateOne(code,name);
 		for(String[] v : intervals){
 			collection.add(new Interval(collection,v[0],v[1],commonUtils.getBigDecimal(v[2]),commonUtils.getBigDecimal(v[3])));
 		}
 		return collection;
-	}
+	}*/
 	
 	@Override
 	public BigDecimal generateRandomValue(IntervalCollection intervalCollection) {

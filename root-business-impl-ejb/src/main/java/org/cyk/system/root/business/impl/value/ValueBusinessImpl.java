@@ -34,29 +34,29 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 	@Override
 	public void setManyRandomly(Collection<Value> values) {
 		for(Value value : values){
-			Boolean setNull = Boolean.TRUE.equals(value.getNullable()) ? RandomDataProvider.getInstance().randomBoolean() : Boolean.FALSE;
-			if(ValueType.BOOLEAN.equals(value.getType())){
-				value.set(Boolean.TRUE.equals(setNull) ? null : RandomDataProvider.getInstance().randomBoolean());
-			}else if(ValueType.NUMBER.equals(value.getType())){
-				if(Boolean.TRUE.equals(setNull))
-					value.set(null);
-				else if(value.getIntervalCollection()==null)
-					value.set(new BigDecimal(RandomDataProvider.getInstance().randomInt(0, 100)));
-				else
-					value.set(inject(IntervalCollectionBusiness.class).generateRandomValue(value.getIntervalCollection()));
-			}else if(ValueType.STRING.equals(value.getType())){
-				if(Boolean.TRUE.equals(setNull))
-					value.set(null);
-				else if(ValueSet.INTERVAL_CODE.equals(value.getSet()))
-					if(value.getIntervalCollection()!=null){
-						Interval interval = ((Interval)RandomDataProvider.getInstance().randomFromList(new ArrayList<>(inject(IntervalBusiness.class)
-								.findByCollection(value.getIntervalCollection()))));
-						value.set(inject(RootBusinessLayer.class).getRelativeCode(interval.getCollection(), interval.getCode()));
-					}else
-						;
-				else
-					value.set( RandomStringUtils.randomAlphabetic(1));
+			if(Boolean.TRUE.equals(value.getNullable()) && RandomDataProvider.getInstance().randomBoolean())
+				value.set(null);
+			else{
+				if(ValueType.BOOLEAN.equals(value.getType())){
+					value.set(RandomDataProvider.getInstance().randomBoolean());
+				}else if(ValueType.NUMBER.equals(value.getType())){
+					if(value.getIntervalCollection()==null)
+						value.set(new BigDecimal(RandomDataProvider.getInstance().randomInt(0, 100)));
+					else
+						value.set(inject(IntervalCollectionBusiness.class).generateRandomValue(value.getIntervalCollection()));
+				}else if(ValueType.STRING.equals(value.getType())){
+					if(ValueSet.INTERVAL_RELATIVE_CODE.equals(value.getSet()))
+						if(value.getIntervalCollection()!=null){
+							Interval interval = ((Interval)RandomDataProvider.getInstance().randomFromList(new ArrayList<>(inject(IntervalBusiness.class)
+									.findByCollection(value.getIntervalCollection()))));
+							value.set(inject(RootBusinessLayer.class).getRelativeCode(interval.getCollection(), interval.getCode()));
+						}else
+							;
+					else
+						value.set( RandomStringUtils.randomAlphabetic(1));
+				}
 			}
+			
 		}	
 		inject(GenericBusiness.class).update(commonUtils.castCollection(values, AbstractIdentifiable.class));
 	}

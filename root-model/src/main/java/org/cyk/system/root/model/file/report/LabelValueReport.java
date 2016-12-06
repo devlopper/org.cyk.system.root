@@ -1,6 +1,8 @@
 package org.cyk.system.root.model.file.report;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,9 +42,16 @@ public class LabelValueReport extends AbstractGeneratable<LabelValueReport> impl
 	
 	@Override
 	public String toString() {
-		return String.format(TO_STRING_FORMAT, identifier,label,value,StringUtils.join(extendedValues,Constant.CHARACTER_COMA.toString()));
+		Collection<String> collection = new ArrayList<>();
+		if(StringUtils.isNotBlank(identifier))
+			collection.add(identifier);
+		collection.add(label);
+		collection.add(value);
+		if(extendedValues!=null && extendedValues.length > 0)
+			collection.add(StringUtils.join(extendedValues,Constant.CHARACTER_COMA.toString()));
+		return StringUtils.join(collection,Constant.CHARACTER_COMA.toString());
 	}
 	
-	private static final String TO_STRING_FORMAT = "(identifier=%s , label=%s , value=%s , Extended values=%s)";
+	//private static final String TO_STRING_FORMAT = "(identifier=%s , label=%s , value=%s , Extended values=%s)";
 
 }

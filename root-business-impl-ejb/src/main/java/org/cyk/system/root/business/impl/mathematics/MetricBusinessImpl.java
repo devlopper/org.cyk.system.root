@@ -6,7 +6,6 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Metric;
@@ -30,11 +29,7 @@ public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metri
 	@Override
 	protected void beforeUpdate(Metric metric) {
 		super.beforeUpdate(metric);
-		if(metric.getValueIntervalCollection()!=null)
-			if(metric.getValueIntervalCollection().getIdentifier()==null){
-				inject(IntervalCollectionBusiness.class).create(metric.getValueIntervalCollection());
-			}else
-				inject(IntervalCollectionBusiness.class).update(metric.getValueIntervalCollection());
+		createIfNotIdentified(metric.getValueProperties());
 	}
 		
 	/**/

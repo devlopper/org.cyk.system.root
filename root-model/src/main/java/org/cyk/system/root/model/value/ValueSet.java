@@ -3,7 +3,7 @@ package org.cyk.system.root.model.value;
 public enum ValueSet {
 
 	INTERVAL_VALUE
-	,INTERVAL_CODE
+	,INTERVAL_RELATIVE_CODE
 	
 	;
 	
