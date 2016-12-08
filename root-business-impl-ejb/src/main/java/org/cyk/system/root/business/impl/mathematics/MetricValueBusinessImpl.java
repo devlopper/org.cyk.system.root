@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
@@ -26,7 +24,6 @@ import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueDao;
 
-@Stateless
 public class MetricValueBusinessImpl extends AbstractTypedBusinessService<MetricValue, MetricValueDao> implements MetricValueBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -55,32 +52,29 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 	}
 	
 	@Override
-	public void updateManyRandomly(Collection<String> metricCollectionCodes,Collection<? extends AbstractIdentifiable> metricCollectionIdentifiables,Collection<? extends AbstractIdentifiable> metricValueIdentifiables) {
-		Collection<Value> values = new ArrayList<>();
+	public Collection<MetricValue> findByCollectionCodesByCollectionIdentifiablesByMetricIdentifiables(Collection<String> metricCollectionCodes,Collection<? extends AbstractIdentifiable> metricCollectionIdentifiables
+			,Collection<? extends AbstractIdentifiable> metricValueIdentifiables){
+		Collection<MetricValue> values = new ArrayList<>();
 		for(AbstractIdentifiable identifiable : metricValueIdentifiables){
 			Collection<MetricCollection> metricCollections = inject(MetricCollectionBusiness.class).findByTypesByIdentifiables(inject(MetricCollectionTypeDao.class)
 					.read(metricCollectionCodes), metricCollectionIdentifiables);
 			for(MetricCollection metricCollection : metricCollections){
 				Collection<Metric> metrics = inject(MetricBusiness.class).findByCollection(metricCollection);
-				Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable));
-				/*IntervalCollection intervalCollection = null;
-				List<Interval> intervals = null;
-				if(metricCollection.getValueIntervalCollection()!=null){
-					intervalCollection = metricCollection.getValueIntervalCollection();
-					inject(IntervalCollectionBusiness.class).load(intervalCollection);
-					intervals = new ArrayList<>(inject(IntervalBusiness.class).findByCollection(intervalCollection));
-				}
-				*/	
-				for(MetricValue metricValue : metricValues)
-					values.add(metricValue.getValue());
-					
+				values.addAll(inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable)));	
 			}
 		}
-		inject(ValueBusiness.class).setManyRandomly(values);
-		inject(GenericBusiness.class).update(commonUtils.castCollection(values, AbstractIdentifiable.class));
+		return values;
+	}
+	
+	@Override
+	public void setValueRandomly(Collection<MetricValue> metricValues) {
+		Collection<Value> values = new ArrayList<>();
+		for(MetricValue metricValue : metricValues)
+			values.add(metricValue.getValue());
+		inject(ValueBusiness.class).setRandomly(values);
 	}
 
-	@Override
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<MetricValue> findByMetrics(Collection<Metric> metrics) {
 		return dao.readByMetrics(metrics);
 	}

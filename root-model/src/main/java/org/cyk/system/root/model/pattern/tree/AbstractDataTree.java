@@ -37,6 +37,11 @@ public class AbstractDataTree<TYPE extends AbstractDataTreeType> extends Abstrac
 		this.type = type;
 		return this;
 	}
+	 
+	public AbstractDataTree<TYPE> setParent(AbstractDataTree<TYPE> parent){
+		super.setParent(parent);
+		return this;
+	}
 	
 	/**/
 	

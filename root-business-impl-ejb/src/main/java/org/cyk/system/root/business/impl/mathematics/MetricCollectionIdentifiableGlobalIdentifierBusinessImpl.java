@@ -14,6 +14,8 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria;
+import org.cyk.system.root.model.value.Value;
+import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 
@@ -28,8 +30,8 @@ public class MetricCollectionIdentifiableGlobalIdentifierBusinessImpl extends Ab
 	
 	@Override
 	public MetricCollectionIdentifiableGlobalIdentifier create(MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier) {
-		if(metricCollectionIdentifiableGlobalIdentifier.getMetricCollection().getIdentifier()==null)
-			inject(MetricCollectionBusiness.class).create(metricCollectionIdentifiableGlobalIdentifier.getMetricCollection());
+		createIfNotIdentified(metricCollectionIdentifiableGlobalIdentifier.getMetricCollection());
+		createIfNotIdentified(metricCollectionIdentifiableGlobalIdentifier.getValue());
 		return super.create(metricCollectionIdentifiableGlobalIdentifier);
 	}
 	
@@ -56,27 +58,27 @@ public class MetricCollectionIdentifiableGlobalIdentifierBusinessImpl extends Ab
 
 	
 	@Override
-	public void create(Collection<MetricCollection> metricCollections,Collection<? extends AbstractIdentifiable> identifiables) {
+	public void create(Collection<MetricCollection> metricCollections,Collection<? extends AbstractIdentifiable> identifiables,ValueProperties valueProperties) {
 		Collection<MetricCollectionIdentifiableGlobalIdentifier> collection = new ArrayList<>();
 		for(MetricCollection metricCollection : metricCollections)
 			for(AbstractIdentifiable identifiable : identifiables)
-				collection.add(new MetricCollectionIdentifiableGlobalIdentifier(metricCollection, identifiable));
+				collection.add(new MetricCollectionIdentifiableGlobalIdentifier(metricCollection, identifiable,valueProperties == null ? null : new Value(valueProperties)));
 		create(collection);
 	}
 
 	@Override
-	public void create(Collection<MetricCollection> metricCollections, AbstractIdentifiable identifiable) {
-		create(metricCollections,Arrays.asList(identifiable));
+	public void create(Collection<MetricCollection> metricCollections, AbstractIdentifiable identifiable,ValueProperties valueProperties) {
+		create(metricCollections,Arrays.asList(identifiable),valueProperties);
 	}
 
 	@Override
-	public void create(MetricCollection metricCollection, Collection<? extends AbstractIdentifiable> identifiables) {
-		create(Arrays.asList(metricCollection),identifiables);
+	public void create(MetricCollection metricCollection, Collection<? extends AbstractIdentifiable> identifiables,ValueProperties valueProperties) {
+		create(Arrays.asList(metricCollection),identifiables,valueProperties);
 	}
 
 	@Override
-	public void create(MetricCollection metricCollection, AbstractIdentifiable identifiable) {
-		create(Arrays.asList(metricCollection),Arrays.asList(identifiable));
+	public void create(MetricCollection metricCollection, AbstractIdentifiable identifiable,ValueProperties valueProperties) {
+		create(Arrays.asList(metricCollection),Arrays.asList(identifiable),valueProperties);
 	}
 	
 }

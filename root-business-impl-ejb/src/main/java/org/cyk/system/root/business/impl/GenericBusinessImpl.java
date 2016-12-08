@@ -1,7 +1,10 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -9,12 +12,15 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.AbstractGenericBusinessService;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
+import org.cyk.system.root.business.impl.utils.IdentifiableCrudExecution;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
+import org.cyk.utility.common.ThreadPoolExecutor;
 
 @Stateless 
 //@Remote 
@@ -57,6 +63,30 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 			return;
 		for(AbstractIdentifiable identifiable : identifiables)
 			create(identifiable);
+	}
+	
+	@Override
+	public void create(Collection<AbstractIdentifiable> identifiables,Boolean useThreadPoolExecutor) {
+		if(identifiables==null)
+			return;
+		if(Boolean.TRUE.equals(useThreadPoolExecutor)){
+			List<AbstractIdentifiable> list = new ArrayList<>(identifiables);
+			Collection<AbstractIdentifiable> identifiables1 = new ArrayList<>(list.subList(0, list.size()/2));
+			Collection<AbstractIdentifiable> identifiables2 = new ArrayList<>(list.subList(identifiables1.size(), list.size()));
+			ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(50, 150, 1l, TimeUnit.MINUTES, 10000, 1l, TimeUnit.MINUTES, null);
+			threadPoolExecutor.execute(new IdentifiableCrudExecution<AbstractIdentifiable>(identifiables1, Crud.CREATE));
+			threadPoolExecutor.execute(new IdentifiableCrudExecution<AbstractIdentifiable>(identifiables2, Crud.CREATE));
+			threadPoolExecutor.waitTermination();
+		}else{
+			for(AbstractIdentifiable identifiable : identifiables)
+				create(identifiable);
+		}
+		
+	}
+	
+	@Override
+	public void createIdentifiables(Collection<? extends AbstractIdentifiable> collection,Boolean useThreadPoolExecutor) {
+		create(commonUtils.castCollection(collection, AbstractIdentifiable.class),useThreadPoolExecutor);	
 	}
 
 	@Override

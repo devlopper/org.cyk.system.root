@@ -28,6 +28,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalReport;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.AbstractActorReport;
@@ -40,6 +41,7 @@ import org.cyk.system.root.model.userinterface.style.Style;
 import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.BeanAdapter;
@@ -110,10 +112,26 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String metricCollectionCode,String defaultValue){
 		MetricCollection metricCollection = inject(MetricCollectionDao.class).read(metricCollectionCode);
+		MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria();
+		searchCriteria.addIdentifiableGlobalIdentifier(identifiable).addMetricCollectionType(metricCollection.getType());
+		Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = inject(MetricCollectionIdentifiableGlobalIdentifierDao.class)
+				.readByCriteria(searchCriteria);
+		MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier = null;
+		for(MetricCollectionIdentifiableGlobalIdentifier m : metricCollectionIdentifiableGlobalIdentifiers)
+			if(m.getMetricCollection().equals(metricCollection)){
+				metricCollectionIdentifiableGlobalIdentifier = m;
+				break;
+			}
+		if(metricCollectionIdentifiableGlobalIdentifier!=null){
+			//System.out.println("AbstractRootReportProducer.addMetricsLabelValueCollection() : Found ");
+		}
 		Collection<Metric> metrics = inject(MetricDao.class).readByCollection(metricCollection);
 		Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable)); 
 		//System.out.println(metricCollectionCode+" : "+metricValues);
-		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(metricCollection.getName().toUpperCase() ,convertToArray(metrics, metricValues));
+		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(metricCollection.getName().toUpperCase()
+				+(metricCollectionIdentifiableGlobalIdentifier==null?Constant.EMPTY_STRING:" : "+inject(FormatterBusiness.class)
+						.format(metricCollectionIdentifiableGlobalIdentifier.getValue()))
+				,convertToArray(metrics, metricValues));
 		for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection())
 			if(StringUtils.isBlank(labelValueReport.getValue()))
 				labelValueReport.setValue(defaultValue);

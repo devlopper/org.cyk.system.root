@@ -31,7 +31,7 @@ public class ValueBusinessIT extends AbstractBusinessIT {
 		Collection<Value> values = inject(ValueDao.class).readAll();
 		
 		System.out.println("B : "+values);
-		inject(ValueBusiness.class).setManyRandomly(values);
+		inject(ValueBusiness.class).setRandomly(values);
 		inject(GenericBusiness.class).update(CommonUtils.getInstance().castCollection(values, AbstractIdentifiable.class));
 		System.out.println("A : "+values);
 		

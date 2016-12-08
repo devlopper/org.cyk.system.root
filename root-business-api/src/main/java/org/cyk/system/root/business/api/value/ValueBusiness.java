@@ -7,6 +7,6 @@ import org.cyk.system.root.model.value.Value;
 
 public interface ValueBusiness extends TypedBusiness<Value> {
 
-	void setManyRandomly(Collection<Value> values);
+	void setRandomly(Collection<Value> values);
 	
 }

@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl.integration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -39,8 +38,8 @@ public class ParallelOperationUsingThreadIT extends AbstractBusinessIT {
 
     @AllArgsConstructor
     public class MyLongRunOperation extends AbstractBean implements Runnable {
-    	
-    	private String name;
+		private static final long serialVersionUID = 1L;
+		private String name;
     	private Collection<? extends AbstractIdentifiable> identifiables;
     	
 		@Override

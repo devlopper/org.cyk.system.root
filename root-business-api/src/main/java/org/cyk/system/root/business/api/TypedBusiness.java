@@ -3,6 +3,7 @@ package org.cyk.system.root.business.api;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +32,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     
     IDENTIFIABLE delete(String code);
     Collection<IDENTIFIABLE> delete(Set<String> codes);
+    
+    Collection<IDENTIFIABLE> instanciateMany(List<String[]> list);
     
     IDENTIFIABLE instanciateOneRandomly();
     IDENTIFIABLE instanciateOneRandomly(String code);

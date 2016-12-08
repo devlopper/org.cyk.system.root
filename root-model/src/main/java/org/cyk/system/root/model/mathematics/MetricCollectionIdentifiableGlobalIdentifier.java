@@ -6,12 +6,14 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.value.Value;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -32,11 +34,21 @@ public class MetricCollectionIdentifiableGlobalIdentifier extends AbstractJoinGl
 	
 	@ManyToOne @NotNull private MetricCollection metricCollection;
 	
+	@ManyToOne @JoinColumn(name="thevalue") private Value value;
+	
 	/**/
 	
-	public MetricCollectionIdentifiableGlobalIdentifier(MetricCollection metricCollection,AbstractIdentifiable identifiable){
+	public MetricCollectionIdentifiableGlobalIdentifier(MetricCollection metricCollection,AbstractIdentifiable identifiable,Value value){
 		super(identifiable);
 		this.metricCollection = metricCollection;
+		this.value = value;
+	}
+	
+	/**/
+	
+	@Override
+	public String toString() {
+		return identifiableGlobalIdentifier.getCode()+" "+metricCollection+" "+value;
 	}
 	
 	/**/

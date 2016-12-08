@@ -151,6 +151,11 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<IDENTIFIABLE> instanciateMany(List<String[]> values) {
+		return null;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IDENTIFIABLE instanciateOneRandomly() {
 		return instanciateOne();
 	}

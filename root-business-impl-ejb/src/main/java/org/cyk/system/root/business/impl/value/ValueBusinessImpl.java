@@ -32,7 +32,7 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 	}
 
 	@Override
-	public void setManyRandomly(Collection<Value> values) {
+	public void setRandomly(Collection<Value> values) {
 		for(Value value : values){
 			if(Boolean.TRUE.equals(value.getNullable()) && RandomDataProvider.getInstance().randomBoolean())
 				value.set(null);

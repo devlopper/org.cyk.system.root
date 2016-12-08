@@ -398,6 +398,10 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	public <T extends AbstractIdentifiable> void createMany(@SuppressWarnings("unchecked") T...objects) {
 		rootDataProducerHelper.createMany(objects);
 	}
+	
+	public void create(Collection<? extends AbstractIdentifiable> collection) {
+		inject(GenericBusiness.class).create(commonUtils.castCollection(collection, AbstractIdentifiable.class));
+	}
 
 	public File createFile(Package basePackage,String relativePath,String code, String name) {
 		return rootDataProducerHelper.createFile(basePackage,relativePath, code,name);

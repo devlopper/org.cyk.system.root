@@ -38,6 +38,11 @@ public class MetricCollection extends AbstractCollection<Metric> implements Seri
 		this.valueProperties = valueProperties;
 		return this;
 	}
+	
+	public MetricCollection setValue(Value value){
+		this.value = value;
+		return this;
+	}
 
 	public ValueType getValueType(){
 		return valueProperties == null ? ValueType.DEFAULT : valueProperties.getType();

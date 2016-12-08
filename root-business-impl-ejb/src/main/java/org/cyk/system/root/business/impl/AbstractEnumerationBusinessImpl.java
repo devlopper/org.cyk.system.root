@@ -53,7 +53,7 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 		return instanciateOne(computeCode(name), name);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	/*@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public List<ENUMERATION> instanciateMany(List<List<String>> arguments) {
 		List<ENUMERATION> r = new ArrayList<>();
 		for(List<String> argument : arguments){
@@ -65,7 +65,7 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 				throw new RuntimeException("Too much arguments") ;
 		}
 		return r;
-	}
+	}*/
 
 	@Override
 	public List<ENUMERATION> instanciateMany(String[][] strings) {
@@ -76,7 +76,7 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 			for(String argument : inputtedArgument)
 				arguments.add(argument);
 		}
-		return instanciateMany(argumentList);
+		return null;// instanciateMany(argumentList);
 	}
     
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
