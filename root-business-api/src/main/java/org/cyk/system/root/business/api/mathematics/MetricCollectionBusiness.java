@@ -12,6 +12,7 @@ import org.cyk.system.root.model.mathematics.MetricCollectionType;
 public interface MetricCollectionBusiness extends AbstractCollectionBusiness<MetricCollection,Metric> {
     
 	MetricCollection instanciateOne(String code,String name,String metricCollectionTypeCode,String[] items);
+	MetricCollection instanciateOne(String code,String name,String metricCollectionTypeCode,String[][] items);
 
 	Collection<MetricCollection> findByMetricCollectionIdentifiableGlobalIdentifierSearchCriteria(SearchCriteria searchCriteria);
 	Collection<MetricCollection> findByTypesByIdentifiables(Collection<MetricCollectionType> metricCollectionTypes,Collection<? extends AbstractIdentifiable> identifiables);

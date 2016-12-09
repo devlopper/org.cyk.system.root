@@ -20,7 +20,7 @@ public class MetricValueIdentifiableGlobalIdentifierDetails extends AbstractJoin
 	public MetricValueIdentifiableGlobalIdentifierDetails(MetricValueIdentifiableGlobalIdentifier metricValueIdentifiableGlobalIdentifier) {
 		super(metricValueIdentifiableGlobalIdentifier);
 		metric = formatUsingBusiness(metricValueIdentifiableGlobalIdentifier.getMetricValue().getMetric());
-		value = formatUsingBusiness(metricValueIdentifiableGlobalIdentifier.getMetricValue());
+		value = formatUsingBusiness(metricValueIdentifiableGlobalIdentifier.getMetricValue().getValue());
 	}
 	
 	public static final String FIELD_METRIC = "metric";

@@ -73,6 +73,13 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 		collection.setType(inject(MetricCollectionTypeDao.class).read(metricCollectionTypeCode));
 		return collection;
 	}
+	
+	@Override
+	public MetricCollection instanciateOne(String code, String name, String metricCollectionTypeCode, String[][] items) {
+		MetricCollection collection = instanciateOne(code,name,items);
+		collection.setType(inject(MetricCollectionTypeDao.class).read(metricCollectionTypeCode));
+		return collection;
+	}
 
 	@Override
 	public Collection<MetricCollection> findByMetricCollectionIdentifiableGlobalIdentifierSearchCriteria(SearchCriteria searchCriteria) {

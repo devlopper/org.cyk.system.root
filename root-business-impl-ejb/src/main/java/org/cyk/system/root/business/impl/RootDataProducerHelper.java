@@ -24,6 +24,7 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.report.ReportTemplate;
@@ -138,7 +139,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	public <T extends AbstractCollectionItem<COLLECTION>,COLLECTION extends AbstractCollection<T>> T updateCollectionItem(Class<T> aClass,Class<COLLECTION> collectionClass,String collectionCode,String code,String name){
 		AbstractCollection<T> collection = getEnumeration(collectionClass, collectionCode);
-		code = AbstractCollectionItemBusinessImpl.buildCode(collection, code);
+		code = RootConstant.Code.generate(collection, code);
 		return updateEnumeration(aClass, code, name);
 	}
 	

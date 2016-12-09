@@ -11,4 +11,6 @@ public interface AbstractCollectionItemDao<ITEM extends AbstractCollectionItem<C
 	Collection<ITEM> readByCollections(Collection<COLLECTION> collections);
 	Collection<ITEM> readByCollection(COLLECTION collection,Boolean ascending);
 	Collection<ITEM> readByCollections(Collection<COLLECTION> collections,Boolean ascending);
+	
+	//ITEM readByCollectionByRelativeCode(COLLECTION collection,String relativeCode);
 }

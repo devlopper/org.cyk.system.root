@@ -17,6 +17,7 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	private static final long serialVersionUID = 5632592320990657808L;
 
 	protected String header,footer,title;
+	protected Boolean provisional = Boolean.FALSE;
 	
 	protected LabelValueCollectionReport currentLabelValueCollection;
 	protected List<LabelValueCollectionReport> labelValueCollections = new ArrayList<>();
@@ -69,11 +70,13 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		labelValueCollections.add(labelValueCollectionReport);
 	}
 	
-	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values){
+	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values,String nullValue){
 		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();
 		labelValueCollectionReport.setName(name);
 		if(values!=null)
 			for(String[] string : values){
+				if(string[1]==null)
+					string[1] = nullValue;
 				if(string[1]==null)
 					;
 				else{
@@ -87,8 +90,12 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		return labelValueCollectionReport;
 	}
 	
+	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values){
+		return addLabelValueCollection(name, values,null);
+	}
+	
 	public LabelValueCollectionReport addNotRenderedLabelValueCollection(){
-		LabelValueCollectionReport labelValueCollectionReport = addLabelValueCollection("NOT_RENDERED", null);
+		LabelValueCollectionReport labelValueCollectionReport = addLabelValueCollection("NOT_RENDERED", null,null);
 		labelValueCollectionReport.setRendered(Boolean.FALSE);
 		return labelValueCollectionReport;
 	}

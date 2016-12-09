@@ -49,11 +49,11 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	public Collection<ITEM> findByCollections(Collection<COLLECTION> collections, Boolean ascending) {
 		return dao.readByCollections(collections, ascending);
 	}
-	
+	/*
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public String findRelativeCode(ITEM item) {
 		return RootBusinessLayer.getInstance().getRelativeCode(item.getCollection(), item.getCode());
-	}
+	}*/
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ITEM instanciateOneRandomly(COLLECTION collection) {
@@ -70,17 +70,9 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		collection.add(item);
 		return item;
 	}
-	
+		
 	/**/
+
 	
-	public static String getRelativeCode(AbstractCollection<?> collection,String code){
-		return StringUtils.isBlank(collection.getItemCodeSeparator()) ? code : StringUtils.split(code,collection.getItemCodeSeparator())[1];
-	}
 	
-	public static String buildCode(AbstractCollection<?> collection,String code){
-		if(StringUtils.isBlank(collection.getItemCodeSeparator()))
-			return code;
-		else
-			return collection.getCode()+collection.getItemCodeSeparator()+ code;
-	}
 }

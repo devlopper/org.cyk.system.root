@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.time;
 
 import java.io.Serializable;
 
+import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractModelElementOutputDetails;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
@@ -16,7 +17,7 @@ public class PeriodDetails extends AbstractModelElementOutputDetails<Period> imp
 
 	private static final long serialVersionUID = 1307822857551633645L;
 
-	@Input @InputText private String fromDate,toDate;
+	@Input @InputText private String fromDate,toDate,duration;
 	
 	public PeriodDetails(Period period) {
 		super(period);
@@ -35,9 +36,11 @@ public class PeriodDetails extends AbstractModelElementOutputDetails<Period> imp
 	public PeriodDetails set(Period period){
 		fromDate = formatDateTime(period.getFromDate());
 		toDate = formatDateTime(period.getToDate());
+		duration = inject(TimeBusiness.class).formatDuration(period.getNumberOfMillisecond().get());
 		return this;
 	}
 	
 	public static final String FIELD_FROM_DATE = "fromDate";
 	public static final String FIELD_TO_DATE = "toDate";
+	public static final String FIELD_DURATION = "duration";
 }

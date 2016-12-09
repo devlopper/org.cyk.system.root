@@ -53,5 +53,11 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 		return AbstractIdentifiable.FIELD_IDENTIFIER;
 	}
 	
+	/*
+	public ITEM readByCollectionByRelativeCode(COLLECTION collection, String relativeCode) {
+		return namedQuery(readByCollectionByRelativeCode).parameter(AbstractCollectionItem.FIELD_COLLECTION, collection)
+				.parameter(GlobalIdentifier.FIELD_CODE, relativeCode)
+				.resultOne();
+	}*/
 }
  

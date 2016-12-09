@@ -12,11 +12,11 @@ import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
-import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractRootBusinessBean;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
@@ -116,6 +116,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		searchCriteria.addIdentifiableGlobalIdentifier(identifiable).addMetricCollectionType(metricCollection.getType());
 		Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = inject(MetricCollectionIdentifiableGlobalIdentifierDao.class)
 				.readByCriteria(searchCriteria);
+		
 		MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier = null;
 		for(MetricCollectionIdentifiableGlobalIdentifier m : metricCollectionIdentifiableGlobalIdentifiers)
 			if(m.getMetricCollection().equals(metricCollection)){
@@ -127,11 +128,10 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		}
 		Collection<Metric> metrics = inject(MetricDao.class).readByCollection(metricCollection);
 		Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable)); 
-		//System.out.println(metricCollectionCode+" : "+metricValues);
 		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(metricCollection.getName().toUpperCase()
 				+(metricCollectionIdentifiableGlobalIdentifier==null?Constant.EMPTY_STRING:" : "+inject(FormatterBusiness.class)
 						.format(metricCollectionIdentifiableGlobalIdentifier.getValue()))
-				,convertToArray(metrics, metricValues));
+				,convertToArray(metrics, metricValues,defaultValue),defaultValue);
 		for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection())
 			if(StringUtils.isBlank(labelValueReport.getValue()))
 				labelValueReport.setValue(defaultValue);
@@ -228,7 +228,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return inject(FileBusiness.class).findInputStream(file);
 	}
 	
-	protected String[][] convertToArray(Collection<Metric> metrics,Collection<MetricValue> metricValues){
+	protected String[][] convertToArray(Collection<Metric> metrics,Collection<MetricValue> metricValues,String nullValueString){
 		String[][] values = new String[metrics.size()][2];
 		Integer i = 0;
 		for(Metric metric : metrics){//TODO is it really necessary to do double loop
@@ -236,6 +236,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 				if(metricValue.getMetric().equals(metric)){
 					values[i][0] = metricValue.getMetric().getName();
 					values[i][1] = inject(FormatterBusiness.class).format(metricValue.getValue());
+					if(values[i][1] == null)
+						values[i][1] = nullValueString;
 				}
 			}
 			i++;
@@ -247,7 +249,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		String[][] values = new String[intervals.size()][2+(Boolean.TRUE.equals(includeExtremities)?1:0)];
 		Integer i = 0;
 		for(Interval interval : intervals){
-			values[i][0] = inject(IntervalBusiness.class).findRelativeCode(interval);
+			values[i][0] = RootConstant.Code.getRelativeCode(interval);
 			values[i][1] = interval.getName();
 			if(Boolean.TRUE.equals(includeExtremities))
 				values[i][2] = interval.getLow()+" - "+interval.getHigh();
@@ -263,7 +265,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			for(Integer[] index : columnsToSwap){
 				commonUtils.swapColumns(values, index[0], index[1]);
 			}
-		LabelValueCollectionReport labelValueCollectionReport = report.addLabelValueCollection(intervalCollection.getName(),values);
+		LabelValueCollectionReport labelValueCollectionReport = report.addLabelValueCollection(intervalCollection.getName(),values,null);
 		if(valueProperties!=null && Boolean.TRUE.equals(valueProperties.getNullable())){
 			labelValueCollectionReport.add(valueProperties.getNullAbbreviation(), valueProperties.getNullString());
 		}

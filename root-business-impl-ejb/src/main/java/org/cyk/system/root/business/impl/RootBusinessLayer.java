@@ -42,7 +42,6 @@ import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
 import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilderAdapter;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
-import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.ContentType;
@@ -638,10 +637,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	}
     }
     	
-	public String getRelativeCode(AbstractCollection<?> collection,String code){
+	/*public String getRelativeCode(AbstractCollection<?> collection,String code){
 		logTrace("Get relative code. {} , code={}", collection.getLogMessage(),code);
 		return AbstractCollectionItemBusinessImpl.getRelativeCode(collection, code);
-	}
+	}*/
 	
 	/**/
 	

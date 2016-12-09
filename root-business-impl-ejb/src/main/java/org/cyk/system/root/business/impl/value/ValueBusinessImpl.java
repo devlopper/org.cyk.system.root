@@ -13,8 +13,8 @@ import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.value.ValueBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueSet;
@@ -49,7 +49,7 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 						if(value.getIntervalCollection()!=null){
 							Interval interval = ((Interval)RandomDataProvider.getInstance().randomFromList(new ArrayList<>(inject(IntervalBusiness.class)
 									.findByCollection(value.getIntervalCollection()))));
-							value.set(inject(RootBusinessLayer.class).getRelativeCode(interval.getCollection(), interval.getCode()));
+							value.set(RootConstant.Code.getRelativeCode(interval));
 						}else
 							;
 					else

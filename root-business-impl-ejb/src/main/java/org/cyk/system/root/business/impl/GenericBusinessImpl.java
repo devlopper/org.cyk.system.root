@@ -77,6 +77,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 			threadPoolExecutor.execute(new IdentifiableCrudExecution<AbstractIdentifiable>(identifiables1, Crud.CREATE));
 			threadPoolExecutor.execute(new IdentifiableCrudExecution<AbstractIdentifiable>(identifiables2, Crud.CREATE));
 			threadPoolExecutor.waitTermination();
+			//pause(1000 * 3);
 		}else{
 			for(AbstractIdentifiable identifiable : identifiables)
 				create(identifiable);

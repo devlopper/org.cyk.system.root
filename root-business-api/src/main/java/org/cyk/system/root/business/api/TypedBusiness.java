@@ -95,7 +95,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		private IDENTIFIABLE identifiable;
 		private File file,backgroundImageFile;
 		private RootReportProducer reportProducer;
-		private Boolean joinFileToIdentifiable = Boolean.TRUE;
+		private Boolean joinFileToIdentifiable = Boolean.TRUE,isDraft=Boolean.FALSE;
 		private String identifiableName;
 		/**/
 		
@@ -184,7 +184,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 				if(arguments.getFile()==null)
 					arguments.setFile(new File());
 				arguments.setReportProducer(reportProducer);
-				
+				arguments.setIsDraft(isDraft);
 				return arguments;
 			}
 			
