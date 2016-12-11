@@ -17,4 +17,5 @@ public interface AbstractCollectionItemBusiness<ITEM extends AbstractCollectionI
 	ITEM instanciateOne(COLLECTION collection);
 	ITEM instanciateOneRandomly(COLLECTION collection);
 	
+	ITEM find(String collectionCode,String relativeCode);
 }

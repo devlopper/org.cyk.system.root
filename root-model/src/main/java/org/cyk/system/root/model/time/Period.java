@@ -40,9 +40,10 @@ public class Period extends AbstractModelElement implements Serializable{
 	
 	@Embedded
 	@AttributeOverrides(value={
-			@AttributeOverride(name=BigDecimalValue.FIELD_USER,column=@Column(name="user_numberofmillisecond"))
-			,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="system_numberofmillisecond"))
-			,@AttributeOverride(name=BigDecimalValue.FIELD_GAP,column=@Column(name="gap_numberofmillisecond"))
+			@AttributeOverride(name=LongValue.FIELD_USER,column=@Column(name="numberofmillisecond_ser"))
+			,@AttributeOverride(name=LongValue.FIELD_SYSTEM,column=@Column(name="numberofmillisecond_system"))
+			,@AttributeOverride(name=LongValue.FIELD_PREFERRED_PROPERTY,column=@Column(name="numberofmillisecond_preferred_property"))
+			,@AttributeOverride(name=LongValue.FIELD_GAP,column=@Column(name="numberofmillisecond_gap"))
 	})
 	private LongValue numberOfMillisecond = new LongValue();
 	
@@ -70,9 +71,9 @@ public class Period extends AbstractModelElement implements Serializable{
 	
 	private void computeNumberOfMillisecond(){
     	if(fromDate==null || toDate==null)
-    		getNumberOfMillisecond().setSystem(null);
+    		getNumberOfMillisecond().set(null);
     	else
-    		getNumberOfMillisecond().setSystem(toDate.getTime() - fromDate.getTime());
+    		getNumberOfMillisecond().set(toDate.getTime() - fromDate.getTime());
     	getNumberOfMillisecond().computeGap();
     }
 	

@@ -1,0 +1,38 @@
+package org.cyk.system.root.model.value;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+
+import org.cyk.system.root.model.AbstractEnumeration;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * a standard unit used to express the size, amount, or degree of something.
+ * @author Komenan.Christian
+ *
+ */
+@Entity @Getter @Setter
+public class Measure extends AbstractEnumeration implements Serializable{
+	
+	private static final long serialVersionUID = 374208919427476791L;
+	
+	@ManyToOne @NotNull private MeasureType type;
+	@Column(nullable=false) @NotNull private BigDecimal value;
+	
+	public Measure() {}
+
+	public Measure(String code,String name, MeasureType type,BigDecimal value) {
+		super(code,name, null,null);
+		this.type = type;
+		this.value = value;
+	}
+	
+}
+

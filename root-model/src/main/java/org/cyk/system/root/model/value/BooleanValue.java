@@ -15,12 +15,8 @@ public class BooleanValue extends AbstractValue<Boolean> implements Serializable
 
 	private static final long serialVersionUID = 6459524990626259467L;
 	
-	public BooleanValue(Boolean user) {
-		super(user);
+	public BooleanValue(Boolean value) {
+		super(value);
 	}
-	
-	/*public BooleanValue set(Boolean value){
-		return (BooleanValue) set(value,Boolean.TRUE);
-	}*/
 		
 }

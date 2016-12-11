@@ -105,9 +105,9 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 	
 	@Override
 	public Long findDuration(Period period) {
-		if(period.getNumberOfMillisecond().getSystem()==null)
+		if(period.getNumberOfMillisecond().get()==null)
 			ExceptionUtils.getInstance().exception("unknownperiodduration");
-		return period.getNumberOfMillisecond().getSystem().longValue();
+		return period.getNumberOfMillisecond().get().longValue();
 	}
 	
 	@Override
@@ -204,7 +204,7 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 			//TODO year periods
 			return null;
 		}else{
-			return findPeriods(period.getFromDate().getTime(), period.getToDate().getTime(), period.getNumberOfMillisecond().getSystem());
+			return findPeriods(period.getFromDate().getTime(), period.getToDate().getTime(), period.getNumberOfMillisecond().get());
 		}
 	}
 

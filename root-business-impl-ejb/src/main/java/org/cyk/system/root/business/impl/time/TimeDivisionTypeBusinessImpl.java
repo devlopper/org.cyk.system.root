@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.time;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import javax.inject.Inject;
 
@@ -21,7 +22,7 @@ public class TimeDivisionTypeBusinessImpl extends AbstractEnumerationBusinessImp
 
 	@Override
 	public BigDecimal convertToDivisionDuration(TimeDivisionType timeDivisionType, Long millisecond) {
-		return new BigDecimal(millisecond).divide(new BigDecimal(timeDivisionType.getDuration()));
+		return new BigDecimal(millisecond).divide(new BigDecimal(timeDivisionType.getDuration()),RoundingMode.HALF_DOWN);
 	}
 
 	@Override

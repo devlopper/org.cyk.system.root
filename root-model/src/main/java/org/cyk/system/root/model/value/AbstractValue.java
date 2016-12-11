@@ -2,6 +2,8 @@ package org.cyk.system.root.model.value;
 
 import java.io.Serializable;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 
 import org.cyk.system.root.model.AbstractModelElement;
@@ -16,35 +18,33 @@ public abstract class AbstractValue<TYPE> extends AbstractModelElement implement
 
 	private static final long serialVersionUID = 6459524990626259467L;
 	
+	@Enumerated(EnumType.ORDINAL) protected PreferredProperty preferredProperty;
+	
 	protected TYPE user;
 	
 	protected TYPE system;
 	
-	public AbstractValue(TYPE user) {
+	public AbstractValue(TYPE value) {
 		super();
-		this.user = user;
+		set(value);
 	}
 	
-	public AbstractValue<TYPE> set(TYPE value,Boolean isUser){
-		if(Boolean.TRUE.equals(isUser))
+	public PreferredProperty getPreferredProperty(){
+		return preferredProperty == null ? PreferredProperty.DEFAULT : preferredProperty;
+	}
+	
+	public AbstractValue<TYPE> set(TYPE value){
+		if(PreferredProperty.USER.equals(getPreferredProperty()))
 			user = value;
 		else
 			system = value;
 		return this;
 	}
 	
-	public AbstractValue<TYPE> set(TYPE value){
-		return set(value,Boolean.TRUE);
-	}
-	
-	public TYPE get(Boolean isUserFirst){
-		if(Boolean.TRUE.equals(isUserFirst))
-			return user == null ? system : user;
-		return system == null ? user : system;
-	}
-	
 	public TYPE get(){
-		return get(Boolean.FALSE);
+		if(PreferredProperty.USER.equals(getPreferredProperty()))
+			return user;
+		return system;
 	}
 	
 	@Override
@@ -54,10 +54,11 @@ public abstract class AbstractValue<TYPE> extends AbstractModelElement implement
 
 	@Override
 	public String toString() {
-		return "U="+user+" , S="+system;
+		return String.valueOf(PreferredProperty.USER.equals(getPreferredProperty()) ? user : system);
 	}
 	
 	public static final String FIELD_USER = "user";
 	public static final String FIELD_SYSTEM = "system";
+	public static final String FIELD_PREFERRED_PROPERTY = "preferredProperty";
 	
 }

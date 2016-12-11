@@ -59,6 +59,30 @@ public interface RootConstant {
 			
 		}
 		
+		public static class MeasureType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String DISTANCE = "DISTANCE";
+			public static String TIME = "TIME";
+			
+		}
+		
+		public static class Measure implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String TIME_DAY = generate(MeasureType.TIME,"DAY");
+			
+			
+		}
+		
+		public static class NullString implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String NOT_ASSESSED = "NA";
+			
+			
+		}
+		
 		/**/
 		
 	}

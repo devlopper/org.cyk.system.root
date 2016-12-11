@@ -235,7 +235,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			for(MetricValue metricValue : metricValues){
 				if(metricValue.getMetric().equals(metric)){
 					values[i][0] = metricValue.getMetric().getName();
-					values[i][1] = inject(FormatterBusiness.class).format(metricValue.getValue());
+					values[i][1] = formatMetricValue(metricValue);
 					if(values[i][1] == null)
 						values[i][1] = nullValueString;
 				}
@@ -243,6 +243,14 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			i++;
 		}
 		return values;
+	}
+	
+	protected String format(Object object){
+		return inject(FormatterBusiness.class).format(object);
+	}
+	
+	protected String formatMetricValue(MetricValue metricValue){
+		return format(metricValue.getValue());
 	}
 	
 	protected String[][] convertToArray(Collection<Interval> intervals,Boolean includeExtremities){
@@ -267,7 +275,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			}
 		LabelValueCollectionReport labelValueCollectionReport = report.addLabelValueCollection(intervalCollection.getName(),values,null);
 		if(valueProperties!=null && Boolean.TRUE.equals(valueProperties.getNullable())){
-			labelValueCollectionReport.add(valueProperties.getNullAbbreviation(), valueProperties.getNullString());
+			labelValueCollectionReport.add(valueProperties.getNullString().getCode(), valueProperties.getNullString().getName());
 		}
 		return labelValueCollectionReport;
 	}

@@ -3,7 +3,6 @@ package org.cyk.system.root.business.api;
 import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.utility.common.ThreadPoolExecutor;
 
 public interface GenericBusiness extends AbstractGenericBusinessService<AbstractIdentifiable, Long> {
 	

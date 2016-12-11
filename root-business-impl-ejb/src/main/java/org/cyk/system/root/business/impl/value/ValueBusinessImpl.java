@@ -11,6 +11,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
+import org.cyk.system.root.business.api.value.MeasureBusiness;
 import org.cyk.system.root.business.api.value.ValueBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -40,9 +41,12 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 				if(ValueType.BOOLEAN.equals(value.getType())){
 					value.set(RandomDataProvider.getInstance().randomBoolean());
 				}else if(ValueType.NUMBER.equals(value.getType())){
-					if(value.getIntervalCollection()==null)
-						value.set(new BigDecimal(RandomDataProvider.getInstance().randomInt(0, 100)));
-					else
+					if(value.getIntervalCollection()==null){
+						value.getNumberValue().set(new BigDecimal(RandomDataProvider.getInstance().randomInt(0, 100)));
+						if(value.getMeasure()!=null){
+							value.getNumberValue().set(inject(MeasureBusiness.class).computeMultiple(value.getMeasure(), value.getNumberValue().get()));
+						}
+					}else
 						value.set(inject(IntervalCollectionBusiness.class).generateRandomValue(value.getIntervalCollection()));
 				}else if(ValueType.STRING.equals(value.getType())){
 					if(ValueSet.INTERVAL_RELATIVE_CODE.equals(value.getSet()))

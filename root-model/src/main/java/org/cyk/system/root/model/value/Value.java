@@ -33,8 +33,9 @@ public class Value extends AbstractIdentifiable implements Serializable {
 	
 	@Embedded
 	@AttributeOverrides(value={
-			@AttributeOverride(name=BigDecimalValue.FIELD_USER,column=@Column(name="boolean_value_user"))
-			,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="boolean_value_system"))
+			@AttributeOverride(name=BooleanValue.FIELD_USER,column=@Column(name="boolean_value_user"))
+			,@AttributeOverride(name=BooleanValue.FIELD_SYSTEM,column=@Column(name="boolean_value_system"))
+			,@AttributeOverride(name=BooleanValue.FIELD_PREFERRED_PROPERTY,column=@Column(name="boolean_value_preferred_property"))
 	})
 	private BooleanValue booleanValue = new BooleanValue();
 	
@@ -43,13 +44,15 @@ public class Value extends AbstractIdentifiable implements Serializable {
 			@AttributeOverride(name=BigDecimalValue.FIELD_USER,column=@Column(name="number_value_user"))
 			,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="number_value_system"))
 			,@AttributeOverride(name=BigDecimalValue.FIELD_GAP,column=@Column(name="number_value_gap"))
+			,@AttributeOverride(name=BigDecimalValue.FIELD_PREFERRED_PROPERTY,column=@Column(name="number_value_preferred_property"))
 	})
 	private BigDecimalValue numberValue = new BigDecimalValue();
 	
 	@Embedded
 	@AttributeOverrides(value={
-			@AttributeOverride(name=BigDecimalValue.FIELD_USER,column=@Column(name="string_value_user"))
-			,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="string_value_system"))
+			@AttributeOverride(name=StringValue.FIELD_USER,column=@Column(name="string_value_user"))
+			,@AttributeOverride(name=StringValue.FIELD_SYSTEM,column=@Column(name="string_value_system"))
+			,@AttributeOverride(name=StringValue.FIELD_PREFERRED_PROPERTY,column=@Column(name="string_value_preferred_property"))
 	})
 	private StringValue stringValue = new StringValue();
 	
@@ -84,6 +87,10 @@ public class Value extends AbstractIdentifiable implements Serializable {
 		return null;
 	}
 	
+	public Measure getMeasure(){
+		return properties == null ? null : properties.getMeasure();
+	}
+	
 	public ValueType getType(){
 		return properties == null ? ValueType.DEFAULT : properties.getType();
 	}
@@ -96,12 +103,8 @@ public class Value extends AbstractIdentifiable implements Serializable {
 		return properties == null ? Boolean.FALSE : properties.getNullable();
 	}
 	
-	public String getNullString(){
+	public NullString getNullString(){
 		return properties == null ? null : properties.getNullString();
-	}
-	
-	public String getNullAbbreviation(){
-		return properties == null ? null : properties.getNullAbbreviation();
 	}
 	
 	public IntervalCollection getIntervalCollection(){

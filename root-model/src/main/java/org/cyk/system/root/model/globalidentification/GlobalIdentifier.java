@@ -75,9 +75,13 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	@Embedded private Rud rud = new Rud();
 	
-	private Boolean usable,male;
-	@Column(name="f_constant",nullable=false,updatable=false)
-	private Boolean constant = Boolean.FALSE;
+	private Boolean usable;
+	private Boolean male;
+	/**
+	 * True if object initialization match business rules , False otherwise
+	 */
+	private Boolean initialized;
+	@Column(name="f_constant") private Boolean constant = Boolean.FALSE;
 	
 	@Embedded private Period existencePeriod = new Period();
 	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;

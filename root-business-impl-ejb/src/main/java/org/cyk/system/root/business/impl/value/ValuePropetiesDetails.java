@@ -10,7 +10,7 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class ValuePropetiesDetails extends AbstractOutputDetails<ValueProperties> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String type,intervalCollection,set,nullable,nullString,nullAbbreviation;
+	@Input @InputText private String type,intervalCollection,set,nullable,nullString;
 	
 	public ValuePropetiesDetails(ValueProperties valueProperties) {
 		super(valueProperties);
@@ -19,7 +19,6 @@ public class ValuePropetiesDetails extends AbstractOutputDetails<ValueProperties
 		set = formatUsingBusiness(valueProperties.getSet());
 		nullable = formatUsingBusiness(valueProperties.getNullable());
 		nullString = formatUsingBusiness(valueProperties.getNullString());
-		nullAbbreviation = formatUsingBusiness(valueProperties.getNullAbbreviation());
 	}
 	
 	public static final String FIELD_TYPE = "type";
@@ -27,5 +26,5 @@ public class ValuePropetiesDetails extends AbstractOutputDetails<ValueProperties
 	public static final String FIELD_SET = "set";
 	public static final String FIELD_NULLABLE = "nullable";
 	public static final String FIELD_NULLABLE_STRING = "nullString";
-	public static final String FIELD_NULLABLE_ABBREVIATION = "nullAbbreviation";
+
 }

@@ -129,7 +129,6 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Collection<NODE> findHierarchies() {
-        //logStackTrace();
         Collection<NODE> hierarchy = dao.readRoots();
         for(NODE type : hierarchy)
             loadChildren(type);

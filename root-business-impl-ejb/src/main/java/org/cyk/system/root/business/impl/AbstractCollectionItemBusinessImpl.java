@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 
 public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,COLLECTION extends AbstractCollection<ITEM>> extends AbstractEnumerationBusinessImpl<ITEM, DAO> implements AbstractCollectionItemBusiness<ITEM,COLLECTION>,Serializable {
@@ -69,6 +70,17 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		item.setCollection(collection);
 		collection.add(item);
 		return item;
+	}
+
+	@Override
+	public ITEM find(String collectionCode, String relativeCode) {
+		COLLECTION collection = inject(BusinessInterfaceLocator.class).injectTyped(getCollectionClass()).find(collectionCode);
+		return dao.read(RootConstant.Code.generate(collection, relativeCode));
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected Class<COLLECTION> getCollectionClass(){
+		return (Class<COLLECTION>) commonUtils.getClassParameterAt(getClass(), 2);
 	}
 		
 	/**/

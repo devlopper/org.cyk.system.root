@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
@@ -31,7 +32,13 @@ public class Metric extends AbstractCollectionItem<MetricCollection> implements 
 	}
 	
 	public IntervalCollection getValueIntervalCollection(){
+		ValueProperties valueProperties = getValueProperties();
 		return valueProperties == null ? null : valueProperties.getIntervalCollection();
+	}
+	
+	public Measure getMeasure(){
+		ValueProperties valueProperties = getValueProperties();
+		return valueProperties == null ? null : valueProperties.getMeasure();
 	}
 	
 	public static final String FIELD_VALUE_PROPERTIES = "valueProperties";

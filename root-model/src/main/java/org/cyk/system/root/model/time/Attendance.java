@@ -25,36 +25,13 @@ public class Attendance extends AbstractModelElement implements Serializable{
 	/**
 	 * All duration are in millisecond
 	 */
-	/*
-	@Embedded
-	@AttributeOverrides(value={
-			@AttributeOverride(name=Value.FIELD_USER,column=@Column(name="attended_numberofmillisecond_user"))
-			,@AttributeOverride(name=Value.FIELD_SYSTEM,column=@Column(name="attended_numberofmillisecond_system"))
-			,@AttributeOverride(name=Value.FIELD_GAP,column=@Column(name="attended_numberofmillisecond_gap"))
-	})
-	private Value attendedNumberOfMillisecond = new Value();
 	
 	@Embedded
 	@AttributeOverrides(value={
-			@AttributeOverride(name=Value.FIELD_USER,column=@Column(name="missed_numberofmillisecond_user"))
-			,@AttributeOverride(name=Value.FIELD_SYSTEM,column=@Column(name="missed_numberofmillisecond_system"))
-			,@AttributeOverride(name=Value.FIELD_GAP,column=@Column(name="missed_numberofmillisecond_gap"))
-	})
-	private Value missedNumberOfMillisecond = new Value();
-	
-	@Embedded
-	@AttributeOverrides(value={
-			@AttributeOverride(name=Value.FIELD_USER,column=@Column(name="missedjustified_numberofmillisecond_user"))
-			,@AttributeOverride(name=Value.FIELD_SYSTEM,column=@Column(name="missedjustified_numberofmillisecond_system"))
-			,@AttributeOverride(name=Value.FIELD_GAP,column=@Column(name="missedjustified_numberofmillisecond_gap"))
-	})
-	private Value missedJustifiedNumberOfMillisecond = new Value();
-	*/
-	@Embedded
-	@AttributeOverrides(value={
-			@AttributeOverride(name=BigDecimalValue.FIELD_USER,column=@Column(name="rate_user"))
-			,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="rate_system"))
-			,@AttributeOverride(name=BigDecimalValue.FIELD_GAP,column=@Column(name="rate_gap"))
+		@AttributeOverride(name=BigDecimalValue.FIELD_USER,column=@Column(name="rate_user"))
+		,@AttributeOverride(name=BigDecimalValue.FIELD_SYSTEM,column=@Column(name="rate_system"))
+		,@AttributeOverride(name=BigDecimalValue.FIELD_GAP,column=@Column(name="rate_gap"))
+		,@AttributeOverride(name=BigDecimalValue.FIELD_PREFERRED_PROPERTY,column=@Column(name="rate_preferred_property"))
 	})
 	private BigDecimalValue rate = new BigDecimalValue();
 

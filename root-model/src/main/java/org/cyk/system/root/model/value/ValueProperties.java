@@ -20,16 +20,21 @@ import lombok.Setter;
 public class ValueProperties extends AbstractIdentifiable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@ManyToOne private Measure measure;
 	@ManyToOne private IntervalCollection intervalCollection;
-	@Enumerated(EnumType.ORDINAL) @Column(name="thetype") private ValueType type = ValueType.NUMBER;
-	@Enumerated(EnumType.ORDINAL) @Column(name="theset") private ValueSet set = ValueSet.INTERVAL_VALUE;
+	@Enumerated(EnumType.ORDINAL) @Column(name="thetype") private ValueType type = ValueType.DEFAULT;
+	@Enumerated(EnumType.ORDINAL) @Column(name="theset") private ValueSet set = ValueSet.DEFAULT;
 	
 	private Boolean nullable;
-	private String nullString;
-	private String nullAbbreviation;
+	@ManyToOne private NullString nullString;
 	
 	public ValueProperties setIntervalCollection(IntervalCollection intervalCollection){
 		this.intervalCollection = intervalCollection;
+		return this;
+	}
+	
+	public ValueProperties setMeasure(Measure measure){
+		this.measure = measure;
 		return this;
 	}
 	
@@ -48,16 +53,11 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 		return this;
 	}
 	
-	public ValueProperties setNullString(String nullString){
+	public ValueProperties setNullString(NullString nullString){
 		this.nullString = nullString;
 		return this;
 	}
-	
-	public ValueProperties setNullAbbreviation(String nullAbbreviation){
-		this.nullAbbreviation = nullAbbreviation;
-		return this;
-	}
-	
+		
 	public ValueType getType(){
 		return type == null ? ValueType.STRING : type;
 	}

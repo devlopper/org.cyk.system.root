@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -20,7 +21,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.FormatterBusiness;
@@ -37,6 +37,7 @@ import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
+import org.cyk.system.root.business.api.value.MeasureBusiness;
 import org.cyk.system.root.business.impl.event.NotificationBuilderAdapter;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
@@ -64,6 +65,7 @@ import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
+import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.message.SmtpProperties;
@@ -89,6 +91,9 @@ import org.cyk.system.root.model.security.BusinessServiceCollection;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
+import org.cyk.system.root.model.value.Measure;
+import org.cyk.system.root.model.value.MeasureType;
+import org.cyk.system.root.model.value.NullString;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueSet;
 import org.cyk.system.root.persistence.api.GenericDao;
@@ -106,6 +111,7 @@ import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.joda.time.DateTimeConstants;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -204,12 +210,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			@Override
 			public String format(Value value, ContentType contentType) {
 				if(value.get()==null && Boolean.TRUE.equals(value.getNullable()))
-					return value.getNullAbbreviation();
+					return value.getNullString().getCode();
 				switch(value.getType()){
 				case BOOLEAN:
 					return inject(LanguageBusiness.class).findResponseText(value.getBooleanValue().get());
 				case NUMBER:
-					return inject(NumberBusiness.class).format(value.getNumberValue().get());
+					if(value.getMeasure()==null)
+						return inject(NumberBusiness.class).format(value.getNumberValue().get());
+					return inject(NumberBusiness.class).format(inject(MeasureBusiness.class).computeQuotient(value.getMeasure(),value.getNumberValue().get()));
 				case STRING:
 					if(ValueSet.INTERVAL_RELATIVE_CODE.equals(value.getSet())){
 						return value.getStringValue().get();
@@ -219,12 +227,20 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				return null;
 			}
 		});
+        registerFormatter(Metric.class, new AbstractFormatter<Metric>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(Metric metric, ContentType contentType) {
+				return metric.getName()+(metric.getMeasure()==null ? Constant.EMPTY_STRING 
+						:(Constant.CHARACTER_LEFT_PARENTHESIS+inject(FormatterBusiness.class).format(metric.getMeasure(), contentType)+Constant.CHARACTER_RIGHT_PARENTHESIS));
+			}
+		});
         registerFormatter(MetricValue.class, new AbstractFormatter<MetricValue>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(MetricValue metricValue, ContentType contentType) {
-				return inject(FormatterBusiness.class).format(metricValue.getMetric(), contentType)+Constant.CHARACTER_SPACE
-						+inject(FormatterBusiness.class).format(metricValue.getMetric(), contentType);
+				return inject(FormatterBusiness.class).format(metricValue.getMetric(), contentType)+Constant.CHARACTER_LEFT_PARENTHESIS
+						+inject(FormatterBusiness.class).format(metricValue.getValue(), contentType)+Constant.CHARACTER_RIGHT_PARENTHESIS;
 			}
 		});
         registerFormatter(NestedSet.class, new AbstractFormatter<NestedSet>() {
@@ -364,8 +380,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		defaultSmtpProperties = inject(SmtpPropertiesDao.class).read(SmtpProperties.DEFAULT);
     }
     
-    
-    
     public GenericBusiness getGenericBusiness(){
     	return inject(GenericBusiness.class);
     }
@@ -395,6 +409,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         file();
         message();
         mathematics();
+        values();
     }
     
     private void geography(){
@@ -486,12 +501,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void time(){ 
-    	create(new TimeDivisionType(TimeDivisionType.DAY, "Jour",DateUtils.MILLIS_PER_DAY ,Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.WEEK, "Semaine",DateUtils.MILLIS_PER_DAY*7, Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.MONTH, "Mois",DateUtils.MILLIS_PER_DAY*30, Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.TRIMESTER, "Trimestre",DateUtils.MILLIS_PER_DAY*30*3, Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.SEMESTER, "Semestre",DateUtils.MILLIS_PER_DAY*30*6, Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.YEAR, "Année",DateUtils.MILLIS_PER_DAY*30*12,Boolean.TRUE));
+    	create(new TimeDivisionType(TimeDivisionType.DAY, "Jour",DateTimeConstants.MILLIS_PER_DAY*1l ,Boolean.TRUE));
+        create(new TimeDivisionType(TimeDivisionType.WEEK, "Semaine",DateTimeConstants.MILLIS_PER_DAY*7l, Boolean.TRUE));
+        create(new TimeDivisionType(TimeDivisionType.MONTH, "Mois",DateTimeConstants.MILLIS_PER_DAY*30l, Boolean.TRUE));
+        create(new TimeDivisionType(TimeDivisionType.TRIMESTER, "Trimestre",DateTimeConstants.MILLIS_PER_DAY*30*3l, Boolean.TRUE));
+        create(new TimeDivisionType(TimeDivisionType.SEMESTER, "Semestre",DateTimeConstants.MILLIS_PER_DAY*30*6l, Boolean.TRUE));
+        create(new TimeDivisionType(TimeDivisionType.YEAR, "Année",DateTimeConstants.MILLIS_PER_DAY*30*12l,Boolean.TRUE));
         
     }
     
@@ -579,6 +594,13 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	createEnumerations(MetricCollectionType.class,RootConstant.Code.MetricCollectionType.ATTENDANCE,RootConstant.Code.MetricCollectionType.BEHAVIOUR
     			,RootConstant.Code.MetricCollectionType.COMMUNICATION);
     	
+    }
+    
+    private void values(){ 
+    	createEnumerations(MeasureType.class,RootConstant.Code.MeasureType.DISTANCE,RootConstant.Code.MeasureType.TIME);
+    	create(new Measure(RootConstant.Code.Measure.TIME_DAY,"jour",getEnumeration(MeasureType.class,RootConstant.Code.MeasureType.TIME)
+    			,new BigDecimal(DateTimeConstants.MILLIS_PER_DAY)));
+    	create(new NullString(RootConstant.Code.NullString.NOT_ASSESSED,"Not assessed"));
     }
     
     @Override
