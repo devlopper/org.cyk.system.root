@@ -20,6 +20,7 @@ import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
+import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
 import org.cyk.utility.common.generator.RandomDataProvider;
@@ -78,14 +79,22 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 	}
 	
 	@Override
-	public void setAddress(Person person, String personRelationshipTypeCode, String value) {
+	public void setAddress(Person person, String personRelationshipTypeCode, String value) {//TODO must be moved to person business
 		PersonRelationshipType personRelationshipType = inject(PersonRelationshipTypeDao.class).read(personRelationshipTypeCode);
 		Collection<PersonRelationship> personRelationships = inject(PersonRelationshipDao.class).readByPerson2ByType(person, personRelationshipType);
 		if(personRelationships.isEmpty()){
 			inject(PersonBusiness.class).addRelationship(person, personRelationshipTypeCode);
 		}
-		Person parent = inject(PersonRelationshipBusiness.class).findOneByType(person.getRelationships(), personRelationshipType).getPerson1();
-		setAddress(parent, value);
+		PersonRelationship personRelationship = inject(PersonRelationshipBusiness.class).findOneByType(person.getRelationships(), personRelationshipType);
+		Person existing = inject(PersonDao.class).readByEmail(value);
+		if(existing==null){
+			Person parent = inject(PersonRelationshipBusiness.class).findOneByType(person.getRelationships(), personRelationshipType).getPerson1();
+			setAddress(parent, value);	
+		}else{
+			personRelationship.setPerson1(existing);
+		}
+			
+		
 	}
 	
 	@Override

@@ -61,8 +61,13 @@ public class MetricCollectionIdentifiableGlobalIdentifierBusinessImpl extends Ab
 	public void create(Collection<MetricCollection> metricCollections,Collection<? extends AbstractIdentifiable> identifiables,ValueProperties valueProperties) {
 		Collection<MetricCollectionIdentifiableGlobalIdentifier> collection = new ArrayList<>();
 		for(MetricCollection metricCollection : metricCollections)
-			for(AbstractIdentifiable identifiable : identifiables)
-				collection.add(new MetricCollectionIdentifiableGlobalIdentifier(metricCollection, identifiable,valueProperties == null ? null : new Value(valueProperties)));
+			for(AbstractIdentifiable identifiable : identifiables){
+				Value value = valueProperties == null ? null : new Value(valueProperties);
+				if(value!=null){
+					value.setName(metricCollection.getName());
+				}
+				collection.add(new MetricCollectionIdentifiableGlobalIdentifier(metricCollection, identifiable,value));
+			}
 		create(collection);
 	}
 

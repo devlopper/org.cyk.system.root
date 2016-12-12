@@ -47,8 +47,7 @@ public class MetricValueIdentifiableGlobalIdentifierBusinessImpl extends Abstrac
 	
 	@Override
 	public MetricValueIdentifiableGlobalIdentifier create(MetricValueIdentifiableGlobalIdentifier metricValueIdentifiableGlobalIdentifier) {
-		if(metricValueIdentifiableGlobalIdentifier.getMetricValue().getIdentifier()==null)
-			inject(MetricValueBusiness.class).create(metricValueIdentifiableGlobalIdentifier.getMetricValue());
+		createIfNotIdentified(metricValueIdentifiableGlobalIdentifier.getMetricValue());
 		return super.create(metricValueIdentifiableGlobalIdentifier);
 	}
 	

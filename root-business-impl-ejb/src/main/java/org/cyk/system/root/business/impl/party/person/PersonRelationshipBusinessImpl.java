@@ -5,12 +5,12 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
 
 public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService<PersonRelationship,PersonRelationshipDao> implements PersonRelationshipBusiness {
@@ -25,9 +25,17 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 	@Override
 	protected void beforeCreate(PersonRelationship personRelationship) {
 		super.beforeCreate(personRelationship);
-		for(Person person : new Person[]{personRelationship.getPerson1(),personRelationship.getPerson2()})
-			if(isNotIdentified(person))
-				inject(PersonBusiness.class).create(person);
+		for(Person person : new Person[]{personRelationship.getPerson1(),personRelationship.getPerson2()}){
+			Person existing = null;
+			if(person.getContactCollection()!=null && person.getContactCollection().getElectronicMails()!=null && !person.getContactCollection().getElectronicMails().isEmpty())
+				existing = inject(PersonDao.class).readByEmail(person.getContactCollection().getElectronicMails().iterator().next().getAddress());
+			if(existing==null)
+				createIfNotIdentified(person);
+			else if(personRelationship.getPerson1() == person)
+				personRelationship.setPerson1(existing);
+			else if(personRelationship.getPerson2() == person)
+				personRelationship.setPerson2(existing);
+		}
 		exceptionUtils().exception(personRelationship.getPerson1().equals(personRelationship.getPerson2()), "person1.cannotbe.person2");
 	}
 	
