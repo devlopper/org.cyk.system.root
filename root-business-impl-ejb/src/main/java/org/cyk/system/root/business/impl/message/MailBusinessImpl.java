@@ -189,14 +189,14 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		addProperty(properties, "user", smtpProperties.getCredentials().getUsername());
 		addProperty(properties, "password", smtpProperties.getCredentials().getPassword());
 		
-		addProperty(properties, "socketFactory.port", smtpProperties.getSocketFactory().getPort());
+		//addProperty(properties, "socketFactory.port", smtpProperties.getSocketFactory().getPort());
 		addProperty(properties, "port", smtpProperties.getPort());
-		addProperty(properties, "socketFactory.fallback", smtpProperties.getSocketFactory().getFallback());
+		//addProperty(properties, "socketFactory.fallback", smtpProperties.getSocketFactory().getFallback());
 		addProperty(properties, "auth", smtpProperties.getAuthenticated());
-		addProperty(properties, "socketFactory.class", smtpProperties.getSocketFactory().getClazz());
+		//addProperty(properties, "socketFactory.class", smtpProperties.getSocketFactory().getClazz());
 		
-		addProperty(properties, "starttls.enable", smtpProperties.getSecured());
-		addProperty(properties, "ssl.enable", smtpProperties.getSecured());
+		//addProperty(properties, "starttls.enable", smtpProperties.getSecured());
+		//addProperty(properties, "ssl.enable", smtpProperties.getSecured());
 		return properties;
 	}
     
@@ -296,6 +296,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
                 
                 message.setContent(multipart);
             }
+            System.out.println("sending message to "+notification.getReceiverIdentifiers());
             Transport.send(message);
        
             
