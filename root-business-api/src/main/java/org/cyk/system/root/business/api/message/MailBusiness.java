@@ -15,6 +15,7 @@ public interface MailBusiness extends MessageSendingBusiness<InternetAddress> {
 	
 	SmtpProperties getSmtpProperties();
 	
+	void setProperties(String localhost,Integer port,String username,String password,Boolean secured);
 	void setProperties(String localhost,Integer port,String username,String password);
 	
 	/**/

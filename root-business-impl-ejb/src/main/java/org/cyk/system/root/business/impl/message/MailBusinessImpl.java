@@ -26,7 +26,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
-import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.message.SmtpProperties;
@@ -54,6 +53,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     private Session getSession(Boolean debug) {
     	Session session = null;
     	Properties properties = convert(getSmtpProperties());
+    	System.out.println("Mail session created : "+properties);
     	session = Session.getInstance(properties,new Authenticator() {
     		@Override
     		protected PasswordAuthentication getPasswordAuthentication() {
@@ -194,6 +194,9 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		addProperty(properties, "socketFactory.fallback", smtpProperties.getSocketFactory().getFallback());
 		addProperty(properties, "auth", smtpProperties.getAuthenticated());
 		addProperty(properties, "socketFactory.class", smtpProperties.getSocketFactory().getClazz());
+		
+		addProperty(properties, "starttls.enable", smtpProperties.getSecured());
+		addProperty(properties, "ssl.enable", smtpProperties.getSecured());
 		return properties;
 	}
     
@@ -204,7 +207,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     
 	@Override
 	public SmtpProperties getSmtpProperties() {
-		SMTP_PROPERTIES = RootBusinessLayer.getInstance().getDefaultSmtpProperties();
+		//SMTP_PROPERTIES = RootBusinessLayer.getInstance().getDefaultSmtpProperties();
 		if(SMTP_PROPERTIES==null){
 			SMTP_PROPERTIES = new SmtpProperties();
 			SMTP_PROPERTIES.setHost(null);
@@ -220,12 +223,13 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 			SMTP_PROPERTIES.getSocketFactory().setFallback(Boolean.FALSE);
 			SMTP_PROPERTIES.getSocketFactory().setPort(null);
 			SMTP_PROPERTIES.setAuthenticated(Boolean.TRUE);
+			SMTP_PROPERTIES.setSecured(Boolean.TRUE);
 		}
 		return SMTP_PROPERTIES;
 	}
 	
 	@Override
-	public void setProperties(String localhost,Integer port,String username,String password) {
+	public void setProperties(String localhost,Integer port,String username,String password,Boolean secured) {
 		SmtpProperties smtpProperties = getSmtpProperties();
 		smtpProperties.setHost(localhost);
 		smtpProperties.setFrom(username);
@@ -233,6 +237,12 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		smtpProperties.getCredentials().setPassword(password);
 		smtpProperties.setPort(port);
 		smtpProperties.getSocketFactory().setPort(port);
+		smtpProperties.setSecured(secured);
+	}
+	
+	@Override
+	public void setProperties(String localhost, Integer port, String username, String password) {
+		setProperties(localhost, port, username, password,Boolean.TRUE);	
 	}
     
 	/**/

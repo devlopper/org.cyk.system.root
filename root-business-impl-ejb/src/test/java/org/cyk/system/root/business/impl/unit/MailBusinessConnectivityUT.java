@@ -26,7 +26,8 @@ public class MailBusinessConnectivityUT extends AbstractUnitTest {
 		super.registerBeans(collection);
 		collection.add(mailBusiness);
 		collection.add(fileBusiness);
-		mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
+		//mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
+		mailBusiness.setProperties("smtp.iesaci.com", 25, "results@iesaci.com", "school2009",Boolean.FALSE);
 	}
 	
 	@Test
@@ -34,7 +35,7 @@ public class MailBusinessConnectivityUT extends AbstractUnitTest {
 		MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
 		Collection<Notification> notifications = new ArrayList<>();
 		
-		for(int i = 0 ; i < 5 ; i++){
+		for(int i = 0 ; i < 1 ; i++){
 			Notification notification = new Notification();
 			notification.setTitle("A message title to receiver "+i);
 			notification.setMessage("Message to reveiver "+i);
