@@ -14,6 +14,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria;
+import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
@@ -43,7 +44,6 @@ public class MetricCollectionIdentifiableGlobalIdentifierBusinessImpl extends Ab
 	
 	@Override
 	public MetricCollectionIdentifiableGlobalIdentifier delete(MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier) {
-		inject(MetricCollectionBusiness.class).delete(metricCollectionIdentifiableGlobalIdentifier.getMetricCollection());
 		metricCollectionIdentifiableGlobalIdentifier.setMetricCollection(null);
 		metricCollectionIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(null);
 		return super.delete(metricCollectionIdentifiableGlobalIdentifier);
@@ -86,4 +86,11 @@ public class MetricCollectionIdentifiableGlobalIdentifierBusinessImpl extends Ab
 		create(Arrays.asList(metricCollection),Arrays.asList(identifiable),valueProperties);
 	}
 	
+	@Override
+	public void delete(Collection<MetricCollection> metricCollections,Collection<? extends AbstractIdentifiable> identifiables) {
+		Collection<MetricCollectionType> metricCollectionTypes = new ArrayList<>();
+		for(MetricCollection metricCollection : metricCollections)
+			metricCollectionTypes.add(metricCollection.getType());
+		delete(findByCriteria(new SearchCriteria().addIdentifiablesGlobalIdentifiers(identifiables).addMetricCollectionTypes(metricCollectionTypes)));
+	}
 }

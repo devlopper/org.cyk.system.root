@@ -10,5 +10,5 @@ import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdenti
 public interface MetricValueIdentifiableGlobalIdentifierBusiness extends JoinGlobalIdentifierBusiness<MetricValueIdentifiableGlobalIdentifier,MetricValueIdentifiableGlobalIdentifier.SearchCriteria> {
 
 	void create(Collection<MetricCollection> metricCollections,Collection<? extends AbstractIdentifiable> identifiables);
-	
+	void delete(Collection<MetricCollection> metricCollections,Collection<? extends AbstractIdentifiable> identifiables);
 }

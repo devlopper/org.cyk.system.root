@@ -66,6 +66,14 @@ public class MetricValueIdentifiableGlobalIdentifierBusinessImpl extends Abstrac
 	}
 	
 	@Override
+	public void delete(Collection<MetricCollection> metricCollections,Collection<? extends AbstractIdentifiable> identifiables) {
+		Collection<Metric> metrics = inject(MetricDao.class).readByCollections(metricCollections);
+		delete(inject(MetricValueIdentifiableGlobalIdentifierDao.class)
+				.readByCriteria(new MetricValueIdentifiableGlobalIdentifier.SearchCriteria().addIdentifiablesGlobalIdentifiers(identifiables)
+						.addMetrics(metrics)));
+	}
+	
+	@Override
 	public Collection<MetricValueIdentifiableGlobalIdentifier> findByCriteria(SearchCriteria searchCriteria) {
 		if(searchCriteria.getMetrics().isEmpty())
 			searchCriteria.setMetrics(inject(MetricDao.class).readAll());

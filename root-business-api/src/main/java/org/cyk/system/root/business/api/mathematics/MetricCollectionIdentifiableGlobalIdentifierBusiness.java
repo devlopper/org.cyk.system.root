@@ -15,4 +15,6 @@ public interface MetricCollectionIdentifiableGlobalIdentifierBusiness extends Jo
 	void create(MetricCollection metricCollection,Collection<? extends AbstractIdentifiable> identifiables,ValueProperties valueProperties);
 	void create(MetricCollection metricCollection,AbstractIdentifiable identifiable,ValueProperties valueProperties);
 	
+	void delete(Collection<MetricCollection> metricCollections,Collection<? extends AbstractIdentifiable> identifiables);
+	
 }
