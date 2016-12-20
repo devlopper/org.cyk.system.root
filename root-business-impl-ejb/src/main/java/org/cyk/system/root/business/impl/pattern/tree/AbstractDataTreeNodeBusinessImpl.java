@@ -161,4 +161,16 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
                 buildHierarchy((NODE) child, children);
     }
     
+	@Override
+	public NODE instanciateOne(String[] values) {
+		NODE node = super.instanciateOne(values);
+		Integer index = getInstanciateOneDataTreeNodeStartIndex(values);
+		if(values.length>index)
+			node.setParent(dao.read(values[index++]));
+		return node;
+	}
+	
+	protected Integer getInstanciateOneDataTreeNodeStartIndex(String[] values) {
+		return 10;
+	}
 }

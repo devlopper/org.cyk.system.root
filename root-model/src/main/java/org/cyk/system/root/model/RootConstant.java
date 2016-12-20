@@ -15,6 +15,10 @@ public interface RootConstant {
 		
 		private static final long serialVersionUID = 1L;
 
+		public static String generateFromString(String string){
+			return StringUtils.remove(string, Constant.CHARACTER_SPACE);
+		}
+		
 		public static String generate(Object...objects){
 			Collection<String> collection = new ArrayList<>();
 			for(Object object : objects)
@@ -41,6 +45,17 @@ public interface RootConstant {
 		}
 		
 		/**/
+		
+		public static class TimeDivisionType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String DAY = "DAY";
+			public static String WEEK = "WEEK";
+			public static String MONTH = "MONTH";
+			public static String TRIMESTER = "TRIMESTER";
+			public static String SEMESTER = "SEMESTER";
+			public static String YEAR = "YEAR";
+		}
 		
 		public static class MetricCollectionType implements Serializable {
 			private static final long serialVersionUID = 1L;
@@ -71,7 +86,11 @@ public interface RootConstant {
 			private static final long serialVersionUID = 1L;
 			
 			public static String TIME_DAY = generate(MeasureType.TIME,"DAY");
-			
+			public static String TIME_WEEK = generate(MeasureType.TIME,"WEEK");
+			public static String TIME_MONTH = generate(MeasureType.TIME,"MONTH");
+			public static String TIME_TRIMESTER = generate(MeasureType.TIME,"TRIMESTER");
+			public static String TIME_SEMESTER = generate(MeasureType.TIME,"SEMESTER");
+			public static String TIME_YEAR = generate(MeasureType.TIME,"YEAR");
 			
 		}
 		

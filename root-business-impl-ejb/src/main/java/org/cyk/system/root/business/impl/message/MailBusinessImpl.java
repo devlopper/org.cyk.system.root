@@ -229,20 +229,21 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 	}
 	
 	@Override
-	public void setProperties(String localhost,Integer port,String username,String password,Boolean secured) {
+	public void setProperties(String host,Integer port,String username,String password,Boolean secured) {
 		SmtpProperties smtpProperties = getSmtpProperties();
-		smtpProperties.setHost(localhost);
+		smtpProperties.setHost(host);
 		smtpProperties.setFrom(username);
 		smtpProperties.getCredentials().setUsername(username);
 		smtpProperties.getCredentials().setPassword(password);
 		smtpProperties.setPort(port);
 		smtpProperties.getSocketFactory().setPort(port);
 		smtpProperties.setSecured(secured);
+		System.out.println("SMTP properties set. host="+host+" , port="+port+" , username="+username+" , password="+password);
 	}
 	
 	@Override
-	public void setProperties(String localhost, Integer port, String username, String password) {
-		setProperties(localhost, port, username, password,Boolean.TRUE);	
+	public void setProperties(String host, Integer port, String username, String password) {
+		setProperties(host, port, username, password,Boolean.TRUE);	
 	}
     
 	/**/

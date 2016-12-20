@@ -29,7 +29,7 @@ public class UserAccountDaoImpl extends AbstractTypedDao<UserAccount> implements
 	
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-	private String readByCredentials,readAllSortedByDate,readByCriteria,countByCriteria,readByCriteriaCreationDateAscendingOrder,readByCriteriaCreationDateDescendingOrder
+	private String readByCredentials,readAllSortedByDate,readByCriteriaCreationDateAscendingOrder,readByCriteriaCreationDateDescendingOrder
 		,readByParties,readByUsername,readAllExcludeRoles,countAllExcludeRoles;
     
     @Override

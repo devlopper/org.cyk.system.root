@@ -143,7 +143,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 		
 		Collection<UniformResourceLocatorParameter> database = uniformResourceLocatorParameterDao.readByUniformResourceLocator(uniformResourceLocator);
 		
-		delete(UniformResourceLocatorParameter.class,uniformResourceLocatorParameterDao,database, uniformResourceLocator.getParameters());
+		delete(UniformResourceLocatorParameter.class,database, uniformResourceLocator.getParameters());
 		
 		save(uniformResourceLocator);
 		return uniformResourceLocator;

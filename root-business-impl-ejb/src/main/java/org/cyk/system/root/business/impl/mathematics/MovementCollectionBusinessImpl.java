@@ -12,6 +12,7 @@ import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -45,9 +46,9 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, inject(IntervalBusiness.class)
 				.instanciateOne(null, code, "0", null));
 		movementCollection.setIncrementAction(inject(MovementActionBusiness.class)
-				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+computeCode(incrementActionName), incrementActionName));
+				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+RootConstant.Code.generateFromString(incrementActionName), incrementActionName));
 		movementCollection.setDecrementAction(inject(MovementActionBusiness.class)
-				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+computeCode(decrementActionName), decrementActionName));
+				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+RootConstant.Code.generateFromString(decrementActionName), decrementActionName));
 		movementCollection.getDecrementAction().getInterval().getHigh().setValue(new BigDecimal("-0.001"));
 		movementCollection.getDecrementAction().getInterval().getLow().setValue(null);
 		movementCollection.getDecrementAction().getInterval().getLow().setExcluded(Boolean.TRUE);

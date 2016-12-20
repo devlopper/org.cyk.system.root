@@ -14,8 +14,6 @@ public class FiniteStateMachineStateLogDaoImpl extends AbstractTypedDao<FiniteSt
 
 	private static final long serialVersionUID = 6306356272165070761L;
 
-	private String readByCriteria,countByCriteria;
-	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();

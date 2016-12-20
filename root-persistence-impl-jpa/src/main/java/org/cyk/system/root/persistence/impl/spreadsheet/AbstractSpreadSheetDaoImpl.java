@@ -23,7 +23,7 @@ public class AbstractSpreadSheetDaoImpl<SPREADSHEET extends AbstractSpreadSheet<
 	private static final String READ_BY_CRITERIA_NOTORDERED_FORMAT = READ_BY_CRITERIA_SELECT_FORMAT+READ_BY_CRITERIA_WHERE_FORMAT;
 	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_SELECT_FORMAT+READ_BY_CRITERIA_WHERE_FORMAT+ORDER_BY_FORMAT;
 	*/
-	private String /*readAllSortedByDate,readByCriteria,*/countByCriteria,readByCriteriaDateAscendingOrder,readByCriteriaDateDescendingOrder;
+	private String /*readAllSortedByDate,*/readByCriteriaDateAscendingOrder,readByCriteriaDateDescendingOrder;
 	
 	@Override
     protected void namedQueriesInitialisation() {

@@ -9,13 +9,13 @@ import java.util.Map;
 
 import javax.persistence.Column;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter @Setter
 public class GlobalIdentifierPersistenceMappingConfiguration implements Serializable {
@@ -25,6 +25,8 @@ public class GlobalIdentifierPersistenceMappingConfiguration implements Serializ
 	public static final Map<Class<?>, GlobalIdentifierPersistenceMappingConfiguration> MAP = new HashMap<>();
 	
 	private Collection<Property> properties;
+	
+	private Long maximumNumberOfDuplicateAllowed=0l;
 	
 	public GlobalIdentifierPersistenceMappingConfiguration addProperties(Property...properties){
 		if(properties!=null && properties.length>0){
@@ -55,6 +57,11 @@ public class GlobalIdentifierPersistenceMappingConfiguration implements Serializ
 				if(property.getColumn().unique())
 					uniques.add(property);
 		return uniques;
+	}
+	
+	public GlobalIdentifierPersistenceMappingConfiguration setMaximumNumberOfDuplicateAllowed(Long maximumNumberOfDuplicateAllowed){
+		this.maximumNumberOfDuplicateAllowed = maximumNumberOfDuplicateAllowed;
+		return this;
 	}
 	
 	/**/

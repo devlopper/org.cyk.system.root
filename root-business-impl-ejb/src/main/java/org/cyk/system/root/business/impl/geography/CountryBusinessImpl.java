@@ -1,12 +1,7 @@
 package org.cyk.system.root.business.impl.geography;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,21 +27,14 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 		super(dao); 
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Collection<Country> instanciateMany(List<String[]> list) {
-		List<Country> countries = new ArrayList<>();
-		for(String[] values : list){
-			Locality continent = inject(LocalityDao.class).read(values[0]);
-			if(continent==null)
-				continue;
-			Country instance = instanciateOne();
-			instance.setContinent(continent);
-    		instance.setCode(values[1]);
-    		instance.setName(values[2]);
-    		instance.setPhoneNumberCode(Integer.parseInt(StringUtils.defaultIfBlank(values.length>3 ? values[3] : null, "0")));
-    		countries.add(instance);
-    	}
-		return countries;
+	@Override
+	public Country instanciateOne(String[] values) {
+		Country country = instanciateOne();
+		country.setCode(values[0]);
+		country.setName(values[1]);
+		country.setContinent(inject(LocalityDao.class).read(values[2]));
+		country.setPhoneNumberCode(Integer.parseInt(StringUtils.defaultIfBlank(values.length>3 ? values[3] : null, "0")));
+		return country;
 	}
 
 	@Override

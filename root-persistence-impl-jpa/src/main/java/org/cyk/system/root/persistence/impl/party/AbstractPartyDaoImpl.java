@@ -18,7 +18,7 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-	protected String readByEmail,readByCode,readByCriteria,countByCriteria,readByCriteriaNameAscendingOrder,readByCriteriaNameDescendingOrder;
+	protected String readByEmail,readByCode,readByCriteriaNameAscendingOrder,readByCriteriaNameDescendingOrder;
 	
 	@Override
 	protected void namedQueriesInitialisation() {

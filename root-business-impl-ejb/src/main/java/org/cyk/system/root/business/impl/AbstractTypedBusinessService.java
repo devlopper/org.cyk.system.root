@@ -152,7 +152,15 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<IDENTIFIABLE> instanciateMany(List<String[]> values) {
-		return null;
+		Collection<IDENTIFIABLE> collection = new ArrayList<>();;
+		for(String[] value : values){
+			IDENTIFIABLE identifiable = instanciateOne(value);
+			if(identifiable==null)
+				System.out.println("Instanciation of "+clazz.getSimpleName()+" with values "+StringUtils.join(values,",")+" gives null");
+			else
+				collection.add(identifiable);
+		}
+		return collection;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -189,7 +197,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    inject(ValidationPolicy.class).validateCreate(identifiable);
 	    beforeCreate(getListeners(), identifiable);
 	}
-
+	
 	@Override
 	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
 		beforeCreate(identifiable);
@@ -446,7 +454,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	 * @param userIdentifiables
 	 * @return
 	 */
-	protected <T extends AbstractIdentifiable> Collection<T> delete(Class<T> aClass,TypedDao<T> dao,Collection<T> databaseIdentifiables,Collection<T> userIdentifiables) {
+	protected <T extends AbstractIdentifiable> Collection<T> delete(Class<T> aClass/*,TypedDao<T> dao*/,Collection<T> databaseIdentifiables,Collection<T> userIdentifiables) {
 		Set<T> deleted = new HashSet<>();
 		for(T database : databaseIdentifiables){
 			Boolean found = Boolean.FALSE;
@@ -459,10 +467,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			if(Boolean.FALSE.equals(found))
 				deleted.add(database);
 		}
-
+		
+		inject(BusinessInterfaceLocator.class).injectTyped(aClass).delete(deleted);
+		/*
 		for(T identifiable : deleted)
 			dao.delete(identifiable);
-		
+		*/
 		return deleted;
 	}
 	
@@ -530,6 +540,23 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public File findReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean createIfNull) {
 		return findReportFile(identifiable, inject(ReportTemplateDao.class).read(reportTemplateCode), createIfNull);
 	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findDuplicates(IDENTIFIABLE identifiable) {
+		return dao.readDuplicates(identifiable);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findDuplicates() {
+		return dao.readDuplicates();
+	}
+
+	@Override
+	public IDENTIFIABLE instanciateOne(String[] values) {
+		return null;
+	}
+	
+	
 	
 	/**/
 	

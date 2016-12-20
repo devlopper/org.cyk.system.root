@@ -12,8 +12,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import lombok.Getter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessManager;
@@ -63,6 +61,8 @@ import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.AbstractLayer;
+
+import lombok.Getter;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -461,6 +461,17 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	
 	/**/
 	
+	protected <T extends AbstractIdentifiable> void createFromExcelSheet(String woorkbookName,Class<T> aClass){
+		rootDataProducerHelper.createFromExcelSheet(getClass(), woorkbookName, aClass);
+	}
+	
+	protected <T extends AbstractIdentifiable> void createFromExcelSheet(Class<T> aClass){
+		createFromExcelSheet(getDataExcelFileName(), aClass);
+	}
+	
+	protected String getDataExcelFileName(){
+		return "data.xls";
+	}
 	
 	/**/
 	

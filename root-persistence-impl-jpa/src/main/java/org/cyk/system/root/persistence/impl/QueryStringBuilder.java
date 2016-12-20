@@ -194,6 +194,10 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 		return where(fieldName,varName,Boolean.TRUE.equals(in)?ArithmeticOperator.IN:ArithmeticOperator.NOT_IN);
 	}
 	
+	public QueryStringBuilder whereIdentifierIn(String anAttributeName,Class<?> aClass) {
+		return whereIdentifierIn(anAttributeName,getVarNameMany(aClass));
+	}
+	
 	public QueryStringBuilder whereIdentifier(String anAttributeName,Boolean in) {
 		return whereIdentifier(anAttributeName, VAR_IDENTIFIERS, in);
 	}
@@ -204,6 +208,10 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	
 	public QueryStringBuilder whereIdentifierIn(String anAttributeName) {
 		return whereIdentifier(anAttributeName, Boolean.TRUE);
+	}
+	
+	public QueryStringBuilder whereAttributeIdentifierIn(String anAttributeName) {
+		return whereIdentifier(anAttributeName,getVarNameMany(anAttributeName), Boolean.TRUE);
 	}
 	
 	public QueryStringBuilder whereIdentifierIn() {
@@ -425,5 +433,23 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	@Override
 	public String toString() {
 		return getValue();
+	}
+	
+	/**/
+	
+	public static String getVarNameOne(String name){
+		return name;
+	}
+	
+	public static String getVarNameMany(String name){
+		return getVarNameOne(name)+"s";
+	}
+	
+	public static String getVarNameOne(Class<?> aClass){
+		return getVarNameOne(aClass.getSimpleName().toLowerCase());
+	}
+	
+	public static String getVarNameMany(Class<?> aClass){
+		return getVarNameMany(getVarNameOne(aClass));
 	}
 }

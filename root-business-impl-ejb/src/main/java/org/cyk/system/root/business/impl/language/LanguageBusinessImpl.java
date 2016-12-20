@@ -20,18 +20,15 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
-import org.cyk.system.root.model.CommonBusinessAction;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
-import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.CommonBusinessAction;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.language.Language;
@@ -41,6 +38,7 @@ import org.cyk.system.root.persistence.api.language.LanguageDao;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
+import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -51,8 +49,11 @@ import org.cyk.utility.common.annotation.user.interfaces.Text.ValueType;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER,order=-1)
-public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language, LanguageDao> implements LanguageBusiness,Serializable {
+public class LanguageBusinessImpl extends AbstractEnumerationBusinessImpl<Language, LanguageDao> implements LanguageBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
@@ -125,7 +126,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	@Override
     public String findText(String code,CaseType caseType) {
-	    return findText(locale,code);
+	    return findText(locale,code,caseType);
 	}
 	
 	@Override
@@ -134,7 +135,7 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	}
 
 	public static String buildCacheIdentifier(Locale locale,String code,Object[] parameters,CaseType caseType){
-		return locale+Constant.CHARACTER_UNDESCORE.toString()+code+StringUtils.join(parameters)+Constant.CHARACTER_UNDESCORE.toString()+caseType;
+		return locale+Constant.CHARACTER_UNDESCORE.toString()+code+(parameters==null?Constant.EMPTY_STRING:StringUtils.join(parameters))+Constant.CHARACTER_UNDESCORE.toString()+caseType;
 	}
 	
 	public static void cache(Locale locale,String code,Object[] parameters,CaseType caseType,String value){
@@ -146,12 +147,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 	
 	@Override
 	public String findText(Locale locale,String code,Object[] parameters,CaseType caseType) {
-		logTrace("Text lookup id={} , locale={}",code,locale);
-		String value = null,cacheId=null;
+		LogMessage.Builder logMessageBuilder = createLogMessageBuilder("find text");
+		logMessageBuilder.addParameters("id",code,"locale",locale,"parameters",StringUtils.join(parameters,Constant.CHARACTER_COMA.toString()),"case",caseType);
+		String value = null,cacheId=null,resourceBundleId=null;
 		// 1 - Lookup in cache
 		if(Boolean.TRUE.equals(cachingEnabled)){
 			cacheId = buildCacheIdentifier(locale, code, parameters, caseType);
-			logTrace("Lookup in cache firstly");
+			logMessageBuilder.addParameters("Lookup in cache",Boolean.TRUE,"cache id",cacheId);
 			/*
 			CachingStrategy cachingStrategy = getCachingStrategy();
 			if(!CachingStrategy.NONE.equals(cachingStrategy)){
@@ -163,13 +165,13 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		}
 		if(value==null){
 			// 2 - Lookup in database
-			
+			logMessageBuilder.addParameters("Lookup in database",Boolean.TRUE);
 			if(value==null){
 				// 3 - Lookup in bundles
-				logTrace("Lookup in bundles");
+				logMessageBuilder.addParameters("Lookup in bundles",Boolean.TRUE);
 				for(Entry<String, ClassLoader> entry : RESOURCE_BUNDLE_ENTRIES){
 					try {
-						ResourceBundle resourceBundle = ResourceBundle.getBundle(entry.getKey(), locale, entry.getValue());
+						ResourceBundle resourceBundle = ResourceBundle.getBundle(resourceBundleId = entry.getKey(), locale, entry.getValue());
 						//logDebug("Bunble={}, Locale={}, Key={}",entry.getKey(),locale, code);
 						/*if(!locale.equals(resourceBundle.getLocale()))
 							throw new RuntimeException("Locale has changed! No same locale : "+locale+" <> "+resourceBundle.getLocale());*/
@@ -188,7 +190,6 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 						
 						if(Boolean.TRUE.equals(cachingEnabled)){
 							RESOURCE_BUNDLE_VALUE_CACHE.put(cacheId, value);
-							logDebug("value of {} is {}",code,value);
 						}
 						break;
 					} catch (Exception e) {
@@ -199,11 +200,16 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 		}
 		if(value==null){
 			// 4 - default
-			logDebug("No match found for {}", code);
-			return UNKNOWN_MARKER_START+code+UNKNOWN_MARKER_END;
+			logMessageBuilder.addParameters("Found",Boolean.FALSE);
+			value = UNKNOWN_MARKER_START+code+UNKNOWN_MARKER_END;
 		}else
-			return value;
+			logMessageBuilder.addParameters("Found",Boolean.TRUE);
+		if(resourceBundleId!=null)
+			logMessageBuilder.addParameters("resource bundle",resourceBundleId);
 		
+		logMessageBuilder.addParameters("value",value);
+		logTrace(logMessageBuilder);
+		return value;
 	}
 	
 	@Override
@@ -613,21 +619,8 @@ public class LanguageBusinessImpl extends AbstractTypedBusinessService<Language,
 			super();
 			this.id = id;
 			this.result = result;
-			//logDebug("No match found for {}",id);
 		}
 		
-	}
-
-	@Override
-	public Collection<Language> instanciateMany(List<String[]> list) {
-		List<Language> languages = new ArrayList<>();
-		for(String[] values : list){
-			Language instance = instanciateOne();
-			instance.setCode(values[0]);
-    		instance.setName(values[1]);
-    		languages.add(instance);
-    	}
-		return languages;
 	}
 	
 	/**/

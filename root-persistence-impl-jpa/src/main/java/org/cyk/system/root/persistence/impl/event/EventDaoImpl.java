@@ -30,7 +30,7 @@ public class EventDaoImpl extends AbstractIdentifiablePeriodDaoImpl<Event> imple
 	
 	@Inject private EventReminderDao eventReminderDao;
 	
-    private String readAllSortedByDate,readByCriteria,countByCriteria,readByCriteriaDateAscendingOrder,readByCriteriaDateDescendingOrder,
+    private String readAllSortedByDate,readByCriteriaDateAscendingOrder,readByCriteriaDateDescendingOrder,
     	readWhereFromDateBetweenPeriodByParties,countWhereFromDateBetweenPeriodByParties
     	,readWhereToDateLessThanByDateByParties,countWhereToDateLessThanByDateByParties
     	,readWhereDateBetweenPeriodByParties,countWhereDateBetweenPeriodByParties

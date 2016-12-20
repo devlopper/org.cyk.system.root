@@ -30,7 +30,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
 		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete,readByGlobalIdentifier
 		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
-		,readByGlobalIdentifierOrderNumber;
+		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -172,6 +172,16 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	}
 	
 	@Override
+	public Collection<IDENTIFIABLE> readDuplicates() {
+		return namedQuery(readDuplicates).resultMany();
+	}
+	
+	@Override
+	public Long countDuplicates() {
+		return namedQuery(countDuplicates,Long.class).resultOne();
+	}
+	
+	@Override
 	public Collection<IDENTIFIABLE> readAllExclude(Collection<IDENTIFIABLE> identifiables) {
 		return namedQuery(readAllExclude).parameterIdentifiers(identifiables).resultMany();
 	}
@@ -243,6 +253,11 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	public void executeDelete(Collection<IDENTIFIABLE> identifiables) {
 		namedQuery(executeDelete).parameter(QueryStringBuilder.VAR_IDENTIFIERS, ids(identifiables));	
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readDuplicates(IDENTIFIABLE identifiable) {
+		return null;
 	}
 	
 	/**/

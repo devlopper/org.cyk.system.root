@@ -2,17 +2,10 @@ package org.cyk.system.root.business.api.language;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.business.api.BusinessEntityInfos;
-import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.language.Language;
@@ -21,7 +14,12 @@ import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import org.cyk.utility.common.annotation.user.interfaces.Text;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
 
-public interface LanguageBusiness extends TypedBusiness<Language> {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+public interface LanguageBusiness extends AbstractEnumerationBusiness<Language> {
 
     String findText(String code,Object[] parameters,CaseType caseType);
     String findText(String code,Object[] parameters);
@@ -162,8 +160,6 @@ public interface LanguageBusiness extends TypedBusiness<Language> {
 
 		
 	}
-
-	Collection<Language> instanciateMany(List<String[]> list);
 
 	@Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class FindTextResult{

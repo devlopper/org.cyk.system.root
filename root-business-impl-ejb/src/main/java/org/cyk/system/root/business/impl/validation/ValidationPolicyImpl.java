@@ -13,6 +13,8 @@ import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.persistence.api.GenericDao;
+import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration;
 import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration.Property;
 import org.cyk.utility.common.Constant;
@@ -69,7 +71,8 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         }
     }
     
-    protected void checkUniqueConstraints(Identifiable<?> anIdentifiable){
+    @SuppressWarnings("unchecked")
+	protected void checkUniqueConstraints(Identifiable<?> anIdentifiable){
     	AbstractIdentifiable identifiable = (AbstractIdentifiable) anIdentifiable;
     	GlobalIdentifierPersistenceMappingConfiguration configuration = GlobalIdentifierPersistenceMappingConfiguration.get(anIdentifiable.getClass(), Boolean.FALSE);
     	if(configuration == null)
@@ -77,6 +80,16 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     	else{
     		for(Property property : configuration.getUniqueProperties())
     			checkUniqueConstraints(identifiable, property.getName());
+    	}
+    	TypedDao<AbstractIdentifiable> business = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable);
+    	if(anIdentifiable.getIdentifier()==null){
+    		if(business==null)
+    			;
+    		else
+    			exceptionUtils().duplicates((Class<AbstractIdentifiable>)identifiable.getClass(), business.readDuplicates(identifiable)
+    				, configuration==null?0l:configuration.getMaximumNumberOfDuplicateAllowed());
+    	}else{
+    		//TODO what about update
     	}
     }
     

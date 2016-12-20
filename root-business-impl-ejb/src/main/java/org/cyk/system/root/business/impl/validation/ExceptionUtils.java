@@ -2,6 +2,9 @@ package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -9,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
@@ -17,6 +21,7 @@ import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
@@ -78,8 +83,25 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     	exception("",messageId);
     }
     
+    @SuppressWarnings("unchecked")
+	public <T extends AbstractIdentifiable> void exists(T identifiable){
+    	if(identifiable==null)
+    		return;
+    	duplicates((Class<T>)identifiable.getClass(), Arrays.asList(identifiable),1l);
+    }
+    
     public void exception(Exception exception){
         exception("","exception.internal");
+    }
+    
+    public <T extends AbstractIdentifiable> void duplicates(Class<T> aClass,Collection<T> identifiables,Long maximum){
+    	if(identifiables==null || maximum==null || identifiables.isEmpty())
+    		return;
+    	Set<String> codes = new LinkedHashSet<>();
+    	for(T identifiable : identifiables)
+    		codes.add(identifiable.getCode());
+    	exception(identifiables.size() > maximum ,"exception.record.duplicate",new Object[]{inject(LanguageBusiness.class).findClassLabelText(aClass)
+    			,StringUtils.join(codes,Constant.CHARACTER_COMA.toString())});
     }
 
     /* Specialized short cuts */

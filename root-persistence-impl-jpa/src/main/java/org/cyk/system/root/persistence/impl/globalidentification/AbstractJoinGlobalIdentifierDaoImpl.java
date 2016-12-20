@@ -15,8 +15,6 @@ public abstract class AbstractJoinGlobalIdentifierDaoImpl<IDENTIFIABLE extends A
 
 	private static final long serialVersionUID = 6306356272165070761L;
 
-	protected String readByCriteria,countByCriteria;
-	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();

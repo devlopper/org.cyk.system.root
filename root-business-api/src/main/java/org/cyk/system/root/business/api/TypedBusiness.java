@@ -35,6 +35,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     
     Collection<IDENTIFIABLE> instanciateMany(List<String[]> list);
     
+    IDENTIFIABLE instanciateOne(String[] values);
     IDENTIFIABLE instanciateOneRandomly();
     IDENTIFIABLE instanciateOneRandomly(String code);
     Collection<IDENTIFIABLE> instanciateManyRandomly(Integer count);
@@ -287,4 +288,14 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	}
 	
     //TODO clone service must be implemented using reflection and listener
+	
+	/**/
+	/**
+	 * Find the duplicates of identifiable
+	 * @param identifiable
+	 * @return
+	 */
+	Collection<IDENTIFIABLE> findDuplicates(IDENTIFIABLE identifiable);
+	
+	Collection<IDENTIFIABLE> findDuplicates();
 }

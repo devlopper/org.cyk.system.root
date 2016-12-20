@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,6 +17,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
@@ -57,6 +59,7 @@ import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
@@ -469,6 +472,25 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		File file = createFile(basePackage,templateRelativeFileName, fileName);
 		
 		return create(new ReportTemplate(code,name,male,file,headerImage,backgroundImage,draftBackgroundImage));
+	}
+	
+	public <T extends AbstractIdentifiable> void createFromExcelSheet(Class<?> inputStreamResourceLocation,String woorkbookName,Class<T> aClass){
+		try {
+			ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments(inputStreamResourceLocation.getResourceAsStream(woorkbookName),aClass);
+	    	List<String[]> list = commonUtils.readExcelSheet(readExcelSheetArguments);
+	    	TypedBusiness<?> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
+	    	@SuppressWarnings("unchecked")
+			Collection<T> collection = (Collection<T>) business.instanciateMany(list);
+	    	if(collection==null){
+	    		System.out.println("Instanciate many <<"+aClass+">> has return null collection");
+	    	}else{
+	    		inject(GenericBusiness.class).create(commonUtils.castCollection(collection,AbstractIdentifiable.class));
+				System.out.println(aClass.getSimpleName()+" created : "+list.size());	
+	    	}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**/

@@ -29,8 +29,6 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.geography.CountryBusiness;
-import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
@@ -57,12 +55,14 @@ import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
+import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.Metric;
@@ -98,14 +98,12 @@ import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueSet;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
-import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeGroupDao;
 import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration;
 import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration.Property;
 import org.cyk.utility.common.AbstractMethod;
-import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
@@ -413,69 +411,23 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void geography(){
-        create(new LocalityType(null, LocalityType.CONTINENT, "Continent"));
-        create(new LocalityType(inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), LocalityType.COUNTRY, "Country"));
-        create(new LocalityType(inject(LocalityTypeDao.class).read(LocalityType.COUNTRY), LocalityType.CITY, "City"));
-        
-        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.AFRICA,"Africa"));
-        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.AMERICA,"America"));
-        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.EUROPE,"Europe"));
-        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.ASIA,"Asia"));
-        create(new Locality(null, inject(LocalityTypeDao.class).read(LocalityType.CONTINENT), Locality.AUSTRALIA,"Australia"));
-        
-        ReadExcelSheetArguments readExcelSheetArguments;
-		List<String[]> list;
-		try {
-			readExcelSheetArguments = new ReadExcelSheetArguments();
-			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("geography/countries.xls")));
-	    	readExcelSheetArguments.setSheetIndex(0);
-	    	list = commonUtils.readExcelSheet(readExcelSheetArguments);
-			inject(CountryBusiness.class).create(inject(CountryBusiness.class).instanciateMany(list));
-			
-			readExcelSheetArguments = new ReadExcelSheetArguments();
-			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("geography/cities.xls")));
-	    	readExcelSheetArguments.setSheetIndex(0);
-	    	list = commonUtils.readExcelSheet(readExcelSheetArguments);
-			inject(LocalityBusiness.class).create(inject(LocalityBusiness.class).instanciateMany(inject(LocalityTypeDao.class).read(LocalityType.CITY),list));
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        
-        create(new PhoneNumberType(PhoneNumberType.LAND, "Fixe"));
-        create(new PhoneNumberType(PhoneNumberType.MOBILE, "Mobile"));
-        
-        create(new LocationType(LocationType.HOME, "Domicile"));
-        create(new LocationType(LocationType.OFFICE, "Bureau"));
-        
+        createFromExcelSheet(LocalityType.class);
+        createFromExcelSheet(Locality.class);
+        createFromExcelSheet(Country.class);
+        createFromExcelSheet(PhoneNumberType.class);
+        createFromExcelSheet(LocationType.class);
     }
     
     private void language(){
-    	ReadExcelSheetArguments readExcelSheetArguments;
-		List<String[]> list;
-		try {
-			readExcelSheetArguments = new ReadExcelSheetArguments();
-			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(getClass().getResourceAsStream("language/languages.xls")));
-	    	readExcelSheetArguments.setSheetIndex(0);
-	    	list = commonUtils.readExcelSheet(readExcelSheetArguments);
-			inject(LanguageBusiness.class).create(inject(LanguageBusiness.class).instanciateMany(list));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	createFromExcelSheet(Language.class);
     }
     
     private void event(){ 
-    	/*create(new EventType(EventType.ANNIVERSARY, "Anniversaire", null));
-    	create(new EventType(EventType.APPOINTMENT, "Rendez vous", null));
-        create(new EventType(EventType.MEETING, "Reunion", null));
-        create(new EventType(EventType.REMINDER, "Rappel", null));
-        */
         notificationTemplate(NotificationTemplate.ALARM_USER_INTERFACE,"Alarm User Interface Notification Template","alarmUITitle.txt","alarmUIMessage.html");
         notificationTemplate(NotificationTemplate.ALARM_EMAIL,"Alarm Email Notification Template","alarmEmailTitle.txt","alarmEmailMessage.html");
         notificationTemplate(NotificationTemplate.ALARM_SMS,"Alarm Sms Notification Template","alarmSmsTitle.txt","alarmSmsMessage.html");
         
-        createEnumeration(EventMissedReason.class,EventMissedReason.DISEASE, "Maladie");
-        createEnumeration(EventMissedReason.class,EventMissedReason.LATE, "Retard");
+        createFromExcelSheet(EventMissedReason.class);
     }
     
     private void notificationTemplate(String code,String name,String titleFileFolder,String titleFileName,String bodyFileFolder,String bodyFileName){
@@ -508,6 +460,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         create(new TimeDivisionType(TimeDivisionType.SEMESTER, "Semestre",DateTimeConstants.MILLIS_PER_DAY*30*6l, Boolean.TRUE));
         create(new TimeDivisionType(TimeDivisionType.YEAR, "Année",DateTimeConstants.MILLIS_PER_DAY*30*12l,Boolean.TRUE));
         
+        createFromExcelSheet(TimeDivisionType.class);
     }
     
     private void party(){

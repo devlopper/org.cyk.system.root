@@ -51,8 +51,8 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	}
 	
 	@Override
-	public Interval instanciateOne(String[] values,InstanciateOneListener listener) {
-		Interval interval = super.instanciateOne(values, listener);
+	public Interval instanciateOne(String[] values) {
+		Interval interval = super.instanciateOne(values);
 		interval.getLow().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 2)));
 		interval.getHigh().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 3)));
 		return interval;

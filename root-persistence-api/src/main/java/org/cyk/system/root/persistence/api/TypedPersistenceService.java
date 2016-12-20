@@ -27,5 +27,11 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
     
     void executeDelete(Collection<IDENTIFIABLE> identifiables);
     
+    /**/
     
+    Collection<IDENTIFIABLE> readDuplicates();
+    Long countDuplicates();
+    
+    Collection<IDENTIFIABLE> readDuplicates(IDENTIFIABLE identifiable);
+
 }

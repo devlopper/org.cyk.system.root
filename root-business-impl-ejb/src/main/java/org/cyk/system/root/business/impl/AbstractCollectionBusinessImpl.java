@@ -21,8 +21,8 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		super(dao); 
 	}
 	
-	protected ITEM instanciateOneItem(String[] values,InstanciateOneListener listener){
-		return getItemBusiness().instanciateOne(values,listener);
+	protected ITEM instanciateOneItem(String[] values){
+		return getItemBusiness().instanciateOne(values);
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -30,7 +30,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		COLLECTION collection = instanciateOne(code,name);
 		collection.setItemCodeSeparator(Constant.CHARACTER_UNDESCORE.toString());
 		for(String[] v : items){
-			ITEM item = instanciateOneItem(v,null);
+			ITEM item = instanciateOneItem(v);
 			item.setCollection(collection);
 			collection.add(item);
 		}
@@ -43,7 +43,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		//if(collection.getItemCodeSeparator()==null)
 			collection.setItemCodeSeparator(Constant.CHARACTER_UNDESCORE.toString());
 		for(String v : items){
-			ITEM item = instanciateOneItem(new String[]{v},null);
+			ITEM item = instanciateOneItem(new String[]{null,v});
 			item.setCollection(collection);
 			collection.add(item);
 		}

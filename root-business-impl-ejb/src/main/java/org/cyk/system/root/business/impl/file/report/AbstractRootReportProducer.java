@@ -112,6 +112,11 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String metricCollectionCode,String defaultValue){
 		MetricCollection metricCollection = inject(MetricCollectionDao.class).read(metricCollectionCode);
+		/*System.out.println("AbstractRootReportProducer.addMetricsLabelValueCollection() "+metricCollectionCode+" : found = "+(metricCollection!=null));
+		if(metricCollection==null){
+			for(MetricCollection mc : inject(MetricCollectionDao.class).readAll())
+				System.out.println(mc.getCode());
+		}*/
 		MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria();
 		searchCriteria.addIdentifiableGlobalIdentifier(identifiable).addMetricCollectionType(metricCollection.getType());
 		Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = inject(MetricCollectionIdentifiableGlobalIdentifierDao.class)
