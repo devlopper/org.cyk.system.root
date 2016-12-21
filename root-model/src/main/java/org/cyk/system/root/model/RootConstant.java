@@ -46,6 +46,73 @@ public interface RootConstant {
 		
 		/**/
 		
+		public static class Sex implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String MALE = "MALE";
+			public static String FEMALE = "FEMALE";
+			
+		}
+		
+		public static class MaritalStatus implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String BACHELOR = "BACHELOR";
+			public static String MARRIED = "MARRIED";
+			
+		}
+		
+		public static class JobFunction implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			
+		}
+		
+		public static class JobTitle implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			
+		}
+		
+		public static class PersonTitle implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String MISTER = "MISTER";
+			public static String MADAM = "MADAM";
+			public static String MISS = "MISS";
+			public static String DOCTOR = "DOCTOR";
+		}
+		
+		public static class FileRepresentationType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String IDENTITY_IMAGE = "IDENTITY_IMAGE";
+			public static String IDENTITY_DOCUMENT = "IDENTITY_DOCUMENT";
+			public static String REPORT_BACKGROUND_IMAGE = "REPORT_BACKGROUND_IMAGE";
+			
+		}
+		
+		public static class PersonRelationshipTypeGroup implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String FAMILY = "FAMILY";
+			public static String SOCIETY = "SOCIETY";
+			
+		}
+		
+		public static class PersonRelationshipType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String FAMILY_FATHER = generate(PersonRelationshipTypeGroup.FAMILY,"FATHER");
+			public static String FAMILY_MOTHER = generate(PersonRelationshipTypeGroup.FAMILY,"MOTHER");
+			
+			public static String SOCIETY_TO_CONTACT_IN_EMERGENCY_CASE = generate(PersonRelationshipTypeGroup.SOCIETY,"TOCONTACTINEMERGENCYCASE");
+			public static String SOCIETY_DOCTOR = generate(PersonRelationshipTypeGroup.SOCIETY,"DOCTOR");
+			
+		}
+		
+		/**/
+		
 		public static class TimeDivisionType implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
@@ -55,6 +122,23 @@ public interface RootConstant {
 			public static String TRIMESTER = "TRIMESTER";
 			public static String SEMESTER = "SEMESTER";
 			public static String YEAR = "YEAR";
+		}
+		
+		public static class BusinessServiceCollection implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String EVENT = "EVENT";
+			public static String FILE = "FILE";
+			public static String GEOGRAPHY = "GEOGRAPHY";
+			public static String INFORMATION = "INFORMATION";
+			public static String LANGUAGE = "LANGUAGE";
+			public static String MATHEMATICS = "MATHEMATICS";
+			public static String MESSAGE = "MESSAGE";
+			public static String NETWORK = "NETWORK";
+			public static String PARTY = "PARTY";
+			public static String TREE = "TREE";
+			public static String SECURITY = "SECURITY";
+			public static String TIME = "TIME";
 		}
 		
 		public static class MetricCollectionType implements Serializable {
@@ -98,6 +182,14 @@ public interface RootConstant {
 			private static final long serialVersionUID = 1L;
 			
 			public static String NOT_ASSESSED = "NA";
+			
+			
+		}
+		
+		public static class SmtpProperties implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String DEFAULT = "DEFAULT";
 			
 			
 		}

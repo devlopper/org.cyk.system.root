@@ -13,6 +13,7 @@ import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.generator.StringGenerator;
+import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.cdi.AbstractBean;
 
 public abstract class AbstractBusinessServiceImpl extends AbstractBean implements BusinessService, Serializable {
@@ -59,6 +60,10 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		if(callArguments!=null && callArguments.getExecutionProgress()!=null){
 			callArguments.getExecutionProgress().clear();
 		}
+	}
+	
+	protected <T extends AbstractIdentifiable> T read(Class<T> aClass,String code){
+		return inject(GenericDao.class).read(aClass, code);
 	}
 	
 	

@@ -65,6 +65,15 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 			return new Object[]{file.getRepresentationType()};
 		return super.getPropertyValueTokens(file, name);
 	}
+	
+	/*@Override
+	public File instanciateOne(String[] values) {
+		File file = instanciateOne();
+		Integer index = 0;
+		file.setCode(values[index++]);
+		process(file, bytes, values[index++], Boolean.TRUE);
+		return file;
+	}*/
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<File> findByFileIdentifiableGlobalIdentifierSearchCriteria(SearchCriteria searchCriteria) {

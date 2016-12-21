@@ -1,14 +1,13 @@
 package org.cyk.system.root.business.impl.time;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.time.TimeDivisionTypeBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.time.TimeDivisionType;
+import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.persistence.api.time.TimeDivisionTypeDao;
 
 public class TimeDivisionTypeBusinessImpl extends AbstractEnumerationBusinessImpl<TimeDivisionType, TimeDivisionTypeDao> implements TimeDivisionTypeBusiness,Serializable {
@@ -21,13 +20,11 @@ public class TimeDivisionTypeBusinessImpl extends AbstractEnumerationBusinessImp
 	}
 
 	@Override
-	public BigDecimal convertToDivisionDuration(TimeDivisionType timeDivisionType, Long millisecond) {
-		return new BigDecimal(millisecond).divide(new BigDecimal(timeDivisionType.getDuration()),RoundingMode.HALF_DOWN);
+	public TimeDivisionType instanciateOne(String[] values) {
+		TimeDivisionType timeDivisionType = super.instanciateOne(values);
+		Integer index = 10;
+		timeDivisionType.setMeasure(read(Measure.class, values[index++]));
+		return timeDivisionType;
 	}
-
-	@Override
-	public Long convertToMillisecond(TimeDivisionType timeDivisionType,BigDecimal duration) {
-		return duration.multiply(new BigDecimal(timeDivisionType.getDuration())).longValue();
-	}   
 	
 }

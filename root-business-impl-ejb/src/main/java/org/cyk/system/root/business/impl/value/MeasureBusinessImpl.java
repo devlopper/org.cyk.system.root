@@ -11,6 +11,7 @@ import org.cyk.system.root.business.api.value.MeasureBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.persistence.api.value.MeasureDao;
+import org.cyk.system.root.persistence.api.value.MeasureTypeDao;
 
 public class MeasureBusinessImpl extends AbstractEnumerationBusinessImpl<Measure, MeasureDao> implements MeasureBusiness,Serializable {
 
@@ -19,6 +20,15 @@ public class MeasureBusinessImpl extends AbstractEnumerationBusinessImpl<Measure
 	@Inject
 	public MeasureBusinessImpl(MeasureDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	public Measure instanciateOne(String[] values) {
+		Measure measure = super.instanciateOne(values);
+		Integer index = 10;
+		measure.setType(inject(MeasureTypeDao.class).read(values[index++]));
+		measure.setValue(commonUtils.getBigDecimal(values[index++]));
+		return measure;
 	}
 
 	@Override

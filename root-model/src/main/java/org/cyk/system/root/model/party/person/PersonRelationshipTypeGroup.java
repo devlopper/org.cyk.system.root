@@ -17,9 +17,6 @@ import org.cyk.utility.common.annotation.ModelBean.GenderType;
 public class PersonRelationshipTypeGroup extends AbstractDataTreeType implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
-
-	public static final String FAMILY = "FAMILY";
-	public static final String SOCIETY = "SOCIETY";
 	
 	public PersonRelationshipTypeGroup(PersonRelationshipTypeGroup parent, String code,String name) {
 		super(parent, code,name);

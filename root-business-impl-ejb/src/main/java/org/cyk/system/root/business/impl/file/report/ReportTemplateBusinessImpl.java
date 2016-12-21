@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.file.report.ReportTemplateBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 
@@ -17,5 +18,17 @@ public class ReportTemplateBusinessImpl extends AbstractEnumerationBusinessImpl<
 	public ReportTemplateBusinessImpl(ReportTemplateDao dao) {
 		super(dao); 
 	}   
+
+	@Override
+	public ReportTemplate instanciateOne(String[] values) {
+		ReportTemplate reportTemplate = super.instanciateOne(values);
+		Integer index = 10;
+		reportTemplate.setTemplate(read(File.class, values[index++]));
+		reportTemplate.setHeaderImage(read(File.class, values[index++]));
+		reportTemplate.setFooterImage(read(File.class, values[index++]));
+		reportTemplate.setBackgroundImage(read(File.class, values[index++]));
+		reportTemplate.setDraftBackgroundImage(read(File.class, values[index++]));
+		return reportTemplate;
+	}
 	
 }

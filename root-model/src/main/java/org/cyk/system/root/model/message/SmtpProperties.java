@@ -20,8 +20,6 @@ import lombok.Setter;
 public class SmtpProperties extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -5516162693913912313L;
-
-	public static final String DEFAULT = "default";
 	
 	@Column(name="csender",nullable=false) @NotNull  @Email
 	private String from;

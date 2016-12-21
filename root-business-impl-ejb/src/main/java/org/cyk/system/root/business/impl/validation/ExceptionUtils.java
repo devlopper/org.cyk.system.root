@@ -100,6 +100,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     	Set<String> codes = new LinkedHashSet<>();
     	for(T identifiable : identifiables)
     		codes.add(identifiable.getCode());
+    	logTrace("Duplicates : {} , maximum : {}", identifiables,maximum);
     	exception(identifiables.size() > maximum ,"exception.record.duplicate",new Object[]{inject(LanguageBusiness.class).findClassLabelText(aClass)
     			,StringUtils.join(codes,Constant.CHARACTER_COMA.toString())});
     }

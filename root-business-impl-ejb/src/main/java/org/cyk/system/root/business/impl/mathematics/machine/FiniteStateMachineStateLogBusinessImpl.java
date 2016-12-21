@@ -16,12 +16,12 @@ import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineSt
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.IdentifiablesSearchCriteria;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineStateLog.SearchCriteria;
-import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateLogDao;
 import org.cyk.utility.common.ListenerUtils;
 import org.joda.time.DateTime;
@@ -121,11 +121,9 @@ public class FiniteStateMachineStateLogBusinessImpl extends AbstractTypedBusines
 			if(StringUtils.isBlank(searchCriteria.getTimeDivisionTypeCode())){
 				date = dateTime.toDate();
 			}else{
-				switch(searchCriteria.getTimeDivisionTypeCode()){
-				case TimeDivisionType.DAY:
+				if(RootConstant.Code.TimeDivisionType.DAY.equals(searchCriteria.getTimeDivisionTypeCode())){
 					date = dateTime.withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate();
-					break;
-				}	
+				}
 			}
 			finiteStateMachineStateLog.setDate(date);
 		}

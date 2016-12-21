@@ -10,11 +10,11 @@ import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeBusiness;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
@@ -37,7 +37,8 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	create(inject(PersonBusiness.class).instanciateManyRandomly(codes));
     	
     	PersonRelationship personRelationship1;
-    	create( personRelationship1 = new PersonRelationship(inject(PersonBusiness.class).find(p1),inject(PersonRelationshipTypeBusiness.class).find(PersonRelationshipType.FAMILY_FATHER)
+    	create( personRelationship1 = new PersonRelationship(inject(PersonBusiness.class).find(p1),inject(PersonRelationshipTypeBusiness.class)
+    			.find(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER)
     			,inject(PersonBusiness.class).find(p2)));
     	
     	delete(personRelationship1);
@@ -51,12 +52,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	son.setLastnames("Yao Christian");
     	son.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "stud@gmail.com"));
     	
-    	Person father = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_FATHER).getPerson1();
+    	Person father = inject(PersonBusiness.class).addRelationship(son, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER).getPerson1();
     	father.setName("KOMENAN");
     	father.setLastnames("N'Dri Jean");
     	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "dad@gmail.com"));
     	
-    	Person mother = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_MOTHER).getPerson1();
+    	Person mother = inject(PersonBusiness.class).addRelationship(son, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER).getPerson1();
     	mother.setName("komenan");
     	mother.setLastnames("Ahou odette");
     	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "mom@gmail.com"));
@@ -65,12 +66,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	
     	assertThat("P001 exists", (son=inject(PersonBusiness.class).find("P001"))!=null);
     	Collection<PersonRelationship> fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_FATHER));
+    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER));
     	assertEquals("Number of father", 1, fathers.size());
     	father = fathers.iterator().next().getPerson1();
     	
     	Collection<PersonRelationship> mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_MOTHER));
+    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER));
     	assertEquals("Number of mother", 1, mothers.size());
     	mother = mothers.iterator().next().getPerson1();
     	
@@ -90,12 +91,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	Person son = inject(PersonBusiness.class).instanciateOne(),father,mother;
     	son.setName("Komenan");
     	son.setLastnames("Yao Christian");
-    	inject(ElectronicMailBusiness.class).setAddress(son, PersonRelationshipType.FAMILY_FATHER, "f@m.com");
-    	inject(ElectronicMailBusiness.class).setAddress(son, PersonRelationshipType.FAMILY_MOTHER, "mom@c.com");
+    	inject(ElectronicMailBusiness.class).setAddress(son, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER, "f@m.com");
+    	inject(ElectronicMailBusiness.class).setAddress(son, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER, "mom@c.com");
     	create(son);
     	assertEquals(electronicMailCountBeforeCreateSon+2, inject(ElectronicMailDao.class).countAll());
-    	father = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son, PersonRelationshipType.FAMILY_FATHER);
-    	mother = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son, PersonRelationshipType.FAMILY_MOTHER);
+    	father = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER);
+    	mother = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER);
     	
     	String sonCode = son.getCode(),fatherCode = father.getCode(),motherCode = mother.getCode();
     	rootBusinessTestHelper.assertCodeExists(Person.class, sonCode);
@@ -103,12 +104,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	rootBusinessTestHelper.assertCodeExists(Person.class, motherCode);
     	
     	Collection<PersonRelationship> fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_FATHER));
+    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER));
     	assertEquals("Number of father", 1, fathers.size());
     	father = fathers.iterator().next().getPerson1();
     	
     	Collection<PersonRelationship> mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_MOTHER));
+    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER));
     	assertEquals("Number of mother", 1, mothers.size());
     	mother = mothers.iterator().next().getPerson1();
     	
@@ -128,12 +129,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	update(son,Arrays.asList(father,mother));
     	assertEquals(electronicMailCountBeforeCreateSon+2, inject(ElectronicMailDao.class).countAll());
     	fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_FATHER));
+    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER));
     	assertEquals("Number of father", 1, fathers.size());
     	father = fathers.iterator().next().getPerson1();
     	
     	mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_MOTHER));
+    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER));
     	assertEquals("Number of mother", 1, mothers.size());
     	mother = mothers.iterator().next().getPerson1();
     	
@@ -177,12 +178,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	Person son1 = inject(PersonBusiness.class).instanciateOne(),father,mother;
     	son1.setName("Komenan");
     	son1.setLastnames("Yao Christian");
-    	inject(ElectronicMailBusiness.class).setAddress(son1, PersonRelationshipType.FAMILY_FATHER, "fn2@m.com");
-    	inject(ElectronicMailBusiness.class).setAddress(son1, PersonRelationshipType.FAMILY_MOTHER, "momn2@c.com");
+    	inject(ElectronicMailBusiness.class).setAddress(son1, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER, "fn2@m.com");
+    	inject(ElectronicMailBusiness.class).setAddress(son1, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER, "momn2@c.com");
     	create(son1);
     	assertEquals(electronicMailCountBeforeCreateSon+2, inject(ElectronicMailDao.class).countAll());
-    	father = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son1, PersonRelationshipType.FAMILY_FATHER);
-    	mother = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son1, PersonRelationshipType.FAMILY_MOTHER);
+    	father = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son1, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER);
+    	mother = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son1, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER);
     	
     	String son1Code = son1.getCode(),fatherCode = father.getCode(),motherCode = mother.getCode();
     	rootBusinessTestHelper.assertCodeExists(Person.class, son1Code);
@@ -190,12 +191,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	rootBusinessTestHelper.assertCodeExists(Person.class, motherCode);
     	
     	Collection<PersonRelationship> fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son1,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_FATHER));
+    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER));
     	assertEquals("Number of father", 1, fathers.size());
     	father = fathers.iterator().next().getPerson1();
     	
     	Collection<PersonRelationship> mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son1,inject(PersonRelationshipTypeDao.class)
-    			.read(PersonRelationshipType.FAMILY_MOTHER));
+    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER));
     	assertEquals("Number of mother", 1, mothers.size());
     	mother = mothers.iterator().next().getPerson1();
     	
@@ -209,23 +210,23 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	Person son2 = inject(PersonBusiness.class).instanciateOne();
     	son2.setName("Komenan");
     	son2.setLastnames("Emmanuel");
-    	inject(ElectronicMailBusiness.class).setAddress(son2, PersonRelationshipType.FAMILY_FATHER, "fn2@m.com");
-    	inject(ElectronicMailBusiness.class).setAddress(son2, PersonRelationshipType.FAMILY_MOTHER, "momn2@c.com");
+    	inject(ElectronicMailBusiness.class).setAddress(son2, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER, "fn2@m.com");
+    	inject(ElectronicMailBusiness.class).setAddress(son2, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER, "momn2@c.com");
     	create(son2);
     	assertEquals(electronicMailCountBeforeCreateSon+2, inject(ElectronicMailDao.class).countAll());
-    	father = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son2, PersonRelationshipType.FAMILY_FATHER);
-    	mother = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son2, PersonRelationshipType.FAMILY_MOTHER);
+    	father = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son2, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER);
+    	mother = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son2, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER);
     	
     	String son2Code = son2.getCode();
     	rootBusinessTestHelper.assertCodeExists(Person.class, son2Code);
     	rootBusinessTestHelper.assertCodeExists(Person.class, fatherCode);
     	rootBusinessTestHelper.assertCodeExists(Person.class, motherCode);
     	
-    	fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son2,inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_FATHER));
+    	fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son2,inject(PersonRelationshipTypeDao.class).read(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER));
     	assertEquals("Number of father", 1, fathers.size());
     	father = fathers.iterator().next().getPerson1();
     	
-    	mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son2,inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_MOTHER));
+    	mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son2,inject(PersonRelationshipTypeDao.class).read(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER));
     	assertEquals("Number of mother", 1, mothers.size());
     	mother = mothers.iterator().next().getPerson1();
     	
@@ -239,23 +240,23 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	Person son3 = inject(PersonBusiness.class).instanciateOne();
     	son3.setName("Komenan");
     	son3.setLastnames("Agathe");
-    	inject(ElectronicMailBusiness.class).setAddress(son3, PersonRelationshipType.FAMILY_FATHER, "fn2@m.com");
-    	inject(ElectronicMailBusiness.class).setAddress(son3, PersonRelationshipType.FAMILY_MOTHER, "mom3@c.com");
+    	inject(ElectronicMailBusiness.class).setAddress(son3, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER, "fn2@m.com");
+    	inject(ElectronicMailBusiness.class).setAddress(son3, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER, "mom3@c.com");
     	create(son3);
     	assertEquals(electronicMailCountBeforeCreateSon+3, inject(ElectronicMailDao.class).countAll());
-    	father = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son3, PersonRelationshipType.FAMILY_FATHER);
-    	mother = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son3, PersonRelationshipType.FAMILY_MOTHER);
+    	father = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son3, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER);
+    	mother = inject(PersonBusiness.class).findOneByPersonByRelationshipType(son3, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER);
     	
     	String son3Code = son3.getCode();
     	rootBusinessTestHelper.assertCodeExists(Person.class, son3Code);
     	rootBusinessTestHelper.assertCodeExists(Person.class, fatherCode);
     	rootBusinessTestHelper.assertCodeExists(Person.class, motherCode);
     	
-    	fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son3,inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_FATHER));
+    	fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son3,inject(PersonRelationshipTypeDao.class).read(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER));
     	assertEquals("Number of father", 1, fathers.size());
     	father = fathers.iterator().next().getPerson1();
     	
-    	mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son3,inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_MOTHER));
+    	mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son3,inject(PersonRelationshipTypeDao.class).read(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER));
     	assertEquals("Number of mother", 1, mothers.size());
     	mother = mothers.iterator().next().getPerson1();
     	

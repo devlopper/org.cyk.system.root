@@ -26,6 +26,7 @@ import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
@@ -90,7 +91,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					collection.add(((AbstractIdentifiable)token).getCode());
 				else
 					collection.add(token.toString());	
-		return StringUtils.join(collection, Constant.CHARACTER_UNDESCORE);
+		return RootConstant.Code.generate(collection.toArray()); //StringUtils.join(collection, Constant.CHARACTER_UNDESCORE);
 	}
 	
 	protected String generateName(Object...tokens){

@@ -13,10 +13,15 @@ public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifia
 	/*-------------------------------------------------------------------------------------------*/
 	
 	 @Override
-	    public AbstractIdentifiable refresh(AbstractIdentifiable identifiable) {
-	     entityManager.refresh(identifiable);   
-	     return identifiable;
-	    }
+    public AbstractIdentifiable refresh(AbstractIdentifiable identifiable) {
+     entityManager.refresh(identifiable);   
+     return identifiable;
+    }
+	 
+	 @Override
+	public <T extends AbstractIdentifiable> T read(Class<T> aClass, String code) {
+		return inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code);
+	}
 	
 	/*--------------------------------------------------------------------------------------------*/
 	

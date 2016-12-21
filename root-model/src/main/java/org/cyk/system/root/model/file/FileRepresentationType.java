@@ -18,10 +18,6 @@ public class FileRepresentationType extends AbstractEnumeration implements Seria
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	public static final String IDENTITY_IMAGE = "IDENTITY_IMAGE";
-	public static final String IDENTITY_DOCUMENT = "IDENTITY_DOCUMENT";
-	public static final String REPORT_BACKGROUND_IMAGE = "REPORT_BACKGROUND_IMAGE";
-	
 	public FileRepresentationType(String code, String libelle, String description) {
 		super(code, libelle,null, description);
 	}

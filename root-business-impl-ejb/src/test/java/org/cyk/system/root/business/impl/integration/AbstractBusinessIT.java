@@ -19,9 +19,6 @@ import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.message.SmtpProperties;
-import org.cyk.system.root.model.security.Credentials;
-import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.utility.common.ObjectFieldValues;
@@ -164,13 +161,6 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     
     protected void installApplication(){
     	RootBusinessLayer.getInstance().installApplication();
-    	SmtpProperties smtpProperties = inject(SmtpPropertiesDao.class).read(SmtpProperties.DEFAULT);
-    	smtpProperties.setFrom("kycdev@gmail.com");
-    	smtpProperties.setCredentials(new Credentials("kycdev@gmail.com", "p@ssw0rd*"));
-    	smtpProperties.setHost("smtp.gmail.com");
-    	smtpProperties.setPort(465);
-		smtpProperties.getSocketFactory().setPort(465);
-		update(smtpProperties);
     }
     
     protected void assertEquals(Object actual,ObjectFieldValues expected){

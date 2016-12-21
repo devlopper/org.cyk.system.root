@@ -22,6 +22,7 @@ public class ReportTemplate extends AbstractEnumeration implements Serializable 
 
 	@ManyToOne private File template;
 	@ManyToOne private File headerImage;
+	@ManyToOne private File footerImage;
 	@ManyToOne private File backgroundImage;
 	
 	@ManyToOne private File draftBackgroundImage;

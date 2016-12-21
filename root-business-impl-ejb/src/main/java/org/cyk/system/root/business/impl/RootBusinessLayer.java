@@ -3,7 +3,6 @@ package org.cyk.system.root.business.impl;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -69,7 +68,6 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.message.SmtpProperties;
-import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
@@ -88,7 +86,6 @@ import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.security.BusinessServiceCollection;
-import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.value.Measure;
@@ -100,7 +97,6 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
-import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeGroupDao;
 import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration;
 import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration.Property;
 import org.cyk.utility.common.AbstractMethod;
@@ -109,7 +105,6 @@ import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.computation.DataReadConfiguration;
-import org.joda.time.DateTimeConstants;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -375,7 +370,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		UniformResourceLocator.Builder.Listener.COLLECTION.add(UniformResourceLocatorBuilderAdapter.DEFAULT);
 		TypedBusiness.CreateReportFileArguments.Builder.Listener.COLLECTION.add(new CreateReportFileArgumentsAdapter());
 		
-		defaultSmtpProperties = inject(SmtpPropertiesDao.class).read(SmtpProperties.DEFAULT);
+		defaultSmtpProperties = inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT);
     }
     
     public GenericBusiness getGenericBusiness(){
@@ -391,13 +386,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	return inject(RootReportRepository.class);
     }
     
-    /*@Override
-    protected RootReportProducer getReportProducer() {
-    	return inject(RootReportProducer.class);
-    }*/
-    
     @Override
-    protected void persistData() {
+    protected void persistStructureData() {
+    	super.persistStructureData();
+    	values();
     	geography();
         event();
         time();
@@ -407,7 +399,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         file();
         message();
         mathematics();
-        values();
     }
     
     private void geography(){
@@ -448,112 +439,48 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void file(){ 
-    	createEnumeration(FileRepresentationType.class,FileRepresentationType.IDENTITY_IMAGE);
-        createEnumeration(FileRepresentationType.class,FileRepresentationType.IDENTITY_DOCUMENT);
+    	createFromExcelSheet(FileRepresentationType.class);
     }
     
     private void time(){ 
-    	create(new TimeDivisionType(TimeDivisionType.DAY, "Jour",DateTimeConstants.MILLIS_PER_DAY*1l ,Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.WEEK, "Semaine",DateTimeConstants.MILLIS_PER_DAY*7l, Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.MONTH, "Mois",DateTimeConstants.MILLIS_PER_DAY*30l, Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.TRIMESTER, "Trimestre",DateTimeConstants.MILLIS_PER_DAY*30*3l, Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.SEMESTER, "Semestre",DateTimeConstants.MILLIS_PER_DAY*30*6l, Boolean.TRUE));
-        create(new TimeDivisionType(TimeDivisionType.YEAR, "Année",DateTimeConstants.MILLIS_PER_DAY*30*12l,Boolean.TRUE));
-        
-        createFromExcelSheet(TimeDivisionType.class);
+    	createFromExcelSheet(TimeDivisionType.class);
     }
     
     private void party(){
-    	createEnumeration(Sex.class,Sex.MALE, "Masculin");
-    	createEnumeration(Sex.class,Sex.FEMALE, "Féminin");
-    	createEnumeration(MaritalStatus.class,"B", "Célibataire");
-    	createEnumeration(MaritalStatus.class,"M", "Marié");
-        
-        createEnumeration(JobFunction.class,"DJ","Développeur Java");
-        createEnumeration(JobFunction.class,"RV","Responsable des ventes");
-        createEnumeration(JobFunction.class,"CP","Chargé des projets");
-        
-        createEnumeration(JobTitle.class,"Directeur");
-        createEnumeration(JobTitle.class,"Manager");
-        createEnumeration(JobTitle.class,"Conseiller");
-           
-        createEnumeration(PersonTitle.class,PersonTitle.MISTER, "Mr");
-        createEnumeration(PersonTitle.class,PersonTitle.MISS, "Ms");
-        createEnumeration(PersonTitle.class,PersonTitle.MADAM, "Mme");
-        createEnumeration(PersonTitle.class,PersonTitle.DOCTOR, "Dr");
-        
-        createEnumeration(BloodGroup.class,"A");
-        createEnumeration(BloodGroup.class,"B");
-        createEnumeration(BloodGroup.class,"AB");
-        createEnumeration(BloodGroup.class,"O");
-        
-        createEnumeration(Allergy.class,"FOOD");
-        createEnumeration(Allergy.class,"INSECT");
-        createEnumeration(Allergy.class,"MEDICINE");
-     
-        createEnumeration(Medication.class,"Acetaminophen");
-        createEnumeration(Medication.class,"Adderall");
-        createEnumeration(Medication.class,"Alprazolam");
-        
-        createEnumeration(PersonRelationshipTypeGroup.class,PersonRelationshipTypeGroup.FAMILY);
-        createEnumeration(PersonRelationshipTypeGroup.class,PersonRelationshipTypeGroup.SOCIETY);
-        
-        create(new PersonRelationshipType(null, inject(PersonRelationshipTypeGroupDao.class).read(PersonRelationshipTypeGroup.FAMILY), PersonRelationshipType.FAMILY_FATHER,"Père"));
-        create(new PersonRelationshipType(null, inject(PersonRelationshipTypeGroupDao.class).read(PersonRelationshipTypeGroup.FAMILY), PersonRelationshipType.FAMILY_MOTHER,"Mère"));
-        
-        create(new PersonRelationshipType(null, inject(PersonRelationshipTypeGroupDao.class).read(PersonRelationshipTypeGroup.SOCIETY)
-        		, PersonRelationshipType.SOCIETY_DOCTOR,"Docteur"));
-        create(new PersonRelationshipType(null, inject(PersonRelationshipTypeGroupDao.class).read(PersonRelationshipTypeGroup.SOCIETY)
-        		, PersonRelationshipType.SOCIETY_TO_CONTACT_IN_EMERGENCY_CASE,"Personne à contacter en cas d'urgence"));
+    	createFromExcelSheet(Sex.class);
+    	createFromExcelSheet(MaritalStatus.class);
+    	createFromExcelSheet(JobFunction.class);
+    	createFromExcelSheet(JobTitle.class);
+    	createFromExcelSheet(PersonTitle.class);
+    	createFromExcelSheet(BloodGroup.class);
+    	createFromExcelSheet(Allergy.class);
+    	createFromExcelSheet(Medication.class);
+    	createFromExcelSheet(PersonRelationshipTypeGroup.class);
+    	createFromExcelSheet(PersonRelationshipType.class);
     }
     
     private void security(){ 
-    	//Permission licenceRead = createPermission(permissionBusiness.computeCode(License.class, Crud.READ));
-    	
     	createRole(Role.ADMINISTRATOR, "Administrator");
     	createRole(Role.MANAGER, "Manager");
         createRole(Role.SETTING_MANAGER, "Setting Manager");
         createRole(Role.SECURITY_MANAGER, "Security Manager");
         createRole(Role.USER, "User",SHIRO_PRIVATE_FOLDER);
         
-        for(String code : new String[]{BusinessServiceCollection.EVENT,BusinessServiceCollection.FILE,BusinessServiceCollection.GEOGRAPHY
-        		,BusinessServiceCollection.INFORMATION,BusinessServiceCollection.LANGUAGE,BusinessServiceCollection.MATHEMATICS,BusinessServiceCollection.MESSAGE
-        		,BusinessServiceCollection.NETWORK,BusinessServiceCollection.PARTY,BusinessServiceCollection.SECURITY,BusinessServiceCollection.TIME
-        		,BusinessServiceCollection.TREE})
-        	createEnumeration(BusinessServiceCollection.class,code);
+        createFromExcelSheet(BusinessServiceCollection.class);
     }
     
     private void message(){ 
-    	SmtpProperties smtpProperties = new SmtpProperties();
-    	smtpProperties.setCode(SmtpProperties.DEFAULT);
-    	smtpProperties.setFrom(PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT,SmtpProperties.FIELD_FROM, "yoursender@email.here"));
-    	smtpProperties.setCredentials(new Credentials(PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT
-    			,commonUtils.attributePath(SmtpProperties.FIELD_CREDENTIALS,Credentials.FIELD_USERNAME), "yourusername")
-    			,PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT
-    			,commonUtils.attributePath(SmtpProperties.FIELD_CREDENTIALS,Credentials.FIELD_PASSWORD), "yourpassword") ));
-    	smtpProperties.setHost(PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT,SmtpProperties.FIELD_HOST, "yourhost"));
-    	smtpProperties.setPort(PersistDataListener.Adapter.process(SmtpProperties.class, SmtpProperties.DEFAULT,SmtpProperties.FIELD_PORT, -9999));
-    	
-		smtpProperties.setSocketFactory(new SmtpSocketFactory());
-		smtpProperties.getSocketFactory().setClazz("javax.net.ssl.SSLSocketFactory");
-		smtpProperties.getSocketFactory().setFallback(Boolean.FALSE);
-		smtpProperties.getSocketFactory().setPort(-9999);
-		smtpProperties.setAuthenticated(Boolean.TRUE);
-		
-    	create(smtpProperties);
+    	createFromExcelSheet(SmtpProperties.class);
     }
     
     private void mathematics(){ 
-    	createEnumerations(MetricCollectionType.class,RootConstant.Code.MetricCollectionType.ATTENDANCE,RootConstant.Code.MetricCollectionType.BEHAVIOUR
-    			,RootConstant.Code.MetricCollectionType.COMMUNICATION);
-    	
+    	createFromExcelSheet(MetricCollectionType.class);
     }
     
     private void values(){ 
-    	createEnumerations(MeasureType.class,RootConstant.Code.MeasureType.DISTANCE,RootConstant.Code.MeasureType.TIME);
-    	create(new Measure(RootConstant.Code.Measure.TIME_DAY,"jour",getEnumeration(MeasureType.class,RootConstant.Code.MeasureType.TIME)
-    			,new BigDecimal(DateTimeConstants.MILLIS_PER_DAY)));
-    	create(new NullString(RootConstant.Code.NullString.NOT_ASSESSED,"Not assessed"));
+    	createFromExcelSheet(MeasureType.class);
+    	createFromExcelSheet(Measure.class);
+    	createFromExcelSheet(NullString.class);
     }
     
     @Override
@@ -565,7 +492,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	RemoteEndPoint.USER_INTERFACE.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_USER_INTERFACE);
     	RemoteEndPoint.MAIL_SERVER.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_EMAIL);
     	RemoteEndPoint.PHONE.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_SMS);
-    	setDefaultSmtpProperties(inject(SmtpPropertiesDao.class).read(SmtpProperties.DEFAULT));
+    	setDefaultSmtpProperties(inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT));
     }
     
     public Application getApplication(){
@@ -611,12 +538,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     		logInfo("Event Alarm Scanning disabled");
     	}
     }
-    	
-	/*public String getRelativeCode(AbstractCollection<?> collection,String code){
-		logTrace("Get relative code. {} , code={}", collection.getLogMessage(),code);
-		return AbstractCollectionItemBusinessImpl.getRelativeCode(collection, code);
-	}*/
-	
+    		
 	/**/
 	
 	public static class GlobalIdentifierCodeGenerator implements GenerateMethod<AbstractIdentifiable, String> {

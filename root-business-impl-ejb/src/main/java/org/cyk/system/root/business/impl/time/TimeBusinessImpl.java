@@ -20,6 +20,7 @@ import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.utility.common.Constant;
@@ -130,7 +131,7 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 			Collection<Period> middlePeriods = new ArrayList<>(),periods = new ArrayList<>();
 			Date fromDate=period.getFromDate(),toDate=period.getToDate();
 			
-			if(timeDivisionType.getCode().equals(TimeDivisionType.DAY)){
+			if(timeDivisionType.getCode().equals(RootConstant.Code.TimeDivisionType.DAY)){
 				Integer milliseconds = findMillisecondOfDay(fromDate);
 				if(milliseconds>0){
 					milliseconds = DateTimeConstants.MILLIS_PER_DAY - milliseconds - 1;//remaining to go to next day - be at the limit by doing minus one
@@ -150,7 +151,7 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 					fromDate = new DateTime(fromDate).plus(DateTimeConstants.MILLIS_PER_DAY).toDate();
 					//dayIndex++;
 				}
-			}else if(timeDivisionType.getCode().equals(TimeDivisionType.WEEK)){
+			}else if(timeDivisionType.getCode().equals(RootConstant.Code.TimeDivisionType.WEEK)){
 				/*
 				Integer milliseconds = findMillisecondOfDay(fromDate);
 				if(milliseconds>0){
@@ -172,7 +173,7 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 					//dayIndex++;
 				}
 				*/
-			}else if(timeDivisionType.getCode().equals(TimeDivisionType.MONTH)){
+			}else if(timeDivisionType.getCode().equals(RootConstant.Code.TimeDivisionType.MONTH)){
 				Date begin = period.getFromDate(),end=null,index=begin;
 				Integer beginMonth,endMonth = findMonth(period.getToDate());
 				Boolean stop = Boolean.FALSE;
@@ -200,7 +201,7 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 			if(lastPeriod!=null) periods.add(lastPeriod);
 			
 			return periods;
-		}else if(timeDivisionType.getCode().equals(TimeDivisionType.YEAR)){
+		}else if(timeDivisionType.getCode().equals(RootConstant.Code.TimeDivisionType.YEAR)){
 			//TODO year periods
 			return null;
 		}else{
@@ -235,10 +236,10 @@ public class TimeBusinessImpl extends AbstractBean implements TimeBusiness,Seria
 
 	@Override
 	public String formatPeriod(Period period, TimeDivisionType timeDivisionType) {
-		switch(timeDivisionType.getCode()){
-		case TimeDivisionType.DAY:return formatDate(period.getFromDate(),TimeBusiness.DATE_SHORT_PATTERN);
-		case TimeDivisionType.MONTH:return new DateFormatSymbols(languageBusiness.findCurrentLocale()).getMonths()[findMonth(period.getFromDate())-1]
-				/*+formatDate(period.getFromDate(),TimeBusiness.DATE_SHORT_PATTERN)*/;
+		if(RootConstant.Code.TimeDivisionType.DAY.equals(timeDivisionType.getCode())){
+			return formatDate(period.getFromDate(),TimeBusiness.DATE_SHORT_PATTERN);
+		}else if(RootConstant.Code.TimeDivisionType.DAY.equals(timeDivisionType.getCode())){
+			return new DateFormatSymbols(languageBusiness.findCurrentLocale()).getMonths()[findMonth(period.getFromDate())-1];
 		}
 		return null;
 	}

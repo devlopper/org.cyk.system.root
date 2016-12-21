@@ -16,15 +16,14 @@ import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.data.Data;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
@@ -53,12 +52,12 @@ public class MailBusinessIT extends AbstractBusinessIT {
     	son.getContactCollection().getElectronicMails().clear();
     	son.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "kycdev@gmail.com"));
     	
-    	Person father = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_FATHER).getPerson1();
+    	Person father = inject(PersonBusiness.class).addRelationship(son, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER).getPerson1();
     	father.setName("Kouagni");
     	father.setLastnames("N'Dri Jean");
     	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup@gmail.com"));
     	
-    	Person mother = inject(PersonBusiness.class).addRelationship(son, PersonRelationshipType.FAMILY_MOTHER).getPerson1();
+    	Person mother = inject(PersonBusiness.class).addRelationship(son, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER).getPerson1();
     	mother.setName("Tchimou");
     	mother.setLastnames("Ahou odette");
     	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup0@gmail.com"));
@@ -72,7 +71,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_DOCUMENT));
+    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(RootConstant.Code.FileRepresentationType.IDENTITY_DOCUMENT));
 		create(file);
 		create(new FileIdentifiableGlobalIdentifier(file,son));
 		
@@ -81,7 +80,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_IMAGE));
+    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE));
 		create(file);
 		create(new FileIdentifiableGlobalIdentifier(file,son));
 		
@@ -90,7 +89,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_IMAGE));
+    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE));
 		create(file);
 		create(new FileIdentifiableGlobalIdentifier(file,father));
 		
@@ -99,7 +98,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(FileRepresentationType.IDENTITY_IMAGE));
+    	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE));
 		create(file);
 		create(new FileIdentifiableGlobalIdentifier(file,mother));
     }
@@ -151,8 +150,8 @@ public class MailBusinessIT extends AbstractBusinessIT {
     public void sendMailToFather(){
 		Person son = inject(PersonBusiness.class).find("P002");
     	MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
-		inject(MailBusiness.class).send(Notification.Builder.buildMail(son, FileRepresentationType.IDENTITY_DOCUMENT
-				,Arrays.asList(PersonRelationshipType.FAMILY_FATHER),Boolean.FALSE));
+		inject(MailBusiness.class).send(Notification.Builder.buildMail(son, RootConstant.Code.FileRepresentationType.IDENTITY_DOCUMENT
+				,Arrays.asList(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER),Boolean.FALSE));
 		/*
 		inject(MailBusiness.class).send(new Notification.Builder().setRemoteEndPoint(RemoteEndPoint.MAIL_SERVER)
 				.addIdentifiables(son)
@@ -170,19 +169,20 @@ public class MailBusinessIT extends AbstractBusinessIT {
     public void sendMailToMother(){
 		Person son = inject(PersonBusiness.class).find("P002");
     	MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
-    	inject(MailBusiness.class).send(Notification.Builder.buildMail(son, FileRepresentationType.IDENTITY_IMAGE,Arrays.asList(PersonRelationshipType.FAMILY_MOTHER
+    	inject(MailBusiness.class).send(Notification.Builder.buildMail(son, RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE,Arrays.asList(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER
     			),Boolean.FALSE));
     }
 	
 	//@Test
     public void sendMultipleMails(){
 		Person son = inject(PersonBusiness.class).find("P002");
-		Person father = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_FATHER))
+		Person father = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER))
 				.iterator().next().getPerson1();
-		Person mother = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(PersonRelationshipType.FAMILY_MOTHER))
+		Person mother = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER))
 				.iterator().next().getPerson1();
     	MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
-    	inject(MailBusiness.class).send(Notification.Builder.buildMails(Arrays.asList(father,mother,son), FileRepresentationType.IDENTITY_IMAGE,Arrays.asList(PersonRelationshipType.FAMILY_FATHER,PersonRelationshipType.FAMILY_MOTHER
+    	inject(MailBusiness.class).send(Notification.Builder.buildMails(Arrays.asList(father,mother,son), RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE
+    			,Arrays.asList(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER,RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER
     			),Boolean.TRUE));
     }
 	
