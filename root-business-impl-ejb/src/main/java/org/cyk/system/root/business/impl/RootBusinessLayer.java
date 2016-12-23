@@ -371,6 +371,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		TypedBusiness.CreateReportFileArguments.Builder.Listener.COLLECTION.add(new CreateReportFileArgumentsAdapter());
 		
 		defaultSmtpProperties = inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT);
+		
+		AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, TimeDivisionType.class);
     }
     
     public GenericBusiness getGenericBusiness(){

@@ -47,6 +47,13 @@ public abstract class AbstractValue<TYPE> extends AbstractModelElement implement
 		return system;
 	}
 	
+	public TYPE get(TYPE defaultValueIfNull){
+		TYPE value = get();
+		if(value == null)
+			value = defaultValueIfNull;
+		return value;
+	}
+	
 	@Override
 	public String getUiString() {
 		return toString();

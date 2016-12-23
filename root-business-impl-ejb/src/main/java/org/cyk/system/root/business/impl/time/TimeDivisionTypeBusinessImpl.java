@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.time.TimeDivisionTypeBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.persistence.api.time.TimeDivisionTypeDao;
@@ -17,6 +19,14 @@ public class TimeDivisionTypeBusinessImpl extends AbstractEnumerationBusinessImp
 	@Inject
 	public TimeDivisionTypeBusinessImpl(TimeDivisionTypeDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected Object[] getPropertyValueTokens(TimeDivisionType timeDivisionType, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, name)){
+			return new Object[]{timeDivisionType.getMeasure()};
+		}
+		return super.getPropertyValueTokens(timeDivisionType, name);
 	}
 
 	@Override
