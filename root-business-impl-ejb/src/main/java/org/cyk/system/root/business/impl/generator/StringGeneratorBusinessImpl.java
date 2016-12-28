@@ -1,8 +1,6 @@
 package org.cyk.system.root.business.impl.generator;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -12,7 +10,6 @@ import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.ScriptVariable;
 import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.StringValueGeneratorConfiguration;
@@ -36,10 +33,8 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 		if(generator.getScript()==null){
 			return generate(generator.getConfiguration(), input);
 		}else{
-			Map<String, Object> inputs = new HashMap<>();
-			inputs.put(ScriptVariable.RESULT, input);
-			Map<String, Object> results = scriptBusiness.evaluate(generator.getScript(), inputs);
-			return (String) results.get(ScriptVariable.RESULT);
+			scriptBusiness.evaluate(generator.getScript());
+			return (String) generator.getScript().getReturned();
 		}
 	}
 

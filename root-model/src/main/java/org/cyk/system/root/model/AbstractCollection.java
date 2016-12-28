@@ -23,7 +23,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	protected String itemCodeSeparator = ITEM_CODE_SEPARATOR; 
 	
-	@Transient protected Collection<ITEM> collection;
+	@Transient protected Collection<ITEM> collection;//TODO should be replaced by runtime collection
 	
 	@Transient protected Collection<ITEM> collectionToDelete;
 

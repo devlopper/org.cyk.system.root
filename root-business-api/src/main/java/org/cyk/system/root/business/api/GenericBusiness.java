@@ -10,4 +10,6 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     
     void create(Collection<AbstractIdentifiable> identifiables,Boolean useThreadPoolExecutor);
     void createIdentifiables(Collection<? extends AbstractIdentifiable> collection,Boolean useThreadPoolExecutor);
+    
+    AbstractIdentifiable find(String identifiableClassIdentifier,String code);
 }

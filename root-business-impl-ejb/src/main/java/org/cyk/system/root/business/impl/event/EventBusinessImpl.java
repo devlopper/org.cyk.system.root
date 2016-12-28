@@ -8,28 +8,22 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.event.EventBusiness;
+import org.cyk.system.root.business.api.event.EventPartyBusiness;
+import org.cyk.system.root.business.api.event.EventReminderBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.impl.time.AbstractIdentifiablePeriodBusinessImpl;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.Event.SearchCriteria;
-import org.cyk.system.root.model.event.EventParty;
-import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
-import org.cyk.system.root.persistence.api.event.EventMissedDao;
 import org.cyk.system.root.persistence.api.event.EventPartyDao;
 import org.cyk.system.root.persistence.api.event.EventReminderDao;
 
 public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Event, EventDao> implements EventBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
-	
-	@Inject private EventPartyDao eventPartyDao;
-	@Inject private EventMissedDao eventMissedDao;
-	@Inject private EventReminderDao eventReminderDao;
-	//@Inject private RepeatedEventBusiness repeatedEventBusiness;
 	
 	@Inject
 	public EventBusinessImpl(EventDao dao) {
@@ -47,52 +41,31 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     }
     
     @Override
-    public Event create(Event event) {
-    	if(event.getContactCollection()!=null)
-    		inject(ContactCollectionBusiness.class).create(event.getContactCollection());
-        super.create(event);
-        for(EventParty eventParty : event.getEventParties()){
-        	eventParty.setEvent(event);
-        	eventPartyDao.create(eventParty);
-        	if(eventParty.getMissed()!=null){
-        		eventMissedDao.create(eventParty.getMissed());
-        	}
-        }
-        return event;
+    protected void beforeCreate(Event event) {
+    	super.beforeCreate(event);
+    	createIfNotIdentified(event.getContactCollection());
     }
     
     @Override
-    public Event delete(Event event) {
+    protected void afterCreate(Event event) {
+    	super.afterCreate(event);
+    	if(event.getEventParties().isSynchonizationEnabled())
+    		inject(EventPartyBusiness.class).create(event.getEventParties().getCollection());
+    	if(event.getEventReminders().isSynchonizationEnabled())
+    		inject(EventReminderBusiness.class).create(event.getEventReminders().getCollection());
+    }
+    
+    @Override
+    protected void beforeDelete(Event event) {
+    	super.beforeDelete(event);
     	if(event.getContactCollection()!=null){
     		ContactCollection contactCollection = event.getContactCollection();
     		event.setContactCollection(null);
-    		event = dao.update(event);
     		inject(ContactCollectionBusiness.class).delete(contactCollection);
     	}
-    	for(EventParty eventParty : eventPartyDao.readByEvent(event))
-        	eventPartyDao.delete(eventParty);
-    	for(EventReminder eventReminder : eventReminderDao.readByEvent(event))
-    		eventReminderDao.delete(eventReminder);
-    	return super.delete(event);
-    }
-
-    @Override
-    public void create(Event event, Collection<EventReminder> eventReminders) {
-    	create(event);
-    	for(EventReminder eventReminder : eventReminders){
-    		eventReminder.setEvent(event);
-    		//TODO check disjoin
-    		eventReminderDao.create(eventReminder);
-    	}
-    }
-    /*
-    @Override
-    public Event update(Event event) {
-    	
-    	return super.update(event);
-    }
-    */
-    
+    	inject(EventPartyBusiness.class).delete(inject(EventPartyDao.class).readByEvent(event));
+    	inject(EventReminderBusiness.class).delete(inject(EventReminderDao.class).readByEvent(event));
+    }    
     
     @Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<Event> findByCriteria(SearchCriteria criteria) {

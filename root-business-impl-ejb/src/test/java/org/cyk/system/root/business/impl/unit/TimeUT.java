@@ -6,7 +6,6 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.impl.time.TimeBusinessImpl;
 import org.cyk.system.root.model.time.Period;
-import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Assert;
 
@@ -72,7 +71,7 @@ public class TimeUT extends AbstractUnitTest {
 			return null;
 		}
 	}
-    
+    /*
     private void assertEqualsPeriod(Period period,TimeDivisionType timeDivisionType,Boolean partial,Date[]...expecteds){
     	int i=0;
     	for(Period p : timeBusiness.findPeriods(period, timeDivisionType,partial)){
@@ -87,6 +86,6 @@ public class TimeUT extends AbstractUnitTest {
     		i++;
     	}
     		
-    }
+    }*/
 
 }

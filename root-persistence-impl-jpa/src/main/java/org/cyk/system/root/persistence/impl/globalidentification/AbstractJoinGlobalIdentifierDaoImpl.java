@@ -1,10 +1,12 @@
 package org.cyk.system.root.persistence.impl.globalidentification;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdentifierDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
@@ -15,14 +17,32 @@ public abstract class AbstractJoinGlobalIdentifierDaoImpl<IDENTIFIABLE extends A
 
 	private static final long serialVersionUID = 6306356272165070761L;
 
+	private String readByIdentifiableGlobalIdentifiers;
+	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
+		registerNamedQuery(readByIdentifiableGlobalIdentifiers, "SELECT r FROM "+clazz.getSimpleName()+" r WHERE r.identifiableGlobalIdentifier.identifier IN :"+PARAMETER_GLOBAL_IDENTIFIERS);
 		registerNamedQuery(readByCriteria, getReadByCriteriaQueryString());
 	}
 	
 	protected String getReadByCriteriaQueryString(){
 		return "SELECT r FROM "+clazz.getSimpleName()+" r WHERE r.identifiableGlobalIdentifier.identifier IN :"+PARAMETER_GLOBAL_IDENTIFIERS;
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readByIdentifiableGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers) {
+		return namedQuery(readByIdentifiableGlobalIdentifiers).parameter(PARAMETER_GLOBAL_IDENTIFIERS, Utils. getGlobalIdentfierValues(globalIdentifiers)).resultMany();
+	}
+
+	@Override
+	public Collection<IDENTIFIABLE> readByIdentifiableGlobalIdentifier(GlobalIdentifier globalIdentifier) {
+		return readByIdentifiableGlobalIdentifiers(Arrays.asList(globalIdentifier));
+	}
+
+	@Override
+	public Collection<IDENTIFIABLE> readByIdentifiableGlobalIdentifier(AbstractIdentifiable identifiable) {
+		return readByIdentifiableGlobalIdentifier(identifiable.getGlobalIdentifier());
 	}
 
 	@Override

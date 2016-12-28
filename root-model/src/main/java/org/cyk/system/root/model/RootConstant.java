@@ -194,7 +194,36 @@ public interface RootConstant {
 			
 		}
 		
+		public static class ScriptEvaluationEngine implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String JAVASCRIPT = "javascript";
+			
+			
+		}
+		
 		/**/
+		
+	}
+	
+	public static class Configuration implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+		
+		public static class ScriptVariable implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String RETURNED = "RETURN";
+			
+			
+		}
+		
+		public static class Script implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String GENERIC_BUSINESS = "business";
+			
+		}
 		
 	}
 

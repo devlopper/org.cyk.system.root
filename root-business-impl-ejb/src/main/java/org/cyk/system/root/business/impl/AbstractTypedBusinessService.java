@@ -22,6 +22,7 @@ import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.file.report.ReportFileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
@@ -39,6 +40,7 @@ import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.value.Value;
+import org.cyk.system.root.model.value.ValueCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
@@ -47,6 +49,7 @@ import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
+import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
@@ -209,6 +212,9 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void afterCreate(IDENTIFIABLE identifiable){
+		if(identifiable.getMetricCollectionIdentifiableGlobalIdentifiers().isSynchonizationEnabled())
+			inject(MetricCollectionIdentifiableGlobalIdentifierBusiness.class).create(identifiable.getMetricCollectionIdentifiableGlobalIdentifiers().getCollection());
+		
 		Collection<String> metricValueMetricCollectionCodes = null;
 		/*metricValueMetricCollectionCodes = listenerUtils.getCollection(getListeners(), new ListenerUtils.CollectionMethod<Listener<AbstractIdentifiable>, String>(){
 
@@ -501,6 +507,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		exceptionUtils().exception(arguments.getReportTemplate()==null,"report template cannot be null");
 		exceptionUtils().exception(arguments.getReportTemplate().getTemplate()==null,"template file cannot be null");
 		exceptionUtils().exception(arguments.getFile()==null,"output file cannot be null");
+		
+		if(arguments.getReportTemplate()!=null){
+			for(ValueCollectionIdentifiableGlobalIdentifier valueCollectionIdentifiableGlobalIdentifier : inject(ValueCollectionIdentifiableGlobalIdentifierDao.class)
+					.readByIdentifiableGlobalIdentifier(arguments.getReportTemplate()))
+				arguments.getReportTemplateValueCollections().add(valueCollectionIdentifiableGlobalIdentifier.getValueCollection());
+		}
+		
 		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, arguments.getReportTemplate().getTemplate()
 				, arguments.getFile().getExtension());
 		inject(FileBusiness.class).process(arguments.getFile(),reportBasedOnTemplateFile.getBytes(), ReportBusiness.DEFAULT_FILE_NAME_AND_EXTENSION);

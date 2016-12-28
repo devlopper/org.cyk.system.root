@@ -12,14 +12,17 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.AbstractGenericBusinessService;
+import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.utils.IdentifiableCrudExecution;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ThreadPoolExecutor;
 
 @Stateless 
@@ -177,5 +180,14 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	@Override
 	public void flushEntityManager() {
 		genericDaoImpl.getEntityManager().flush();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public AbstractIdentifiable find(String identifiableClassIdentifier, String code) {
+		BusinessEntityInfos businessEntityInfos = inject(ApplicationBusiness.class).findBusinessEntityInfos(identifiableClassIdentifier);
+		if(businessEntityInfos==null)
+			exceptionUtils().exception("no.businessEntityInfos."+identifiableClassIdentifier);
+		return inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)businessEntityInfos.getClazz()).read(code);
 	}
 }

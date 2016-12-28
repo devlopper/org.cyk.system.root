@@ -11,7 +11,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.event.EventBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.EventReminder;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.time.Period;
@@ -73,11 +72,12 @@ public class EventBusinessIT extends AbstractBusinessIT {
         create(event3 =event(now, DateUtils.addMinutes(now, 3)));
     
         create(event4 =event(oneHourPast, DateUtils.addMinutes(oneHourPast, 7)));
-        
+        /*
         Person p1 =  createPerson("1", "P1", "LN1", 10,1,2000);
         Person p2 =  createPerson("2", "komenan", "Yao", 19,8,1983);
         Person p3 =  createPerson("3", "Kouadio", "Odette", 24,3,1960);
         Person p4 =  createPerson("4", "Aya", "Pascale", 28,3,1986);
+        */
         createPerson("5", "Gnangnan", "Sandrine", 14,5,1989);
         createPerson("6", "Jramoh", "Pierre", 10,9,2000);
     	
@@ -105,10 +105,10 @@ public class EventBusinessIT extends AbstractBusinessIT {
         		.phoneNumber(event.getContactCollection(),RootBusinessLayer.getInstance().getCountryCoteDivoire(),
         				RootBusinessLayer.getInstance().getLandPhoneNumberType()));
         */
-        event.getEventParties().add(new EventParty(p1));
+        /*event.getEventParties().add(new EventParty(p1));
         event.getEventParties().add(new EventParty(p2));
         event.getEventParties().add(new EventParty(p3));
-        event.getEventParties().add(new EventParty(p4));
+        event.getEventParties().add(new EventParty(p4));*/
         Collection<EventReminder> reminders = new ArrayList<>();
         EventReminder eventReminder = new EventReminder();
         reminders.add(eventReminder);

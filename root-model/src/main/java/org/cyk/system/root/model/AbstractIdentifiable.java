@@ -20,9 +20,6 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -30,6 +27,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.AbstractMethod;
@@ -37,6 +35,9 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /*lombok*/
 
@@ -63,6 +64,14 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	@Transient private Collection<AbstractIdentifiable> parents;
 	@Transient private Collection<AbstractIdentifiable> children;
+	
+	@Transient private IdentifiableRuntimeCollection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers;
+	
+	public IdentifiableRuntimeCollection<MetricCollectionIdentifiableGlobalIdentifier> getMetricCollectionIdentifiableGlobalIdentifiers(){
+		if(metricCollectionIdentifiableGlobalIdentifiers == null)
+			metricCollectionIdentifiableGlobalIdentifiers = new IdentifiableRuntimeCollection<>();
+		return metricCollectionIdentifiableGlobalIdentifiers;
+	}
 	
 	public void setCode(String code){
 		getGlobalIdentifierCreateIfNull().setCode(code);

@@ -615,6 +615,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	    void setParents(IDENTIFIABLE identifiable);
 	    void setParents(Collection<? extends AbstractIdentifiable> identifiables);
 		
+	    String getCodePrefix();
+	    Listener<IDENTIFIABLE> setCodePrefix(String prefix);
+	    
 		/**/
 		
 		@Getter @Setter
@@ -623,6 +626,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			
 			private Collection<Class<? extends AbstractIdentifiable>> cascadeToClasses;
 			private Collection<String> cascadeToReportTemplateCodes,metricValueMetricCollectionCodes;
+			private String codePrefix;
 			
 			@Override public void beforeGetPropertyValueTokens(IDENTIFIABLE identifiable, String name) {}
 			@Override public Object[] afterGetPropertyValueTokens(IDENTIFIABLE identifiable,String name, Object[] tokens) {return tokens;}
@@ -638,6 +642,12 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			
 			@Override public void beforeInstanciateOne(UserAccount userAccount) {}
 			@Override public void afterInstanciateOne(UserAccount userAccount, IDENTIFIABLE identifiable) {}
+			
+			@Override
+			public Adapter<IDENTIFIABLE> setCodePrefix(String prefix){
+				this.codePrefix = prefix;
+				return this;
+			}
 			
 			@Override
 			public Adapter<IDENTIFIABLE> addCascadeToClass(Class<? extends AbstractIdentifiable> aClass){

@@ -8,7 +8,9 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.value.MeasureBusiness;
@@ -16,11 +18,13 @@ import org.cyk.system.root.business.api.value.ValueBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueSet;
 import org.cyk.system.root.model.value.ValueType;
 import org.cyk.system.root.persistence.api.value.ValueDao;
+import org.cyk.system.root.persistence.api.value.ValuePropertiesDao;
 import org.cyk.utility.common.generator.RandomDataProvider;
 
 public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, ValueDao> implements ValueBusiness,Serializable {
@@ -30,6 +34,19 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 	@Inject
 	public ValueBusinessImpl(ValueDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	public Value instanciateOne(String[] values) {
+		Value value = instanciateOne();
+		Integer index = 0;
+		String valueString;
+		value.setCode(values[index++]);
+		value.setName(values[index++]);
+		valueString = values[index++];
+		if(StringUtils.isNotBlank(valueString))
+			value.setProperties(inject(ValuePropertiesDao.class).read(valueString));
+		return value;
 	}
 
 	@Override
@@ -65,4 +82,40 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 		inject(GenericBusiness.class).update(commonUtils.castCollection(values, AbstractIdentifiable.class));
 	}
 
+	@Override
+	public Object derive(Value value,DeriveArguments arguments) {
+		if(value.isDerived()){
+			Script script = value.getProperties().getDerivationScript();
+			script.getInputs().clear();
+			if(arguments==null){
+				
+			}
+			if(arguments!=null)
+				script.getInputs().putAll(arguments.getInputs());
+			value.set(inject(ScriptBusiness.class).evaluate(script));//TODO be carefull with concurrent access
+		}
+		return value.get();
+	}
+
+	@Override
+	public void derive(Collection<Value> values,DeriveArguments arguments) {
+		for(Value value : values)
+			derive(value,arguments);
+	}
+
+	@Override
+	public Collection<Value> deriveByCodes(Collection<String> valueCodes,DeriveArguments arguments) {
+		Collection<Value> values = dao.read(valueCodes);
+		derive(values,arguments);
+		return values;
+	}
+
+	@Override
+	public Value deriveByCode(String valueCode,DeriveArguments arguments) {
+		Value value = dao.read(valueCode);
+		derive(value,arguments);
+		return value;
+	}
+	
+	
 }

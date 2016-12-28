@@ -14,13 +14,17 @@ import lombok.Setter;
 public class ScriptDetails extends AbstractOutputDetails<Script> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String file;
+	@Input @InputText private String file,evaluationEngine,arguments,returned,variables;
 	
 	public ScriptDetails(Script script) {
 		super(script);
-		file = formatUsingBusiness(script);
+		file = formatUsingBusiness(script.getFile());
+		evaluationEngine = formatUsingBusiness(script.getEvaluationEngine());
 	}
 	
 	public static final String FIELD_FILE = "file";
-	
+	public static final String FIELD_EVALUATION_ENGINE = "evaluationEngine";
+	public static final String FIELD_ARGUMENTS = "arguments";
+	public static final String FIELD_RETURNED = "returned";
+	public static final String FIELD_VARIABLES = "variables";
 }

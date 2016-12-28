@@ -91,7 +91,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     }
     
     public void exception(Exception exception){
-        exception("","exception.internal");
+        exception(Boolean.TRUE,"exception.internal",new Object[]{exception.toString()});
     }
     
     public <T extends AbstractIdentifiable> void duplicates(Class<T> aClass,Collection<T> identifiables,Long maximum){

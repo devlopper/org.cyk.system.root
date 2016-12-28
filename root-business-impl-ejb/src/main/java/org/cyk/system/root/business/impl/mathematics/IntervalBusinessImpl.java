@@ -53,6 +53,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	@Override
 	public Interval instanciateOne(String[] values) {
 		Interval interval = super.instanciateOne(values);
+		//FIXME should use index after 10
 		interval.getLow().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 2)));
 		interval.getHigh().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 3)));
 		return interval;

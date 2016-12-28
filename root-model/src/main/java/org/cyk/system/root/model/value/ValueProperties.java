@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	@ManyToOne private IntervalCollection intervalCollection;
 	@Enumerated(EnumType.ORDINAL) @Column(name="thetype") private ValueType type = ValueType.DEFAULT;
 	@Enumerated(EnumType.ORDINAL) @Column(name="theset") private ValueSet set = ValueSet.DEFAULT;
+	
+	private Boolean derived;
+	@ManyToOne private Script derivationScript;
 	
 	private Boolean nullable;
 	@ManyToOne private NullString nullString;

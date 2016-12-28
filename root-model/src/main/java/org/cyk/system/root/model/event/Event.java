@@ -1,14 +1,15 @@
 package org.cyk.system.root.model.event;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import org.cyk.system.root.model.IdentifiableRuntimeCollection;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.time.AbstractIdentifiablePeriod;
@@ -32,13 +33,28 @@ public class Event extends AbstractIdentifiablePeriod implements Serializable  {
 
 	private static final long serialVersionUID = 4094533140633110556L;
 	
+	@ManyToOne @JoinColumn(name="thetype") private EventType type;
+	
     @OneToOne private ContactCollection contactCollection = new ContactCollection();
     
-    @Transient private Collection<EventParty> eventParties = new ArrayList<>();
-   
+    @Transient private IdentifiableRuntimeCollection<EventParty> eventParties;
+    @Transient private IdentifiableRuntimeCollection<EventReminder> eventReminders;
+    
     public Event(Period period) {
         super();
         setExistencePeriod(period);
+    }
+    
+    public IdentifiableRuntimeCollection<EventParty> getEventParties(){
+    	if(eventParties==null)
+    		eventParties = new IdentifiableRuntimeCollection<>();
+    	return eventParties;
+    }
+    
+    public IdentifiableRuntimeCollection<EventReminder> getEventReminders(){
+    	if(eventReminders==null)
+    		eventReminders = new IdentifiableRuntimeCollection<>();
+    	return eventReminders;
     }
     
     /**/

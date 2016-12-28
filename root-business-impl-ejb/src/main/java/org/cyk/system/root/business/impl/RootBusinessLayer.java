@@ -50,6 +50,7 @@ import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileRepresentationType;
+import org.cyk.system.root.model.file.ScriptEvaluationEngine;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
@@ -442,6 +443,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private void file(){ 
     	createFromExcelSheet(FileRepresentationType.class);
+    	createFromExcelSheet(ScriptEvaluationEngine.class);
     }
     
     private void time(){ 

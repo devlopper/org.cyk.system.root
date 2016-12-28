@@ -129,6 +129,10 @@ public class Value extends AbstractIdentifiable implements Serializable {
 		return numberValue;
 	}
 	
+	public Boolean isDerived(){
+		return properties == null ? Boolean.FALSE : Boolean.TRUE.equals(properties.getDerived());
+	}
+	
 	@Override
 	public String toString() {
 		ValueType type = getType();

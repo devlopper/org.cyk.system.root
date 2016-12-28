@@ -6,9 +6,7 @@ import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -95,17 +93,17 @@ public class MathematicsBusinessImpl extends AbstractBusinessServiceImpl impleme
 				
 			}
 		}else{
-			Map<String,Object> inputs = new HashMap<>();
-			inputs.put(DIVIDEND, average.getDividend());
-			inputs.put(DIVISOR, average.getDivisor());
-			Map<String, Object> results = scriptBusiness.evaluate(script, inputs);
+			script.getInputs().clear();
+			script.getInputs().put(DIVIDEND, average.getDividend());
+			script.getInputs().put(DIVISOR, average.getDivisor());
+			scriptBusiness.evaluate(script);
 			
-			if(results.get(DIVIDEND)!=null)
-				average.setDividend(new BigDecimal(results.get(DIVIDEND).toString()));
-			if(results.get(DIVISOR)!=null)
-				average.setDivisor(new BigDecimal(results.get(DIVISOR).toString()));
-			if(results.get(AVERAGE)!=null)
-				average.setValue(new BigDecimal(results.get(AVERAGE).toString()));
+			if(script.getOutputs().get(DIVIDEND)!=null)
+				average.setDividend(new BigDecimal(script.getOutputs().get(DIVIDEND).toString()));
+			if(script.getOutputs().get(DIVISOR)!=null)
+				average.setDivisor(new BigDecimal(script.getOutputs().get(DIVISOR).toString()));
+			if(script.getOutputs().get(AVERAGE)!=null)
+				average.setValue(new BigDecimal(script.getOutputs().get(AVERAGE).toString()));
 		}
 		logTrace("Dividend={} Divisor={} Average={}", average.getDividend(),average.getDivisor(),average.getValue());
 		return average;

@@ -58,6 +58,7 @@ import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleSecuredView;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
+import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.AbstractLayer;
@@ -170,7 +171,11 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     
 	@Override
 	public void registerTypedBusinessBean(Map<Class<AbstractIdentifiable>, TypedBusiness<AbstractIdentifiable>> arg0) {}
-    
+
+	protected <T extends AbstractIdentifiable> T read(Class<T> aClass,String code){
+		return inject(GenericDao.class).read(aClass, code);
+	}
+	
     /* shortcut methods */
 	 
     protected void registerResourceBundle(String id, ClassLoader aClassLoader) {

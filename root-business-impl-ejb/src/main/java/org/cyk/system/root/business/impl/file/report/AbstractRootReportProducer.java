@@ -38,11 +38,15 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonReport;
 import org.cyk.system.root.model.userinterface.style.Style;
+import org.cyk.system.root.model.value.Value;
+import org.cyk.system.root.model.value.ValueCollection;
+import org.cyk.system.root.model.value.ValueCollectionItem;
 import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
+import org.cyk.system.root.persistence.api.value.ValueCollectionItemDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.BeanAdapter;
 
@@ -108,6 +112,25 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected LabelValueReport getLabelValue(String id){
 		return currentLabelValueCollection.getById(id);
+	}
+	
+	protected LabelValueCollectionReport addValueCollection(AbstractReportTemplateFile<?> report,ValueCollection valueCollection,String defaultValue){
+		Collection<ValueCollectionItem> items = inject(ValueCollectionItemDao.class).readByCollection(valueCollection);
+		Collection<Value> values = new ArrayList<>();
+		for(ValueCollectionItem item : items){
+			values.add(item.getValue());
+		}
+		//inject(ValueBusiness.class).derive(values);
+		
+		//TODO should be factored
+		
+		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(valueCollection.getName(),convertToArray(values,defaultValue),defaultValue);
+		for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection()){
+			if(StringUtils.isBlank(labelValueReport.getValue())){
+				labelValueReport.setValue(defaultValue);
+			}
+		}
+		return labelValueCollectionReport;
 	}
 	
 	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String metricCollectionCode,String defaultValue){
@@ -233,6 +256,20 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return inject(FileBusiness.class).findInputStream(file);
 	}
 	
+	protected String[][] convertToArray(Collection<Value> values,String nullValueString){
+		String[][] array = new String[values.size()][2];
+		Integer i = 0;
+		for(Value value : values){
+			array[i][0] = value.getName();
+			array[i][1] = format(value.get());
+			if(array[i][1] == null)
+				array[i][1] = nullValueString;
+			i++;
+		}
+		return array;
+	}
+	
+	//TODO use convertToArray(Collection<Value> values)
 	protected String[][] convertToArray(Collection<Metric> metrics,Collection<MetricValue> metricValues,String nullValueString){
 		String[][] values = new String[metrics.size()][2];
 		Integer i = 0;
@@ -279,9 +316,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 				commonUtils.swapColumns(values, index[0], index[1]);
 			}
 		LabelValueCollectionReport labelValueCollectionReport = report.addLabelValueCollection(intervalCollection.getName(),values,null);
-		if(valueProperties!=null && Boolean.TRUE.equals(valueProperties.getNullable())){
+		if(valueProperties!=null && Boolean.TRUE.equals(valueProperties.getNullable()) && valueProperties.getNullString()!=null)
 			labelValueCollectionReport.add(valueProperties.getNullString().getCode(), valueProperties.getNullString().getName());
-		}
 		return labelValueCollectionReport;
 	}
 	

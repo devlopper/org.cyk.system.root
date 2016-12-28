@@ -70,9 +70,11 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		actor.setName(actor.getPerson().getName());
 		return actor;
 	}
+	
 
 	@Override
-	public ACTOR create(ACTOR anActor) {
+	protected void beforeCreate(ACTOR anActor) {
+		super.beforeCreate(anActor);
 		if(anActor.getPerson().getIdentifier()==null){
 			if(StringUtils.isBlank(anActor.getPerson().getCode()))
 				anActor.getPerson().setCode(anActor.getCode());
@@ -83,23 +85,22 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 			anActor.getPerson().getGlobalIdentifierCreateIfNull().setCreatedBy(anActor.getGlobalIdentifierCreateIfNull().getCreatedBy());
 			inject(PersonBusiness.class).create(anActor.getPerson());
 		}
-		return super.create(anActor);
-	}
-	
-	@Override
-	public ACTOR update(ACTOR anActor) {
-		anActor.getPerson().setName(anActor.getName());//TODO i think it is better to align those names because there are same concept . is it ?
-		inject(PersonBusiness.class).update(anActor.getPerson());
-		return super.update(anActor);
-	}
-	
-	@Override
-	public ACTOR delete(ACTOR actor) {
-		inject(PersonBusiness.class).delete(actor.getPerson());
-		actor.setPerson(null);
-		return super.delete(actor);
 	}
 
+	@Override
+	protected void beforeUpdate(ACTOR anActor) {
+		super.beforeUpdate(anActor);
+		anActor.getPerson().setName(anActor.getName());//TODO i think it is better to align those names because there are same concept . is it ?
+		inject(PersonBusiness.class).update(anActor.getPerson());
+	}
+	
+	@Override
+	protected void beforeDelete(ACTOR actor) {
+		super.beforeDelete(actor);
+		inject(PersonBusiness.class).delete(actor.getPerson());
+		actor.setPerson(null);
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public ACTOR findByPerson(Person person) {
 		return dao.readByPerson(person);
@@ -222,6 +223,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 					actor.getPerson().setExtendedInformations(new PersonExtendedInformations(actor.getPerson()));
 				}
 				
+					
 			}
 			
 		}

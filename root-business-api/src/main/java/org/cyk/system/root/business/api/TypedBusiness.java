@@ -12,6 +12,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.value.ValueCollection;
 import org.cyk.utility.common.AbstractBuilder;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.cdi.BeanAdapter;
@@ -93,6 +94,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		private static final long serialVersionUID = 1L;
 		
 		private ReportTemplate reportTemplate;
+		private Collection<ValueCollection> reportTemplateValueCollections = new ArrayList<>();
 		private IDENTIFIABLE identifiable;
 		private File file,backgroundImageFile;
 		private RootReportProducer reportProducer;
@@ -149,6 +151,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 					public ReportTemplate getNullValue() {
 						return null;
 					}}));
+				
+				
 				
 				arguments.setBackgroundImageFile(listenerUtils.getValue(File.class, Listener.COLLECTION, new ListenerUtils.ResultMethod<Listener, File>(){
 					@Override
