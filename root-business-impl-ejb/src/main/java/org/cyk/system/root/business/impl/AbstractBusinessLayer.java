@@ -103,8 +103,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     protected void initialisation() {
         super.initialisation();
         id = this.getClass().getName();
-        String systemName = StringUtils.split(this.getClass().getName(), Constant.CHARACTER_DOT)[3];
-        registerResourceBundles(systemName);
+        systemIdentifier = StringUtils.split(this.getClass().getName(), Constant.CHARACTER_DOT)[3];
+        registerResourceBundles(systemIdentifier);
         //registerTypedBusinessBean(businessInterfaceLocator.getTypedBusinessBeanMap());
         
         rootDataProducerHelper.setBasePackage(this.getClass().getPackage());
@@ -475,7 +475,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	}
 	
 	protected String getDataExcelFileName(){
-		return "data.xls";
+		return systemIdentifier+"data.xls";
 	}
 	
 	/**/

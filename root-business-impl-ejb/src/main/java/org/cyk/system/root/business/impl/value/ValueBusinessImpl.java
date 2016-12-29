@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -15,6 +17,7 @@ import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.value.MeasureBusiness;
 import org.cyk.system.root.business.api.value.ValueBusiness;
+import org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
@@ -90,8 +93,12 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 			if(arguments==null){
 				
 			}
-			if(arguments!=null)
-				script.getInputs().putAll(arguments.getInputs());
+			if(arguments!=null){
+				Map<String,Object> inputs = new LinkedHashMap<>(arguments.getInputs());
+				if(arguments.getListener()!=null)
+					arguments.getListener().processInputs(value,inputs);
+				script.getInputs().putAll(inputs);
+			}
 			value.set(inject(ScriptBusiness.class).evaluate(script));//TODO be carefull with concurrent access
 		}
 		return value.get();
@@ -117,5 +124,31 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 		return value;
 	}
 	
+	/**/
 	
+	public static interface Listener extends AbstractIdentifiableBusinessServiceImpl.Listener<Value> {
+	
+		/**/
+		
+		public static class Adapter extends AbstractIdentifiableBusinessServiceImpl.Listener.Adapter<Value> implements Listener,Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			/**/
+			
+			public static class Default extends Listener.Adapter implements Serializable {
+				private static final long serialVersionUID = 1L;
+				
+				/**/
+			
+				public static class EnterpriseResourcePlanning extends Default implements Serializable {
+					private static final long serialVersionUID = 1L;
+					
+					/**/
+					
+				}
+				
+			}
+			
+		}
+	}
 }

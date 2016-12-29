@@ -26,6 +26,7 @@ import org.cyk.system.root.business.api.party.person.PersonExtendedInformationsB
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.person.JobFunction;
@@ -106,7 +107,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 		person.setName(randomPerson.firstName());
 		person.setLastnames(randomPerson.lastName());
-		person.setSex(inject(SexDao.class).read(Boolean.TRUE.equals(male)?Sex.MALE:Sex.FEMALE));
+		person.setSex(inject(SexDao.class).read(Boolean.TRUE.equals(male)?RootConstant.Code.Sex.MALE:RootConstant.Code.Sex.FEMALE));
 		person.setSurname(randomPerson.surName());
 		person.setBirthDate(RandomDataProvider.getInstance().randomDate(DateUtils.addYears(new Date(), -50), DateUtils.addYears(new Date(), -20)) );
 		person.setContactCollection(inject(ContactCollectionBusiness.class).instanciateOneRandomly());

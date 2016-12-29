@@ -18,6 +18,7 @@ import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfManyFromValuesArguments;
 import org.cyk.system.root.business.api.party.person.PersonBusiness.CompletePersonInstanciationOfOneFromValuesArguments;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.party.person.Person;
@@ -92,7 +93,7 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	Person person = new Person();
     	person.setName("Paul");
     	person.setSex(new Sex());
-    	person.getSex().setCode(Sex.FEMALE);
+    	person.getSex().setCode(RootConstant.Code.Sex.FEMALE);
     	personBusiness.completeInstanciationOfOne(person);
     	System.out.println(person.getSex().getName());
     	

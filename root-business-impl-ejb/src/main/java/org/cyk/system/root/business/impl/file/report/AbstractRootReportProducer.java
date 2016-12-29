@@ -8,21 +8,28 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.FormatterBusiness;
+import org.cyk.system.root.business.api.TypedBusiness.ConvertArguments;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.api.value.ValueCollectionBusiness;
+import org.cyk.system.root.business.api.value.ValueCollectionItemBusiness;
+import org.cyk.system.root.business.api.value.ValueBusiness.DeriveArguments;
 import org.cyk.system.root.business.impl.AbstractRootBusinessBean;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.report.AbstractIdentifiableReport;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
 import org.cyk.system.root.model.file.report.LabelValueReport;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ContactCollectionReport;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifierReport;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalReport;
@@ -66,20 +73,9 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	public <REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass,CreateReportFileArguments<?> arguments) {
 		return null;
 	}
-	/*
-	@Override
-	public <REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass, AbstractIdentifiable identifiable) {
-		return produce(reportClass,identifiable);
-	}
 	
-	@Override
-	public <REPORT extends AbstractReportTemplateFile<REPORT>> ProduceArguments<REPORT> getDefaultProduceArguments(Class<REPORT> reportClass, AbstractIdentifiable identifiable) {
-		return new ProduceArguments<REPORT>();
-	}
-	*/
 	protected String getJasperStyle(String text,Style style){
 		return String.format(JASPER_STYLE, style.getFont().getSize(),"#"+style.getText().getColor().getHexademicalCode(),text);
-		//return String.format(JASPER_STYLE, style.getFont().getSize(),"#0000ff",text);
 	}
 	
 	@Override
@@ -114,22 +110,55 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return currentLabelValueCollection.getById(id);
 	}
 	
-	protected LabelValueCollectionReport addValueCollection(AbstractReportTemplateFile<?> report,ValueCollection valueCollection,String defaultValue){
+	/**/
+	
+	
+	
+	/**/
+	
+	protected LabelValueCollectionReport addLabelValueCollection(AbstractReportTemplateFile<?> report,LabelValueCollectionReport labelValueCollection,String[][] values,String defaultValue){
+		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(labelValueCollection,values,defaultValue);
+		//TODO is necessary ?
+		/*for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection()){
+			if(StringUtils.isBlank(labelValueReport.getValue())){
+				labelValueReport.setValue(defaultValue);
+			}
+		}*/
+		return labelValueCollectionReport;
+	}
+	
+	/*protected LabelValueCollectionReport addLabelValueCollection(AbstractReportTemplateFile<?> report,String name,String[][] values,String defaultValue){
+		
+	}*/
+	
+	protected LabelValueCollectionReport addValueCollection(AbstractReportTemplateFile<?> report,String valueCollectionCode,DeriveArguments deriveArguments){
+		String defaultValue = Constant.EMPTY_STRING;
+		ValueCollection valueCollection = inject(ValueCollectionBusiness.class).deriveByCode(valueCollectionCode,deriveArguments);
 		Collection<ValueCollectionItem> items = inject(ValueCollectionItemDao.class).readByCollection(valueCollection);
 		Collection<Value> values = new ArrayList<>();
 		for(ValueCollectionItem item : items){
 			values.add(item.getValue());
 		}
-		//inject(ValueBusiness.class).derive(values);
-		
+		ConvertArguments convertArguments = new ConvertArguments();
+		convertArguments.setBlankString(defaultValue);
+		convertArguments.setListener(new ConvertArguments.Listener.Adapter.Default(){
+			private static final long serialVersionUID = 1L;
+			@Override
+			public String format(AbstractIdentifiable identifiable) {
+				return inject(FormatterBusiness.class).format(((ValueCollectionItem)identifiable).getValue().get());
+			}
+		});
+		String[][] array = inject(ValueCollectionItemBusiness.class).convert(items, String[][].class, convertArguments);
 		//TODO should be factored
 		
-		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(valueCollection.getName(),convertToArray(values,defaultValue),defaultValue);
+		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(valueCollection.getName(),array,defaultValue);
+		/*
 		for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection()){
 			if(StringUtils.isBlank(labelValueReport.getValue())){
 				labelValueReport.setValue(defaultValue);
 			}
 		}
+		*/
 		return labelValueCollectionReport;
 	}
 	
@@ -173,6 +202,25 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	protected void addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String[][] metricCollections){
 		for(String[] metricCollection : metricCollections)
 			addMetricsLabelValueCollection(report, identifiable, metricCollection[0],metricCollection[1]);
+	}
+	
+	/**/
+	
+	protected void setGlobalIdentifier(GlobalIdentifier globalIdentifier,GlobalIdentifierReport report){
+		if(globalIdentifier==null)
+			return;
+		report.setCode(globalIdentifier.getCode());
+		report.setName(globalIdentifier.getName());
+		report.setBirthLocation(formatUsingBusiness(globalIdentifier.getBirthLocation()));
+		report.setDeathLocation(formatUsingBusiness(globalIdentifier.getDeathLocation()));
+		report.getExistencePeriod().setFrom(format(globalIdentifier.getExistencePeriod().getFromDate()));
+		report.getExistencePeriod().setTo(format(globalIdentifier.getExistencePeriod().getToDate()));
+	}
+	
+	protected void setGlobalIdentifier(AbstractIdentifiable identifiable,AbstractIdentifiableReport<?> report){
+		if(identifiable==null || identifiable.getGlobalIdentifier()==null)
+			return ;
+		setGlobalIdentifier(identifiable.getGlobalIdentifier(), report.getGlobalIdentifier());
 	}
 	
 	protected void set(ContactCollection contactCollection,ContactCollectionReport report){
@@ -235,12 +283,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected void set(AbstractActor actor,AbstractActorReport<?> report){
 		set(actor==null?null:actor.getPerson(), report.getPerson());
-		if(actor==null){
-			
-		}else{
-			report.getGlobalIdentifier().setCode(actor.getGlobalIdentifier().getCode());
-			report.getGlobalIdentifier().getExistencePeriod().setFrom(format(actor.getBirthDate()));
-		}
+		setGlobalIdentifier(actor, report);
 	}
 	
 	protected void set(Person person,ActorReport report){
@@ -256,7 +299,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return inject(FileBusiness.class).findInputStream(file);
 	}
 	
-	protected String[][] convertToArray(Collection<Value> values,String nullValueString){
+	/*protected String[][] convertToArray(Collection<Value> values,String nullValueString){
 		String[][] array = new String[values.size()][2];
 		Integer i = 0;
 		for(Value value : values){
@@ -267,7 +310,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			i++;
 		}
 		return array;
-	}
+	}*/
 	
 	//TODO use convertToArray(Collection<Value> values)
 	protected String[][] convertToArray(Collection<Metric> metrics,Collection<MetricValue> metricValues,String nullValueString){

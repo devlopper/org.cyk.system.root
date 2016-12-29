@@ -31,5 +31,16 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 		name = RandomStringUtils.randomAlphanumeric(6);
 		otherDetails = provider.randomWord(RandomDataProvider.WORD_LOCATION, 10, 20);
 	}
+
+
+	public String getBirthDate() {
+		return existencePeriod.getFrom();
+	}
+
+
+	public String getDeathDate() {
+		return existencePeriod.getTo();
+	}
+	
 	
 }

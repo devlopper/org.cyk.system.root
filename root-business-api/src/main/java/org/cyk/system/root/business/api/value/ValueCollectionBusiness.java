@@ -13,5 +13,6 @@ public interface ValueCollectionBusiness extends AbstractCollectionBusiness<Valu
 	void derive(ValueCollection valueCollection,DeriveArguments arguments);
 	Collection<ValueCollection> deriveByCodes(Collection<String> valueCollectionCodes,DeriveArguments arguments);
 	ValueCollection deriveByCode(String valueCollectionCode,DeriveArguments arguments);
+	
 }
 	

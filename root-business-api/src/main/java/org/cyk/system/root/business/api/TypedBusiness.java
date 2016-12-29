@@ -14,6 +14,7 @@ import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.value.ValueCollection;
 import org.cyk.utility.common.AbstractBuilder;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -302,4 +303,54 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	Collection<IDENTIFIABLE> findDuplicates(IDENTIFIABLE identifiable);
 	
 	Collection<IDENTIFIABLE> findDuplicates();
+	
+	<T> T convert(IDENTIFIABLE identifiable,Class<T> resultClass,ConvertArguments arguments);
+	<T> T convert(Collection<IDENTIFIABLE> identifiables,Class<T> resultClass,ConvertArguments arguments);
+	
+	@Getter @Setter
+	public static class ConvertArguments implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
+		private Listener listener;
+		private Long arrayLenght=2l;
+		private Boolean ignoreNull,ignoreBlank;
+		private String blankString = Constant.EMPTY_STRING;
+		
+		public static interface Listener {
+			String getName(AbstractIdentifiable identifiable);
+			String format(AbstractIdentifiable identifiable);
+			
+			/**/
+			
+			public static class Adapter extends BeanAdapter implements Listener,Serializable {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public String getName(AbstractIdentifiable identifiable) {
+					return null;
+				}
+
+				@Override
+				public String format(AbstractIdentifiable identifiable) {
+					return null;
+				}
+				
+				/**/
+				
+				public static class Default extends Adapter implements Serializable {
+					private static final long serialVersionUID = 1L;
+					
+					@Override
+					public String getName(AbstractIdentifiable identifiable) {
+						return identifiable.getName();
+					}
+					
+					@Override
+					public String format(AbstractIdentifiable identifiable) {
+						return inject(FormatterBusiness.class).format(identifiable);
+					}
+				}
+			}
+		}
+	}
 }

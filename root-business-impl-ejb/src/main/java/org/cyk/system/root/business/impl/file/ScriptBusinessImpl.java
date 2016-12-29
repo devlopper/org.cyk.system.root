@@ -1,6 +1,8 @@
 package org.cyk.system.root.business.impl.file;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map.Entry;
 
 import javax.inject.Inject;
@@ -14,6 +16,7 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.api.file.ScriptVariableBusiness;
+import org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
@@ -22,6 +25,7 @@ import org.cyk.system.root.model.file.ScriptVariable;
 import org.cyk.system.root.persistence.api.file.ScriptDao;
 import org.cyk.system.root.persistence.api.file.ScriptEvaluationEngineDao;
 import org.cyk.system.root.persistence.api.file.ScriptVariableDao;
+import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
 
 public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, ScriptDao> implements ScriptBusiness, Serializable {
@@ -63,7 +67,7 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 	}
 
 	@Override
-	public Object evaluate(Script script) {
+	public Object evaluate(final Script script) {
 		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Evaluate", "script");
 		ScriptEngineManager manager = new ScriptEngineManager();
 		String engineName = script.getEvaluationEngine().getCode();
@@ -75,12 +79,17 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		
 		bindings.put(RootConstant.Configuration.Script.GENERIC_BUSINESS, inject(GenericBusiness.class));
 		
-		if(script.getInputs()!=null){
-			if(!script.getInputs().isEmpty())
-				logMessageBuilder.addParameters("Inputs",script.getInputs());
-			for (Entry<String, Object> entry : script.getInputs().entrySet())
-				bindings.put(entry.getKey(), entry.getValue());
-		}
+		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
+			@Override
+			public void execute(Listener listener) {
+				listener.processInputs(script);
+			}
+		});
+		
+		if(!script.getInputs().isEmpty())
+			logMessageBuilder.addParameters("Inputs",script.getInputs());
+		for (Entry<String, Object> entry : script.getInputs().entrySet())
+			bindings.put(entry.getKey(), entry.getValue());
 		
 		try {
 			String string = IOUtils.toString(inject(FileBusiness.class).findInputStream(script.getFile()));
@@ -99,6 +108,43 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		logMessageBuilder.addParameters("Outputs",script.getOutputs());
 		logTrace(logMessageBuilder);
 		return script.getReturned();
+	}
+	
+	/**/
+	
+	public static interface Listener extends AbstractIdentifiableBusinessServiceImpl.Listener<Script> {
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		/**/
+		
+		void processInputs(Script script);
+		
+		/**/
+		
+		public static class Adapter extends AbstractIdentifiableBusinessServiceImpl.Listener.Adapter<Script> implements Listener,Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void processInputs(Script script) {}
+			
+			/**/
+			
+			public static class Default extends Listener.Adapter implements Serializable {
+				private static final long serialVersionUID = 1L;
+				
+				/**/
+			
+				public static class EnterpriseResourcePlanning extends Default implements Serializable {
+					private static final long serialVersionUID = 1L;
+					
+					/**/
+					
+				}
+				
+			}
+			
+		}
 	}
 
 }

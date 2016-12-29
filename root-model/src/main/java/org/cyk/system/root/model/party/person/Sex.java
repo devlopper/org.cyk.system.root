@@ -15,9 +15,6 @@ public class Sex extends AbstractEnumeration implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	public static final String MALE = "M";
-	public static final String FEMALE = "F";
-	
 	public Sex(String code, String libelle) {
 		super(code, libelle,null, null);
 	}

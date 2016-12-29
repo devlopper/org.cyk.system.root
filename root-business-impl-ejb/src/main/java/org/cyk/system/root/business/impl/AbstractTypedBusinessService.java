@@ -51,6 +51,7 @@ import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
@@ -569,9 +570,51 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public IDENTIFIABLE instanciateOne(String[] values) {
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T convert(IDENTIFIABLE identifiable, Class<T> resultClass,ConvertArguments arguments) {
+		if(identifiable == null)
+			return null;
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Convert", identifiable.getClass().getSimpleName());
+		logMessageBuilder.addParameters("result class",resultClass);
+		T result = null;
+		if(String[].class.equals(resultClass)){
+			result = (T) new String[arguments.getArrayLenght().intValue()];
+			((String[])result)[0] = arguments.getListener() == null ? identifiable.getName() : arguments.getListener().getName(identifiable);
+			((String[])result)[1] = arguments.getListener() == null ? inject(FormatterBusiness.class).format(identifiable) : arguments.getListener().format(identifiable);
+			if(StringUtils.isBlank(((String[])result)[1]))
+				((String[])result)[1] = arguments.getBlankString();
+			logMessageBuilder.addParameters("result",StringUtils.join((String[])result,","));
+		}
+		if(result == null)
+			logMessageBuilder.addParameters("result","not convertable");
+		logTrace(logMessageBuilder);
+		return result;
+	}
 	
-	
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T convert(Collection<IDENTIFIABLE> identifiables, Class<T> resultClass,ConvertArguments arguments) {
+		if(identifiables == null || identifiables.isEmpty())
+			return null;
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Convert", identifiables.size()+Constant.CHARACTER_SPACE+identifiables.iterator().next().getClass().getSimpleName());
+		T result = null;
+		if(String[][].class.equals(resultClass)){
+			result = (T) new String[identifiables.size()][arguments.getArrayLenght().intValue()];
+			Integer i = 0;
+			for(IDENTIFIABLE identifiable : identifiables){
+				String[] array = (String[]) convert(identifiable, String[].class, arguments);
+				if(array==null)
+					;
+				else
+					((String[][])result)[i++] = array;
+			}
+		}
+		logTrace(logMessageBuilder);
+		return result;
+	}
+
 	/**/
 	
 }

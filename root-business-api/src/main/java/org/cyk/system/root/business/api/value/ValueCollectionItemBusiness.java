@@ -14,5 +14,4 @@ public interface ValueCollectionItemBusiness extends AbstractCollectionItemBusin
 	Collection<ValueCollectionItem> deriveByCodes(Collection<String> valueCollectionItemCodes,DeriveArguments arguments);
 	ValueCollectionItem deriveByCode(String valueCollectionItemCode,DeriveArguments arguments);
 	
-    
 }

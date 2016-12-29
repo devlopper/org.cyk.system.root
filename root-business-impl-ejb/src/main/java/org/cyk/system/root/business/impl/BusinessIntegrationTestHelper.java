@@ -19,7 +19,7 @@ public class BusinessIntegrationTestHelper {
     //FIXME those classes are ignored. WHY 
     private static Class<?>[] CLASSES = {ExceptionUtils.class,PersonValidator.class,FileValidator.class,
     	RandomDataProvider.class,ResourceProducer.class,Logger.class,RootReportRepository.class,RootDataProducerHelper.class
-    	,DatabaseUtils.class,BusinessInterfaceLocator.class};
+    	,DatabaseUtils.class,BusinessInterfaceLocator.class,RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator.class,RootFormattingConfigurationsRegistrator.class};
     
     public static Package[] packages(){
         return PACKAGES;

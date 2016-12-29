@@ -6,9 +6,10 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.value.ValueBusiness;
-import org.cyk.system.root.business.api.value.ValueCollectionItemBusiness;
 import org.cyk.system.root.business.api.value.ValueBusiness.DeriveArguments;
+import org.cyk.system.root.business.api.value.ValueCollectionItemBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueCollection;
@@ -26,10 +27,20 @@ public class ValueCollectionItemBusinessImpl extends AbstractCollectionItemBusin
 	}
 	
 	@Override
+	protected void setAutoSettedProperties(ValueCollectionItem valueCollectionItem) {
+		super.setAutoSettedProperties(valueCollectionItem);
+		if(StringUtils.isBlank(valueCollectionItem.getName()))
+			if(valueCollectionItem.getValue()!=null)
+				valueCollectionItem.setName(valueCollectionItem.getValue().getName());
+	}
+	
+	@Override
 	public ValueCollectionItem instanciateOne(String[] values) {
 		ValueCollectionItem valueCollectionItem = super.instanciateOne(values);
 		Integer index = 15;
-		valueCollectionItem.setValue(inject(ValueDao.class).read(values[index++]));
+		String value;
+		if(StringUtils.isNotBlank(value = values[index++]))
+			valueCollectionItem.setValue(inject(ValueDao.class).read(value));
 		return valueCollectionItem;
 	}
 
@@ -59,5 +70,5 @@ public class ValueCollectionItemBusinessImpl extends AbstractCollectionItemBusin
 		derive(valueCollectionItem,arguments);
 		return valueCollectionItem;
 	}
-    
+		
 }

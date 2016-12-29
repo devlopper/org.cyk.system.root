@@ -70,24 +70,28 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		labelValueCollections.add(labelValueCollectionReport);
 	}
 	
-	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values,String nullValue){
-		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();
-		labelValueCollectionReport.setName(name);
+	public LabelValueCollectionReport addLabelValueCollection(LabelValueCollectionReport labelValueCollectionReport,String[][] values,String nullValue){
 		if(values!=null)
-			for(String[] string : values){
-				if(string[1]==null)
-					string[1] = nullValue;
-				if(string[1]==null)
+			for(String[] array : values){
+				if(array[1]==null)
+					array[1] = nullValue;
+				if(array[1]==null)
 					;
 				else{
-					LabelValueReport labelValue = labelValueCollectionReport.add(string[0], string[1]);
-					if(string.length>2)
-						labelValue.setExtendedValues(ArrayUtils.subarray(string, 2, string.length));
+					LabelValueReport labelValue = labelValueCollectionReport.add(array[0], array[1]);
+					if(array.length>2)
+						labelValue.setExtendedValues(ArrayUtils.subarray(array, 2, array.length));
 				}
 			}
 		addLabelValueCollection(labelValueCollectionReport);
 		
 		return labelValueCollectionReport;
+	}
+	
+	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values,String nullValue){
+		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();
+		labelValueCollectionReport.setName(name);
+		return addLabelValueCollection(labelValueCollectionReport,values,nullValue);
 	}
 	
 	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values){

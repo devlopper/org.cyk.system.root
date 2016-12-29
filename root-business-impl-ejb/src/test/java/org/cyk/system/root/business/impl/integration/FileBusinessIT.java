@@ -33,8 +33,8 @@ public class FileBusinessIT extends AbstractBusinessIT {
 			create(file2);
 			file2 = fileBusiness.find(file2.getIdentifier());
 			
-			Sex sexMale = inject(SexDao.class).read(Sex.MALE);
-			Sex sexFemale = inject(SexDao.class).read(Sex.FEMALE);
+			Sex sexMale = inject(SexDao.class).read(RootConstant.Code.Sex.MALE);
+			Sex sexFemale = inject(SexDao.class).read(RootConstant.Code.Sex.FEMALE);
 			
 			create(new FileIdentifiableGlobalIdentifier(file1,sexMale));
 			create(new FileIdentifiableGlobalIdentifier(file2,sexMale));

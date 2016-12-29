@@ -62,5 +62,4 @@ public class ValueCollectionBusinessImpl extends AbstractCollectionBusinessImpl<
 		return valueCollection;
 	}
 	
-
 }
