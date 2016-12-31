@@ -29,6 +29,18 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		title = provider.randomLine(1, 2);
 	}
 	
+	public LabelValueCollectionReport addLabelValueCollection(LabelValueCollectionReport labelValueCollectionReport){
+		currentLabelValueCollection = labelValueCollectionReport;
+		labelValueCollections.add(labelValueCollectionReport);
+		return labelValueCollectionReport;
+	}
+	
+	public LabelValueCollectionReport addLabelValueCollection(String name){
+		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();
+		labelValueCollectionReport.setName(name);
+		return addLabelValueCollection(labelValueCollectionReport);
+	}
+	
 	public void labelValue(LabelValueCollectionReport collection,String labelId,String labelValue,String value,Boolean condition){
 		if(!Boolean.TRUE.equals(condition))
 			return;
@@ -47,6 +59,7 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	public void labelValue(LabelValueCollectionReport collection,String id,String value){
 		labelValue(collection, id, value,Boolean.TRUE);
 	}
+	
 	public void labelValue(String id,String value){
 		labelValue(currentLabelValueCollection,id, value);
 	}
@@ -65,12 +78,9 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		return randomLabelValueCollection(5);
 	}
 	
-	public void addLabelValueCollection(LabelValueCollectionReport labelValueCollectionReport){
-		currentLabelValueCollection = labelValueCollectionReport;
-		labelValueCollections.add(labelValueCollectionReport);
-	}
 	
-	public LabelValueCollectionReport addLabelValueCollection(LabelValueCollectionReport labelValueCollectionReport,String[][] values,String nullValue){
+	
+	public void addLabelValues(LabelValueCollectionReport labelValueCollection,String[][] values,String nullValue){
 		if(values!=null)
 			for(String[] array : values){
 				if(array[1]==null)
@@ -78,20 +88,18 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 				if(array[1]==null)
 					;
 				else{
-					LabelValueReport labelValue = labelValueCollectionReport.add(array[0], array[1]);
+					LabelValueReport labelValue = labelValueCollection.add(array[0], array[1]);
 					if(array.length>2)
 						labelValue.setExtendedValues(ArrayUtils.subarray(array, 2, array.length));
 				}
 			}
-		addLabelValueCollection(labelValueCollectionReport);
-		
-		return labelValueCollectionReport;
+		//addLabelValueCollection(labelValueCollectionReport);
 	}
 	
 	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values,String nullValue){
-		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();
-		labelValueCollectionReport.setName(name);
-		return addLabelValueCollection(labelValueCollectionReport,values,nullValue);
+		LabelValueCollectionReport labelValueCollectionReport = addLabelValueCollection(name);
+		addLabelValues(labelValueCollectionReport,values,nullValue);
+		return labelValueCollectionReport;
 	}
 	
 	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values){

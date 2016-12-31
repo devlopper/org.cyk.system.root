@@ -10,8 +10,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.report.AbstractIdentifiableReport;
+import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.AbstractActorReport;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonReport;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.generator.AbstractGeneratable;
@@ -50,11 +53,26 @@ public interface ValueBusiness extends TypedBusiness<Value> {
 		}
 		
 		public DeriveArguments addInput(Object instance){
+			if(instance==null)
+				return this;
 			Class<?> aClass = instance.getClass(); //instance instanceof AbstractIdentifiable ? instance.getClass() : ((AbstractIdentifiableReport<?>)instance).getSource().getClass();
 			String name = Introspector.decapitalize(aClass.getSimpleName());
 			if(instance instanceof AbstractIdentifiableReport || instance instanceof AbstractGeneratable)
 				name = StringUtils.substringBefore(name, "Report");
 			return addInput(name, instance);
+		}
+		
+		public DeriveArguments addInputs(Object...instances){
+			for(Object instance : instances){
+				if(instance instanceof AbstractActor || instance instanceof AbstractActorReport<?>)
+					setActor(instance);
+				else if(instance instanceof Person || instance instanceof PersonReport)
+					setPerson(instance,Boolean.TRUE);
+				addInput(instance);
+				if(instance instanceof AbstractReportTemplateFile)
+					addInput(((AbstractReportTemplateFile<?>)instance).getSource());
+			}
+			return this;
 		}
 		
 		public DeriveArguments setGlobalIdentifier(Object identifiable){

@@ -28,7 +28,6 @@ import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
@@ -58,8 +57,8 @@ import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
@@ -208,6 +207,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return metricCollection;
 	}*/
 	
+	@Deprecated
 	public File createFile(Package basePackage,String relativePath,String code,String name){
 		basePackage = PersistDataListener.Adapter.process(File.class, code,PersistDataListener.BASE_PACKAGE, basePackage);
 		relativePath = PersistDataListener.Adapter.process(File.class, code, PersistDataListener.RELATIVE_PATH, relativePath);
@@ -224,12 +224,13 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			;//System.out.println("Relative path is blank : "+relativePath+" : "+code+" , "+name+" , "+basePackage);
 		return file;
 	}
-	
+	@Deprecated
 	public File createFile(Package basePackage,String relativePath,String code){
 		String name = FilenameUtils.getName(relativePath);
 		return createFile(basePackage, relativePath,code, name);
 	}
 	
+	@Deprecated
 	public byte[] getResourceAsBytes(Package basePackage,String relativePath){
     	String path = "/"+StringUtils.replace( (basePackage==null?(this.basePackage==null?this.getClass().getPackage():this.basePackage):basePackage).getName(), ".", "/")+"/";
     	path += relativePath;
@@ -461,6 +462,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		instanciateUserAccounts(parties, roles);
 	}
 
+	@Deprecated
 	public ReportTemplate createReportTemplate(String code,String name,Boolean male,String templateRelativeFileName,File headerImage,File backgroundImage,File draftBackgroundImage){
 		Package basePackage = PersistDataListener.Adapter.process(File.class, code,PersistDataListener.BASE_PACKAGE, this.basePackage);
 		templateRelativeFileName = PersistDataListener.Adapter.process(ReportTemplate.class, code,PersistDataListener.RELATIVE_PATH, templateRelativeFileName);
@@ -468,7 +470,6 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		String fileName = StringUtils.substringAfterLast(templateRelativeFileName, Constant.CHARACTER_SLASH.toString());
 		if(StringUtils.isBlank(name))
 			name = fileName;
-		createEnumeration(FileRepresentationType.class,code, name);
 		File file = createFile(basePackage,templateRelativeFileName, fileName);
 		
 		return create(new ReportTemplate(code,name,male,file,headerImage,backgroundImage,draftBackgroundImage));

@@ -221,8 +221,10 @@ public interface RootConstant {
 		public static class Script implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
-			public static String GENERIC_BUSINESS = "business";
-			
+			public static String GENERIC_BUSINESS = "genericBusiness";
+			public static String NUMBER_BUSINESS = "numberBusiness";
+			public static String TIME_BUSINESS = "timeBusiness";
+			public static String NUMBER_BUSINESS_FORMAT_ARGUMENTS = NUMBER_BUSINESS+"FormatArguments";
 		}
 		
 	}

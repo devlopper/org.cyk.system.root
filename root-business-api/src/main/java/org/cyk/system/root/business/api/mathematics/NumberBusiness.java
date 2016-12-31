@@ -61,6 +61,10 @@ public interface NumberBusiness {
 		private Boolean isPercentage = Boolean.FALSE;
 		private String percentageSymbol = Constant.CHARACTER_PERCENT.toString(),leftPadding=Constant.CHARACTER_ZERO.toString();
 		private Integer width;
+		
+		public void setTypeAsLetter(){
+			setType(CharacterSet.LETTER);
+		}
 	}
 	
 	@Getter @Setter

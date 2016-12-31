@@ -51,9 +51,9 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
     @Override
 	public ENUMERATION instanciateOne(String[] values) {
     	ENUMERATION enumeration = instanciateOne();
-    	Integer index = getInstanciateOneEnumerationStartIndex(values);
-    	enumeration.setCode(values[index++]);
-    	enumeration.setName(values[index++]);
+    	SetListener listener = new SetListener.Adapter.Default(values, getInstanciateOneEnumerationStartIndex(values), null);
+    	set(enumeration.getGlobalIdentifierCreateIfNull(), GlobalIdentifier.FIELD_CODE,  listener);
+    	set(enumeration.getGlobalIdentifierCreateIfNull(), GlobalIdentifier.FIELD_NAME,  listener);
 		return enumeration;
 	}
     

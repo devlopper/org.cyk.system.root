@@ -44,6 +44,7 @@ import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.ScriptEvaluationEngine;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
+import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
@@ -146,6 +147,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         inject(RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator.class).register();
         inject(RootFormattingConfigurationsRegistrator.class).register();
+        
+        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, ReportTemplate.class);
         
         rootBusinessTestHelper.setReportBusiness(reportBusiness);
         

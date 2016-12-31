@@ -23,6 +23,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,7 @@ import org.cyk.system.root.business.api.file.MediaBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
 import org.cyk.system.root.business.api.file.StreamBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.PersistDataListener;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
@@ -42,6 +44,7 @@ import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.FileExtension;
+import org.cyk.utility.common.LogMessage;
 
 public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao> implements FileBusiness,Serializable {
 
@@ -66,14 +69,42 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		return super.getPropertyValueTokens(file, name);
 	}
 	
-	/*@Override
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public File instanciateOne(String[] values) {
-		File file = instanciateOne();
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Instanciate", "file from values "+StringUtils.join(values,Constant.CHARACTER_COMA.toString()));
 		Integer index = 0;
-		file.setCode(values[index++]);
-		process(file, bytes, values[index++], Boolean.TRUE);
+		String code = values[index++];
+		String name = values[index++];
+		Package basePackage = PersistDataListener.Adapter.process(File.class, code,PersistDataListener.BASE_PACKAGE, Package.getPackage(values[index++]));
+		String relativePath = PersistDataListener.Adapter.process(File.class, code, PersistDataListener.RELATIVE_PATH, values[index++]);
+		String extension = FilenameUtils.getExtension(relativePath);
+		logMessageBuilder.addParameters("Code",code,"Name",name,"Package",basePackage,"Relative path",relativePath);
+		File file = null;
+		if(StringUtils.isNotBlank(relativePath)){
+			if(StringUtils.isBlank(name))
+				name = FilenameUtils.getName(relativePath);
+			file = process(getResourceAsBytes(basePackage,relativePath),name+Constant.CHARACTER_DOT+extension);
+			if(StringUtils.isNotBlank(code))
+				file.setCode(code);
+		}
+		logTrace(logMessageBuilder);
 		return file;
-	}*/
+	}
+	
+	protected byte[] getResourceAsBytes(Package basePackage,String relativePath){
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Get", "resource as bytes");
+		String path = "/"+StringUtils.replace(basePackage.getName(), Constant.CHARACTER_DOT.toString(), "/")+"/";
+    	path += relativePath;
+    	logMessageBuilder.addParameters("Path",path);
+    	try {
+    		return IOUtils.toByteArray(this.getClass().getResourceAsStream(path));
+		} catch (IOException e) {
+			logMessageBuilder.addParameters("Exception",e.toString());
+			return null;
+		} finally {
+			logTrace(logMessageBuilder);
+		}
+    }
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<File> findByFileIdentifiableGlobalIdentifierSearchCriteria(SearchCriteria searchCriteria) {

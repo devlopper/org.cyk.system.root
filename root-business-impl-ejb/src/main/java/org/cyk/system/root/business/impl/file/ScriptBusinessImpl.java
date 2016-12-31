@@ -16,6 +16,8 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.api.file.ScriptVariableBusiness;
+import org.cyk.system.root.business.api.mathematics.NumberBusiness;
+import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.RootConstant;
@@ -78,6 +80,9 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		bindings.clear();
 		
 		bindings.put(RootConstant.Configuration.Script.GENERIC_BUSINESS, inject(GenericBusiness.class));
+		bindings.put(RootConstant.Configuration.Script.NUMBER_BUSINESS, inject(NumberBusiness.class));
+		bindings.put(RootConstant.Configuration.Script.NUMBER_BUSINESS_FORMAT_ARGUMENTS, new NumberBusiness.FormatArguments());
+		bindings.put(RootConstant.Configuration.Script.TIME_BUSINESS, inject(TimeBusiness.class));
 		
 		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
 			@Override
@@ -96,17 +101,18 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 			logMessageBuilder.addParameters("Text",string);
 			script.setReturned(engine.eval(string, bindings));
 			logMessageBuilder.addParameters("Returned",script.getReturned());
+			
+			script.getOutputs().clear();
+			for (ScriptVariable scriptVariable : inject(ScriptVariableDao.class).readByScript(script))
+				script.getOutputs().put(scriptVariable.getCode(), bindings.get(scriptVariable.getCode()));
+			if(!script.getOutputs().containsKey(RootConstant.Configuration.ScriptVariable.RETURNED))
+				script.getOutputs().put(RootConstant.Configuration.ScriptVariable.RETURNED, script.getReturned());
+			logMessageBuilder.addParameters("Outputs",script.getOutputs());
 		} catch (Exception e) {
 			exceptionUtils().exception(e);
+		} finally {
+			logTrace(logMessageBuilder);
 		}
-		
-		script.getOutputs().clear();
-		for (ScriptVariable scriptVariable : inject(ScriptVariableDao.class).readByScript(script))
-			script.getOutputs().put(scriptVariable.getCode(), bindings.get(scriptVariable.getCode()));
-		if(!script.getOutputs().containsKey(RootConstant.Configuration.ScriptVariable.RETURNED))
-			script.getOutputs().put(RootConstant.Configuration.ScriptVariable.RETURNED, script.getReturned());
-		logMessageBuilder.addParameters("Outputs",script.getOutputs());
-		logTrace(logMessageBuilder);
 		return script.getReturned();
 	}
 	
