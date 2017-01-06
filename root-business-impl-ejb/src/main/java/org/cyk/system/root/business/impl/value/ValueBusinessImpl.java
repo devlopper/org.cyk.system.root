@@ -80,23 +80,18 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 						value.set( RandomStringUtils.randomAlphabetic(1));
 				}
 			}
-			
 		}	
 		inject(GenericBusiness.class).update(commonUtils.castCollection(values, AbstractIdentifiable.class));
 	}
 
 	@Override
-	public Object derive(Value value,DeriveArguments arguments) {
+	public Object derive(Value value,Derive listener) {
 		if(value.isDerived()){
 			Script script = value.getProperties().getDerivationScript();
 			script.getInputs().clear();
-			if(arguments==null){
-				
-			}
-			if(arguments!=null){
-				Map<String,Object> inputs = new LinkedHashMap<>(arguments.getInputs());
-				if(arguments.getListener()!=null)
-					arguments.getListener().processInputs(value,inputs);
+			if(listener!=null){
+				Map<String,Object> inputs = new LinkedHashMap<>(listener.getInputs());
+				listener.processInputs(value,inputs);
 				script.getInputs().putAll(inputs);
 			}
 			value.set(inject(ScriptBusiness.class).evaluate(script));//TODO be carefull with concurrent access
@@ -105,22 +100,22 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 	}
 
 	@Override
-	public void derive(Collection<Value> values,DeriveArguments arguments) {
+	public void derive(Collection<Value> values,Derive listener) {
 		for(Value value : values)
-			derive(value,arguments);
+			derive(value,listener);
 	}
 
 	@Override
-	public Collection<Value> deriveByCodes(Collection<String> valueCodes,DeriveArguments arguments) {
+	public Collection<Value> deriveByCodes(Collection<String> valueCodes,Derive listener) {
 		Collection<Value> values = dao.read(valueCodes);
-		derive(values,arguments);
+		derive(values,listener);
 		return values;
 	}
 
 	@Override
-	public Value deriveByCode(String valueCode,DeriveArguments arguments) {
+	public Value deriveByCode(String valueCode,Derive listener) {
 		Value value = dao.read(valueCode);
-		derive(value,arguments);
+		derive(value,listener);
 		return value;
 	}
 	

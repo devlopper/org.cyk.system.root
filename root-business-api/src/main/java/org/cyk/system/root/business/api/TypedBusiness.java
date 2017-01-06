@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.api;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,10 +15,13 @@ import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.value.ValueCollection;
 import org.cyk.utility.common.AbstractBuilder;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
+import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.converter.Converter;
+import org.cyk.utility.common.converter.ManyConverter;
+import org.cyk.utility.common.converter.OneConverter;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,7 +41,9 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     
     Collection<IDENTIFIABLE> instanciateMany(List<String[]> list);
     
+    //IDENTIFIABLE instanciateOne(String[] values,InstanciateOneListener listener);
     IDENTIFIABLE instanciateOne(String[] values);
+    
     IDENTIFIABLE instanciateOneRandomly();
     IDENTIFIABLE instanciateOneRandomly(String code);
     Collection<IDENTIFIABLE> instanciateManyRandomly(Integer count);
@@ -304,53 +310,107 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	
 	Collection<IDENTIFIABLE> findDuplicates();
 	
-	<T> T convert(IDENTIFIABLE identifiable,Class<T> resultClass,ConvertArguments arguments);
-	<T> T convert(Collection<IDENTIFIABLE> identifiables,Class<T> resultClass,ConvertArguments arguments);
+	<T> T convert(Converter<IDENTIFIABLE, T> converter);
+	<T> T convert(OneConverter<IDENTIFIABLE, T> converter);
+	<T> T convert(ManyConverter<IDENTIFIABLE, T> converter);
+
+	/**/
 	
-	@Getter @Setter
-	public static class ConvertArguments implements Serializable {
-		private static final long serialVersionUID = 1L;
+	public static interface InstanciateOneListener<T> extends Serializable {
 		
-		private Listener listener;
-		private Long arrayLenght=2l;
-		private Boolean ignoreNull,ignoreBlank;
-		private String blankString = Constant.EMPTY_STRING;
+		SetListener getSetListener();
+		InstanciateOneListener<T> setSetListener(SetListener setListener);
+		T getInstance();
 		
-		public static interface Listener {
-			String getName(AbstractIdentifiable identifiable);
-			String format(AbstractIdentifiable identifiable);
+		@Getter @Setter
+		public static class Adapter<T> extends BeanAdapter implements InstanciateOneListener<T>,Serializable {
+			private static final long serialVersionUID = 1L;
 			
-			/**/
+			protected T instance;
+			protected SetListener setListener;
 			
-			public static class Adapter extends BeanAdapter implements Listener,Serializable {
+			public InstanciateOneListener<T> setSetListener(SetListener setListener){
+				this.setListener = setListener;
+				return this;
+			}
+			
+			@Getter @Setter
+			public static class Default<T> extends InstanciateOneListener.Adapter<T> implements Serializable {
 				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String getName(AbstractIdentifiable identifiable) {
-					return null;
-				}
-
-				@Override
-				public String format(AbstractIdentifiable identifiable) {
-					return null;
-				}
 				
-				/**/
-				
-				public static class Default extends Adapter implements Serializable {
-					private static final long serialVersionUID = 1L;
-					
-					@Override
-					public String getName(AbstractIdentifiable identifiable) {
-						return identifiable.getName();
-					}
-					
-					@Override
-					public String format(AbstractIdentifiable identifiable) {
-						return inject(FormatterBusiness.class).format(identifiable);
-					}
+				public Default(T instance,String[] values,Integer index,LogMessage.Builder logMessageBuilder) {
+					setListener = new SetListener.Adapter.Default(this.instance = instance,values,index,logMessageBuilder);
 				}
 			}
 		}
+	}
+	
+	public static interface SetListener extends Serializable {
+		
+		public Object getInstance();
+		public SetListener setInstance(Object instance);
+		public Integer getIndex();
+		public SetListener setIndex(Integer index);
+		public Integer getIndexIncrement();
+		public SetListener setIndexIncrement(Integer indexIncrement);
+		public String[] getValues();
+		public Class<?> getFieldType();
+		public SetListener setFieldType(Class<?> fieldType);
+		public Class<?> getFieldType(Class<?> aClass,Field field);
+		public LogMessage.Builder getLogMessageBuilder();
+		
+		@Getter @Setter
+		public static class Adapter extends BeanAdapter implements SetListener,Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			protected Object instance;
+			protected Integer index,indexIncrement=1;
+			protected String[] values;
+			protected LogMessage.Builder logMessageBuilder;
+			protected Class<?> fieldType;
+			
+			public SetListener setInstance(Object instance){
+				this.instance = instance;
+				return this;
+			}
+			
+			public SetListener setIndex(Integer index){
+				this.index = index;
+				return this;
+			}
+			
+			public SetListener setIndexIncrement(Integer indexIncrement){
+				this.indexIncrement = indexIncrement;
+				return this;
+			}
+			
+			public SetListener setFieldType(Class<?> fieldType){
+				this.fieldType = fieldType;
+				return this;
+			}
+			
+			@Override
+			public Class<?> getFieldType(Class<?> aClass,Field field) {
+				return null;
+			}
+			
+			public static class Default extends SetListener.Adapter implements Serializable {
+				private static final long serialVersionUID = 1L;
+				
+				public Default(Object instance,String[] values,Integer index,LogMessage.Builder logMessageBuilder) {
+					this.instance = instance;
+					this.values = values;
+					this.index = index;
+					this.logMessageBuilder = logMessageBuilder;
+				}
+				
+				@Override
+				public Class<?> getFieldType(Class<?> aClass,Field field) {
+					return commonUtils.getFieldType(aClass, field);
+				}
+			}
+			
+		}
+		
 	}
 }

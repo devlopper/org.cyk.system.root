@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.value.ValueBusiness;
-import org.cyk.system.root.business.api.value.ValueBusiness.DeriveArguments;
+import org.cyk.system.root.business.api.value.ValueBusiness.Derive;
 import org.cyk.system.root.business.api.value.ValueCollectionItemBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.value.Value;
@@ -45,29 +45,29 @@ public class ValueCollectionItemBusinessImpl extends AbstractCollectionItemBusin
 	}
 
 	@Override
-	public void derive(Collection<ValueCollectionItem> valueCollectionItems,DeriveArguments arguments) {
+	public void derive(Collection<ValueCollectionItem> valueCollectionItems,Derive listener) {
 		Collection<Value> values = new ArrayList<>();
 		for(ValueCollectionItem valueCollectionItem : valueCollectionItems)
 			values.add(valueCollectionItem.getValue());
-		inject(ValueBusiness.class).derive(values,arguments);
+		inject(ValueBusiness.class).derive(values,listener);
 	}
 
 	@Override
-	public void derive(ValueCollectionItem valueCollectionItem,DeriveArguments arguments) {
-		inject(ValueBusiness.class).derive(valueCollectionItem.getValue(),arguments);
+	public void derive(ValueCollectionItem valueCollectionItem,Derive listener) {
+		inject(ValueBusiness.class).derive(valueCollectionItem.getValue(),listener);
 	}
 
 	@Override
-	public Collection<ValueCollectionItem> deriveByCodes(Collection<String> valueCollectionItemCodes,DeriveArguments arguments) {
+	public Collection<ValueCollectionItem> deriveByCodes(Collection<String> valueCollectionItemCodes,Derive listener) {
 		Collection<ValueCollectionItem> valueCollectionItems = dao.read(valueCollectionItemCodes);
-		derive(valueCollectionItems,arguments);
+		derive(valueCollectionItems,listener);
 		return valueCollectionItems;
 	}
 
 	@Override
-	public ValueCollectionItem deriveByCode(String valueCollectionItemCode,DeriveArguments arguments) {
+	public ValueCollectionItem deriveByCode(String valueCollectionItemCode,Derive listener) {
 		ValueCollectionItem valueCollectionItem = dao.read(valueCollectionItemCode);
-		derive(valueCollectionItem,arguments);
+		derive(valueCollectionItem,listener);
 		return valueCollectionItem;
 	}
 		

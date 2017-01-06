@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 
 import lombok.Getter;
@@ -19,7 +18,6 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	protected String header,footer,title;
 	protected Boolean provisional = Boolean.FALSE;
 	
-	protected LabelValueCollectionReport currentLabelValueCollection;
 	protected List<LabelValueCollectionReport> labelValueCollections = new ArrayList<>();
 
 	@Override
@@ -29,18 +27,23 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		title = provider.randomLine(1, 2);
 	}
 	
-	public LabelValueCollectionReport addLabelValueCollection(LabelValueCollectionReport labelValueCollectionReport){
-		currentLabelValueCollection = labelValueCollectionReport;
-		labelValueCollections.add(labelValueCollectionReport);
-		return labelValueCollectionReport;
+	public LabelValueCollectionReport getCurrentLabelValueCollection(){
+		if(labelValueCollections.isEmpty())
+			return null;
+		return labelValueCollections.get(labelValueCollections.size()-1);
 	}
 	
-	public LabelValueCollectionReport addLabelValueCollection(String name){
+	public AbstractReportTemplateFile<TEMPLATE> addLabelValueCollection(LabelValueCollectionReport labelValueCollectionReport){
+		labelValueCollections.add(labelValueCollectionReport);
+		return this;
+	}
+	
+	public AbstractReportTemplateFile<TEMPLATE> addLabelValueCollection(String name){
 		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();
 		labelValueCollectionReport.setName(name);
 		return addLabelValueCollection(labelValueCollectionReport);
 	}
-	
+	/*
 	public void labelValue(LabelValueCollectionReport collection,String labelId,String labelValue,String value,Boolean condition){
 		if(!Boolean.TRUE.equals(condition))
 			return;
@@ -77,38 +80,27 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	public LabelValueCollectionReport randomLabelValueCollection(){
 		return randomLabelValueCollection(5);
 	}
+	*/
 	
-	
-	
-	public void addLabelValues(LabelValueCollectionReport labelValueCollection,String[][] values,String nullValue){
-		if(values!=null)
-			for(String[] array : values){
-				if(array[1]==null)
-					array[1] = nullValue;
-				if(array[1]==null)
-					;
-				else{
-					LabelValueReport labelValue = labelValueCollection.add(array[0], array[1]);
-					if(array.length>2)
-						labelValue.setExtendedValues(ArrayUtils.subarray(array, 2, array.length));
-				}
-			}
-		//addLabelValueCollection(labelValueCollectionReport);
+	public AbstractReportTemplateFile<TEMPLATE> addLabelValues(String name,String[][] values){
+		addLabelValueCollection(name);
+		addLabelValues(values);
+		return this;
 	}
 	
-	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values,String nullValue){
-		LabelValueCollectionReport labelValueCollectionReport = addLabelValueCollection(name);
-		addLabelValues(labelValueCollectionReport,values,nullValue);
-		return labelValueCollectionReport;
+	public AbstractReportTemplateFile<TEMPLATE> addLabelValues(String[][] values){
+		getCurrentLabelValueCollection().addLabelValues(values);
+		return this;
 	}
 	
-	public LabelValueCollectionReport addLabelValueCollection(String name,String[][] values){
-		return addLabelValueCollection(name, values,null);
+	public AbstractReportTemplateFile<TEMPLATE> addLabelValue(String label,String value){
+		getCurrentLabelValueCollection().add(label,value);
+		return this;
 	}
 	
 	public LabelValueCollectionReport addNotRenderedLabelValueCollection(){
-		LabelValueCollectionReport labelValueCollectionReport = addLabelValueCollection("NOT_RENDERED", null,null);
-		labelValueCollectionReport.setRendered(Boolean.FALSE);
+		LabelValueCollectionReport labelValueCollectionReport = null;//addLabelValueCollection("NOT_RENDERED", null,null);
+		//labelValueCollectionReport.setRendered(Boolean.FALSE);
 		return labelValueCollectionReport;
 	}
 	

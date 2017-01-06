@@ -8,7 +8,6 @@ import java.util.LinkedHashSet;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
@@ -22,8 +21,6 @@ import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
-import org.cyk.system.root.persistence.api.value.ValueDao;
-import org.cyk.system.root.persistence.api.value.ValuePropertiesDao;
 
 public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MetricCollection, Metric,MetricCollectionDao,MetricDao,MetricBusiness> implements MetricCollectionBusiness,Serializable {
 
@@ -43,19 +40,14 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 	}
 	
 	@Override
-	public MetricCollection instanciateOne(String[] values) {
-		MetricCollection metricCollection = super.instanciateOne(values);
-		Integer index = 10;
-		String value;
-		if(StringUtils.isNotBlank(value = values[index++]))
-			metricCollection.setType(inject(MetricCollectionTypeDao.class).read(value));
-		if(StringUtils.isNotBlank(value = values[index++]))
-			metricCollection.setValueProperties(inject(ValuePropertiesDao.class).read(value));
-		if(StringUtils.isNotBlank(value = values[index++]))
-			metricCollection.setValue(inject(ValueDao.class).read(value));
+	protected MetricCollection __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<MetricCollection> listener) {
+		MetricCollection metricCollection = super.__instanciateOne__(values, listener);
+		set(listener.getSetListener().setIndex(10),MetricCollection.FIELD_TYPE);
+		set(listener.getSetListener(),MetricCollection.FIELD_VALUE_PROPERTIES);
+		set(listener.getSetListener(),MetricCollection.FIELD_VALUE);
 		return metricCollection;
 	}
-	
+		
 	@Override
 	protected MetricBusiness getItemBusiness() {
 		return inject(MetricBusiness.class);

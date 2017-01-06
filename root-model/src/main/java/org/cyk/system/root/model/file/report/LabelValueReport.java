@@ -29,15 +29,15 @@ public class LabelValueReport extends AbstractGeneratable<LabelValueReport> impl
 		this.label = label;
 		this.value = value;
 	}
-	
-	public void addExtendedValues(String...values){
-		extendedValues = values;
-	}
-	
+
 	@Override
 	public void generate() {
 		label = RandomStringUtils.randomAlphabetic(5);
 		value = provider.randomWord(5, 15);
+	}
+	
+	public void addExtendedValues(String...values){
+		extendedValues = values;
 	}
 	
 	@Override
@@ -52,6 +52,4 @@ public class LabelValueReport extends AbstractGeneratable<LabelValueReport> impl
 		return StringUtils.join(collection,Constant.CHARACTER_COMA.toString());
 	}
 	
-	//private static final String TO_STRING_FORMAT = "(identifier=%s , label=%s , value=%s , Extended values=%s)";
-
 }

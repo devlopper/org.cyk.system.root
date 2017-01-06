@@ -20,12 +20,13 @@ import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.ScriptVariable;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.file.ScriptDao;
-import org.cyk.system.root.persistence.api.file.ScriptEvaluationEngineDao;
 import org.cyk.system.root.persistence.api.file.ScriptVariableDao;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
@@ -58,16 +59,16 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 	}
 	
 	@Override
-	public Script instanciateOne(String[] values) {
-		Script script = instanciateOne();
-		Integer index = 0;
-		script.setCode(values[index++]);
-		script.setEvaluationEngine(inject(ScriptEvaluationEngineDao.class).read(values[index++]));
-		script.setFile(new File());
-		script.getFile().setBytes(values[index++].getBytes());
-		return script;
+	protected Script __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<Script> listener) {
+		listener.getInstance().getGlobalIdentifierCreateIfNull();
+    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
+    	set(listener.getSetListener(), Script.FIELD_EVALUATION_ENGINE);
+    	Integer index = listener.getSetListener().getIndex();
+    	listener.getInstance().setFile(new File());
+    	listener.getInstance().getFile().setBytes(values[index++].getBytes());
+    	return listener.getInstance();
 	}
-
+	
 	@Override
 	public Object evaluate(final Script script) {
 		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Evaluate", "script");

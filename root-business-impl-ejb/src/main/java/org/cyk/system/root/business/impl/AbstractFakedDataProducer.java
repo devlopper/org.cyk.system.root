@@ -5,17 +5,16 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.utility.common.cdi.AbstractBean;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractFakedDataProducer extends AbstractBean implements Serializable {
 
@@ -48,6 +47,7 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	}
 	/**/
 	
+	@Deprecated
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String code, String name) {
 		return rootDataProducerHelper.createEnumeration(aClass, code, name);
 	}
@@ -80,21 +80,6 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 
 	public <T extends AbstractIdentifiable> void createMany(@SuppressWarnings("unchecked") T...objects) {
 		rootDataProducerHelper.createMany(objects);
-	}
-
-	public File createFile(Package basePackage,String relativePath, String name) {
-		return rootDataProducerHelper.createFile(basePackage,relativePath, name);
-	}
-	public File createFile(String relativePath, String name) {
-		return createFile(rootDataProducerHelper.getBasePackage(),relativePath, name);
-	}
-
-	public byte[] getResourceAsBytes(Package basePackage,String relativePath) {
-		return rootDataProducerHelper.getResourceAsBytes(basePackage,relativePath);
-	}
-	
-	public byte[] getResourceAsBytes(String relativePath) {
-		return getResourceAsBytes(rootDataProducerHelper.getBasePackage(),relativePath);
 	}
 
 	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code) {

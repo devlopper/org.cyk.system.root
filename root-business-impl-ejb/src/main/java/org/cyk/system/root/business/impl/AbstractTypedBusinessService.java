@@ -53,6 +53,9 @@ import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlob
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.converter.Converter;
+import org.cyk.utility.common.converter.ManyConverter;
+import org.cyk.utility.common.converter.OneConverter;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -568,53 +571,38 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE instanciateOne(String[] values) {
-		return null;
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Instanciate one",getClass().getSimpleName());
+		InstanciateOneListener<IDENTIFIABLE> listener = new InstanciateOneListener.Adapter.Default<IDENTIFIABLE>(instanciateOne(),values,0,logMessageBuilder);
+		IDENTIFIABLE identifiable = __instanciateOne__(values,listener);
+		logTrace(logMessageBuilder);
+		return identifiable;
 	}
 
-	@SuppressWarnings("unchecked")
+	protected IDENTIFIABLE __instanciateOne__(String[] values,InstanciateOneListener<IDENTIFIABLE> listener) {
+		return null;
+	}
+	
 	@Override
-	public <T> T convert(IDENTIFIABLE identifiable, Class<T> resultClass,ConvertArguments arguments) {
-		if(identifiable == null)
-			return null;
-		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Convert", identifiable.getClass().getSimpleName());
-		logMessageBuilder.addParameters("result class",resultClass);
-		T result = null;
-		if(String[].class.equals(resultClass)){
-			result = (T) new String[arguments.getArrayLenght().intValue()];
-			((String[])result)[0] = arguments.getListener() == null ? identifiable.getName() : arguments.getListener().getName(identifiable);
-			((String[])result)[1] = arguments.getListener() == null ? inject(FormatterBusiness.class).format(identifiable) : arguments.getListener().format(identifiable);
-			if(StringUtils.isBlank(((String[])result)[1]))
-				((String[])result)[1] = arguments.getBlankString();
-			logMessageBuilder.addParameters("result",StringUtils.join((String[])result,","));
-		}
-		if(result == null)
-			logMessageBuilder.addParameters("result","not convertable");
-		logTrace(logMessageBuilder);
+	public <T> T convert(Converter<IDENTIFIABLE, T> converter) {
+		T result = converter.execute();
+		logTrace(converter.getLogMessageBuilder());
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T convert(Collection<IDENTIFIABLE> identifiables, Class<T> resultClass,ConvertArguments arguments) {
-		if(identifiables == null || identifiables.isEmpty())
-			return null;
-		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Convert", identifiables.size()+Constant.CHARACTER_SPACE+identifiables.iterator().next().getClass().getSimpleName());
-		T result = null;
-		if(String[][].class.equals(resultClass)){
-			result = (T) new String[identifiables.size()][arguments.getArrayLenght().intValue()];
-			Integer i = 0;
-			for(IDENTIFIABLE identifiable : identifiables){
-				String[] array = (String[]) convert(identifiable, String[].class, arguments);
-				if(array==null)
-					;
-				else
-					((String[][])result)[i++] = array;
-			}
-		}
-		logTrace(logMessageBuilder);
+	public <T> T convert(OneConverter<IDENTIFIABLE, T> converter) {
+		T result = converter.execute();
+		logTrace(converter.getLogMessageBuilder());
 		return result;
 	}
-
+	
+	@Override
+	public <T> T convert(ManyConverter<IDENTIFIABLE, T> converter) {
+		T result = converter.execute();
+		logTrace(converter.getLogMessageBuilder());
+		return result;
+	}
+	
 	/**/
 	
 }

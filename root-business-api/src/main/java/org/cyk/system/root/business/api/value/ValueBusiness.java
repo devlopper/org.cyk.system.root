@@ -26,15 +26,107 @@ public interface ValueBusiness extends TypedBusiness<Value> {
 
 	void setRandomly(Collection<Value> values);
 	
-	Object derive(Value value,DeriveArguments arguments);
-	void derive(Collection<Value> values,DeriveArguments arguments);
+	Object derive(Value value,Derive listener);
+	void derive(Collection<Value> values,Derive listener);
 	
-	Collection<Value> deriveByCodes(Collection<String> valueCodes,DeriveArguments arguments);
-	Value deriveByCode(String valueCode,DeriveArguments arguments);
+	Collection<Value> deriveByCodes(Collection<String> valueCodes,Derive listener);
+	Value deriveByCode(String valueCode,Derive listener);
 	
 	/**/
 	
-	@Getter @Setter
+	public static interface Derive {
+		
+		Map<String,Object> getInputs();
+		Derive setInputs(Map<String,Object> inputs);
+		
+		Derive addInput(String name,Object instance);
+		Derive addInputs(Object...instances);
+		
+		void processInputs(Value value,Map<String,Object> inputs);
+		
+		@Getter @Setter
+		public static class Adapter extends BeanAdapter implements Derive,Serializable {
+			private static final long serialVersionUID = 1L;
+
+			protected Map<String,Object> inputs;
+
+			@Override
+			public Derive setInputs(Map<String, Object> inputs) {
+				return null;
+			}
+
+			@Override
+			public Derive addInput(String name, Object instance) {
+				return null;
+			}
+
+			@Override
+			public Derive addInputs(Object... instances) {
+				return null;
+			}
+			
+			@Override
+			public void processInputs(Value value, Map<String, Object> inputs) {
+				
+			}
+			
+			protected String getInstanceVariableName(Object instance){
+				Class<?> aClass = instance.getClass(); //instance instanceof AbstractIdentifiable ? instance.getClass() : ((AbstractIdentifiableReport<?>)instance).getSource().getClass();
+				String name = Introspector.decapitalize(aClass.getSimpleName());
+				if(instance instanceof AbstractIdentifiableReport || instance instanceof AbstractGeneratable)
+					name = StringUtils.substringBefore(name, "Report");
+				return name;
+			}
+			
+			protected Derive setGlobalIdentifier(Object identifiable){
+				return addInputs(identifiable instanceof AbstractIdentifiable ? ((AbstractIdentifiable)identifiable).getGlobalIdentifier() 
+						: ((AbstractIdentifiableReport<?>)identifiable).getGlobalIdentifier());
+			}
+			
+			
+			
+			/**/
+			
+			public static class Default extends Derive.Adapter implements Serializable {
+				private static final long serialVersionUID = 1L;
+				
+				public Map<String,Object> getInputs(){
+					if(inputs == null)
+						inputs = new HashMap<>();
+					return inputs;
+				}
+				
+				@Override
+				public Derive addInput(String name, Object instance) {
+					getInputs().put(name, instance);
+					return this;
+				}
+				
+				private void addInstance(Object instance){
+					addInput(getInstanceVariableName(instance), instance);
+				}
+				
+				@Override
+				public Derive addInputs(Object... instances) {
+					if(instances!=null)
+						for(Object instance : instances){
+							addInstance(instance);
+							if(instance instanceof Person){
+								
+							}else if(instance instanceof AbstractActor){
+								addInstance(((AbstractActor)instance).getPerson());
+							}else if(instance instanceof AbstractActorReport<?>){
+								addInstance(((AbstractActorReport<?>)instance).getPerson());
+							}
+						}
+					return this;
+				}
+				
+			}
+		}
+	}
+	
+	@Getter @Setter @Deprecated
 	public static class DeriveArguments implements Serializable {
 		private static final long serialVersionUID = 9078040654840071139L;
 		

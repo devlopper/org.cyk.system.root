@@ -35,11 +35,9 @@ import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
-import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.generator.StringValueGeneratorConfiguration;
 import org.cyk.system.root.model.geography.ContactCollection;
@@ -364,19 +362,23 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 
     /* Data creation */
     
+    @Deprecated
     public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String code, String name) {
 		return rootDataProducerHelper.createEnumeration(aClass, code, name);
 	}
 
+    @Deprecated
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String name) {
 		return rootDataProducerHelper.createEnumeration(aClass, name);
 	}
 	
+    @Deprecated
 	public <T extends AbstractEnumeration> void createEnumerations(Class<T> aClass,String...names) {
 		for(String name : names)
 			rootDataProducerHelper.createEnumeration(aClass, name);
 	}
 	
+    @Deprecated
 	public <T extends AbstractEnumeration> T updateEnumeration(Class<T> aClass,String code,String name){
 		return rootDataProducerHelper.updateEnumeration(aClass, code, name);
 	}
@@ -408,28 +410,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		inject(GenericBusiness.class).create(commonUtils.castCollection(collection, AbstractIdentifiable.class));
 	}
 
-	public File createFile(Package basePackage,String relativePath,String code, String name) {
-		return rootDataProducerHelper.createFile(basePackage,relativePath, code,name);
-	}
-	public File createFile(String relativePath, String code,String name) {
-		return createFile(this.getClass().getPackage(),relativePath, code,name);
-	}
-	public File createFile(Package basePackage,String relativePath,String code){
-		return rootDataProducerHelper.createFile(basePackage, relativePath,code);
-	}
-	public File createFile(String code,String relativePath){
-		return rootDataProducerHelper.createFile(this.getClass().getPackage(), relativePath,code);
-	}
-	
-
-	public byte[] getResourceAsBytes(Package basePackage,String relativePath) {
-		return rootDataProducerHelper.getResourceAsBytes(basePackage,relativePath);
-	}
-	
-	public byte[] getResourceAsBytes(String relativePath) {
-		return getResourceAsBytes(this.getClass().getPackage(),relativePath);
-	}
-
 	public <T extends AbstractEnumeration> T getEnumeration(Class<T> aClass,String code) {
 		return rootDataProducerHelper.getEnumeration(aClass, code);
 	}
@@ -444,10 +424,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		return rootDataProducerHelper.createMovementCollection(code, incrementActionName, decrementActionName);
 	}
 
-	public ReportTemplate createReportTemplate(String code,String name,Boolean male,String templateRelativeFileName,File headerImage,File backgroundImage,File draftBackgroundImage){
-		return rootDataProducerHelper.createReportTemplate(code, name, male, templateRelativeFileName, headerImage, backgroundImage, draftBackgroundImage);
-	}
-	
 	protected void instanciateRoleUniformResourceLocator(Collection<Role> roles,Object...uniformResourceLocatorArray){
 		rootDataProducerHelper.instanciateRoleUniformResourceLocator(roles, uniformResourceLocatorArray);
 	}

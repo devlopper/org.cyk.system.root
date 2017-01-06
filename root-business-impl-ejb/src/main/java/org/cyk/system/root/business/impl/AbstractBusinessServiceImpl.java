@@ -9,9 +9,9 @@ import javax.inject.Inject;
 import javax.persistence.Entity;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.TypedBusiness.SetListener;
 import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
@@ -19,12 +19,9 @@ import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.persistence.api.GenericDao;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.AbstractBean;
-import org.cyk.utility.common.cdi.BeanAdapter;
-
-import lombok.Getter;
-import lombok.Setter;
 
 public abstract class AbstractBusinessServiceImpl extends AbstractBean implements BusinessService, Serializable {
 
@@ -72,23 +69,17 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		}
 	}
 	
-	protected void addLogMessageBuilderParameter(LogMessage.Builder logMessageBuilder,Object...parameters){
-		if(logMessageBuilder==null)
-			return;
-		logMessageBuilder.addParameters(parameters);
-	}
-	
 	protected <T extends AbstractIdentifiable> T read(Class<T> aClass,String code){
 		return inject(GenericDao.class).read(aClass, code);
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void set(Object object,Field field,Class<?> fieldType,Integer index,String[] values,LogMessage.Builder logMessageBuilder) {
+	protected void set(Object instance,Field field,Class<?> fieldType,Integer index,String[] values,LogMessage.Builder logMessageBuilder) {
 		if(index >= values.length || StringUtils.isBlank(values[index])){
 			if(index >= values.length)
-				addLogMessageBuilderParameter(logMessageBuilder,"Cannot access "+field.getName()+" at index "+index,"*");
+				addLogMessageBuilderParameters(logMessageBuilder,"Cannot access "+field.getName()+" at index "+index,"*");
 			else if(StringUtils.isBlank(values[index]))
-				addLogMessageBuilderParameter(logMessageBuilder,"Blank value of "+field.getName()+" at index "+index,"*");
+				addLogMessageBuilderParameters(logMessageBuilder,"Blank value of "+field.getName()+" at index "+index,"*");
 		}else{
 			Object value = null;
 			if(fieldType.isAnnotationPresent(Entity.class))
@@ -101,81 +92,48 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 				value = new BigDecimal(values[index]);
 			else if(Long.class.equals(fieldType))
 				value = new Long(values[index]);
-			else{
-				addLogMessageBuilderParameter(logMessageBuilder,fieldType+" fo field named "+field.getName()+" not handled","*");
+			else if(Integer.class.equals(fieldType))
+				value = new Integer(values[index]);
+			else if(Boolean.class.equals(fieldType))
+				value = new Boolean(values[index]);
+			else if(fieldType.isEnum()){
+				for(Object object : fieldType.getEnumConstants()){
+					if(object.toString().equals(values[index])){
+						value = object;
+						break;
+					}
+				}
+				if(value==null)
+					addLogMessageBuilderParameters(logMessageBuilder,"no enum constant found for ",values[index]);	
+			}else{
+				addLogMessageBuilderParameters(logMessageBuilder,fieldType+" fo field named "+field.getName()+" not handled","*");
 				return;
 			}
-			commonUtils.writeField(field, object, value);
-				
+			commonUtils.writeField(field, instance, value);
+			addLogMessageBuilderParameters(logMessageBuilder,"set field "+field.getName()+" to",value);	
 		}
 	}
 	
-	protected void set(Object object,String fieldName,SetListener listener) {
-		Field field = commonUtils.getFieldFromClass(object.getClass(), fieldName);
-		if(field==null)
-			addLogMessageBuilderParameter(listener.getLogMessageBuilder(),"Cannot access "+fieldName+" in class "+object.getClass(),"*");
-		else
-			set(object, field,listener.getFieldType() == null ? listener.getFieldType(object.getClass(), field) : listener.getFieldType(), listener.getIndex()
+	protected void set(SetListener listener,String...fieldNames) {
+		String fieldName = StringUtils.join(fieldNames,Constant.CHARACTER_DOT.toString());
+		addLogMessageBuilderParameters(listener.getLogMessageBuilder(), "set",fieldName);
+		Object instance = StringUtils.contains(fieldName, Constant.CHARACTER_DOT.toString()) ? commonUtils.readProperty(listener.getInstance(),
+				StringUtils.substringBeforeLast(fieldName, Constant.CHARACTER_DOT.toString())) 
+				: listener.getInstance();
+		addLogMessageBuilderParameters(listener.getLogMessageBuilder(), "instance",instance);
+		Field field = commonUtils.getFieldFromClass(instance.getClass(),  StringUtils.contains(fieldName, Constant.CHARACTER_DOT.toString()) ? 
+				StringUtils.substringAfterLast(fieldName, Constant.CHARACTER_DOT.toString()) : fieldName);
+		if(/*instance==null || */field==null){
+			/*if(instance==null)
+				addLogMessageBuilderParameters(listener.getLogMessageBuilder(),"Cannot access instance "+fieldName+" in class "+listener.getInstance().getClass(),"*");
+			else */if(field==null)
+				addLogMessageBuilderParameters(listener.getLogMessageBuilder(),"Cannot access field "+fieldName+" in class "+instance.getClass(),"*");	
+		}else
+			set(instance, field,listener.getFieldType() == null ? listener.getFieldType(instance.getClass(), field) : listener.getFieldType(), listener.getIndex()
 					, listener.getValues(), listener.getLogMessageBuilder());
 		listener.setIndex(listener.getIndex()+listener.getIndexIncrement());
 	
 	}
-	
-	public static interface SetListener extends Serializable {
-		
-		public Integer getIndex();
-		public void setIndex(Integer index);
-		public Integer getIndexIncrement();
-		public SetListener setIndexIncrement(Integer indexIncrement);
-		public String[] getValues();
-		public Class<?> getFieldType();
-		public SetListener setFieldType(Class<?> fieldType);
-		public Class<?> getFieldType(Class<?> aClass,Field field);
-		public LogMessage.Builder getLogMessageBuilder();
-		
-		@Getter @Setter
-		public static class Adapter extends BeanAdapter implements SetListener,Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			protected Integer index,indexIncrement=1;
-			protected String[] values;
-			protected LogMessage.Builder logMessageBuilder;
-			protected Class<?> fieldType;
-			
-			public SetListener setIndexIncrement(Integer indexIncrement){
-				this.indexIncrement = indexIncrement;
-				return this;
-			}
-			
-			public SetListener setFieldType(Class<?> fieldType){
-				this.fieldType = fieldType;
-				return this;
-			}
-			
-			@Override
-			public Class<?> getFieldType(Class<?> aClass,Field field) {
-				return null;
-			}
-			
-			public static class Default extends SetListener.Adapter implements Serializable {
-				private static final long serialVersionUID = 1L;
-				
-				public Default(String[] values,Integer index,LogMessage.Builder logMessageBuilder) {
-					this.values = values;
-					this.index = index;
-					this.logMessageBuilder = logMessageBuilder;
-				}
-				
-				@Override
-				public Class<?> getFieldType(Class<?> aClass,Field field) {
-					return commonUtils.getFieldType(aClass, field);
-				}
-			}
-			
-		}
-		
-	}
-	
 	
 	/**/
 	

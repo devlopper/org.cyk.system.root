@@ -34,6 +34,7 @@ import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
 import org.cyk.system.root.business.api.file.StreamBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.PersistDataListener;
+import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
@@ -69,26 +70,31 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		return super.getPropertyValueTokens(file, name);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public File instanciateOne(String[] values) {
-		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Instanciate", "file from values "+StringUtils.join(values,Constant.CHARACTER_COMA.toString()));
-		Integer index = 0;
-		String code = values[index++];
-		String name = values[index++];
-		Package basePackage = PersistDataListener.Adapter.process(File.class, code,PersistDataListener.BASE_PACKAGE, Package.getPackage(values[index++]));
-		String relativePath = PersistDataListener.Adapter.process(File.class, code, PersistDataListener.RELATIVE_PATH, values[index++]);
+	@Override
+	protected void beforeCreate(File file) {
+		super.beforeCreate(file);
+		exceptionUtils().exception(file.getBytes()==null, "file.bytes.required");
+	}
+	
+	@Override
+	protected File __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<File> listener) {
+		listener.getInstance().getGlobalIdentifierCreateIfNull();
+    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
+    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_NAME);
+    	Integer index = listener.getSetListener().getIndex();
+    	Package basePackage = PersistDataListener.Adapter.process(File.class, listener.getInstance().getCode(),PersistDataListener.BASE_PACKAGE, Package.getPackage(values[index++]));
+		String relativePath = PersistDataListener.Adapter.process(File.class, listener.getInstance().getCode(), PersistDataListener.RELATIVE_PATH, values[index++]);
 		String extension = FilenameUtils.getExtension(relativePath);
-		logMessageBuilder.addParameters("Code",code,"Name",name,"Package",basePackage,"Relative path",relativePath);
-		File file = null;
+		//logMessageBuilder.addParameters("Code",code,"Name",name,"Package",basePackage,"Relative path",relativePath);
+		//File file = null;
 		if(StringUtils.isNotBlank(relativePath)){
-			if(StringUtils.isBlank(name))
-				name = FilenameUtils.getName(relativePath);
-			file = process(getResourceAsBytes(basePackage,relativePath),name+Constant.CHARACTER_DOT+extension);
-			if(StringUtils.isNotBlank(code))
-				file.setCode(code);
+			if(StringUtils.isBlank(listener.getInstance().getName()))
+				listener.getInstance().setName(FilenameUtils.getName(relativePath));
+			process(listener.getInstance(),getResourceAsBytes(basePackage,relativePath),listener.getInstance().getName()+Constant.CHARACTER_DOT+extension);
+			//if(StringUtils.isNotBlank(listener.getInstance().getCode()))
+			//	listener.getInstance().setCode(listener.getInstance().getCode());
 		}
-		logTrace(logMessageBuilder);
-		return file;
+    	return listener.getInstance();
 	}
 	
 	protected byte[] getResourceAsBytes(Package basePackage,String relativePath){

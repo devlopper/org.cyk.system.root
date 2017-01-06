@@ -12,7 +12,7 @@ public class PeriodReport extends AbstractGeneratable<PeriodReport> implements S
 
 	private static final long serialVersionUID = 1L;
 
-	private String from,to;
+	private String from,to,numberOfMillisecond;
 	
 	@Override
 	public void generate() {

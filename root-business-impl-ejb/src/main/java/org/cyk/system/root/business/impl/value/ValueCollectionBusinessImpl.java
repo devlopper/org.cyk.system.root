@@ -6,9 +6,9 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.value.ValueBusiness.Derive;
 import org.cyk.system.root.business.api.value.ValueCollectionBusiness;
 import org.cyk.system.root.business.api.value.ValueCollectionItemBusiness;
-import org.cyk.system.root.business.api.value.ValueBusiness.DeriveArguments;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.model.value.ValueCollection;
 import org.cyk.system.root.model.value.ValueCollectionItem;
@@ -19,8 +19,6 @@ public class ValueCollectionBusinessImpl extends AbstractCollectionBusinessImpl<
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private ValueCollectionItemDao valueCollectionItemDao;
-	
 	@Inject
 	public ValueCollectionBusinessImpl(ValueCollectionDao dao) {
 		super(dao); 
@@ -28,7 +26,7 @@ public class ValueCollectionBusinessImpl extends AbstractCollectionBusinessImpl<
 	
 	@Override
 	protected ValueCollectionItemDao getItemDao() {
-		return valueCollectionItemDao;
+		return inject(ValueCollectionItemDao.class);
 	}
 	@Override
 	protected ValueCollectionItemBusiness getItemBusiness() {
@@ -36,29 +34,29 @@ public class ValueCollectionBusinessImpl extends AbstractCollectionBusinessImpl<
 	}
 
 	@Override
-	public void derive(Collection<ValueCollection> valueCollections,DeriveArguments arguments) {
+	public void derive(Collection<ValueCollection> valueCollections,Derive listener) {
 		for(ValueCollection valueCollection : valueCollections)
-			derive(valueCollection,arguments);
+			derive(valueCollection,listener);
 	}
 
 	@Override
-	public void derive(ValueCollection valueCollection,DeriveArguments arguments) {
-		inject(ValueCollectionItemBusiness.class).derive(valueCollection.getCollection(),arguments);
+	public void derive(ValueCollection valueCollection,Derive listener) {
+		inject(ValueCollectionItemBusiness.class).derive(valueCollection.getCollection(),listener);
 	}
 
 	@Override
-	public Collection<ValueCollection> deriveByCodes(Collection<String> valueCollectionCodes,DeriveArguments arguments) {
+	public Collection<ValueCollection> deriveByCodes(Collection<String> valueCollectionCodes,Derive listener) {
 		Collection<ValueCollection> valueCollections = new ArrayList<>();
 		for(String valueCollectionCode : valueCollectionCodes)
-			valueCollections.add(deriveByCode(valueCollectionCode,arguments));
+			valueCollections.add(deriveByCode(valueCollectionCode,listener));
 		return valueCollections;
 	}
 
 	@Override
-	public ValueCollection deriveByCode(String valueCollectionCode,DeriveArguments arguments) {
+	public ValueCollection deriveByCode(String valueCollectionCode,Derive listener) {
 		ValueCollection valueCollection = dao.read(valueCollectionCode);
 		valueCollection.setCollection(inject(ValueCollectionItemDao.class).readByCollection(valueCollection));
-		derive(valueCollection,arguments);
+		derive(valueCollection,listener);
 		return valueCollection;
 	}
 	

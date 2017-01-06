@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.model.AbstractFormatter;
 import org.cyk.system.root.model.ContentType;
@@ -53,6 +54,22 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 			if(labelValue.getIdentifier().equals(identifier))
 				return labelValue;
 		return null;
+	}
+	
+	/**/
+	
+	public LabelValueCollectionReport addLabelValues(String[][] values){
+		if(values!=null)
+			for(String[] array : values){
+				if(array[0]==null || array[1]==null)
+					;
+				else{
+					LabelValueReport labelValue = add(array[0], array[1]);
+					if(array.length>2)
+						labelValue.setExtendedValues(ArrayUtils.subarray(array, 2, array.length));
+				}
+			}
+		return this;
 	}
 	
 	/**/

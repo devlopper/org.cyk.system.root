@@ -1,10 +1,12 @@
 package org.cyk.system.root.business.impl.integration;
 
+import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
+import org.cyk.utility.common.file.ExcelSheetReader;
 
 public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
 
@@ -15,6 +17,16 @@ public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
     	GlobalIdentifier.EXCLUDED.add(NestedSet.class);
     	GlobalIdentifier.EXCLUDED.add(NestedSetNode.class);
     	GlobalIdentifier.EXCLUDED.add(Value.class);
+    	RootDataProducerHelper.Listener.COLLECTION.add(new RootDataProducerHelper.Listener.Adapter.Default(){
+    		private static final long serialVersionUID = 1L;
+
+			@Override
+    		public ExcelSheetReader processExcelSheetReader(ExcelSheetReader excelSheetReader) {
+    			if(excelSheetReader.getName().equals("Country"))
+    				excelSheetReader.setRowCount(2);
+    			return super.processExcelSheetReader(excelSheetReader);
+    		}
+    	});
     	super.populate();
     }
     

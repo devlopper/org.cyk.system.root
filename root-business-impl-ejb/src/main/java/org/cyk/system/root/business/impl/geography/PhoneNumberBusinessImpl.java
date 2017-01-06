@@ -8,11 +8,10 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.PhoneNumber;
-import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
@@ -28,7 +27,7 @@ public class PhoneNumberBusinessImpl extends AbstractContactBusinessImpl<PhoneNu
 	
 	@Override
 	public Contact instanciateOneRandomly() {
-		return instanciateOne(null,Country.COTE_DIVOIRE, PhoneNumberType.MOBILE, RandomStringUtils.randomNumeric(8));
+		return instanciateOne(null,inject(CountryDao.class).readOneRandomly().getCode(), RootConstant.Code.PhoneNumberType.MOBILE, RandomStringUtils.randomNumeric(8));
 	}
 
 	@Override
@@ -58,7 +57,7 @@ public class PhoneNumberBusinessImpl extends AbstractContactBusinessImpl<PhoneNu
 		List<PhoneNumber> list = new ArrayList<>();
 		if(numbers!=null)
 			for(String number : numbers)
-				list.add(instanciateOne(collection,Country.COTE_DIVOIRE,PhoneNumberType.MOBILE,number));
+				list.add(instanciateOne(collection,inject(CountryDao.class).readOneRandomly().getCode(),RootConstant.Code.PhoneNumberType.MOBILE,number));
 		return list;
 	}
 	

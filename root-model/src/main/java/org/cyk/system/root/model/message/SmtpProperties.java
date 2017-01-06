@@ -37,9 +37,15 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 	@Column(nullable=false) @NotNull 
 	private Boolean authenticated = Boolean.TRUE,secured = Boolean.FALSE;
 	
+	public SmtpSocketFactory getSocketFactory(){
+		if(socketFactory==null)
+			socketFactory = new SmtpSocketFactory();
+		return socketFactory;
+	}
+	
 	public static final String FIELD_FROM = "from";
 	public static final String FIELD_CREDENTIALS = "credentials";
 	public static final String FIELD_HOST = "host";
 	public static final String FIELD_PORT = "port";
-	
+	public static final String FIELD_SOCKET_FACTORY = "socketFactory";
 }

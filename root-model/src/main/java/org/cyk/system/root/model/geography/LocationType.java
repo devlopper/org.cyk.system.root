@@ -15,9 +15,6 @@ public class LocationType extends AbstractEnumeration implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 	
-	public static final String HOME = "HOME";
-	public static final String OFFICE = "OFFICE";
-
 	public LocationType(String code, String libelle) {
 		super(code, libelle,null, null);
 	}

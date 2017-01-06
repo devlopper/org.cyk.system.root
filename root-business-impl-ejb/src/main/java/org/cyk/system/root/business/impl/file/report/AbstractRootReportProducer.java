@@ -8,23 +8,22 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.FormatterBusiness;
-import org.cyk.system.root.business.api.TypedBusiness.ConvertArguments;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
-import org.cyk.system.root.business.api.value.ValueBusiness.DeriveArguments;
+import org.cyk.system.root.business.api.value.ValueBusiness.Derive;
 import org.cyk.system.root.business.api.value.ValueCollectionBusiness;
 import org.cyk.system.root.business.api.value.ValueCollectionItemBusiness;
 import org.cyk.system.root.business.impl.AbstractRootBusinessBean;
+import org.cyk.system.root.business.impl.ManyConverter;
+import org.cyk.system.root.business.impl.OneConverter;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.AbstractIdentifiableReport;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
-import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
-import org.cyk.system.root.model.file.report.LabelValueReport;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ContactCollectionReport;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -34,7 +33,6 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalReport;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
-import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.AbstractActorReport;
@@ -50,9 +48,7 @@ import org.cyk.system.root.model.value.ValueCollectionItem;
 import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
-import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
-import org.cyk.system.root.persistence.api.value.ValueCollectionItemDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.BeanAdapter;
 
@@ -65,16 +61,13 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	public static String NOT_APPLICABLE = "NA";
 	public static RootReportProducer DEFAULT;
 	
-	
-	protected LabelValueCollectionReport currentLabelValueCollection;
-	
 	@Override
 	public <REPORT extends AbstractReportTemplateFile<REPORT>> REPORT produce(Class<REPORT> reportClass,CreateReportFileArguments<?> arguments) {
 		return null;
 	}
 	
 	protected String getJasperStyle(String text,Style style){
-		return String.format(JASPER_STYLE, style.getFont().getSize(),"#"+style.getText().getColor().getHexademicalCode(),text);
+		return String.format(JASPER_STYLE, style.getFont().getSize(),Constant.CHARACTER_SHARP+style.getText().getColor().getHexademicalCode(),text);
 	}
 	
 	@Override
@@ -82,116 +75,119 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return null;
 	}
 	
-	protected LabelValueReport labelValue(LabelValueCollectionReport collection,String id,String value,Boolean condition){
-		if(!Boolean.TRUE.equals(condition))
-			return null;
-		currentLabelValueCollection = collection;
-		return currentLabelValueCollection.add(id,languageBusiness.findText(id), value);
+	protected <T extends AbstractReportTemplateFile<?>> T createReportTemplateFile(Class<T> aClass,CreateReportFileArguments<?> arguments){
+		T report = newInstance(aClass);
+		report.setProvisional(arguments.getIsDraft());
+		report.setSource(arguments.getIdentifiable());
+		return report;
 	}
 	
-	protected LabelValueReport labelValue(String labelId,String value,Boolean condition){
-		return labelValue(currentLabelValueCollection, labelId, value,condition);
-	}
-	
-	protected LabelValueReport labelValue(LabelValueCollectionReport collection,String labelId,String value){
-		return labelValue(collection, labelId, value,Boolean.TRUE);
-	}
-	protected LabelValueReport labelValue(String labelId,String value){
-		return labelValue(currentLabelValueCollection,labelId, value);
-	}
-	
-	protected LabelValueReport getLabelValue(String id){
-		return currentLabelValueCollection.getById(id);
-	}
-	
-	/**/
-	
-	
-	
-	/**/
-	
-	protected LabelValueCollectionReport addLabelValues(AbstractReportTemplateFile<?> report,LabelValueCollectionReport labelValueCollection,String[][] values,String defaultValue){
-		report.addLabelValues(labelValueCollection,values,defaultValue);
-		return labelValueCollection;
-	}
-	
-	/*protected LabelValueCollectionReport addLabelValueCollection(AbstractReportTemplateFile<?> report,String name,String[][] values,String defaultValue){
-		
-	}*/
-	
-	protected LabelValueCollectionReport addValueCollection(AbstractReportTemplateFile<?> report,String valueCollectionCode,DeriveArguments deriveArguments){
-		String defaultValue = Constant.EMPTY_STRING;
-		ValueCollection valueCollection = inject(ValueCollectionBusiness.class).deriveByCode(valueCollectionCode,deriveArguments);
-		Collection<ValueCollectionItem> items = inject(ValueCollectionItemDao.class).readByCollection(valueCollection);
+	public void addValueCollection(AbstractReportTemplateFile<?> report,String code,Derive listener,Boolean create){
+		ValueCollection valueCollection = inject(ValueCollectionBusiness.class).deriveByCode(code,listener);
+		if(Boolean.TRUE.equals(create))
+			report.addLabelValueCollection(valueCollection.getName());
+		Collection<ValueCollectionItem> items = valueCollection.getCollection();
 		Collection<Value> values = new ArrayList<>();
-		for(ValueCollectionItem item : items){
+		for(ValueCollectionItem item : valueCollection.getCollection()){
 			values.add(item.getValue());
 		}
-		ConvertArguments convertArguments = new ConvertArguments();
-		convertArguments.setBlankString(defaultValue);
-		convertArguments.setListener(new ConvertArguments.Listener.Adapter.Default(){
-			private static final long serialVersionUID = 1L;
-			@Override
-			public String format(AbstractIdentifiable identifiable) {
-				return inject(FormatterBusiness.class).format(((ValueCollectionItem)identifiable).getValue().get());
-			}
-		});
-		String[][] array = inject(ValueCollectionItemBusiness.class).convert(items, String[][].class, convertArguments);
-		//TODO should be factored
-		
-		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(valueCollection.getName(),array,defaultValue);
-		/*
-		for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection()){
-			if(StringUtils.isBlank(labelValueReport.getValue())){
-				labelValueReport.setValue(defaultValue);
-			}
-		}
-		*/
-		return labelValueCollectionReport;
+		String[][] array = inject(ValueCollectionItemBusiness.class).convert(new ManyConverter.ConverterToArray<ValueCollectionItem,String[][]>(items, String[][].class
+			,new OneConverter.ConverterToArray<ValueCollectionItem,String[]>(ValueCollectionItem.class, null, String[].class, null){
+				private static final long serialVersionUID = 1L;
+				
+				@Override
+				public Object getValueAt(Integer index) {
+					if(index==1)
+						return inject(FormatterBusiness.class).format(instance.getValue().get());
+					return super.getValueAt(index);
+				}
+				
+			}, null));
+		report.addLabelValues(array);
 	}
 	
-	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,LabelValueCollectionReport labelValueCollection,AbstractIdentifiable identifiable,String metricCollectionCode,String defaultValue){
-		MetricCollection metricCollection = inject(MetricCollectionDao.class).read(metricCollectionCode);
-		/*System.out.println("AbstractRootReportProducer.addMetricsLabelValueCollection() "+metricCollectionCode+" : found = "+(metricCollection!=null));
-		if(metricCollection==null){
-			for(MetricCollection mc : inject(MetricCollectionDao.class).readAll())
-				System.out.println(mc.getCode());
-		}*/
+	public void addValueCollection(AbstractReportTemplateFile<?> report,String code,Derive listener){
+		addValueCollection(report, code, listener,Boolean.TRUE);
+	}
+	/*
+	public void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,MetricCollection metricCollection){
+		MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria();
+		searchCriteria.addIdentifiableGlobalIdentifier(identifiable).addMetricCollectionType(metricCollection.getType());
+		Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = inject(MetricCollectionIdentifiableGlobalIdentifierDao.class)
+				.readByCriteria(searchCriteria);
 		
+		MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier = null;
+		for(MetricCollectionIdentifiableGlobalIdentifier m : metricCollectionIdentifiableGlobalIdentifiers)
+			if(m.getMetricCollection().equals(metricCollection)){
+				metricCollectionIdentifiableGlobalIdentifier = m;
+				break;
+			}
 		
+		String n = metricCollection.getName()+(metricCollectionIdentifiableGlobalIdentifier==null?Constant.EMPTY_STRING:" : "+inject(FormatterBusiness.class)
+				.format(metricCollectionIdentifiableGlobalIdentifier.getValue()));
+		
+		report.addLabelValueCollection(n);
+	}
+	*/
+	
+	/**/
+	
+	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code,Boolean create){
+		final MetricCollection metricCollection = inject(MetricCollectionDao.class).read(code);
+		if(Boolean.TRUE.equals(create))
+			report.addLabelValueCollection(metricCollection.getName());
 		Collection<Metric> metrics = inject(MetricDao.class).readByCollection(metricCollection);
 		Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable)); 
-		/*LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection(metricCollection.getName().toUpperCase()
-				+(metricCollectionIdentifiableGlobalIdentifier==null?Constant.EMPTY_STRING:" : "+inject(FormatterBusiness.class)
-						.format(metricCollectionIdentifiableGlobalIdentifier.getValue()))
-				,convertToArray(metrics, metricValues,defaultValue),defaultValue);
-		*/
-		ConvertArguments convertArguments = new ConvertArguments();
-		convertArguments.setBlankString(defaultValue);
-		convertArguments.setListener(new ConvertArguments.Listener.Adapter.Default(){
-			private static final long serialVersionUID = 1L;
-			
-			@Override
-			public String getName(AbstractIdentifiable identifiable) {
-				return ((MetricValue)identifiable).getMetric().getName();
-			}
-			
-			@Override
-			public String format(AbstractIdentifiable identifiable) {
-				return inject(FormatterBusiness.class).format(((MetricValue)identifiable).getValue().get());
-			}
-		});
-	
-		String[][] values = /*convertToArray(metrics, metricValues,defaultValue); */inject(MetricValueBusiness.class).convert(metricValues, String[][].class, convertArguments);
-		report.addLabelValues(labelValueCollection,values,defaultValue);
-		/*
-		for(LabelValueReport labelValueReport : labelValueCollectionReport.getCollection())
-			if(StringUtils.isBlank(labelValueReport.getValue()))
-				labelValueReport.setValue(defaultValue);
-		*/
-		return labelValueCollection;
+		
+		String[][] values = inject(MetricValueBusiness.class).convert(new ManyConverter.ConverterToArray<MetricValue,String[][]>(metricValues, String[][].class
+			,new OneConverter.ConverterToArray<MetricValue,String[]>(MetricValue.class, null, String[].class, null){
+				private static final long serialVersionUID = 1L;
+				
+				@Override
+				public Object getValueAt(Integer index) {
+					if(index==0)
+						return instance.getMetric().getName();
+					if(index==1)
+						return inject(FormatterBusiness.class).format(instance.getValue().get());
+					return super.getValueAt(index);
+				}
+				
+				@Override
+				public Object getBlankValueOf(Integer index) {
+					if(index==1 && metricCollection.getValueProperties()!=null && Boolean.TRUE.equals(metricCollection.getValueProperties().getNullable()))
+						return metricCollection.getValueProperties().getNullString().getAbbreviation();
+					return super.getBlankValueOf(index);
+				}
+				
+			}, null));
+		report.addLabelValues(values);
 	}
 	
+	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code){
+		addMetricCollection(report, identifiable, code,Boolean.TRUE);  
+	}
+	
+	protected AbstractRootReportProducer addIntervalCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,ValueProperties valueProperties,Boolean ascending,Boolean includeExtremities,
+			Integer[][] columnsToSwap,Boolean create){
+		String[][] values =  convertToArray(inject(IntervalDao.class).readByCollection(intervalCollection,ascending),includeExtremities);
+		if(columnsToSwap!=null)
+			for(Integer[] index : columnsToSwap){
+				commonUtils.swapColumns(values, index[0], index[1]);
+			}
+		if(Boolean.TRUE.equals(create))
+			report.addLabelValueCollection(intervalCollection.getName());
+		
+		report.addLabelValues(values);
+		if(valueProperties!=null && Boolean.TRUE.equals(valueProperties.getNullable()) && valueProperties.getNullString()!=null)
+			report.addLabelValue(valueProperties.getNullString().getCode(), valueProperties.getNullString().getName());
+		return this;
+	}
+	
+	protected AbstractRootReportProducer addIntervalCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,ValueProperties valueProperties,Boolean ascending,Boolean includeExtremities,
+			Integer[][] columnsToSwap){
+		return addIntervalCollection(report, intervalCollection, valueProperties, ascending, includeExtremities, columnsToSwap,Boolean.TRUE);
+	}
+	/*
 	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String metricCollectionCode,String defaultValue){
 		MetricCollection metricCollection = inject(MetricCollectionDao.class).read(metricCollectionCode);
 		
@@ -212,8 +208,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 						.format(metricCollectionIdentifiableGlobalIdentifier.getValue()))));
 		
 		return addMetricsLabelValueCollection(report,labelValueCollectionReport, identifiable, metricCollectionCode, defaultValue);
-	}
-	
+	}*/
+	/*
 	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,LabelValueCollectionReport labelValueCollection,AbstractIdentifiable identifiable,String metricCollectionCode){
 		return addMetricsLabelValueCollection(report,labelValueCollection, identifiable, metricCollectionCode, Constant.EMPTY_STRING);
 	}
@@ -231,7 +227,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		for(String[] metricCollection : metricCollections)
 			addMetricsLabelValueCollection(report, identifiable, metricCollection[0],metricCollection[1]);
 	}
-	
+	*/
 	/**/
 	
 	protected void setGlobalIdentifier(GlobalIdentifier globalIdentifier,GlobalIdentifierReport report){
@@ -381,18 +377,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return values;
 	}
 	
-	protected LabelValueCollectionReport addIntervalCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,ValueProperties valueProperties,Boolean ascending,Boolean includeExtremities,
-			Integer[][] columnsToSwap){
-		String[][] values =  convertToArray(inject(IntervalDao.class).readByCollection(intervalCollection,ascending),includeExtremities);
-		if(columnsToSwap!=null)
-			for(Integer[] index : columnsToSwap){
-				commonUtils.swapColumns(values, index[0], index[1]);
-			}
-		LabelValueCollectionReport labelValueCollectionReport = report.addLabelValueCollection(intervalCollection.getName(),values,null);
-		if(valueProperties!=null && Boolean.TRUE.equals(valueProperties.getNullable()) && valueProperties.getNullString()!=null)
-			labelValueCollectionReport.add(valueProperties.getNullString().getCode(), valueProperties.getNullString().getName());
-		return labelValueCollectionReport;
-	}
+	
 	
 	/*protected LabelValueCollectionReport addMetricCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,MetricCollection metricCollection){
 		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();

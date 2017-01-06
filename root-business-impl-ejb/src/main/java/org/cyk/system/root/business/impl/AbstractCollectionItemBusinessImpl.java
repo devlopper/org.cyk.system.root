@@ -12,8 +12,6 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
-import org.cyk.system.root.persistence.api.TypedDao;
-import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 
 public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,COLLECTION extends AbstractCollection<ITEM>> extends AbstractEnumerationBusinessImpl<ITEM, DAO> implements AbstractCollectionItemBusiness<ITEM,COLLECTION>,Serializable {
 
@@ -83,8 +81,17 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	protected Class<COLLECTION> getCollectionClass(){
 		return (Class<COLLECTION>) commonUtils.getClassParameterAt(getClass(), 2);
 	}
-
+	
 	@SuppressWarnings("unchecked")
+	@Override
+	protected ITEM __instanciateOne__(String[] values, InstanciateOneListener<ITEM> listener) {
+		ITEM item = super.__instanciateOne__(values, listener);
+		set(listener.getSetListener().setIndex(10).setFieldType((Class<COLLECTION>)commonUtils.getClassParameterAt(getClass(), 2))
+				, AbstractCollectionItem.FIELD_COLLECTION);
+		return item;
+	}
+
+	/*@SuppressWarnings("unchecked")
 	@Override
 	public ITEM instanciateOne(String[] values) {
 		ITEM item = super.instanciateOne(values);
@@ -94,7 +101,7 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 			item.setCollection(business.read(values[index++]));
 		}
 		return item;
-	}
+	}*/
 	
 	
 		

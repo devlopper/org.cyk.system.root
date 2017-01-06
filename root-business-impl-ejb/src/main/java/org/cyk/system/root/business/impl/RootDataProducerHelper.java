@@ -33,7 +33,6 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Location;
-import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.geography.PostalBox;
@@ -57,14 +56,15 @@ import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
-import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.database.DatabaseUtils;
 import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
 import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
+import org.cyk.utility.common.file.ExcelSheetReader;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -87,8 +87,6 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	@Getter private Package basePackage;
 	private Deque<Package> basePackageQueue = new ArrayDeque<>();
 	private Boolean basePackageQueueingEnabled = Boolean.FALSE;
-	
-	@Getter private Collection<Listener> rootDataProducerHelperListeners = new ArrayList<>();
 	
 	@Getter @Setter private Collection<UniformResourceLocator> uniformResourceLocators;
 	@Getter @Setter private Collection<RoleUniformResourceLocator> roleUniformResourceLocators;
@@ -121,21 +119,21 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") @Deprecated
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String code,String name){
 		T data = newInstance(aClass);
 		data.setCode(code);
 		data.setName(name);
-		for(Listener listener : rootDataProducerHelperListeners)
+		for(Listener listener : Listener.COLLECTION)
 			listener.set(data);
 		return (T) genericBusiness.create(data);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") @Deprecated
 	public <T extends AbstractEnumeration> T updateEnumeration(Class<T> aClass,String code,String name){
 		T data = getEnumeration(aClass, code);
 		data.setName(name);
-		for(Listener listener : rootDataProducerHelperListeners)
+		for(Listener listener : Listener.COLLECTION)
 			listener.set(data);
 		return (T) genericBusiness.update(data);
 	}
@@ -159,7 +157,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			T data = newInstance(aClass);
 			data.setCode(getCode((String)value));
 			data.setName((String)value);
-			for(Listener listener : rootDataProducerHelperListeners)
+			for(Listener listener : Listener.COLLECTION)
 				listener.set(data);
 			collection.add(data);
 		}
@@ -270,20 +268,22 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	
 	public PhoneNumber addPhoneNumber(ContactCollection collection,PhoneNumberType type,String number){
-		return addPhoneNumber(collection,inject(CountryDao.class).read(Country.COTE_DIVOIRE), type, number);
+		return addPhoneNumber(collection,inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE), type, number);
 	}
 	public PhoneNumber addLandPhoneNumber(ContactCollection collection,String number){
-		return addPhoneNumber(collection,inject(CountryDao.class).read(Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class).read(PhoneNumberType.LAND), number);
+		return addPhoneNumber(collection,inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class)
+				.read(RootConstant.Code.PhoneNumberType.LAND), number);
 	}
 	public PhoneNumber addMobilePhoneNumber(ContactCollection collection,String number){
-		return addPhoneNumber(collection,inject(CountryDao.class).read(Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class).read(PhoneNumberType.MOBILE), number);
+		return addPhoneNumber(collection,inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class)
+				.read(RootConstant.Code.PhoneNumberType.MOBILE), number);
 	}
 	public void addContacts(ContactCollection collection,String[] addresses,String[] landNumbers,String[] mobileNumbers,String[] postalBoxes,String[] emails,String[] websites){
 		if(addresses!=null)
 			for(String address : addresses){
-				Location location = new Location(collection, inject(CountryDao.class).read(Country.COTE_DIVOIRE).getLocality());
+				Location location = new Location(collection, inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE).getLocality());
 				location.setOtherDetails(address);
-				location.setType(inject(LocationTypeBusiness.class).find(LocationType.OFFICE));
+				location.setType(inject(LocationTypeBusiness.class).find(RootConstant.Code.LocationType.OFFICE));
 				if(collection.getLocations()==null)
 					collection.setLocations(new ArrayList<Location>());
 				collection.getLocations().add(location);
@@ -477,8 +477,25 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	public <T extends AbstractIdentifiable> void createFromExcelSheet(Class<?> inputStreamResourceLocation,String woorkbookName,Class<T> aClass){
 		try {
-			ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments(inputStreamResourceLocation.getResourceAsStream(woorkbookName),aClass);
-	    	List<String[]> list = commonUtils.readExcelSheet(readExcelSheetArguments);
+			final ExcelSheetReader excelSheetReader = new ExcelSheetReader.Adapter.Default().setWorkbookBytes(inputStreamResourceLocation.getResourceAsStream(woorkbookName))
+					.setName(aClass).setFromColumnIndex(0).setFromRowIndex(1);
+			
+			listenerUtils.getValue(ExcelSheetReader.class, Listener.COLLECTION, new ListenerUtils.ResultMethod<Listener, ExcelSheetReader>() {
+
+				@Override
+				public ExcelSheetReader execute(Listener listener) {
+					return listener.processExcelSheetReader(excelSheetReader);
+				}
+
+				@Override
+				public ExcelSheetReader getNullValue() {
+					return null;
+				}
+			});
+			
+			//ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments(inputStreamResourceLocation.getResourceAsStream(woorkbookName),aClass);
+	    	
+			List<String[]> list = excelSheetReader.execute(); //commonUtils.readExcelSheet(readExcelSheetArguments);
 	    	TypedBusiness<?> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
 	    	@SuppressWarnings("unchecked")
 			Collection<T> collection = (Collection<T>) business.instanciateMany(list);
@@ -527,14 +544,22 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	/**/
 	
 	public static interface Listener{
-		void set(Object object);
 		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		void set(Object object);
+		ExcelSheetReader processExcelSheetReader(ExcelSheetReader excelSheetReader);
 		/**/
 		
 		public static class Adapter extends BeanAdapter implements Listener,Serializable{
 			private static final long serialVersionUID = 581887995233346336L;
 			@Override
 			public void set(Object object) {}
+			
+			@Override
+			public ExcelSheetReader processExcelSheetReader(ExcelSheetReader excelSheetReader) {
+				return excelSheetReader;
+			}
 			
 			/**/
 			

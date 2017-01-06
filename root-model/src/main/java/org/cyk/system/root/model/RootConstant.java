@@ -54,6 +54,26 @@ public interface RootConstant {
 			
 		}
 		
+		public static class LocationType implements Serializable {
+			private static final long serialVersionUID = 1L;
+		
+			public static String HOME = "HOME";
+			public static String OFFICE = "OFFICE";
+		}
+		
+		public static class PhoneNumberType implements Serializable {
+			private static final long serialVersionUID = 1L;
+		
+			public static String LAND = "LAND";
+			public static String MOBILE = "MOBILE";
+		}
+		
+		public static class Country implements Serializable {
+			private static final long serialVersionUID = 1L;
+		
+			public static String COTE_DIVOIRE = "CI";
+		}
+		
 		public static class MaritalStatus implements Serializable {
 			private static final long serialVersionUID = 1L;
 			

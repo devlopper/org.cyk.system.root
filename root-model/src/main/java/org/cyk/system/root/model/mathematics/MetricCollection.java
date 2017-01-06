@@ -56,4 +56,10 @@ public class MetricCollection extends AbstractCollection<Metric> implements Seri
 		return valueProperties == null ? null : valueProperties.getIntervalCollection();
 	}
 	
+	/**/
+	
+	public static final String FIELD_TYPE = "type";
+	public static final String FIELD_VALUE_PROPERTIES = "valueProperties";
+	public static final String FIELD_VALUE = "value";
+	
 }

@@ -26,8 +26,6 @@ public class Country extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 8675998527199168142L;
 	
-	public static final String COTE_DIVOIRE = "CI";
-	
 	@OneToOne @JoinColumn(nullable=false) @NotNull 
 	private Locality locality;
 	

@@ -16,7 +16,7 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 
 	private static final long serialVersionUID = 5692082425509998915L;
 	
-	private String identifier,creationDate,createdBy,code,name,otherDetails,birthLocation,deathLocation,owner;
+	private String identifier,creationDate,createdBy,code,name,otherDetails,birthLocation,deathLocation,owner,weight;
 	private PeriodReport existencePeriod = new PeriodReport();
 	private InputStream image;
 	private Boolean generateImage=Boolean.FALSE;
@@ -29,6 +29,7 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 		identifier = RandomStringUtils.randomAlphanumeric(6);
 		code = RandomStringUtils.randomAlphanumeric(6);
 		name = RandomStringUtils.randomAlphanumeric(6);
+		weight = RandomStringUtils.randomNumeric(2);
 		otherDetails = provider.randomWord(RandomDataProvider.WORD_LOCATION, 10, 20);
 	}
 

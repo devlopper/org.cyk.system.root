@@ -47,17 +47,17 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 		}
 		return null;// instanciateMany(argumentList);
 	}
-
+	
     @Override
-	public ENUMERATION instanciateOne(String[] values) {
-    	ENUMERATION enumeration = instanciateOne();
-    	SetListener listener = new SetListener.Adapter.Default(values, getInstanciateOneEnumerationStartIndex(values), null);
-    	set(enumeration.getGlobalIdentifierCreateIfNull(), GlobalIdentifier.FIELD_CODE,  listener);
-    	set(enumeration.getGlobalIdentifierCreateIfNull(), GlobalIdentifier.FIELD_NAME,  listener);
+	protected ENUMERATION __instanciateOne__(String[] values, InstanciateOneListener<ENUMERATION> listener) {
+    	ENUMERATION enumeration = listener.getInstance();
+    	enumeration.getGlobalIdentifierCreateIfNull();
+    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
+    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_NAME);
 		return enumeration;
 	}
-    
-    protected Integer getInstanciateOneEnumerationStartIndex(String[] values){
+
+	protected Integer getInstanciateOneEnumerationStartIndex(String[] values){
     	return 0;
     }
 

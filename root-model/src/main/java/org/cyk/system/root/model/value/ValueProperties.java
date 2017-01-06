@@ -92,6 +92,8 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	public static final String FIELD_SET = "set";
 	public static final String FIELD_NULLABLE = "nullable";
 	public static final String FIELD_NULL_STRING = "nullString";
-	public static final String FIELD_NULL_ABBREVIATION = "nullAbbreviation";
+	public static final String FIELD_MEASURE = "measure";
+	public static final String FIELD_DERIVED = "derived";
+	public static final String FIELD_DERIVATION_SCRIPT = "derivationScript";
 	
 }

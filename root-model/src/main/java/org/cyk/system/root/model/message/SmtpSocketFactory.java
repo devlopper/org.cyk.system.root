@@ -30,4 +30,8 @@ public class SmtpSocketFactory extends AbstractModelElement implements Serializa
 		return toString();
 	}
 	
+	public static final String FIELD_CLAZZ = "clazz";
+	public static final String FIELD_FALLBACK = "fallback";
+	public static final String FIELD_PORT = "port";
+	
 }
