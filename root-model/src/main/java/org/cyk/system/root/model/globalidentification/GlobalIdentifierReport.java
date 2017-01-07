@@ -21,6 +21,17 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 	private InputStream image;
 	private Boolean generateImage=Boolean.FALSE;
 	
+	@Override
+	public void setSource(Object source) {
+		super.setSource(source);
+		identifier = ((GlobalIdentifier)source).getIdentifier();
+		code = ((GlobalIdentifier)source).getCode();
+		name = ((GlobalIdentifier)source).getName();
+		otherDetails = ((GlobalIdentifier)source).getOtherDetails();
+		weight = format(((GlobalIdentifier)source).getWeight());
+		creationDate = ((GlobalIdentifier)source).getCreationDate().toString();
+		existencePeriod.setSource(((GlobalIdentifier)source).getExistencePeriod());
+	}
 	
 	@Override
 	public void generate() {

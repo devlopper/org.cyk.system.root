@@ -40,7 +40,7 @@ public class Period extends AbstractModelElement implements Serializable{
 	
 	@Embedded
 	@AttributeOverrides(value={
-			@AttributeOverride(name=LongValue.FIELD_USER,column=@Column(name="numberofmillisecond_ser"))
+			@AttributeOverride(name=LongValue.FIELD_USER,column=@Column(name="numberofmillisecond_user"))
 			,@AttributeOverride(name=LongValue.FIELD_SYSTEM,column=@Column(name="numberofmillisecond_system"))
 			,@AttributeOverride(name=LongValue.FIELD_PREFERRED_PROPERTY,column=@Column(name="numberofmillisecond_preferred_property"))
 			,@AttributeOverride(name=LongValue.FIELD_GAP,column=@Column(name="numberofmillisecond_gap"))

@@ -522,8 +522,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				, arguments.getFile().getExtension());
 		inject(FileBusiness.class).process(arguments.getFile(),reportBasedOnTemplateFile.getBytes(), ReportBusiness.DEFAULT_FILE_NAME_AND_EXTENSION);
 		Boolean isNewFile = isNotIdentified(arguments.getFile());
-		StringBuilder fileNameBuilder = new StringBuilder(arguments.getFile().getRepresentationType().getName());
-		fileNameBuilder.append(Constant.CHARACTER_SPACE);
+		StringBuilder fileNameBuilder = new StringBuilder(/*arguments.getFile().getRepresentationType().getName()*/);
+		//fileNameBuilder.append(Constant.CHARACTER_SPACE);
 		fileNameBuilder.append(StringUtils.defaultIfBlank(arguments.getIdentifiableName(), inject(FormatterBusiness.class).format(arguments.getIdentifiable())));
 		arguments.getFile().setName(fileNameBuilder.toString());	
 		inject(GenericBusiness.class).save(arguments.getFile());

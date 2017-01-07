@@ -3,6 +3,7 @@ package org.cyk.system.root.model.file.report;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifierReport;
 import org.cyk.system.root.model.time.PeriodReport;
 import org.cyk.utility.common.generator.AbstractGeneratable;
@@ -17,6 +18,12 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 	private static final long serialVersionUID = 5632592320990657808L;
 
 	protected GlobalIdentifierReport globalIdentifier = new GlobalIdentifierReport();
+	
+	public void setSource(Object source){
+		super.setSource(source);
+		if(source!=null)
+			globalIdentifier.setSource(((AbstractIdentifiable)source).getGlobalIdentifier());
+	}
 	
 	@Override
 	public void generate() {

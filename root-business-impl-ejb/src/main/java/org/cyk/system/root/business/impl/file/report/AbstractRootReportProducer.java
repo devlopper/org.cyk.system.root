@@ -33,6 +33,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalReport;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.AbstractActorReport;
@@ -48,6 +49,8 @@ import org.cyk.system.root.model.value.ValueCollectionItem;
 import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.BeanAdapter;
@@ -171,6 +174,18 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code){
 		addMetricCollection(report, identifiable, code,null);  
+	}
+	
+	protected void addMetricCollectionsByType(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers){
+		for(MetricCollectionIdentifiableGlobalIdentifier index : metricCollectionIdentifiableGlobalIdentifiers){
+			addMetricCollection(report, identifiable, index.getMetricCollection().getCode());
+		}
+	}
+	
+	protected void addMetricCollectionsByType(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,AbstractIdentifiable metricCollectionJoin,String typeCode){
+		addMetricCollectionsByType(report, identifiable, inject(MetricCollectionIdentifiableGlobalIdentifierDao.class)
+				.readByCriteria(new MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria().addIdentifiableGlobalIdentifier(metricCollectionJoin)
+						.addMetricCollectionType(inject(MetricCollectionTypeDao.class).read(typeCode))));
 	}
 	
 	protected AbstractRootReportProducer addIntervalCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,ValueProperties valueProperties,Boolean ascending,Boolean includeExtremities,
