@@ -74,7 +74,8 @@ public interface ValueBusiness extends TypedBusiness<Value> {
 				Class<?> aClass = instance.getClass(); //instance instanceof AbstractIdentifiable ? instance.getClass() : ((AbstractIdentifiableReport<?>)instance).getSource().getClass();
 				String name = Introspector.decapitalize(aClass.getSimpleName());
 				if(instance instanceof AbstractIdentifiableReport || instance instanceof AbstractGeneratable)
-					name = StringUtils.substringBefore(name, "Report");
+					if(StringUtils.endsWith(name, "Report"))
+						name = StringUtils.substringBefore(name, "Report");
 				return name;
 			}
 			

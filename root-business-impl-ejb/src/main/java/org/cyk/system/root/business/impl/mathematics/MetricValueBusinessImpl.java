@@ -15,6 +15,7 @@ import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.value.ValueBusiness;
+import org.cyk.system.root.business.api.value.ValueBusiness.Derive;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.Metric;
@@ -58,6 +59,11 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 		return metricValues;
 	}
 	
+	@Override
+	public Collection<MetricValue> findByMetricCollectionByMetricByIdentifiable(String metricCollectionCode,String metricRelativeCode, AbstractIdentifiable identifiable) {
+		return findByMetricsByIdentifiables(Arrays.asList(inject(MetricBusiness.class).find(metricCollectionCode,metricRelativeCode)), Arrays.asList(identifiable));
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<MetricValue> findByCollectionCodesByCollectionIdentifiablesByMetricIdentifiables(Collection<String> metricCollectionCodes,Collection<? extends AbstractIdentifiable> metricCollectionIdentifiables
 			,Collection<? extends AbstractIdentifiable> metricValueIdentifiables){
@@ -84,6 +90,14 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<MetricValue> findByMetrics(Collection<Metric> metrics) {
 		return dao.readByMetrics(metrics);
+	}
+	
+	@Override
+	public void derive(Collection<MetricValue> metricValues, Derive derive) {
+		Collection<Value> values = new ArrayList<>();
+		for(MetricValue metricValue : metricValues)
+			values.add(metricValue.getValue());
+		inject(ValueBusiness.class).derive(values, derive);
 	}
 
 }

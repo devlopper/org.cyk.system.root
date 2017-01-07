@@ -23,11 +23,15 @@ public abstract class AbstractJoinGlobalIdentifierDaoImpl<IDENTIFIABLE extends A
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByIdentifiableGlobalIdentifiers, "SELECT r FROM "+clazz.getSimpleName()+" r WHERE r.identifiableGlobalIdentifier.identifier IN :"+PARAMETER_GLOBAL_IDENTIFIERS);
-		registerNamedQuery(readByCriteria, getReadByCriteriaQueryString());
+		registerNamedQuery(readByCriteria, getReadByCriteriaQueryString()+getReadByCriteriaOrderByString());
 	}
 	
 	protected String getReadByCriteriaQueryString(){
 		return "SELECT r FROM "+clazz.getSimpleName()+" r WHERE r.identifiableGlobalIdentifier.identifier IN :"+PARAMETER_GLOBAL_IDENTIFIERS;
+	}
+	
+	protected String getReadByCriteriaOrderByString(){
+		return " ORDER BY r.globalIdentifier.orderNumber , r.identifier";
 	}
 	
 	@Override

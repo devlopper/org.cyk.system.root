@@ -21,6 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.Identifiable;
@@ -118,7 +119,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 
 	@Override
 	public String toString() {
-		return String.format(LOG_FORMAT, identifier,creationDate==null?null:Constant.DATE_TIME_FORMATTER.format(creationDate)
+		return String.format(LOG_FORMAT, StringUtils.isBlank(code)?identifier:code,creationDate==null?null:Constant.DATE_TIME_FORMATTER.format(creationDate)
 				,createdBy==null?Constant.EMPTY_STRING:createdBy.getGlobalIdentifier().getCode(),rud==null ? null : rud.getUiString());
 	}
 	

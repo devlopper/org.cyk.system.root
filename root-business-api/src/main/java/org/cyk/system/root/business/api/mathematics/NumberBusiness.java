@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.formatter.NumberFormatter;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,13 @@ public interface NumberBusiness {
 	
 	String format(Number number,Locale locale);
 	String format(Number number);
+	
+	NumberFormatter.String instanciateOneFormatter(Number number);
+	
+	@Deprecated
 	String format(Number number,FormatArguments arguments);
+	
+	String format(NumberFormatter.String formatter);
 	
 	<NUMBER extends Number> NUMBER parse(Class<NUMBER> numberClass,String number);
 	
@@ -51,7 +58,7 @@ public interface NumberBusiness {
 	
 	/**/
 	
-	@Getter @Setter
+	@Getter @Setter @Deprecated //TODO to be changed by interface : Format extends 
 	public static class FormatArguments implements Serializable{
 		private static final long serialVersionUID = 7407251574517349144L;
 		public static enum CharacterSet{DIGIT,LETTER};

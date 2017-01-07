@@ -16,8 +16,11 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.api.file.ScriptVariableBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
+import org.cyk.system.root.business.api.value.ValueBusiness;
 import org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractEnumeration;
@@ -84,6 +87,9 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		bindings.put(RootConstant.Configuration.Script.NUMBER_BUSINESS, inject(NumberBusiness.class));
 		bindings.put(RootConstant.Configuration.Script.NUMBER_BUSINESS_FORMAT_ARGUMENTS, new NumberBusiness.FormatArguments());
 		bindings.put(RootConstant.Configuration.Script.TIME_BUSINESS, inject(TimeBusiness.class));
+		bindings.put(RootConstant.Configuration.Script.METRIC_BUSINESS, inject(MetricBusiness.class));
+		bindings.put(RootConstant.Configuration.Script.VALUE_BUSINESS, inject(ValueBusiness.class));
+		bindings.put(RootConstant.Configuration.Script.METRIC_VALUE_BUSINESS, inject(MetricValueBusiness.class));
 		
 		listenerUtils.execute(Listener.COLLECTION, new ListenerUtils.VoidMethod<Listener>() {
 			@Override

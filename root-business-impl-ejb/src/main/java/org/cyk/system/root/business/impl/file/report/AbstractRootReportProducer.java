@@ -132,13 +132,15 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	/**/
 	
-	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code,Boolean create){
+	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code,Derive derive,Boolean create){
 		final MetricCollection metricCollection = inject(MetricCollectionDao.class).read(code);
 		if(Boolean.TRUE.equals(create))
 			report.addLabelValueCollection(metricCollection.getName());
 		Collection<Metric> metrics = inject(MetricDao.class).readByCollection(metricCollection);
 		Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable)); 
-		
+		if(derive!=null)
+			derive.addInputs(metricCollection);
+		inject(MetricValueBusiness.class).derive(metricValues,derive);
 		String[][] values = inject(MetricValueBusiness.class).convert(new ManyConverter.ConverterToArray<MetricValue,String[][]>(metricValues, String[][].class
 			,new OneConverter.ConverterToArray<MetricValue,String[]>(MetricValue.class, null, String[].class, null){
 				private static final long serialVersionUID = 1L;
@@ -148,7 +150,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 					if(index==0)
 						return instance.getMetric().getName();
 					if(index==1)
-						return inject(FormatterBusiness.class).format(instance.getValue().get());
+						return inject(FormatterBusiness.class).format(instance.getValue());
 					return super.getValueAt(index);
 				}
 				
@@ -163,8 +165,12 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		report.addLabelValues(values);
 	}
 	
+	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code,Derive derive){
+		addMetricCollection(report, identifiable, code,derive,Boolean.TRUE);  
+	}
+	
 	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code){
-		addMetricCollection(report, identifiable, code,Boolean.TRUE);  
+		addMetricCollection(report, identifiable, code,null);  
 	}
 	
 	protected AbstractRootReportProducer addIntervalCollection(AbstractReportTemplateFile<?> report,IntervalCollection intervalCollection,ValueProperties valueProperties,Boolean ascending,Boolean includeExtremities,

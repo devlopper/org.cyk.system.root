@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
+import org.cyk.system.root.business.impl.NumberStringFormatter;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 
@@ -25,6 +26,18 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 	//private NumberFormat numberFormatter = NumberFormat.getNumberInstance(currentLocale);
 	//private DecimalFormat myFormatter = new DecimalFormat(pattern);
 
+	@Override
+	public org.cyk.utility.common.formatter.NumberFormatter.String instanciateOneFormatter(Number number) {
+		return new NumberStringFormatter(number, null);
+	}
+	
+	@Override
+	public String format(org.cyk.utility.common.formatter.NumberFormatter.String formatter) {
+		String result = formatter.execute();
+		logTrace(formatter);
+		return result;
+	}
+	
 	@Override
 	public String format(Number number, Locale locale) {
 		if(number==null)

@@ -82,9 +82,11 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 				addLogMessageBuilderParameters(logMessageBuilder,"Blank value of "+field.getName()+" at index "+index,"*");
 		}else{
 			Object value = null;
-			if(fieldType.isAnnotationPresent(Entity.class))
+			if(fieldType.isAnnotationPresent(Entity.class)){
 				value = read((Class<AbstractIdentifiable>)fieldType, values[index]);
-			else if(Date.class.equals(fieldType))
+				if(value==null)
+					addLogMessageBuilderParameters(logMessageBuilder,"no "+fieldType.getSimpleName()+" found for ",values[index]);	
+			}else if(Date.class.equals(fieldType))
 				value = inject(TimeBusiness.class).parse(values[index]);
 			else if(String.class.equals(fieldType))
 				value = values[index];
@@ -132,7 +134,7 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 			set(instance, field,listener.getFieldType() == null ? listener.getFieldType(instance.getClass(), field) : listener.getFieldType(), listener.getIndex()
 					, listener.getValues(), listener.getLogMessageBuilder());
 		listener.setIndex(listener.getIndex()+listener.getIndexIncrement());
-	
+		listener.setFieldType(null);
 	}
 	
 	/**/

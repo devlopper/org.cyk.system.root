@@ -10,6 +10,7 @@ import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 
 public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metric,MetricDao,MetricCollection> implements MetricBusiness,Serializable {
@@ -39,9 +40,10 @@ public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metri
 	}
 	
 	@Override
-	protected Metric __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<Metric> listener) {
+	protected Metric __instanciateOne__(String[] values,InstanciateOneListener<Metric> listener) {
 		Metric metric = super.__instanciateOne__(values, listener);
-		set(listener.getSetListener().setIndex(15),Metric.FIELD_VALUE_PROPERTIES);
+		set(listener.getSetListener().setIndex(15).setFieldType(ValueProperties.class),Metric.FIELD_VALUE_PROPERTIES);
+		//listener.getSetListener().setIndex(15).setFieldType(null);
 		return metric;
 	}
 		

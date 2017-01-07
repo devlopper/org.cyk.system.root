@@ -245,6 +245,9 @@ public interface RootConstant {
 			public static String NUMBER_BUSINESS = "numberBusiness";
 			public static String TIME_BUSINESS = "timeBusiness";
 			public static String NUMBER_BUSINESS_FORMAT_ARGUMENTS = NUMBER_BUSINESS+"FormatArguments";
+			public static String METRIC_BUSINESS = "metricBusiness";
+			public static String METRIC_VALUE_BUSINESS = "metricValueBusiness";
+			public static String VALUE_BUSINESS = "valueBusiness";
 		}
 		
 	}
