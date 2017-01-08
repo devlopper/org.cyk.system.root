@@ -50,7 +50,7 @@ public class RootFormattingConfigurationsRegistrator extends AbstractFormattingC
 			@Override
 			public String format(Value value, ContentType contentType) {
 				if(value.get()==null && Boolean.TRUE.equals(value.getNullable()))
-					return value.getNullString().getCode();
+					return value.getNullString().getAbbreviation();
 				switch(value.getType()){
 				case BOOLEAN:
 					return inject(LanguageBusiness.class).findResponseText(value.getBooleanValue().get());
