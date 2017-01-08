@@ -27,19 +27,17 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	}
 	
 	@Override
-	public Interval create(Interval interval) {
-		super.create(interval);
+	protected void afterCreate(Interval interval) {
+		super.afterCreate(interval);
 		updateCollection(interval);
-		return interval;
 	}
 	
 	@Override
-	public Interval update(Interval interval) {
-		interval = super.update(interval);
+	protected void afterUpdate(Interval interval) {
+		super.afterUpdate(interval);
 		updateCollection(interval);
-		return interval;
 	}
-	
+		
 	private void updateCollection(Interval interval){
 		if(interval.getCollection()==null)
 			return;
@@ -51,19 +49,32 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	}
 	
 	@Override
+	protected Interval __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<Interval> listener) {
+		super.__instanciateOne__(values, listener);
+		set(listener.getSetListener().setIndex(15), Interval.FIELD_LOW,IntervalExtremity.FIELD_VALUE);
+		set(listener.getSetListener(), Interval.FIELD_HIGH,IntervalExtremity.FIELD_VALUE);
+		return listener.getInstance();
+	}
+	
+	/*@Override
 	public Interval instanciateOne(String[] values) {
 		Interval interval = super.instanciateOne(values);
 		//FIXME should use index after 10
 		interval.getLow().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 2)));
 		interval.getHigh().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 3)));
 		return interval;
-	}
+	}*/
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
-		Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
-		
-		return interval;
+		//Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
+		String[] values = new String[16];
+		values[0] = code;
+		if(collection!=null)
+			values[10] = collection.getCode();
+		values[15] = low;
+		values[16] = high;
+		return instanciateOne(values);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -169,23 +180,4 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
     			: Boolean.FALSE.equals(interval.getLow().getExcluded()) ? interval.getLow().getValue() : interval.getLow().getValue().subtract(BigDecimal.ONE);
     }
 
-	/*
-    @Override
-	public <NUMBER extends Number> Collection<Interval> instanciateManyFromNumberSequence(Collection<NUMBER> numbers,InstanciateManyFromNumberSequenceArguments<NUMBER> arguments) {
-    	Collection<Interval> intervals = new ArrayList<>();
-    	Interval interval = null;
-    	for(NUMBER number : numbers){
-    		if(interval == null){
-    			interval = new Interval();
-    			interval.getLow().setValue(new BigDecimal(number.toString()));
-    		}else{
-    			if()
-    			interval.getHigh().setValue(new BigDecimal(number.toString()));
-    			
-    		}
-    	}
-		return intervals;
-	}*/
-
-    
 }

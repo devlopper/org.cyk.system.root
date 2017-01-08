@@ -85,7 +85,6 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		
 		bindings.put(RootConstant.Configuration.Script.GENERIC_BUSINESS, inject(GenericBusiness.class));
 		bindings.put(RootConstant.Configuration.Script.NUMBER_BUSINESS, inject(NumberBusiness.class));
-		bindings.put(RootConstant.Configuration.Script.NUMBER_BUSINESS_FORMAT_ARGUMENTS, new NumberBusiness.FormatArguments());
 		bindings.put(RootConstant.Configuration.Script.TIME_BUSINESS, inject(TimeBusiness.class));
 		bindings.put(RootConstant.Configuration.Script.METRIC_BUSINESS, inject(MetricBusiness.class));
 		bindings.put(RootConstant.Configuration.Script.VALUE_BUSINESS, inject(ValueBusiness.class));

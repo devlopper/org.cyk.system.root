@@ -23,7 +23,7 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Sex;
-import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
+import org.cyk.utility.common.file.ExcelSheetReader;
 import org.junit.Test;
 
 public class InstanciationBusinessIT extends AbstractBusinessIT {
@@ -117,15 +117,15 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\excel");
 		File file = new File(directory, "persons.xlsx");
 		
-    	ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments();
+    	ExcelSheetReader excelSheetReader = new ExcelSheetReader.Adapter.Default();
     	try {
-			readExcelSheetArguments.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
+    		excelSheetReader.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	readExcelSheetArguments.setSheetIndex(0);
-    	readExcelSheetArguments.setFromRowIndex(2);
-    	readExcelSheetArguments.setFromColumnIndex(1);
+    	excelSheetReader.setIndex(0);
+    	excelSheetReader.setFromRowIndex(2);
+    	excelSheetReader.setFromColumnIndex(1);
 		//List<String[]> list = CommonUtils.getInstance().readExcelSheet(readExcelSheetArguments);
 		
 		CompletePersonInstanciationOfManyFromValuesArguments completeInstanciationOfManyFromValuesArguments = new CompletePersonInstanciationOfManyFromValuesArguments();
@@ -134,7 +134,7 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
 		completeInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setTitleCodeIndex(1);
 		completeInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(2);
 		completeInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().setLastnameIndex(3);
-		persons = personBusiness.instanciateMany(readExcelSheetArguments, completeInstanciationOfManyFromValuesArguments);
+		persons = personBusiness.instanciateMany(excelSheetReader, completeInstanciationOfManyFromValuesArguments);
 		personBusiness.create(persons);
     }
     

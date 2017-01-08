@@ -30,11 +30,11 @@ public class MovementActionBusinessImpl extends AbstractTypedBusinessService<Mov
 	}
 	
 	@Override
-	public MovementAction create(MovementAction movementAction) {
-		inject(IntervalBusiness.class).create(movementAction.getInterval());
-		return super.create(movementAction);
+	protected void beforeCreate(MovementAction movementAction) {
+		super.beforeCreate(movementAction);
+		createIfNotIdentified(movementAction.getInterval());
 	}
-	
+		
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public BigDecimal computeValue(String movementActionCode,BigDecimal value,BigDecimal increment) {
 		if(increment==null)

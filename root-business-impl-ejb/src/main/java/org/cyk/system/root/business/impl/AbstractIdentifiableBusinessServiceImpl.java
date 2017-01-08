@@ -34,7 +34,6 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
-import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
@@ -43,6 +42,7 @@ import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+import org.cyk.utility.common.file.ExcelSheetReader;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -292,10 +292,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	@Override
-	public List<IDENTIFIABLE> instanciateMany(ReadExcelSheetArguments readExcelSheetArguments,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments) {
+	public List<IDENTIFIABLE> instanciateMany(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments) {
 		List<String[]> list;
 		try {
-			list = commonUtils.readExcelSheet(readExcelSheetArguments);
+			list = excelSheetReader.execute();
 		} catch (Exception e) {
 			System.out.println("ERR -------------- : "+e);
 			System.out.println("ERR -------------- : "+e.getCause());

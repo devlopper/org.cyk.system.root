@@ -9,11 +9,11 @@ import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
-import org.cyk.utility.common.CommonUtils.ReadExcelSheetArguments;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+import org.cyk.utility.common.file.ExcelSheetReader;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -99,7 +99,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     IDENTIFIABLE completeInstanciationOfOneFromValues(AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> arguments);
                     
                     List<IDENTIFIABLE> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments);
-                    List<IDENTIFIABLE> instanciateMany(ReadExcelSheetArguments readExcelSheetArguments,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments);
+                    List<IDENTIFIABLE> instanciateMany(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments);
                     
                     void completeInstanciationOfMany(Collection<IDENTIFIABLE> identifiables);
                     
