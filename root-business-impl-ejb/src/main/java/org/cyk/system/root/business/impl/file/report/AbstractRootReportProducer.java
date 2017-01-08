@@ -137,8 +137,24 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code,Derive derive,Boolean create){
 		final MetricCollection metricCollection = inject(MetricCollectionDao.class).read(code);
-		if(Boolean.TRUE.equals(create))
-			report.addLabelValueCollection(metricCollection.getName());
+		if(Boolean.TRUE.equals(create)){
+			MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria();
+			searchCriteria.addIdentifiableGlobalIdentifier(identifiable).addMetricCollectionType(metricCollection.getType());
+			Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = inject(MetricCollectionIdentifiableGlobalIdentifierDao.class)
+					.readByCriteria(searchCriteria);
+			
+			MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier = null;
+			for(MetricCollectionIdentifiableGlobalIdentifier m : metricCollectionIdentifiableGlobalIdentifiers)
+				if(m.getMetricCollection().equals(metricCollection)){
+					metricCollectionIdentifiableGlobalIdentifier = m;
+					break;
+				}
+			
+			report.addLabelValueCollection((metricCollection.getName()
+					+(metricCollectionIdentifiableGlobalIdentifier==null?Constant.EMPTY_STRING:" : "+inject(FormatterBusiness.class)
+							.format(metricCollectionIdentifiableGlobalIdentifier.getValue()))));
+			//report.addLabelValueCollection(metricCollection.getName());
+		}
 		Collection<Metric> metrics = inject(MetricDao.class).readByCollection(metricCollection);
 		Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable)); 
 		if(derive!=null)

@@ -130,9 +130,10 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_IDENTIFIER = "identifier";
 	public static final String FIELD_CODE = "code";
 	public static final String FIELD_NAME = "name";
+	public static final String FIELD_ABBREVIATION = "abbreviation";
+	public static final String FIELD_WEIGHT = "weight";
 	public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
 	public static final String FIELD_BIRTH_LOCATION = "birthLocation";
-	public static final String FIELD_WEIGHT = "weight";
 	public static final String FIELD_ORDER_NUMBER = "orderNumber";
 	
 	/**/
