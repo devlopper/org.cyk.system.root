@@ -89,6 +89,7 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.cyk.utility.common.generator.AbstractGeneratable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -219,6 +220,16 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		defaultSmtpProperties = inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT);
 		
 		AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, TimeDivisionType.class);
+    
+		AbstractGeneratable.Listener.COLLECTION.add(new AbstractGeneratable.Listener.Adapter.Default(){
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Object format(Object object, Object fieldValue) {
+				if(fieldValue instanceof Date)
+					return inject(TimeBusiness.class).formatDate((Date)fieldValue);
+				return super.format(object, fieldValue);
+			}
+		});
     }
     
     public GenericBusiness getGenericBusiness(){

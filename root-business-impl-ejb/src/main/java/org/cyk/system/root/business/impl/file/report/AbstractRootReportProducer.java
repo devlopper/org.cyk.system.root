@@ -216,7 +216,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		
 		report.addLabelValues(values);
 		if(valueProperties!=null && Boolean.TRUE.equals(valueProperties.getNullable()) && valueProperties.getNullString()!=null)
-			report.addLabelValue(valueProperties.getNullString().getCode(), valueProperties.getNullString().getName());
+			report.addLabelValue(valueProperties.getNullString().getAbbreviation(), valueProperties.getNullString().getName());
 		return this;
 	}
 	
