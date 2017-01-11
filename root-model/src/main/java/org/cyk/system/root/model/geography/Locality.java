@@ -22,6 +22,8 @@ public class Locality extends AbstractDataTree<LocalityType> implements Serializ
 	public static final String AUSTRALIA = "AUSTRALIA";
 	public static final String EUROPE = "EUROPA";
 	
+	private String residentName;
+	
 	public Locality(Locality parent, LocalityType type, String code,String name) {
 		super(parent, type, code);
 		setName(name);

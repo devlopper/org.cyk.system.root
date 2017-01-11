@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.utility.common.annotation.ModelBean;
@@ -25,11 +26,13 @@ public class Language extends AbstractEnumeration implements Serializable {
 	 */
 	private String isoCode;
 	
+	@Transient private Collection<LanguageEntry> entries = new HashSet<>();
+	
 	public Language(String code, String libelle) {
 		super(code, libelle,libelle, null);
 		this.isoCode = code.toLowerCase();
 	}
 	
-	private Collection<LanguageEntry> entries = new HashSet<>();
+	
 
 }
