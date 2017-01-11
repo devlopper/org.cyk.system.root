@@ -33,6 +33,7 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria.LocationType;
 import org.cyk.system.root.model.time.Period;
+import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.Constant;
 
 @Getter @Setter @Entity @EqualsAndHashCode(callSuper=false,of="identifier")
@@ -53,7 +54,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 * Common business informations
 	 */
 	
-	@OneToOne/*(cascade=CascadeType.ALL,orphanRemoval=true)*/ private File image;
+	@OneToOne private File image;
 	
 	private String code;
 	
@@ -78,10 +79,15 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	private Boolean usable;
 	private Boolean male;
+	
 	/**
-	 * True if object initialization match business rules , False otherwise
+	 * True if object initialization match business rules , False otherwise.
 	 */
 	private Boolean initialized;
+	
+	/**
+	 * Must be only update by application
+	 */
 	@Column(name="f_constant") private Boolean constant = Boolean.FALSE;
 	
 	@Embedded private Period existencePeriod = new Period();
@@ -90,9 +96,12 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	@ManyToOne private Party owner;
 	
-	//private String htmlStyle;//TODO how to use it???
+	@Embedded private CascadeStyleSheet cascadeStyleSheet;
 	
-	@Column private String externalIdentifier;//This value is used to link to another system
+	/**
+	 * Used to link to another system
+	 */
+	@Column private String externalIdentifier;
 	
 	public GlobalIdentifier() {}
 	
@@ -110,6 +119,12 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		if(existencePeriod==null)
 			existencePeriod = new Period();
 		return existencePeriod;
+	}
+	
+	public CascadeStyleSheet getCascadeStyleSheet(){
+		if(cascadeStyleSheet==null)
+			cascadeStyleSheet = new CascadeStyleSheet();
+		return cascadeStyleSheet;
 	}
 	
 	@Override

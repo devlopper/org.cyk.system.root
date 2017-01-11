@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
@@ -23,28 +25,42 @@ public class IdentifiableCollectionItem extends AbstractJoinGlobalIdentifier imp
 
 	private static final long serialVersionUID = 8167875049554197503L;
 
-	/**/
+	@ManyToOne @NotNull private IdentifiableCollection collection;
+	
+	public static final String FIELD_COLLECTION = "collection";
 	
 	@Getter @Setter
 	public static class SearchCriteria extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria implements Serializable {
 
 		private static final long serialVersionUID = 6796076474234170332L;
 
-		protected Collection<IdentifiableCollectionType> commentTypes = new ArrayList<>();
+		protected Collection<IdentifiableCollection> collections = new ArrayList<>();
+		//protected Collection<IdentifiableCollectionType> types = new ArrayList<>();
 				
 		public SearchCriteria addGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers){
 			return (SearchCriteria) super.addGlobalIdentifiers(globalIdentifiers);
 		}
+		
 		public SearchCriteria addGlobalIdentifier(GlobalIdentifier globalIdentifier){
 			return (SearchCriteria) super.addGlobalIdentifier(globalIdentifier);
 		}
-		
-		public SearchCriteria addCommentTypes(Collection<IdentifiableCollectionType> commentTypes){
-			this.commentTypes.addAll(commentTypes);
+		/*
+		public SearchCriteria addTypes(Collection<IdentifiableCollectionType> types){
+			this.types.addAll(types);
 			return this;
 		}
-		public SearchCriteria addCommentType(IdentifiableCollectionType commentType){
-			return addCommentTypes(Arrays.asList(commentType));
+		
+		public SearchCriteria addType(IdentifiableCollectionType type){
+			return addTypes(Arrays.asList(type));
+		}
+		*/
+		public SearchCriteria addCollections(Collection<IdentifiableCollection> collections){
+			this.collections.addAll(collections);
+			return this;
+		}
+		
+		public SearchCriteria addCollection(IdentifiableCollection collection){
+			return addCollections(Arrays.asList(collection));
 		}
 	}
 	
@@ -53,9 +69,11 @@ public class IdentifiableCollectionItem extends AbstractJoinGlobalIdentifier imp
 	public static Boolean isUserDefinedClass(Class<?> aClass){
 		return isUserDefinedClass(IdentifiableCollectionItem.class,aClass);
 	}
+	
 	public static Boolean isUserDefinedObject(Object object){
 		return isUserDefinedObject(IdentifiableCollectionItem.class,object);
 	}
+	
 	public static void define(Class<? extends AbstractIdentifiable> aClass){
 		define(IdentifiableCollectionItem.class, aClass);
 	}

@@ -43,45 +43,7 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		labelValueCollectionReport.setName(name);
 		return addLabelValueCollection(labelValueCollectionReport);
 	}
-	/*
-	public void labelValue(LabelValueCollectionReport collection,String labelId,String labelValue,String value,Boolean condition){
-		if(!Boolean.TRUE.equals(condition))
-			return;
-		currentLabelValueCollection = collection;
-		currentLabelValueCollection.add(labelId,labelValue, value);
-	}
-	
-	public void labelValue(LabelValueCollectionReport collection,String labelId,String value,Boolean condition){
-		labelValue(collection, labelId,null, value, condition);
-	}
-	
-	public void labelValue(String id,String value,Boolean condition){
-		labelValue(currentLabelValueCollection, id, value,condition);
-	}
-	
-	public void labelValue(LabelValueCollectionReport collection,String id,String value){
-		labelValue(collection, id, value,Boolean.TRUE);
-	}
-	
-	public void labelValue(String id,String value){
-		labelValue(currentLabelValueCollection,id, value);
-	}
-	
-	public LabelValueReport getLabelValue(String id){
-		return currentLabelValueCollection.getById(id);
-	}
-	
-	public LabelValueCollectionReport randomLabelValueCollection(Integer count){
-		LabelValueCollectionReport labelValueCollection = new LabelValueCollectionReport();
-		labelValueCollection.generate();
-		return labelValueCollection;
-	}
-	
-	public LabelValueCollectionReport randomLabelValueCollection(){
-		return randomLabelValueCollection(5);
-	}
-	*/
-	
+
 	public AbstractReportTemplateFile<TEMPLATE> addLabelValues(String name,String[][] values){
 		addLabelValueCollection(name);
 		addLabelValues(values);

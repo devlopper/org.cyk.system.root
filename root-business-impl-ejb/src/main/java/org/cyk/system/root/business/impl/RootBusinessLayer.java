@@ -54,6 +54,7 @@ import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.information.IdentifiableCollectionType;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.message.SmtpProperties;
@@ -259,6 +260,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         message();
         mathematics();
+        information();
     }
     
     private void geography(){
@@ -345,6 +347,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	createFromExcelSheet(NullString.class);
     	createFromExcelSheet(ValueProperties.class);
     	createFromExcelSheet(Value.class);
+    }
+    
+    private void information(){ 
+    	createFromExcelSheet(IdentifiableCollectionType.class);
     }
     
     @Override

@@ -52,32 +52,6 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 	}
 	
 	@Override
-	public String format(Number number, FormatArguments arguments) {
-		StringBuilder stringBuilder = new StringBuilder();
-		if(FormatArguments.CharacterSet.DIGIT.equals(arguments.getType())){
-			NumberFormat numberFormatter = NumberFormat.getNumberInstance(arguments.getLocale()==null?inject(LanguageBusiness.class).findCurrentLocale():arguments.getLocale());
-			if(Boolean.TRUE.equals(arguments.getIsPercentage())){
-				number = new BigDecimal(number.toString()).multiply(_100);
-			}
-			stringBuilder.append(numberFormatter.format(number));
-			if(Boolean.TRUE.equals(arguments.getIsPercentage())){
-				if(StringUtils.isNotBlank(arguments.getPercentageSymbol()))
-					stringBuilder.append(Constant.CHARACTER_SPACE+arguments.getPercentageSymbol());
-			}
-			if(arguments.getWidth()!=null){
-				stringBuilder = new StringBuilder(StringUtils.leftPad(stringBuilder.toString(), arguments.getWidth(), arguments.getLeftPadding()));
-			}
-		}else if(FormatArguments.CharacterSet.LETTER.equals(arguments.getType())){
-			if(Boolean.TRUE.equals(arguments.getIsRank())){
-				return inject(LanguageBusiness.class).findText("rank."+number+".letter");
-			}else{
-				throw new RuntimeException("Not yet implemented");
-			}
-		}
-		return stringBuilder.toString();
-	}
-	
-	@Override
 	public String encode(String number, String inputCharacters, String outputCharacters) {
 		BigInteger integer = new BigInteger(number);
 		if (integer.compareTo(BigInteger.ZERO) == -1) {
@@ -150,7 +124,7 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 	
 	@Override
 	public BigDecimal computePercentage(BigDecimal value, BigDecimal percent) {
-		return value.multiply(percent).divide(_100);
+		return value.multiply(percent).divide(Constant.BIGDECIMAL_100);
 	}
 	
 	@Override

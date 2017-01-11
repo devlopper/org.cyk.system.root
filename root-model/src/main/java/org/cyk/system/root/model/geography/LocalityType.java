@@ -12,10 +12,6 @@ import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 
 @Getter @Setter @NoArgsConstructor @Entity 
 public class LocalityType extends AbstractDataTreeType implements Serializable  {
-
-	public static final String COUNTRY = "COUNTRY";
-	public static final String CITY = "CITY";
-	public static final String CONTINENT = "CONTINENT";
 	
 	private static final long serialVersionUID = -6838401709866343401L;
 

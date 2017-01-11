@@ -68,6 +68,14 @@ public interface RootConstant {
 			public static String MOBILE = "MOBILE";
 		}
 		
+		public static class LocalityType implements Serializable {
+			private static final long serialVersionUID = 1L;
+		
+			public static String COUNTRY = "COUNTRY";
+			public static String CITY = "CITY";
+			public static String CONTINENT = "CONTINENT";
+		}
+		
 		public static class Country implements Serializable {
 			private static final long serialVersionUID = 1L;
 		
@@ -222,6 +230,14 @@ public interface RootConstant {
 			
 		}
 		
+		public static class IdentifiableCollectionType implements Serializable {
+			private static final long serialVersionUID = 1L;
+		
+			public static String CONTACT_COLLECTION = "CONTACTCOLLECTION";
+			public static String PERSON = "PERSON";
+			
+		}
+		
 		/**/
 		
 	}
@@ -229,6 +245,15 @@ public interface RootConstant {
 	public static class Configuration implements Serializable {
 
 		private static final long serialVersionUID = 1L;
+		
+		public static class CascadeStyleSheet implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static final String CLAZZ_SEPARATOR = Constant.CHARACTER_SPACE.toString();
+			public static final String INLINE_SEPARATOR = Constant.CHARACTER_SEMI_COLON.toString();
+			public static final String IDENTIFIABLE_CLASS_PREFIX = "identifiable";
+			
+		}
 		
 		public static class ScriptVariable implements Serializable {
 			private static final long serialVersionUID = 1L;

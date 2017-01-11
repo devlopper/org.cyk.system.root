@@ -52,14 +52,17 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 			this.globalIdentifiers.addAll(globalIdentifiers);
 			return this;
 		}
+		
 		public AbstractSearchCriteria addGlobalIdentifier(GlobalIdentifier globalIdentifier){
 			return addGlobalIdentifiers(Arrays.asList(globalIdentifier));
 		}
+		
 		public AbstractSearchCriteria addIdentifiablesGlobalIdentifiers(Collection<? extends AbstractIdentifiable> identifiables){
 			for(AbstractIdentifiable identifiable : identifiables)
 				addIdentifiableGlobalIdentifier(identifiable);
 			return this;
 		}
+		
 		public AbstractSearchCriteria addIdentifiableGlobalIdentifier(AbstractIdentifiable identifiable){
 			return addGlobalIdentifiers(Arrays.asList(identifiable.getGlobalIdentifier()));
 		}

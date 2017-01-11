@@ -224,47 +224,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			Integer[][] columnsToSwap){
 		return addIntervalCollection(report, intervalCollection, valueProperties, ascending, includeExtremities, columnsToSwap,Boolean.TRUE);
 	}
-	/*
-	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String metricCollectionCode,String defaultValue){
-		MetricCollection metricCollection = inject(MetricCollectionDao.class).read(metricCollectionCode);
-		
-		MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria();
-		searchCriteria.addIdentifiableGlobalIdentifier(identifiable).addMetricCollectionType(metricCollection.getType());
-		Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = inject(MetricCollectionIdentifiableGlobalIdentifierDao.class)
-				.readByCriteria(searchCriteria);
-		
-		MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier = null;
-		for(MetricCollectionIdentifiableGlobalIdentifier m : metricCollectionIdentifiableGlobalIdentifiers)
-			if(m.getMetricCollection().equals(metricCollection)){
-				metricCollectionIdentifiableGlobalIdentifier = m;
-				break;
-			}
-		
-		LabelValueCollectionReport labelValueCollectionReport =  report.addLabelValueCollection((metricCollection.getName()
-				+(metricCollectionIdentifiableGlobalIdentifier==null?Constant.EMPTY_STRING:" : "+inject(FormatterBusiness.class)
-						.format(metricCollectionIdentifiableGlobalIdentifier.getValue()))));
-		
-		return addMetricsLabelValueCollection(report,labelValueCollectionReport, identifiable, metricCollectionCode, defaultValue);
-	}*/
-	/*
-	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,LabelValueCollectionReport labelValueCollection,AbstractIdentifiable identifiable,String metricCollectionCode){
-		return addMetricsLabelValueCollection(report,labelValueCollection, identifiable, metricCollectionCode, Constant.EMPTY_STRING);
-	}
 	
-	protected LabelValueCollectionReport addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String metricCollectionCode){
-		return addMetricsLabelValueCollection(report, identifiable, metricCollectionCode, Constant.EMPTY_STRING);
-	}
-	
-	protected void addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,LabelValueCollectionReport labelValueCollection,AbstractIdentifiable identifiable,String[][] metricCollections){
-		for(String[] metricCollection : metricCollections)
-			addMetricsLabelValueCollection(report,labelValueCollection, identifiable, metricCollection[0],metricCollection[1]);
-	}
-	
-	protected void addMetricsLabelValueCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String[][] metricCollections){
-		for(String[] metricCollection : metricCollections)
-			addMetricsLabelValueCollection(report, identifiable, metricCollection[0],metricCollection[1]);
-	}
-	*/
 	/**/
 	
 	protected void setGlobalIdentifier(GlobalIdentifier globalIdentifier,GlobalIdentifierReport report){
@@ -360,21 +320,9 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return inject(FileBusiness.class).findInputStream(file);
 	}
 	
-	/*protected String[][] convertToArray(Collection<Value> values,String nullValueString){
-		String[][] array = new String[values.size()][2];
-		Integer i = 0;
-		for(Value value : values){
-			array[i][0] = value.getName();
-			array[i][1] = format(value.get());
-			if(array[i][1] == null)
-				array[i][1] = nullValueString;
-			i++;
-		}
-		return array;
-	}*/
-	
 	//TODO use convertToArray(Collection<Value> values)
 	
+	@Deprecated
 	protected String[][] convertToArray(Collection<Metric> metrics,Collection<MetricValue> metricValues,String nullValueString){
 		String[][] values = new String[metrics.size()][2];
 		Integer i = 0;
@@ -401,6 +349,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		return format(metricValue.getValue());
 	}
 	
+	@Deprecated
 	protected String[][] convertToArray(Collection<Interval> intervals,Boolean includeExtremities){
 		String[][] values = new String[intervals.size()][2+(Boolean.TRUE.equals(includeExtremities)?1:0)];
 		Integer i = 0;
@@ -413,15 +362,6 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		}
 		return values;
 	}
-	
-	
-	
-	/*protected LabelValueCollectionReport addMetricCollectionLabelValueCollection(AbstractReportTemplateFile<?> report,MetricCollection metricCollection){
-		LabelValueCollectionReport labelValueCollectionReport = new LabelValueCollectionReport();
-		labelValueCollectionReport.setName(metricCollection.getName());
-		for(MetricValue metricValue : rootBusinessLayer.getMetricDao().fin)
-	}*/
-			
 		
 	/**/
 	
@@ -433,7 +373,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			private static final long serialVersionUID = 1L;
 			
 			/**/
-			public static class Default extends Adapter implements Serializable {
+			public static class Default extends Listener.Adapter implements Serializable {
 				private static final long serialVersionUID = 1L;
 				
 			}

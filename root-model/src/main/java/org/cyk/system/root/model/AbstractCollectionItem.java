@@ -20,7 +20,7 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 
 	/*
 	 * an item can be a simple attribute of another model bean. 
-	 * In that case , it might not belongs to a collection , not have an order index 
+	 * In that case , it might not belongs to a collection. 
 	 */
 	@ManyToOne protected COLLECTION collection;
 	
@@ -28,12 +28,12 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 		super(code, name, null, null);
 		this.collection = collection;
 	}
-
+	/*
 	@Override
 	public String toString() {
 		return "("+collection+")"+super.toString();
-	}
+	}*/
 	
 	public static final String FIELD_COLLECTION = "collection";
-	public static final String FIELD_ORDER_NUMBER = "orderNumber";
+	
 }

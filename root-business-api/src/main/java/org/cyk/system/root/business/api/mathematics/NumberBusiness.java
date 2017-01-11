@@ -23,9 +23,6 @@ public interface NumberBusiness {
 	
 	NumberFormatter.String instanciateOneFormatter(Number number);
 	
-	@Deprecated
-	String format(Number number,FormatArguments arguments);
-	
 	String format(NumberFormatter.String formatter);
 	
 	<NUMBER extends Number> NUMBER parse(Class<NUMBER> numberClass,String number);
@@ -54,25 +51,7 @@ public interface NumberBusiness {
 	
 	BigDecimal parseBigDecimal(String value);
 	
-	BigDecimal _100 = new BigDecimal("100");
-	
 	/**/
-	
-	@Getter @Setter @Deprecated //TODO to be changed by interface : Format extends 
-	public static class FormatArguments implements Serializable{
-		private static final long serialVersionUID = 7407251574517349144L;
-		public static enum CharacterSet{DIGIT,LETTER};
-		private Locale locale;
-		private CharacterSet type = CharacterSet.DIGIT;
-		private Boolean isRank = Boolean.FALSE;
-		private Boolean isPercentage = Boolean.FALSE;
-		private String percentageSymbol = Constant.CHARACTER_PERCENT.toString(),leftPadding=Constant.CHARACTER_ZERO.toString();
-		private Integer width;
-		
-		public void setTypeAsLetter(){
-			setType(CharacterSet.LETTER);
-		}
-	}
 	
 	@Getter @Setter
 	public static class FormatSequenceArguments<NUMBER extends Number> implements Serializable{

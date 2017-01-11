@@ -8,9 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.Locality;
-import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
 import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
@@ -41,7 +41,7 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 	public Country create(Country country) {
 		Locality locality = country.getLocality();
 		if(locality==null){
-			locality = new Locality(country.getContinent(), localityTypeDao.read(LocalityType.COUNTRY), country.getCode(), country.getName());
+			locality = new Locality(country.getContinent(), localityTypeDao.read(RootConstant.Code.LocalityType.COUNTRY), country.getCode(), country.getName());
 			country.setLocality(locality);
 		}
 		if(locality.getIdentifier()==null)
