@@ -126,6 +126,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     protected void initialisation() {
     	INSTANCE = this; 
         super.initialisation();
+        org.cyk.utility.common.cdi.annotation.Log.Interceptor.COLLECTION.add(new LogInterceptorAdapter() /*inject(LogInterceptorAdapter.class)*/);
+        
         ClazzBusiness.LISTENERS.add(new ClazzBusinessListener.Adapter() {
 			private static final long serialVersionUID = 4056356640763766384L;
 			@Override
@@ -154,7 +156,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         rootBusinessTestHelper.setReportBusiness(reportBusiness);
         
-        applicationBusiness.registerValueGenerator((ValueGenerator<?, ?>) new StringValueGenerator<Party>(
+        inject(ApplicationBusiness.class).registerValueGenerator((ValueGenerator<?, ?>) new StringValueGenerator<Party>(
         		ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER,ValueGenerator.GLOBAL_IDENTIFIER_CODE_DESCRIPTION, Party.class));
         
         registerValidator(Person.class, inject(PersonValidator.class));

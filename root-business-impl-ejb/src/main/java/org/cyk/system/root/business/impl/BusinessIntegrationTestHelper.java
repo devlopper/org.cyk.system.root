@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.transaction.TransactionSynchronizationRegistry;
+
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
@@ -18,8 +20,9 @@ public class BusinessIntegrationTestHelper {
 
     //FIXME those classes are ignored. WHY 
     private static Class<?>[] CLASSES = {ExceptionUtils.class,PersonValidator.class,FileValidator.class,
-    	RandomDataProvider.class,ResourceProducer.class,Logger.class,RootReportRepository.class,RootDataProducerHelper.class
-    	,DatabaseUtils.class,BusinessInterfaceLocator.class,RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator.class,RootFormattingConfigurationsRegistrator.class};
+    	RandomDataProvider.class,ResourceProducer.class,Logger.class,RootReportRepository.class,RootDataProducerHelper.class,ModelClassLocator.class
+    	,DatabaseUtils.class,BusinessInterfaceLocator.class,RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator.class,RootFormattingConfigurationsRegistrator.class
+    	,TransactionSynchronizationRegistry.class};
     
     public static Package[] packages(){
         return PACKAGES;

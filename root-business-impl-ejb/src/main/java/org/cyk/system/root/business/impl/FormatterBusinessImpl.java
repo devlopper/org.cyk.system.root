@@ -26,14 +26,6 @@ public class FormatterBusinessImpl extends AbstractBusinessServiceImpl implement
 			return Constant.EMPTY_STRING;
 		AbstractFormatter<T> formatter;
 		if((formatter = (AbstractFormatter<T>) FORMATTER_MAP.get(object.getClass()))==null){
-			//logWarning("No formatter has been found for class {}. the toString() method will be used instead", object.getClass());
-			
-			/*return object instanceof AbstractIdentifiable
-				?(object instanceof AbstractEnumeration
-					?((AbstractEnumeration)object).getName()
-					:((AbstractIdentifiable)object).getUiString())
-				:object.toString();*/
-			
 			return object instanceof AbstractModelElement ?((AbstractModelElement)object).getUiString() : object.toString();
 			
 			//return object.toString();

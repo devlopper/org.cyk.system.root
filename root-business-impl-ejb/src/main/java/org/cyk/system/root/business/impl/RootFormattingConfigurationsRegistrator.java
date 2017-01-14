@@ -27,6 +27,30 @@ public class RootFormattingConfigurationsRegistrator extends AbstractFormattingC
 
 	@Override
 	public void register() {
+		register(Boolean.class, new AbstractFormatter<Boolean>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(Boolean value, ContentType contentType) {
+				return inject(LanguageBusiness.class).findResponseText(value);
+			}
+		});
+		
+		register(Object[].class, new AbstractFormatter<Object[]>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(Object[] objects, ContentType contentType) {
+				return commonUtils.convertToString(objects, Constant.CHARACTER_COMA);
+			}
+		});
+		
+		register(Object[][].class, new AbstractFormatter<Object[][]>() {
+			private static final long serialVersionUID = -4793331650394948152L;
+			@Override
+			public String format(Object[][] objects, ContentType contentType) {
+				return commonUtils.convertToString(objects, Constant.CHARACTER_COMA,Constant.CHARACTER_VERTICAL_BAR);
+			}
+		});
+		
 		register(IntervalExtremity.class, new AbstractFormatter<IntervalExtremity>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override

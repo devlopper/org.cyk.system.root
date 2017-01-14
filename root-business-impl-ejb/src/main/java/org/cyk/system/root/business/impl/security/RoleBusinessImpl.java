@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.security.RoleBusiness;
@@ -15,7 +14,6 @@ import org.cyk.system.root.model.security.RoleUniformResourceLocator;
 import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.system.root.persistence.api.security.RoleUniformResourceLocatorDao;
 
-@Stateless
 public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, RoleDao> implements RoleBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;

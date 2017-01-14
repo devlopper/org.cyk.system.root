@@ -26,14 +26,10 @@ import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ThreadPoolExecutor;
 
 @Stateless 
-//@Remote 
-//@Business
 public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl<AbstractIdentifiable> implements GenericBusiness,Serializable {
 	
 	private static final long serialVersionUID = -1042342183332719272L;
  
-	@Inject private BusinessInterfaceLocator businessInterfaceLocator;
-	
 	@Inject private GenericDaoImpl genericDaoImpl;
 	
 	@Override
@@ -42,8 +38,13 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	}
 	
 	@Override
+	protected Class<?> parameterizedClass() {
+		return AbstractIdentifiable.class;
+	}
+	
+	@Override
 	public AbstractIdentifiable create(AbstractIdentifiable anIdentifiable) {	    
-	    TypedBusiness<AbstractIdentifiable> businessBean = businessInterfaceLocator.injectTypedByObject(anIdentifiable);
+	    TypedBusiness<AbstractIdentifiable> businessBean = inject(BusinessInterfaceLocator.class).injectTypedByObject(anIdentifiable);
 	    if(businessBean==null){
 	    	inject(ValidationPolicy.class).validateCreate(anIdentifiable);
 	        return genericDao.create(anIdentifiable);
@@ -95,7 +96,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 
 	@Override
 	public AbstractIdentifiable update(AbstractIdentifiable anObject) {
-	    TypedBusiness<AbstractIdentifiable> businessBean = businessInterfaceLocator.injectTypedByObject(anObject);
+	    TypedBusiness<AbstractIdentifiable> businessBean = inject(BusinessInterfaceLocator.class).injectTypedByObject(anObject);
 	    if(businessBean==null){
 	    	inject(ValidationPolicy.class).validateUpdate(anObject);
             return genericDao.update(anObject);
@@ -121,7 +122,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 
 	@Override
 	public AbstractIdentifiable delete(AbstractIdentifiable anObject) {
-	    TypedBusiness<AbstractIdentifiable> businessBean = businessInterfaceLocator.injectTypedByObject(anObject);
+	    TypedBusiness<AbstractIdentifiable> businessBean = inject(BusinessInterfaceLocator.class).injectTypedByObject(anObject);
         if(businessBean==null){
         	inject(ValidationPolicy.class).validateDelete(anObject);
             return genericDao.delete(anObject);

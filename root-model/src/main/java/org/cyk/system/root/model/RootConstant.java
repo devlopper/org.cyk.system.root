@@ -76,6 +76,16 @@ public interface RootConstant {
 			public static String CONTINENT = "CONTINENT";
 		}
 		
+		public static class Locality implements Serializable {
+			private static final long serialVersionUID = 1L;
+		
+			public static String AFRICA = "AFRICA";
+			public static String AMERICA = "AMERICA";
+			public static String ASIA = "ASIA";
+			public static String AUSTRALIA = "AUSTRALIA";
+			public static String EUROPE = "EUROPA";
+		}
+		
 		public static class Country implements Serializable {
 			private static final long serialVersionUID = 1L;
 		

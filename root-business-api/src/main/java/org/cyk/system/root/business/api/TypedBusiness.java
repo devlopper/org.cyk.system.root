@@ -357,13 +357,15 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		public Class<?> getFieldType();
 		public SetListener setFieldType(Class<?> fieldType);
 		public Class<?> getFieldType(Class<?> aClass,Field field);
+		SetListener setNullValue(Object value);
+		Object getNullValue();
 		public LogMessage.Builder getLogMessageBuilder();
 		
 		@Getter @Setter
 		public static class Adapter extends BeanAdapter implements SetListener,Serializable {
 			private static final long serialVersionUID = 1L;
 			
-			protected Object instance;
+			protected Object instance,nullValue;
 			protected Integer index,indexIncrement=1;
 			protected String[] values;
 			protected LogMessage.Builder logMessageBuilder;
@@ -386,6 +388,11 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 			
 			public SetListener setFieldType(Class<?> fieldType){
 				this.fieldType = fieldType;
+				return this;
+			}
+			
+			public SetListener setNullValue(Object nullValue){
+				this.nullValue = nullValue;
 				return this;
 			}
 			

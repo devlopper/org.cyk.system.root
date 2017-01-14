@@ -15,12 +15,6 @@ import org.cyk.utility.common.annotation.FieldOverride;
 public class Locality extends AbstractDataTree<LocalityType> implements Serializable  {
 
 	private static final long serialVersionUID = -6128937819261060725L;
-
-	public static final String AFRICA = "AFRICA";
-	public static final String AMERICA = "AMERICA";
-	public static final String ASIA = "ASIA";
-	public static final String AUSTRALIA = "AUSTRALIA";
-	public static final String EUROPE = "EUROPA";
 	
 	private String residentName;
 	

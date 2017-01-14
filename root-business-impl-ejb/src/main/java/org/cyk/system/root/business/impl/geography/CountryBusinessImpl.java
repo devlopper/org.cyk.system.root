@@ -19,12 +19,14 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 
 	private static final long serialVersionUID = -3799482462496328200L;
 
-	@Inject private LocalityBusiness localityBusiness;
-	@Inject private LocalityTypeDao localityTypeDao;
-	
 	@Inject
 	public CountryBusinessImpl(CountryDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected Class<?> parameterizedClass() {
+		return Country.class;
 	}
 	
 	@Override
@@ -36,28 +38,22 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 		country.setPhoneNumberCode(Integer.parseInt(StringUtils.defaultIfBlank(values.length>3 ? values[3] : null, "0")));
 		return country;
 	}
-
+	
 	@Override
-	public Country create(Country country) {
+	protected void beforeCreate(Country country) {
 		Locality locality = country.getLocality();
 		if(locality==null){
-			locality = new Locality(country.getContinent(), localityTypeDao.read(RootConstant.Code.LocalityType.COUNTRY), country.getCode(), country.getName());
+			locality = new Locality(country.getContinent(), inject(LocalityTypeDao.class).read(RootConstant.Code.LocalityType.COUNTRY), country.getCode(), country.getName());
 			country.setLocality(locality);
 		}
 		if(locality.getIdentifier()==null)
-			localityBusiness.create(locality);
-		/*
-		if(StringUtils.isBlank(country.getCode()))
-			country.setCode(country.getLocality().getCode());
-		if(StringUtils.isBlank(country.getName()))
-			country.setName(country.getLocality().getName());
-		*/
-		super.create(country);
-		return country;
+			inject(LocalityBusiness.class).create(locality);
+		super.beforeCreate(country);
 	}
-	
+
 	@Override
-	public Country update(Country country) {
+	protected void beforeUpdate(Country country) {
+		super.beforeUpdate(country);
 		if(StringUtils.isBlank(country.getCode()))
 			country.setCode(country.getLocality().getCode());
 		else
@@ -66,7 +62,7 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 			country.setName(country.getLocality().getName());
 		else
 			country.getLocality().setName(country.getName());
-		localityBusiness.update(country.getLocality());
-		return super.update(country);
+		inject(LocalityBusiness.class).update(country.getLocality());
 	}
+	
 }

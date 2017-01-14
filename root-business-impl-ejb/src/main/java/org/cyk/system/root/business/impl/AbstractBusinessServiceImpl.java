@@ -2,7 +2,6 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -86,7 +85,10 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 				value = read((Class<AbstractIdentifiable>)fieldType, values[index]);
 				if(value==null)
 					addLogMessageBuilderParameters(logMessageBuilder,"no "+fieldType.getSimpleName()+" found for ",values[index]);	
-			}else if(Date.class.equals(fieldType))
+			}else
+				value = commonUtils.convertString(values[index], fieldType);
+			
+			/*else if(Date.class.equals(fieldType))
 				value = inject(TimeBusiness.class).parse(values[index]);
 			else if(String.class.equals(fieldType))
 				value = values[index];
@@ -94,6 +96,8 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 				value = new BigDecimal(values[index]);
 			else if(Long.class.equals(fieldType))
 				value = new Long(values[index]);
+			else if(Byte.class.equals(fieldType))
+				value = new Byte(values[index]);
 			else if(Integer.class.equals(fieldType))
 				value = new Integer(values[index]);
 			else if(Boolean.class.equals(fieldType))
@@ -111,6 +115,7 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 				addLogMessageBuilderParameters(logMessageBuilder,fieldType+" fo field named "+field.getName()+" not handled","*");
 				return;
 			}
+			*/
 			commonUtils.writeField(field, instance, value);
 			addLogMessageBuilderParameters(logMessageBuilder,"set field "+field.getName()+" to",value);	
 		}
@@ -135,6 +140,7 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 					, listener.getValues(), listener.getLogMessageBuilder());
 		listener.setIndex(listener.getIndex()+listener.getIndexIncrement());
 		listener.setFieldType(null);
+		listener.setNullValue(null);
 	}
 	
 	/**/

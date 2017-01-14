@@ -1,22 +1,25 @@
 package org.cyk.system.root.model.mathematics.machine;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * A join between a finite state machine state and an identifiable
@@ -40,8 +43,34 @@ public class FiniteStateMachineStateIdentifiableGlobalIdentifier extends Abstrac
 		public SearchCriteria addGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers){
 			return (SearchCriteria) super.addGlobalIdentifiers(globalIdentifiers);
 		}
+		
 		public SearchCriteria addGlobalIdentifier(GlobalIdentifier globalIdentifier){
 			return (SearchCriteria) super.addGlobalIdentifier(globalIdentifier);
+		}
+		
+	}
+	
+	@Getter @Setter
+	public static class IdentifiablesSearchCriteria<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		protected Collection<FiniteStateMachineStateIdentifiableGlobalIdentifier> finiteStateMachineStateIdentifiableGlobalIdentifiers = new ArrayList<>();
+		protected Class<IDENTIFIABLE> identifiableClass;
+		protected SearchCriteria finiteStateMachineStateIdentifiableGlobalIdentifier;
+		
+		public IdentifiablesSearchCriteria(Class<IDENTIFIABLE> identifiableClass,SearchCriteria finiteStateMachineStateIdentifiableGlobalIdentifier){
+			this.identifiableClass = identifiableClass;
+			this.finiteStateMachineStateIdentifiableGlobalIdentifier = finiteStateMachineStateIdentifiableGlobalIdentifier;
+		}
+		
+		public IdentifiablesSearchCriteria<IDENTIFIABLE> addFiniteStateMachineStateIdentifiableGlobalIdentifiers(Collection<FiniteStateMachineStateIdentifiableGlobalIdentifier> finiteStateMachineStateIdentifiableGlobalIdentifiers){
+			this.finiteStateMachineStateIdentifiableGlobalIdentifiers.addAll(finiteStateMachineStateIdentifiableGlobalIdentifiers);
+			return this;
+		}
+		
+		public IdentifiablesSearchCriteria<IDENTIFIABLE> addFiniteStateMachineStateIdentifiableGlobalIdentifier(FiniteStateMachineStateIdentifiableGlobalIdentifier finiteStateMachineStateIdentifiableGlobalIdentifier){
+			return addFiniteStateMachineStateIdentifiableGlobalIdentifiers(Arrays.asList(finiteStateMachineStateIdentifiableGlobalIdentifier));
 		}
 		
 	}

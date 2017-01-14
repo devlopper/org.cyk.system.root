@@ -15,6 +15,7 @@ public class FileRepresentationTypeBusinessImpl extends AbstractEnumerationBusin
 	@Inject
 	public FileRepresentationTypeBusinessImpl(FileRepresentationTypeDao dao) { 
 		super(dao);
-	} 
+	}
+	
 
 }

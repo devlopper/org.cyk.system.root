@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -94,8 +93,18 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		clazz = (Class<IDENTIFIABLE>) parameterizedClass();
 		super.beforeInitialisation();
 	}
+	
 	protected Class<?> parameterizedClass(){
-	    return (Class<?>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		try {
+			String name = getClass().getName();
+			name = StringUtils.replace(name, "business.impl", "model");
+			name = StringUtils.substringBefore(name, "BusinessImpl");
+			return Class.forName(name);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} //inject(ModelClassLocator.class).locate(getClass());
+		//return (Class<?>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
