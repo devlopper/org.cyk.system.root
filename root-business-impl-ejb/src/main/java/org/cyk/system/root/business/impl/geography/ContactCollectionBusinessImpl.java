@@ -80,7 +80,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
     
     @Override
     public ContactCollection update(ContactCollection collection) {
-    	update(contactDao.readByCollectionByClass(collection,PhoneNumber.class), collection.getPhoneNumbers(), collection);
+    	update(inject(ContactDao.class).readByCollectionByClass(collection,PhoneNumber.class), collection.getPhoneNumbers(), collection);
     	update(contactDao.readByCollectionByClass(collection,Location.class), collection.getLocations(), collection);
     	Collection<ElectronicMail> electronicMails = new ArrayList<>();
     	if(collection.getElectronicMails()!=null)
@@ -91,6 +91,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
     	
     	update(contactDao.readByCollectionByClass(collection,PostalBox.class), collection.getPostalBoxs(), collection);
     	update(contactDao.readByCollectionByClass(collection,Website.class), collection.getWebsites(), collection);
+    	
     	return super.update(collection);
     }
      

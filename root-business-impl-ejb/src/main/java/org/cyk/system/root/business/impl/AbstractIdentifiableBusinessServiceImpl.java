@@ -203,8 +203,11 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 
 	@Override
-	public Collection<IDENTIFIABLE> findByString(String string) {
+	public Collection<IDENTIFIABLE> findByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables) {
 		StringSearchCriteria stringSearchCriteria = new StringSearchCriteria(string, StringSearchCriteria.LocationType.INSIDE);
+		if(excludedIdentifiables!=null)
+			for(IDENTIFIABLE excluded : excludedIdentifiables)
+				stringSearchCriteria.getExcluded().add(excluded.getCode());
 		return findByString(stringSearchCriteria);
 	}
 	

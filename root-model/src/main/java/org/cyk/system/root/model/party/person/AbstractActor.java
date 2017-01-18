@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,7 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 
 	private static final long serialVersionUID = 2742833783679362737L;
 
-	@ManyToOne protected Person person;
+	@ManyToOne @NotNull protected Person person;
 		
 	@Override
 	public String toString() {

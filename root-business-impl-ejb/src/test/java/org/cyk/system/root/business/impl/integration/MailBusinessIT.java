@@ -126,7 +126,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
         }
         genericBusiness.create(notificationTemplate2);
         
-        NotificationTemplate nt = notificationTemplateDao.readByGlobalIdentifierCode(NotificationTemplate.ALARM_USER_INTERFACE);
+        NotificationTemplate nt = notificationTemplateDao.readByGlobalIdentifierCode(RootConstant.Code.NotificationTemplate.ALARM_USER_INTERFACE);
         nt.getTitleParametersMap().put("title", "Drogba didier");
         nt.getMessageParametersMap().put("body", "The Big Manager");
         

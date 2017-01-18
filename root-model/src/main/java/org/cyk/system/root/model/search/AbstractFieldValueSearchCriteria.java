@@ -1,6 +1,8 @@
 package org.cyk.system.root.model.search;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.cyk.utility.common.Constant;
 
@@ -15,11 +17,8 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 
 	protected VALUE_TYPE value,nullValue;
 	protected Boolean ascendingOrdered=Boolean.FALSE;
+	protected Collection<VALUE_TYPE> excluded;
 	
-	public VALUE_TYPE getPreparedValue(){
-		return value==null?nullValue:value;
-	}
-
 	public AbstractFieldValueSearchCriteria(VALUE_TYPE value) {
 		super();
 		this.value = value;
@@ -30,6 +29,18 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 		this.value = criteria.value;
 		this.nullValue = criteria.nullValue;
 		this.ascendingOrdered = criteria.ascendingOrdered;
+		if(criteria.excluded!=null)
+			this.excluded = new ArrayList<>(criteria.excluded);
+	}
+	
+	public Collection<VALUE_TYPE> getExcluded(){
+		if(excluded == null)
+			excluded = new ArrayList<>();
+		return excluded;
+	}
+	
+	public VALUE_TYPE getPreparedValue(){
+		return value==null?nullValue:value;
 	}
 	
 	@Override

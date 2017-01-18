@@ -82,29 +82,14 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		return (Class<COLLECTION>) commonUtils.getClassParameterAt(getClass(), 2);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected ITEM __instanciateOne__(String[] values, InstanciateOneListener<ITEM> listener) {
 		ITEM item = super.__instanciateOne__(values, listener);
-		set(listener.getSetListener().setIndex(10).setFieldType((Class<COLLECTION>)commonUtils.getClassParameterAt(getClass(), 2))
+		set(listener.getSetListener().setIndex(10).setFieldType(getCollectionClass())
 				, AbstractCollectionItem.FIELD_COLLECTION);
 		return item;
 	}
-
-	/*@SuppressWarnings("unchecked")
-	@Override
-	public ITEM instanciateOne(String[] values) {
-		ITEM item = super.instanciateOne(values);
-		if(values.length > 10){
-			Integer index = 10;
-			TypedDao<COLLECTION> business = (TypedDao<COLLECTION>) inject(PersistenceInterfaceLocator.class).injectTyped((Class<COLLECTION>)commonUtils.getClassParameterAt(getClass(), 2));
-			item.setCollection(business.read(values[index++]));
-		}
-		return item;
-	}*/
 	
-	
-		
 	/**/
 
 	

@@ -1,6 +1,8 @@
 package org.cyk.system.root.business.impl.event;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -21,6 +23,11 @@ public class ExecutedMethodBusinessImpl extends AbstractTypedBusinessService<Exe
 	@Inject
 	public ExecutedMethodBusinessImpl(ExecutedMethodDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected Collection<? extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<?>> getListeners() {
+		return Listener.COLLECTION;
 	}
 
 	@Override
@@ -66,6 +73,35 @@ public class ExecutedMethodBusinessImpl extends AbstractTypedBusinessService<Exe
 		return instanciateOne(className, invocationContext.getMethod().getName(), invocationContext.getParameters()
 				,inputAsString, invocationContext.getMethod().getReturnType().equals(Void.TYPE) ? null : new Object[]{output},outputAsString
 						,throwable==null?null:throwable.toString(), startTime, endTime, numberOfMillisecond);
+	}
+	
+	/**/
+	
+	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<ExecutedMethod> {
+		
+		Collection<Listener> COLLECTION = new ArrayList<>();
+		
+		/**/
+		
+		public static class Adapter extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter.Default<ExecutedMethod> implements Listener,Serializable{
+			private static final long serialVersionUID = 1L;
+			
+			/**/
+			
+			public static class Default extends Listener.Adapter implements Serializable{
+				private static final long serialVersionUID = 1L;
+				
+				/**/
+			
+				
+				public static class EnterpriseResourcePlanning extends Listener.Adapter.Default implements Serializable{
+					private static final long serialVersionUID = 1L;
+					
+					/**/					
+					
+				}
+			}
+		}
 	}
 
 }

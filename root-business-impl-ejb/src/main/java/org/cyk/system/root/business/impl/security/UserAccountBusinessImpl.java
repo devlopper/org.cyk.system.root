@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -32,16 +31,13 @@ import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.system.root.persistence.api.security.UserAccountDao;
 import org.cyk.utility.common.Constant;
 
-@Stateless //@Secure
+//@Stateless //@Secure
 public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAccount, UserAccountDao> implements UserAccountBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	private static final Map<String,UserAccount> USER_ACCOUNT_MAP = new HashMap<>();
 	
-	@Inject private LanguageBusiness languageBusiness;
 	@Inject private UserSessionBusiness userSessionBusiness;
-	
-	@Inject private RoleDao roleDao;
 	
 	@Inject
 	public UserAccountBusinessImpl(UserAccountDao dao) {
@@ -66,7 +62,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		}else{
 			//TODO
 			//exceptionUtils().exception(USER_ACCOUNT_MAP.get(credentials.getUsername())!=null,EXCEPTION_ALREADY_CONNECTED, "exception.useraccount.multipleconnect");
-			logInfo("User account connected : Username={} , Roles={}", account.getCredentials().getUsername(),account.getRoles());
+			//logInfo("User account connected : Username={} , Roles={}", account.getCredentials().getUsername(),account.getRoles());
 		}
 		userSessionBusiness.setUserAccount(account);
 		
@@ -89,14 +85,14 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		credentialsDao.update(userAccount.getCredentials());
 	}*/
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public String findStatus(UserAccount userAccount) {
 		if(userAccount.getCurrentLock()==null)
-			return languageBusiness.findText("enabled");
-		return languageBusiness.findText("locked");
+			return inject(LanguageBusiness.class).findText("enabled");
+		return inject(LanguageBusiness.class).findText("locked");
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<UserAccount> findByCriteria(UserAccountSearchCriteria criteria) {
 		Collection<UserAccount> userAccounts;
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
@@ -108,7 +104,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		return userAccounts;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER) //@Secure 
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) //@Secure 
 	public Long countByCriteria(UserAccountSearchCriteria criteria) {
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
 			return dao.countAllExcludeRoles(Arrays.asList(inject(RoleBusiness.class).find(Role.ADMINISTRATOR)));
@@ -202,16 +198,16 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 
 	@Override
 	public Boolean canRead(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isReadable(identifiable);
+		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isReadable(identifiable);
 	}
 
 	@Override
 	public Boolean canUpdate(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isUpdatable(identifiable);
+		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isUpdatable(identifiable);
 	}
 
 	@Override
 	public Boolean canDelete(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, roleDao.readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isDeletable(identifiable);
+		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isDeletable(identifiable);
 	}
 }

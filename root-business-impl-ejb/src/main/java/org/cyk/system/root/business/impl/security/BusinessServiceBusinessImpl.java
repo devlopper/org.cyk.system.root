@@ -18,5 +18,10 @@ public class BusinessServiceBusinessImpl extends AbstractCollectionItemBusinessI
 	public BusinessServiceBusinessImpl(BusinessServiceDao dao) {
 		super(dao); 
 	}
+	
+	@Override
+	protected Class<BusinessServiceCollection> getCollectionClass() {
+		return BusinessServiceCollection.class;
+	}
 		
 }

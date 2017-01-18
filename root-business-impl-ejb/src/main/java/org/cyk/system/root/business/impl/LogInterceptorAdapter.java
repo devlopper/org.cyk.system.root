@@ -12,13 +12,17 @@ public class LogInterceptorAdapter extends org.cyk.utility.common.cdi.annotation
 	
 	private static final long serialVersionUID = 1L;
 
+	private static final String[] PREFIXES = {"instanciate","find","get","set","register","generate","add","format","load","process","has","is"};
+	
 	@Override
 	public void processAfter(InvocationContext invocationContext,String input, Object result,String output,Throwable throwable,Long startTime,Long endTime, Long numberOfMillisecond) {
 		super.processAfter(invocationContext,input, result,output,throwable,startTime,endTime, numberOfMillisecond);
-		if(!StringUtils.startsWithAny(invocationContext.getMethod().getName(), "instanciate","find","get","set")){
+		//Ignore ignore = invocationContext.getMethod().getAnnotation(Ignore.class);
+		//if(ignore==null || !ArrayUtils.contains(ignore.classes(), org.cyk.utility.common.cdi.annotation.Log.class) ){
+		if(!StringUtils.startsWithAny(invocationContext.getMethod().getName(), PREFIXES)){
 			inject(GenericBusiness.class).create(inject(ExecutedMethodBusiness.class)
-					.instanciateOne(invocationContext,input,result,output,throwable==null?null:throwable.toString(),startTime, endTime, numberOfMillisecond));
-			}
+				.instanciateOne(invocationContext,input,result,output,throwable==null?null:throwable.toString(),startTime, endTime, numberOfMillisecond));
+		}
 	}
 	
 	private String getObjectsAsString(Object[] objects) {

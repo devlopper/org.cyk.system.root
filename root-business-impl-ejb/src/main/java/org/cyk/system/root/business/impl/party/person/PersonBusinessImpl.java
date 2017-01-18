@@ -29,6 +29,7 @@ import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
@@ -37,6 +38,7 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonRelationship;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.file.FileDao;
@@ -77,6 +79,14 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	@Override
 	protected Collection<? extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<?>> getListeners() {
 		return Listener.COLLECTION;
+	}
+	
+	@Override
+	public Collection<Person> get(Collection<? extends AbstractActor> actors) {
+		Collection<Person> persons = new ArrayList<>();
+		for(AbstractActor actor : actors)
+			persons.add(actor.getPerson());
+		return persons;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -295,6 +305,14 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		Collection<Person> persons = findByPersonByRelationshipType(person, personRelationshipTypeCode);
 		exceptionUtils().exception(persons.size() > 1, "toomuch.person.found");
 		return persons.isEmpty() ? null : persons.iterator().next();
+	}
+	
+	@Override
+	public Collection<Person> findByPersonRelationshipPerson2ByPersonRelationshipTypes(Collection<Person> persons, Collection<PersonRelationshipType> personRelationshipTypes) {
+		Collection<Person> collection = new ArrayList<>();
+		for(PersonRelationship personRelationship : inject(PersonRelationshipBusiness.class).findByPerson2ByTypes(persons, personRelationshipTypes))
+			collection.add(personRelationship.getPerson1());
+		return collection;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

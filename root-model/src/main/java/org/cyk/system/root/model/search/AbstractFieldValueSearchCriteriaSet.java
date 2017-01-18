@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
@@ -19,6 +20,7 @@ public abstract class AbstractFieldValueSearchCriteriaSet extends AbstractModelE
 
 	protected DataReadConfiguration readConfig = new DataReadConfiguration();
 	protected Collection<AbstractFieldValueSearchCriteria<?>> criterias = new ArrayList<>();
+	protected Collection<AbstractIdentifiable> excluded;
 	
 	protected void setStringSearchCriteria(StringSearchCriteria stringSearchCriteria,String value){
 		stringSearchCriteria.setValue(value);
@@ -33,6 +35,12 @@ public abstract class AbstractFieldValueSearchCriteriaSet extends AbstractModelE
 	@Override
 	public String getUiString() {
 		return toString();
+	}
+	
+	public Collection<AbstractIdentifiable> getExcluded(){
+		if(excluded==null)
+			excluded = new ArrayList<>();
+		return excluded;
 	}
 	
 }

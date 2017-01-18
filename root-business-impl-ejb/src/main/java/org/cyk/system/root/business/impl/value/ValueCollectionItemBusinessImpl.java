@@ -27,6 +27,11 @@ public class ValueCollectionItemBusinessImpl extends AbstractCollectionItemBusin
 	}
 	
 	@Override
+	protected Class<ValueCollection> getCollectionClass() {
+		return ValueCollection.class;
+	}
+	
+	@Override
 	protected void setAutoSettedProperties(ValueCollectionItem valueCollectionItem) {
 		super.setAutoSettedProperties(valueCollectionItem);
 		if(StringUtils.isBlank(valueCollectionItem.getName()))

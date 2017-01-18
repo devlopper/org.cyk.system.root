@@ -55,7 +55,7 @@ public class CascadeStyleSheet extends AbstractModelElement implements Serializa
 	
 	public void setUniqueClass(String uniqueClass){
 		removeClasses(uniqueClass);
-		setUniqueClass(uniqueClass);
+		this.uniqueClass = uniqueClass;
 		addClasses(getUniqueClass());
 	}
 	

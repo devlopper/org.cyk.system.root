@@ -54,6 +54,15 @@ public interface RootConstant {
 			
 		}
 		
+		public static class NotificationTemplate implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String ALARM_EMAIL = "ALARMMAIL";
+			public static String ALARM_SMS = "ALARMSMS";
+			public static String ALARM_USER_INTERFACE = "ALARMUSERINTERFACE";
+			
+		}
+		
 		public static class LocationType implements Serializable {
 			private static final long serialVersionUID = 1L;
 		

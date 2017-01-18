@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
+import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.party.person.PersonRelationship;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.utility.common.Constant;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +18,8 @@ import lombok.Setter;
 
 public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCriteria> {
 
+	Collection<Person> get(Collection<? extends AbstractActor> actors);
+	
 	String findNames(Person person,FindNamesArguments arguments);
 	String findNames(Person person);
 
@@ -29,6 +33,8 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCrite
 	
 	Collection<Person> findByPersonByRelationshipType(Person person,String personRelationshipTypeCode);
 	Person findOneByPersonByRelationshipType(Person person,String personRelationshipTypeCode);
+	
+	Collection<Person> findByPersonRelationshipPerson2ByPersonRelationshipTypes(Collection<Person> persons,Collection<PersonRelationshipType> personRelationshipTypes);
 	
 	/**/
 	

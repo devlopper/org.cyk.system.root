@@ -30,6 +30,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
 		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete,readByGlobalIdentifier
 		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
+		,readByGlobalIdentifierByCodeSearchCriteria,countByGlobalIdentifierByCodeSearchCriteria
 		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria;
 	/*
 	@SuppressWarnings("unchecked")
@@ -87,13 +88,22 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getExecuteDelete()))
 			registerNamedQuery(executeDelete, "DELETE FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
 		
-		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierSearchCriteria()))
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierSearchCriteria())) {
 			registerNamedQuery(readByGlobalIdentifierSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
-	    		+ "    ( LOCATE(LOWER(:code),LOWER(record.globalIdentifier.code))                > 0 )"
-	    		+ " OR ( LOCATE(LOWER(:name),LOWER(record.globalIdentifier.name))            > 0 )");
+	    		+ "    ( LOCATE(LOWER(:code),LOWER(record.globalIdentifier.code)) > 0 )"
+	    		+ " OR ( LOCATE(LOWER(:name),LOWER(record.globalIdentifier.name)) > 0 )")
+			;
+			
+			registerNamedQuery(readByGlobalIdentifierByCodeSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
+		    		+ " record.globalIdentifier.code NOT IN :excludedCodes "
+		    		+ " AND ("
+		    		+ "	    ( LOCATE(LOWER(:code),LOWER(record.globalIdentifier.code)) > 0 )"
+		    		+ " OR  ( LOCATE(LOWER(:name),LOWER(record.globalIdentifier.name)) > 0 )"
+		    		+ ")")
+				;
 		
-		
-		
+		}
+		// record.globalIdentifier.code NOT IN :exceludedCodes OR
 	}
 	
 	public Configuration getConfiguration(){
@@ -111,6 +121,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
 		if(searchCriteria instanceof GlobalIdentifier.SearchCriteria){
 			queryWrapper.parameter(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getPreparedValue());
+			if(!((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getExcluded().isEmpty())
+				queryWrapper.parameter("excludedCodes", ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getExcluded());
 			queryWrapper.parameter(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getPreparedValue());
 		}
 	}
@@ -118,7 +130,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<IDENTIFIABLE> readByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
-		QueryWrapper<?> queryWrapper = namedQuery(readByGlobalIdentifierSearchCriteria);
+		QueryWrapper<?> queryWrapper = namedQuery(globalIdentifierSearchCriteria.getCode().getExcluded().isEmpty() ? 
+				readByGlobalIdentifierSearchCriteria : readByGlobalIdentifierByCodeSearchCriteria);
 		applySearchCriteriaParameters(queryWrapper, globalIdentifierSearchCriteria);
 		return (Collection<IDENTIFIABLE>) queryWrapper.resultMany();
 	}

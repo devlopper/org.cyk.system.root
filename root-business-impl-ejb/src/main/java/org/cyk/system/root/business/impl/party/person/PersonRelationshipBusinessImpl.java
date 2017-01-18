@@ -68,6 +68,11 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 	public Collection<PersonRelationship> findByPerson2ByType(Person person, PersonRelationshipType type) {
 		return dao.readByPerson2ByType(person, type);
 	}
+	
+	@Override
+	public Collection<PersonRelationship> findByPerson2ByTypes(Collection<Person> persons,Collection<PersonRelationshipType> types) {
+		return dao.readByPerson2ByTypes(persons, types);
+	}
 
 	@Override
 	public Collection<PersonRelationship> findByType(Collection<PersonRelationship> personRelationships,PersonRelationshipType type) {

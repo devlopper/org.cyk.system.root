@@ -58,7 +58,8 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         @SuppressWarnings("unchecked")
         AbstractValidator<Identifiable<?>> validator = (AbstractValidator<Identifiable<?>>) ValidatorMap.getInstance().validatorOf(anIdentifiable.getClass());
         if(validator==null)
-            DefaultValidator.getInstance().validate(anIdentifiable);
+            //DefaultValidator.getInstance().validate(anIdentifiable);
+        	inject(DefaultValidator.class).validate(anIdentifiable);
         else
             validator.validate(anIdentifiable);
     }

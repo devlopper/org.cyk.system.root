@@ -9,6 +9,7 @@ import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness;
 import org.cyk.system.root.business.impl.data.Data;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
@@ -55,7 +56,7 @@ public class NotificationBusinessIT extends AbstractBusinessIT {
         }
         genericBusiness.create(notificationTemplate2);
         
-        NotificationTemplate nt = notificationTemplateDao.readByGlobalIdentifierCode(NotificationTemplate.ALARM_USER_INTERFACE);
+        NotificationTemplate nt = notificationTemplateDao.readByGlobalIdentifierCode(RootConstant.Code.NotificationTemplate.ALARM_USER_INTERFACE);
         nt.getTitleParametersMap().put("title", "Drogba didier");
         nt.getMessageParametersMap().put("body", "The Big Manager");
         

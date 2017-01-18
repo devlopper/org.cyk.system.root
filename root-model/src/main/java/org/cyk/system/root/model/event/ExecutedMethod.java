@@ -31,14 +31,14 @@ public class ExecutedMethod extends AbstractIdentifiable implements Serializable
 	
 	@Embedded @AttributeOverrides(value={
 			@AttributeOverride(name=ExecutedMethodInputOutput.FIELD_COUNT,column=@Column(name="input_count"))
-			,@AttributeOverride(name=ExecutedMethodInputOutput.FIELD_TEXT,column=@Column(name="input_text"))
+			,@AttributeOverride(name=ExecutedMethodInputOutput.FIELD_TEXT,column=@Column(name="input_text",length=1024 * 32))
 			,@AttributeOverride(name=ExecutedMethodInputOutput.FIELD_COMPRESSED,column=@Column(name="input_compressed"))
 	})
 	private ExecutedMethodInputOutput input;
 	
 	@Embedded @AttributeOverrides(value={
 			@AttributeOverride(name=ExecutedMethodInputOutput.FIELD_COUNT,column=@Column(name="output_count"))
-			,@AttributeOverride(name=ExecutedMethodInputOutput.FIELD_TEXT,column=@Column(name="output_text"))
+			,@AttributeOverride(name=ExecutedMethodInputOutput.FIELD_TEXT,column=@Column(name="output_text",length=1024 * 32))
 			,@AttributeOverride(name=ExecutedMethodInputOutput.FIELD_COMPRESSED,column=@Column(name="output_compressed"))
 	})
 	private ExecutedMethodInputOutput output;

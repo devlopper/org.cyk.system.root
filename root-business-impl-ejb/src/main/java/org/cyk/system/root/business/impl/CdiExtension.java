@@ -22,7 +22,7 @@ import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 
 public class CdiExtension implements Extension {
 
-	public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> processAnnotatedType) {
+	/*public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> processAnnotatedType) {
 
 		AnnotatedType<T> annotatedType = processAnnotatedType.getAnnotatedType();
 
@@ -30,7 +30,7 @@ public class CdiExtension implements Extension {
 				&&  annotatedType.getJavaClass().getName().endsWith("BusinessImpl")) {
 			AnnotatedTypeWrapper<T> wrapper = new AnnotatedTypeWrapper<T>(annotatedType,annotatedType.getAnnotations());
 			if(ArrayUtils.contains(new Class[]{GlobalIdentifierBusinessImpl.class,ApplicationBusinessImpl.class,LanguageBusinessImpl.class
-					,ExecutedMethodBusinessImpl.class}, annotatedType.getJavaClass())){
+					,ExecutedMethodBusinessImpl.class,GenericBusinessImpl.class}, annotatedType.getJavaClass())){
 				
 			}else{
 				wrapper.addAnnotation(new javax.interceptor.Interceptors(){
@@ -56,7 +56,7 @@ public class CdiExtension implements Extension {
 			processAnnotatedType.setAnnotatedType(wrapper);
 		}
 
-	}
+	}*/
 
 	/**/
 

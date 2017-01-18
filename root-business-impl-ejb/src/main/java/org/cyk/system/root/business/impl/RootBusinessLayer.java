@@ -1,6 +1,5 @@
 package org.cyk.system.root.business.impl;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +13,6 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
@@ -23,7 +21,6 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
-import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
@@ -278,28 +275,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void event(){ 
-        notificationTemplate(NotificationTemplate.ALARM_USER_INTERFACE,"Alarm User Interface Notification Template","alarmUITitle.txt","alarmUIMessage.html");
-        notificationTemplate(NotificationTemplate.ALARM_EMAIL,"Alarm Email Notification Template","alarmEmailTitle.txt","alarmEmailMessage.html");
-        notificationTemplate(NotificationTemplate.ALARM_SMS,"Alarm Sms Notification Template","alarmSmsTitle.txt","alarmSmsMessage.html");
-        
+        createFromExcelSheet(NotificationTemplate.class);
         createFromExcelSheet(EventMissedReason.class);
-    }
-    
-    private void notificationTemplate(String code,String name,String titleFileFolder,String titleFileName,String bodyFileFolder,String bodyFileName){
-    	NotificationTemplate notificationTemplate = new NotificationTemplate();
-        notificationTemplate.setCode(code);
-        notificationTemplate.setName(name);
-        try {
-        	notificationTemplate.setTitle(inject(FileBusiness.class).process(IOUtils.toByteArray(getClass().getResourceAsStream(titleFileFolder+"/"+titleFileName)), titleFileName));
-        	notificationTemplate.setMessage(inject(FileBusiness.class).process(IOUtils.toByteArray(getClass().getResourceAsStream(bodyFileFolder+"/"+bodyFileName)), bodyFileName));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        create(notificationTemplate);
-    }
-    
-    private void notificationTemplate(String code,String name,String titleFileName,String bodyFileName){
-    	notificationTemplate(code, name, "template", titleFileName, "template", bodyFileName);
     }
     
     private void file(){ 
@@ -361,9 +338,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	if(application!=null)
     		applicationIdentifier = application.getIdentifier();
     	
-    	RemoteEndPoint.USER_INTERFACE.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_USER_INTERFACE);
-    	RemoteEndPoint.MAIL_SERVER.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_EMAIL);
-    	RemoteEndPoint.PHONE.alarmTemplate = inject(NotificationTemplateDao.class).read(NotificationTemplate.ALARM_SMS);
+    	RemoteEndPoint.USER_INTERFACE.alarmTemplate = inject(NotificationTemplateDao.class).read(RootConstant.Code.NotificationTemplate.ALARM_USER_INTERFACE);
+    	RemoteEndPoint.MAIL_SERVER.alarmTemplate = inject(NotificationTemplateDao.class).read(RootConstant.Code.NotificationTemplate.ALARM_EMAIL);
+    	RemoteEndPoint.PHONE.alarmTemplate = inject(NotificationTemplateDao.class).read(RootConstant.Code.NotificationTemplate.ALARM_SMS);
     	setDefaultSmtpProperties(inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT));
     }
     

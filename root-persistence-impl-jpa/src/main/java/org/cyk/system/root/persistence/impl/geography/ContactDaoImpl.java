@@ -42,7 +42,6 @@ public class ContactDaoImpl extends AbstractContactDaoImpl<Contact> implements C
 
 	@Override
 	public Collection<Contact> readByCollectionsByClasses(Collection<ContactCollection> collections,Collection<Class<? extends Contact>> classes) {
-		//System.out.println("Collection : "+collections+" , classes : "+classes(classes));
 		return namedQuery(readByCollectionsByClasses).parameterIdentifiers(collections).parameterClasses(classes(classes)).resultMany();
 	}
 

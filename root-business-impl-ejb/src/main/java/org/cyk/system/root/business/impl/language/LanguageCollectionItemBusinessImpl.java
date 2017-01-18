@@ -19,4 +19,8 @@ public class LanguageCollectionItemBusinessImpl extends AbstractCollectionItemBu
 		super(dao); 
 	}
     
+	@Override
+	protected Class<LanguageCollection> getCollectionClass() {
+		return LanguageCollection.class;
+	}
 }

@@ -19,6 +19,11 @@ public class ContactBusinessImpl extends AbstractCollectionItemBusinessImpl<Cont
 	public ContactBusinessImpl(ContactDao dao) {
 		super(dao); 
 	}
+	
+	@Override
+	protected Class<ContactCollection> getCollectionClass() {
+		return ContactCollection.class;
+	}
 
 	@Override
 	public Collection<Contact> findByCollections(Collection<ContactCollection> collections) {

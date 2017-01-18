@@ -28,6 +28,11 @@ public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metri
 	}
 	
 	@Override
+	protected Class<MetricCollection> getCollectionClass() {
+		return MetricCollection.class;
+	}
+	
+	@Override
 	protected void beforeCreate(Metric metric) {
 		super.beforeCreate(metric);
 		createIfNotIdentified(metric.getValueProperties());
