@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.party;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
@@ -23,6 +25,14 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		super(dao); 
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<ContactCollection> getContactCollections(Collection<PARTY> parties) {
+		Collection<ContactCollection> collection = new ArrayList<>();
+		for(PARTY party : parties)
+			collection.add(party.getContactCollection());
+		return collection;
+	}
+
 	@Override
     public PARTY create(PARTY party) {
 		if(party.getContactCollection()!=null){

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 
@@ -14,6 +15,8 @@ public interface AbstractPartyBusiness<PARTY extends Party,SEARCH_CRITERIA exten
 
 	Collection<PARTY> findByCriteria(SEARCH_CRITERIA criteria);
 	Long countByCriteria(SEARCH_CRITERIA criteria);
+	
+	Collection<ContactCollection> getContactCollections(Collection<PARTY> parties);
 	
 	/**/
 	/*

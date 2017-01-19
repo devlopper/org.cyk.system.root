@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.impl.time.PeriodDetails;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
@@ -31,6 +32,13 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	@Input @InputFile (extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) protected File image;
 	@Input @InputText protected String code,name,abbreviation,description,weight,orderNumber,otherDetails;
 	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod;
+	
+	/**
+	 * The following fields are used to dynamically extend
+	 */
+	@Getter @Setter @Input @InputText protected String 
+		__f00__,__f01__,__f02__,__f03__,__f04__,__f05__,__f06__,__f07__,__f08__,__f09__,__f10__,__f11__,__f12__,__f13__,__f14__,__f15__,
+		__f16__,__f17__,__f18__,__f19__,__f20__,__f21__,__f22__,__f23__,__f24__,__f25__,__f26__,__f27__,__f28__,__f29__,__f30__,__f31__;
 	
 	public AbstractOutputDetails(IDENTIFIABLE master) {
 		super(master);
@@ -93,22 +101,19 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	public static final String IDENTIFIER_7 = RandomStringUtils.randomAlphanumeric(10);
 	public static final String IDENTIFIER_8 = RandomStringUtils.randomAlphanumeric(10);
 	public static final String IDENTIFIER_9 = RandomStringUtils.randomAlphanumeric(10);
-	/*
-	public static final String URL_FIELD_NAME_FORMAT = "__url__%s____";
 	
-	public static String getUrlFieldName(String fieldName){
-		return String.format(URL_FIELD_NAME_FORMAT, fieldName);
+	private static final String __F__PREFIX = "__f";
+	private static final String __F__SUFFIX = "__";
+	
+	public static Boolean isExtendedFieldName(String name){
+		return StringUtils.isNotBlank(StringUtils.substringBetween(name,__F__PREFIX, __F__SUFFIX));
 	}
 	
-	public static Boolean hasUrlFieldName(Class<?> aClass,String fieldName){
-		Field field = CommonUtils.getInstance().getFieldFromClass(aClass, getUrlFieldName(fieldName));
-		return field != null;
+	protected static String getExtendedFieldName(Integer index){
+		return __F__PREFIX+index+__F__SUFFIX;
 	}
 	
-	public static Object getUrlOfFieldName(Object object,String fieldName){
-		if(Boolean.TRUE.equals(hasUrlFieldName(object.getClass(), fieldName)))
-			return CommonUtils.getInstance().readProperty(object, getUrlFieldName(fieldName));
-		return null;
+	public static Integer getExtendedFieldNameIndex(String name){
+		return Integer.valueOf(StringUtils.substringBetween(name, __F__PREFIX, __F__SUFFIX));
 	}
-	*/
 }

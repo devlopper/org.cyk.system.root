@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -86,6 +88,14 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		Collection<Person> persons = new ArrayList<>();
 		for(AbstractActor actor : actors)
 			persons.add(actor.getPerson());
+		return persons;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<Person> getPerson1(Collection<PersonRelationship> personRelationships) {
+		Set<Person> persons = new LinkedHashSet<>();
+		for(PersonRelationship personRelationship : personRelationships)
+			persons.add(personRelationship.getPerson1());
 		return persons;
 	}
 	

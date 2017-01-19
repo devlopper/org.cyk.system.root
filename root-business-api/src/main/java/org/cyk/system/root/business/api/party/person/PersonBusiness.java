@@ -35,6 +35,7 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCrite
 	Person findOneByPersonByRelationshipType(Person person,String personRelationshipTypeCode);
 	
 	Collection<Person> findByPersonRelationshipPerson2ByPersonRelationshipTypes(Collection<Person> persons,Collection<PersonRelationshipType> personRelationshipTypes);
+	Collection<Person> getPerson1(Collection<PersonRelationship> personRelationships);
 	
 	/**/
 	
