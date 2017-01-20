@@ -13,7 +13,6 @@ import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeNodeBusines
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
@@ -165,7 +164,12 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 	@Override
 	protected NODE __instanciateOne__(String[] values, InstanciateOneListener<NODE> listener) {
 		NODE node = super.__instanciateOne__(values, listener);
-		set(listener.getSetListener().setIndex(getInstanciateOneDataTreeNodeStartIndex(values)), AbstractDataTree.FIELD_TYPE);
+		Integer index = 10;
+		String value;
+		if(index < values.length && StringUtils.isNotBlank(value = values[index++])){
+			node.setParent(dao.read(value));
+			//System.out.println("AbstractDataTreeNodeBusinessImpl.__instanciateOne__() Parent : "+value+" : "+dao.read(value));
+		}
 		return node;
 	}
 	

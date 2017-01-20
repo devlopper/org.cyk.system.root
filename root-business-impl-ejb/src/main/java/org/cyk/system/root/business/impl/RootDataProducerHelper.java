@@ -48,6 +48,7 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransitio
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
 import org.cyk.system.root.model.security.UserAccount;
@@ -497,15 +498,33 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	    	
 			List<String[]> list = excelSheetReader.execute(); //commonUtils.readExcelSheet(readExcelSheetArguments);
 	    	TypedBusiness<?> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
-	    	@SuppressWarnings("unchecked")
-			Collection<T> collection = (Collection<T>) business.instanciateMany(list);
-	    	if(collection==null){
-	    		System.out.println("Instanciate many <<"+aClass+">> has return null collection");
+	    	if(AbstractDataTreeNode.class.isAssignableFrom(aClass)){
+	    		if(list==null){
+		    		
+		    	}else{
+		    		Integer count = 0;
+		    		for(String[] values : list){
+		    			@SuppressWarnings("unchecked")
+						T instance = (T) business.instanciateOne(values);
+		    			if(instance==null){
+		    				
+		    			}else{
+		    				inject(GenericBusiness.class).create(instance);
+		    				count++;
+		    			}
+		    		}
+		    		System.out.println(aClass.getSimpleName()+" created : "+count);	
+		    	}
 	    	}else{
-	    		inject(GenericBusiness.class).create(commonUtils.castCollection(collection,AbstractIdentifiable.class));
-				System.out.println(aClass.getSimpleName()+" created : "+list.size());	
+	    		@SuppressWarnings("unchecked")
+				Collection<T> collection = (Collection<T>) business.instanciateMany(list);
+		    	if(collection==null){
+		    		System.out.println("Instanciate many <<"+aClass+">> has return null collection");
+		    	}else{
+		    		inject(GenericBusiness.class).create(commonUtils.castCollection(collection,AbstractIdentifiable.class));
+					System.out.println(aClass.getSimpleName()+" created : "+list.size());	
+		    	}	
 	    	}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
