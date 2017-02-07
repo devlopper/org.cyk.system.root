@@ -1,8 +1,5 @@
 package org.cyk.system.root.business.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
@@ -36,7 +33,7 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 		return instanciateOne(RootConstant.Code.generateFromString(name), name);
 	}
 	
-	@Override
+	/*@Override
 	public List<ENUMERATION> instanciateMany(String[][] strings) {
 		List<List<String>> argumentList = new ArrayList<>();
 		for(String[] inputtedArgument : strings){
@@ -46,7 +43,7 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 				arguments.add(argument);
 		}
 		return null;// instanciateMany(argumentList);
-	}
+	}*/
 	
     @Override
 	protected ENUMERATION __instanciateOne__(String[] values, InstanciateOneListener<ENUMERATION> listener) {

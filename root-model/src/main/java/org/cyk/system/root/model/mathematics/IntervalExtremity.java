@@ -18,8 +18,6 @@ public class IntervalExtremity extends AbstractModelElement implements Serializa
 
 	private static final long serialVersionUID = -8646753247708396439L;
 
-	public static final int COLUMN_VALUE_PRECISION = 30;
-	
 	@Column(precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE)
 	private BigDecimal value;
 	

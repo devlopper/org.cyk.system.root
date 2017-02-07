@@ -37,8 +37,14 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	})
 	private IntervalExtremity high = new IntervalExtremity();
 	
+	/**
+	 * It is the value we use When we belongs to this interval
+	 */
+	@Column(precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE)
+	private BigDecimal value;
+	
 	/* color support right now */
-	private String style;
+	//private String style;
 	
 	{
 		if(low!=null)

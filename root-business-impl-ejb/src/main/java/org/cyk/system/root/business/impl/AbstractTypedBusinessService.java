@@ -13,6 +13,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -171,6 +172,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return collection;
 	}
 	
+	@Override
+	public Collection<IDENTIFIABLE> instanciateMany(String[][] strings) {
+		List<String[]> argumentList = new ArrayList<>();
+		for(String[] array : strings)
+			argumentList.add(array);
+		return instanciateMany(argumentList);
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IDENTIFIABLE instanciateOneRandomly() {
 		return instanciateOne();
@@ -200,10 +209,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return list;
 	}
 	
+	protected void beforeCrud(IDENTIFIABLE identifiable,Crud crud){}
+	protected void afterCrud(IDENTIFIABLE identifiable,Crud crud){}
+	
 	protected void beforeCreate(IDENTIFIABLE identifiable){
 		setAutoSettedProperties(identifiable);
 	    inject(ValidationPolicy.class).validateCreate(identifiable);
 	    beforeCreate(getListeners(), identifiable);
+	    beforeCrud(identifiable, Crud.CREATE);
 	}
 	
 	@Override
@@ -245,6 +258,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			inject(MetricValueBusiness.class).create(metricValues);
 		}
 		afterCreate(getListeners(), identifiable);
+		afterCrud(identifiable, Crud.CREATE);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -281,6 +295,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		setAutoSettedProperties(identifiable);
 		inject(ValidationPolicy.class).validateUpdate(identifiable);
 		beforeUpdate(getListeners(), identifiable);
+		beforeCrud(identifiable, Crud.UPDATE);
 	}
 
 	@Override
@@ -295,6 +310,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	protected void afterUpdate(IDENTIFIABLE identifiable){
 		afterUpdate(getListeners(), identifiable);
+		afterCrud(identifiable, Crud.UPDATE);
 	}
 	
 	@Override
@@ -306,10 +322,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	protected void beforeDelete(IDENTIFIABLE identifiable){
 		inject(ValidationPolicy.class).validateDelete(identifiable);
 		beforeDelete(getListeners(), identifiable);
+		beforeCrud(identifiable, Crud.DELETE);
 	}
 	
 	protected void afterDelete(IDENTIFIABLE identifiable){
 		afterDelete(getListeners(), identifiable);
+		afterCrud(identifiable, Crud.DELETE);
 	}
 
 	@Override

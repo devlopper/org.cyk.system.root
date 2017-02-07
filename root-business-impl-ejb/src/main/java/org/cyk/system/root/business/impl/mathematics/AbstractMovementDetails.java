@@ -35,6 +35,7 @@ public abstract class AbstractMovementDetails<ITEM extends AbstractIdentifiable,
 	
 	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_SUPPORTING_DOCUMENT_PROVIDER = "supportingDocumentProvider";
 	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";
 	
 	/**/

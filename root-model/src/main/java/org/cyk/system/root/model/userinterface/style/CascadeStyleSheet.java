@@ -64,4 +64,12 @@ public class CascadeStyleSheet extends AbstractModelElement implements Serializa
 		return "Class="+clazz+" , style="+inline;
 	}
 	
+	public static final String FIELD_CLASS = "clazz";
+	public static final String FIELD_INLINE = "inline";
+	public static final String FIELD_UNIQUE_CLASS = "uniqueClass";
+	
+	public static final String COLUMN_CLASS = "clazz";
+	public static final String COLUMN_INLINE = "inline";
+	public static final String COLUMN_UNIQUE_CLASS = "uniqueClass";
+	
 }

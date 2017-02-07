@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -96,6 +98,11 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	@ManyToOne private Party owner;
 	
+	@AttributeOverrides(value={
+			@AttributeOverride(name=CascadeStyleSheet.FIELD_CLASS, column=@Column(name="cascadestylesheet_"+CascadeStyleSheet.COLUMN_CLASS))
+			,@AttributeOverride(name=CascadeStyleSheet.FIELD_INLINE, column=@Column(name="cascadestylesheet_"+CascadeStyleSheet.COLUMN_INLINE))
+			,@AttributeOverride(name=CascadeStyleSheet.FIELD_UNIQUE_CLASS, column=@Column(name="cascadestylesheet_"+CascadeStyleSheet.COLUMN_UNIQUE_CLASS))
+	})
 	@Embedded private CascadeStyleSheet cascadeStyleSheet;
 	
 	/**

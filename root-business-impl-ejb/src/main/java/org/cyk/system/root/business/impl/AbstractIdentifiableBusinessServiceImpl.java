@@ -604,6 +604,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		void beforeDelete(IDENTIFIABLE identifiable);
 		void afterDelete(IDENTIFIABLE identifiable);
 		
+		void beforeCrud(IDENTIFIABLE identifiable,Crud crud);
+		void afterCrud(IDENTIFIABLE identifiable,Crud crud);
+		
 		Collection<Class<? extends AbstractIdentifiable>> getCascadeToClasses();
 		void setCascadeToClasses(Collection<Class<? extends AbstractIdentifiable>> classes);
 		
@@ -651,6 +654,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			
 			@Override public void beforeDelete(IDENTIFIABLE identifiable) {}
 			@Override public void afterDelete(IDENTIFIABLE identifiable) {}
+			
+			@Override public void beforeCrud(IDENTIFIABLE identifiable,Crud crud) {}
+			@Override public void afterCrud(IDENTIFIABLE identifiable,Crud crud) {}
 			
 			@Override public void beforeInstanciateOne(UserAccount userAccount) {}
 			@Override public void afterInstanciateOne(UserAccount userAccount, IDENTIFIABLE identifiable) {}

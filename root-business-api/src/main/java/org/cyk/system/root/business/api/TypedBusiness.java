@@ -40,6 +40,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     Collection<IDENTIFIABLE> delete(Set<String> codes);
     
     Collection<IDENTIFIABLE> instanciateMany(List<String[]> list);
+    Collection<IDENTIFIABLE> instanciateMany(String[][] strings);
     
     //IDENTIFIABLE instanciateOne(String[] values,InstanciateOneListener listener);
     IDENTIFIABLE instanciateOne(String[] values);

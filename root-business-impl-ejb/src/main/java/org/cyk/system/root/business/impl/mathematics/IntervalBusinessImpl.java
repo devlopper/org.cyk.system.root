@@ -73,7 +73,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
 		//Interval interval = new Interval(collection, code, code, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
-		String[] values = new String[16];
+		String[] values = new String[17];
 		values[0] = code;
 		if(collection!=null)
 			values[10] = collection.getCode();
