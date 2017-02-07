@@ -80,7 +80,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	
 	protected <T extends AbstractReportTemplateFile<?>> T createReportTemplateFile(Class<T> aClass,CreateReportFileArguments<?> arguments){
 		T report = newInstance(aClass);
-		report.setProvisional(arguments.getIsDraft());
+		report.setIsDraft(arguments.getIsDraft());
 		report.setSource(arguments.getIdentifiable());
 		return report;
 	}

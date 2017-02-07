@@ -16,7 +16,7 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	private static final long serialVersionUID = 5632592320990657808L;
 
 	protected String header,footer,title;
-	protected Boolean provisional = Boolean.FALSE;
+	protected Boolean isDraft = Boolean.FALSE;
 	
 	protected List<LabelValueCollectionReport> labelValueCollections = new ArrayList<>();
 

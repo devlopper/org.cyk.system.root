@@ -21,6 +21,7 @@ import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.Average;
 import org.cyk.system.root.model.mathematics.Rank;
 import org.cyk.utility.common.cdi.BeanAdapter;
+import org.cyk.utility.common.formatter.NumberFormatter;
 
 public class MathematicsBusinessImpl extends AbstractBusinessServiceImpl implements MathematicsBusiness,Serializable {
 
@@ -58,8 +59,6 @@ public class MathematicsBusinessImpl extends AbstractBusinessServiceImpl impleme
 	};
 	
 	@Inject private ScriptBusiness scriptBusiness;
-	
-	@Inject private LanguageBusiness languageBusiness;
 	
 	@Override
 	public Average average(Collection<WeightedValue> weightedValues,AverageComputationListener computationListener,Script script) {
@@ -150,8 +149,19 @@ public class MathematicsBusinessImpl extends AbstractBusinessServiceImpl impleme
 	}
 	
 	@Override
+	public String format(Rank rank,NumberFormatter.String formatter) {
+		formatter.setInput(rank.getValue());
+		return formatter.execute(); 
+	}
+	
+	@Override
 	public String format(Rank rank) {
-		return rank.getValue()+ (Boolean.TRUE.equals(rank.getExaequo())?languageBusiness.findText("rank.exaequo"):"");
+		NumberFormatter.String formatter = new NumberFormatter.String.Adapter.Default(null,null);
+		formatter.setIsOrdinal(Boolean.TRUE);
+		formatter.setLocale(inject(LanguageBusiness.class).findCurrentLocale());
+		formatter.setIsAppendOrdinalSuffix(Boolean.TRUE);
+		formatter.setIsAppendExaequo(Boolean.TRUE.equals(rank.getExaequo()));
+		return format(rank,formatter);
 	}
 	
 	@Override

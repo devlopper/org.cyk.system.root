@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.Average;
 import org.cyk.system.root.model.mathematics.Rank;
+import org.cyk.utility.common.formatter.NumberFormatter;
 
 public interface MathematicsBusiness {
 
@@ -30,6 +31,7 @@ public interface MathematicsBusiness {
 	
 	<T> void sortByRank(SortByRankArguments<T> arguments);
 	
+	String format(Rank rank,NumberFormatter.String formatter);
 	String format(Rank rank);
 	
 	/**/
