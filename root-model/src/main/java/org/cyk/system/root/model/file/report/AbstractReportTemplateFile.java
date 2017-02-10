@@ -1,9 +1,11 @@
 package org.cyk.system.root.model.file.report;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cyk.system.root.model.party.person.PersonReport;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 
 import lombok.Getter;
@@ -15,8 +17,11 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	  
 	private static final long serialVersionUID = 5632592320990657808L;
 
-	protected String header,footer,title;
+	protected String name,header,footer,title;
 	protected Boolean isDraft = Boolean.FALSE;
+	protected InputStream headerImage,backgroundImage,footerImage,signature;
+	protected PersonReport signer = new PersonReport();
+	protected Boolean generateHeaderImage=Boolean.TRUE,generateBackgroundImage=Boolean.TRUE,generateFooterImage=Boolean.TRUE,generateSigner=Boolean.TRUE;
 	
 	protected List<LabelValueCollectionReport> labelValueCollections = new ArrayList<>();
 
@@ -25,6 +30,36 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		header = provider.randomLine(1, 2);
 		footer = provider.randomLine(1, 2);
 		title = provider.randomLine(1, 2);
+		
+		if(Boolean.TRUE.equals(generateHeaderImage))
+			headerImage = generateHeaderImage();
+		
+		if(Boolean.TRUE.equals(generateBackgroundImage)) 
+			backgroundImage = generateBackgroundImage();
+		
+		if(Boolean.TRUE.equals(generateFooterImage)) 
+			footerImage = generateFooterImage();
+		
+		if(Boolean.TRUE.equals(generateSigner)) {
+			signer.setGenerateSignatureSpecimen(Boolean.TRUE);
+			signer.generate();
+		}
+	}
+	
+	protected InputStream generateHeaderImage(){
+		return inputStream(provider.documentHeader().getBytes());
+	}
+	
+	protected InputStream generateBackgroundImage(){
+		return inputStream(provider.documentBackground().getBytes());
+	}
+	
+	protected InputStream generateFooterImage(){
+		return null;//inputStream(provider.documentFooter().getBytes());
+	}
+	
+	protected InputStream generateSignature(){
+		return inputStream(provider.signatureSpecimen().getBytes());
 	}
 	
 	public LabelValueCollectionReport getCurrentLabelValueCollection(){

@@ -17,6 +17,7 @@ public abstract class AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	public static final String COLUMN_NAME_WORD_SEPARATOR = "_";
 	public static final int COLUMN_VALUE_PRECISION = 30;
 	public static final int COEFFICIENT_PRECISION = 5;
 	public static final int PERCENT_PRECISION = 5;
