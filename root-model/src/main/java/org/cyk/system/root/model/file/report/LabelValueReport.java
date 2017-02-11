@@ -40,6 +40,10 @@ public class LabelValueReport extends AbstractGeneratable<LabelValueReport> impl
 		extendedValues = values;
 	}
 	
+	public String getValueAt(Integer index){
+		return index < extendedValues.length ? extendedValues[index] : Constant.EMPTY_STRING;
+	}
+	
 	@Override
 	public String toString() {
 		Collection<String> collection = new ArrayList<>();

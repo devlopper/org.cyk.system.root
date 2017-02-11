@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -18,10 +16,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -37,6 +31,10 @@ import org.cyk.system.root.model.search.StringSearchCriteria.LocationType;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.Constant;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter @Setter @Entity @EqualsAndHashCode(callSuper=false,of="identifier")
 public class GlobalIdentifier extends AbstractModelElement implements Identifiable<String>, Serializable {
@@ -98,11 +96,6 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	@ManyToOne private Party owner;
 	
-	@AttributeOverrides(value={
-			@AttributeOverride(name=CascadeStyleSheet.FIELD_CLASS, column=@Column(name="cascadestylesheet_"+CascadeStyleSheet.COLUMN_CLASS))
-			,@AttributeOverride(name=CascadeStyleSheet.FIELD_INLINE, column=@Column(name="cascadestylesheet_"+CascadeStyleSheet.COLUMN_INLINE))
-			,@AttributeOverride(name=CascadeStyleSheet.FIELD_UNIQUE_CLASS, column=@Column(name="cascadestylesheet_"+CascadeStyleSheet.COLUMN_UNIQUE_CLASS))
-	})
 	@Embedded private CascadeStyleSheet cascadeStyleSheet;
 	
 	/**

@@ -33,18 +33,6 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 		return instanciateOne(RootConstant.Code.generateFromString(name), name);
 	}
 	
-	/*@Override
-	public List<ENUMERATION> instanciateMany(String[][] strings) {
-		List<List<String>> argumentList = new ArrayList<>();
-		for(String[] inputtedArgument : strings){
-			List<String> arguments = new ArrayList<>();
-			argumentList.add(arguments);
-			for(String argument : inputtedArgument)
-				arguments.add(argument);
-		}
-		return null;// instanciateMany(argumentList);
-	}*/
-	
     @Override
 	protected ENUMERATION __instanciateOne__(String[] values, InstanciateOneListener<ENUMERATION> listener) {
     	ENUMERATION enumeration = listener.getInstance();

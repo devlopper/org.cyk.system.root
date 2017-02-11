@@ -38,7 +38,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	/**
 	 * Informations about the party in case it does not belongs to the system 
 	 */
-	private String senderOrReceiverPartyInformations;
+	private String senderOrReceiverPartyInformations;//TODO we can create person and use other details
 	
 	/**/
 	

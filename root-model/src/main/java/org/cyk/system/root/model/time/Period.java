@@ -16,7 +16,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.value.BigDecimalValue;
 import org.cyk.system.root.model.value.LongValue;
-import org.cyk.utility.common.Constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -95,8 +94,8 @@ public class Period extends AbstractModelElement implements Serializable{
 	public static final String FIELD_TO_DATE = "toDate";
 	public static final String FIELD_NUMBER_OF_MILLISECOND = "numberOfMillisecond";
 	
-	public static final String COLUMN_USER_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+Constant.CHARACTER_UNDESCORE+BigDecimalValue.FIELD_USER;
-	public static final String COLUMN_SYSTEM_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+Constant.CHARACTER_UNDESCORE+BigDecimalValue.FIELD_SYSTEM;
-	public static final String COLUMN_GAP_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+Constant.CHARACTER_UNDESCORE+BigDecimalValue.FIELD_GAP;
+	public static final String COLUMN_USER_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+COLUMN_NAME_WORD_SEPARATOR+BigDecimalValue.FIELD_USER;
+	public static final String COLUMN_SYSTEM_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+COLUMN_NAME_WORD_SEPARATOR+BigDecimalValue.FIELD_SYSTEM;
+	public static final String COLUMN_GAP_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+COLUMN_NAME_WORD_SEPARATOR+BigDecimalValue.FIELD_GAP;
 	
 }

@@ -30,6 +30,7 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		header = provider.randomLine(1, 2);
 		footer = provider.randomLine(1, 2);
 		title = provider.randomLine(1, 2);
+		name = provider.randomLine(1, 2);
 		
 		if(Boolean.TRUE.equals(generateHeaderImage))
 			headerImage = generateHeaderImage();
@@ -55,7 +56,7 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	}
 	
 	protected InputStream generateFooterImage(){
-		return null;//inputStream(provider.documentFooter().getBytes());
+		return inputStream(provider.documentFooter().getBytes());
 	}
 	
 	protected InputStream generateSignature(){
@@ -104,8 +105,8 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	/**/
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex(Integer index){
-		return labelValueCollections.get(index.intValue());
-		//return index < labelValueCollections.size() ? labelValueCollections.get(index.intValue()) : null;
+		//return labelValueCollections.get(index.intValue());
+		return index < labelValueCollections.size() ? labelValueCollections.get(index.intValue()) : null;//NULL_LABEL_VALUE_COLLECTION;
 	}
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex0(){
@@ -189,5 +190,13 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	
 	public LabelValueCollectionReport getLabelValueCollectionAtIndex20(){
 		return getLabelValueCollectionAtIndex(20);
+	}
+	
+	/**/
+	
+	private static final LabelValueCollectionReport NULL_LABEL_VALUE_COLLECTION = new LabelValueCollectionReport();
+	static {
+		NULL_LABEL_VALUE_COLLECTION.setName("??NULL??");
+		NULL_LABEL_VALUE_COLLECTION.addLabelValues(new String[][]{{"??NULL??","??NULL??"}});
 	}
 }
