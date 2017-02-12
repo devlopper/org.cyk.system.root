@@ -55,6 +55,7 @@ import org.cyk.utility.common.ClassRepository.ClassField;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
@@ -262,7 +263,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     }
 	
 	public void write(org.cyk.system.root.model.file.File file){
-    	write(file, StringUtils.defaultIfBlank(file.getName(), "file")+System.currentTimeMillis());
+    	write(file, StringUtils.defaultIfBlank(new FileNameNormaliser.Adapter.Default().setInput(file.getName()).execute(), "file")+System.currentTimeMillis());
     }
 	
 	protected void writeStream(ByteArrayOutputStream byteArrayOutputStream,String name,String extension){

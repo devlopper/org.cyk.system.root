@@ -173,19 +173,6 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     }
     
     @Override
-    public String convertToFileName(String string) {
-    	/*StringBuilder stringBuilder = new StringBuilder();
-    	for(int i=0;i<string.length();i++){
-    		char character = string.charAt(i);
-    		if(!StringUtils.contains(stringBuilder, character) && (Character.isAlphabetic(character) || Character.isDigit(character)))
-    			stringBuilder.append(character);
-    	}
-    	return stringBuilder.toString();
-    	*/
-    	return StringUtils.replaceChars(string, ILLEGAL_FILE_NAME_CHARACTERS, null);
-    }
-    
-    @Override
     public void writeTo(File file,java.io.File directory,String name) {
     	try {
     		// new java.io.File(directory,aReport.getFileName()+"."+aReport.getFileExtension())

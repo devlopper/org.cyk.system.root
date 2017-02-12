@@ -40,7 +40,7 @@ public class LabelValueReport extends AbstractGeneratable<LabelValueReport> impl
 		extendedValues = values;
 	}
 	
-	public String getValueAt(Integer index){
+	public String getExtendedValueAt(Integer index){
 		return index < extendedValues.length ? extendedValues[index] : Constant.EMPTY_STRING;
 	}
 	
