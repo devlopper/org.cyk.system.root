@@ -57,6 +57,9 @@ public class ReportTemplateBusinessImpl extends AbstractEnumerationBusinessImpl<
 		set(listener.getSetListener(), ReportTemplate.FIELD_DRAFT_BACKGROUND_IMAGE);
 		set(listener.getSetListener(), ReportTemplate.FIELD_SIGNER);
 		set(listener.getSetListener(), ReportTemplate.FIELD_RESULT_FILE_NAMING_SCRIPT);
+		set(listener.getSetListener(), ReportTemplate.FIELD_HEADER_SCRIPT);
+		set(listener.getSetListener(), ReportTemplate.FIELD_FOOTER_SCRIPT);
+		set(listener.getSetListener(), ReportTemplate.FIELD_NAME_SCRIPT);
 		return reportTemplate;
 	}
 	

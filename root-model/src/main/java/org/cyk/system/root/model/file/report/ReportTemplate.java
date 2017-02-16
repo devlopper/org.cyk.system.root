@@ -30,7 +30,10 @@ public class ReportTemplate extends AbstractEnumeration implements Serializable 
 	@ManyToOne private File draftBackgroundImage;
 	
 	@ManyToOne private Person signer;
+	@ManyToOne private Script nameScript;
 	@ManyToOne private Script resultFileNamingScript;
+	@ManyToOne private Script headerScript;
+	@ManyToOne private Script footerScript;
 	
 	public ReportTemplate(String code,String name,Boolean male, File template,File headerImage,File backgroundImage,File draftBackgroundImage) {
 		super(code, name, null, null);
@@ -47,5 +50,8 @@ public class ReportTemplate extends AbstractEnumeration implements Serializable 
 	public static final String FIELD_BACKGROUND_IMAGE = "backgroundImage";
 	public static final String FIELD_DRAFT_BACKGROUND_IMAGE = "draftBackgroundImage";
 	public static final String FIELD_SIGNER = "signer";
+	public static final String FIELD_NAME_SCRIPT = "nameScript";
 	public static final String FIELD_RESULT_FILE_NAMING_SCRIPT = "resultFileNamingScript";
+	public static final String FIELD_HEADER_SCRIPT = "headerScript";
+	public static final String FIELD_FOOTER_SCRIPT = "footerScript";
 }

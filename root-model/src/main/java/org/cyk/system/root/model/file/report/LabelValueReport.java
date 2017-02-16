@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.Constant;
@@ -19,7 +20,7 @@ public class LabelValueReport extends AbstractGeneratable<LabelValueReport> impl
 	private static final long serialVersionUID = -3815250939177148339L;
 
 	private LabelValueCollectionReport collection;
-	private String identifier,label,value;
+	private String identifier,label,value,extendedValue1=Constant.EMPTY_STRING;
 	private String[] extendedValues;
 
 	public LabelValueReport(LabelValueCollectionReport collection,String identifier, String label, String value) {
@@ -34,6 +35,20 @@ public class LabelValueReport extends AbstractGeneratable<LabelValueReport> impl
 	public void generate() {
 		label = RandomStringUtils.randomAlphabetic(5);
 		value = provider.randomWord(5, 15);
+	}
+	
+	public void set(String...values){
+		if(values[0]==null || values[1]==null)
+				;
+			else{
+				if(values.length>2)
+					setExtendedValues(ArrayUtils.subarray(values, 2, values.length));
+			}
+	}
+	
+	public void setExtendedValues(String[] extendedValues){
+		this.extendedValues = extendedValues;
+		extendedValue1 = StringUtils.defaultIfBlank(commonUtils.getValueAt(this.extendedValues,0), Constant.EMPTY_STRING);
 	}
 	
 	public void addExtendedValues(String...values){

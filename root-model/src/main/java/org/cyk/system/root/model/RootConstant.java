@@ -286,12 +286,14 @@ public interface RootConstant {
 			private static final long serialVersionUID = 1L;
 			
 			public static String GENERIC_BUSINESS = "genericBusiness";
+			public static String FORMATTER_BUSINESS = "formatterBusiness";
 			public static String NUMBER_BUSINESS = "numberBusiness";
 			public static String TIME_BUSINESS = "timeBusiness";
 			public static String NUMBER_BUSINESS_FORMAT_ARGUMENTS = NUMBER_BUSINESS+"FormatArguments";
 			public static String METRIC_BUSINESS = "metricBusiness";
 			public static String METRIC_VALUE_BUSINESS = "metricValueBusiness";
 			public static String VALUE_BUSINESS = "valueBusiness";
+			public static String IS_DRAFT = "isDraft";
 		}
 		
 	}

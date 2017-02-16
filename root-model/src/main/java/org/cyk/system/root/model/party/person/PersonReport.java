@@ -3,7 +3,9 @@ package org.cyk.system.root.model.party.person;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.party.PartyReport;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
 
 import lombok.Getter;
@@ -18,6 +20,12 @@ public class PersonReport extends PartyReport implements Serializable {
 	protected InputStream signatureSpecimen;
 	
 	protected Boolean generateSignatureSpecimen=Boolean.FALSE;
+	
+	public String getNames(){
+		if(names==null)
+			names = StringUtils.join(new String[]{globalIdentifier.getName(),lastnames},Constant.CHARACTER_SPACE.toString());
+		return names;
+	}
 	
 	@Override
 	public void generate() { 
