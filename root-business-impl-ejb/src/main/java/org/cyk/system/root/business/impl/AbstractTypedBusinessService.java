@@ -23,6 +23,7 @@ import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.file.report.ReportFileBusiness;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
@@ -57,6 +58,7 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.converter.Converter;
 import org.cyk.utility.common.converter.ManyConverter;
 import org.cyk.utility.common.converter.OneConverter;
+import org.cyk.utility.common.formatter.DateFormatter;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -535,7 +537,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					.readByIdentifiableGlobalIdentifier(arguments.getReportTemplate()))
 				arguments.getReportTemplateValueCollections().add(valueCollectionIdentifiableGlobalIdentifier.getValueCollection());
 		}
-		producedReport.setCreationDate(inject(FormatterBusiness.class).format(arguments.getCreationDate() == null ? new Date() : arguments.getCreationDate()));
+		DateFormatter.String dateFormatter = new DateFormatter.String.Adapter.Default(arguments.getCreationDate() == null ? new Date() : arguments.getCreationDate(),null);
+		dateFormatter.setPart(Constant.Date.Part.DATE_AND_TIME).setLength(Constant.Date.Length.LONG).setLocale(arguments.getLocale() == null ?
+				inject(LanguageBusiness.class).findCurrentLocale() : arguments.getLocale());
+		producedReport.setCreationDate(dateFormatter.execute());
 		if(arguments.getCreatedBy()!=null)
 			producedReport.setCreatedBy(arguments.getCreatedBy().getNames());
 		/* Images */

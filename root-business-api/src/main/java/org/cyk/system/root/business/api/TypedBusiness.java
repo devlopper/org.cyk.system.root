@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -112,6 +113,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		private String identifiableName;
 		private Person createdBy;
 		private Date creationDate;
+		private Locale locale;
 		/**/
 		
 		public CreateReportFileArguments(IDENTIFIABLE identifiable){
