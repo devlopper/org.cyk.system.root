@@ -14,7 +14,8 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.system.root.model.value.BigDecimalValue;
+import org.cyk.system.root.model.value.AbstractNumberValue;
+import org.cyk.system.root.model.value.AbstractValue;
 import org.cyk.system.root.model.value.LongValue;
 
 import lombok.AllArgsConstructor;
@@ -39,10 +40,10 @@ public class Period extends AbstractModelElement implements Serializable{
 	
 	@Embedded
 	@AttributeOverrides(value={
-			@AttributeOverride(name=LongValue.FIELD_USER,column=@Column(name="numberofmillisecond_user"))
-			,@AttributeOverride(name=LongValue.FIELD_SYSTEM,column=@Column(name="numberofmillisecond_system"))
-			,@AttributeOverride(name=LongValue.FIELD_PREFERRED_PROPERTY,column=@Column(name="numberofmillisecond_preferred_property"))
-			,@AttributeOverride(name=LongValue.FIELD_GAP,column=@Column(name="numberofmillisecond_gap"))
+			@AttributeOverride(name=LongValue.FIELD_USER,column=@Column(name=COLUMN_NUMBER_OF_MILLISECOND_USER))
+			,@AttributeOverride(name=LongValue.FIELD_SYSTEM,column=@Column(name=COLUMN_NUMBER_OF_MILLISECOND_SYSTEM))
+			,@AttributeOverride(name=LongValue.FIELD_PREFERRED_PROPERTY,column=@Column(name=COLUMN_NUMBER_OF_MILLISECOND_PREFERRED_PROPERTY))
+			,@AttributeOverride(name=LongValue.FIELD_GAP,column=@Column(name=COLUMN_NUMBER_OF_MILLISECOND_GAP))
 	})
 	private LongValue numberOfMillisecond = new LongValue();
 	
@@ -94,8 +95,10 @@ public class Period extends AbstractModelElement implements Serializable{
 	public static final String FIELD_TO_DATE = "toDate";
 	public static final String FIELD_NUMBER_OF_MILLISECOND = "numberOfMillisecond";
 	
-	public static final String COLUMN_USER_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+COLUMN_NAME_WORD_SEPARATOR+BigDecimalValue.FIELD_USER;
-	public static final String COLUMN_SYSTEM_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+COLUMN_NAME_WORD_SEPARATOR+BigDecimalValue.FIELD_SYSTEM;
-	public static final String COLUMN_GAP_NUMBER_OF_MILLISECOND = FIELD_NUMBER_OF_MILLISECOND+COLUMN_NAME_WORD_SEPARATOR+BigDecimalValue.FIELD_GAP;
+	public static final String COLUMN_NUMBER_OF_MILLISECOND_PREFIX = FIELD_NUMBER_OF_MILLISECOND.toLowerCase()+COLUMN_NAME_WORD_SEPARATOR;
+	public static final String COLUMN_NUMBER_OF_MILLISECOND_USER = FIELD_NUMBER_OF_MILLISECOND+AbstractValue.COLUMN_USER;
+	public static final String COLUMN_NUMBER_OF_MILLISECOND_SYSTEM = FIELD_NUMBER_OF_MILLISECOND+AbstractValue.COLUMN_SYSTEM;
+	public static final String COLUMN_NUMBER_OF_MILLISECOND_PREFERRED_PROPERTY = FIELD_NUMBER_OF_MILLISECOND+AbstractValue.COLUMN_PREFERRED_PROPERTY;
+	public static final String COLUMN_NUMBER_OF_MILLISECOND_GAP = FIELD_NUMBER_OF_MILLISECOND+AbstractNumberValue.FIELD_GAP;
 	
 }

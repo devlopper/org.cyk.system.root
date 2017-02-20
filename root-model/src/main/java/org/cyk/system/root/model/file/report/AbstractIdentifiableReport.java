@@ -19,8 +19,8 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 
 	protected GlobalIdentifierReport globalIdentifier = new GlobalIdentifierReport();
 	
-	protected AbstractIdentifiableReport<MODEL> previous;
-	protected AbstractIdentifiableReport<MODEL> next;
+	protected MODEL previous;
+	protected MODEL next;
 	
 	public void setSource(Object source){
 		super.setSource(source);

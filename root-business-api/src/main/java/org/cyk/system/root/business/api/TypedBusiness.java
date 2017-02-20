@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.value.ValueCollection;
 import org.cyk.utility.common.AbstractBuilder;
 import org.cyk.utility.common.ListenerUtils;
@@ -108,6 +110,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		private RootReportProducer reportProducer;
 		private Boolean joinFileToIdentifiable = Boolean.TRUE,isDraft=Boolean.FALSE;
 		private String identifiableName;
+		private Person createdBy;
+		private Date creationDate;
 		/**/
 		
 		public CreateReportFileArguments(IDENTIFIABLE identifiable){

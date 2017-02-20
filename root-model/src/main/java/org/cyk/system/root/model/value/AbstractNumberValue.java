@@ -58,4 +58,6 @@ public abstract class AbstractNumberValue<NUMBER extends Number> extends Abstrac
 	}
 	
 	public static final String FIELD_GAP = "gap";
+	
+	public static final String COLUMN_GAP = "gap";
 }

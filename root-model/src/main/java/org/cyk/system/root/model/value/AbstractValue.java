@@ -68,4 +68,8 @@ public abstract class AbstractValue<TYPE> extends AbstractModelElement implement
 	public static final String FIELD_SYSTEM = "system";
 	public static final String FIELD_PREFERRED_PROPERTY = "preferredProperty";
 	
+	public static final String COLUMN_USER = "user";
+	public static final String COLUMN_SYSTEM = "system";
+	public static final String COLUMN_PREFERRED_PROPERTY = "preferred_property";
+	
 }

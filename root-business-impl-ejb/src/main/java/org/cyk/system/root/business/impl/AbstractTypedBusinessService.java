@@ -535,6 +535,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					.readByIdentifiableGlobalIdentifier(arguments.getReportTemplate()))
 				arguments.getReportTemplateValueCollections().add(valueCollectionIdentifiableGlobalIdentifier.getValueCollection());
 		}
+		producedReport.setCreationDate(inject(FormatterBusiness.class).format(arguments.getCreationDate() == null ? new Date() : arguments.getCreationDate()));
+		if(arguments.getCreatedBy()!=null)
+			producedReport.setCreatedBy(arguments.getCreatedBy().getNames());
+		/* Images */
+		if(arguments.getReportTemplate().getHeaderImage()!=null)
+			producedReport.setHeaderImage(inject(FileBusiness.class).findInputStream(arguments.getReportTemplate().getHeaderImage()));
+		if(arguments.getBackgroundImageFile()!=null)
+			producedReport.setBackgroundImage(inject(FileBusiness.class).findInputStream(arguments.getBackgroundImageFile()));
 		
 		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, arguments.getReportTemplate().getTemplate()
 				, arguments.getFile().getExtension());

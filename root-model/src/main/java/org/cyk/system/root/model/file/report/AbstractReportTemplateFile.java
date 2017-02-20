@@ -3,10 +3,13 @@ package org.cyk.system.root.model.file.report;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.cyk.system.root.model.party.person.PersonReport;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.generator.AbstractGeneratable;
+import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +20,9 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 	  
 	private static final long serialVersionUID = 5632592320990657808L;
 
-	protected String name,header,footer,title;
+	protected String name,header,footer,title,creationDate,createdBy;
 	protected Boolean isDraft = Boolean.FALSE;
-	protected InputStream headerImage,backgroundImage,footerImage,signature;
+	protected InputStream headerImage,backgroundImage,footerImage/*,signature*/;
 	protected PersonReport signer = new PersonReport();
 	protected Boolean generateHeaderImage=Boolean.TRUE,generateBackgroundImage=Boolean.TRUE,generateFooterImage=Boolean.TRUE,generateSigner=Boolean.TRUE;
 	
@@ -31,6 +34,9 @@ public abstract class AbstractReportTemplateFile<TEMPLATE> extends AbstractGener
 		footer = provider.randomLine(1, 2);
 		title = provider.randomLine(1, 2);
 		name = provider.randomLine(1, 2);
+		creationDate = formatDate(new Date(),Constant.Date.Part.DATE_AND_TIME,Constant.Date.Length.LONG);
+		RandomPerson randomPerson = provider.getMale();
+		createdBy = randomPerson.firstName()+Constant.CHARACTER_SPACE+randomPerson.lastName();
 		
 		if(Boolean.TRUE.equals(generateHeaderImage))
 			headerImage = generateHeaderImage();

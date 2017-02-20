@@ -229,6 +229,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 					return inject(TimeBusiness.class).formatDate((Date)fieldValue);
 				return super.format(object, fieldValue);
 			}
+			
+			/*@Override
+			public Locale getLocale() {
+				return inject(LanguageBusiness.class).findCurrentLocale();
+			}*/
 		});
     }
     
