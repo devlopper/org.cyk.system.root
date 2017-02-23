@@ -39,6 +39,7 @@ import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
@@ -203,23 +204,49 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 
 	@Override
-	public Collection<IDENTIFIABLE> findByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables) {
-		StringSearchCriteria stringSearchCriteria = new StringSearchCriteria(string, StringSearchCriteria.LocationType.INSIDE);
+	public Collection<IDENTIFIABLE> findByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables,DataReadConfiguration dataReadConfiguration) {
+		StringSearchCriteria stringSearchCriteria = new StringSearchCriteria(string);
 		if(excludedIdentifiables!=null)
 			for(IDENTIFIABLE excluded : excludedIdentifiables)
 				stringSearchCriteria.getExcluded().add(excluded.getCode());
-		return findByString(stringSearchCriteria);
+		return findByString(stringSearchCriteria,dataReadConfiguration);
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> findByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables) {
+		DataReadConfiguration dataReadConfiguration = new DataReadConfiguration();
+		return findByString(string,excludedIdentifiables,dataReadConfiguration);
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> findByString(StringSearchCriteria stringSearchCriteria,DataReadConfiguration dataReadConfiguration) {
+		GlobalIdentifier.SearchCriteria searchCriteria = new GlobalIdentifier.SearchCriteria();
+		searchCriteria.setCode(new StringSearchCriteria(stringSearchCriteria));
+		searchCriteria.setName(new StringSearchCriteria(stringSearchCriteria));
+		searchCriteria.setReadConfig(dataReadConfiguration);
+		return findByGlobalIdentifierSearchCriteria(searchCriteria);
 	}
 	
 	@Override
 	public Collection<IDENTIFIABLE> findByString(StringSearchCriteria stringSearchCriteria) {
+		DataReadConfiguration dataReadConfiguration = new DataReadConfiguration();
+		return findByString(stringSearchCriteria, dataReadConfiguration);
+	}
+	
+	@Override
+	public Long countByString(String string) {
+		StringSearchCriteria stringSearchCriteria = new StringSearchCriteria(string);
+		return countByString(stringSearchCriteria);
+	}
+	
+	@Override
+	public Long countByString(StringSearchCriteria stringSearchCriteria) {
 		GlobalIdentifier.SearchCriteria searchCriteria = new GlobalIdentifier.SearchCriteria();
 		searchCriteria.setCode(new StringSearchCriteria(stringSearchCriteria));
 		searchCriteria.setName(new StringSearchCriteria(stringSearchCriteria));
-		//return (List<IDENTIFIABLE>) inject(BusinessInterfaceLocator.class).injectTyped(((Class<AbstractIdentifiable>)clazz)).findByGlobalIdentifierSearchCriteria(searchCriteria);
-		return findByGlobalIdentifierSearchCriteria(searchCriteria);
+		return countByGlobalIdentifierSearchCriteria(searchCriteria);
 	}
-
+	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Long findOneIdentifierRandomly() {
 		return getPersistenceService().readOneIdentifierRandomly();
@@ -402,12 +429,20 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	@Override
 	public Collection<IDENTIFIABLE> findByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
-		return getPersistenceService().readByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);
+		Collection<IDENTIFIABLE> results;
+		prepareFindByCriteria(globalIdentifierSearchCriteria);
+		results = getPersistenceService().readByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);	
+		logTrace("Find {} by global identifier search criteria {}. Found {}", clazz.getSimpleName(),globalIdentifierSearchCriteria,results.size());
+		return results;
 	}
 
 	@Override
 	public Long countByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
-		return getPersistenceService().countByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);
+		Long count;
+		prepareFindByCriteria(globalIdentifierSearchCriteria);
+		count = getPersistenceService().countByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);	
+		logTrace("Count {} by global identifier search criteria {}. Found {}", clazz.getSimpleName(),globalIdentifierSearchCriteria,count);
+		return count;
 	}
 
 	/**/

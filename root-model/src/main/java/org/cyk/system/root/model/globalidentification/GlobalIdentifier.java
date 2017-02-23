@@ -162,9 +162,15 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		
 		public SearchCriteria(){
 			code.setLocationType(LocationType.INSIDE);
+			criterias.add(code);
 			name.setLocationType(LocationType.INSIDE);
+			criterias.add(name);
 		}
 		
+		@Override
+		public String toString() {
+			return "code : "+code+" , name : "+name;
+		}
 	}
 	
 	/**/

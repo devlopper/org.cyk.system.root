@@ -11,6 +11,7 @@ import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
@@ -81,8 +82,13 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     Collection<IDENTIFIABLE> findManyRandomly(Integer count);
                     Collection<IDENTIFIABLE> findByIdentifiers(Collection<IDENTIFIER> identifiers);
                     
+                    Collection<IDENTIFIABLE> findByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables,DataReadConfiguration dataReadConfiguration);
                     Collection<IDENTIFIABLE> findByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables);
+                    Collection<IDENTIFIABLE> findByString(StringSearchCriteria stringSearchCriteria,DataReadConfiguration dataReadConfiguration);
                     Collection<IDENTIFIABLE> findByString(StringSearchCriteria stringSearchCriteria);
+                    
+                    Long countByString(String string);
+                    Long countByString(StringSearchCriteria stringSearchCriteria);
                     
                     /**/
                     

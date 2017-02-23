@@ -43,6 +43,10 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 		return value==null?nullValue:value;
 	}
 	
+	public Boolean isNull(){
+		return value == null;
+	}
+	
 	@Override
 	public String toString() {
 		Object o = getPreparedValue();

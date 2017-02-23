@@ -370,28 +370,26 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		for(IDENTIFIABLE identifiable : identifiables)
 			load(identifiable);
 	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<IDENTIFIABLE> findAll(DataReadConfiguration dataReadConfig) {
+		if(dataReadConfig==null)
+			dao.getDataReadConfig().clear();
+		else
+			dao.getDataReadConfig().set(dataReadConfig);
+		return dao.readAll();
+	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findAll() {
-		return dao.readAll();
+		return findAll(null);
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Long countAll() {
 		return dao.countAll();
 	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Collection<IDENTIFIABLE> findAll(DataReadConfiguration dataReadConfig) {
-		dao.getDataReadConfig().set(dataReadConfig);
-		return dao.readAll();
-	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public Long countAll(DataReadConfiguration dataReadConfig) {
-		return dao.countAll();
-	}
-	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findAllExclude(Collection<IDENTIFIABLE> identifiables) {
 		//FIXME find how to handle pagination

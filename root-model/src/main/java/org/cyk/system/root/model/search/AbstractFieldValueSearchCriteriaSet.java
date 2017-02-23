@@ -43,4 +43,11 @@ public abstract class AbstractFieldValueSearchCriteriaSet extends AbstractModelE
 		return excluded;
 	}
 	
+	public Boolean isNull(){
+		for(AbstractFieldValueSearchCriteria<?> criteria : criterias)
+			if(!Boolean.TRUE.equals(criteria.isNull()))
+				return Boolean.FALSE;
+		return Boolean.TRUE;
+	}
+	
 }

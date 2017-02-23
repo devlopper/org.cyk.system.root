@@ -54,10 +54,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     Collection<IDENTIFIABLE> instanciateManyRandomly(Set<String> codes);
     
     Collection<IDENTIFIABLE> findAll(); 
-    Long countAll();
-    
     Collection<IDENTIFIABLE> findAll(DataReadConfiguration configuration); 
-    Long countAll(DataReadConfiguration configuration);
+    Long countAll();
     
     Collection<IDENTIFIABLE> findAllExclude(Collection<IDENTIFIABLE> identifiables); 
     

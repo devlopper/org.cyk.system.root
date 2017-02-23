@@ -17,7 +17,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
-@Singleton @Deployment(initialisationType=InitialisationType.EAGER)
+@Singleton @Deployment(initialisationType=InitialisationType.EAGER) @Deprecated
 public class BusinessServiceProvider extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 6526060809947143790L;

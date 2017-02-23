@@ -90,15 +90,15 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierSearchCriteria())) {
 			registerNamedQuery(readByGlobalIdentifierSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
-	    		+ "    ( LOCATE(LOWER(:code),LOWER(record.globalIdentifier.code)) > 0 )"
-	    		+ " OR ( LOCATE(LOWER(:name),LOWER(record.globalIdentifier.name)) > 0 )")
+	    		+ "    ( LOWER(record.globalIdentifier.code) LIKE LOWER(:code) )"
+	    		+ " OR ( LOWER(record.globalIdentifier.name) LIKE LOWER(:name) )")
 			;
 			
 			registerNamedQuery(readByGlobalIdentifierByCodeSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
 		    		+ " record.globalIdentifier.code NOT IN :excludedCodes "
 		    		+ " AND ("
-		    		+ "	    ( LOCATE(LOWER(:code),LOWER(record.globalIdentifier.code)) > 0 )"
-		    		+ " OR  ( LOCATE(LOWER(:name),LOWER(record.globalIdentifier.name)) > 0 )"
+		    		+ "	    ( LOWER(record.globalIdentifier.code) LIKE LOWER(:code) )"
+		    		+ " OR  ( LOWER(record.globalIdentifier.name) LIKE LOWER(:name) )"
 		    		+ ")")
 				;
 		
@@ -120,11 +120,13 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
 		if(searchCriteria instanceof GlobalIdentifier.SearchCriteria){
-			queryWrapper.parameter(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getPreparedValue());
+			//System.out.println("AbstractTypedDao.applySearchCriteriaParameters() : "+((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getLikeValue());
+			queryWrapper.parameterLike(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getLikeValue());
 			if(!((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getExcluded().isEmpty())
 				queryWrapper.parameter("excludedCodes", ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getExcluded());
-			queryWrapper.parameter(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getPreparedValue());
+			queryWrapper.parameterLike(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getLikeValue());
 		}
+		getDataReadConfig().set(searchCriteria.getReadConfig());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -138,7 +140,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 
 	@Override
 	public Long countByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
-		QueryWrapper<?> queryWrapper = countNamedQuery(readByGlobalIdentifierSearchCriteria);
+		QueryWrapper<?> queryWrapper = countNamedQuery(countByGlobalIdentifierSearchCriteria);
 		applySearchCriteriaParameters(queryWrapper, globalIdentifierSearchCriteria);
 		return (Long) queryWrapper.resultOne();
 	}

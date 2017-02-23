@@ -58,7 +58,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	protected static final String ORDER_BY_FORMAT = "ORDER BY %s";
 	
-	private QueryWrapper<?> __queryWrapper__;
+	//private QueryWrapper<?> __queryWrapper__;
 	@Getter private DataReadConfiguration dataReadConfig = new DataReadConfiguration();
 	
 	@PersistenceContext @Getter
@@ -241,6 +241,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	@SuppressWarnings("unchecked")
 	protected <RESULT_CLASS> QueryWrapper<RESULT_CLASS> query(String value,QueryType type,Class<RESULT_CLASS> aResultClass){
+		QueryWrapper<?> __queryWrapper__;
 		if(StringUtils.isBlank(value)){
 			throw new IllegalArgumentException("Value cannot be blank <<"+value+">>");
 		}

@@ -3,7 +3,9 @@ package org.cyk.system.root.business.impl.integration;
 import java.util.Arrays;
 
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.utility.common.file.ExcelSheetReader;
@@ -47,12 +49,20 @@ public class FindByStringIT extends AbstractBusinessIT {
 	@Override
 	protected void businesses() {
 		assertEquals(4l, inject(PersonDao.class).countAll());
+		assertFindByString(Person.class,"WXWX",0);
+		assertFindByString(Person.class,null,4);
+		assertFindByString(Person.class,"",4);
+		
 		assertEquals(1, inject(PersonBusiness.class).findByString("ko", Arrays.asList(inject(PersonDao.class).read("c002"))).size());
 		assertEquals(1, inject(PersonBusiness.class).findByString("ko", null).size());
 		assertEquals(4, inject(PersonBusiness.class).findByString("a", null).size());
 		assertEquals(3, inject(PersonBusiness.class).findByString("a", Arrays.asList(inject(PersonDao.class).read("c002"))).size());
 	}
 	
+	private void assertFindByString(Class<? extends AbstractIdentifiable> aClass,String string,Integer expected){
+		assertEquals(expected.intValue(), inject(BusinessInterfaceLocator.class).injectTyped(aClass).findByString(string, null).size());
+		assertEquals(expected.longValue(), inject(BusinessInterfaceLocator.class).injectTyped(aClass).countByString(string));
+	}
 	
 	/**/
     
