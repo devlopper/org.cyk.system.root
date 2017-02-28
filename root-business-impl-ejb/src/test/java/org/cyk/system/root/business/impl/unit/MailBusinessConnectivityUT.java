@@ -27,7 +27,8 @@ public class MailBusinessConnectivityUT extends AbstractUnitTest {
 		collection.add(mailBusiness);
 		collection.add(fileBusiness);
 		//mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
-		mailBusiness.setProperties("smtp.iesaci.com", 25, "results@iesaci.com", "school2009");
+		//mailBusiness.setProperties("smtp.iesaci.com", 25, "results@iesaci.com", "school2009");
+		mailBusiness.setProperties("smtp.gmail.com", 465, "soldesigdcp@gmail.com", "sigdcp1234");
 	}
 	
 	@Test
@@ -39,7 +40,9 @@ public class MailBusinessConnectivityUT extends AbstractUnitTest {
 			Notification notification = new Notification();
 			notification.setTitle("A message title to receiver "+i);
 			notification.setMessage("Message to reveiver "+i);
-			notification.addReceiverIdentifiers("results@iesaci.com");
+			//notification.addReceiverIdentifiers("results@iesaci.com");
+			//notification.addReceiverIdentifiers("kycdev@gmail.com");
+			notification.addReceiverIdentifiers("soldesigdcp@gmail.com");
 			notifications.add(notification);
 		}
 		SendListener listener = new SendListener.Adapter.Default(){
@@ -53,6 +56,7 @@ public class MailBusinessConnectivityUT extends AbstractUnitTest {
 
 		};
 		SendArguments sendArguments = new SendArguments();
+		sendArguments.setDebug(Boolean.TRUE);
 		sendArguments.setNumberOfRetry(100l);
 		sendArguments.setNumberOfMillisecondBeforeRetry(1000l * 10);
 		sendArguments.setThreadPoolExecutorListener(new ThreadPoolExecutor.Listener.Adapter.Default() {

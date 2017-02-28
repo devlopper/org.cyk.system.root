@@ -13,6 +13,7 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 
@@ -89,6 +90,12 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 	
 	public QueryWrapper<T> parameterLike(String name,String value){
 		parameter(name, StringUtils.isBlank(value)?QueryStringBuilder.PERCENTAGE:value);
+		return this;
+	}
+	
+	public QueryWrapper<T> parameterLike(String name,StringSearchCriteria value){
+		parameterLike(name, value.getLikeValue());
+		parameter(QueryStringBuilder.getLengthParameterName(name), value.getPreparedValue().length());
 		return this;
 	}
 	

@@ -195,8 +195,10 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		addProperty(properties, "auth", smtpProperties.getAuthenticated());
 		//addProperty(properties, "socketFactory.class", smtpProperties.getSocketFactory().getClazz());
 		
-		//addProperty(properties, "starttls.enable", smtpProperties.getSecured());
-		//addProperty(properties, "ssl.enable", smtpProperties.getSecured());
+		if(Boolean.TRUE.equals(smtpProperties.getSecured())){
+			addProperty(properties, "starttls.enable", smtpProperties.getSecured());
+			addProperty(properties, "ssl.enable", smtpProperties.getSecured());
+		}
 		return properties;
 	}
     

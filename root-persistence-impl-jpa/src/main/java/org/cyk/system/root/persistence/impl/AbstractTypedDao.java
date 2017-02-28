@@ -89,22 +89,19 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			registerNamedQuery(executeDelete, "DELETE FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierSearchCriteria())) {
-			registerNamedQuery(readByGlobalIdentifierSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
-	    		+ "    ( LOWER(record.globalIdentifier.code) LIKE LOWER(:code) )"
-	    		+ " OR ( LOWER(record.globalIdentifier.name) LIKE LOWER(:name) )")
-			;
+			String codeLike = QueryStringBuilder.getLikeString("record.globalIdentifier.code", ":code");
+			String nameLike = QueryStringBuilder.getLikeString("record.globalIdentifier.name", ":name");
+			
+			registerNamedQuery(readByGlobalIdentifierSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "+codeLike+" OR "+nameLike);
 			
 			registerNamedQuery(readByGlobalIdentifierByCodeSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
-		    		+ " record.globalIdentifier.code NOT IN :excludedCodes "
-		    		+ " AND ("
-		    		+ "	    ( LOWER(record.globalIdentifier.code) LIKE LOWER(:code) )"
-		    		+ " OR  ( LOWER(record.globalIdentifier.name) LIKE LOWER(:name) )"
-		    		+ ")")
-				;
+		    		+ " record.globalIdentifier.code NOT IN :excludedCodes "+ " AND ("+ codeLike+" OR "+nameLike+ ")");
 		
 		}
 		// record.globalIdentifier.code NOT IN :exceludedCodes OR
 	}
+	
+	
 	
 	public Configuration getConfiguration(){
 		return Configuration.get(this.getClass());
@@ -121,10 +118,14 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
 		if(searchCriteria instanceof GlobalIdentifier.SearchCriteria){
 			//System.out.println("AbstractTypedDao.applySearchCriteriaParameters() : "+((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getLikeValue());
-			queryWrapper.parameterLike(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getLikeValue());
+			queryWrapper.parameterLike(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode());
+			//queryWrapper.parameterLike(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getLikeValue());
+			//queryWrapper.parameter(QueryStringBuilder.getLengthParameterName(GlobalIdentifier.FIELD_CODE), ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getPreparedValue().length());
 			if(!((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getExcluded().isEmpty())
 				queryWrapper.parameter("excludedCodes", ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getExcluded());
-			queryWrapper.parameterLike(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getLikeValue());
+			queryWrapper.parameterLike(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName());
+			//queryWrapper.parameterLike(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getLikeValue());
+			//queryWrapper.parameter(QueryStringBuilder.getLengthParameterName(GlobalIdentifier.FIELD_NAME), ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getPreparedValue().length());
 		}
 		getDataReadConfig().set(searchCriteria.getReadConfig());
 	}
@@ -140,7 +141,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 
 	@Override
 	public Long countByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
-		QueryWrapper<?> queryWrapper = countNamedQuery(countByGlobalIdentifierSearchCriteria);
+		QueryWrapper<?> queryWrapper = countNamedQuery(globalIdentifierSearchCriteria.getCode().getExcluded().isEmpty() ? 
+				countByGlobalIdentifierSearchCriteria : countByGlobalIdentifierByCodeSearchCriteria);
 		applySearchCriteriaParameters(queryWrapper, globalIdentifierSearchCriteria);
 		return (Long) queryWrapper.resultOne();
 	}

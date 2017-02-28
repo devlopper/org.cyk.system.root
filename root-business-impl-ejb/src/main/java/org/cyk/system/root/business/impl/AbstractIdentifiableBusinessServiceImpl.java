@@ -206,9 +206,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@Override
 	public Collection<IDENTIFIABLE> findByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables,DataReadConfiguration dataReadConfiguration) {
 		StringSearchCriteria stringSearchCriteria = new StringSearchCriteria(string);
-		if(excludedIdentifiables!=null)
-			for(IDENTIFIABLE excluded : excludedIdentifiables)
-				stringSearchCriteria.getExcluded().add(excluded.getCode());
+		stringSearchCriteria.excludeCode(excludedIdentifiables);
 		return findByString(stringSearchCriteria,dataReadConfiguration);
 	}
 	
@@ -234,9 +232,15 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	@Override
-	public Long countByString(String string) {
+	public Long countByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables) {
 		StringSearchCriteria stringSearchCriteria = new StringSearchCriteria(string);
+		stringSearchCriteria.excludeCode(excludedIdentifiables);
 		return countByString(stringSearchCriteria);
+	}
+	
+	@Override
+	public Long countByString(String string) {
+		return countByString(string,null);
 	}
 	
 	@Override

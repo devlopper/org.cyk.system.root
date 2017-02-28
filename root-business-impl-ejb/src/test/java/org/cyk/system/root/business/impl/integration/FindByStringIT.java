@@ -1,13 +1,16 @@
 package org.cyk.system.root.business.impl.integration;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.file.ExcelSheetReader;
 
 public class FindByStringIT extends AbstractBusinessIT {
@@ -44,6 +47,11 @@ public class FindByStringIT extends AbstractBusinessIT {
     	person.setName("doudou");
     	person.setLastnames("cherif");
     	create(person);
+    	
+    	create(new JobFunction(null, null));
+    	create(new JobFunction("mycode", null));
+    	create(new JobFunction(null, "mylibeller"));
+    	
     }
     
 	@Override
@@ -53,15 +61,35 @@ public class FindByStringIT extends AbstractBusinessIT {
 		assertFindByString(Person.class,null,4);
 		assertFindByString(Person.class,"",4);
 		
-		assertEquals(1, inject(PersonBusiness.class).findByString("ko", Arrays.asList(inject(PersonDao.class).read("c002"))).size());
-		assertEquals(1, inject(PersonBusiness.class).findByString("ko", null).size());
-		assertEquals(4, inject(PersonBusiness.class).findByString("a", null).size());
-		assertEquals(3, inject(PersonBusiness.class).findByString("a", Arrays.asList(inject(PersonDao.class).read("c002"))).size());
+		assertFindByString(Person.class,"ko",Arrays.asList("c002"),1);
+		assertFindByString(Person.class,"a",4);
+		assertFindByString(Person.class,"a",Arrays.asList("c002"),3);
+		
+		assertFindByString(JobFunction.class,null,4);
+		assertFindByString(JobFunction.class,"",4);
+		
+		assertFindByString(JobFunction.class,"rec",1);
+		assertFindByString(JobFunction.class,"m",2);
+		assertFindByString(JobFunction.class,"my",2);
+		assertFindByString(JobFunction.class,"myc",1);
+		assertFindByString(JobFunction.class,"myl",1);
+		assertFindByString(JobFunction.class,"e",3);
+		assertFindByString(JobFunction.class,"m",2);
+		assertFindByString(JobFunction.class,"my",2);
+		assertFindByString(JobFunction.class,"c",2);
+		assertFindByString(JobFunction.class,"r",2);
+		
 	}
 	
-	private void assertFindByString(Class<? extends AbstractIdentifiable> aClass,String string,Integer expected){
-		assertEquals(expected.intValue(), inject(BusinessInterfaceLocator.class).injectTyped(aClass).findByString(string, null).size());
-		assertEquals(expected.longValue(), inject(BusinessInterfaceLocator.class).injectTyped(aClass).countByString(string));
+	@SuppressWarnings("unchecked")
+	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Collection<String> excludedCodes,Integer expected){
+		Collection<? extends AbstractIdentifiable> excludedIdentifiables = excludedCodes == null ? null : inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(excludedCodes);
+		assertEquals(expected.intValue(), inject(BusinessInterfaceLocator.class).injectTyped(aClass).findByString(string, (Collection<T>) excludedIdentifiables).size());
+		assertEquals(expected.longValue(), inject(BusinessInterfaceLocator.class).injectTyped(aClass).countByString(string,(Collection<T>) excludedIdentifiables));
+	}
+	
+	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Integer expected){
+		assertFindByString(aClass, string, null, expected);
 	}
 	
 	/**/

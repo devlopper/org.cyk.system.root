@@ -58,6 +58,10 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	private static final String PREDICATE_FORMAT = "%1$s %2$s %3$s";
 	private static final String WHERE_VAR_FORMAT = "%1$s.%2$s %3$s %4$s";
 	private static final String PREDICATE_BETWEEN_FORMAT = "%1$s.%2$s BETWEEN %3$s AND %4$s";
+	//private static final String LIKE_FORMAT = " ( (%1$s is null) OR (%1$s is not null AND LOWER(%1$s) LIKE LOWER(%2$s)) ) ";
+	//private static final String LIKE_FORMAT = " (((%1$s IS NULL ) AND (LENGTH(%2$s) = 2)) OR ((%1$s IS NOT NULL ) AND (LOWER(%1$s) LIKE LOWER(%2$s)))) ";
+	private static final String LIKE_FORMAT = " (((%1$s IS NULL ) AND (%3$s = 0)) OR ((%1$s IS NOT NULL ) AND (LOWER(%1$s) LIKE LOWER(%2$s)))) ";
+	//private static final String LIKE_FORMAT = " (LOWER(%1$s) LIKE LOWER(%2$s) ) ";
 	
 	private static final String SUBQUERY_EXISTS_FORMAT = KW_JPQL_EXISTS+"(%1$s)";
 	
@@ -452,4 +456,20 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	public static String getVarNameMany(Class<?> aClass){
 		return getVarNameMany(getVarNameOne(aClass));
 	}
+	
+	/**/
+	
+	public static String getLikeString(String field,String parameter,String length){
+		return String.format(LIKE_FORMAT, field,parameter,length);
+	}
+	
+	public static String getLikeString(String field,String parameter){
+		return getLikeString(field,parameter,parameter+"Length");
+	}
+	
+	public static String getLengthParameterName(String parameter){
+		return parameter+"Length";
+	}
+	
+	
 }

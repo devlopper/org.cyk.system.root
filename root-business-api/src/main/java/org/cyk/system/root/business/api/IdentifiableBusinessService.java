@@ -87,6 +87,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     Collection<IDENTIFIABLE> findByString(StringSearchCriteria stringSearchCriteria,DataReadConfiguration dataReadConfiguration);
                     Collection<IDENTIFIABLE> findByString(StringSearchCriteria stringSearchCriteria);
                     
+                    Long countByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables);
                     Long countByString(String string);
                     Long countByString(StringSearchCriteria stringSearchCriteria);
                     

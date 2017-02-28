@@ -1,8 +1,10 @@
 package org.cyk.system.root.model.search;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.Constant;
 
 import lombok.Getter;
@@ -57,6 +59,12 @@ public class StringSearchCriteria extends AbstractFieldValueSearchCriteria<Strin
 		case EXACT:return getPreparedValue();
 		}
 		return getPreparedValue();
+	}
+	
+	public void excludeCode(Collection<? extends AbstractIdentifiable> excludedIdentifiables){
+		if(excludedIdentifiables!=null)
+			for(AbstractIdentifiable excluded : excludedIdentifiables)
+				getExcluded().add(excluded.getCode());
 	}
 
 }
