@@ -298,9 +298,10 @@ public class LanguageBusinessImpl extends AbstractEnumerationBusinessImpl<Langua
 		FindTextResult findTextResult = new FindTextResult();
 		Collection<String> values = new ArrayList<>();
 		if(ValueType.ID.equals(type))
-			if(StringUtils.isNotBlank(specifiedValue))
-				values.add(findText(specifiedValue));
-			else{
+			if(StringUtils.isNotBlank(specifiedValue)){
+				findTextResult.setIdentifier(specifiedValue);
+				values.add(findText(findTextResult.getIdentifier()));
+			}else{
 				try {
 					buildFromCompleteFieldName(field, values);
 				} catch (NoMatchFoundException e) {
