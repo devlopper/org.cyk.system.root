@@ -2,17 +2,14 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.util.Collection;
 
 import javax.persistence.Column;
 
-import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration;
 import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration.Property;
-import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator extends AbstractGlobalIdentifierPersistenceMappingConfigurationsRegistrator implements Serializable {
 
@@ -37,7 +34,7 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
         configuration.addProperties(property);
         GlobalIdentifierPersistenceMappingConfiguration.register(Person.class, configuration);
         
-        BusinessServiceProvider.Identifiable.COLLECTION.add(new BusinessServiceProvider.Identifiable.Adapter.Default<Person>(Person.class){
+        /*BusinessServiceProvider.Identifiable.COLLECTION.add(new BusinessServiceProvider.Identifiable.Adapter.Default<Person>(Person.class){
 			private static final long serialVersionUID = 1322416788278558869L;
 			@Override
 			public Collection<Person> find(DataReadConfiguration configuration) {
@@ -50,7 +47,7 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
 			public Long count(DataReadConfiguration configuration) {
 				return inject(PersonBusiness.class).countByCriteria(new Person.SearchCriteria(configuration.getGlobalFilter()));
 			}
-        });
+        });*/
 	}
 
 }
