@@ -33,4 +33,8 @@ public interface TypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends Typ
 	 * 
 	 */
 	Collection<IDENTIFIABLE> read(Collection<String> globalIdentifierCodes);
+	
+	/**/
+	
+	
 }

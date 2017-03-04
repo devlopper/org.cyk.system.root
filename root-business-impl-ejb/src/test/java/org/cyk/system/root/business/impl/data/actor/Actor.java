@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 
 @Getter @Setter @Entity
 public class Actor extends AbstractActor implements Serializable {
@@ -24,6 +25,16 @@ public class Actor extends AbstractActor implements Serializable {
 
 		public SearchCriteria(String name) {
 			super(name);
+		}
+
+		@Override
+		public void set(String value) {
+			
+		}
+
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
 		}
 
 	}

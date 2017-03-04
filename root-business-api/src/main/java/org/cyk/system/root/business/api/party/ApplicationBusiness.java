@@ -8,11 +8,10 @@ import org.cyk.system.root.business.api.security.ShiroConfigurator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.party.Application;
-import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
-public interface ApplicationBusiness extends AbstractPartyBusiness<Application,PartySearchCriteria> {
+public interface ApplicationBusiness extends AbstractPartyBusiness<Application> {
 	
 	void install(Installation installation);
 	

@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.utility.common.Constant;
@@ -16,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public interface PersonBusiness extends AbstractPartyBusiness<Person,SearchCriteria> {
+public interface PersonBusiness extends AbstractPartyBusiness<Person> {
 
 	Collection<Person> get(Collection<? extends AbstractActor> actors);
 	

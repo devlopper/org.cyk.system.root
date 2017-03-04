@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,16 @@ public class FiniteStateMachineTransitionIdentifiableGlobalIdentifier extends Ab
 		
 		public SearchCriteria addGlobalIdentifier(GlobalIdentifier globalIdentifier){
 			return (SearchCriteria) super.addGlobalIdentifier(globalIdentifier);
+		}
+
+		@Override
+		public void set(String value) {
+			
+		}
+
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
 		}
 		
 	}

@@ -9,6 +9,7 @@ import javax.persistence.Embeddable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.BigDecimalSearchCriteria;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,6 +51,16 @@ public class Average extends AbstractModelElement implements Serializable{
 		private BigDecimalSearchCriteria dividend = new BigDecimalSearchCriteria();
 		private BigDecimalSearchCriteria divisor = new BigDecimalSearchCriteria();
 		private BigDecimalSearchCriteria value = new BigDecimalSearchCriteria();
+		
+		@Override
+		public void set(String value) {
+			
+		}
+
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
+		}
 		
 	}
 }

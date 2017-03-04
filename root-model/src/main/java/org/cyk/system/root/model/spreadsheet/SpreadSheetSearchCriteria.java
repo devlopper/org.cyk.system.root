@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.search.AbstractPeriodSearchCriteria;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 
 @Getter @Setter
 public class SpreadSheetSearchCriteria extends AbstractPeriodSearchCriteria implements Serializable {
@@ -16,6 +17,18 @@ public class SpreadSheetSearchCriteria extends AbstractPeriodSearchCriteria impl
 	
 	public SpreadSheetSearchCriteria(Date fromDate,Date toDate) {
 		super(fromDate,toDate);
+	}
+
+
+	@Override
+	public void set(String value) {
+		
+	}
+
+
+	@Override
+	public void set(StringSearchCriteria stringSearchCriteria) {
+		
 	}
 	
 }

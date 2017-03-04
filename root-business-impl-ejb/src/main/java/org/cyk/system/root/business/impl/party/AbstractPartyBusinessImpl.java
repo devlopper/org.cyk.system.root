@@ -14,10 +14,10 @@ import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.Party.PartySearchCriteria;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
 
-public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends AbstractPartyDao<PARTY,SEARCH_CRITERIA>,SEARCH_CRITERIA extends PartySearchCriteria> extends AbstractTypedBusinessService<PARTY, DAO> implements AbstractPartyBusiness<PARTY,SEARCH_CRITERIA>,Serializable {
+public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends AbstractPartyDao<PARTY>> extends AbstractTypedBusinessService<PARTY, DAO> implements AbstractPartyBusiness<PARTY>,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
@@ -59,22 +59,22 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		return super.delete(party);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-    public Collection<PARTY> findByCriteria(SEARCH_CRITERIA criteria) {
-    	if(StringUtils.isBlank(criteria.getName().getValue())){
-    		return findAll(criteria.getReadConfig());
+    @Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<PARTY> findBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue())){
+    		return findAll(searchCriteria.getReadConfig());
     	}
-    	prepareFindByCriteria(criteria);
-    	return dao.readByCriteria(criteria);
-    }
-    
-    @Override  @TransactionAttribute(TransactionAttributeType.NEVER)
-    public Long countByCriteria(SEARCH_CRITERIA criteria) {
-    	if(StringUtils.isBlank(criteria.getName().getValue()))
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.readBySearchCriteria(searchCriteria);
+	}
+
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue()))
     		return countAll();
-    	prepareFindByCriteria(criteria);
-    	return dao.countByCriteria(criteria);
-    }
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.countBySearchCriteria(searchCriteria);
+	}
     
     /**/
         

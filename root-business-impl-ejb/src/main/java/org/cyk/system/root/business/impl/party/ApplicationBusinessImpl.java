@@ -47,7 +47,7 @@ import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Application, ApplicationDao,PartySearchCriteria> implements ApplicationBusiness,Serializable {
+public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Application, ApplicationDao> implements ApplicationBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	

@@ -12,7 +12,7 @@ import org.cyk.system.root.model.search.DateSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 
 @Getter @Setter
-public class UserAccountSearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+public class UserAccountSearchCriteria extends AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet implements Serializable {
 
 	private static final long serialVersionUID = 3134811510557411588L;
 
@@ -22,8 +22,10 @@ public class UserAccountSearchCriteria extends AbstractFieldValueSearchCriteriaS
 	private Collection<Role> roleExcluded = new ArrayList<>();
 	
 	public UserAccountSearchCriteria(String username){
+		super(username);
 		usernameSearchCriteria = new StringSearchCriteria();
 		setStringSearchCriteria(usernameSearchCriteria, username);
 	}
+	
 	
 }

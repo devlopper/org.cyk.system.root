@@ -40,6 +40,8 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueCollectionIdentifiableGlobalIdentifier;
@@ -470,6 +472,43 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Long countByNotClass(Class<?> aClass) {
 		return dao.countByNotClass(aClass);
+	}
+	
+	protected Class<? extends AbstractFieldValueSearchCriteriaSet> getSearchCriteriaClass() {
+		return null;
+	}
+	
+	protected AbstractFieldValueSearchCriteriaSet createSearchCriteriaInstance() {
+		Class<? extends AbstractFieldValueSearchCriteriaSet> searchCriteriaClass = getSearchCriteriaClass();
+		if(searchCriteriaClass==null)
+			return null;
+		AbstractFieldValueSearchCriteriaSet searchCriteria = newInstance(searchCriteriaClass);
+		return searchCriteria;
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> findByString(StringSearchCriteria stringSearchCriteria,DataReadConfiguration dataReadConfiguration) {
+		AbstractFieldValueSearchCriteriaSet searchCriteria = createSearchCriteriaInstance();
+		if(searchCriteria==null){
+			GlobalIdentifier.SearchCriteria globalSearchCriteria = new GlobalIdentifier.SearchCriteria();
+			globalSearchCriteria.set(stringSearchCriteria);
+			return findByGlobalIdentifierSearchCriteria(globalSearchCriteria);
+		}
+		searchCriteria.set(stringSearchCriteria);
+		searchCriteria.setReadConfig(dataReadConfiguration);
+		return findBySearchCriteria(searchCriteria);
+	}
+	
+	@Override
+	public Long countByString(StringSearchCriteria stringSearchCriteria) {
+		AbstractFieldValueSearchCriteriaSet searchCriteria = createSearchCriteriaInstance();
+		if(searchCriteria==null){
+			GlobalIdentifier.SearchCriteria globalSearchCriteria = new GlobalIdentifier.SearchCriteria();
+			globalSearchCriteria.set(stringSearchCriteria);
+			return countByGlobalIdentifierSearchCriteria(globalSearchCriteria);
+		}
+		searchCriteria.set(stringSearchCriteria);
+		return countBySearchCriteria(searchCriteria);
 	}
 
 	protected void applyDataReadConfigToDao(DataReadConfiguration dataReadConfig){

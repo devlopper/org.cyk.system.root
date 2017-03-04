@@ -26,6 +26,10 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 	
 	public AbstractFieldValueSearchCriteria(AbstractFieldValueSearchCriteria<VALUE_TYPE> criteria) {
 		super();
+		set(criteria);
+	}
+	
+	public void set(AbstractFieldValueSearchCriteria<VALUE_TYPE> criteria){
 		this.value = criteria.value;
 		this.nullValue = criteria.nullValue;
 		this.ascendingOrdered = criteria.ascendingOrdered;
@@ -55,4 +59,5 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 		else
 			return o.toString();
 	}
+
 }

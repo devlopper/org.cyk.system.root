@@ -7,6 +7,7 @@ import java.util.List;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.ObjectFieldValues;
@@ -31,6 +32,10 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				Collection<IDENTIFIABLE> find(Collection<IDENTIFIABLE> identifiables,Collection<String> codes);
     				Collection<IDENTIFIABLE> find(Collection<IDENTIFIABLE> identifiables,String code);
     				IDENTIFIABLE findOne(Collection<IDENTIFIABLE> identifiables,String code);
+    				
+    				<SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<IDENTIFIABLE> findBySearchCriteria(SEARCH_CRITERIA searchCriteria);
+    			    
+    				<SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria);
     
     /* Update */    IDENTIFIABLE update(IDENTIFIABLE identifiable);
     				IDENTIFIABLE update(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);

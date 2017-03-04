@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.Constant;
 
 import lombok.AllArgsConstructor;
@@ -76,6 +77,16 @@ public class Sort extends AbstractModelElement implements Serializable {
 
 		private Average.SearchCriteria average = new Average.SearchCriteria();
 		private Rank.SearchCriteria rank = new Rank.SearchCriteria();
+		
+		@Override
+		public void set(String value) {
+			
+		}
+
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
+		}
 		
 		
 	}

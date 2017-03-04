@@ -167,6 +167,17 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 			criterias.add(name);
 		}
 		
+		public void set(String value){
+			code.setValue(value);
+			name.setValue(value);
+		}
+		
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			code.set(stringSearchCriteria);
+			name.set(stringSearchCriteria);
+		}
+		
 		@Override
 		public String toString() {
 			return "code : <<"+code+">> , name : <<"+name+">>";

@@ -42,6 +42,12 @@ public class StringSearchCriteria extends AbstractFieldValueSearchCriteria<Strin
 	}
 	
 	@Override
+	public void set(AbstractFieldValueSearchCriteria<String> criteria) {
+		super.set(criteria);
+		this.locationType = ((StringSearchCriteria)criteria).locationType;
+	}
+	
+	@Override
 	public Boolean isNull() {
 		return StringUtils.isEmpty(value);
 	}

@@ -24,4 +24,14 @@ public class DefaultSearchCriteria extends AbstractPeriodSearchCriteria implemen
 		super(criteria);
 		identifierStringSearchCriteria = new StringSearchCriteria(criteria.identifierStringSearchCriteria);
 	}
+
+	@Override
+	public void set(String value) {
+		
+	}
+
+	@Override
+	public void set(StringSearchCriteria stringSearchCriteria) {
+		
+	}
 }

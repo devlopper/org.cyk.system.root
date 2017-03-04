@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.integration;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
@@ -65,6 +66,8 @@ public class FindByStringIT extends AbstractBusinessIT {
 		assertFindByString(Person.class,"a",4);
 		assertFindByString(Person.class,"a",Arrays.asList("c002"),3);
 		
+		assertFindByString(Person.class,"ius",1);
+		
 		assertFindByString(JobFunction.class,null,4);
 		assertFindByString(JobFunction.class,"",4);
 		
@@ -81,11 +84,11 @@ public class FindByStringIT extends AbstractBusinessIT {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Collection<String> excludedCodes,Integer expected){
-		Collection<? extends AbstractIdentifiable> excludedIdentifiables = excludedCodes == null ? null : inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(excludedCodes);
-		assertEquals(expected.intValue(), inject(BusinessInterfaceLocator.class).injectTyped(aClass).findByString(string, (Collection<T>) excludedIdentifiables).size());
-		assertEquals(expected.longValue(), inject(BusinessInterfaceLocator.class).injectTyped(aClass).countByString(string,(Collection<T>) excludedIdentifiables));
+		TypedBusiness<T> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
+		Collection<T> excludedIdentifiables = excludedCodes == null ? null : inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(excludedCodes);
+		assertEquals(expected.intValue(), business.findByString(string, excludedIdentifiables).size());
+		assertEquals(expected.longValue(), business.countByString(string,(Collection<T>) excludedIdentifiables));
 	}
 	
 	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Integer expected){

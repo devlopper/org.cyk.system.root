@@ -89,8 +89,19 @@ public class Person extends Party implements Serializable{
 		
 		public SearchCriteria(String name) {
 			super(name);
-			setStringSearchCriteria(lastnames, name);
-			
+			setStringSearchCriteria(lastnames, name);	
+		}
+		
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			super.set(stringSearchCriteria);
+			lastnames.set(stringSearchCriteria);
+		}
+		
+		@Override
+		public void set(String value) {
+			super.set(value);
+			lastnames.setValue(value);
 		}
 		
 	}

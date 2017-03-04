@@ -202,6 +202,16 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public Long oneLong() {
 		return getPersistenceService().oneLong();
 	}
+	
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<IDENTIFIABLE> findBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		return null;
+	}
+
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		return null;
+	}
 
 	@Override
 	public Collection<IDENTIFIABLE> findByString(String string,Collection<IDENTIFIABLE> excludedIdentifiables,DataReadConfiguration dataReadConfiguration) {
@@ -246,8 +256,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@Override
 	public Long countByString(StringSearchCriteria stringSearchCriteria) {
 		GlobalIdentifier.SearchCriteria searchCriteria = new GlobalIdentifier.SearchCriteria();
-		searchCriteria.setCode(new StringSearchCriteria(stringSearchCriteria));
-		searchCriteria.setName(new StringSearchCriteria(stringSearchCriteria));
+		searchCriteria.set(new StringSearchCriteria(stringSearchCriteria));
 		return countByGlobalIdentifierSearchCriteria(searchCriteria);
 	}
 	

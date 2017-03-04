@@ -19,6 +19,7 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.TypedDao;
 
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
@@ -30,8 +31,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
 		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete,readByGlobalIdentifier
 		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
-		,readByGlobalIdentifierByCodeSearchCriteria,countByGlobalIdentifierByCodeSearchCriteria
-		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria;
+		,readByGlobalIdentifierSearchCriteriaCodeExcluded,countByGlobalIdentifierByCodeSearchCriteria
+		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria,readByCriteriaCodeExcluded,countByCriteriaCodeExcluded;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -88,15 +89,25 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getExecuteDelete()))
 			registerNamedQuery(executeDelete, "DELETE FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
 		
+		String readByGlobalIdentifierSearchCriteriaQuery = null;
+		String readByGlobalIdentifierSearchCriteriaCodeExcludedQuery = null;
+		String readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart = null;
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierSearchCriteria())) {
 			String codeLike = QueryStringBuilder.getLikeString("record.globalIdentifier.code", ":code");
 			String nameLike = QueryStringBuilder.getLikeString("record.globalIdentifier.name", ":name");
 			
-			registerNamedQuery(readByGlobalIdentifierSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "+codeLike+" OR "+nameLike);
+			registerNamedQuery(readByGlobalIdentifierSearchCriteria, readByGlobalIdentifierSearchCriteriaQuery = "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "+codeLike+" OR "+nameLike);
 			
-			registerNamedQuery(readByGlobalIdentifierByCodeSearchCriteria, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
-		    		+ " record.globalIdentifier.code NOT IN :excludedCodes "+ " AND ("+ codeLike+" OR "+nameLike+ ")");
+			readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart = codeLike+" OR "+nameLike;
+			registerNamedQuery(readByGlobalIdentifierSearchCriteriaCodeExcluded, readByGlobalIdentifierSearchCriteriaCodeExcludedQuery = "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
+		    		+ " record.globalIdentifier.code NOT IN :excludedCodes "+ " AND ("+ 
+		    		getReadByCriteriaQueryCodeExcludedWherePart(readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart) + ")");
 		
+		}
+		
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadBySearchCriteria())) {
+			registerNamedQuery(readByCriteria, getReadByCriteriaQuery(readByGlobalIdentifierSearchCriteriaQuery));
+			registerNamedQuery(readByCriteriaCodeExcluded, getReadByCriteriaQueryCodeExcluded(readByGlobalIdentifierSearchCriteriaCodeExcludedQuery));
 		}
 		// record.globalIdentifier.code NOT IN :exceludedCodes OR
 	}
@@ -111,19 +122,36 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		return null;
 	}
 	
+	protected String getReadByCriteriaQuery(String query){
+		return query;
+	}
+	
+	protected String getReadByCriteriaQueryCodeExcluded(String query){
+		return query;
+	}
+	protected String getReadByCriteriaQueryCodeExcludedWherePart(String where){
+		return where;
+	}
+	
 	/**/
 	
 	@Override
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
-		if(searchCriteria instanceof GlobalIdentifier.SearchCriteria){
+		GlobalIdentifier.SearchCriteria globalIdentifier = null;
+		if(searchCriteria instanceof GlobalIdentifier.SearchCriteria)
+			globalIdentifier = (SearchCriteria) searchCriteria;
+		else if(searchCriteria instanceof AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)
+			globalIdentifier = ((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet) searchCriteria).getGlobalIdentifier();
+		
+		if(globalIdentifier!=null){
 			//System.out.println("AbstractTypedDao.applySearchCriteriaParameters() : "+((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getLikeValue());
-			queryWrapper.parameterLike(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode());
+			queryWrapper.parameterLike(GlobalIdentifier.FIELD_CODE, globalIdentifier.getCode());
 			//queryWrapper.parameterLike(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getLikeValue());
 			//queryWrapper.parameter(QueryStringBuilder.getLengthParameterName(GlobalIdentifier.FIELD_CODE), ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getPreparedValue().length());
-			if(!((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getExcluded().isEmpty())
-				queryWrapper.parameter("excludedCodes", ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getExcluded());
-			queryWrapper.parameterLike(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName());
+			if(!globalIdentifier.getCode().getExcluded().isEmpty())
+				queryWrapper.parameter("excludedCodes", globalIdentifier.getCode().getExcluded());
+			queryWrapper.parameterLike(GlobalIdentifier.FIELD_NAME, globalIdentifier.getName());
 			//queryWrapper.parameterLike(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getLikeValue());
 			//queryWrapper.parameter(QueryStringBuilder.getLengthParameterName(GlobalIdentifier.FIELD_NAME), ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getPreparedValue().length());
 		}
@@ -134,7 +162,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	public Collection<IDENTIFIABLE> readByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
 		QueryWrapper<?> queryWrapper = namedQuery(globalIdentifierSearchCriteria.getCode().getExcluded().isEmpty() ? 
-				readByGlobalIdentifierSearchCriteria : readByGlobalIdentifierByCodeSearchCriteria);
+				readByGlobalIdentifierSearchCriteria : readByGlobalIdentifierSearchCriteriaCodeExcluded);
 		applySearchCriteriaParameters(queryWrapper, globalIdentifierSearchCriteria);
 		return (Collection<IDENTIFIABLE>) queryWrapper.resultMany();
 	}
@@ -145,6 +173,14 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 				countByGlobalIdentifierSearchCriteria : countByGlobalIdentifierByCodeSearchCriteria);
 		applySearchCriteriaParameters(queryWrapper, globalIdentifierSearchCriteria);
 		return (Long) queryWrapper.resultOne();
+	}
+	
+	protected <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> String getSearchCriteriaNamedQuery(SEARCH_CRITERIA searchCriteria,Boolean read){
+		if(searchCriteria instanceof AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet){
+			AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet identifiableSearchCriteria = (AbstractIdentifiableSearchCriteriaSet) searchCriteria;
+			return identifiableSearchCriteria.getCode().getExcluded().isEmpty() ? (read?readByCriteria:countByCriteria) : (read?readByCriteriaCodeExcluded:countByCriteriaCodeExcluded);
+		}
+		return null;
 	}
 	
 	@Override
@@ -170,6 +206,21 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 				.resultMany();
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<IDENTIFIABLE> readBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		QueryWrapper<?> queryWrapper = namedQuery(getSearchCriteriaNamedQuery(searchCriteria, Boolean.TRUE));
+		applySearchCriteriaParameters(queryWrapper, searchCriteria);
+		return (Collection<IDENTIFIABLE>) queryWrapper.resultMany();
+	}
+
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		QueryWrapper<?> queryWrapper = countNamedQuery(getSearchCriteriaNamedQuery(searchCriteria, Boolean.FALSE));
+		applySearchCriteriaParameters(queryWrapper, searchCriteria);
+		return (Long) queryWrapper.resultOne();
+	}
+
 	public IDENTIFIABLE read(String globalIdentifierCode) {
 		return readByGlobalIdentifierCode(globalIdentifierCode);
 	}
@@ -313,6 +364,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		
 		private Boolean executeDelete = Boolean.TRUE;
 		private Boolean readByGlobalIdentifierSearchCriteria = Boolean.TRUE;
+		private Boolean readBySearchCriteria = Boolean.TRUE;
 		
 		/**/
 		

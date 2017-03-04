@@ -9,6 +9,7 @@ import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.BooleanSearchCriteria;
 import org.cyk.system.root.model.search.IntegerSearchCriteria;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -58,6 +59,16 @@ public class Rank extends AbstractModelElement implements Serializable{
 		private IntegerSearchCriteria sequenceOrder = new IntegerSearchCriteria();
 		private IntegerSearchCriteria value = new IntegerSearchCriteria();
 		private BooleanSearchCriteria exaequo = new BooleanSearchCriteria();
+		
+		@Override
+		public void set(String value) {
+			
+		}
+
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
+		}
 		
 	}
 }

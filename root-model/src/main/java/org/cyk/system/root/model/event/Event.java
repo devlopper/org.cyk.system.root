@@ -60,7 +60,7 @@ public class Event extends AbstractIdentifiablePeriod implements Serializable  {
     /**/
     
     @Getter @Setter
-    public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+    public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet implements Serializable {
 
     	private static final long serialVersionUID = 3134811510557411588L;
 
@@ -71,10 +71,12 @@ public class Event extends AbstractIdentifiablePeriod implements Serializable  {
     	}
     	
     	public SearchCriteria(SearchCriteria criteria){
+    		super(null);
     		this.periodSearchCriteria = new PeriodSearchCriteria(criteria.periodSearchCriteria);
     	}
     	
     	public SearchCriteria(Date fromDate,Date toDate){
+    		super(null);
     		periodSearchCriteria = new PeriodSearchCriteria(fromDate,toDate);
     	}
     	

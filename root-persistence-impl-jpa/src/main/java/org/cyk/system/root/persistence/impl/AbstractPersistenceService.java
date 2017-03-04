@@ -5,8 +5,8 @@ import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_FR
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_ORDER_BY;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_JPQL_SELECT;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COMPUTE;
-import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_EXECUTE;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_COUNT;
+import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_EXECUTE;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_READ;
 import static org.cyk.system.root.persistence.impl.QueryStringBuilder.KW_NQ_SUM;
 
@@ -389,6 +389,8 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 				.getResultList();
 	}
 	
+	
+	
 	/**/
 	
 	protected void applyPeriodSearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractPeriodSearchCriteria searchCriteria){
@@ -411,5 +413,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		return commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, fieldNames);
 	}
 	
+	
+
 	public static final String PARAMETER_INDEX = "pindex";
 }

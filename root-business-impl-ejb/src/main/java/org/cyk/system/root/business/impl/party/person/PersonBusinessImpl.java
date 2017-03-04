@@ -37,12 +37,12 @@ import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MedicalInformations;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.party.person.JobFunctionDao;
@@ -61,7 +61,7 @@ import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
 
 @Stateless
-public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao,SearchCriteria> implements PersonBusiness,Serializable {
+public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao> implements PersonBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
@@ -418,6 +418,26 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return person.getExtendedInformations();
 	}
 
+	@Override
+	protected Class<? extends AbstractFieldValueSearchCriteriaSet> getSearchCriteriaClass() {
+		return Person.SearchCriteria.class;
+	}
+	
+	/*@Override
+	public Collection<Person> findByString(StringSearchCriteria stringSearchCriteria,DataReadConfiguration dataReadConfiguration) {
+		Person.SearchCriteria searchCriteria = new Person.SearchCriteria();
+		searchCriteria.set(stringSearchCriteria);
+		searchCriteria.setReadConfig(dataReadConfiguration);
+		return findBySearchCriteria(searchCriteria);
+	}
+	
+	@Override
+	public Long countByString(StringSearchCriteria stringSearchCriteria) {
+		Person.SearchCriteria searchCriteria = new Person.SearchCriteria();
+		searchCriteria.set(stringSearchCriteria);
+		return countBySearchCriteria(searchCriteria);
+	}*/
+	
 	/**/
 	
 	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Person>{

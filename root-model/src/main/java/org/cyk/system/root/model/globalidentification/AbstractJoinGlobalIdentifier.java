@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,7 +43,7 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	/**/
 	
 	@Getter @Setter
-	public static class AbstractSearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+	public static abstract class AbstractSearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
 
 		private static final long serialVersionUID = 6796076474234170332L;
 
@@ -65,6 +66,17 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 		
 		public AbstractSearchCriteria addIdentifiableGlobalIdentifier(AbstractIdentifiable identifiable){
 			return addGlobalIdentifiers(Arrays.asList(identifiable.getGlobalIdentifier()));
+		}
+		
+		/**/
+		
+		@Override
+		public void set(String value) {
+			
+		}
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
 		}
 		
 	}

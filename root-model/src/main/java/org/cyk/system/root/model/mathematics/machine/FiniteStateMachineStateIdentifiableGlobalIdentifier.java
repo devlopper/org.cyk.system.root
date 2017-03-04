@@ -13,6 +13,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -47,6 +48,14 @@ public class FiniteStateMachineStateIdentifiableGlobalIdentifier extends Abstrac
 		public SearchCriteria addGlobalIdentifier(GlobalIdentifier globalIdentifier){
 			return (SearchCriteria) super.addGlobalIdentifier(globalIdentifier);
 		}
+
+		@Override
+		public void set(String value) {}
+
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
+		}
 		
 	}
 	
@@ -71,6 +80,16 @@ public class FiniteStateMachineStateIdentifiableGlobalIdentifier extends Abstrac
 		
 		public IdentifiablesSearchCriteria<IDENTIFIABLE> addFiniteStateMachineStateIdentifiableGlobalIdentifier(FiniteStateMachineStateIdentifiableGlobalIdentifier finiteStateMachineStateIdentifiableGlobalIdentifier){
 			return addFiniteStateMachineStateIdentifiableGlobalIdentifiers(Arrays.asList(finiteStateMachineStateIdentifiableGlobalIdentifier));
+		}
+		
+		@Override
+		public void set(String value) {
+			finiteStateMachineStateIdentifiableGlobalIdentifier.set(value);
+		}
+
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
 		}
 		
 	}
