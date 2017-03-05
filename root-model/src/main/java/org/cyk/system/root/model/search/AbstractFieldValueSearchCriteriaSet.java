@@ -56,7 +56,7 @@ public abstract class AbstractFieldValueSearchCriteriaSet extends AbstractModelE
 	
 	/**/
 	
-	@Getter @Setter
+	@Getter @Setter @NoArgsConstructor
 	public static abstract class AbstractIdentifiableSearchCriteriaSet extends AbstractFieldValueSearchCriteriaSet implements Serializable {
 		private static final long serialVersionUID = 3289886983410287161L;
 		

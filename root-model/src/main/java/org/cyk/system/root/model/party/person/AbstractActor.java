@@ -40,7 +40,7 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 	/**/
 	
 	@Getter @Setter
-	public static abstract class AbstractSearchCriteria<ACTOR extends AbstractActor> extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+	public static abstract class AbstractSearchCriteria<ACTOR extends AbstractActor> extends AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet implements Serializable {
 
 		private static final long serialVersionUID = 6796076474234170332L;
 
@@ -51,6 +51,7 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 		}
 		
 		public AbstractSearchCriteria(String name) {
+			super(name);
 			person = new Person.SearchCriteria(name);
 		}
 		
