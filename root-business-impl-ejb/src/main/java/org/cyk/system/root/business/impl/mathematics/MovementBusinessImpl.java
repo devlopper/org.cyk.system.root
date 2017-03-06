@@ -20,6 +20,7 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
@@ -39,11 +40,6 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	protected Class<MovementCollection> getCollectionClass() {
-		return MovementCollection.class;
-	}
-	
-	@Override
 	protected Collection<? extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<?>> getListeners() {
 		return Listener.COLLECTION;
 	}
@@ -56,12 +52,21 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
+	public Movement instanciateOne(String code, String name, String value, String supportingDocumentProvider,String supportingDocumentIdentifier, String actionCode) {
+		Movement movement = instanciateOne(code, name);
+		movement.setValue(commonUtils.getBigDecimal(value));
+		movement.setSupportingDocumentProvider(supportingDocumentProvider);
+		movement.setSupportingDocumentIdentifier(supportingDocumentIdentifier);
+		if(StringUtils.isNotBlank(actionCode))
+			movement.setAction(inject(MovementActionDao.class).read(actionCode));
+		return movement;
+	}
+	
+	@Override
 	public Movement create(Movement movement) {
 		exceptionUtils().exception(movement.getValue()==null, "exception.value.mustnotbenull");
 		exceptionUtils().exception(BigDecimal.ZERO.equals(movement.getValue()), "exception.value.mustnotbezero");
-		if(StringUtils.isBlank(movement.getSupportingDocumentIdentifier()))
-			movement.setSupportingDocumentIdentifier(null);
-		exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier())!=null, "exception.supportingDocumentIdentifierAlreadyUsed");
+		exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && !dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier()).isEmpty(), "exception.supportingDocumentIdentifierAlreadyUsed");
 		MovementAction action = movement.getAction();	
 		if(action!=null){
 			exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && movement.getValue().signum()==-1, "exception.value.mustbepositive");

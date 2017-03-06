@@ -17,8 +17,12 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
+	protected Class<COLLECTION> collectionClass;
+	
+	@SuppressWarnings("unchecked")
 	public AbstractCollectionItemBusinessImpl(DAO dao) {
 		super(dao); 
+		collectionClass = (Class<COLLECTION>) commonUtils.getClassParameterAt(getClass(), 2);
 	}   
 	
 	@Override
@@ -73,20 +77,14 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 
 	@Override
 	public ITEM find(String collectionCode, String relativeCode) {
-		COLLECTION collection = inject(BusinessInterfaceLocator.class).injectTyped(getCollectionClass()).find(collectionCode);
+		COLLECTION collection = inject(BusinessInterfaceLocator.class).injectTyped(collectionClass).find(collectionCode);
 		return dao.read(RootConstant.Code.generate(collection, relativeCode));
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected Class<COLLECTION> getCollectionClass(){
-		return (Class<COLLECTION>) commonUtils.getClassParameterAt(getClass(), 2);
 	}
 	
 	@Override
 	protected ITEM __instanciateOne__(String[] values, InstanciateOneListener<ITEM> listener) {
 		ITEM item = super.__instanciateOne__(values, listener);
-		set(listener.getSetListener().setIndex(10).setFieldType(getCollectionClass())
-				, AbstractCollectionItem.FIELD_COLLECTION);
+		set(listener.getSetListener().setIndex(10).setFieldType(collectionClass), AbstractCollectionItem.FIELD_COLLECTION);
 		return item;
 	}
 	

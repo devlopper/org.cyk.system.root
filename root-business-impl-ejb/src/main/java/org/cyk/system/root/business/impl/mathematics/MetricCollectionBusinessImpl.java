@@ -26,8 +26,6 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private MetricDao metricDao;
-	
 	@Inject
 	public MetricCollectionBusinessImpl(MetricCollectionDao dao) {
 		super(dao); 
@@ -47,17 +45,7 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 		set(listener.getSetListener(),MetricCollection.FIELD_VALUE);
 		return metricCollection;
 	}
-		
-	@Override
-	protected MetricBusiness getItemBusiness() {
-		return inject(MetricBusiness.class);
-	}
-	
-	@Override
-	protected MetricDao getItemDao() {
-		return metricDao;
-	}
-	 
+			 
 	/*@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MetricCollection instanciateOne(String code,String name,MetricCollectionType type,MetricValueType metricValueType,String[] items,String intervalCollectionName,String[][] intervals){
 		MetricCollection collection = instanciateOne(code,name,items);

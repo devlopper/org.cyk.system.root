@@ -24,7 +24,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne @JoinColumn(name="maction") /*@NotNull*/ private MovementAction action;	
+	@ManyToOne @JoinColumn(name="maction") private MovementAction action;	
 	@Column(name="mvalue",precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
 	
 	@Column private String supportingDocumentProvider;
@@ -51,6 +51,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	/**/
 	
+	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_SUPPORTING_DOCUMENT_PROVIDER = "supportingDocumentProvider";
 	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";

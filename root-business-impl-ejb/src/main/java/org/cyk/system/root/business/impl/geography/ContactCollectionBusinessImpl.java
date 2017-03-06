@@ -148,16 +148,6 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
     }
 
 	@Override
-	protected ContactDao getItemDao() {
-		return contactDao;
-	}
-
-	@Override
-	protected ContactBusiness getItemBusiness() {
-		return inject(ContactBusiness.class);
-	}
-
-	@Override
 	public ContactCollection instanciateOne(String[] phoneNumbers, String[] electronicMails, String[] postalBoxes,String[] websites) {
 		ContactCollection contactCollection = new ContactCollection();
 		contactCollection.setPhoneNumbers(inject(PhoneNumberBusiness.class).instanciateMany(contactCollection, phoneNumbers));

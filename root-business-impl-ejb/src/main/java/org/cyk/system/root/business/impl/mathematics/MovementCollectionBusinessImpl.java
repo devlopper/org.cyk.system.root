@@ -24,21 +24,9 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private MovementDao movementDao;
-	
 	@Inject
 	public MovementCollectionBusinessImpl(MovementCollectionDao dao) {
 		super(dao); 
-	}
-	
-	@Override
-	protected MovementBusiness getItemBusiness() {
-		return inject(MovementBusiness.class);
-	}
-		
-	@Override
-	protected MovementDao getItemDao() {
-		return movementDao;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

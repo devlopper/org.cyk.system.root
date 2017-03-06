@@ -25,15 +25,6 @@ public class ValueCollectionBusinessImpl extends AbstractCollectionBusinessImpl<
 	}
 	
 	@Override
-	protected ValueCollectionItemDao getItemDao() {
-		return inject(ValueCollectionItemDao.class);
-	}
-	@Override
-	protected ValueCollectionItemBusiness getItemBusiness() {
-		return inject(ValueCollectionItemBusiness.class);
-	}
-
-	@Override
 	public void derive(Collection<ValueCollection> valueCollections,Derive listener) {
 		for(ValueCollection valueCollection : valueCollections)
 			derive(valueCollection,listener);

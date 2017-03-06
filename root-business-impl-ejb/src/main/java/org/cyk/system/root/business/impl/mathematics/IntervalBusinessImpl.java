@@ -25,12 +25,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	public IntervalBusinessImpl(IntervalDao dao) {
 		super(dao); 
 	}
-	
-	@Override
-	protected Class<IntervalCollection> getCollectionClass() {
-		return IntervalCollection.class;
-	}
-	
+		
 	@Override
 	protected void afterCreate(Interval interval) {
 		super.afterCreate(interval);

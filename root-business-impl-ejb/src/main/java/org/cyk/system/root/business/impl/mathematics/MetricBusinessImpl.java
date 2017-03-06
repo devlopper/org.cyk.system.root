@@ -26,12 +26,7 @@ public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metri
 	protected Collection<? extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<?>> getListeners() {
 		return Listener.COLLECTION;
 	}
-	
-	@Override
-	protected Class<MetricCollection> getCollectionClass() {
-		return MetricCollection.class;
-	}
-	
+		
 	@Override
 	protected void beforeCreate(Metric metric) {
 		super.beforeCreate(metric);

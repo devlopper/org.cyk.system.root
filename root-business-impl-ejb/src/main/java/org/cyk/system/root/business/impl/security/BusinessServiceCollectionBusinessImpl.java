@@ -16,20 +16,9 @@ public class BusinessServiceCollectionBusinessImpl extends AbstractCollectionBus
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private BusinessServiceDao businessServiceDao;
-	
 	@Inject
 	public BusinessServiceCollectionBusinessImpl(BusinessServiceCollectionDao dao) {
 		super(dao); 
-	}
-	
-	@Override
-	protected BusinessServiceDao getItemDao() {
-		return businessServiceDao;
-	}
-	@Override
-	protected BusinessServiceBusiness getItemBusiness() {
-		return inject(BusinessServiceBusiness.class);
 	}
 	
 }

@@ -34,20 +34,6 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
         configuration.addProperties(property);
         GlobalIdentifierPersistenceMappingConfiguration.register(Person.class, configuration);
         
-        /*BusinessServiceProvider.Identifiable.COLLECTION.add(new BusinessServiceProvider.Identifiable.Adapter.Default<Person>(Person.class){
-			private static final long serialVersionUID = 1322416788278558869L;
-			@Override
-			public Collection<Person> find(DataReadConfiguration configuration) {
-				Person.SearchCriteria criteria = new Person.SearchCriteria(configuration.getGlobalFilter());
-				criteria.getReadConfig().set(configuration);
-				return inject(PersonBusiness.class).findByCriteria(criteria);
-			}
-			
-			@Override
-			public Long count(DataReadConfiguration configuration) {
-				return inject(PersonBusiness.class).countByCriteria(new Person.SearchCriteria(configuration.getGlobalFilter()));
-			}
-        });*/
 	}
 
 }

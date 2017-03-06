@@ -7,4 +7,7 @@ public interface AbstractCollectionBusiness<COLLECTION extends AbstractCollectio
     
 	COLLECTION instanciateOne(String code,String name,String[][] items);
 	COLLECTION instanciateOne(String code,String name,String[] items);
+	
+	ITEM add(COLLECTION collection,ITEM item);
+	ITEM remove(COLLECTION collection,ITEM item);
 }

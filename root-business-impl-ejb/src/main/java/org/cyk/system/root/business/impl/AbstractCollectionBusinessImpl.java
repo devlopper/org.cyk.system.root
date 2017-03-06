@@ -11,14 +11,19 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.persistence.api.AbstractCollectionDao;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 
 public abstract class AbstractCollectionBusinessImpl<COLLECTION extends AbstractCollection<ITEM>,ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionDao<COLLECTION, ITEM>,ITEM_DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,ITEM_BUSINESS extends AbstractCollectionItemBusiness<ITEM,COLLECTION>> extends AbstractEnumerationBusinessImpl<COLLECTION, DAO> implements AbstractCollectionBusiness<COLLECTION,ITEM>,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
+	protected Class<ITEM> itemClass;
+	
+	@SuppressWarnings("unchecked")
 	public AbstractCollectionBusinessImpl(DAO dao) {
-		super(dao); 
+		super(dao);
+		itemClass = (Class<ITEM>) commonUtils.getClassParameterAt(getClass(), 1);
 	}
 	
 	protected ITEM instanciateOneItem(String[] values){
@@ -50,6 +55,35 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		return collection;
 	}
 		
+	@Override
+	public ITEM add(COLLECTION collection, ITEM item) {
+		return addOrRemove(collection, item, Boolean.TRUE);
+	}
+
+	@Override
+	public ITEM remove(COLLECTION collection, ITEM item) {
+		return addOrRemove(collection, item, Boolean.FALSE);
+	}
+	
+	protected ITEM addOrRemove(COLLECTION collection, ITEM item,Boolean add) {
+		if(Boolean.TRUE.equals(add)){
+			Boolean found = Boolean.FALSE;
+			if(item.getCollection()!=null)
+				for(ITEM index : collection.getCollection())
+					if(index == item){
+						found = Boolean.TRUE;
+						break;
+					}
+			if(Boolean.FALSE.equals(found))
+				collection.add(item);	
+		}else{
+			if(collection.getCollection()!=null)
+				collection.getCollection().remove(item);
+			collection.addToDelete(item);
+		}
+		return item;
+	}
+
 	@Override
 	public COLLECTION create(COLLECTION collection) {
 		super.create(collection);
@@ -84,8 +118,15 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		return super.delete(collection);
 	}
 	
-	protected abstract ITEM_DAO getItemDao();
-	protected abstract ITEM_BUSINESS getItemBusiness();
+	@SuppressWarnings("unchecked")
+	protected ITEM_DAO getItemDao(){
+		return (ITEM_DAO) inject(PersistenceInterfaceLocator.class).injectTyped(itemClass);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected ITEM_BUSINESS getItemBusiness(){
+		return (ITEM_BUSINESS) inject(BusinessInterfaceLocator.class).injectTyped(itemClass);
+	}
 	
 	protected ITEM createItem(ITEM item){
 		return getItemBusiness().create(item);

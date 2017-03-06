@@ -28,15 +28,6 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	}
 	
 	@Override
-	protected IntervalDao getItemDao() {
-		return intervalDao;
-	}
-	@Override
-	protected IntervalBusiness getItemBusiness() {
-		return inject(IntervalBusiness.class);
-	}
-	
-	@Override
 	public IntervalCollection create(IntervalCollection collection) {
 		collection = super.create(collection);
 		collection.setLowestValue(findLowestValue(collection));

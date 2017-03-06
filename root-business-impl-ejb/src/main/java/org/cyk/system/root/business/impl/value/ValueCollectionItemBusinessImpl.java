@@ -25,12 +25,7 @@ public class ValueCollectionItemBusinessImpl extends AbstractCollectionItemBusin
 	public ValueCollectionItemBusinessImpl(ValueCollectionItemDao dao) {
 		super(dao); 
 	}
-	
-	@Override
-	protected Class<ValueCollection> getCollectionClass() {
-		return ValueCollection.class;
-	}
-	
+		
 	@Override
 	protected void setAutoSettedProperties(ValueCollectionItem valueCollectionItem) {
 		super.setAutoSettedProperties(valueCollectionItem);

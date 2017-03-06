@@ -12,6 +12,7 @@ import lombok.Setter;
 
 public interface MovementBusiness extends AbstractCollectionItemBusiness<Movement,MovementCollection> {
 
+	Movement instanciateOne(String code,String name, String value,String supportingDocumentProvider,String supportingDocumentIdentifier,String actionCode);
 	Movement instanciateOne(MovementCollection movementCollection,MovementAction movementAction, String value);
 	
 	@Getter @Setter

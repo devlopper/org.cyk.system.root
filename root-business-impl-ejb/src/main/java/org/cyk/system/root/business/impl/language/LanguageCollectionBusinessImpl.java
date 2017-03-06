@@ -16,21 +16,9 @@ public class LanguageCollectionBusinessImpl extends AbstractCollectionBusinessIm
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private LanguageCollectionItemDao languageCollectionItemDao;
-	
 	@Inject
 	public LanguageCollectionBusinessImpl(LanguageCollectionDao dao) {
 		super(dao); 
 	}
 	
-	@Override
-	protected LanguageCollectionItemDao getItemDao() {
-		return languageCollectionItemDao;
-	}
-	@Override
-	protected LanguageCollectionItemBusiness getItemBusiness() {
-		return inject(LanguageCollectionItemBusiness.class);
-	}
-	
-
 }

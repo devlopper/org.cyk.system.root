@@ -1,8 +1,7 @@
 package org.cyk.system.root.persistence.impl.mathematics;
 
 import java.io.Serializable;
-
-import javax.persistence.NoResultException;
+import java.util.Collection;
 
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -22,9 +21,8 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 	}
 	
 	@Override
-	public Movement readBySupportingDocumentIdentifier(String supportingDocumentIdentifier) {
-		return namedQuery(readBySupportingDocumentIdentifier).ignoreThrowable(NoResultException.class)
-				.parameter(Movement.FIELD_SUPPORTING_DOCUMENT_IDENTIFIER, supportingDocumentIdentifier).resultOne();
+	public Collection<Movement> readBySupportingDocumentIdentifier(String supportingDocumentIdentifier) {
+		return namedQuery(readBySupportingDocumentIdentifier).parameter(Movement.FIELD_SUPPORTING_DOCUMENT_IDENTIFIER, supportingDocumentIdentifier).resultMany();
 	}
 }
  
