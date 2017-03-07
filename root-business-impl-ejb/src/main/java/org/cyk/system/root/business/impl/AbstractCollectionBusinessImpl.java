@@ -68,14 +68,15 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	protected ITEM addOrRemove(COLLECTION collection, ITEM item,Boolean add) {
 		if(Boolean.TRUE.equals(add)){
 			Boolean found = Boolean.FALSE;
-			if(item.getCollection()!=null)
+			if(collection.getCollection()!=null)
 				for(ITEM index : collection.getCollection())
 					if(index == item){
 						found = Boolean.TRUE;
 						break;
 					}
-			if(Boolean.FALSE.equals(found))
+			if(Boolean.FALSE.equals(found)){
 				collection.add(item);	
+			}
 		}else{
 			if(collection.getCollection()!=null)
 				collection.getCollection().remove(item);

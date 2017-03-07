@@ -7,6 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.AbstractCollectionBusiness;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
@@ -19,11 +20,16 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	
 	protected Class<COLLECTION> collectionClass;
 	
-	@SuppressWarnings("unchecked")
 	public AbstractCollectionItemBusinessImpl(DAO dao) {
 		super(dao); 
-		collectionClass = (Class<COLLECTION>) commonUtils.getClassParameterAt(getClass(), 2);
 	}   
+	
+	@SuppressWarnings("unchecked")
+	public Class<COLLECTION> getCollectionClass(){
+		if(collectionClass==null)
+			collectionClass = (Class<COLLECTION>) commonUtils.getClassParameterAt(getClass(), 2);
+		return collectionClass;
+	}
 	
 	@Override
 	protected void setAutoSettedProperties(ITEM item) {
@@ -67,24 +73,30 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		return item;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ITEM instanciateOne(COLLECTION collection,Boolean addable) {
+		ITEM item = instanciateOne();
+		if(Boolean.TRUE.equals(addable))
+			((AbstractCollectionBusiness<COLLECTION, ITEM>)inject(BusinessInterfaceLocator.class).injectTyped(getCollectionClass())).add(collection, item);
+		return item;
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ITEM instanciateOne(COLLECTION collection) {
-		ITEM item = instanciateOne();
-		item.setCollection(collection);
-		collection.add(item);
-		return item;
+		return instanciateOne(collection,Boolean.TRUE);
 	}
 
 	@Override
 	public ITEM find(String collectionCode, String relativeCode) {
-		COLLECTION collection = inject(BusinessInterfaceLocator.class).injectTyped(collectionClass).find(collectionCode);
+		COLLECTION collection = inject(BusinessInterfaceLocator.class).injectTyped(getCollectionClass()).find(collectionCode);
 		return dao.read(RootConstant.Code.generate(collection, relativeCode));
 	}
 	
 	@Override
 	protected ITEM __instanciateOne__(String[] values, InstanciateOneListener<ITEM> listener) {
 		ITEM item = super.__instanciateOne__(values, listener);
-		set(listener.getSetListener().setIndex(10).setFieldType(collectionClass), AbstractCollectionItem.FIELD_COLLECTION);
+		set(listener.getSetListener().setIndex(10).setFieldType(getCollectionClass()), AbstractCollectionItem.FIELD_COLLECTION);
 		return item;
 	}
 	

@@ -52,8 +52,9 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	public Movement instanciateOne(String code, String name, String value, String supportingDocumentProvider,String supportingDocumentIdentifier, String actionCode) {
-		Movement movement = instanciateOne(code, name);
+	public Movement instanciateOne(String collectionCode, String value, String supportingDocumentProvider,String supportingDocumentIdentifier, String actionCode) {
+		MovementCollection movementCollection = inject(MovementCollectionDao.class).read(collectionCode);
+		Movement movement = instanciateOne(movementCollection);
 		movement.setValue(commonUtils.getBigDecimal(value));
 		movement.setSupportingDocumentProvider(supportingDocumentProvider);
 		movement.setSupportingDocumentIdentifier(supportingDocumentIdentifier);

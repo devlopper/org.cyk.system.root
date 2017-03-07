@@ -15,6 +15,7 @@ public interface AbstractCollectionItemBusiness<ITEM extends AbstractCollectionI
 	//String findRelativeCode(ITEM item);
 	
 	ITEM instanciateOne(COLLECTION collection);
+	ITEM instanciateOne(COLLECTION collection,Boolean addable);
 	ITEM instanciateOneRandomly(COLLECTION collection);
 	
 	ITEM find(String collectionCode,String relativeCode);

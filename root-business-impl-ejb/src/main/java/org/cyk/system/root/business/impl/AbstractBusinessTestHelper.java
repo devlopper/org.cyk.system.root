@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -20,6 +21,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
@@ -32,6 +35,7 @@ import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBu
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilder;
@@ -49,6 +53,10 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalStat
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
+import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
+import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
 import org.cyk.utility.common.ClassRepository.ClassField;
@@ -465,9 +473,24 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	/* Assertions */
 	
+	public void assertMovementCollection(String code,String expectedValue){
+    	assertMovementCollection(inject(MovementCollectionDao.class).read(code), expectedValue);
+    }
+	
 	public void assertMovementCollection(MovementCollection movementCollection,String expectedValue){
-    	movementCollection = inject(MovementCollectionBusiness.class).find(movementCollection.getIdentifier());
     	assertEquals("Value",new BigDecimal(expectedValue), movementCollection.getValue());
+    }
+	
+	public void assertMovement(String code,String expectedValue,Boolean increment,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier,String expectedCollectionValue){
+    	assertMovement(inject(MovementDao.class).read(code), expectedValue, increment, expectedSupportingDocumentProvider, expectedSupportingDocumentIdentifier,expectedCollectionValue);
+    }
+	
+	public void assertMovement(Movement movement,String expectedValue,Boolean expectedIncrement,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier,String expectedCollectionValue){
+    	assertEquals("Value",new BigDecimal(expectedValue), movement.getValue());
+    	assertEquals("Action",expectedIncrement == null ? null : (Boolean.TRUE.equals(expectedIncrement) ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction()), movement.getAction());
+    	assertEquals("Supporting Document Provider",expectedSupportingDocumentProvider, movement.getSupportingDocumentProvider());
+    	assertEquals("Supporting Document Identifier",expectedSupportingDocumentIdentifier, movement.getSupportingDocumentIdentifier());
+    	assertMovementCollection(movement.getCollection().getCode(), expectedCollectionValue);
     }
 	
 	private void assertFiniteStateMachine(FiniteStateMachine machine,String expectedStateCode){
@@ -561,6 +584,26 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	protected Date getDate(String date){
 		return getDate(date, Boolean.TRUE);
+	}
+	
+	/**/
+	
+	public <IDENTIFIABLE extends AbstractIdentifiable> void createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale,Integer count){
+		CreateReportFileArguments<IDENTIFIABLE> createSaleReportFileArguments = new CreateReportFileArguments<IDENTIFIABLE>(identifiable);
+    	createSaleReportFileArguments.setLocale(locale);
+    	createSaleReportFileArguments.setReportTemplate(inject(ReportTemplateDao.class).read(reportTemplateCode));	
+    	inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(createSaleReportFileArguments);
+    	
+    	if(count!=null && count>0){
+    		String fileRepresentationTyeCode = reportTemplateCode;
+    		FileRepresentationType fileRepresentationType = inject(FileRepresentationTypeDao.class).read(fileRepresentationTyeCode);
+    		Integer i = 0;
+    		for(org.cyk.system.root.model.file.File file : inject(FileBusiness.class).findByRepresentationTypeByIdentifiable(fileRepresentationType, identifiable)){
+    			if(i++ == count)
+    				break;
+    			write(file);
+    		}	
+    	}
 	}
 	
 	/**/

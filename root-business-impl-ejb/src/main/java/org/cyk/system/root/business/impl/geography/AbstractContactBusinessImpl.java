@@ -27,4 +27,8 @@ public abstract class AbstractContactBusinessImpl<CONTACT extends Contact,DAO ex
 		return dao.countByValue(value);
 	}
 	
+	@Override
+	public Class<ContactCollection> getCollectionClass() {
+		return ContactCollection.class;
+	}
 }
