@@ -9,5 +9,6 @@ import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 public interface MovementDao extends AbstractCollectionItemDao<Movement,MovementCollection> {
 
 	Collection<Movement> readBySupportingDocumentIdentifier(String supportingDocumentIdentifier);
+	Long countBySupportingDocumentIdentifier(String supportingDocumentIdentifier);
 	
 }

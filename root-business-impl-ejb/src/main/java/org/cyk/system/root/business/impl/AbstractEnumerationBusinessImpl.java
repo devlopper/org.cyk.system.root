@@ -33,6 +33,11 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 		return instanciateOne(RootConstant.Code.generateFromString(name), name);
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ENUMERATION instanciateOne() {
+		return instanciateOne(null, null);
+	}
+	
     @Override
 	protected ENUMERATION __instanciateOne__(String[] values, InstanciateOneListener<ENUMERATION> listener) {
     	ENUMERATION enumeration = listener.getInstance();

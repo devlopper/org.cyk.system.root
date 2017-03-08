@@ -12,7 +12,7 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-	private String readBySupportingDocumentIdentifier;
+	private String readBySupportingDocumentIdentifier,countBySupportingDocumentIdentifier;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -23,6 +23,11 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 	@Override
 	public Collection<Movement> readBySupportingDocumentIdentifier(String supportingDocumentIdentifier) {
 		return namedQuery(readBySupportingDocumentIdentifier).parameter(Movement.FIELD_SUPPORTING_DOCUMENT_IDENTIFIER, supportingDocumentIdentifier).resultMany();
+	}
+
+	@Override
+	public Long countBySupportingDocumentIdentifier(String supportingDocumentIdentifier) {
+		return countNamedQuery(countBySupportingDocumentIdentifier).parameter(Movement.FIELD_SUPPORTING_DOCUMENT_IDENTIFIER, supportingDocumentIdentifier).resultOne();
 	}
 }
  

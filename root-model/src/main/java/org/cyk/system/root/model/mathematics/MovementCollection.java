@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
@@ -26,13 +27,16 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	
 	@Column(precision=20,scale=FLOAT_SCALE) private BigDecimal value;
  
-	@OneToOne @JoinColumn(name="theinterval") private Interval interval;
+	@ManyToOne @JoinColumn(name="theinterval") private Interval interval;
 	
 	@OneToOne private MovementAction incrementAction;
 	
 	@OneToOne private MovementAction decrementAction;
 	
 	private Boolean supportDocumentIdentifier = Boolean.FALSE;
+	
+	//private Boolean enableMultipleJoinOfDocumentIdentifier;
+	@ManyToOne @JoinColumn(name="document_identifier_count_interval") private Interval documentIdentifierCountInterval;
 	
 	//TODO to be model using a class which can be called MovementCollectionAlert or something like that. really i do not know so to think about
 	//@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal minimalQuantityAlert = BigDecimal.ZERO;

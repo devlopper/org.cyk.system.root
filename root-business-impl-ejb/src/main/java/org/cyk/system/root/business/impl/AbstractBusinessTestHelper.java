@@ -59,6 +59,7 @@ import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ClassRepository.ClassField;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ObjectFieldValues;
@@ -91,19 +92,49 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	@Inject protected FiniteStateMachineStateDao finiteStateMachineStateDao;
 	@Inject protected FiniteStateMachineAlphabetDao finiteStateMachineAlphabetDao;
 	
-	@SuppressWarnings("unchecked")
-	protected <T extends AbstractIdentifiable> T create(T identifiable){
-		return (T) inject(GenericBusiness.class).create(identifiable);
+	public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
+		if(expectedThrowableMessage!=null){
+    		new Try(expectedThrowableMessage){ 
+    			private static final long serialVersionUID = -8176804174113453706L;
+    			@Override protected void code() {inject(GenericBusiness.class).create(identifiable);}
+    		}.execute();
+    	}else{
+    		inject(GenericBusiness.class).create(identifiable);
+    		assertThat("Created", inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier())!=null);
+    	}
+		return identifiable;
+	}
+	public <T extends AbstractIdentifiable> T create(final T identifiable){
+		return create(identifiable, null);
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T extends AbstractIdentifiable> T update(T identifiable){
+	public <T extends AbstractIdentifiable> T update(T identifiable){
 		return (T) inject(GenericBusiness.class).update(identifiable);
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected <T extends AbstractIdentifiable> T delete(T identifiable){
-		return (T) inject(GenericBusiness.class).delete(identifiable);
+	public <T extends AbstractIdentifiable> T delete(final T identifiable,String expectedThrowableMessage){
+		if(expectedThrowableMessage!=null){
+    		new Try(expectedThrowableMessage){ 
+    			private static final long serialVersionUID = -8176804174113453706L;
+    			@Override protected void code() {inject(GenericBusiness.class).delete(identifiable);}
+    		}.execute();
+    	}else{
+    		inject(GenericBusiness.class).delete(identifiable);
+    		assertThat("Deleted", inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier())==null);
+    	}
+		return identifiable;
+	}
+	public <T extends AbstractIdentifiable> T delete(T identifiable){
+		return delete(identifiable,null);
+	}
+	public <T extends AbstractIdentifiable> T delete(Class<T> aClass,String code,String expectedThrowableMessage){
+		T identifiable = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code);
+		assertThat("Found identifiable to delete", identifiable!=null);
+		return delete(identifiable,expectedThrowableMessage);
+	}
+	public <T extends AbstractIdentifiable> T delete(Class<T> aClass,String code){
+		return delete(aClass,code,null);
 	}
 	
 	public <T extends AbstractIdentifiable> void reportBasedOnTemplateFile(Class<T> aClass,Collection<T> collection,Map<String, String[]> map,String reportIdentifier){

@@ -65,11 +65,15 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	
 	@Override
 	public Movement create(Movement movement) {
-		exceptionUtils().exception(movement.getValue()==null, "exception.value.mustnotbenull");
-		exceptionUtils().exception(BigDecimal.ZERO.equals(movement.getValue()), "exception.value.mustnotbezero");
-		exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && !dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier()).isEmpty(), "exception.supportingDocumentIdentifierAlreadyUsed");
+		//exceptionUtils().exception(BigDecimal.ZERO.equals(movement.getValue()), "exception.value.mustnotbezero");
+		if(movement.getCollection().getDocumentIdentifierCountInterval()!=null){
+			exceptionUtils().comparisonBetween(new BigDecimal(dao.countBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier()))
+					, movement.getCollection().getDocumentIdentifierCountInterval(), movement.getCollection().getDocumentIdentifierCountInterval().getName());
+		}
+		//exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && !dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier()).isEmpty(), "exception.supportingDocumentIdentifierAlreadyUsed");
 		MovementAction action = movement.getAction();	
 		if(action!=null){
+			exceptionUtils().comparisonBetween(movement.getValue(), action.getInterval(), action.getName());
 			exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && movement.getValue().signum()==-1, "exception.value.mustbepositive");
 			exceptionUtils().exception(movement.getCollection().getDecrementAction().equals(action) && movement.getValue().signum()==1, "exception.value.mustbenegative");
 			//exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(movement.getValue().abs())>0
@@ -96,7 +100,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		if(Crud.isCreateOrUpdate(crud)){
 			Boolean positive = movement.getValue().signum() == 0 ? null : movement.getValue().signum() == 1 ;
 			BigDecimal sign = new BigDecimal((Boolean.TRUE.equals(positive) ? Constant.EMPTY_STRING:"-")+"1");
-			exceptionUtils().comparison(positive==null || movement.getValue().multiply(sign).signum() <= 0, movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName(), ArithmeticOperator.GT, BigDecimal.ZERO);
+			
+			//TODO has been done upper
+			//exceptionUtils().comparison(positive==null || movement.getValue().multiply(sign).signum() <= 0, movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName(), ArithmeticOperator.GT, BigDecimal.ZERO);
+			
 			if(oldValue!=null){
 				if(Crud.CREATE.equals(crud)){
 					newValue = oldValue.add(movement.getValue());
