@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.ejb.TransactionAttribute;
@@ -561,6 +562,14 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return arguments.getFile();
 	}
 	
+	@Override
+	public File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode, Locale locale) {
+		CreateReportFileArguments<IDENTIFIABLE> createSaleReportFileArguments = new CreateReportFileArguments<IDENTIFIABLE>(identifiable);
+    	createSaleReportFileArguments.setLocale(locale);
+    	createSaleReportFileArguments.setReportTemplate(inject(ReportTemplateDao.class).read(reportTemplateCode));	
+    	return createReportFile(createSaleReportFileArguments);
+	}
+
 	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,CreateReportFileArguments<IDENTIFIABLE> arguments){
 		RootReportProducer reportProducer = arguments.getReportProducer() == null ? AbstractRootReportProducer.DEFAULT : arguments.getReportProducer();
 		REPORT producedReport = reportProducer.produce(reportClass,arguments);

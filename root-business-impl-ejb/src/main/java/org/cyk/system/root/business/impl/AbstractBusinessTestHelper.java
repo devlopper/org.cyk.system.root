@@ -21,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
@@ -54,7 +53,6 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
-import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
@@ -620,11 +618,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	/**/
 	
 	public <IDENTIFIABLE extends AbstractIdentifiable> void createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale,Integer count){
-		CreateReportFileArguments<IDENTIFIABLE> createSaleReportFileArguments = new CreateReportFileArguments<IDENTIFIABLE>(identifiable);
-    	createSaleReportFileArguments.setLocale(locale);
-    	createSaleReportFileArguments.setReportTemplate(inject(ReportTemplateDao.class).read(reportTemplateCode));	
-    	inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(createSaleReportFileArguments);
-    	
+		inject(GenericBusiness.class).createReportFile(identifiable, reportTemplateCode, locale);
     	if(count!=null && count>0){
     		String fileRepresentationTyeCode = reportTemplateCode;
     		FileRepresentationType fileRepresentationType = inject(FileRepresentationTypeDao.class).read(fileRepresentationTyeCode);

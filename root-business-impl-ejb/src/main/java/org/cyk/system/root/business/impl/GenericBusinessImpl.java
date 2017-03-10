@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.ejb.Stateless;
@@ -169,6 +170,11 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	        return (T) use(aClass).find(identifier);
 	    else
 	        return businessBean.load(identifier);
+	}
+	
+	@Override 
+	public <IDENTIFIABLE extends AbstractIdentifiable> void createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale){
+		inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, reportTemplateCode, locale);
 	}
 	
 	@Override
