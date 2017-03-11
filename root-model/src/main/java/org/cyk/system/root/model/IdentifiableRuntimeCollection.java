@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,5 +26,10 @@ public class IdentifiableRuntimeCollection<T> implements Serializable {
 	
 	public Boolean isSynchonizationEnabled(){
 		return Boolean.TRUE.equals(synchonizationEnabled);
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.DEFAULT_STYLE);
 	}
 }

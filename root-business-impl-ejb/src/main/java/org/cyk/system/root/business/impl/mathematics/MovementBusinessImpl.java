@@ -98,8 +98,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		logMessageBuilder.addParameters("collection.code",movement.getCollection().getCode(),"collection.value",oldValue,
 				"movement.value",movement.getValue(),"action",movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName());
 		if(Crud.isCreateOrUpdate(crud)){
-			Boolean positive = movement.getValue().signum() == 0 ? null : movement.getValue().signum() == 1 ;
-			BigDecimal sign = new BigDecimal((Boolean.TRUE.equals(positive) ? Constant.EMPTY_STRING:"-")+"1");
+			//Boolean positive = movement.getValue().signum() == 0 ? null : movement.getValue().signum() == 1 ;
+			//BigDecimal sign = new BigDecimal((Boolean.TRUE.equals(positive) ? Constant.EMPTY_STRING:"-")+"1");
 			
 			//TODO has been done upper
 			//exceptionUtils().comparison(positive==null || movement.getValue().multiply(sign).signum() <= 0, movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName(), ArithmeticOperator.GT, BigDecimal.ZERO);

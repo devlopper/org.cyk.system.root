@@ -23,7 +23,8 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	protected String itemCodeSeparator = ITEM_CODE_SEPARATOR; 
 	
-	@Transient protected Collection<ITEM> collection;//TODO should be replaced by runtime collection
+	@Transient @Deprecated protected Collection<ITEM> collection;//TODO should be replaced by runtime collection
+	@Transient protected IdentifiableRuntimeCollection<ITEM> items = new IdentifiableRuntimeCollection<>();
 	
 	@Transient protected Collection<ITEM> collectionToDelete;
 
@@ -61,9 +62,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	@SuppressWarnings("unchecked")
 	public ITEM add(ITEM item){
-		if(collection==null)
-			collection = new ArrayList<>();
-		collection.add(item);
+		items.getCollection().add(item);
 		((AbstractCollectionItem<AbstractIdentifiable>)item).setCollection(this);
 		return item;
 	}

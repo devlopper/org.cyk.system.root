@@ -58,10 +58,10 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     			i++;
     	}
     	
-    	for(int i=0;i<collection.getCollection().size();){
-    		if( ((List<Contact>)collection.getCollection()).get(i) instanceof PhoneNumber )
-	    		if( ((PhoneNumber)((List<Contact>)collection.getCollection()).get(i)).getNumber().equals(number) )
-	    			((List<Contact>)collection.getCollection()).remove(i);
+    	for(int i=0;i<collection.getItems().getCollection().size();){
+    		if( ((List<Contact>)collection.getItems().getCollection()).get(i) instanceof PhoneNumber )
+	    		if( ((PhoneNumber)((List<Contact>)collection.getItems().getCollection()).get(i)).getNumber().equals(number) )
+	    			((List<Contact>)collection.getItems().getCollection()).remove(i);
 	    		else
 	    			i++;
     		else

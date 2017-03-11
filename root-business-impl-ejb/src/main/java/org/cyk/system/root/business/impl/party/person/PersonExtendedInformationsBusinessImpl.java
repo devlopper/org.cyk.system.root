@@ -22,7 +22,7 @@ public class PersonExtendedInformationsBusinessImpl extends AbstractPersonExtend
 	protected void __load__(PersonExtendedInformations extendedInformations) {
 		super.__load__(extendedInformations);
 		if(extendedInformations.getLanguageCollection()!=null)
-			extendedInformations.getLanguageCollection().setCollection(inject(LanguageCollectionItemBusiness.class)
+			extendedInformations.getLanguageCollection().getItems().setCollection(inject(LanguageCollectionItemBusiness.class)
 				.findByCollection(extendedInformations.getLanguageCollection()));
 	}
 }

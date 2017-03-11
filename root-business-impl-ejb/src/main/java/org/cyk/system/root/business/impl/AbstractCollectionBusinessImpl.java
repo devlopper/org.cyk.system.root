@@ -68,8 +68,8 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	protected ITEM addOrRemove(COLLECTION collection, ITEM item,Boolean add) {
 		if(Boolean.TRUE.equals(add)){
 			Boolean found = Boolean.FALSE;
-			if(collection.getCollection()!=null)
-				for(ITEM index : collection.getCollection())
+			if(collection.getItems().getCollection()!=null)
+				for(ITEM index : collection.getItems().getCollection())
 					if(index == item){
 						found = Boolean.TRUE;
 						break;
@@ -78,45 +78,48 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 				collection.add(item);	
 			}
 		}else{
-			if(collection.getCollection()!=null)
-				collection.getCollection().remove(item);
+			if(collection.getItems().getCollection()!=null)
+				collection.getItems().getCollection().remove(item);
 			collection.addToDelete(item);
 		}
 		return item;
 	}
 
 	@Override
-	public COLLECTION create(COLLECTION collection) {
-		super.create(collection);
-		if(collection.getCollection()!=null){
-			for(ITEM item : collection.getCollection()){
+	protected void afterCreate(COLLECTION collection) {
+		super.afterCreate(collection);
+		if(collection.getItems().getCollection()!=null){
+			for(ITEM item : collection.getItems().getCollection()){
 				item.setCollection(collection);
 				item = createItem(item);
 			}
 		}
-		return collection;
 	}
-	
+
 	@Override
-	public COLLECTION update(COLLECTION collection) {
-		if(collection.getCollection()!=null)
-			for(ITEM item : collection.getCollection()){
-				getItemBusiness().update(item);
-			}
+	protected void beforeUpdate(COLLECTION collection) {
+		super.beforeUpdate(collection);
+		if(collection.getItems().getSynchonizationEnabled()==null || collection.getItems().isSynchonizationEnabled()){
+			if(collection.getItems().getCollection()!=null){
+				for(ITEM item : collection.getItems().getCollection()){
+					getItemBusiness().update(item);
+				}
+			}	
+		}
+		
 		if(collection.getCollectionToDelete()!=null)
 			for(ITEM item : collection.getCollectionToDelete()){
 				getItemBusiness().delete(item);
 			}
-		return super.update(collection);
 	}
-	
+
 	@Override
-	public COLLECTION delete(COLLECTION collection) {
+	protected void beforeDelete(COLLECTION collection) {
+		super.beforeDelete(collection);
 		for(ITEM item : getItemDao().readByCollection(collection)){
 			item.setCollection(null);
 			getItemBusiness().delete(item);
 		}
-		return super.delete(collection);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -134,6 +137,6 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	}
 	
 	protected void __load__(COLLECTION collection) {
-		collection.setCollection(getItemDao().readByCollection(collection));
+		collection.getItems().setCollection(getItemDao().readByCollection(collection));
 	}
 }

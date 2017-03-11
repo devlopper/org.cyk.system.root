@@ -306,11 +306,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override
 	public IDENTIFIABLE update(IDENTIFIABLE identifiable) {
 		beforeUpdate(identifiable);
-		IDENTIFIABLE newObject = dao.update(identifiable);
+		//IDENTIFIABLE newObject = dao.update(identifiable);
+		dao.update(identifiable);
 	    if(identifiable.getGlobalIdentifier()!=null)
 	    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
 	    afterUpdate(identifiable);
-		return newObject;
+		//return newObject; We might lost some informations by returning the new managed object. better to keep the old one
+		return identifiable;
 	}
 	
 	protected void afterUpdate(IDENTIFIABLE identifiable){
@@ -567,6 +569,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		CreateReportFileArguments<IDENTIFIABLE> createSaleReportFileArguments = new CreateReportFileArguments<IDENTIFIABLE>(identifiable);
     	createSaleReportFileArguments.setLocale(locale);
     	createSaleReportFileArguments.setReportTemplate(inject(ReportTemplateDao.class).read(reportTemplateCode));	
+    	Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers =  inject(FileIdentifiableGlobalIdentifierDao.class)
+    			.readByIdentifiableGlobalIdentifier(identifiable);
+    	if(fileIdentifiableGlobalIdentifiers.size()==1)
+    		createSaleReportFileArguments.setFile(fileIdentifiableGlobalIdentifiers.iterator().next().getFile());
     	return createReportFile(createSaleReportFileArguments);
 	}
 
