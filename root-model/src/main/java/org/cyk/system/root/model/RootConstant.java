@@ -3,6 +3,7 @@ package org.cyk.system.root.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.Constant;
@@ -294,6 +295,13 @@ public interface RootConstant {
 			public static String METRIC_VALUE_BUSINESS = "metricValueBusiness";
 			public static String VALUE_BUSINESS = "valueBusiness";
 			public static String IS_DRAFT = "isDraft";
+		}
+		
+		public static class ReportTemplate implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static Locale LOCALE = Locale.FRENCH;
+			
 		}
 		
 	}

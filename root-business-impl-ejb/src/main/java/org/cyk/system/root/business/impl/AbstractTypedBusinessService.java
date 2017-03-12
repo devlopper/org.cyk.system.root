@@ -328,8 +328,20 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	protected void beforeDelete(IDENTIFIABLE identifiable){
 		inject(ValidationPolicy.class).validateDelete(identifiable);
+		deleteFileIdentifiableGlobalIdentifier(identifiable);
 		beforeDelete(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.DELETE);
+		
+		
+	}
+	
+	protected void deleteFileIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
+		if(identifiable instanceof FileIdentifiableGlobalIdentifier){
+			
+		}else{
+			Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
+			inject(FileIdentifiableGlobalIdentifierBusiness.class).delete(fileIdentifiableGlobalIdentifiers);	
+		}
 	}
 	
 	protected void afterDelete(IDENTIFIABLE identifiable){

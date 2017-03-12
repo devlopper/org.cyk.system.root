@@ -92,13 +92,13 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 
 	@Override
 	protected void afterCreate(COLLECTION collection) {
-		super.afterCreate(collection);
 		if(collection.getItems().getCollection()!=null){
 			for(ITEM item : collection.getItems().getCollection()){
 				item.setCollection(collection);
 				item = createItem(item);
 			}
 		}
+		super.afterCreate(collection);
 	}
 
 	@Override
