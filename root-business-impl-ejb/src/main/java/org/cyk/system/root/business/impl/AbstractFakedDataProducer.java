@@ -16,6 +16,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import lombok.Getter;
 import lombok.Setter;
 
+//TODO Faked to be removed from class name
 public abstract class AbstractFakedDataProducer extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 6589529849414444956L;
@@ -46,6 +47,11 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
     		doBusiness(listener);
 	}
 	/**/
+	
+	@SuppressWarnings("unchecked")
+	protected <T extends AbstractIdentifiable> void create(Collection<T> objects){
+        genericBusiness.create((Collection<AbstractIdentifiable>) objects);
+    }
 	
 	@Deprecated
 	public <T extends AbstractEnumeration> T createEnumeration(Class<T> aClass,String code, String name) {

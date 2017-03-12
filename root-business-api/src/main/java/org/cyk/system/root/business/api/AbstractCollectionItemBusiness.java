@@ -16,6 +16,8 @@ public interface AbstractCollectionItemBusiness<ITEM extends AbstractCollectionI
 	
 	ITEM instanciateOne(COLLECTION collection);
 	ITEM instanciateOne(COLLECTION collection,Boolean addable);
+	ITEM instanciateOne(COLLECTION collection,String code,String name,Boolean addable);
+	ITEM instanciateOne(COLLECTION collection,String code,String name);
 	ITEM instanciateOneRandomly(COLLECTION collection);
 	
 	ITEM find(String collectionCode,String relativeCode);

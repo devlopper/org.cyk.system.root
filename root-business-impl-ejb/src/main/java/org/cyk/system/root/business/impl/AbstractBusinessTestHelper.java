@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -637,4 +638,49 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		return RootBusinessLayer.getInstance();
 	}
 	
+	/**/
+	
+	public static class TestCase extends AbstractBean implements Serializable {
+
+		private static final long serialVersionUID = -6026836126124339547L;
+
+		private AbstractBusinessTestHelper helper;
+		private List<AbstractIdentifiable> identifiables;
+		
+		public TestCase(AbstractBusinessTestHelper helper) {
+			super();
+			this.helper = helper;
+		}
+		
+		public void add(AbstractIdentifiable identifiable){
+			if(identifiables==null)
+				identifiables = new ArrayList<>();
+			identifiables.add(identifiable);
+		}
+
+		public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
+			T created = helper.create(identifiable,expectedThrowableMessage);
+			add(created);
+			return created;
+		}
+		
+		public <T extends AbstractIdentifiable> T create(final T identifiable){
+			return create(identifiable,null);
+		}
+		
+		public void clean(){
+			if(identifiables!=null){
+				Collections.reverse(identifiables);
+				for(AbstractIdentifiable identifiable : identifiables)
+					helper.delete(identifiable.getClass(), identifiable.getCode()); //inject(GenericBusiness.class).delete(identifiable);
+			}
+		}
+		
+	}
+
+	public TestCase instanciateTestCase(){
+		TestCase testCase = new TestCase(this);
+		
+		return testCase;
+	}
 }

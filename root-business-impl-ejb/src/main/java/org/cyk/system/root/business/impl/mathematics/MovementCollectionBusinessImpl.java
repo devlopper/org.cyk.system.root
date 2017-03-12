@@ -32,7 +32,7 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MovementCollection instanciateOne(String code,String incrementActionName,String decrementActionName) {
 		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, inject(IntervalBusiness.class)
-				.instanciateOne(null, code, "0", null));
+				.instanciateOne(code, "0"));
 		movementCollection.setIncrementAction(inject(MovementActionBusiness.class)
 				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+RootConstant.Code.generateFromString(incrementActionName), incrementActionName));
 		movementCollection.setDecrementAction(inject(MovementActionBusiness.class)

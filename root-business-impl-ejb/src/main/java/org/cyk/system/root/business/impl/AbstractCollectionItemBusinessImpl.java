@@ -75,11 +75,22 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	
 	@SuppressWarnings("unchecked")
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public ITEM instanciateOne(COLLECTION collection,Boolean addable) {
-		ITEM item = instanciateOne();
+	public ITEM instanciateOne(COLLECTION collection,String code,String name,Boolean addable) {
+		ITEM item = instanciateOne(code,name);
+		item.setCascadeOperationToMaster(Boolean.TRUE);
 		if(Boolean.TRUE.equals(addable))
 			((AbstractCollectionBusiness<COLLECTION, ITEM>)inject(BusinessInterfaceLocator.class).injectTyped(getCollectionClass())).add(collection, item);
 		return item;
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ITEM instanciateOne(COLLECTION collection,Boolean addable) {
+		return instanciateOne(collection,null,null,addable);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ITEM instanciateOne(COLLECTION collection,String code,String name) {
+		return instanciateOne(collection,code,name,Boolean.TRUE);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

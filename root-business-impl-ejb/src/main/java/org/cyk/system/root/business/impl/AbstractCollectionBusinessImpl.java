@@ -13,6 +13,7 @@ import org.cyk.system.root.persistence.api.AbstractCollectionDao;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.LogMessage;
 
 public abstract class AbstractCollectionBusinessImpl<COLLECTION extends AbstractCollection<ITEM>,ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionDao<COLLECTION, ITEM>,ITEM_DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,ITEM_BUSINESS extends AbstractCollectionItemBusiness<ITEM,COLLECTION>> extends AbstractEnumerationBusinessImpl<COLLECTION, DAO> implements AbstractCollectionBusiness<COLLECTION,ITEM>,Serializable {
 
@@ -66,6 +67,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	}
 	
 	protected ITEM addOrRemove(COLLECTION collection, ITEM item,Boolean add) {
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder(Boolean.TRUE.equals(add) ? "Add":"Remove", item.getClass().getSimpleName());
 		if(Boolean.TRUE.equals(add)){
 			Boolean found = Boolean.FALSE;
 			if(collection.getItems().getCollection()!=null)
@@ -74,14 +76,17 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 						found = Boolean.TRUE;
 						break;
 					}
+			logMessageBuilder.addParameters("found",found);
 			if(Boolean.FALSE.equals(found)){
-				collection.add(item);	
+				collection.add(item);
+				logMessageBuilder.addParameters("item",item);
 			}
 		}else{
 			if(collection.getItems().getCollection()!=null)
 				collection.getItems().getCollection().remove(item);
 			collection.addToDelete(item);
 		}
+		logTrace(logMessageBuilder);
 		return item;
 	}
 
