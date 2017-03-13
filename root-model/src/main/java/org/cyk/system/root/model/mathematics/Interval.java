@@ -79,6 +79,8 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	public static final String COLUMN_HIGH_VALUE = FIELD_HIGH+"_"+IntervalExtremity.FIELD_VALUE;
 	public static final String COLUMN_HIGH_EXCLUDED = FIELD_HIGH+"_"+IntervalExtremity.FIELD_EXCLUDED;
 	
+	public static final String FIELD_VALUE = "value";
+	
 	@Override
 	public String getLogMessage() {
 		return String.format(LOG_FORMAT, Boolean.TRUE.equals(low.getExcluded()) ? "]":"[",low.getValue()==null ? "<-" : low.getValue()

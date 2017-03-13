@@ -9,6 +9,8 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 public interface IntervalBusiness extends AbstractCollectionItemBusiness<Interval,IntervalCollection> {
     
     Interval findByCollectionByValue(IntervalCollection collection,BigDecimal value,Integer scale);
+    Interval findByCollectionByValue(String collectionCode,BigDecimal value,Integer scale);
+    Interval findByCollectionByValue(String collectionCode,String value,String scale);
     
     Interval instanciateOne(IntervalCollection collection,String code,String low,String high);
     

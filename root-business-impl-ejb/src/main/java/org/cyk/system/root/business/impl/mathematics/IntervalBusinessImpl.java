@@ -53,6 +53,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		super.__instanciateOne__(values, listener);
 		set(listener.getSetListener().setIndex(15), Interval.FIELD_LOW,IntervalExtremity.FIELD_VALUE);
 		set(listener.getSetListener(), Interval.FIELD_HIGH,IntervalExtremity.FIELD_VALUE);
+		set(listener.getSetListener(), Interval.FIELD_VALUE);
 		return listener.getInstance();
 	}
 	
@@ -84,7 +85,17 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 			if(Boolean.TRUE.equals(contains(interval, value, scale)))
 				return interval;
 		return null;
-	}  
+	} 
+	
+	@Override
+	public Interval findByCollectionByValue(String collectionCode, BigDecimal value, Integer scale) {
+		return findByCollectionByValue(inject(IntervalCollectionDao.class).read(collectionCode), value, scale);
+	}
+
+	@Override
+	public Interval findByCollectionByValue(String collectionCode, String value, String scale) {
+		return findByCollectionByValue(inject(IntervalCollectionDao.class).read(collectionCode), new BigDecimal(value), Integer.parseInt(scale));
+	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Boolean isLowerEqualsToHigher(Interval interval) {
@@ -179,5 +190,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
     	return interval.getLow().getValue()==null ? null 
     			: Boolean.FALSE.equals(interval.getLow().getExcluded()) ? interval.getLow().getValue() : interval.getLow().getValue().subtract(BigDecimal.ONE);
     }
+
+	
 
 }

@@ -3,6 +3,7 @@ package org.cyk.system.root.model.file.report;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifierReport;
 import org.cyk.system.root.model.time.PeriodReport;
@@ -19,9 +20,6 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 
 	protected GlobalIdentifierReport globalIdentifier = new GlobalIdentifierReport();
 	
-	protected MODEL previous;
-	protected MODEL next;
-	
 	public void setSource(Object source){
 		super.setSource(source);
 		if(source!=null)
@@ -31,6 +29,7 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 	@Override
 	public void generate() {
 		globalIdentifier.generate();
+		text = RandomStringUtils.randomAlphanumeric(20);
 	}
 
 	public String getBirthLocation() {

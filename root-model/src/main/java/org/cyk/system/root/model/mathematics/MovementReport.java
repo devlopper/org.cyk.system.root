@@ -21,6 +21,8 @@ public class MovementReport extends AbstractIdentifiableReport<MovementReport> i
 	@Override
 	public void setSource(Object source) {
 		super.setSource(source);
+		supportingDocumentProvider = ((Movement)source).getSupportingDocumentProvider();
+		supportingDocumentIdentifier = ((Movement)source).getSupportingDocumentIdentifier();
 		_setValue(((Movement)source).getValue());
 		senderOrReceiverPerson.setSource(((Movement)source).getSenderOrReceiverPerson());
 	}
