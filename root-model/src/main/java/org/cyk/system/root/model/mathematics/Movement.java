@@ -31,14 +31,9 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	@Column private String supportingDocumentIdentifier;
 	
 	/**
-	 * The party to whom value goes or from whom value comes
+	 * The person to whom value goes or from whom value comes
 	 */
-	private Person senderOrReceiverParty;
-	
-	/**
-	 * Informations about the party in case it does not belongs to the system 
-	 */
-	private String senderOrReceiverPartyInformations;//TODO we can create person and use other details
+	private Person senderOrReceiverPerson;
 	
 	/**/
 	
@@ -55,5 +50,6 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_SUPPORTING_DOCUMENT_PROVIDER = "supportingDocumentProvider";
 	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";
+	public static final String FIELD_SENDER_OR_RECEIVER_PERSON = "senderOrReceiverPerson";
 		
 }
