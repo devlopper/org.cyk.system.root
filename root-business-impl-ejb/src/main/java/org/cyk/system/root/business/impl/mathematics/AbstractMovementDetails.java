@@ -2,7 +2,6 @@ package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.impl.AbstractCollectionItemDetails;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
@@ -18,7 +17,7 @@ import lombok.Setter;
 public abstract class AbstractMovementDetails<ITEM extends AbstractIdentifiable,COLLECTION extends AbstractIdentifiable> extends AbstractCollectionItemDetails<ITEM,COLLECTION> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText protected String action,value,supportingDocumentIdentifier;
+	@Input @InputText protected String action,value;
 	
 	public AbstractMovementDetails(ITEM item) {
 		super(item);
@@ -26,7 +25,6 @@ public abstract class AbstractMovementDetails<ITEM extends AbstractIdentifiable,
 			action = getMovement().getAction().getName();
 		
 		value = formatNumber(getMovement().getValue());
-		supportingDocumentIdentifier = StringUtils.defaultString(getMovement().getSupportingDocumentIdentifier());
 	}
 	
 	protected abstract Movement getMovement();
@@ -35,8 +33,6 @@ public abstract class AbstractMovementDetails<ITEM extends AbstractIdentifiable,
 	
 	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_VALUE = "value";
-	public static final String FIELD_SUPPORTING_DOCUMENT_PROVIDER = "supportingDocumentProvider";
-	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";
 	
 	/**/
 	

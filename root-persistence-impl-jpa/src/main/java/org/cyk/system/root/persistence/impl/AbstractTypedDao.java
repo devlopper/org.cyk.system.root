@@ -32,7 +32,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete,readByGlobalIdentifier
 		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
 		,readByGlobalIdentifierSearchCriteriaCodeExcluded,countByGlobalIdentifierByCodeSearchCriteria
-		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria,readByCriteriaCodeExcluded,countByCriteriaCodeExcluded;
+		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria,readByCriteriaCodeExcluded,countByCriteriaCodeExcluded
+		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -81,6 +82,9 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierOrderNumber()))
 			registerNamedQuery(readByGlobalIdentifierOrderNumber, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.orderNumber = :orderNumber");
 		
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierSupportingDocumentCode()))
+			registerNamedQuery(readByGlobalIdentifierSupportingDocumentCode, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.supportingDocument.code = :supportingDocumentCode");
+		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByClasses()))
 			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy(AbstractIdentifiable.FIELD_IDENTIFIER,Boolean.TRUE));
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByNotClasses()))
@@ -112,7 +116,15 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		// record.globalIdentifier.code NOT IN :exceludedCodes OR
 	}
 	
+	@Override
+	public Collection<IDENTIFIABLE> readByGlobalIdentifierSupportingDocumentCode(String supportingDocumentIdentifier) {
+		return null;
+	}
 	
+	@Override
+	public Long countByGlobalIdentifierSupportingDocumentCode(String supportingDocumentIdentifier) {
+		return null;
+	}
 	
 	public Configuration getConfiguration(){
 		return Configuration.get(this.getClass());
@@ -358,6 +370,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		private Boolean readByGlobalIdentifierCode = Boolean.TRUE;
 		private Boolean readByGlobalIdentifierCodes = Boolean.TRUE;
 		private Boolean readByGlobalIdentifierOrderNumber = Boolean.TRUE;
+		private Boolean readByGlobalIdentifierSupportingDocumentCode = Boolean.FALSE;
 		
 		private Boolean readByClasses = Boolean.FALSE;
 		private Boolean readByNotClasses = Boolean.FALSE;

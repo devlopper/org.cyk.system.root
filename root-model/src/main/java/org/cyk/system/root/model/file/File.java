@@ -40,11 +40,24 @@ public class File extends AbstractIdentifiable implements Serializable{
 	private URI uri;//in case we need to point to a file outside the database
 	
 	/**
+	 * Text representation of the bytes. This enable lookup into text
+	 */
+	private String text;
+	
+	/**
 	 * Multipurpose Internet Mail Extension
 	 */
 	private String mime;
 	
 	@ManyToOne private FileRepresentationType representationType;
+	
+	/** Others GED informations **/
+	
+	private String generator;
+	private String sender;
+	private String contentWriter;
+	
+	/****/
 	
 	@Override
 	public String toString() {

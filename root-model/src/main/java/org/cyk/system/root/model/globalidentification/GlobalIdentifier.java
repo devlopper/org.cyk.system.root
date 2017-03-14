@@ -55,6 +55,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 */
 	
 	@OneToOne private File image;
+	@OneToOne private File supportingDocument;
 	
 	private String code;
 	

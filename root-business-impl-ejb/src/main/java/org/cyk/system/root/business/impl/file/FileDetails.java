@@ -15,13 +15,29 @@ import lombok.Setter;
 public class FileDetails extends AbstractOutputDetails<File> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String extension,uniformResourceLocator,mime;
+	@Input @InputText private String extension,uniformResourceLocator,mime,generator,sender,contentWriter;
+	
+	public FileDetails() {
+		this(null);
+	}
 	
 	public FileDetails(File file) {
 		super(file);
-		uniformResourceLocator = file.getUri() == null ? Constant.EMPTY_STRING : file.getUri().toString();
-		extension = file.getExtension();
-		mime = file.getMime();
+	}
+	
+	@Override
+	public void setMaster(File master) {
+		super.setMaster(master);
+		if(master==null){
+			
+		}else{
+			uniformResourceLocator = master.getUri() == null ? Constant.EMPTY_STRING : master.getUri().toString();
+			extension = master.getExtension();
+			mime = master.getMime();	
+			generator = master.getGenerator();
+			sender = master.getSender();
+			contentWriter = master.getContentWriter();
+		}
 	}
 	
 	/**/

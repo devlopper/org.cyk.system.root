@@ -18,6 +18,9 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
     Collection<IDENTIFIABLE> readByNotClasses(Collection<Class<?>> classes);
     Long countByNotClasses(Collection<Class<?>> classes);
     
+    Collection<IDENTIFIABLE> readByGlobalIdentifierSupportingDocumentCode(String supportingDocumentCode);
+  	Long countByGlobalIdentifierSupportingDocumentCode(String supportingDocumentCode);
+    
     /**/
     
     <T extends IDENTIFIABLE> Collection<T> readByClass(Class<T> aClass);

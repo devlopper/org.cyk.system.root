@@ -220,6 +220,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	protected void beforeCreate(IDENTIFIABLE identifiable){
 		setAutoSettedProperties(identifiable);
 	    inject(ValidationPolicy.class).validateCreate(identifiable);
+	    createIfNotIdentified(identifiable.getSupportingDocument());
 	    beforeCreate(getListeners(), identifiable);
 	    beforeCrud(identifiable, Crud.CREATE);
 	}

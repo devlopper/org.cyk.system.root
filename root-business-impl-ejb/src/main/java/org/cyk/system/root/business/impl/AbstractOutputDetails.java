@@ -32,6 +32,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	@Input @InputFile (extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) protected File image;
 	@Input @InputText protected String code,name,abbreviation,description,weight,orderNumber,otherDetails;
 	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod;
+	//@IncludeInputs(layout=Layout.VERTICAL) protected FileDetails supportingDocument;
 	
 	/**
 	 * The following fields are used to dynamically extend
@@ -58,6 +59,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 			weight = formatNumber(this.master.getWeight());
 			orderNumber = formatNumber(this.master.getOrderNumber());
 			otherDetails = this.master.getOtherDetails();
+			//getSupportingDocument().setMaster(this.master.getSupportingDocument());
 		}
 	}
 	
@@ -66,6 +68,12 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 			existencePeriod = new PeriodDetails();
 		return existencePeriod;
 	}
+	
+	/*public FileDetails getSupportingDocument(){
+		if(supportingDocument == null)
+			supportingDocument = new FileDetails();
+		return supportingDocument;
+	}*/
 	
 	/**/
 	

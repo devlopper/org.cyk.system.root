@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.cyk.system.root.model.file.FileReport;
 import org.cyk.system.root.model.time.PeriodReport;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 import org.cyk.utility.common.generator.RandomDataProvider;
@@ -18,6 +19,7 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 	
 	private String identifier,creationDate,createdBy,code,name,otherDetails,birthLocation,deathLocation,owner,weight;
 	private PeriodReport existencePeriod = new PeriodReport();
+	private FileReport supportingDocument = new FileReport();
 	private InputStream image;
 	private Boolean generateImage=Boolean.FALSE;
 	
@@ -31,6 +33,7 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 		weight = format(((GlobalIdentifier)source).getWeight());
 		creationDate = ((GlobalIdentifier)source).getCreationDate().toString();
 		existencePeriod.setSource(((GlobalIdentifier)source).getExistencePeriod());
+		supportingDocument.setSource(((GlobalIdentifier)source).getSupportingDocument());
 	}
 	
 	@Override
@@ -42,6 +45,7 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 		name = RandomStringUtils.randomAlphanumeric(6);
 		weight = RandomStringUtils.randomNumeric(2);
 		otherDetails = provider.randomWord(RandomDataProvider.WORD_LOCATION, 10, 20);
+		supportingDocument.generate();
 	}
 
 

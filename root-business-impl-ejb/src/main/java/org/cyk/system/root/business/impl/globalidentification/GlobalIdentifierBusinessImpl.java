@@ -74,6 +74,10 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 			inject(FileBusiness.class).delete(globalIdentifier.getImage());
 			globalIdentifier.setImage(null);
 		}
+		if(inject(GenericBusiness.class).isNotIdentified(globalIdentifier.getSupportingDocument())){
+			inject(FileBusiness.class).delete(globalIdentifier.getSupportingDocument());
+			globalIdentifier.setSupportingDocument(null);
+		}
 		/*if(globalIdentifier.getImage()!=null){
 			//inject(FileBusiness.class).delete(globalIdentifier.getImage());
 			globalIdentifier.setImage(null);

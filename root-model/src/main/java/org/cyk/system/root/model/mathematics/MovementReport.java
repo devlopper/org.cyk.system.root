@@ -14,15 +14,13 @@ public class MovementReport extends AbstractIdentifiableReport<MovementReport> i
 
 	private static final long serialVersionUID = 2972654088041307426L;
 
-	private String value,action,supportingDocumentIdentifier,supportingDocumentProvider;	
+	private String value,action;	
 	private String valueInWords;
 	private PersonReport senderOrReceiverPerson = new PersonReport();
 	
 	@Override
 	public void setSource(Object source) {
 		super.setSource(source);
-		supportingDocumentProvider = ((Movement)source).getSupportingDocumentProvider();
-		supportingDocumentIdentifier = ((Movement)source).getSupportingDocumentIdentifier();
 		_setValue(((Movement)source).getValue());
 		senderOrReceiverPerson.setSource(((Movement)source).getSenderOrReceiverPerson());
 	}
@@ -42,8 +40,6 @@ public class MovementReport extends AbstractIdentifiableReport<MovementReport> i
 	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_VALUE_IN_WORDS = "valueInWords";
-	public static final String FIELD_SUPPORTING_DOCUMENT_PROVIDER = "supportingDocumentProvider";
-	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON = "senderOrReceiverPerson";
 	
 }

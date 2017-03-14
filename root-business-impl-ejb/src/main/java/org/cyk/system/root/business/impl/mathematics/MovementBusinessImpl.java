@@ -12,10 +12,12 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
@@ -52,12 +54,17 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	public Movement instanciateOne(String collectionCode, String value, String supportingDocumentProvider,String supportingDocumentIdentifier, String actionCode) {
+	public Movement instanciateOne(String collectionCode, String value,String supportingDocumentCode,String supportingDocumentPhysicalCreator,String supportingDocumentContentWriter, String actionCode) {
 		MovementCollection movementCollection = inject(MovementCollectionDao.class).read(collectionCode);
 		Movement movement = instanciateOne(movementCollection);
 		movement.setValue(commonUtils.getBigDecimal(value));
-		movement.setSupportingDocumentProvider(supportingDocumentProvider);
-		movement.setSupportingDocumentIdentifier(supportingDocumentIdentifier);
+		/*if(StringUtils.isNotBlank(supportingDocumentCode)){
+			File supportingDocument = inject(FileBusiness.class).instanciateOne();
+			supportingDocument.setCode(supportingDocumentCode);
+			supportingDocument.setPhysicalCreator(supportingDocumentPhysicalCreator);
+			supportingDocument.setContentWriter(supportingDocumentContentWriter);
+			movement.setSupportingDocument(supportingDocument);
+		}*/
 		if(StringUtils.isNotBlank(actionCode))
 			movement.setAction(inject(MovementActionDao.class).read(actionCode));
 		return movement;
@@ -66,10 +73,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	public Movement create(Movement movement) {
 		//exceptionUtils().exception(BigDecimal.ZERO.equals(movement.getValue()), "exception.value.mustnotbezero");
-		if(movement.getCollection().getDocumentIdentifierCountInterval()!=null){
-			exceptionUtils().comparisonBetween(new BigDecimal(dao.countBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier()))
+		/*if(movement.getCollection().getDocumentIdentifierCountInterval()!=null){
+			exceptionUtils().comparisonBetween(new BigDecimal(dao.countByGlobalIdentifierSupportingDocumentCode(movement.getSupportingDocument().getCode()))
 					, movement.getCollection().getDocumentIdentifierCountInterval(), movement.getCollection().getDocumentIdentifierCountInterval().getName());
-		}
+		}*/
 		//exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && !dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier()).isEmpty(), "exception.supportingDocumentIdentifierAlreadyUsed");
 		MovementAction action = movement.getAction();	
 		if(action!=null){
@@ -138,6 +145,11 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	public Movement delete(Movement movement) {
 		updateCollection(movement,Crud.DELETE);
 		return super.delete(movement);
+	}
+	
+	@Override
+	protected void deleteFileIdentifiableGlobalIdentifier(Movement identifiable) {
+		
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

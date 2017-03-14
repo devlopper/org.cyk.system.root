@@ -73,7 +73,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	@Override
 	protected void beforeCreate(File file) {
 		super.beforeCreate(file);
-		exceptionUtils().exception(file.getBytes()==null, "file.bytes.required");
+		//exceptionUtils().exception(file.getBytes()==null, "file.bytes.required");
 	}
 	
 	@Override

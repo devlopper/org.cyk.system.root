@@ -27,13 +27,12 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	@ManyToOne @JoinColumn(name="maction") private MovementAction action;	
 	@Column(name="mvalue",precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
 	
-	@Column private String supportingDocumentProvider;
-	@Column private String supportingDocumentIdentifier;
-	
 	/**
 	 * The person to whom value goes or from whom value comes
 	 */
-	private Person senderOrReceiverPerson;
+	@ManyToOne private Person senderOrReceiverPerson;
+	
+	private String senderOrReceiverPersonAsString;
 	
 	/**/
 	
@@ -48,8 +47,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_VALUE = "value";
-	public static final String FIELD_SUPPORTING_DOCUMENT_PROVIDER = "supportingDocumentProvider";
-	public static final String FIELD_SUPPORTING_DOCUMENT_IDENTIFIER = "supportingDocumentIdentifier";
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON = "senderOrReceiverPerson";
+	public static final String FIELD_SENDER_OR_RECEIVER_PERSON_AS_STRING = "senderOrReceiverPersonAsString";
 		
 }

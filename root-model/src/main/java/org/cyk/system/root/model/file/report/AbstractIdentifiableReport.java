@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.FileReport;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifierReport;
 import org.cyk.system.root.model.time.PeriodReport;
 import org.cyk.utility.common.generator.AbstractGeneratable;
@@ -80,6 +81,8 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 		return globalIdentifier.getDeathDate();
 	}
 	
-	
+	public FileReport getSupportingDocument() {
+		return globalIdentifier.getSupportingDocument();
+	}
 	
 }
