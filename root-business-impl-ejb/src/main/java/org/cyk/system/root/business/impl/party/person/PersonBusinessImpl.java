@@ -115,7 +115,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return person;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Person instanciateOneRandomly() {
 		Boolean male = RandomDataProvider.getInstance().randomBoolean();
 		RandomPerson randomPerson = Boolean.TRUE.equals(male)?RandomDataProvider.getInstance().getMale()

@@ -24,6 +24,7 @@ import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.AbstractIdentifiableReport;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
+import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ContactCollectionReport;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -53,6 +54,7 @@ import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifia
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.cdi.BeanAdapter;
 
 public abstract class AbstractRootReportProducer extends AbstractRootBusinessBean implements RootReportProducer,Serializable {
@@ -369,14 +371,47 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		Collection<Listener> COLLECTION = new ArrayList<>();
 		
 		/**/
+		
+		void process(AbstractReportTemplateFile<?> report);
+		void processLabelValueCollection(AbstractIdentifiableReport<?> identifiable,LabelValueCollectionReport labelValueCollection);
+		
 		public static class Adapter extends BeanAdapter implements Serializable,Listener {
 			private static final long serialVersionUID = 1L;
 			
 			/**/
+			
+			@Override
+			public void process(AbstractReportTemplateFile<?> report) {	}
+			
+			@Override
+			public void processLabelValueCollection(AbstractIdentifiableReport<?> identifiable,LabelValueCollectionReport labelValueCollection) { }
+			
+			/**/
+			
+			public static <T extends Listener> void process(Collection<T> listeners,final AbstractReportTemplateFile<?> report){
+				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<T>() {
+					@Override
+					public void execute(T listener) {
+						listener.process(report);
+					}
+				});
+			}
+			
+			public static <T extends Listener> void processLabelValueCollection(Collection<T> listeners,@SuppressWarnings("rawtypes") final AbstractIdentifiableReport identifiable,final LabelValueCollectionReport labelValueCollection){
+				ListenerUtils.getInstance().execute(listeners, new ListenerUtils.VoidMethod<T>() {
+					@Override
+					public void execute(T listener) {
+						listener.processLabelValueCollection(identifiable,labelValueCollection);
+					}
+				});
+			}
+			
 			public static class Default extends Listener.Adapter implements Serializable {
 				private static final long serialVersionUID = 1L;
 				
 			}
+
+			
 		}
 	}
 	

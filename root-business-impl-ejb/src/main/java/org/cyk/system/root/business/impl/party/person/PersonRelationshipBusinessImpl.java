@@ -88,5 +88,15 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 		Collection<PersonRelationship> collection = findByType(personRelationships, type);
 		exceptionUtils().exception(collection.size()>1, "toomuch.PersonRelationship.found");
 		return collection.isEmpty() ? null : collection.iterator().next();
+	}
+
+	
+	@Override
+	public PersonRelationship instanciateOne(String person1Code,String personRelationshipTypeCode, String person2Code) {
+		PersonRelationship personRelationship = instanciateOne();
+		personRelationship.setPerson1(read(Person.class, person1Code));
+		personRelationship.setType(read(PersonRelationshipType.class, personRelationshipTypeCode));
+		personRelationship.setPerson2(read(Person.class, person2Code));
+		return personRelationship;
 	} 
 }

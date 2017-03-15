@@ -58,7 +58,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return actors;
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ACTOR instanciateOneRandomly() {
 		ACTOR actor = super.instanciateOne();
 		actor.setPerson(inject(PersonBusiness.class).instanciateOneRandomly());
@@ -68,6 +68,12 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return actor;
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public ACTOR instanciateOneRandomly(String code) {
+		ACTOR actor = super.instanciateOneRandomly(code);
+		actor.getPerson().setCode(code);
+		return actor;
+	}
 
 	@Override
 	protected void beforeCreate(ACTOR anActor) {
@@ -98,7 +104,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		actor.setPerson(null);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ACTOR findByPerson(Person person) {
 		return dao.readByPerson(person);
 	}
@@ -155,7 +161,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		return actors;
 	}*/
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<ACTOR> findByCriteria(SEARCH_CRITERIA criteria) {
 		if(StringUtils.isBlank(criteria.getPerson().getName().getValue())){
     		return findAll(criteria.getReadConfig());
@@ -164,7 +170,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
     	return dao.readByCriteria(criteria);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Long countByCriteria(SEARCH_CRITERIA criteria) {
 		if(StringUtils.isBlank(criteria.getPerson().getName().getValue()))
     		return countAll();

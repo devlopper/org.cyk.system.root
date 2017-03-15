@@ -19,5 +19,6 @@ public interface PersonRelationshipBusiness extends TypedBusiness<PersonRelation
 	
 	Collection<PersonRelationship> findByPerson2ByTypes(Collection<Person> persons,Collection<PersonRelationshipType> types);
 	Collection<PersonRelationship> findByPerson2ByType(Person person,PersonRelationshipType type);
+	PersonRelationship instanciateOne(String person1Code,String personRelationshipTypeCode,String person2Code);
  
 }
