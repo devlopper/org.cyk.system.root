@@ -15,6 +15,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 //TODO Faked to be removed from class name
 public abstract class AbstractFakedDataProducer extends AbstractBean implements Serializable {
@@ -26,7 +27,7 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	@Inject protected GenericBusiness genericBusiness;
 	protected Listener listener;
 	
-	@Getter @Setter protected Boolean doBusiness = Boolean.FALSE;
+	@Accessors(chain=true) @Getter @Setter protected Boolean doBusiness = Boolean.FALSE;
 	
 	@Override
 	protected void initialisation() {
@@ -46,6 +47,9 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
     	if(Boolean.TRUE.equals(doBusiness))
     		doBusiness(listener);
 	}
+	
+	
+	
 	/**/
 	
 	@SuppressWarnings("unchecked")

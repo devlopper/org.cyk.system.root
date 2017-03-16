@@ -86,6 +86,7 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 
 	@Override
 	public Object derive(Value value,Derive listener) {
+		Object oldValue = value.get();
 		if(value.isDerived()){
 			Script script = value.getProperties().getDerivationScript();
 			script.getInputs().clear();
@@ -96,6 +97,7 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 			}
 			value.set(inject(ScriptBusiness.class).evaluate(script));//TODO be carefull with concurrent access
 		}
+		logTrace("Value {} , derivable {} , old value = {} , new value = {}", value.getName(),value.isDerived(),oldValue,value.get());
 		return value.get();
 	}
 

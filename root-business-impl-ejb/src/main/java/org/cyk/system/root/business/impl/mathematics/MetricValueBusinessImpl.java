@@ -25,6 +25,7 @@ import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdenti
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueDao;
+import org.cyk.utility.common.LogMessage;
 
 public class MetricValueBusinessImpl extends AbstractTypedBusinessService<MetricValue, MetricValueDao> implements MetricValueBusiness,Serializable {
 
@@ -51,11 +52,16 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<MetricValue> findByMetricsByIdentifiables(Collection<Metric> metrics,Collection<? extends AbstractIdentifiable> identifiables) {
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Find","metrics identifiables");
 		MetricValueIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new MetricValueIdentifiableGlobalIdentifier.SearchCriteria();
 		searchCriteria.addIdentifiablesGlobalIdentifiers(identifiables).addMetrics(metrics);
 		Collection<MetricValue> metricValues = new ArrayList<>();
-		for(MetricValueIdentifiableGlobalIdentifier metricValueIdentifiableGlobalIdentifier : inject(MetricValueIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria))
+		logMessageBuilder.addParameters("criteria",searchCriteria);
+		Collection<MetricValueIdentifiableGlobalIdentifier> metricValueIdentifiableGlobalIdentifiers = inject(MetricValueIdentifiableGlobalIdentifierBusiness.class).findByCriteria(searchCriteria);
+		logMessageBuilder.addParameters("results",metricValueIdentifiableGlobalIdentifiers);
+		for(MetricValueIdentifiableGlobalIdentifier metricValueIdentifiableGlobalIdentifier : metricValueIdentifiableGlobalIdentifiers)
 			metricValues.add(metricValueIdentifiableGlobalIdentifier.getMetricValue());
+		logTrace(logMessageBuilder);
 		return metricValues;
 	}
 	

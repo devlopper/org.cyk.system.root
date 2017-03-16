@@ -55,6 +55,7 @@ import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
+import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.BeanAdapter;
 
 public abstract class AbstractRootReportProducer extends AbstractRootBusinessBean implements RootReportProducer,Serializable {
@@ -138,7 +139,9 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	/**/
 	
 	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code,Derive derive,Boolean create){
+		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Add","metric collection");
 		final MetricCollection metricCollection = inject(MetricCollectionDao.class).read(code);
+		logMessageBuilder.addParameters("identifiable",identifiable,"class",identifiable.getClass().getSimpleName(),"code",code,"found",metricCollection!=null);
 		if(Boolean.TRUE.equals(create)){
 			MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria searchCriteria = new MetricCollectionIdentifiableGlobalIdentifier.SearchCriteria();
 			searchCriteria.addIdentifiableGlobalIdentifier(identifiable).addMetricCollectionType(metricCollection.getType());
@@ -151,17 +154,21 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 					metricCollectionIdentifiableGlobalIdentifier = m;
 					break;
 				}
-			
+			logMessageBuilder.addParameters("Identifiable metric collection found",metricCollectionIdentifiableGlobalIdentifier!=null);
 			report.addLabelValueCollection((metricCollection.getName()
 					+(metricCollectionIdentifiableGlobalIdentifier==null?Constant.EMPTY_STRING:" : "+inject(FormatterBusiness.class)
 							.format(metricCollectionIdentifiableGlobalIdentifier.getValue()))));
 			//report.addLabelValueCollection(metricCollection.getName());
 		}
 		Collection<Metric> metrics = inject(MetricDao.class).readByCollection(metricCollection);
+		logMessageBuilder.addParameters("metrics",metrics);
 		Collection<MetricValue> metricValues = inject(MetricValueBusiness.class).findByMetricsByIdentifiables(metrics,Arrays.asList(identifiable)); 
+		logMessageBuilder.addParameters("values",metricValues);
 		if(derive!=null)
 			derive.addInputs(metricCollection);
 		inject(MetricValueBusiness.class).derive(metricValues,derive);
+		logMessageBuilder.addParameters("derived",metricValues);
+		
 		String[][] values = inject(MetricValueBusiness.class).convert(new ManyConverter.ConverterToArray<MetricValue,String[][]>(metricValues, String[][].class
 			,new OneConverter.ConverterToArray<MetricValue,String[]>(MetricValue.class, null, String[].class, null){
 				private static final long serialVersionUID = 1L;
@@ -183,7 +190,9 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 				}
 				
 			}, null));
+		logMessageBuilder.addParameters("array",commonUtils.convertToString(values, Constant.CHARACTER_COMA, Constant.CHARACTER_VERTICAL_BAR));
 		report.addLabelValues(values);
+		logTrace(logMessageBuilder);
 	}
 	
 	protected void addMetricCollection(AbstractReportTemplateFile<?> report,AbstractIdentifiable identifiable,String code,Derive derive){

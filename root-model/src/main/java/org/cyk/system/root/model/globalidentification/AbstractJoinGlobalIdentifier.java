@@ -79,6 +79,11 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 			
 		}
 		
+		@Override
+		public String toString() {
+			return "Identifiables : "+globalIdentifiers.toString();
+		}
+		
 	}
 	
 	/**/

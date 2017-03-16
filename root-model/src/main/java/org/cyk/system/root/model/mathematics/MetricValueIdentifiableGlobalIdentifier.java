@@ -41,6 +41,11 @@ public class MetricValueIdentifiableGlobalIdentifier extends AbstractJoinGlobalI
 		this.metricValue = metricValue;
 	}
 	
+	@Override
+	public String toString() {
+		return globalIdentifier+","+metricValue;
+	}
+	
 	/**/
 	
 	@Getter @Setter
@@ -78,7 +83,10 @@ public class MetricValueIdentifiableGlobalIdentifier extends AbstractJoinGlobalI
 			return addMetrics(Arrays.asList(metric));
 		}
 		
-		
+		@Override
+		public String toString() {
+			return super.toString()+" , Metrics : "+metrics.toString();
+		}
 	}
 	
 	public static void define(Class<? extends AbstractIdentifiable> aClass){
