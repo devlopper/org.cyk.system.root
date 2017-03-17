@@ -50,12 +50,16 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 
 
 	public String getBirthDate() {
-		return existencePeriod.getFrom();
+		return existencePeriod.getFromDate();
 	}
 
 
 	public String getDeathDate() {
-		return existencePeriod.getTo();
+		return existencePeriod.getToDate();
+	}
+	
+	public String getFromDateToDate() {
+		return existencePeriod.getFromDateToDate();
 	}
 	
 	

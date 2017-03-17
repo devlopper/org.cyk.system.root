@@ -85,4 +85,12 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 		return globalIdentifier.getSupportingDocument();
 	}
 	
+	public String getFromDateToDate(){
+		return globalIdentifier.getFromDateToDate();
+	}
+	
+	public void setFromDateToDate(String fromDateToDate){
+		globalIdentifier.getExistencePeriod().setFromDateToDate(fromDateToDate);
+	}
+	
 }

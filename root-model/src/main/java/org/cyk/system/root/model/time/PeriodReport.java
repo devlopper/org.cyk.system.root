@@ -13,21 +13,23 @@ public class PeriodReport extends AbstractGeneratable<PeriodReport> implements S
 
 	private static final long serialVersionUID = 1L;
 
-	private String from,to;
+	private String fromDate,toDate;
+	private String fromDateToDate;
 	private LongValueReport numberOfMillisecond = new LongValueReport();
 	
 	@Override
 	public void setSource(Object source) {
 		super.setSource(source);
-		from = format(((Period)source).getFromDate());
-		to = format(((Period)source).getToDate());
+		fromDate = format(((Period)source).getFromDate());
+		toDate = format(((Period)source).getToDate());
 		numberOfMillisecond.setSource(((Period)source).getNumberOfMillisecond());
 	}
 	
 	@Override
 	public void generate() {
-		from = "12/10/2013";
-		to = "23/11/2014";
+		fromDate = "12/10/2013";
+		toDate = "23/11/2014";
+		fromDateToDate = "Du "+fromDate+" Au "+toDate;
 		numberOfMillisecond.generate();
 	}
 

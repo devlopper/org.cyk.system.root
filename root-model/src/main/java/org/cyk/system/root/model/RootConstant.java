@@ -278,8 +278,8 @@ public interface RootConstant {
 		public static class ScriptVariable implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
+			public static String LOCALE = "locale";
 			public static String RETURNED = "RETURN";
-			
 			
 		}
 		

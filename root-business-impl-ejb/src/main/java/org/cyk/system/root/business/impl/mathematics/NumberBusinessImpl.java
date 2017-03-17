@@ -16,6 +16,7 @@ import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.impl.NumberStringFormatter;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.AbstractBean;
 
 @Singleton
@@ -28,7 +29,7 @@ public class NumberBusinessImpl extends AbstractBean implements NumberBusiness,S
 
 	@Override
 	public org.cyk.utility.common.formatter.NumberFormatter.String instanciateOneFormatter(Number number) {
-		return new NumberStringFormatter(number, null);
+		return new NumberStringFormatter(number, new LogMessage.Builder());
 	}
 	
 	@Override

@@ -237,7 +237,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	/**/
-	
+	//TODO to be move in each report
 	protected void setGlobalIdentifier(GlobalIdentifier globalIdentifier,GlobalIdentifierReport report){
 		if(globalIdentifier==null)
 			return;
@@ -245,8 +245,8 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		report.setName(globalIdentifier.getName());
 		report.setBirthLocation(formatUsingBusiness(globalIdentifier.getBirthLocation()));
 		report.setDeathLocation(formatUsingBusiness(globalIdentifier.getDeathLocation()));
-		report.getExistencePeriod().setFrom(format(globalIdentifier.getExistencePeriod().getFromDate()));
-		report.getExistencePeriod().setTo(format(globalIdentifier.getExistencePeriod().getToDate()));
+		report.getExistencePeriod().setFromDate(format(globalIdentifier.getExistencePeriod().getFromDate()));
+		report.getExistencePeriod().setToDate(format(globalIdentifier.getExistencePeriod().getToDate()));
 	}
 	
 	protected void setGlobalIdentifier(AbstractIdentifiable identifiable,AbstractIdentifiableReport<?> report){
@@ -278,7 +278,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			report.setLastnames(person.getLastnames());
 			report.setNames(inject(PersonBusiness.class).findNames(person));
 			report.setSurname(person.getSurname());
-			report.getGlobalIdentifier().getExistencePeriod().setFrom(format(person.getBirthDate()));
+			report.getGlobalIdentifier().getExistencePeriod().setFromDate(format(person.getBirthDate()));
 			report.getGlobalIdentifier().setCode(person.getCode());
 			
 			if(person.getImage()!=null){
