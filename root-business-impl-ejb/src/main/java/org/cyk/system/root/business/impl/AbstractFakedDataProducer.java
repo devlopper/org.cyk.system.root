@@ -27,6 +27,8 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	@Inject protected GenericBusiness genericBusiness;
 	protected Listener listener;
 	
+	@Accessors(chain=true) @Getter @Setter protected Boolean structurationEnabled = Boolean.TRUE;
+	@Accessors(chain=true) @Getter @Setter protected Boolean synchronizationEnabled = Boolean.FALSE;
 	@Accessors(chain=true) @Getter @Setter protected Boolean doBusiness = Boolean.FALSE;
 	
 	@Override
@@ -36,14 +38,18 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	}
 	
 	/**/
-	protected abstract void structure();
+	protected abstract void structure(Listener listener);
 	protected abstract void doBusiness(Listener listener);
+	protected abstract void synchronize(Listener listener);
 	protected abstract Package getBasePackage();
 	
 	public void produce(Listener listener){
 		this.listener =listener;
 		rootDataProducerHelper.setBasePackage(getBasePackage());		
-    	structure();
+		if(Boolean.TRUE.equals(structurationEnabled))
+			structure(listener);
+    	if(Boolean.TRUE.equals(synchronizationEnabled))
+    		synchronize(listener);
     	if(Boolean.TRUE.equals(doBusiness))
     		doBusiness(listener);
 	}

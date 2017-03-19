@@ -129,7 +129,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		inject(PersonBusiness.class).completeInstanciationOfOneFromValues(actor.getPerson(), arguments.getPersonInstanciationOfOneFromValuesArguments());
 		
 		if(arguments.getRegistrationCodeIndex()!=null)
-			actor.getGlobalIdentifierCreateIfNull().setCode(arguments.getValues()[arguments.getRegistrationCodeIndex()]);
+			actor.setCode(arguments.getValues()[arguments.getRegistrationCodeIndex()]);
 		
 		if(arguments.getRegistrationDateIndex()!=null)
 			actor.setBirthDate(timeBusiness.parse(arguments.getValues()[arguments.getRegistrationDateIndex()]));

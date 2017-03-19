@@ -18,6 +18,13 @@ public class Utils {
 			ids.add(identifiable.getIdentifier());
 		return ids;
 	}
+	
+	public static Collection<String> getCodes(Collection<? extends AbstractIdentifiable> identifiables){
+		Collection<String> codes = new HashSet<>();
+		for(AbstractIdentifiable identifiable : identifiables)
+			codes.add(identifiable.getCode());
+		return codes;
+	}
 
 	public static Collection<String> getGlobalIdentfierValues(Collection<GlobalIdentifier> globalIdentifiers){
 		Collection<String> ids = new HashSet<>();

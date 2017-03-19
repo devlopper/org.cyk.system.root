@@ -54,9 +54,16 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public static AbstractMethod<Object,GlobalIdentifier> CREATE_GLOBAL_IDENTIFIER;
 	public static AbstractMethod<Object,GlobalIdentifier> UPDATE_GLOBAL_IDENTIFIER;
 	
+	/* Persisted */
+	
 	@Id @GeneratedValue protected Long identifier;// Generation is customizable using mapping file
-
+	
+	/**
+	 * Used to join subsystem
+	 */
 	@OneToOne protected GlobalIdentifier globalIdentifier;
+	
+	/* Transients */
 	
 	@Transient protected Processing processing;
 	@Transient protected Boolean cascadeOperationToMaster = Boolean.FALSE;

@@ -78,7 +78,19 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	@Embedded private Rud rud = new Rud();
 	
+	/**
+	 * True if usable in business services , False otherwise.
+	 */
 	private Boolean usable;
+	
+	/**
+	 * True if it has finish its business process , False otherwise.
+	 */
+	private Boolean closed;
+	
+	/**
+	 * True if is masculin concept , False otherwise.
+	 */
 	private Boolean male;
 	
 	/**
@@ -87,7 +99,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	private Boolean initialized;
 	
 	/**
-	 * Must be only update by application
+	 * True if must be only update by application , False otherwise.
 	 */
 	@Column(name="f_constant") private Boolean constant = Boolean.FALSE;
 	
@@ -100,7 +112,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	@Embedded private CascadeStyleSheet cascadeStyleSheet;
 	
 	/**
-	 * Used to link to another system
+	 * External system identifier. Used to link to another system
 	 */
 	@Column private String externalIdentifier;
 	
