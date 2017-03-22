@@ -187,6 +187,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	@Override
 	public void flushEntityManager() {
 		genericDaoImpl.getEntityManager().flush();
+		genericDaoImpl.getEntityManager().clear();
 	}
 
 	@SuppressWarnings("unchecked")

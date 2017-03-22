@@ -62,7 +62,7 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person> {
 		private static final long serialVersionUID = 6568108456054174796L;
 		
 		private CompletePartyInstanciationOfOneFromValuesArguments<Person> partyInstanciationOfOneFromValuesArguments = new CompletePartyInstanciationOfOneFromValuesArguments<>();
-		protected Integer lastnameIndex,sexCodeIndex,birthLocationOtherDetailsIndex,titleCodeIndex,jobFunctionCodeIndex,jobTitleCodeIndex;
+		protected Integer lastnameIndex,sexCodeIndex,titleCodeIndex,jobFunctionCodeIndex,jobTitleCodeIndex;
 		
 		public void setValues(String[] values){
 			this.values = values;

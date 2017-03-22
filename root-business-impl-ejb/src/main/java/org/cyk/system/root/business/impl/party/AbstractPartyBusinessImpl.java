@@ -16,6 +16,7 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
+import org.cyk.utility.common.file.ExcelSheetReader;
 
 public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends AbstractPartyDao<PARTY>> extends AbstractTypedBusinessService<PARTY, DAO> implements AbstractPartyBusiness<PARTY>,Serializable {
 
@@ -107,12 +108,13 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	@Override
 	public void completeInstanciationOfManyFromValues(List<PARTY> parties,AbstractCompleteInstanciationOfManyFromValuesArguments<PARTY> completeInstanciationOfManyFromValuesArguments) {
 		CompletePartyInstanciationOfManyFromValuesArguments<PARTY> arguments = (CompletePartyInstanciationOfManyFromValuesArguments<PARTY>) completeInstanciationOfManyFromValuesArguments;
-		completeInstanciationOfManyFromValuesBeforeProcessing(parties,arguments.getValues(),arguments.getListener());
+		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
+		completeInstanciationOfManyFromValuesBeforeProcessing(parties,values,arguments.getListener());
 		for(int index = 0; index < arguments.getValues().size(); index++ ){
-			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index));
+			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
 			completeInstanciationOfOneFromValues(parties.get(index), arguments.getInstanciationOfOneFromValuesArguments());
 		}
-		completeInstanciationOfManyFromValuesAfterProcessing(parties,arguments.getValues(),arguments.getListener());
+		completeInstanciationOfManyFromValuesAfterProcessing(parties,values,arguments.getListener());
 	}
 	
 }

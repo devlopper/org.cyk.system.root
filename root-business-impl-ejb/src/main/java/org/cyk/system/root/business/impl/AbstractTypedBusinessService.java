@@ -166,13 +166,17 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<IDENTIFIABLE> instanciateMany(List<String[]> values) {
-		Collection<IDENTIFIABLE> collection = new ArrayList<>();;
-		for(String[] value : values){
-			IDENTIFIABLE identifiable = instanciateOne(value);
-			if(identifiable==null)
-				System.out.println("Instanciation of "+clazz.getSimpleName()+" with values "+StringUtils.join(values,",")+" gives null");
-			else
-				collection.add(identifiable);
+		Collection<IDENTIFIABLE> collection = new ArrayList<>();
+		if(values==null){
+			System.out.println("Cannot instanciate "+clazz.getSimpleName()+" from list of null values ");
+		}else{
+			for(String[] value : values){
+				IDENTIFIABLE identifiable = instanciateOne(value);
+				if(identifiable==null)
+					System.out.println("Instanciation of "+clazz.getSimpleName()+" with values "+StringUtils.join(values,",")+" gives null");
+				else
+					collection.add(identifiable);
+			}
 		}
 		return collection;
 	}

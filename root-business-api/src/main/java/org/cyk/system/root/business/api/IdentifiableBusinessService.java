@@ -15,6 +15,7 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+import org.cyk.utility.common.file.ArrayReader.Dimension;
 import org.cyk.utility.common.file.ExcelSheetReader;
 
 import lombok.Getter;
@@ -44,6 +45,10 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     /* Delete */    IDENTIFIABLE delete(IDENTIFIABLE identifiable);
     				IDENTIFIABLE delete(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);
     				void delete(Collection<IDENTIFIABLE> identifiables);
+    				
+    /* Save   */	IDENTIFIABLE save(IDENTIFIABLE identifiable);
+    				void save(Collection<IDENTIFIABLE> identifiables);
+    				void synchronize(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments);
     
     /* ------------------------ Dynamic methods ---------------------------- */
     
@@ -138,6 +143,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
 
                 		private static final long serialVersionUID = 6568108456054174796L;
                 		
+                		protected Integer codeIndex,creationDateIndex,nameIndex,birthDateIndex,isCodeExistIndex,birthLocationOtherDetailsIndex;
                 		protected String[] values;
                 		protected CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener;
                 		
@@ -155,7 +161,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
 
                 		private static final long serialVersionUID = 6568108456054174796L;
                 		
-                		protected List<String[]> values;
+                		protected List<Dimension.Row<String>> values;
                 		protected CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE> listener;
                 		
                 	}

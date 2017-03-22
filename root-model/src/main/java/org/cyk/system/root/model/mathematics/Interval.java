@@ -26,13 +26,13 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	private static final long serialVersionUID = -165832578043422718L;
 	
 	@Embedded @AttributeOverrides(value={
-			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=COLUMN_LOW_VALUE))
+			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=COLUMN_LOW_VALUE,precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE))
 			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=COLUMN_LOW_EXCLUDED))
 	})
 	private IntervalExtremity low = new IntervalExtremity();
 	
 	@Embedded @AttributeOverrides(value={
-			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=COLUMN_HIGH_VALUE))
+			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=COLUMN_HIGH_VALUE,precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE))
 			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=COLUMN_HIGH_EXCLUDED))
 	})
 	private IntervalExtremity high = new IntervalExtremity();

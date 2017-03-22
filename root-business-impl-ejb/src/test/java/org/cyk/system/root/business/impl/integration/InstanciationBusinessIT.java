@@ -1,14 +1,11 @@
 package org.cyk.system.root.business.impl.integration;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
@@ -105,7 +102,7 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	personBusiness.completeInstanciationOfOneFromValues(person, personInstanciationOfOneFromValuesArguments);
     	
     	CompletePersonInstanciationOfManyFromValuesArguments completePersonInstanciationOfManyFromValuesArguments = new CompletePersonInstanciationOfManyFromValuesArguments();
-    	completePersonInstanciationOfManyFromValuesArguments.setValues(Arrays.asList(new String[]{"Jack"},new String[]{"Jack"}));
+    	//completePersonInstanciationOfManyFromValuesArguments.setValues(Arrays.asList(new String[]{"Jack"},new String[]{"Jack"}));
     	completePersonInstanciationOfManyFromValuesArguments.getInstanciationOfOneFromValuesArguments().getPartyInstanciationOfOneFromValuesArguments().setNameIndex(0);
     	List<Person> persons = new ArrayList<>();
     	persons.add(new Person());
@@ -117,12 +114,7 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	File directory = new File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\excel");
 		File file = new File(directory, "persons.xlsx");
 		
-    	ExcelSheetReader excelSheetReader = new ExcelSheetReader.Adapter.Default();
-    	try {
-    		excelSheetReader.setWorkbookBytes(IOUtils.toByteArray(new FileInputStream(file)));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	ExcelSheetReader excelSheetReader = new ExcelSheetReader.Adapter.Default(file);
     	excelSheetReader.setIndex(0);
     	excelSheetReader.setFromRowIndex(2);
     	excelSheetReader.setFromColumnIndex(1);

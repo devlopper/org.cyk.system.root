@@ -37,7 +37,8 @@ public interface AbstractActorBusiness<ACTOR extends AbstractActor,SEARCH_CRITER
 		private static final long serialVersionUID = 6568108456054174796L;
 		
 		private CompletePersonInstanciationOfOneFromValuesArguments personInstanciationOfOneFromValuesArguments = new CompletePersonInstanciationOfOneFromValuesArguments();
-		protected Integer registrationCodeIndex,registrationDateIndex;
+		@Deprecated protected Integer registrationCodeIndex,registrationDateIndex;
+		protected Integer personCodeColumnIndex;
 		
 		public void setValues(String[] values){
 			this.values = values;

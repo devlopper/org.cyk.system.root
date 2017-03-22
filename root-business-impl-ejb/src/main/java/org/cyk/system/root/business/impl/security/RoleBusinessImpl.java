@@ -32,7 +32,8 @@ public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, Role
 		return role;
 	}
 	
-	private void save(Role role){
+	@Override //FIXME must call super first
+	public Role save(Role role){
 		for(RoleUniformResourceLocator roleUniformResourceLocator : role.getRoleUniformResourceLocators()){
 			roleUniformResourceLocator.setRole(role);
 			if(roleUniformResourceLocator.getIdentifier()==null)
@@ -40,6 +41,7 @@ public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, Role
 			else
 				roleUniformResourceLocatorDao.update(roleUniformResourceLocator);		
 		}
+		return role;
 	}
 	
 	@Override

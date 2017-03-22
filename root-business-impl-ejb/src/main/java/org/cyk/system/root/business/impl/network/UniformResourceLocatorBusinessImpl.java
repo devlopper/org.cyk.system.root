@@ -125,7 +125,8 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 		return uniformResourceLocator;
 	}
 	
-	private void save(UniformResourceLocator uniformResourceLocator){
+	@Override //FIXME must call super first
+	public UniformResourceLocator save(UniformResourceLocator uniformResourceLocator){
 		for(UniformResourceLocatorParameter uniformResourceLocatorParameter : uniformResourceLocator.getParameters()){
 			uniformResourceLocatorParameter.setUniformResourceLocator(uniformResourceLocator);
 			exceptionUtils().exception(uniformResourceLocatorParameter.getName()==null, "no name set");
@@ -134,6 +135,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 			else
 				uniformResourceLocatorParameterDao.update(uniformResourceLocatorParameter);		
 		}
+		return uniformResourceLocator;
 	}
 	
 	@Override //FIXME this method should delete and use only update and remove state less annoatation

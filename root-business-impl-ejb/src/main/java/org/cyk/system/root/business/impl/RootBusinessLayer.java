@@ -253,6 +253,17 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Override
     protected void persistStructureData() {
     	super.persistStructureData();
+    	/*ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 50, 10l, TimeUnit.SECONDS, 50, 50l, TimeUnit.SECONDS, null);
+    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { file(); }});
+    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { values(); }});
+    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { geography(); }});
+    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { event(); }});
+    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { time(); }});
+    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { language(); }});
+    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { party(); }});
+    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { security(); }});
+    	threadPoolExecutor.waitTermination(1, TimeUnit.MINUTES);
+    	*/
     	file();
     	values();
     	geography();

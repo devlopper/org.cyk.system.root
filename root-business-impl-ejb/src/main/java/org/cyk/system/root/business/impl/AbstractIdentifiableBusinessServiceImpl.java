@@ -42,6 +42,7 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+import org.cyk.utility.common.file.ArrayReader.Dimension;
 import org.cyk.utility.common.file.ExcelSheetReader;
 
 import lombok.Getter;
@@ -113,6 +114,27 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return clazz;
 	}
 	
+	@Override
+	public IDENTIFIABLE save(IDENTIFIABLE identifiable) {
+		if(identifiable.getIdentifier()==null)
+			create(identifiable);
+		else
+			update(identifiable);
+		return identifiable;
+	}
+
+	@Override
+	public void save(Collection<IDENTIFIABLE> identifiables) {
+		for(IDENTIFIABLE identifiable : identifiables)
+			save(identifiable);
+	}
+	
+	@Override
+	public void synchronize(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments) {
+		Collection<IDENTIFIABLE> identifiables = instanciateMany(excelSheetReader, completeInstanciationOfManyFromValuesArguments);
+		save(identifiables);
+	}
+
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public IdentifiableBusinessService<IDENTIFIABLE, Long> find() {
 		getPersistenceService().select();
@@ -345,13 +367,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	@Override
 	public List<IDENTIFIABLE> instanciateMany(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments) {
-		List<String[]> list;
+		List<Dimension.Row<String>> list;
 		try {
 			list = excelSheetReader.execute();
 		} catch (Exception e) {
-			System.out.println("ERR -------------- : "+e);
-			System.out.println("ERR -------------- : "+e.getCause());
-			e.printStackTrace();
 			exceptionUtils().exception(e);
 			return null;
 		}
@@ -377,10 +396,17 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@Override
 	public List<IDENTIFIABLE> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments) {
 		List<IDENTIFIABLE> identifiables = new ArrayList<>();
-		for(int index = 0; index < arguments.getValues().size(); index++ ){
-			IDENTIFIABLE identifiable =  instanciateOne((UserAccount)null); //newInstance(getClazz());
+		for(Dimension.Row<String> row : arguments.getValues()){
+			IDENTIFIABLE identifiable =  null;
+			if(row.hasPrimaryKey())
+				identifiable = getPersistenceService().readByGlobalIdentifierCode(row.getPrimaryKey());
+			if(identifiable==null)
+				identifiable = instanciateOne((UserAccount)null); //newInstance(getClazz());
+			
 			identifiables.add(identifiable);
+			
 		}
+		
 		completeInstanciationOfManyFromValues(identifiables,arguments);
 		return identifiables;
 	}

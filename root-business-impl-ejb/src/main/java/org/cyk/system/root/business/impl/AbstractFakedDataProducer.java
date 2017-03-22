@@ -46,12 +46,16 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 	public void produce(Listener listener){
 		this.listener =listener;
 		rootDataProducerHelper.setBasePackage(getBasePackage());		
-		if(Boolean.TRUE.equals(structurationEnabled))
-			structure(listener);
-    	if(Boolean.TRUE.equals(synchronizationEnabled))
-    		synchronize(listener);
-    	if(Boolean.TRUE.equals(doBusiness))
-    		doBusiness(listener);
+		try {
+			if(Boolean.TRUE.equals(structurationEnabled))
+				structure(listener);
+			if(Boolean.TRUE.equals(synchronizationEnabled))
+				synchronize(listener);
+			if(Boolean.TRUE.equals(doBusiness))
+				doBusiness(listener);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

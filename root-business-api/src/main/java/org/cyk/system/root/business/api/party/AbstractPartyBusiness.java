@@ -24,7 +24,7 @@ public interface AbstractPartyBusiness<PARTY extends Party> extends TypedBusines
 
 		private static final long serialVersionUID = 6568108456054174796L;
 		
-		protected Integer codeIndex,creationDateIndex,nameIndex,birthDateIndex;
+		
 		
 	}
 	

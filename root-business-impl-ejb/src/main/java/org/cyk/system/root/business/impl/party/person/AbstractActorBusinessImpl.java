@@ -17,6 +17,8 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
+import org.cyk.system.root.persistence.api.party.person.PersonDao;
+import org.cyk.utility.common.file.ExcelSheetReader;
 
 public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO extends AbstractActorDao<ACTOR,SEARCH_CRITERIA>,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends AbstractTypedBusinessService<ACTOR, DAO> implements AbstractActorBusiness<ACTOR,SEARCH_CRITERIA>,Serializable {
 
@@ -116,7 +118,8 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	@Override
 	public void completeInstanciationOfOne(ACTOR actor) {
 		super.completeInstanciationOfOne(actor);
-		inject(PersonBusiness.class).completeInstanciationOfOne(actor.getPerson());
+		if(actor.getPerson().getIdentifier()==null)
+			inject(PersonBusiness.class).completeInstanciationOfOne(actor.getPerson());
 	}
 
 	@Override
@@ -124,16 +127,26 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		CompleteActorInstanciationOfOneFromValuesArguments<ACTOR> arguments = (CompleteActorInstanciationOfOneFromValuesArguments<ACTOR>) completeInstanciationOfManyFromValuesArguments;
 		completeInstanciationOfOneFromValuesBeforeProcessing(actor, arguments.getValues(),arguments.getListener());
 		
-		if(actor.getPerson()==null)
-			actor.setPerson(new Person());
-		inject(PersonBusiness.class).completeInstanciationOfOneFromValues(actor.getPerson(), arguments.getPersonInstanciationOfOneFromValuesArguments());
+		if(arguments.getPersonCodeColumnIndex()!=null){
+			//if(actor.getPerson()==null)
+				actor.setPerson(inject(PersonDao.class).read(arguments.getValues()[arguments.getPersonCodeColumnIndex()]));
+			
+			actor.setCode(actor.getPerson().getCode());
+		}else{
+			
+		}
 		
-		if(arguments.getRegistrationCodeIndex()!=null)
+		if(actor.getPerson()==null){
+			actor.setPerson(new Person());
+			inject(PersonBusiness.class).completeInstanciationOfOneFromValues(actor.getPerson(), arguments.getPersonInstanciationOfOneFromValuesArguments());
+		}
+		
+		/*if(arguments.getRegistrationCodeIndex()!=null)
 			actor.setCode(arguments.getValues()[arguments.getRegistrationCodeIndex()]);
 		
 		if(arguments.getRegistrationDateIndex()!=null)
 			actor.setBirthDate(timeBusiness.parse(arguments.getValues()[arguments.getRegistrationDateIndex()]));
-		
+		*/
 		completeInstanciationOfOne(actor);
 		
 		completeInstanciationOfOneFromValuesAfterProcessing(actor, arguments.getValues(),arguments.getListener());
@@ -142,12 +155,13 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	@Override
 	public void completeInstanciationOfManyFromValues(List<ACTOR> actors,AbstractCompleteInstanciationOfManyFromValuesArguments<ACTOR> completeInstanciationOfManyFromValuesArguments) {
 		CompleteActorInstanciationOfManyFromValuesArguments<ACTOR> arguments = (CompleteActorInstanciationOfManyFromValuesArguments<ACTOR>) completeInstanciationOfManyFromValuesArguments;
-		completeInstanciationOfManyFromValuesBeforeProcessing(actors,arguments.getValues(),arguments.getListener());
+		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
+		completeInstanciationOfManyFromValuesBeforeProcessing(actors,values,arguments.getListener());
 		for(int index = 0; index < arguments.getValues().size(); index++ ){
-			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index));
+			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
 			completeInstanciationOfOneFromValues(actors.get(index), arguments.getInstanciationOfOneFromValuesArguments());
 		}
-		completeInstanciationOfManyFromValuesAfterProcessing(actors,arguments.getValues(),arguments.getListener());
+		completeInstanciationOfManyFromValuesAfterProcessing(actors,values,arguments.getListener());
 	}
 /*
 	@Override

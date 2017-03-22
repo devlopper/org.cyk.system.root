@@ -88,6 +88,9 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 			}else
 				value = commonUtils.convertString(values[index], fieldType);
 			
+			//if(BigDecimal.class.equals(fieldType))
+			//	System.out.println(values[index]+" => "+value);
+			
 			/*else if(Date.class.equals(fieldType))
 				value = inject(TimeBusiness.class).parse(values[index]);
 			else if(String.class.equals(fieldType))

@@ -65,6 +65,7 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.database.DatabaseUtils;
 import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
 import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
+import org.cyk.utility.common.file.ArrayReader.Dimension;
 import org.cyk.utility.common.file.ExcelSheetReader;
 
 import lombok.Getter;
@@ -478,8 +479,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	public <T extends AbstractIdentifiable> void createFromExcelSheet(Class<?> inputStreamResourceLocation,String woorkbookName,Class<T> aClass){
 		try {
-			final ExcelSheetReader excelSheetReader = new ExcelSheetReader.Adapter.Default().setWorkbookBytes(inputStreamResourceLocation.getResourceAsStream(woorkbookName))
-					.setName(aClass).setFromColumnIndex(0).setFromRowIndex(1);
+			final ExcelSheetReader excelSheetReader = new ExcelSheetReader.Adapter.Default(new java.io.File("")).setWorkbookBytes(inputStreamResourceLocation.getResourceAsStream(woorkbookName))
+					.setSheetName(aClass).setFromColumnIndex(0).setFromRowIndex(1);
 			
 			listenerUtils.getValue(ExcelSheetReader.class, Listener.COLLECTION, new ListenerUtils.ResultMethod<Listener, ExcelSheetReader>() {
 
@@ -496,16 +497,16 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			
 			//ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments(inputStreamResourceLocation.getResourceAsStream(woorkbookName),aClass);
 	    	
-			List<String[]> list = excelSheetReader.execute(); //commonUtils.readExcelSheet(readExcelSheetArguments);
-	    	TypedBusiness<?> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
+			List<Dimension.Row<String>> list = excelSheetReader.execute(); //commonUtils.readExcelSheet(readExcelSheetArguments);
+			TypedBusiness<?> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
 	    	if(AbstractDataTreeNode.class.isAssignableFrom(aClass)){
 	    		if(list==null){
 		    		
 		    	}else{
 		    		Integer count = 0;
-		    		for(String[] values : list){
+		    		for(Dimension.Row<String> row : list){
 		    			@SuppressWarnings("unchecked")
-						T instance = (T) business.instanciateOne(values);
+						T instance = (T) business.instanciateOne(row.getValues());
 		    			if(instance==null){
 		    				
 		    			}else{
@@ -517,7 +518,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		    	}
 	    	}else{
 	    		@SuppressWarnings("unchecked")
-				Collection<T> collection = (Collection<T>) business.instanciateMany(list);
+				Collection<T> collection = (Collection<T>) business.instanciateMany(ExcelSheetReader.Adapter.getValues(list));
 		    	if(collection==null){
 		    		System.out.println("Instanciate many <<"+aClass+">> has return null collection");
 		    	}else{

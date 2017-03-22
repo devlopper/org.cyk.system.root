@@ -17,6 +17,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
+import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.geography.LocationBusiness;
@@ -26,8 +28,11 @@ import org.cyk.system.root.business.api.party.person.MedicalInformationsBusiness
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonExtendedInformationsBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
+import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
+import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
@@ -55,7 +60,9 @@ import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
 import org.cyk.system.root.persistence.api.party.person.PersonTitleDao;
 import org.cyk.system.root.persistence.api.party.person.SexDao;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.file.ExcelSheetReader;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
@@ -378,43 +385,76 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			person.setLastnames(arguments.getValues()[arguments.getLastnameIndex()]);
 		}
 		
+		setFieldValue(person, Sex.class, Person.FIELD_SEX, arguments.getSexCodeIndex(), arguments.getValues());
+		setFieldValue(person.getExtendedInformations(), PersonTitle.class, PersonExtendedInformations.FIELD_TITLE, arguments.getTitleCodeIndex(), arguments.getValues());
+		/*
 		if(arguments.getSexCodeIndex()!=null){
-			if(person.getSex()==null)
-				person.setSex(new Sex());
-			person.getSex().setCode(arguments.getValues()[arguments.getSexCodeIndex()]);
+			if(person.getSex()==null){
+				person.setSex(inject(SexDao.class).read(arguments.getValues()[arguments.getSexCodeIndex()]));
+				if(person.getSex()==null)
+					person.setSex(inject(SexBusiness.class).instanciateOne(arguments.getValues()[arguments.getSexCodeIndex()]));
+			}
+			
 		}
 		
 		if(arguments.getTitleCodeIndex()!=null){
-			if(getExtendedInformations(person).getTitle()==null)
-				person.getExtendedInformations().setTitle(new PersonTitle());
-			getExtendedInformations(person).getTitle().setCode(arguments.getValues()[arguments.getTitleCodeIndex()]);
+			if(getExtendedInformations(person).getTitle()==null){
+				person.getExtendedInformations().setTitle(inject(PersonTitleDao.class).read(arguments.getValues()[arguments.getTitleCodeIndex()]));
+				if(person.getExtendedInformations().getTitle()==null)
+					person.getExtendedInformations().setTitle(inject(PersonTitleBusiness.class).instanciateOne(arguments.getValues()[arguments.getTitleCodeIndex()]));
+			}
 		}
-		
+		*/
 		completeInstanciationOfOne(person);
 		
 		completeInstanciationOfOneFromValuesAfterProcessing(person,arguments.getValues(),arguments.getListener());
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected <T extends AbstractIdentifiable> void setFieldValue(Object master,Class<T> fieldType,String fieldName,Integer index,String[] values){
+		T fieldValue = (T) commonUtils.readField(master, commonUtils.getFieldFromClass(master.getClass(), fieldName), Boolean.FALSE);
+		if(index!=null){
+			if(fieldValue==null){
+				String code = values[index];
+				fieldValue = inject(PersistenceInterfaceLocator.class).injectTyped(fieldType).read(code);
+				if(fieldValue==null){
+					TypedBusiness<T> business = inject(BusinessInterfaceLocator.class).injectTyped(fieldType);
+					if(AbstractEnumeration.class.isAssignableFrom(fieldType))
+						fieldValue = (T) ((AbstractEnumerationBusiness)business).instanciateOne(code);
+					else
+						fieldValue = business.instanciateOne();
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void completeInstanciationOfManyFromValues(List<Person> persons,AbstractCompleteInstanciationOfManyFromValuesArguments<Person> completeInstanciationOfManyFromValuesArguments) {
 		CompletePersonInstanciationOfManyFromValuesArguments arguments = (CompletePersonInstanciationOfManyFromValuesArguments) completeInstanciationOfManyFromValuesArguments;
-		completeInstanciationOfManyFromValuesBeforeProcessing(persons,arguments.getValues(), arguments.getListener());
+		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
+		completeInstanciationOfManyFromValuesBeforeProcessing(persons,values, arguments.getListener());
 		for(int index = 0; index < arguments.getValues().size(); index++ ){
-			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index));
+			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
 			completeInstanciationOfOneFromValues(persons.get(index), arguments.getInstanciationOfOneFromValuesArguments());
 		}
-		completeInstanciationOfManyFromValuesAfterProcessing(persons,arguments.getValues(), arguments.getListener());
+		completeInstanciationOfManyFromValuesAfterProcessing(persons,values, arguments.getListener());
 	}
 
 	private JobInformations getJobInformations(Person person){
-		if(person.getJobInformations()==null)
-			person.setJobInformations(new JobInformations(person));
+		if(person.getJobInformations()==null){
+			person.setJobInformations(inject(JobInformationsDao.class).readByParty(person));
+			if(person.getJobInformations()==null)
+				person.setJobInformations(new JobInformations(person));
+		}
 		return person.getJobInformations();
 	}
 	
 	private PersonExtendedInformations getExtendedInformations(Person person){
-		if(person.getExtendedInformations()==null)
-			person.setExtendedInformations(new PersonExtendedInformations(person));
+		if(person.getExtendedInformations()==null){
+			person.setExtendedInformations(inject(PersonExtendedInformationsDao.class).readByParty(person));
+			if(person.getExtendedInformations()==null)
+				person.setExtendedInformations(new PersonExtendedInformations(person));
+		}
 		return person.getExtendedInformations();
 	}
 
@@ -449,6 +489,28 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		public static class Adapter extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener.Adapter<Person> implements Listener, Serializable {
 			private static final long serialVersionUID = -1625238619828187690L;
 			
+		}
+		
+	}
+	
+	/**/
+	
+	public static class CompleteInstanciationOfOneFromValuesAdapter implements CompleteInstanciationOfOneFromValuesListener<Person> {
+
+		@Override
+		public void beforeProcessing(Person person, String[] values) {
+			
+		}
+
+		@Override
+		public void afterProcessing(Person person, String[] values) {
+			if(person.getIdentifier()==null){
+				
+			}else{
+				
+			}
+			//if(person.getSex()!=null)
+			//	person.setSex(inject(SexDao.class).read(person.getSex().getCode()));
 		}
 		
 	}
