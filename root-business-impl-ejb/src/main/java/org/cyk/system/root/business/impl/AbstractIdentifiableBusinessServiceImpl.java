@@ -389,8 +389,14 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	@Override
-	public void completeInstanciationOfManyFromValues(List<IDENTIFIABLE> actors,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments) {
-		
+	public void completeInstanciationOfManyFromValues(List<IDENTIFIABLE> identifiables,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments) {
+		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
+		completeInstanciationOfManyFromValuesBeforeProcessing(identifiables,values, arguments.getListener());
+		for(int index = 0; index < arguments.getValues().size(); index++ ){
+			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
+			completeInstanciationOfOneFromValues(identifiables.get(index), arguments.getInstanciationOfOneFromValuesArguments());
+		}
+		completeInstanciationOfManyFromValuesAfterProcessing(identifiables,values, arguments.getListener());
 	}
 
 	@Override

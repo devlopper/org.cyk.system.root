@@ -163,6 +163,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                 		
                 		protected List<Dimension.Row<String>> values;
                 		protected CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE> listener;
+                		protected AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> instanciationOfOneFromValuesArguments;
                 		
                 	}
     

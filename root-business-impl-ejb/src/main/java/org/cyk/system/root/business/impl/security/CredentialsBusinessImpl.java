@@ -29,4 +29,13 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 	public Credentials findByUsername(String aUsername, String password) {
 		return dao.readByUsernameByPassword(aUsername, password);
 	}
+
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Credentials instanciateOne(String username, String password) {
+		Credentials credentials = instanciateOne();
+		credentials.setUsername(username);
+		credentials.setPassword(password);
+		return credentials;
+	}
+	
 }

@@ -71,6 +71,10 @@ public class UserAccount extends AbstractIdentifiable implements Serializable {
 		return credentials.getUsername();
 	}
 	
+	public static final String FIELD_USER = "user";
+	public static final String FIELD_CREDENTIALS = "credentials";
+	public static final String FIELD_ROLES = "roles";
+	
 	/*
 	@Override
 	public String toString() {

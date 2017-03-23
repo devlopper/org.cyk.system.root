@@ -46,6 +46,8 @@ public interface UserAccountBusiness extends TypedBusiness<UserAccount> {
 	Boolean canUpdate(UserAccount userAccount,AbstractIdentifiable identifiable);
 	Boolean canDelete(UserAccount userAccount,AbstractIdentifiable identifiable);
 	
+	UserAccount instanciateOne(String partyCode,String username,String password);
+	
 	/**/
 	
 	String EXCEPTION_ALREADY_CONNECTED = "ALREADY_CONNECTED";

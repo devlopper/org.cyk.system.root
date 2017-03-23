@@ -2,6 +2,8 @@ package org.cyk.system.root.persistence.impl.party.person;
 
 import java.util.Collection;
 
+import javax.persistence.NoResultException;
+
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
@@ -12,7 +14,7 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 
 	private static final long serialVersionUID = 6920278182318788380L;
 
-	private String readByPerson,readByType,readByPersonByType,readByPerson1ByType,readByPerson2ByType,readByPerson2ByTypes;
+	private String readByPerson,readByType,readByPersonByType,readByPerson1ByType,readByPerson2ByType,readByPerson2ByTypes,readByPerson1ByTypeByPerson2;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -25,6 +27,8 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 		registerNamedQuery(readByPerson2ByType, _select().where(PersonRelationship.FIELD_PERSON2).and(PersonRelationship.FIELD_TYPE));
 		registerNamedQuery(readByPerson2ByTypes, _select().whereIdentifierIn(PersonRelationship.FIELD_PERSON2,PersonRelationship.FIELD_PERSON2)
 				.and().whereIdentifierIn(PersonRelationship.FIELD_TYPE,PersonRelationship.FIELD_TYPE));
+		registerNamedQuery(readByPerson1ByTypeByPerson2, _select().where(PersonRelationship.FIELD_PERSON1)
+				.and(PersonRelationship.FIELD_TYPE).and(PersonRelationship.FIELD_PERSON2));
 	}
 	
 	@Override
@@ -57,6 +61,13 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 	public Collection<PersonRelationship> readByPerson2ByTypes(Collection<Person> persons, Collection<PersonRelationshipType> types) {
 		return namedQuery(readByPerson2ByTypes).parameterIdentifiers(PersonRelationship.FIELD_PERSON2, persons)
 				.parameterIdentifiers(PersonRelationship.FIELD_TYPE, types).resultMany();
+	}
+	
+	@Override
+	public PersonRelationship readByPerson1ByTypeByPerson2(Person person1,PersonRelationshipType type,Person person2) {
+		return namedQuery(readByPerson1ByTypeByPerson2).parameter(PersonRelationship.FIELD_PERSON1, person1)
+				.parameter(PersonRelationship.FIELD_TYPE, type).parameter(PersonRelationship.FIELD_PERSON2, person2)
+				.ignoreThrowable(NoResultException.class).resultOne();
 	}
 
 }

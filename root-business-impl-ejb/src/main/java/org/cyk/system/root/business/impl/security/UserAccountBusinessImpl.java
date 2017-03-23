@@ -15,6 +15,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.security.CredentialsBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -27,6 +28,7 @@ import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.security.UserAccountSearchCriteria;
+import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.system.root.persistence.api.security.UserAccountDao;
 import org.cyk.utility.common.Constant;
@@ -209,5 +211,13 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	@Override
 	public Boolean canDelete(UserAccount userAccount,AbstractIdentifiable identifiable) {
 		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isDeletable(identifiable);
+	}
+
+	@Override
+	public UserAccount instanciateOne(String partyCode, String username, String password) {
+		UserAccount userAccount = instanciateOne();
+		userAccount.setUser(inject(PersonDao.class).read(partyCode));
+		userAccount.setCredentials(inject(CredentialsBusiness.class).instanciateOne(username, password));
+		return userAccount;
 	}
 }

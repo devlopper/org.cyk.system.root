@@ -120,6 +120,8 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		super.completeInstanciationOfOne(actor);
 		if(actor.getPerson().getIdentifier()==null)
 			inject(PersonBusiness.class).completeInstanciationOfOne(actor.getPerson());
+		if(StringUtils.isBlank(actor.getName()))
+			actor.setName(actor.getPerson().getName());
 	}
 
 	@Override

@@ -385,6 +385,10 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			person.setLastnames(arguments.getValues()[arguments.getLastnameIndex()]);
 		}
 		
+		if("M".equals(arguments.getValues()[arguments.getSexCodeIndex()]))
+			arguments.getValues()[arguments.getSexCodeIndex()] = RootConstant.Code.Sex.MALE;
+		else if("F".equals(arguments.getValues()[arguments.getSexCodeIndex()]))
+			arguments.getValues()[arguments.getSexCodeIndex()] = RootConstant.Code.Sex.FEMALE;
 		setFieldValue(person, Sex.class, Person.FIELD_SEX, arguments.getSexCodeIndex(), arguments.getValues());
 		setFieldValue(person.getExtendedInformations(), PersonTitle.class, PersonExtendedInformations.FIELD_TITLE, arguments.getTitleCodeIndex(), arguments.getValues());
 		/*
