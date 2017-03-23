@@ -389,26 +389,29 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			arguments.getValues()[arguments.getSexCodeIndex()] = RootConstant.Code.Sex.MALE;
 		else if("F".equals(arguments.getValues()[arguments.getSexCodeIndex()]))
 			arguments.getValues()[arguments.getSexCodeIndex()] = RootConstant.Code.Sex.FEMALE;
-		setFieldValue(person, Sex.class, Person.FIELD_SEX, arguments.getSexCodeIndex(), arguments.getValues());
-		setFieldValue(person.getExtendedInformations(), PersonTitle.class, PersonExtendedInformations.FIELD_TITLE, arguments.getTitleCodeIndex(), arguments.getValues());
-		/*
+		//setFieldValue(person, Sex.class, Person.FIELD_SEX, arguments.getSexCodeIndex(), arguments.getValues());
+		//setFieldValue(person.getExtendedInformations(), PersonTitle.class, PersonExtendedInformations.FIELD_TITLE, arguments.getTitleCodeIndex(), arguments.getValues());
+		
 		if(arguments.getSexCodeIndex()!=null){
 			if(person.getSex()==null){
 				person.setSex(inject(SexDao.class).read(arguments.getValues()[arguments.getSexCodeIndex()]));
-				if(person.getSex()==null)
-					person.setSex(inject(SexBusiness.class).instanciateOne(arguments.getValues()[arguments.getSexCodeIndex()]));
+				//if(person.getSex()==null)
+				//	person.setSex(inject(SexBusiness.class).instanciateOne(arguments.getValues()[arguments.getSexCodeIndex()]));
 			}
 			
 		}
 		
 		if(arguments.getTitleCodeIndex()!=null){
+			//System.out.println(StringUtils.join(arguments.getValues(),";")+" : "+arguments.getTitleCodeIndex());
 			if(getExtendedInformations(person).getTitle()==null){
 				person.getExtendedInformations().setTitle(inject(PersonTitleDao.class).read(arguments.getValues()[arguments.getTitleCodeIndex()]));
-				if(person.getExtendedInformations().getTitle()==null)
-					person.getExtendedInformations().setTitle(inject(PersonTitleBusiness.class).instanciateOne(arguments.getValues()[arguments.getTitleCodeIndex()]));
+				
+				//System.out.println(arguments.getValues()[arguments.getTitleCodeIndex()]+" : "+inject(PersonTitleDao.class).read(arguments.getValues()[arguments.getTitleCodeIndex()]));
+				//if(person.getExtendedInformations().getTitle()==null)
+				//	person.getExtendedInformations().setTitle(inject(PersonTitleBusiness.class).instanciateOne(arguments.getValues()[arguments.getTitleCodeIndex()]));
 			}
 		}
-		*/
+		
 		completeInstanciationOfOne(person);
 		
 		completeInstanciationOfOneFromValuesAfterProcessing(person,arguments.getValues(),arguments.getListener());
