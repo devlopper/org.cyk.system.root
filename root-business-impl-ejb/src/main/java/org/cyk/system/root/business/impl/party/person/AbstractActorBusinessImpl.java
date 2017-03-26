@@ -80,6 +80,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	@Override
 	protected void beforeCreate(ACTOR anActor) {
 		super.beforeCreate(anActor);
+		//move code to super and use a variable to do distinguish
 		if(anActor.getPerson().getIdentifier()==null){
 			if(StringUtils.isBlank(anActor.getPerson().getCode()))
 				anActor.getPerson().setCode(anActor.getCode());
@@ -89,6 +90,13 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 				anActor.getPerson().setImage(anActor.getImage());
 			anActor.getPerson().getGlobalIdentifierCreateIfNull().setCreatedBy(anActor.getGlobalIdentifierCreateIfNull().getCreatedBy());
 			inject(PersonBusiness.class).create(anActor.getPerson());
+		}else{
+			if(StringUtils.isEmpty(anActor.getCode()))
+				anActor.setCode(anActor.getPerson().getCode());
+			if(StringUtils.isEmpty(anActor.getName()))
+				anActor.setName(anActor.getPerson().getName());
+			if(anActor.getImage() == null)
+				anActor.setImage(anActor.getPerson().getImage());
 		}
 	}
 

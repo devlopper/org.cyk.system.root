@@ -37,6 +37,7 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.ObjectFieldValues;
+import org.cyk.utility.common.accessor.InstanceFieldSetter;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -133,6 +134,16 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public void synchronize(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments) {
 		Collection<IDENTIFIABLE> identifiables = instanciateMany(excelSheetReader, completeInstanciationOfManyFromValuesArguments);
 		save(identifiables);
+	}
+	
+	@Override
+	public void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter) {
+		logTrace("Synchronize {} from excel", clazz.getSimpleName());
+		excelSheetReader.execute();
+		setter.setInput(excelSheetReader.getValues());
+		setter.execute();
+		save(setter.getOutput());
+		logTrace("Synchronization of {} from excel done.", clazz.getSimpleName());
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -330,7 +341,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	 */
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public IDENTIFIABLE instanciateOne(){
-		return newInstance(getClazz());
+		IDENTIFIABLE identifiable = newInstance(getClazz());
+		if(!GlobalIdentifier.EXCLUDED.contains(clazz))
+			identifiable.getGlobalIdentifierCreateIfNull();
+		return identifiable;
 	}
 	@Override
 	public IDENTIFIABLE instanciateOne(UserAccount userAccount) {

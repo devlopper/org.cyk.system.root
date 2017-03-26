@@ -64,4 +64,14 @@ public class File extends AbstractIdentifiable implements Serializable{
 		return identifier==null?super.toString():((uri==null?(extension+Constant.CHARACTER_LEFT_PARENTHESIS+mime+Constant.CHARACTER_RIGHT_PARENTHESIS):(uri.toString()))+"("+identifier+")");
 	}
 	
+	public static final String FIELD_EXTENSION = "extension";
+	public static final String FIELD_BYTES = "bytes";
+	public static final String FIELD_URI = "uri";
+	public static final String FIELD_TEXT = "text";
+	public static final String FIELD_MIME = "mime";
+	public static final String FIELD_REPRESENTATION_TYPE = "representationType";
+	public static final String FIELD_GENERATOR = "generator";
+	public static final String FIELD_SENDER = "sender";
+	public static final String FIELD_CONTENT_WRITER = "contentWriter";
+	
 }

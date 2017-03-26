@@ -15,6 +15,16 @@ public abstract class AbstractActorReport<MODEL> extends AbstractIdentifiableRep
 	protected PersonReport person = new PersonReport();
 	
 	@Override
+	public void setSource(Object source) {
+		super.setSource(source);
+		if(source==null){
+			
+		}else{
+			person.setSource(((AbstractActor)source).getPerson());
+		}
+	}
+	
+	@Override
 	public void generate() {
 		super.generate();
 		person.generate();

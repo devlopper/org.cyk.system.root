@@ -14,6 +14,7 @@ import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessTestHelper;
+import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
@@ -22,6 +23,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.utility.common.ObjectFieldValues;
+import org.cyk.utility.common.file.ExcelSheetReader;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.test.ArchiveBuilder;
 import org.cyk.utility.test.integration.AbstractIntegrationTestJpaBased;
@@ -91,6 +93,16 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     }
     @Override
     protected void populate() {
+    	RootDataProducerHelper.Listener.COLLECTION.add(new RootDataProducerHelper.Listener.Adapter.Default(){
+    		private static final long serialVersionUID = 1L;
+
+			@Override
+    		public ExcelSheetReader processExcelSheetReader(ExcelSheetReader excelSheetReader) {
+    			if(excelSheetReader.getSheetName().equals("Country"))
+    				excelSheetReader.setRowCount(2);
+    			return super.processExcelSheetReader(excelSheetReader);
+    		}
+    	});
     	installApplication();
     }
 	 

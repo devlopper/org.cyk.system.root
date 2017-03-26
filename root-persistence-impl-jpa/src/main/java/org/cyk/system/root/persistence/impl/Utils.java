@@ -33,6 +33,13 @@ public class Utils {
 		return ids;
 	}
 	
+	public static Collection<GlobalIdentifier> getGlobalIdentfiers(Collection<? extends AbstractIdentifiable> identifiables){
+		Collection<GlobalIdentifier> globalIdentifiers = new ArrayList<>();
+		for(AbstractIdentifiable identifiable : identifiables)
+			globalIdentifiers.add(identifiable.getGlobalIdentifier());
+		return globalIdentifiers;
+	}
+	
 	public static Collection<File>  getFiles(Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers){
 		Collection<File> files = new ArrayList<>();
 		if(fileIdentifiableGlobalIdentifiers!=null)

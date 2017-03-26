@@ -27,6 +27,10 @@ public class PersonReport extends PartyReport implements Serializable {
 		if(source==null){
 			
 		}else{
+			//report.getGlobalIdentifier().setName(person.getGlobalIdentifier().getName());
+			//report.getGlobalIdentifier().getExistencePeriod().setFromDate(format(person.getBirthDate()));
+			//report.getGlobalIdentifier().setCode(person.getCode());
+			
 			//this.signatureSpecimen = ((Person)source).getImage();
 			this.names = ((Person)source).getNames();
 			this.lastnames = ((Person)source).getLastnames();
@@ -35,7 +39,7 @@ public class PersonReport extends PartyReport implements Serializable {
 				this.sex = ((Person)source).getSex().getName();
 			if(((Person)source).getExtendedInformations()!=null){
 				if(((Person)source).getExtendedInformations().getTitle()!=null)
-					this.title = ((Person)source).getExtendedInformations().getTitle().getName();
+					this.title = ((Person)source).getExtendedInformations().getTitle().getAbbreviation();
 				if(((Person)source).getExtendedInformations().getMaritalStatus()!=null)
 					this.maritalStatus = ((Person)source).getExtendedInformations().getMaritalStatus().getName();
 			}

@@ -39,7 +39,6 @@ import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.AbstractActorReport;
 import org.cyk.system.root.model.party.person.ActorReport;
-import org.cyk.system.root.model.party.person.JobInformations;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonReport;
@@ -267,46 +266,25 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		if(person==null){
 			report.getGlobalIdentifier().setName(NOT_APPLICABLE);
 			report.setNames(NOT_APPLICABLE);
-			report.setLastnames(NOT_APPLICABLE);
 			report.setLastnames(Constant.EMPTY_STRING);
 		}else{
 			inject(PersonBusiness.class).load(person);
+			report.setSource(person);
+			
 			if(person.getContactCollection()!=null)
 				set(person.getContactCollection(), report.getContactCollection());
-			
-			report.getGlobalIdentifier().setName(person.getGlobalIdentifier().getName());
-			report.setLastnames(person.getLastnames());
-			report.setNames(inject(PersonBusiness.class).findNames(person));
-			report.setSurname(person.getSurname());
-			report.getGlobalIdentifier().getExistencePeriod().setFromDate(format(person.getBirthDate()));
-			report.getGlobalIdentifier().setCode(person.getCode());
 			
 			if(person.getImage()!=null){
 				report.getGlobalIdentifier().setImage(findInputStream(person.getImage()));
 			}
-			if(person.getNationality()!=null)
-				report.setNationality(person.getNationality().getUiString());
-			if(person.getSex()!=null)
-				report.setSex(person.getSex().getName());
 			
 			if(person.getExtendedInformations()!=null){
 				PersonExtendedInformations extendedInformations = person.getExtendedInformations();
 				if(extendedInformations.getBirthLocation()!=null)
-					report.getGlobalIdentifier().setBirthLocation(extendedInformations.getBirthLocation().getUiString());
-				if(extendedInformations.getTitle()!=null)
-					report.setTitle(extendedInformations.getTitle().getUiString());
+					report.getGlobalIdentifier().setBirthLocation(extendedInformations.getBirthLocation().getUiString());//TODO should be moved to global identifier
 				if(extendedInformations.getSignatureSpecimen()!=null)
 					report.setSignatureSpecimen(findInputStream(extendedInformations.getSignatureSpecimen()));
-				if(extendedInformations.getMaritalStatus()!=null)
-					report.setMaritalStatus(extendedInformations.getMaritalStatus().getName());
-			}
-			
-			if(person.getJobInformations()!=null){
-				JobInformations jobInformations = person.getJobInformations();
-				if(jobInformations.getFunction()!=null)
-					report.setJobFonction(jobInformations.getFunction().getName());
-				if(jobInformations.getTitle()!=null)
-					report.setJobTitle(jobInformations.getTitle().getName());
+				
 			}
 			
 			//System.out.println("AbstractRootReportProducer.set() : "+report.getImage());	

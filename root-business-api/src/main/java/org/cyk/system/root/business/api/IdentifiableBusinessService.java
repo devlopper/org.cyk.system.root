@@ -11,6 +11,7 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.ObjectFieldValues;
+import org.cyk.utility.common.accessor.InstanceFieldSetter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
@@ -49,7 +50,8 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     /* Save   */	IDENTIFIABLE save(IDENTIFIABLE identifiable);
     				void save(Collection<IDENTIFIABLE> identifiables);
     				void synchronize(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments);
-    
+    				void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter);
+    				
     /* ------------------------ Dynamic methods ---------------------------- */
     
     /* --- Selection --- */
