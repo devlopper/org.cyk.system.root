@@ -41,6 +41,10 @@ public class Average extends AbstractModelElement implements Serializable{
 	}
 	private static final String LOG_FORMAT = Average.class.getSimpleName()+"(%s / %s = %s)";
 	
+	public static final String FIELD_DIVIDEND = "dividend";
+	public static final String FIELD_DIVISOR = "divisor";
+	public static final String FIELD_VALUE = "value";
+	
 	/**/
 	
 	@Getter @Setter

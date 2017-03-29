@@ -48,7 +48,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	@Override
     public PARTY update(PARTY party) {
 		if(party.getContactCollection()!=null)
-			inject(ContactCollectionBusiness.class).update(party.getContactCollection());
+			inject(ContactCollectionBusiness.class).save(party.getContactCollection());
         return super.update(party);
     }
 	

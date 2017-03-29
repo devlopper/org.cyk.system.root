@@ -29,6 +29,9 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 		identifier = ((GlobalIdentifier)source).getIdentifier();
 		code = ((GlobalIdentifier)source).getCode();
 		name = ((GlobalIdentifier)source).getName();
+		if(((GlobalIdentifier)source).getBirthLocation()!=null){
+			birthLocation = ((GlobalIdentifier)source).getBirthLocation().getUiString();
+		}
 		otherDetails = ((GlobalIdentifier)source).getOtherDetails();
 		weight = format(((GlobalIdentifier)source).getWeight());
 		creationDate = ((GlobalIdentifier)source).getCreationDate().toString();

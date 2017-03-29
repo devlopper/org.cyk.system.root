@@ -24,12 +24,32 @@ public class IdentifiableInstanceFieldSetterAdapter implements Serializable {
 		}
 		
 		@Override
-		public Integer getKeyIndex(Object[] values) {
+		public Object getKeyType() {
+			if(getFieldNames().contains(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_IDENTIFIER)))
+				return KEY_TYPE_GLOBAL;
+			if(getFieldNames().contains(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE)))
+				return KEY_TYPE_LOCAL;
+			return super.getKeyType();
+		}
+		
+		@Override
+		public Object getKeyType(Object[] values) {
+			return getKeyType();
+		}
+		
+		@Override
+		public Integer getKeyIndex() {
 			for(String fieldName : new String[]{commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_IDENTIFIER)
-					,commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE)})
+					,commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE)}){
 				if(getFieldNames().contains(fieldName))
 					return getFieldNamesIndexes().get(fieldName);
-			return super.getKeyIndex(values);
+			}
+			return super.getKeyIndex();
+		}
+		
+		@Override
+		public Integer getKeyIndex(Object[] values) {
+			return getKeyIndex();
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -65,17 +85,17 @@ public class IdentifiableInstanceFieldSetterAdapter implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public TwoDimensionObjectArray(Object[][] input,OneDimensionObjectArray<T> oneDimension,Object keyType) {
-			super(input, oneDimension);
+		public TwoDimensionObjectArray(OneDimensionObjectArray<T> oneDimension) {
+			super(oneDimension);
 			TypedDao<T> persistence = inject(PersistenceInterfaceLocator.class).injectTyped(getOneDimension().getOutputClass());
-			existingKeys.clear();
-			for(String code : OneDimensionObjectArray.KEY_TYPE_LOCAL.equals(keyType) ? Utils.getCodes(persistence.readAll()) 
-					: Utils.getGlobalIdentfierValues( Utils.getGlobalIdentfiers(persistence.readAll())))
-				existingKeys.add(code);
-		}
-		
-		public TwoDimensionObjectArray(Object[][] input,OneDimensionObjectArray<T> oneDimension) {
-			this(input,oneDimension,OneDimensionObjectArray.KEY_TYPE_LOCAL);
+			Object keyType = oneDimension.getKeyType();
+			if(keyType != null){
+				existingKeys.clear();
+				for(String code : OneDimensionObjectArray.KEY_TYPE_LOCAL.equals(keyType) ? Utils.getCodes(persistence.readAll()) 
+						: Utils.getGlobalIdentfierValues( Utils.getGlobalIdentfiers(persistence.readAll())))
+					existingKeys.add(code);	
+			}
+			
 		}
 		
 		@Override

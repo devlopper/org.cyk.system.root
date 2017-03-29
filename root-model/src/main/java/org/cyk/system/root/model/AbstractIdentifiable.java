@@ -202,6 +202,10 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return  processing;
 	}
 	
+	public String getShortName(){
+		return StringUtils.isBlank(getAbbreviation()) ? getCode() : getAbbreviation();
+	}
+	
 	protected String getMemoryAddress(){
 		return getClass().getSimpleName()+Constant.CHARACTER_AT+String.valueOf(System.identityHashCode(this)); 
 		//StringUtils.substringBefore(ToStringBuilder.reflectionToString(this, ToStringStyle.NO_FIELD_NAMES_STYLE),"[");

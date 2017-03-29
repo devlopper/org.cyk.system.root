@@ -27,8 +27,8 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 		registerNamedQuery(readByPerson2ByType, _select().where(PersonRelationship.FIELD_PERSON2).and(PersonRelationship.FIELD_TYPE));
 		registerNamedQuery(readByPerson2ByTypes, _select().whereIdentifierIn(PersonRelationship.FIELD_PERSON2,PersonRelationship.FIELD_PERSON2)
 				.and().whereIdentifierIn(PersonRelationship.FIELD_TYPE,PersonRelationship.FIELD_TYPE));
-		registerNamedQuery(readByPerson1ByTypeByPerson2, _select().where(PersonRelationship.FIELD_PERSON1)
-				.and(PersonRelationship.FIELD_TYPE).and(PersonRelationship.FIELD_PERSON2));
+		registerNamedQuery(readByPerson1ByTypeByPerson2, _select().where(PersonRelationship.FIELD_PERSON1).and(PersonRelationship.FIELD_TYPE)
+				.and(PersonRelationship.FIELD_PERSON2));
 	}
 	
 	@Override

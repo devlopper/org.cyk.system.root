@@ -37,4 +37,10 @@ public abstract class AbstractModelElement implements Serializable{
 		lastComputedLogMessage = getLogMessage();
 	}
 	
+	/**/
+	
+	public static String generateColumnName(String fieldName){
+		return fieldName;
+	}
+	
 }

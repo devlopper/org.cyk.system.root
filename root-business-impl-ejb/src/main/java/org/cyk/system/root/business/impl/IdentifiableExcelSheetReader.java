@@ -1,11 +1,8 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.File;
-import java.util.HashSet;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
-import org.cyk.system.root.persistence.impl.Utils;
 import org.cyk.utility.common.file.ExcelSheetReader;
 
 public class IdentifiableExcelSheetReader<T extends AbstractIdentifiable> extends ExcelSheetReader.Adapter.Default {
@@ -14,7 +11,10 @@ public class IdentifiableExcelSheetReader<T extends AbstractIdentifiable> extend
 
 	public IdentifiableExcelSheetReader(File file,Class<T> identifiableClass) {
 		super(file);
-		setPrimaryKeys(new HashSet<>(Utils.getCodes(inject(PersistenceInterfaceLocator.class).injectTyped(identifiableClass).readAll())));
+		setSheetName(identifiableClass);
+    	setFromRowIndex(1);
+    	setFromColumnIndex(0);
+		//setPrimaryKeys(new HashSet<>(Utils.getCodes(inject(PersistenceInterfaceLocator.class).injectTyped(identifiableClass).readAll())));
 	}
 		
 }
