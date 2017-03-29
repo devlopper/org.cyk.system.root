@@ -16,7 +16,7 @@ public class PersonReport extends PartyReport implements Serializable {
 
 	private static final long serialVersionUID = 4273143271881011482L;
 
-	protected String lastnames,surname,sex,maritalStatus,nationality,names,title,jobFonction,jobTitle;
+	protected String lastnames,surname,sex,maritalStatus,nationality,names,title=Constant.EMPTY_STRING,jobFonction,jobTitle;
 	protected InputStream signatureSpecimen;
 	
 	protected Boolean generateSignatureSpecimen=Boolean.FALSE;
@@ -39,7 +39,7 @@ public class PersonReport extends PartyReport implements Serializable {
 				this.sex = ((Person)source).getSex().getName();
 			if(((Person)source).getExtendedInformations()!=null){
 				if(((Person)source).getExtendedInformations().getTitle()!=null)
-					this.title = ((Person)source).getExtendedInformations().getTitle().getAbbreviation();
+					this.title = ((Person)source).getExtendedInformations().getTitle().getShortName();
 				if(((Person)source).getExtendedInformations().getMaritalStatus()!=null)
 					this.maritalStatus = ((Person)source).getExtendedInformations().getMaritalStatus().getName();
 			}

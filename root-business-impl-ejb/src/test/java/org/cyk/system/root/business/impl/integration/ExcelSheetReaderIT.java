@@ -39,7 +39,7 @@ public class ExcelSheetReaderIT extends AbstractBusinessIT {
 				,commonUtils.attributePath(Person.FIELD_EXTENDED_INFORMATIONS, PersonExtendedInformations.FIELD_TITLE)
 				);
 		excelSheetReader.execute();
-		IdentifiableInstanceFieldSetterAdapter.TwoDimensionObjectArray<Person> twoDimensionObjectArray = new IdentifiableInstanceFieldSetterAdapter.TwoDimensionObjectArray<Person>(excelSheetReader.getValues(),setter){
+		IdentifiableInstanceFieldSetterAdapter.TwoDimensionObjectArray<Person> twoDimensionObjectArray = new IdentifiableInstanceFieldSetterAdapter.TwoDimensionObjectArray<Person>(setter){
 			private static final long serialVersionUID = 1L;
 
 			@Override
