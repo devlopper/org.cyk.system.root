@@ -74,6 +74,9 @@ public class MetricValueIdentifiableGlobalIdentifierBusinessImpl extends Abstrac
 	}
 	
 	@Override
+	protected void deleteFileIdentifiableGlobalIdentifier(MetricValueIdentifiableGlobalIdentifier identifiable) {}
+	
+	@Override
 	public Collection<MetricValueIdentifiableGlobalIdentifier> findByCriteria(SearchCriteria searchCriteria) {
 		if(searchCriteria.getMetrics().isEmpty())
 			searchCriteria.setMetrics(inject(MetricDao.class).readAll());
