@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.LocationBusiness;
 import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.LocationDao;
@@ -27,7 +28,9 @@ public class LocationBusinessImpl extends AbstractContactBusinessImpl<Location, 
 	public Location instanciateOneRandomly() {
 		Location location = new Location();
 		location.setOtherDetails(RandomDataProvider.getInstance().randomWord(RandomDataProvider.WORD_LOCATION, 5, 10));
-		location.setLocality(inject(CountryDao.class).readOneRandomly().getLocality());
+		Country country = inject(CountryDao.class).readOneRandomly();
+		if(country!=null)
+			location.setLocality(country.getLocality());
 		location.setType(inject(LocationTypeDao.class).read(RootConstant.Code.LocationType.HOME));
 		return location; 
 	}

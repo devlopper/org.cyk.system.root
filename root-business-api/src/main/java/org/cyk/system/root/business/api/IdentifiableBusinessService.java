@@ -132,7 +132,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     void setParents(Collection<IDENTIFIABLE> identifiables);
                     
                     /**/
-                    
+                    @Deprecated
                 	public static interface CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE extends Identifiable<?>>{
 
                 		void beforeProcessing(IDENTIFIABLE identifiable,String[] values);
@@ -140,7 +140,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
 
                 	}
                 	
-                	@Getter @Setter
+                	@Getter @Setter @Deprecated
                 	public static class AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE extends Identifiable<?>> implements Serializable{
 
                 		private static final long serialVersionUID = 6568108456054174796L;
@@ -150,7 +150,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                 		protected CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener;
                 		
                 	}
-                	
+                	@Deprecated
                 	public static interface CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE extends Identifiable<?>>{
 
                 		void beforeProcessing(List<IDENTIFIABLE> identifiables,List<String[]> values);
@@ -158,7 +158,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                 		
                 	}
                 	
-                	@Getter @Setter
+                	@Getter @Setter @Deprecated
                 	public static class AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE extends Identifiable<?>> implements Serializable{
 
                 		private static final long serialVersionUID = 6568108456054174796L;

@@ -11,6 +11,7 @@ import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberDao;
@@ -27,7 +28,8 @@ public class PhoneNumberBusinessImpl extends AbstractContactBusinessImpl<PhoneNu
 	
 	@Override
 	public Contact instanciateOneRandomly() {
-		return instanciateOne(null,inject(CountryDao.class).readOneRandomly().getCode(), RootConstant.Code.PhoneNumberType.MOBILE, RandomStringUtils.randomNumeric(8));
+		Country country = inject(CountryDao.class).readOneRandomly();
+		return instanciateOne(null,country==null ?null:country.getCode(), RootConstant.Code.PhoneNumberType.MOBILE, RandomStringUtils.randomNumeric(8));
 	}
 
 	@Override

@@ -373,13 +373,14 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 				.setMaxResults(count)
 				.getResultList();
 		*/
-		return readByIdentifiers(readManyIdentifiersRandomly(count));
+		Collection<Long> identifiers = readManyIdentifiersRandomly(count);
+		return identifiers == null || identifiers.isEmpty() ? new ArrayList<IDENTIFIABLE>() : readByIdentifiers(identifiers);
 	}
 	
 	@Override
 	public IDENTIFIABLE readOneRandomly() {
 		Collection<IDENTIFIABLE> collection = readManyRandomly(1);
-		return collection.isEmpty()?null:collection.iterator().next();
+		return collection == null || collection.isEmpty() ? null : collection.iterator().next();
 	}
 	
 	@Override
