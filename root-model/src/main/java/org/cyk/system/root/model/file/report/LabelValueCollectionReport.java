@@ -34,6 +34,12 @@ public class LabelValueCollectionReport extends AbstractGeneratable<LabelValueCo
 			collection.add(labelValueReport);
 		}
 	}
+	
+	public void generateExtendedValues(Integer size){
+		for(LabelValueReport labelValue : collection){
+			labelValue.generateExtendedValues(size);
+		}
+	}
 
 	public LabelValueReport add(String identifier,String label,String value){
 		LabelValueReport r = null;

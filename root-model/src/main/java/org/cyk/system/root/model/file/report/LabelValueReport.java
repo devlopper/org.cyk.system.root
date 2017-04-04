@@ -37,6 +37,13 @@ public class LabelValueReport extends AbstractGeneratable<LabelValueReport> impl
 		value = provider.randomWord(5, 15);
 	}
 	
+	public void generateExtendedValues(Integer size){
+		setExtendedValues(new String[size]);
+		for(int i = 0 ; i < extendedValues.length ; i++){
+			extendedValues[i] = String.valueOf(i);
+		}
+	}
+	
 	public void set(String...values){
 		if(values[0]==null || values[1]==null)
 				;
