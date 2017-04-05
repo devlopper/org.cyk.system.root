@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.api.mathematics;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -21,5 +22,7 @@ public interface IntervalBusiness extends AbstractCollectionItemBusiness<Interva
     
     BigDecimal findLowestGreatestValue(Interval interval);
     BigDecimal findGreatestLowestValue(Interval interval);
+    
+    Collection<BigDecimal> findByContains(Interval interval,Integer scale,Collection<BigDecimal> values);
      
 }

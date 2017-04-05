@@ -2,6 +2,8 @@ package org.cyk.system.root.model.file.report;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,7 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 	private static final long serialVersionUID = 5632592320990657808L;
 
 	protected GlobalIdentifierReport globalIdentifier = new GlobalIdentifierReport();
+	protected List<LabelValueCollectionReport> labelValueCollections = new ArrayList<>();//TODO should be replaced by table in super class
 	
 	public void setSource(Object source){
 		super.setSource(source);

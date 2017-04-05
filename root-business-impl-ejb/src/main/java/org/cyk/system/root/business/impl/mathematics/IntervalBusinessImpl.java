@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.mathematics;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
@@ -190,6 +191,15 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
     	return interval.getLow().getValue()==null ? null 
     			: Boolean.FALSE.equals(interval.getLow().getExcluded()) ? interval.getLow().getValue() : interval.getLow().getValue().subtract(BigDecimal.ONE);
     }
+
+	@Override
+	public Collection<BigDecimal> findByContains(Interval interval,Integer scale,Collection<BigDecimal> values) {
+		Collection<BigDecimal> result = new ArrayList<>();
+		for(BigDecimal value : values)
+			if( Boolean.TRUE.equals(contains(interval, value, scale)) )
+				result.add(value);
+		return result;
+	}
 
 	
 

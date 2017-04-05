@@ -30,6 +30,11 @@ public class LabelValueReport extends AbstractGeneratable<LabelValueReport> impl
 		this.label = label;
 		this.value = value;
 	}
+	
+	public LabelValueReport setExtendedValuesSize(Integer size){
+		extendedValues = new String[size];
+		return this;
+	}
 
 	@Override
 	public void generate() {
