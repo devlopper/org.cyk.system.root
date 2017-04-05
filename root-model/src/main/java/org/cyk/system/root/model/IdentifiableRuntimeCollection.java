@@ -18,6 +18,16 @@ public class IdentifiableRuntimeCollection<T> implements Serializable {
 	private Collection<T> collection;
 	private Boolean synchonizationEnabled;
 	
+	public IdentifiableRuntimeCollection<T> addOne(T item){
+		getCollection().add(item);
+		return this;
+	}
+	
+	public IdentifiableRuntimeCollection<T> addMany(Collection<T> items){
+		getCollection().addAll(items);
+		return this;
+	}
+	
 	public Collection<T> getCollection(){
 		if(collection==null)
 			collection=new ArrayList<>();

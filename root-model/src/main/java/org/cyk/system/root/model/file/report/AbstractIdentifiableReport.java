@@ -3,16 +3,17 @@ package org.cyk.system.root.model.file.report;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.FileReport;
-import org.cyk.system.root.model.globalidentification.GlobalIdentifierReport;
-import org.cyk.system.root.model.time.PeriodReport;
-import org.cyk.utility.common.generator.AbstractGeneratable;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.FileReport;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifierReport;
+import org.cyk.system.root.model.time.PeriodReport;
+import org.cyk.utility.common.generator.AbstractGeneratable;
 
 @Getter @Setter @NoArgsConstructor
 public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGeneratable<MODEL> implements Serializable {
@@ -23,13 +24,16 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 	
 	public void setSource(Object source){
 		super.setSource(source);
-		if(source!=null)
+		if(source!=null){
 			globalIdentifier.setSource(((AbstractIdentifiable)source).getGlobalIdentifier());
+		}
 	}
 	
 	@Override
 	public void generate() {
 		globalIdentifier.generate();
+		globalIdentifier.setName(getFieldRandomValue(String.class, commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_NAME)));
+		
 		text = RandomStringUtils.randomAlphanumeric(20);
 	}
 
@@ -92,5 +96,7 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 	public void setFromDateToDate(String fromDateToDate){
 		globalIdentifier.getExistencePeriod().setFromDateToDate(fromDateToDate);
 	}
+	
+	
 	
 }
