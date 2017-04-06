@@ -20,7 +20,7 @@ public class ScriptBusinessIT extends AbstractBusinessIT {
     	create(script2 = script("a = 1 + 2; r2 = 10+6","a","r2"));
     	create(script3 = script("business.find('Country','FJ').getName();"));
     	create(script4 = script("business.find('Locality','FJ');"));
-    	create(script5 = script("mystring = 'hello'; mystring.charAt(0)='h'"));
+    	create(script5 = script("mystring = 'hello'; print(mystring.charAt(0)==='h');print(mystring.charAt(0)==='5');"));
     }
     
     private Script script(String text,String...variables){
@@ -44,7 +44,7 @@ public class ScriptBusinessIT extends AbstractBusinessIT {
         assertValues(script2,"a",3.0,"r2",16.0);
         //assertValues(script3);
         //assertValues(script4);
-        assertValues(script5,"false");
+        assertValues(script5);
     }
     
     /**/
