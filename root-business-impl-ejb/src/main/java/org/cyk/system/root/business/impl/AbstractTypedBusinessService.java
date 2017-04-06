@@ -619,8 +619,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		File backgroundImage = arguments.getBackgroundImageFile();
 		if(backgroundImage==null)
 			backgroundImage = arguments.getReportTemplate().getBackgroundImage();
-		if(arguments.getBackgroundImageFile()!=null)
-			producedReport.setBackgroundImage(inject(FileBusiness.class).findInputStream(arguments.getBackgroundImageFile()));
+		if(backgroundImage!=null)
+			producedReport.setBackgroundImage(inject(FileBusiness.class).findInputStream(backgroundImage));
 		
 		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, arguments.getReportTemplate().getTemplate()
 				, arguments.getFile().getExtension());
