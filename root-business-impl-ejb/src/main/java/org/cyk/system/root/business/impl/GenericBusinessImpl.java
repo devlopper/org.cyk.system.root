@@ -21,6 +21,7 @@ import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.utils.IdentifiableCrudExecution;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
@@ -173,8 +174,21 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	}
 	
 	@Override 
-	public <IDENTIFIABLE extends AbstractIdentifiable> void createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale){
-		inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, reportTemplateCode, locale);
+	public <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale){
+		return inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, reportTemplateCode, locale);
+	}
+	
+	@Override 
+	public <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode){
+		return inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, reportTemplateCode);
+	}
+	
+	@Override 
+	public <IDENTIFIABLE extends AbstractIdentifiable> Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables,String reportTemplateCode){
+		Collection<File> files = new ArrayList<>();
+		for(IDENTIFIABLE identifiable : identifiables)
+			files.add(createReportFile(identifiable, reportTemplateCode));
+		return files;
 	}
 	
 	@Override

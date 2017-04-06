@@ -96,6 +96,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     
 	File createReportFile(CreateReportFileArguments<IDENTIFIABLE> arguments);
 	File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale);
+	File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode);
+	Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables,String reportTemplateCode);
 	
 	File findReportFile(IDENTIFIABLE identifiable,ReportTemplate reportTemplate,Boolean createIfNull);
 	File findReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean createIfNull);

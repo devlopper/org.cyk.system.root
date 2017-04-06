@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
 
 public interface GenericBusiness extends AbstractGenericBusinessService<AbstractIdentifiable, Long> {
 	
@@ -14,5 +15,7 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     
     AbstractIdentifiable find(String identifiableClassIdentifier,String code);
 
-    <IDENTIFIABLE extends AbstractIdentifiable> void createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode, Locale locale);
+    <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode, Locale locale);
+    <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode);
+    <IDENTIFIABLE extends AbstractIdentifiable> Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables, String reportTemplateCode);
 }

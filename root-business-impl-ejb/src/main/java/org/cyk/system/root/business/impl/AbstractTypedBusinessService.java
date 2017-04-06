@@ -592,6 +592,19 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
     		createSaleReportFileArguments.setFile(fileIdentifiableGlobalIdentifiers.iterator().next().getFile());
     	return createReportFile(createSaleReportFileArguments);
 	}
+	
+	@Override
+	public File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode) {
+		return createReportFile(identifiable, reportTemplateCode, RootConstant.Configuration.ReportTemplate.LOCALE);
+	}
+	
+	@Override
+	public Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables, String reportTemplateCode) {
+		Collection<File> files = new ArrayList<>();
+		for(IDENTIFIABLE identifiable : identifiables)
+			files.add(createReportFile(identifiable, reportTemplateCode));
+		return files;
+	}
 
 	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,CreateReportFileArguments<IDENTIFIABLE> arguments){
 		RootReportProducer reportProducer = arguments.getReportProducer() == null ? AbstractRootReportProducer.DEFAULT : arguments.getReportProducer();
