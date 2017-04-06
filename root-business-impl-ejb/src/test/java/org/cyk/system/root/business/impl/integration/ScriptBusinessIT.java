@@ -16,11 +16,11 @@ public class ScriptBusinessIT extends AbstractBusinessIT {
     @Override
     protected void populate() {
     	super.populate();
-    	create(script1 = script("print('THIS IS A IT')"));
+    	create(script1 = script("println('THIS IS A IT')"));
     	create(script2 = script("a = 1 + 2; r2 = 10+6","a","r2"));
     	create(script3 = script("business.find('Country','FJ').getName();"));
     	create(script4 = script("business.find('Locality','FJ');"));
-    	create(script5 = script("mystring = 'hello'; print(mystring.charAt(0)==='h');print(mystring.charAt(0)==='5');"));
+    	create(script5 = script("mystring = 'hello'; mystring.charAt(0)==='1' ? print('Match') : println('No matching');"));
     }
     
     private Script script(String text,String...variables){
