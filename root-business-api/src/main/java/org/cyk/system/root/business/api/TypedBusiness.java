@@ -107,7 +107,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		private ReportTemplate reportTemplate;
 		private Collection<ValueCollection> reportTemplateValueCollections = new ArrayList<>();
 		private IDENTIFIABLE identifiable;
-		private File file,backgroundImageFile;
+		private File file,backgroundImageFile;//TODO header image should exist too because can be runtime set
 		private RootReportProducer reportProducer;
 		private Boolean joinFileToIdentifiable = Boolean.TRUE,isDraft=Boolean.FALSE;
 		private String identifiableName;

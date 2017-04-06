@@ -613,8 +613,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		if(arguments.getCreatedBy()!=null)
 			producedReport.setCreatedBy(arguments.getCreatedBy().getNames());
 		/* Images */
+		//File headerImage = arguments.get
 		if(arguments.getReportTemplate().getHeaderImage()!=null)
 			producedReport.setHeaderImage(inject(FileBusiness.class).findInputStream(arguments.getReportTemplate().getHeaderImage()));
+		File backgroundImage = arguments.getBackgroundImageFile();
+		if(backgroundImage==null)
+			backgroundImage = arguments.getReportTemplate().getBackgroundImage();
 		if(arguments.getBackgroundImageFile()!=null)
 			producedReport.setBackgroundImage(inject(FileBusiness.class).findInputStream(arguments.getBackgroundImageFile()));
 		
