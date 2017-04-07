@@ -22,7 +22,7 @@ public class ReportTemplate extends AbstractEnumeration implements Serializable 
 
 	private static final long serialVersionUID = -6245201590820068337L;
 
-	@ManyToOne private File template;
+	@ManyToOne private File template;//TODO must be not null
 	@ManyToOne private File headerImage;
 	@ManyToOne private File footerImage;
 	@ManyToOne private File backgroundImage;

@@ -28,7 +28,7 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 	/**
 	 * This is an image which visually represent the signature
 	 */
-	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
+	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)//TODO orphan removal and cascade should be false because of global identifier
 	private File signatureSpecimen;
 
 	@OneToOne private LanguageCollection languageCollection;

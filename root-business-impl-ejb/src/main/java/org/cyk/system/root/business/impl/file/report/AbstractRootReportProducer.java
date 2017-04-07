@@ -52,6 +52,7 @@ import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
+import org.cyk.system.root.persistence.api.party.person.PersonExtendedInformationsDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
@@ -268,6 +269,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			report.setNames(NOT_APPLICABLE);
 			report.setLastnames(Constant.EMPTY_STRING);
 		}else{
+			report.setNames(inject(PersonBusiness.class).findNames(person));
 			inject(PersonBusiness.class).load(person);
 			report.setSource(person);
 			
@@ -277,7 +279,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			if(person.getImage()!=null){
 				report.getGlobalIdentifier().setImage(findInputStream(person.getImage()));
 			}
-			
+			person.setExtendedInformations(inject(PersonExtendedInformationsDao.class).readByParty(person));
 			if(person.getExtendedInformations()!=null){
 				PersonExtendedInformations extendedInformations = person.getExtendedInformations();
 				if(extendedInformations.getBirthLocation()!=null)
