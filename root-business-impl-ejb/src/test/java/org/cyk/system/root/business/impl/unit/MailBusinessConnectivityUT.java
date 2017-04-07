@@ -9,6 +9,8 @@ import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendListe
 import org.cyk.system.root.business.impl.file.FileBusinessImpl;
 import org.cyk.system.root.business.impl.message.MailBusinessImpl;
 import org.cyk.system.root.model.event.Notification;
+import org.cyk.system.root.model.message.SmtpProperties;
+import org.cyk.system.root.model.security.Credentials;
 import org.cyk.utility.common.ThreadPoolExecutor;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
@@ -26,9 +28,13 @@ public class MailBusinessConnectivityUT extends AbstractUnitTest {
 		super.registerBeans(collection);
 		collection.add(mailBusiness);
 		collection.add(fileBusiness);
-		//mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
+		MailBusinessImpl.SMTP_PROPERTIES = new SmtpProperties();
+		MailBusinessImpl.SMTP_PROPERTIES.setCredentials(new Credentials());
+		mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
 		//mailBusiness.setProperties("smtp.iesaci.com", 25, "results@iesaci.com", "school2009");
-		mailBusiness.setProperties("smtp.gmail.com", 465, "soldesigdcp@gmail.com", "sigdcp1234");
+		//mailBusiness.setProperties("smtp.gmail.com", 465, "soldesigdcp@gmail.com", "sigdcp1234");
+		//mailBusiness.setProperties("smtpauth.myorangeoffice.com", 465, "results@iesa-ci.com", "17abIESAresults");
+		//mailBusiness.setProperties("smtp.gmail.com", 465, "iesaciresults@gmail.com", "17abIESAresults");
 	}
 	
 	@Test
@@ -41,8 +47,10 @@ public class MailBusinessConnectivityUT extends AbstractUnitTest {
 			notification.setTitle("A message title to receiver "+i);
 			notification.setMessage("Message to reveiver "+i);
 			//notification.addReceiverIdentifiers("results@iesaci.com");
-			//notification.addReceiverIdentifiers("kycdev@gmail.com");
-			notification.addReceiverIdentifiers("soldesigdcp@gmail.com");
+			notification.addReceiverIdentifiers("kycdev@gmail.com");
+			//notification.addReceiverIdentifiers("soldesigdcp@gmail.com");
+			//notification.addReceiverIdentifiers("results@iesa-ci.com");
+			//notification.addReceiverIdentifiers("iesaciresults@gmail.com");
 			notifications.add(notification);
 		}
 		SendListener listener = new SendListener.Adapter.Default(){
