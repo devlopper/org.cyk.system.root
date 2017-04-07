@@ -195,7 +195,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		
 		@Override
 		public String toString() {
-			return "code : <<"+code+">> , name : <<"+name+">>";
+			return "code : <<"+code+">> , name : <<"+name+">> , "+readConfig;
 		}
 	}
 	

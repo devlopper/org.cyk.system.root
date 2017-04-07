@@ -308,7 +308,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	public Boolean isText(File file) {
 		return file!=null && (StringUtils.startsWith(file.getMime(), Mime.TEXT) );
 	}
-	
+		
 	/**/
 	
 	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<File> {

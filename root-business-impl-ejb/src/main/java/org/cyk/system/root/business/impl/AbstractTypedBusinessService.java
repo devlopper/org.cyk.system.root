@@ -512,6 +512,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		if(searchCriteria==null){
 			GlobalIdentifier.SearchCriteria globalSearchCriteria = new GlobalIdentifier.SearchCriteria();
 			globalSearchCriteria.set(stringSearchCriteria);
+			globalSearchCriteria.setReadConfig(dataReadConfiguration);
 			return findByGlobalIdentifierSearchCriteria(globalSearchCriteria);
 		}
 		searchCriteria.set(stringSearchCriteria);

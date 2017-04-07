@@ -490,6 +490,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public Collection<IDENTIFIABLE> findByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
 		Collection<IDENTIFIABLE> results;
 		prepareFindByCriteria(globalIdentifierSearchCriteria);
+		getPersistenceService().getDataReadConfig().set(globalIdentifierSearchCriteria.getReadConfig());
 		results = getPersistenceService().readByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);	
 		logTrace("Find {} by global identifier search criteria {}. Found {}", clazz.getSimpleName(),globalIdentifierSearchCriteria,results.size());
 		return results;
