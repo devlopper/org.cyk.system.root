@@ -47,6 +47,31 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 	}
 	
 	@Override
+	protected void beforeUpdate(NODE node){
+		super.beforeUpdate(node);
+		exceptionUtils().exception(node.getIdentifier()!=null && node.getNode().getIdentifier()==null, "thisisamove");
+		/*NODE parent = dao.readParent(node);
+		NODE databaseRecord = dao.read(node.getIdentifier());
+		NODE databaseRecordParent = dao.readParent(databaseRecord);
+		System.out.println("AbstractDataTreeNodeBusinessImpl.beforeUpdate() : "+node.getIdentifier()+":"+node.getNode().getIdentifier());
+		*/
+		//exceptionUtils().exception(databaseRecordParent!=null && !databaseRecordParent.equals(parent), "thisisamove");
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void afterUpdate(NODE node){
+		super.afterUpdate(node);
+		if(Boolean.TRUE.equals(node.getAutomaticallyMoveToNewParent())){
+			NODE parent = dao.readParent(node);
+			if(parent==null && node.getNewParent()!=null || node.getNewParent()==null && parent!=null || !parent.equals(node.getNewParent()))
+				move(node, (NODE) node.getNewParent());
+		}
+		
+	}
+	
+	@Override
 	public NODE delete(NODE enumeration) {
 		logTrace("Deleting {} on node {}. Children are the followings :", enumeration,enumeration.getNode());
 		NestedSetNode rootNode = enumeration.getNode();

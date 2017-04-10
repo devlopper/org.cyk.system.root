@@ -6,9 +6,11 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
+import org.cyk.system.root.persistence.api.geography.LocalityDao;
 
 public class LocalityBusinessIT extends AbstractBusinessIT {
 	   
@@ -21,10 +23,18 @@ public class LocalityBusinessIT extends AbstractBusinessIT {
     protected void businesses() {
     	traceLocalityType(localityTypeBusiness.findAll(),"");
     	
-    	traceLocality(localityBusiness.findByParent(traceLocality(localityBusiness.find("AF"),"")),"\t");
+    	/*traceLocality(localityBusiness.findByParent(traceLocality(localityBusiness.find("AF"),"")),"\t");
     	traceLocality(localityBusiness.findByParent(traceLocality(localityBusiness.find("AL"),"")),"\t");
     	traceLocality(localityBusiness.findByParent(traceLocality(localityBusiness.find("DZ"),"")),"\t");
-    	
+    	*/
+    	String countryCode =  "CI";
+    	Locality coteDivoire = inject(LocalityDao.class).read(countryCode);
+    	System.out.println(coteDivoire.getNode().getLeftIndex()+":"+coteDivoire.getNode().getRightIndex());
+    	Locality parent = (Locality) inject(LocalityBusiness.class).findParent(coteDivoire);
+    	coteDivoire.setParent(parent);
+    	update(coteDivoire);
+    	System.out.println(coteDivoire.getNode().getLeftIndex()+":"+coteDivoire.getNode().getRightIndex());
+    	coteDivoire = inject(LocalityDao.class).read(countryCode);
     }
 
     /**/
