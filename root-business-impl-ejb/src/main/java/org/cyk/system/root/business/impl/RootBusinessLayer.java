@@ -319,11 +319,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void security(){ 
-    	createRole(Role.ADMINISTRATOR, "Administrator");
-    	createRole(Role.MANAGER, "Manager");
-        createRole(Role.SETTING_MANAGER, "Setting Manager");
-        createRole(Role.SECURITY_MANAGER, "Security Manager");
-        createRole(Role.USER, "User",SHIRO_PRIVATE_FOLDER);
+    	createRole(RootConstant.Code.Role.ADMINISTRATOR, "Administrator");
+    	createRole(RootConstant.Code.Role.MANAGER, "Manager");
+        createRole(RootConstant.Code.Role.SETTING_MANAGER, "Setting Manager");
+        createRole(RootConstant.Code.Role.SECURITY_MANAGER, "Security Manager");
+        createRole(RootConstant.Code.Role.USER, "User",SHIRO_PRIVATE_FOLDER);
         
         createFromExcelSheet(BusinessServiceCollection.class);
     }

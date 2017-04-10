@@ -258,6 +258,17 @@ public interface RootConstant {
 			
 		}
 		
+		public static class Role implements Serializable {
+			private static final long serialVersionUID = 1L;
+		
+			public static String ADMINISTRATOR = "ADMINISTRATOR";
+			public static String MANAGER = "MANAGER";
+			public static String SECURITY_MANAGER = "SECURITY_MANAGER";//TODO remove underscore
+			public static String SETTING_MANAGER = "SETTING_MANAGER";
+			public static String USER = "USER";
+			
+		}
+		
 		/**/
 		
 	}

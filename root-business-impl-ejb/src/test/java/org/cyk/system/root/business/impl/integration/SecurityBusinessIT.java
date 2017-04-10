@@ -12,6 +12,7 @@ import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
@@ -71,7 +72,7 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	
     	UserAccountSearchCriteria criteria = new UserAccountSearchCriteria(null);
     	//System.out.println(RootBusinessLayer.getInstance().getAdministratorRole());
-    	criteria.getRoleExcluded().add(inject(RoleBusiness.class).find(Role.ADMINISTRATOR));
+    	criteria.getRoleExcluded().add(inject(RoleBusiness.class).find(RootConstant.Code.Role.ADMINISTRATOR));
     	
     	/*System.out.println(userAccountBusiness.findAll());
     	System.out.println(userAccountBusiness.findAllExcludeRoles(Arrays.asList(RootBusinessLayer.getInstance().getAdministratorRole())));
@@ -97,15 +98,15 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	
     	//System.out.println(RootBusinessLayer.getInstance().getUniformResourceLocatorBusiness().findAll());
     	
-    	create(new RoleUniformResourceLocator(inject(RoleBusiness.class).find(Role.USER),u1));
-    	create(new RoleUniformResourceLocator(inject(RoleBusiness.class).find(Role.USER),u2));
+    	create(new RoleUniformResourceLocator(inject(RoleBusiness.class).find(RootConstant.Code.Role.USER),u1));
+    	create(new RoleUniformResourceLocator(inject(RoleBusiness.class).find(RootConstant.Code.Role.USER),u2));
     	
-    	create(new RoleUniformResourceLocator(inject(RoleBusiness.class).find(Role.ADMINISTRATOR),u1));
-    	create(new RoleUniformResourceLocator(inject(RoleBusiness.class).find(Role.ADMINISTRATOR),u3));
+    	create(new RoleUniformResourceLocator(inject(RoleBusiness.class).find(RootConstant.Code.Role.ADMINISTRATOR),u1));
+    	create(new RoleUniformResourceLocator(inject(RoleBusiness.class).find(RootConstant.Code.Role.ADMINISTRATOR),u3));
     	
-    	isUrlAccessible("/path",Boolean.FALSE,Boolean.FALSE, inject(RoleBusiness.class).find(Role.USER));
-    	isUrlAccessible("/a",Boolean.TRUE,Boolean.TRUE, inject(RoleBusiness.class).find(Role.USER));
-    	isUrlAccessible("/a/1",Boolean.TRUE,Boolean.FALSE, inject(RoleBusiness.class).find(Role.USER));
+    	isUrlAccessible("/path",Boolean.FALSE,Boolean.FALSE, inject(RoleBusiness.class).find(RootConstant.Code.Role.USER));
+    	isUrlAccessible("/a",Boolean.TRUE,Boolean.TRUE, inject(RoleBusiness.class).find(RootConstant.Code.Role.USER));
+    	isUrlAccessible("/a/1",Boolean.TRUE,Boolean.FALSE, inject(RoleBusiness.class).find(RootConstant.Code.Role.USER));
     	
     	//System.out.println(RootBusinessLayer.getInstance().getRoleUniformResourceLocatorBusiness().findAll());
     }

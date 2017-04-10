@@ -49,9 +49,4 @@ public class Role extends AbstractEnumeration implements Serializable {
 	
 	/**/
 	
-	public static final String ADMINISTRATOR = "ADMINISTRATOR";
-	public static final String MANAGER = "MANAGER";
-	public static final String SECURITY_MANAGER = "SECURITY_MANAGER";
-	public static final String SETTING_MANAGER = "SETTING_MANAGER";
-	public static final String USER = "USER";
 }

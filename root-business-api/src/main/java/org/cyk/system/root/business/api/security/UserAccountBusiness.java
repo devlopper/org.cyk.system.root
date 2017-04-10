@@ -33,6 +33,7 @@ public interface UserAccountBusiness extends TypedBusiness<UserAccount> {
 	void deleteSessionNotification(UserAccount userAccount,Notification notification);
 	
 	Boolean hasAtLeastOneRole(UserAccount userAccount,Collection<Role> roles);
+	Boolean hasRole(UserAccount userAccount, String roleCode);
 	Boolean hasRole(UserAccount userAccount,Role role);
 	
 	//void updatePassword(UserAccount userAccount,String oldPassword,String newPassword);
@@ -51,4 +52,6 @@ public interface UserAccountBusiness extends TypedBusiness<UserAccount> {
 	/**/
 	
 	String EXCEPTION_ALREADY_CONNECTED = "ALREADY_CONNECTED";
+
+	
 }

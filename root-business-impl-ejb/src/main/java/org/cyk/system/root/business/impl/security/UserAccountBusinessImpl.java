@@ -21,6 +21,7 @@ import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.UserSessionBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
@@ -98,7 +99,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	public Collection<UserAccount> findByCriteria(UserAccountSearchCriteria criteria) {
 		Collection<UserAccount> userAccounts;
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
-			userAccounts = dao.readAllExcludeRoles(Arrays.asList(inject(RoleBusiness.class).find(Role.ADMINISTRATOR)));
+			userAccounts = dao.readAllExcludeRoles(Arrays.asList(inject(RoleBusiness.class).find(RootConstant.Code.Role.ADMINISTRATOR)));
 		else
 			userAccounts = dao.readByCriteria(criteria);
 		for(UserAccount userAccount : userAccounts)
@@ -109,7 +110,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) //@Secure 
 	public Long countByCriteria(UserAccountSearchCriteria criteria) {
 		if(StringUtils.isBlank(criteria.getUsernameSearchCriteria().getPreparedValue()))
-			return dao.countAllExcludeRoles(Arrays.asList(inject(RoleBusiness.class).find(Role.ADMINISTRATOR)));
+			return dao.countAllExcludeRoles(Arrays.asList(inject(RoleBusiness.class).find(RootConstant.Code.Role.ADMINISTRATOR)));
 		return dao.countByCriteria(criteria);
 	}
 	
@@ -167,6 +168,11 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Boolean hasRole(UserAccount userAccount, String roleCode) {
+		return hasRole(userAccount, inject(RoleDao.class).read(roleCode));
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public UserAccount instanciateOne(Party party,Role...roles) {
 		UserAccount userAccount = new UserAccount();
 		userAccount.setUser(party);
@@ -200,17 +206,17 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 
 	@Override
 	public Boolean canRead(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isReadable(identifiable);
+		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(RootConstant.Code.Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isReadable(identifiable);
 	}
 
 	@Override
 	public Boolean canUpdate(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isUpdatable(identifiable);
+		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(RootConstant.Code.Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isUpdatable(identifiable);
 	}
 
 	@Override
 	public Boolean canDelete(UserAccount userAccount,AbstractIdentifiable identifiable) {
-		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isDeletable(identifiable);
+		return hasRole(userAccount, inject(RoleDao.class).readByGlobalIdentifierCode(RootConstant.Code.Role.ADMINISTRATOR)) || inject(GlobalIdentifierBusiness.class).isDeletable(identifiable);
 	}
 
 	@Override

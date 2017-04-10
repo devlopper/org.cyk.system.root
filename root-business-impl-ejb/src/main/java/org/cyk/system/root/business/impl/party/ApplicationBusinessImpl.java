@@ -34,11 +34,11 @@ import org.cyk.system.root.business.impl.security.DefaultApplicationPropertiesPr
 import org.cyk.system.root.business.impl.security.DefaultShiroConfigurator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.security.ApplicationAccount;
 import org.cyk.system.root.model.security.Installation;
-import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.PersistenceManager;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
@@ -137,7 +137,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		
 		//Super User : The one who use the system
 		
-		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(inject(RoleDao.class).read(Role.ADMINISTRATOR))));
+		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(inject(RoleDao.class).read(RootConstant.Code.Role.ADMINISTRATOR))));
 		//managerAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
 		
 		userAccountBusiness.create(managerAccount);
