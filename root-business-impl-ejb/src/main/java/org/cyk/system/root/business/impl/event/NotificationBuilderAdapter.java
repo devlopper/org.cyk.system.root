@@ -7,8 +7,8 @@ import java.util.Set;
 
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
-import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.file.File;
@@ -21,6 +21,7 @@ import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
+import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
 
@@ -33,7 +34,7 @@ public class NotificationBuilderAdapter extends Notification.Builder.Listener.Ad
 	@Override
 	public String getSenderIdentifier(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint) {
 		if(RemoteEndPoint.MAIL_SERVER.equals(remoteEndPoint))
-			return inject(ApplicationBusiness.class).findCurrentInstance().getSmtpProperties().getFrom();
+			return inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT).getFrom();
 		return super.getSenderIdentifier(identifiables, remoteEndPoint);
 	}
 	

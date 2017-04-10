@@ -70,7 +70,7 @@ public interface MessageSendingBusiness<ADDRESS> extends BusinessService {
 		public static Boolean BLOCKING = Boolean.FALSE;
 		
 		private Boolean blocking=BLOCKING,debug=Boolean.FALSE;
-		private Integer corePoolSize=1,maximumPoolSize=1;
+		private Integer corePoolSize=1,maximumPoolSize=1,queueSize=10;
 		private Long numberOfRetry = 5l,keepAliveTime=1l,timeout=1l;
 		private TimeUnit keepAliveTimeUnit = TimeUnit.SECONDS,timeoutUnit=TimeUnit.MINUTES;
 		private Long numberOfMillisecondBeforeRetry = 1000l * 6;

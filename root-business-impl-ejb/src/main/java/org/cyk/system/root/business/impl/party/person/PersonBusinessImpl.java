@@ -470,21 +470,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return Person.SearchCriteria.class;
 	}
 	
-	/*@Override
-	public Collection<Person> findByString(StringSearchCriteria stringSearchCriteria,DataReadConfiguration dataReadConfiguration) {
-		Person.SearchCriteria searchCriteria = new Person.SearchCriteria();
-		searchCriteria.set(stringSearchCriteria);
-		searchCriteria.setReadConfig(dataReadConfiguration);
-		return findBySearchCriteria(searchCriteria);
-	}
-	
-	@Override
-	public Long countByString(StringSearchCriteria stringSearchCriteria) {
-		Person.SearchCriteria searchCriteria = new Person.SearchCriteria();
-		searchCriteria.set(stringSearchCriteria);
-		return countBySearchCriteria(searchCriteria);
-	}*/
-	
 	/**/
 	
 	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Person>{

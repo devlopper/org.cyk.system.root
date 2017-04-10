@@ -124,7 +124,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		
 		/**/
 		
-		@SuppressWarnings("rawtypes")
+		@SuppressWarnings("rawtypes") @Getter @Setter
 		public static class Builder<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBuilder<CreateReportFileArguments> {
 			private static final long serialVersionUID = 1L;
 
@@ -132,7 +132,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 			
 			private String reportTemplateCode;
 			private ReportTemplate reportTemplate;
-			private File file,backgroundImageFile;
+			private File file;
+			@Getter @Setter private File backgroundImageFile;
 			private RootReportProducer reportProducer;
 			private Boolean joinFileToIdentifiable,isDraft = Boolean.FALSE,updateExisting=Boolean.TRUE;
 			

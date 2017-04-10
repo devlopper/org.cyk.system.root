@@ -26,12 +26,14 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.security.Credentials;
+import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.ThreadPoolExecutor;
@@ -52,12 +54,13 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 	
     private Session getSession(Boolean debug) {
     	Session session = null;
-    	Properties properties = convert(getSmtpProperties());
+    	final SmtpProperties smtpProperties = getSmtpProperties();
+    	Properties properties = convert(smtpProperties);
     	System.out.println("Mail session created : "+properties);
     	session = Session.getInstance(properties,new Authenticator() {
     		@Override
     		protected PasswordAuthentication getPasswordAuthentication() {
-    			return new PasswordAuthentication(getSmtpProperties().getCredentials().getUsername(), getSmtpProperties().getCredentials().getPassword());
+    			return new PasswordAuthentication(smtpProperties.getCredentials().getUsername(), smtpProperties.getCredentials().getPassword());
     		}
 		});
     	session.setDebug(debug);
@@ -133,7 +136,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		//classes.add(MessagingException.class);
 		classes.add(MailConnectException.class);
     	ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(arguments.getCorePoolSize(), arguments.getMaximumPoolSize(), arguments.getKeepAliveTime()
-    			, arguments.getKeepAliveTimeUnit(), notifications.size(),arguments.getTimeout(), arguments.getTimeoutUnit(),classes);
+    			, arguments.getKeepAliveTimeUnit(), arguments.getQueueSize(),arguments.getTimeout(), arguments.getTimeoutUnit(),classes);
     	threadPoolExecutor.addListener(arguments.getThreadPoolExecutorListener());
     	Session session = getSession(arguments.getDebug());
         for(Notification notification : notifications)
@@ -209,7 +212,8 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     
 	@Override
 	public SmtpProperties getSmtpProperties() {
-		//SMTP_PROPERTIES = RootBusinessLayer.getInstance().getDefaultSmtpProperties();
+		if(SMTP_PROPERTIES==null)
+			SMTP_PROPERTIES = inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT); //RootBusinessLayer.getInstance().getDefaultSmtpProperties();
 		if(SMTP_PROPERTIES==null){
 			SMTP_PROPERTIES = new SmtpProperties();
 			SMTP_PROPERTIES.setHost(null);
@@ -224,9 +228,15 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 			SMTP_PROPERTIES.getSocketFactory().setClazz("javax.net.ssl.SSLSocketFactory");
 			SMTP_PROPERTIES.getSocketFactory().setFallback(Boolean.FALSE);
 			SMTP_PROPERTIES.getSocketFactory().setPort(null);
+			
+		}
+		
+		if(SMTP_PROPERTIES!=null){
+			
 			SMTP_PROPERTIES.setAuthenticated(Boolean.TRUE);
 			SMTP_PROPERTIES.setSecured(Boolean.TRUE);
 		}
+		
 		return SMTP_PROPERTIES;
 	}
 	
