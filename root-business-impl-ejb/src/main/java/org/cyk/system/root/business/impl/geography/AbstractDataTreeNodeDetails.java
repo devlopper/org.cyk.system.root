@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.geography;
 import java.io.Serializable;
 
 import org.cyk.system.root.business.impl.AbstractEnumerationDetails;
+import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
@@ -21,10 +22,12 @@ public abstract class AbstractDataTreeNodeDetails<NODE extends AbstractDataTreeN
 	
 	@Override
 	public void setMaster(NODE master) {
-		// TODO Auto-generated method stub
 		super.setMaster(master);
+		
 		if(master!=null){
-			parent = master.getNode().getParent() == null ? null : formatUsingBusiness(master.getNode().getParent());
+			@SuppressWarnings("unchecked")
+			NODE parent = (NODE) inject(BusinessInterfaceLocator.class).injectTyped(clazz).findParent(master);
+			this.parent = parent == null ? null : formatUsingBusiness(parent);
 		}
 	}
 	

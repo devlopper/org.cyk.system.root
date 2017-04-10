@@ -21,6 +21,7 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 
 	private static final long serialVersionUID = 7439361240545541931L;
 
+	protected Class<MODEL_ELEMENT> clazz;
 	protected RootBusinessLayer rootBusinessLayer = RootBusinessLayer.getInstance();
 	protected NumberBusiness numberBusiness = inject(NumberBusiness.class);
 	protected TimeBusiness timeBusiness = inject(TimeBusiness.class);
@@ -29,7 +30,13 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	
 	public AbstractModelElementOutputDetails(MODEL_ELEMENT master) {
 		super();
+		clazz = getClassParameter();
 		setMaster(master);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected Class<MODEL_ELEMENT> getClassParameter(){
+		return (Class<MODEL_ELEMENT>) commonUtils.getClassParameterAt(getClass(), 0);
 	}
 	
 	public void setMaster(MODEL_ELEMENT master){
