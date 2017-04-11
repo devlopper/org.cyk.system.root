@@ -125,6 +125,10 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 
 	@Override
 	public void move(NODE enumeration, NODE parent) {
+		NODE databaseParent = dao.readParent(enumeration);
+		if(parent.equals(databaseParent))
+			return;
+		exceptionUtils().exception(enumeration.equals(parent),"exception.nestedsetnode.move.nodecannotbeitsownparent",new Object[]{parent});
 		Long numberOfChildrenByCountBefore = dao.countByParent(enumeration);
 		Long numberOfChildrenOfParentByCountBefore = dao.countByParent(parent);
 		NestedSetNode node = enumeration.getNode();
