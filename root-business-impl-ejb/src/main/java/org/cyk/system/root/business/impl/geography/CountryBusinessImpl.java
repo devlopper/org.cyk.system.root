@@ -36,6 +36,7 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 		country.setName(values[1]);
 		country.setContinent(inject(LocalityDao.class).read(values[2]));
 		country.setPhoneNumberCode(Integer.parseInt(StringUtils.defaultIfBlank(values.length>3 ? values[3] : null, "0")));
+		country.setLocality(inject(LocalityDao.class).read(country.getCode()));
 		return country;
 	}
 	
@@ -49,6 +50,13 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 		if(locality.getIdentifier()==null)
 			inject(LocalityBusiness.class).create(locality);
 		super.beforeCreate(country);
+	}
+	
+	@Override
+	public Country create(Country country) {
+		if(country.getContinent()==null)
+			return null;
+		return super.create(country);
 	}
 
 	@Override

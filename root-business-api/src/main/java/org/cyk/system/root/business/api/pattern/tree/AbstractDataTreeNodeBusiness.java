@@ -13,6 +13,7 @@ public interface AbstractDataTreeNodeBusiness<NODE extends AbstractEnumeration> 
     Collection<NODE> findByParent(NODE parent);
     
     void move(NODE anEnumeration,NODE parent);
+    void move(String code,String parentCode);
     /*
     NODE findParent(NODE child);
     Collection<NODE> findParentRecursively(NODE node);

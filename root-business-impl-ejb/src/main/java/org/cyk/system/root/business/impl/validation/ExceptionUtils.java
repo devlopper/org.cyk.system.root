@@ -60,7 +60,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     public void exception(Boolean condition,String identifier,String messageId,Object[] parameters){
         if(Boolean.TRUE.equals(condition)){
         	String message = languageBusiness.findText(messageId,parameters);
-            BusinessException exception = new BusinessException(message);
+        	BusinessException exception = new BusinessException(message);
             exception.setIdentifier(identifier);
             throw exception;
         }

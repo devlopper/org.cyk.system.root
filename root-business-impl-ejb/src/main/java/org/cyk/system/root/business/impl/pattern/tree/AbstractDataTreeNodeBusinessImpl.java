@@ -59,16 +59,14 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void afterUpdate(NODE node){
 		super.afterUpdate(node);
 		if(Boolean.TRUE.equals(node.getAutomaticallyMoveToNewParent())){
 			NODE parent = dao.readParent(node);
 			if(parent==null && node.getNewParent()!=null || node.getNewParent()==null && parent!=null || !parent.equals(node.getNewParent()))
-				move(node, (NODE) node.getNewParent());
+				move(node.getCode(), node.getNewParent().getCode());
 		}
-		
 	}
 	
 	@Override
@@ -127,9 +125,35 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 
 	@Override
 	public void move(NODE enumeration, NODE parent) {
+		Long numberOfChildrenByCountBefore = dao.countByParent(enumeration);
+		Long numberOfChildrenOfParentByCountBefore = dao.countByParent(parent);
 		NestedSetNode node = enumeration.getNode();
 		node = nestedSetNodeBusiness.detach(node);
 		nestedSetNodeBusiness.attach(node,parent.getNode());
+		
+		Long numberOfChildrenByCountAfter = dao.countByParent(dao.read(enumeration.getIdentifier()));
+		Long numberOfChildrenOfParentByCountAfter = dao.countByParent(dao.read(parent.getIdentifier()));
+		/*
+		List<NODE> l = new ArrayList<>(dao.readByParent(dao.read(enumeration.getIdentifier())));
+		l.add(0, dao.read(enumeration.getIdentifier()));
+		List<String> s = new ArrayList<>();
+		for(NODE index : l)  
+			s.add(index.getNode().getLeftIndex()+","+index.getNode().getRightIndex());
+		*/
+		/*Boolean v = true;
+		if(v)
+			throw new RuntimeException("DONTDO");
+		*/
+		exceptionUtils().exception(numberOfChildrenByCountBefore!=numberOfChildrenByCountAfter, "exception.nestedsetnode.move.numberofchildren"
+				,new Object[]{enumeration,numberOfChildrenByCountBefore,numberOfChildrenByCountAfter});
+		Long expectedNumberOfChildrenOfParentByCount = numberOfChildrenOfParentByCountBefore+numberOfChildrenByCountBefore+1;
+		exceptionUtils().exception(expectedNumberOfChildrenOfParentByCount!=numberOfChildrenOfParentByCountAfter, "exception.nestedsetnode.move.numberofchildren"
+				,new Object[]{parent,expectedNumberOfChildrenOfParentByCount,numberOfChildrenOfParentByCountAfter});
+	}
+	
+	@Override
+	public void move(String code, String parentCode) {
+		move(dao.read(code), dao.read(parentCode));
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -168,12 +192,13 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 	}
 
 	private void loadChildren(NODE parent){
-       buildHierarchy(parent,new ArrayList<>(dao.readByParent(parent)));
+		parent.setChildren(null);
+		buildHierarchy(parent,new ArrayList<>(dao.readByParent(parent)));
     }
     
     @SuppressWarnings("unchecked")
     private void buildHierarchy(NODE parent,List<NODE> children){
-        for(int i=0;i<children.size();){
+    	for(int i=0;i<children.size();){
             
             if(children.get(i).getNode().getParent().equals(parent.getNode())){
                 if(parent.getChildren()==null)
