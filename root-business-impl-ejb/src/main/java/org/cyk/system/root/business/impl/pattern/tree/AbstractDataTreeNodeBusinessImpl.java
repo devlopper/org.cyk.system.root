@@ -137,17 +137,7 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		
 		Long numberOfChildrenByCountAfter = dao.countByParent(dao.read(enumeration.getIdentifier()));
 		Long numberOfChildrenOfParentByCountAfter = dao.countByParent(dao.read(parent.getIdentifier()));
-		/*
-		List<NODE> l = new ArrayList<>(dao.readByParent(dao.read(enumeration.getIdentifier())));
-		l.add(0, dao.read(enumeration.getIdentifier()));
-		List<String> s = new ArrayList<>();
-		for(NODE index : l)  
-			s.add(index.getNode().getLeftIndex()+","+index.getNode().getRightIndex());
-		*/
-		/*Boolean v = true;
-		if(v)
-			throw new RuntimeException("DONTDO");
-		*/
+		
 		exceptionUtils().exception(numberOfChildrenByCountBefore!=numberOfChildrenByCountAfter, "exception.nestedsetnode.move.numberofchildren"
 				,new Object[]{enumeration,numberOfChildrenByCountBefore,numberOfChildrenByCountAfter});
 		Long expectedNumberOfChildrenOfParentByCount = numberOfChildrenOfParentByCountBefore+numberOfChildrenByCountBefore+1;
