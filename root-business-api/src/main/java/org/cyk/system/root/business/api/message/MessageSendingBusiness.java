@@ -2,6 +2,7 @@ package org.cyk.system.root.business.api.message;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.cyk.system.root.business.api.BusinessService;
@@ -75,6 +76,8 @@ public interface MessageSendingBusiness<ADDRESS> extends BusinessService {
 		private TimeUnit keepAliveTimeUnit = TimeUnit.SECONDS,timeoutUnit=TimeUnit.MINUTES;
 		private Long numberOfMillisecondBeforeRetry = 1000l * 6;
 		private ThreadPoolExecutor.Listener threadPoolExecutorListener;
+		
+		private Properties properties;
 	}
 	
 	/**/

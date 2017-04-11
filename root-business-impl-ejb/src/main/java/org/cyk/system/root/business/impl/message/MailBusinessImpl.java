@@ -49,23 +49,34 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 	
 	public static final String SMTP = "smtp";
 	public static final String PROPERTY_FORMAT = "mail."+SMTP+"%s.%s";
+	public static final String PROPERTY_USERNAME = String.format(PROPERTY_FORMAT, "user",Constant.EMPTY_STRING);
+	public static final String PROPERTY_PASSWORD = String.format(PROPERTY_FORMAT, "password",Constant.EMPTY_STRING);
 	
-	public static SmtpProperties SMTP_PROPERTIES;
+	//public static SmtpProperties SMTP_PROPERTIES;
 	
-    private Session getSession(Boolean debug) {
+    private Session getSession(final Properties properties,Boolean debug) {
     	Session session = null;
-    	final SmtpProperties smtpProperties = getSmtpProperties();
-    	Properties properties = convert(smtpProperties);
-    	System.out.println("Mail session created : "+properties);
+    	/*final SmtpProperties smtpProperties = getSmtpProperties();
+    	if(properties!=null)
+    		properties = convert(smtpProperties);
+    	*/
+    	System.out.println("Mail session will create with properties : "+properties);
     	session = Session.getInstance(properties,new Authenticator() {
     		@Override
     		protected PasswordAuthentication getPasswordAuthentication() {
-    			return new PasswordAuthentication(smtpProperties.getCredentials().getUsername(), smtpProperties.getCredentials().getPassword());
+    			return new PasswordAuthentication(properties.getProperty(PROPERTY_USERNAME), properties.getProperty(PROPERTY_PASSWORD));
     		}
-		});
+		});session.
     	session.setDebug(debug);
     	return session;
-		
+    }
+    
+    private Session getSession(final SmtpProperties smtpProperties,Boolean debug) {
+    	return getSession(convert(smtpProperties), debug);
+    }
+    
+    private Session getSession(Boolean debug) {
+    	return getSession(inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT), debug);
     }
     
     private void send(final Session session,final Notification notification,final InternetAddress[] addresses) {
@@ -138,9 +149,9 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     	ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(arguments.getCorePoolSize(), arguments.getMaximumPoolSize(), arguments.getKeepAliveTime()
     			, arguments.getKeepAliveTimeUnit(), arguments.getQueueSize(),arguments.getTimeout(), arguments.getTimeoutUnit(),classes);
     	threadPoolExecutor.addListener(arguments.getThreadPoolExecutorListener());
-    	Session session = getSession(arguments.getDebug());
+    	Session session = getSession(arguments.getProperties(),arguments.getDebug());
         for(Notification notification : notifications)
-        	threadPoolExecutor.execute(new Sender(session, notification,listener));
+        	threadPoolExecutor.execute(new Sender(arguments.getProperties(),session, notification,listener));
     		
         ThreadPoolExecutor.execute(threadPoolExecutor,arguments.getNumberOfRetry(),arguments.getNumberOfMillisecondBeforeRetry());
     }
@@ -210,7 +221,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     	properties.put(String.format(PROPERTY_FORMAT, "s",name), value);
     }
     
-	@Override
+	/*@Override
 	public SmtpProperties getSmtpProperties() {
 		if(SMTP_PROPERTIES==null)
 			SMTP_PROPERTIES = inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT); //RootBusinessLayer.getInstance().getDefaultSmtpProperties();
@@ -238,7 +249,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		}
 		
 		return SMTP_PROPERTIES;
-	}
+	}*/
 	
 	@Override
 	public void setProperties(String host,Integer port,String username,String password,Boolean secured) {
@@ -265,14 +276,15 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		private static final long serialVersionUID = 1L;
 		
 		private Session session;
+		private Properties properties;
 		
-		public Sender(Session session, Notification notification,SendListener listener) {
+		public Sender(Properties properties,Session session, Notification notification,SendListener listener) {
 			super(notification,listener);
 			this.session = session;
 		}
 		
-		public Sender(Session session, Notification notification) {
-			this(session, notification, null);
+		public Sender(Properties properties,Session session, Notification notification) {
+			this(properties,session, notification, null);
 		}
 				
 		@Override
