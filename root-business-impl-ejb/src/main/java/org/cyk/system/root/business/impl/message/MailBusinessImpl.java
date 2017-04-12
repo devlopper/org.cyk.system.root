@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.message;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -26,15 +27,13 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
+import org.cyk.system.root.business.api.message.SmtpPropertiesBusiness;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.message.SmtpProperties;
-import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.ThreadPoolExecutor;
 
@@ -47,13 +46,6 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     
 	private static final long serialVersionUID = 4468167686499924200L;
 	
-	public static final String SMTP = "smtp";
-	public static final String PROPERTY_FORMAT = "mail."+SMTP+"%s.%s";
-	public static final String PROPERTY_USERNAME = String.format(PROPERTY_FORMAT, "user",Constant.EMPTY_STRING);
-	public static final String PROPERTY_PASSWORD = String.format(PROPERTY_FORMAT, "password",Constant.EMPTY_STRING);
-	
-	//public static SmtpProperties SMTP_PROPERTIES;
-	
     private Session getSession(final Properties properties,Boolean debug) {
     	Session session = null;
     	/*final SmtpProperties smtpProperties = getSmtpProperties();
@@ -64,28 +56,29 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     	session = Session.getInstance(properties,new Authenticator() {
     		@Override
     		protected PasswordAuthentication getPasswordAuthentication() {
-    			return new PasswordAuthentication(properties.getProperty(PROPERTY_USERNAME), properties.getProperty(PROPERTY_PASSWORD));
+    			return new PasswordAuthentication(properties.getProperty(RootConstant.Configuration.SmtpProperties.PROPERTY_USERNAME)
+    					, properties.getProperty(RootConstant.Configuration.SmtpProperties.PROPERTY_PASSWORD));
     		}
-		});session.
+		});
     	session.setDebug(debug);
     	return session;
     }
     
     private Session getSession(final SmtpProperties smtpProperties,Boolean debug) {
-    	return getSession(convert(smtpProperties), debug);
+    	return getSession(inject(SmtpPropertiesBusiness.class).convertToProperties(smtpProperties), debug);
     }
     
     private Session getSession(Boolean debug) {
     	return getSession(inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT), debug);
     }
     
-    private void send(final Session session,final Notification notification,final InternetAddress[] addresses) {
+    private void send(Properties properties,final Session session,final Notification notification,final InternetAddress[] addresses) {
     	/*exceptionUtils().exception(StringUtils.isBlank(notification.getTitle()), "notification.title.required");
     	exceptionUtils().exception(StringUtils.isBlank(notification.getMessage()) && (notification.getFiles()==null || notification.getFiles().isEmpty())
     			, "notification.messageorattachement.required");
     	*/
     	
-    	new Sender(session, notification).run();
+    	new Sender(properties,session, notification).run();
         
     }
     
@@ -102,8 +95,8 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
         
     @Override
     public void send(Notification notification, String[] theReceiverIds,SendArguments arguments) {
-        Session session = getSession(arguments.getDebug());
-        send(session,notification, getAddresses(theReceiverIds));
+        Session session = getSession(arguments.getProperties(),arguments.getDebug());
+        send(arguments.getProperties(),session,notification, getAddresses(theReceiverIds));
     }
     
     @Override
@@ -193,33 +186,18 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
         
     }
     
+    @Override
+    public void ping(String[] theReceiverIds,SendArguments sendArguments) {
+    	Notification notification = new Notification();
+    	notification.setTitle("Ping");
+    	notification.setMessage("This is a ping");
+    	notification.addReceiverIdentifiers(Arrays.asList(theReceiverIds));
+		send(notification,sendArguments);
+    }
+    
     /**/
     
-    @Override
-	public Properties convert(SmtpProperties smtpProperties) {
-		Properties properties = new Properties();
-		addProperty(properties, "host", smtpProperties.getHost());
-		addProperty(properties, "from", smtpProperties.getFrom());
-		addProperty(properties, "user", smtpProperties.getCredentials().getUsername());
-		addProperty(properties, "password", smtpProperties.getCredentials().getPassword());
-		
-		//addProperty(properties, "socketFactory.port", smtpProperties.getSocketFactory().getPort());
-		addProperty(properties, "port", smtpProperties.getPort());
-		//addProperty(properties, "socketFactory.fallback", smtpProperties.getSocketFactory().getFallback());
-		addProperty(properties, "auth", smtpProperties.getAuthenticated());
-		//addProperty(properties, "socketFactory.class", smtpProperties.getSocketFactory().getClazz());
-		
-		if(Boolean.TRUE.equals(smtpProperties.getSecured())){
-			addProperty(properties, "starttls.enable", smtpProperties.getSecured());
-			addProperty(properties, "ssl.enable", smtpProperties.getSecured());
-		}
-		return properties;
-	}
     
-    private void addProperty(Properties properties,String name,Object value){
-    	properties.put(String.format(PROPERTY_FORMAT, Constant.EMPTY_STRING,name), value);
-    	properties.put(String.format(PROPERTY_FORMAT, "s",name), value);
-    }
     
 	/*@Override
 	public SmtpProperties getSmtpProperties() {
@@ -251,7 +229,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		return SMTP_PROPERTIES;
 	}*/
 	
-	@Override
+	/*@Override
 	public void setProperties(String host,Integer port,String username,String password,Boolean secured) {
 		SmtpProperties smtpProperties = getSmtpProperties();
 		smtpProperties.setHost(host);
@@ -267,7 +245,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 	@Override
 	public void setProperties(String host, Integer port, String username, String password) {
 		setProperties(host, port, username, password,Boolean.TRUE);	
-	}
+	}*/
     
 	/**/
 	
@@ -280,6 +258,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		
 		public Sender(Properties properties,Session session, Notification notification,SendListener listener) {
 			super(notification,listener);
+			this.properties = properties;
 			this.session = session;
 		}
 		
@@ -291,8 +270,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
 		protected void __run__(LogMessage.Builder logMessageBuilder) throws Exception{
 			InternetAddress[] addresses = getReceiverAddresses(notification).toArray(new InternetAddress[]{});
 			MimeMessage message = new MimeMessage(session);
-            
-            message.setFrom(new InternetAddress(SMTP_PROPERTIES.getFrom()));
+            message.setFrom(new InternetAddress(properties.getProperty(RootConstant.Configuration.SmtpProperties.PROPERTY_FROM)));
             message.setRecipients(Message.RecipientType.TO, addresses);
             message.setSubject(notification.getTitle());
             message.setSentDate(notification.getDate() == null ? new Date() : notification.getDate());

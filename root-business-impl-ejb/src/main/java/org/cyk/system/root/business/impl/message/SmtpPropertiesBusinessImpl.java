@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl.message;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 import javax.inject.Inject;
 
@@ -9,6 +10,7 @@ import org.cyk.system.root.business.api.message.SmtpPropertiesBusiness;
 import org.cyk.system.root.business.api.security.CredentialsBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.message.SmtpSocketFactory;
@@ -52,5 +54,42 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
 		super.afterUpdate(smtpProperties);
 		inject(CredentialsBusiness.class).update(smtpProperties.getCredentials());
 	}
+	
+	@Override
+	public Properties convertToProperties(String host, Integer port, String username, String password,Boolean secured) {
+		Properties properties = new Properties();
+		addProperty(properties, RootConstant.Configuration.SmtpProperties.HOST, host);
+		addProperty(properties, RootConstant.Configuration.SmtpProperties.FROM, username);
+		addProperty(properties, RootConstant.Configuration.SmtpProperties.USER, username);
+		addProperty(properties, RootConstant.Configuration.SmtpProperties.PASSWORD, password);
+		
+		//addProperty(properties, "socketFactory.port", smtpProperties.getSocketFactory().getPort());
+		addProperty(properties, RootConstant.Configuration.SmtpProperties.PORT, port);
+		//addProperty(properties, "socketFactory.fallback", smtpProperties.getSocketFactory().getFallback());
+		addProperty(properties, RootConstant.Configuration.SmtpProperties.AUTH, StringUtils.isNotBlank(password));
+		//addProperty(properties, "socketFactory.class", smtpProperties.getSocketFactory().getClazz());
+		
+		if(Boolean.TRUE.equals(secured)){
+			addProperty(properties, RootConstant.Configuration.SmtpProperties.STARTTLS_ENABLE, secured);
+			addProperty(properties, RootConstant.Configuration.SmtpProperties.SSL_ENABLE, secured);
+		}
+		return properties;
+	}
+	
+	@Override
+	public Properties convertToProperties(String host, Integer port, String username, String password) {
+		return convertToProperties(host, port, username, password,Boolean.TRUE);
+	}
+	
+	@Override
+	public Properties convertToProperties(SmtpProperties smtpProperties) {
+		return convertToProperties(smtpProperties.getHost(), smtpProperties.getPort(), smtpProperties.getCredentials().getUsername()
+				, smtpProperties.getCredentials().getPassword(), smtpProperties.getSecured());
+	}
+	
+	private void addProperty(Properties properties,String name,Object value){
+    	properties.put(RootConstant.Configuration.SmtpProperties.getProperty(name,Boolean.FALSE), value);
+    	properties.put(RootConstant.Configuration.SmtpProperties.getProperty(name,Boolean.TRUE), value);
+    }
 	
 }

@@ -41,6 +41,8 @@ public interface MessageSendingBusiness<ADDRESS> extends BusinessService {
 	void send(Collection<Notification> notifications,SendListener listener);
 	void send(Collection<Notification> notifications);
 	
+	void ping(String[] theReceiverIds,SendArguments options);
+	
 	/**/
 	
 	public static interface SendListener {
