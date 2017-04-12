@@ -184,6 +184,10 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return parents;
 	}
 	
+	public AbstractIdentifiable getParent(){
+		return (AbstractIdentifiable) (parents == null || parents.isEmpty() ? null : parents.iterator().next());
+	}
+	
 	public Collection<AbstractIdentifiable> getChildren(){
 		if(children==null)
 			children =  new ArrayList<>();
