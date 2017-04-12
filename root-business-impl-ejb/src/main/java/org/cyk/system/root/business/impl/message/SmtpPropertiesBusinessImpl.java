@@ -40,7 +40,8 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
     	set(listener.getSetListener(), SmtpProperties.FIELD_SOCKET_FACTORY,SmtpSocketFactory.FIELD_FALLBACK);
     	set(listener.getSetListener(), SmtpProperties.FIELD_SOCKET_FACTORY,SmtpSocketFactory.FIELD_PORT);
     	listener.getInstance().setAuthenticated(StringUtils.isNotBlank(listener.getInstance().getCredentials().getPassword()));
-		return listener.getInstance();
+    	listener.getInstance().setSecured(listener.getInstance().getAuthenticated());
+    	return listener.getInstance();
 	}
 	
 	@Override

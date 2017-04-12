@@ -10,7 +10,7 @@ import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
-public class MailBusinessConnectivityUT extends AbstractUnitTest {
+public class MailBusinessPingUT extends AbstractUnitTest {
 
 	private static final long serialVersionUID = 124355073578123984L;
 
@@ -46,6 +46,11 @@ public class MailBusinessConnectivityUT extends AbstractUnitTest {
 	
 	//@Test
 	public void pingOrangeIesaResults() {
-		ping("smtpauth.myorangeoffice.com", 465, "results@iesa-ci.com", "p@17abIESAresults*");
+		ping("smtpauth.myorangeoffice.com", 465, "results@iesa-ci.com", "17abIESAresults");
+	}
+	
+	@Test
+	public void pingGmailIesaResults() {
+		ping("smtp.gmail.com", 465, "iesaciresults@gmail.com", "17abIESAresults");
 	}
 }

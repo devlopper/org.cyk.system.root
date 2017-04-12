@@ -6,8 +6,12 @@ import java.util.Collection;
 
 import javax.mail.internet.InternetAddress;
 
+import org.cyk.system.root.model.message.SmtpProperties;
+
 public interface MailBusiness extends MessageSendingBusiness<InternetAddress> {
 
+	void ping(SmtpProperties smtpProperties);
+	
 	//Properties convert(SmtpProperties smtpProperties);
 	
 	/*

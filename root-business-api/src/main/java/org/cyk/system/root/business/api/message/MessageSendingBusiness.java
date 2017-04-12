@@ -42,6 +42,8 @@ public interface MessageSendingBusiness<ADDRESS> extends BusinessService {
 	void send(Collection<Notification> notifications);
 	
 	void ping(String[] theReceiverIds,SendArguments options);
+	void ping(SendArguments options);
+	void ping();
 	
 	/**/
 	

@@ -44,7 +44,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
     @Override
     protected void populate() {
     	super.populate();
-    	inject(MailBusiness.class).setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
+    	//inject(MailBusiness.class).setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
     	
     	Person son = inject(PersonBusiness.class).instanciateOneRandomly("P002");
     	son.setName("Komenan");

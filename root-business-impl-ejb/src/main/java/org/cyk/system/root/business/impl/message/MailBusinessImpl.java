@@ -52,7 +52,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     	if(properties!=null)
     		properties = convert(smtpProperties);
     	*/
-    	System.out.println("Mail session will create with properties : "+properties);
+    	System.out.println("Mail session will be created with properties : "+properties);
     	session = Session.getInstance(properties,new Authenticator() {
     		@Override
     		protected PasswordAuthentication getPasswordAuthentication() {
@@ -193,6 +193,24 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     	notification.setMessage("This is a ping");
     	notification.addReceiverIdentifiers(Arrays.asList(theReceiverIds));
 		send(notification,sendArguments);
+    }
+    
+    @Override
+    public void ping(SendArguments sendArguments) {
+    	ping(new String[]{(String) sendArguments.getProperties().get(RootConstant.Configuration.SmtpProperties.PROPERTY_USERNAME)}, sendArguments);
+    }
+    
+    @Override
+    public void ping(SmtpProperties smtpProperties) {
+    	SendArguments sendArguments = new SendArguments();
+    	sendArguments.setProperties(inject(SmtpPropertiesBusiness.class).convertToProperties(smtpProperties));
+    	ping(sendArguments);
+    }
+    
+    @Override
+    public void ping() {
+    	SmtpProperties smtpProperties = inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT);
+    	ping(smtpProperties);
     }
     
     /**/

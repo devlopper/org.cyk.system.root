@@ -10,6 +10,7 @@ import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendArgum
 import org.cyk.system.root.business.api.message.MessageSendingBusiness.SendListener;
 import org.cyk.system.root.business.impl.file.FileBusinessImpl;
 import org.cyk.system.root.business.impl.message.MailBusinessImpl;
+import org.cyk.system.root.business.impl.message.SmtpPropertiesBusinessImpl;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.utility.common.ThreadPoolExecutor;
 import org.cyk.utility.test.unit.AbstractUnitTest;
@@ -22,13 +23,14 @@ public class MailBusinessPerformanceUT extends AbstractUnitTest {
 
 	@InjectMocks private MailBusinessImpl mailBusiness;
 	@InjectMocks private FileBusinessImpl fileBusiness;
+	@InjectMocks private SmtpPropertiesBusinessImpl smtpPropertiesBusiness;
 	
 	@Override
 	protected void registerBeans(Collection<Object> collection) {
 		super.registerBeans(collection);
 		collection.add(mailBusiness);
 		collection.add(fileBusiness);
-		mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
+		collection.add(smtpPropertiesBusiness);
 	}
 	
 	@Test
@@ -60,6 +62,7 @@ public class MailBusinessPerformanceUT extends AbstractUnitTest {
 
 		};
 		SendArguments sendArguments = new SendArguments();
+		sendArguments.setProperties(smtpPropertiesBusiness.convertToProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*"));
 		sendArguments.setNumberOfRetry(30l);
 		sendArguments.setNumberOfMillisecondBeforeRetry(1000l * 10);
 		sendArguments.setThreadPoolExecutorListener(new ThreadPoolExecutor.Listener.Adapter.Default() {

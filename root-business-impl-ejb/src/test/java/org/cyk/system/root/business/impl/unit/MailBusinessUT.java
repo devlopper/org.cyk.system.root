@@ -35,7 +35,7 @@ public class MailBusinessUT extends AbstractUnitTest {
 		collection.add(mailBusiness);
 		collection.add(fileBusiness);
 		collection.add(exceptionUtils);
-		mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
+		//mailBusiness.setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
 	}
 	
 	@Test
