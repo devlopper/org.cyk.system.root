@@ -8,11 +8,14 @@ import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.persistence.api.geography.LocalityDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.file.ExcelSheetReader;
+import org.junit.Test;
 
 public class FindByStringIT extends AbstractBusinessIT {
 
@@ -56,7 +59,10 @@ public class FindByStringIT extends AbstractBusinessIT {
     }
     
 	@Override
-	protected void businesses() {
+	protected void businesses() {}
+	
+	@Test
+	public void findPerson(){
 		assertEquals(4l, inject(PersonDao.class).countAll());
 		assertFindByString(Person.class,"WXWX",0);
 		assertFindByString(Person.class,null,4);
@@ -67,21 +73,30 @@ public class FindByStringIT extends AbstractBusinessIT {
 		assertFindByString(Person.class,"a",Arrays.asList("c002"),3);
 		
 		assertFindByString(Person.class,"ius",1);
+	}
+	
+	@Test
+	public void findJobFunction(){
+		assertFindByString(JobFunction.class,null,5);
+		assertFindByString(JobFunction.class,"",5);
 		
-		assertFindByString(JobFunction.class,null,4);
-		assertFindByString(JobFunction.class,"",4);
-		
-		assertFindByString(JobFunction.class,"rec",1);
+		assertFindByString(JobFunction.class,"rec",2);
 		assertFindByString(JobFunction.class,"m",2);
 		assertFindByString(JobFunction.class,"my",2);
 		assertFindByString(JobFunction.class,"myc",1);
 		assertFindByString(JobFunction.class,"myl",1);
-		assertFindByString(JobFunction.class,"e",3);
+		assertFindByString(JobFunction.class,"e",4);
 		assertFindByString(JobFunction.class,"m",2);
-		assertFindByString(JobFunction.class,"my",2);
-		assertFindByString(JobFunction.class,"c",2);
-		assertFindByString(JobFunction.class,"r",2);
-		
+		assertFindByString(JobFunction.class,"c",3);
+		assertFindByString(JobFunction.class,"r",3);
+	}
+	
+	@Test
+	public void findLocality(){
+		Integer allCount = inject(LocalityDao.class).countAll().intValue();
+		assertFindByString(Locality.class,null,allCount);
+		assertFindByString(Locality.class,"",allCount);
+		assertFindByString(Locality.class,"ivoire",1);
 	}
 	
 	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Collection<String> excludedCodes,Integer expected){
