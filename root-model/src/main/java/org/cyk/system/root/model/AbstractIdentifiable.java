@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,9 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,9 +39,6 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /*lombok*/
 
@@ -185,7 +186,17 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	}
 	
 	public AbstractIdentifiable getParent(){
-		return (AbstractIdentifiable) (parents == null || parents.isEmpty() ? null : parents.iterator().next());
+		return (AbstractIdentifiable) (parents == null || parents.isEmpty() ? null : ((List<AbstractIdentifiable>)parents).get(((List<AbstractIdentifiable>)parents).size()-1));
+	}
+	
+	/**
+	 * Set the parent.
+	 * Clear existing parents and add this parent to the list
+	 * @param parent
+	 */
+	public void setParent(AbstractIdentifiable parent){
+		getParents().clear();
+		getParents().add(parent);
 	}
 	
 	public Collection<AbstractIdentifiable> getChildren(){

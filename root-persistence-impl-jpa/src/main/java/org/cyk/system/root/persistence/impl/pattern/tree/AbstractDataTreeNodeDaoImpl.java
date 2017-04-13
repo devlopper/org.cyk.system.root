@@ -6,6 +6,7 @@ import static org.cyk.utility.common.computation.ArithmeticOperator.LT;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
@@ -23,7 +24,8 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 	/* 
 	 *Named Queries Identifiers Declaration 
 	 */
-	private String readByParent,countByParent,readRoots,countRoots,readByLeftIndexByRightIndex,readByLeftIndexLowerThanByRightIndexGreaterThan; 
+	private String readByParent,countByParent,readRoots,countRoots,readByLeftIndexByRightIndex,readByLeftIndexLowerThanByRightIndexGreaterThan
+		,readDirectChildrenByParent,countDirectChildrenByParent; 
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -38,6 +40,11 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 		registerNamedQuery(readByParent, _select().where("node.set", "nestedSet").and("node.leftIndex","leftIndex",GT).and("node.leftIndex","rightIndex",LT)
 				.orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_LEFT_INDEX), Boolean.TRUE));
 		registerNamedQuery(readRoots, _select().where(null,"node.set.root", QueryStringBuilder.VAR+".node",ArithmeticOperator.EQ,false));
+		
+		registerNamedQuery(readDirectChildrenByParent, _select().where(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE, NestedSetNode.FIELD_PARENT)
+					,NestedSetNode.FIELD_PARENT)
+				 .orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_ORDER_NUMBER), Boolean.TRUE)
+				 .orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_LEFT_INDEX), Boolean.TRUE));
 	}
 	
 	@Override
@@ -67,6 +74,16 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 	    NestedSetNode n = parent.getNode();
         return countNamedQuery(countByParent).parameter("nestedSet", n.getSet()).parameter("leftIndex", n.getLeftIndex()).parameter("rightIndex", n.getRightIndex())
                 .resultOne();
+	}
+	
+	@Override
+	public Collection<ENUMERATION> readDirectChildrenByParent(ENUMERATION parent) {
+	    return namedQuery(readDirectChildrenByParent).parameter(NestedSetNode.FIELD_PARENT, parent.getNode()).resultMany();
+	}
+	
+	@Override
+	public Long countDirectChildrenByParent(ENUMERATION parent) {
+        return countNamedQuery(countDirectChildrenByParent).parameter(NestedSetNode.FIELD_PARENT, parent.getNode()).resultOne();
 	}
 	
 	@Override

@@ -7,13 +7,15 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 @Getter @Setter
 public class LocalityDetails extends AbstractDataTreeDetails<Locality,LocalityType> implements Serializable {
 
 	private static final long serialVersionUID = -4747519269632371426L;
 
-	private String residentName;
+	@Input @InputText private String residentName;
 	
 	public LocalityDetails(Locality locality) {
 		super(locality);

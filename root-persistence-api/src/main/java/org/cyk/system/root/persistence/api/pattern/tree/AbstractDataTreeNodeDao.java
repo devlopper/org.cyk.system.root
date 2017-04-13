@@ -14,6 +14,9 @@ public interface AbstractDataTreeNodeDao<ENUMERATION extends AbstractDataTreeNod
 	Collection<ENUMERATION> readByParent(ENUMERATION parent);
 	Long countByParent(ENUMERATION parent);
 	
+	Collection<ENUMERATION> readDirectChildrenByParent(ENUMERATION parent);
+	Long countDirectChildrenByParent(ENUMERATION parent);
+	
 	ENUMERATION readParent(ENUMERATION node);
 	Collection<ENUMERATION> readParentRecursively(ENUMERATION node);
 	

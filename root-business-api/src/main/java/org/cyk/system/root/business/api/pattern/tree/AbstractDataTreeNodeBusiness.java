@@ -25,6 +25,9 @@ public interface AbstractDataTreeNodeBusiness<NODE extends AbstractEnumeration> 
 
     NODE instanciateOne(String parentCode,String code,String name);
     
+    NODE instanciateOne(NODE parent);
     
+    Collection<NODE> findDirectChildrenByParent(NODE parent);
+	Long countDirectChildrenByParent(NODE parent);
     
 }

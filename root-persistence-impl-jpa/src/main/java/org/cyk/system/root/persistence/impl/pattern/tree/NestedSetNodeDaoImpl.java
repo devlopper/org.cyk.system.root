@@ -6,6 +6,7 @@ import static org.cyk.utility.common.computation.ArithmeticOperator.LT;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
@@ -19,7 +20,7 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	private String readByParent,countByParent,readByDetachedIdentifier,countByDetachedIdentifier;
 	private String readBySet,countBySet,readWhereDetachedIdentifierIsNullBySet,countWhereDetachedIdentifierIsNullBySet;
 	private String readBySetByLeftOrRightGreaterThanOrEqualTo;
-	private String executeIncrementLeftIndex,executeIncrementRightIndex;
+	private String executeIncrementLeftIndex,executeIncrementRightIndex,readDirectChildrenByParent,countDirectChildrenByParent;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -36,6 +37,10 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 		 registerNamedQuery(executeIncrementRightIndex, "UPDATE NestedSetNode nestedSetNode SET nestedSetNode.rightIndex = :increment + nestedSetNode.rightIndex "
 		 		+ "WHERE nestedSetNode.identifier IN :identifiers"
 		 		+ "");
+		 
+		 registerNamedQuery(readDirectChildrenByParent, _select().where(NestedSetNode.FIELD_PARENT)
+				 .orderBy(commonUtils.attributePath(NestedSetNode.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_ORDER_NUMBER), Boolean.TRUE)
+				 .orderBy(NestedSetNode.FIELD_LEFT_INDEX, Boolean.TRUE));
 	}
 	
 	@Override
@@ -49,6 +54,16 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 		return countNamedQuery(countByParent).parameter(PARAMETER_NESTED_SET, parent.getSet()).parameter(NestedSetNode.FIELD_LEFT_INDEX, parent.getLeftIndex())
 				.parameter(NestedSetNode.FIELD_RIGHT_INDEX, parent.getRightIndex())
 				.resultOne();
+	}
+	
+	@Override
+	public Collection<NestedSetNode> readDirectChildrenByParent(NestedSetNode parent) {
+		return namedQuery(readDirectChildrenByParent).parameter(NestedSetNode.FIELD_PARENT, parent).resultMany();
+	}
+
+	@Override
+	public Long countDirectChildrenByParent(NestedSetNode parent) {
+		return countNamedQuery(countDirectChildrenByParent).parameter(NestedSetNode.FIELD_PARENT, parent).resultOne();
 	}
 	
 	@Override
@@ -111,5 +126,7 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	
 	private static final String PARAMETER_NESTED_SET = "nestedSet";
 	private static final String PARAMETER_INCREMENT = "increment";
+
+	
 
 }

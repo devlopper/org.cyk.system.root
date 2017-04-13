@@ -12,81 +12,67 @@ public class LocalityBusinessIT extends AbstractBusinessIT {
 	
     @Override
     protected void businesses() {
-    	//traceLocalityType(localityTypeBusiness.findAll(),"");
     	
-    	/*traceLocality(localityBusiness.findByParent(traceLocality(localityBusiness.find("AF"),"")),"\t");
-    	traceLocality(localityBusiness.findByParent(traceLocality(localityBusiness.find("AL"),"")),"\t");
-    	traceLocality(localityBusiness.findByParent(traceLocality(localityBusiness.find("DZ"),"")),"\t");
-    	*/
-    	/*String countryCode =  "CI";
-    	Locality coteDivoire = inject(LocalityDao.class).read(countryCode);
-    	System.out.println(coteDivoire.getNode().getLeftIndex()+":"+coteDivoire.getNode().getRightIndex());
-    	Locality parent = (Locality) inject(LocalityBusiness.class).findParent(coteDivoire);
-    	coteDivoire.setParent(parent);
-    	update(coteDivoire);
-    	System.out.println(coteDivoire.getNode().getLeftIndex()+":"+coteDivoire.getNode().getRightIndex());
-    	coteDivoire = inject(LocalityDao.class).read(countryCode);
-    	*/
     }
     
-    //@Test
+    @Test
     public void moveCoteDIvoireAndMoveItBackUsingMove(){
-    	moveAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.AMERICA, 8l);
+    	moveAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.AMERICA, 8l,3l);
     }
 
     @Test
     public void moveCoteDIvoireAndMoveItBackUsingUpdate(){
-    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.AMERICA, 8l);
-    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.ASIA, 8l);
-    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.AUSTRALIA, 8l);
-    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.EUROPE, 8l);
-    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.AFRICA, 8l);
+    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.AMERICA, 8l,3l);
+    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.ASIA, 8l,3l);
+    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.AUSTRALIA, 8l,3l);
+    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.EUROPE, 8l,3l);
+    	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.AFRICA, 8l,3l);
     	
     }
     /**/
 
-    private void moveAndMoveItBack(String localityCode,String parentCode,Long expectedNumberOfChildren){
+    private void moveAndMoveItBack(String localityCode,String parentCode,Long expectedNumberOfChildren,Long expectedNumberOfDirectChildren){
     	Locality locality = inject(LocalityDao.class).read(localityCode);
     	assertThat("Locality is not null", locality!=null);
     	Locality oldParent = inject(LocalityDao.class).readParent(locality);
     	String oldParentCode = oldParent == null ? null : oldParent.getCode();
     	
-    	assertNumberOfChildren(localityCode, expectedNumberOfChildren);
+    	assertNumberOfChildren(localityCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
     	inject(LocalityBusiness.class).move(localityCode, parentCode);//move
-    	assertNumberOfChildren(localityCode, expectedNumberOfChildren);
+    	assertNumberOfChildren(localityCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
     	inject(LocalityBusiness.class).move(localityCode, oldParentCode);//move it back
-    	assertNumberOfChildren(localityCode, expectedNumberOfChildren);
+    	assertNumberOfChildren(localityCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
     	
     }
     
-    private void updateAndMoveAndUpdateAndMoveItBack(String localityCode,String parentCode,Long expectedNumberOfChildren){
+    private void updateAndMoveAndUpdateAndMoveItBack(String localityCode,String parentCode,Long expectedNumberOfChildren,Long expectedNumberOfDirectChildren){
     	Locality locality = inject(LocalityDao.class).read(localityCode);
     	assertThat("Locality is not null", locality!=null);
     	Locality oldParent = inject(LocalityDao.class).readParent(locality);
     	String oldParentCode = oldParent == null ? null : oldParent.getCode();
     	
-    	assertUpdateAndMove(localityCode, parentCode, expectedNumberOfChildren);
-    	assertUpdateAndMove(localityCode, oldParentCode, expectedNumberOfChildren);
-    	assertUpdateAndMove(localityCode, parentCode, expectedNumberOfChildren);
-    	assertUpdateAndMove(localityCode, oldParentCode, expectedNumberOfChildren);
-    	assertUpdateAndMove(localityCode, parentCode, expectedNumberOfChildren);
-    	assertUpdateAndMove(localityCode, oldParentCode, expectedNumberOfChildren);
+    	assertUpdateAndMove(localityCode, parentCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
+    	assertUpdateAndMove(localityCode, oldParentCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
+    	assertUpdateAndMove(localityCode, parentCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
+    	assertUpdateAndMove(localityCode, oldParentCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
+    	assertUpdateAndMove(localityCode, parentCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
+    	assertUpdateAndMove(localityCode, oldParentCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
     }
     
-    private void assertUpdateAndMove(String localityCode,String parentCode,Long expectedNumberOfChildren){
-    	assertNumberOfChildren(localityCode, expectedNumberOfChildren);
+    private void assertUpdateAndMove(String localityCode,String parentCode,Long expectedNumberOfChildren,Long expectedNumberOfDirectChildren){
+    	assertNumberOfChildren(localityCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
     	Locality locality = inject(LocalityDao.class).read(localityCode);
     	locality.setAutomaticallyMoveToNewParent(Boolean.TRUE);
     	locality.setNewParent(parentCode == null ? null : inject(LocalityDao.class).read(parentCode));
     	inject(LocalityBusiness.class).update(locality);
-    	assertNumberOfChildren(localityCode, expectedNumberOfChildren);
+    	assertNumberOfChildren(localityCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
     }
     
-    private void assertNumberOfChildren(String localityCode,Long expectedNumberOfChildren){
+    private void assertNumberOfChildren(String localityCode,Long expectedNumberOfChildren,Long expectedNumberOfDirectChildren){
     	Locality locality = inject(LocalityDao.class).read(localityCode);
     	assertThat("Locality is not null", locality!=null);
-    	Long numberOfChildren = inject(LocalityDao.class).countByParent(locality);
-    	assertEquals("Number of children", expectedNumberOfChildren, numberOfChildren);
+    	assertEquals("Number of children", expectedNumberOfChildren, inject(LocalityDao.class).countByParent(locality));
+    	assertEquals("Number of direct children", expectedNumberOfDirectChildren, inject(LocalityDao.class).countDirectChildrenByParent(locality));
     }
 
 }

@@ -20,7 +20,6 @@ public class AbstractDataTree<TYPE extends AbstractDataTreeType> extends Abstrac
 
 	public AbstractDataTree(AbstractDataTree<TYPE> parent,String code) {
 		super(parent,code);
-		setParent(parent);
 	}
 	
 	public AbstractDataTree(AbstractDataTree<TYPE> parent,TYPE type,String code) {
@@ -38,8 +37,8 @@ public class AbstractDataTree<TYPE extends AbstractDataTreeType> extends Abstrac
 		return this;
 	}
 	 
-	public AbstractDataTree<TYPE> setParent(AbstractDataTree<TYPE> parent){
-		super.setParent(parent);
+	public AbstractDataTree<TYPE> setParentNode(AbstractDataTree<TYPE> parent){
+		super.setParentNode(parent);
 		return this;
 	}
 	

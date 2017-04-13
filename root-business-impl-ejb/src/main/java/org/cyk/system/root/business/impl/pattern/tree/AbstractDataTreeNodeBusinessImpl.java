@@ -116,6 +116,16 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		return dao.readByParent(parent);
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Collection<NODE> findDirectChildrenByParent(NODE parent){
+		return dao.readDirectChildrenByParent(parent);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countDirectChildrenByParent(NODE parent){
+		return dao.countDirectChildrenByParent(parent);
+	}
+	
 	@Override
 	public Collection<NODE> findByString(StringSearchCriteria stringSearchCriteria) {
 		Collection<NODE> nodes = super.findByString(stringSearchCriteria);
@@ -182,7 +192,14 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public NODE instanciateOne(String parentCode, String code,String name) {
 		NODE enumeration = instanciateOne(code,name);
-    	enumeration.setParent(dao.readByGlobalIdentifierCode(parentCode));
+    	enumeration.setParentNode(dao.readByGlobalIdentifierCode(parentCode));
+    	return enumeration;
+	}
+    
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public NODE instanciateOne(NODE parent) {
+		NODE enumeration = instanciateOne();
+    	enumeration.setParentNode(parent == null ? null : dao.read(parent.getIdentifier()));
     	return enumeration;
 	}
 
@@ -212,7 +229,7 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		Integer index = 10;
 		String value;
 		if(index < values.length && StringUtils.isNotBlank(value = values[index++])){
-			node.setParent(dao.read(value));
+			node.setParentNode(dao.read(value));
 			//System.out.println("AbstractDataTreeNodeBusinessImpl.__instanciateOne__() Parent : "+value+" : "+dao.read(value));
 		}
 		return node;
