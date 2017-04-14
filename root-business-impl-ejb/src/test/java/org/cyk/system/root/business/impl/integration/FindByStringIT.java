@@ -14,6 +14,7 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.file.ExcelSheetReader;
 import org.junit.Test;
 
@@ -95,20 +96,34 @@ public class FindByStringIT extends AbstractBusinessIT {
 	public void findLocality(){
 		Integer allCount = inject(LocalityDao.class).countAll().intValue();
 		assertFindByString(Locality.class,null,allCount);
+		assertFindByString(Locality.class,null,null,new DataReadConfiguration().setMaximumResultCount(10l),10,60);
 		assertFindByString(Locality.class,"",allCount);
 		assertFindByString(Locality.class,"ivoire",1);
 	}
 	
-	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Collection<String> excludedCodes,Integer expected){
+	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Collection<String> excludedCodes,DataReadConfiguration configuration,Integer expectedReturnCount,Integer expectedDatabaseCount){
 		TypedBusiness<T> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
 		Collection<T> excludedIdentifiables = excludedCodes == null ? null : inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(excludedCodes);
-		assertEquals(expected.intValue(), business.findByString(string, excludedIdentifiables).size());
-		assertEquals(expected.longValue(), business.countByString(string,(Collection<T>) excludedIdentifiables));
+		assertEquals(expectedReturnCount.intValue(), business.findByString(string, excludedIdentifiables,configuration).size());
+		assertEquals(expectedDatabaseCount.longValue(), business.countByString(string,(Collection<T>) excludedIdentifiables));
+	}
+	
+	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Collection<String> excludedCodes,DataReadConfiguration configuration,Integer expectedReturnCount){
+		assertFindByString(aClass, string, excludedCodes, configuration, expectedReturnCount, expectedReturnCount);
+	}
+	
+	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Collection<String> excludedCodes,Integer expected){
+		assertFindByString(aClass, string, excludedCodes, null, expected);
+	}
+	
+	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,DataReadConfiguration configuration,Integer expected){
+		assertFindByString(aClass, string, null,configuration, expected);
 	}
 	
 	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Integer expected){
-		assertFindByString(aClass, string, null, expected);
+		assertFindByString(aClass, string, (DataReadConfiguration)null, expected);
 	}
+	
 	
 	/**/
     
