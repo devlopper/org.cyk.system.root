@@ -25,7 +25,7 @@ public class DefaultShiroConfigurator implements ShiroConfigurator,Serializable 
 	@Override
 	public void configure(ApplicationPropertiesProvider applicationPropertiesProvider) {
 		Properties applicationProperties = applicationPropertiesProvider.getProperties();
-		dataSource.getService().getHost().setName(applicationProperties.getProperty("shiro.dataSource.host"));
+		dataSource.getService().getComputer().setName(applicationProperties.getProperty("shiro.dataSource.host"));
 		dataSource.getService().setPort(Integer.parseInt(applicationProperties.getProperty("shiro.dataSource.port")));
 		dataSource.setUsername(applicationProperties.getProperty("shiro.dataSource.username"));
 		dataSource.setPassword(applicationProperties.getProperty("shiro.dataSource.password"));

@@ -38,4 +38,11 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 		return credentials;
 	}
 	
+	@Override
+	protected Credentials __instanciateOne__(String[] values,InstanciateOneListener<Credentials> listener) {
+		set(listener.getSetListener(), Credentials.FIELD_USERNAME);
+    	set(listener.getSetListener(), Credentials.FIELD_PASSWORD);
+    	return listener.getInstance();
+	}
+	
 }

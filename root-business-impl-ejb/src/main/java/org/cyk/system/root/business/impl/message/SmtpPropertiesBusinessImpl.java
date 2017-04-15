@@ -13,7 +13,6 @@ import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.message.SmtpProperties;
-import org.cyk.system.root.model.message.SmtpSocketFactory;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 
@@ -31,16 +30,9 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
 		listener.getInstance().getGlobalIdentifierCreateIfNull();
 		listener.getInstance().setCredentials(new Credentials());
     	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_HOST);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_PORT);
+    	set(listener.getSetListener(), SmtpProperties.FIELD_SERVICE);
+    	set(listener.getSetListener(), SmtpProperties.FIELD_CREDENTIALS);
     	set(listener.getSetListener(), SmtpProperties.FIELD_FROM);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_CREDENTIALS,Credentials.FIELD_USERNAME);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_CREDENTIALS,Credentials.FIELD_PASSWORD);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_SOCKET_FACTORY,SmtpSocketFactory.FIELD_CLAZZ);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_SOCKET_FACTORY,SmtpSocketFactory.FIELD_FALLBACK);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_SOCKET_FACTORY,SmtpSocketFactory.FIELD_PORT);
-    	listener.getInstance().setAuthenticated(StringUtils.isNotBlank(listener.getInstance().getCredentials().getPassword()));
-    	listener.getInstance().setSecured(listener.getInstance().getAuthenticated());
     	return listener.getInstance();
 	}
 	
@@ -48,6 +40,8 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
 	protected void beforeCreate(SmtpProperties smtpProperties) {
 		super.beforeCreate(smtpProperties);
 		createIfNotIdentified(smtpProperties.getCredentials());
+		if(StringUtils.isBlank(smtpProperties.getFrom()))
+			smtpProperties.setFrom(smtpProperties.getCredentials().getUsername());
 	}
 	
 	@Override
@@ -84,8 +78,8 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
 	
 	@Override
 	public Properties convertToProperties(SmtpProperties smtpProperties) {
-		return convertToProperties(smtpProperties.getHost(), smtpProperties.getPort(), smtpProperties.getCredentials().getUsername()
-				, smtpProperties.getCredentials().getPassword(), smtpProperties.getSecured());
+		return convertToProperties(smtpProperties.getService().getComputer().getIpAddressName(), smtpProperties.getService().getPort(), smtpProperties.getCredentials().getUsername()
+				, smtpProperties.getCredentials().getPassword(), smtpProperties.getService().getSecured());
 	}
 	
 	private void addProperty(Properties properties,String name,Object value){

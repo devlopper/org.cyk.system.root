@@ -55,6 +55,8 @@ import org.cyk.system.root.model.information.IdentifiableCollectionType;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.message.SmtpProperties;
+import org.cyk.system.root.model.network.Computer;
+import org.cyk.system.root.model.network.Service;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
@@ -71,6 +73,7 @@ import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.BusinessServiceCollection;
+import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.value.Measure;
@@ -273,9 +276,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         party();
         security();
         
+        network();
+        
         message();
         mathematics();
         information();
+        
     }
     
     private void geography(){
@@ -325,7 +331,13 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createRole(RootConstant.Code.Role.SECURITY_MANAGER, "Security Manager");
         createRole(RootConstant.Code.Role.USER, "User",SHIRO_PRIVATE_FOLDER);
         
+        createFromExcelSheet(Credentials.class);
         createFromExcelSheet(BusinessServiceCollection.class);
+    }
+    
+    private void network(){ 
+    	createFromExcelSheet(Computer.class);
+        createFromExcelSheet(Service.class);
     }
     
     private void message(){ 

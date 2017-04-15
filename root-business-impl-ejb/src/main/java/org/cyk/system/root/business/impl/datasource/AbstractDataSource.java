@@ -21,7 +21,7 @@ public abstract class AbstractDataSource extends AbstractBean implements DataSou
 	@Getter @Setter protected Service service = new Service();
 	
 	public String getUrl(){
-		return scheme+"://"+service.getHost().getName()+":"+service.getPort();
+		return scheme+"://"+service.getComputer().getName()+":"+service.getPort();
 	}
 	
 	@Override

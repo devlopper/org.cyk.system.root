@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
@@ -270,23 +271,34 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
         return namedQuery(value, Long.class).nullValue(0l);
     }
 	
-	protected void registerNamedQuery(String name,String query,Class<?> aResultClass){
-		entityManager.getEntityManagerFactory().addNamedQuery(name, entityManager.createQuery(query, aResultClass));	
+	protected void registerNamedQuery(String name,String queryString,Class<?> aResultClass){
+		Query query = aResultClass == null ? entityManager.createQuery(queryString) : entityManager.createQuery(queryString, aResultClass);
+		//logInfo("Register Named Query {} , {}", name,query);
+		entityManager.getEntityManagerFactory().addNamedQuery(name, query);	
 	}
-	protected void registerNamedQuery(String name,String query){
-		registerNamedQuery(name, query, clazz);
-		Field countField = FieldUtils.getField(getClass(), KW_NQ_COUNT+StringUtils.substringAfter(name, "."+KW_NQ_READ), true);
-		if(countField!=null){
-			String var = StringUtils.substringAfter(StringUtils.substringBefore(query, KW_JPQL_FROM),KW_JPQL_SELECT).trim();
-			if(var.toLowerCase().startsWith("new ")){
-				String afterFrom = StringUtils.substringAfter(query, KW_JPQL_FROM+" ").trim();
-				var = StringUtils.split(afterFrom)[1];
+	
+	protected void registerNamedQuery(String name,String query,Boolean isSelectQuery){
+		registerNamedQuery(name, query, Boolean.TRUE.equals(isSelectQuery) ? clazz : null);
+		if(Boolean.TRUE.equals(isSelectQuery)){
+			Field countField = FieldUtils.getField(getClass(), KW_NQ_COUNT+StringUtils.substringAfter(name, "."+KW_NQ_READ), true);
+			if(countField!=null){
+				String var = StringUtils.substringAfter(StringUtils.substringBefore(query, KW_JPQL_FROM),KW_JPQL_SELECT).trim();
+				if(var.toLowerCase().startsWith("new ")){
+					String afterFrom = StringUtils.substringAfter(query, KW_JPQL_FROM+" ").trim();
+					var = StringUtils.split(afterFrom)[1];
+				}
+				query = KW_JPQL_SELECT+" "+KW_JPQL_COUNT+"(" +var.trim()+")"+" "+KW_JPQL_FROM+" "+
+				(StringUtils.contains(query, KW_JPQL_ORDER_BY)?StringUtils.substringBetween(query, KW_JPQL_FROM,KW_JPQL_ORDER_BY):StringUtils.substringAfter(query, KW_JPQL_FROM));
+				registerNamedQuery(StringUtils.replaceOnce(name, "."+KW_NQ_READ, "."+KW_NQ_COUNT), query, Long.class);
 			}
-			query = KW_JPQL_SELECT+" "+KW_JPQL_COUNT+"(" +var.trim()+")"+" "+KW_JPQL_FROM+" "+
-			(StringUtils.contains(query, KW_JPQL_ORDER_BY)?StringUtils.substringBetween(query, KW_JPQL_FROM,KW_JPQL_ORDER_BY):StringUtils.substringAfter(query, KW_JPQL_FROM));
-			registerNamedQuery(StringUtils.replaceOnce(name, "."+KW_NQ_READ, "."+KW_NQ_COUNT), query, Long.class);
 		}
+		
 	}
+	
+	protected void registerNamedQuery(String name,String query){
+		registerNamedQuery(name, query, StringUtils.startsWithIgnoreCase(query, KW_JPQL_SELECT));
+	}
+	
 	protected void registerNamedQuery(String name,QueryStringBuilder builder){
 		registerNamedQuery(name, builder.getValue());
 	}

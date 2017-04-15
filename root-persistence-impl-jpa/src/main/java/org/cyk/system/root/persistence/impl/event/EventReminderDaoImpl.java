@@ -11,13 +11,13 @@ public class EventReminderDaoImpl extends AbstractIdentifiablePeriodDaoImpl<Even
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-	private String readByEvent,deleteByEvent;
+	private String readByEvent,executeDeleteByEvent;
 
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByEvent, _select().where("event"));
-		registerNamedQuery(deleteByEvent, "DELETE FROM EventReminder eventReminder WHERE eventReminder.event.identifier = :eventId");
+		registerNamedQuery(executeDeleteByEvent, "DELETE FROM EventReminder eventReminder WHERE eventReminder.event.identifier = :eventId");
 	}
 	
 	@Override
