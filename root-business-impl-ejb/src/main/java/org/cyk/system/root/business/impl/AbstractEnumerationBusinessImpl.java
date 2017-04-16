@@ -47,6 +47,7 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
     	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_ABBREVIATION);
     	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_ORDER_NUMBER);
     	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_WEIGHT);
+    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_DEFAULTED);
 		return enumeration;
 	}
 

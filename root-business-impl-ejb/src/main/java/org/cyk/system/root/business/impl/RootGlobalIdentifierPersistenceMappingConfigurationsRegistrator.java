@@ -34,6 +34,7 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
         configuration.addProperties(property);
         GlobalIdentifierPersistenceMappingConfiguration.register(Person.class, configuration);
         
+        
 	}
 
 }

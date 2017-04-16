@@ -11,8 +11,6 @@ import java.util.Set;
 
 import javax.persistence.NoResultException;
 
-import lombok.Getter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -22,13 +20,17 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.TypedDao;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
 
 	private static final long serialVersionUID = -2964204372097468908L;
 
 	//TODO try use collection query for single query to see performance difference
 	
-	protected String readAll,countAll,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
+	protected String readAll,countAll,readDefaulted,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
 		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete,readByGlobalIdentifier
 		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
 		,readByGlobalIdentifierSearchCriteriaCodeExcluded,countByGlobalIdentifierByCodeSearchCriteria
@@ -78,6 +80,10 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			registerNamedQuery(readByGlobalIdentifierCode, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.code = :code");
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierCodes()))
 			registerNamedQuery(readByGlobalIdentifierCodes, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.code IN :code");
+		
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadDefaulted()))
+			registerNamedQuery(readDefaulted, _select().where(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_DEFAULTED)
+					,GlobalIdentifier.FIELD_DEFAULTED));
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierOrderNumber()))
 			registerNamedQuery(readByGlobalIdentifierOrderNumber, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.orderNumber = :orderNumber");
@@ -193,6 +199,11 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			return identifiableSearchCriteria.getCode().getExcluded().isEmpty() ? (read?readByCriteria:countByCriteria) : (read?readByCriteriaCodeExcluded:countByCriteriaCodeExcluded);
 		}
 		return null;
+	}
+	
+	@Override
+	public IDENTIFIABLE readDefaulted() {
+		return namedQuery(readDefaulted).parameter(GlobalIdentifier.FIELD_DEFAULTED, Boolean.TRUE).ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
 	@Override
@@ -351,7 +362,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	
 	/**/
 	
-	@Getter
+	@Getter @Setter @Accessors(chain=true)
 	public static class Configuration implements Serializable {
 		private static final long serialVersionUID = 1L;
 		
@@ -362,6 +373,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		private static final Set<Class<?>> ALLOWED_ALL_CLASSES = new HashSet<>();
 		
 		private Boolean readAll = Boolean.TRUE;
+		private Boolean readDefaulted = Boolean.TRUE;
 		private Boolean readAllInclude = Boolean.TRUE;
 		private Boolean readAllExclude = Boolean.TRUE;
 		private Boolean readByGlobalIdentifier = Boolean.TRUE;
@@ -382,71 +394,6 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		/**/
 		
 		/**/
-		
-		public Configuration setReadAll(Boolean readAll) {
-			this.readAll = readAll;
-			return this;
-		}
-		
-		public Configuration setReadAllExclude(Boolean readAllExclude) {
-			this.readAllExclude = readAllExclude;
-			return this;
-		}
-		
-		public Configuration setReadAllInclude(Boolean readAllInclude) {
-			this.readAllInclude = readAllInclude;
-			return this;
-		}
-		
-		public Configuration setReadByGlobalIdentifier(Boolean readByGlobalIdentifier) {
-			this.readByGlobalIdentifier = readByGlobalIdentifier;
-			return this;
-		}
-		
-		public Configuration setReadByGlobalIdentifiers(Boolean readByGlobalIdentifiers) {
-			this.readByGlobalIdentifiers = readByGlobalIdentifiers;
-			return this;
-		}
-		
-		public Configuration setReadByGlobalIdentifierValue(Boolean readByGlobalIdentifierValue) {
-			this.readByGlobalIdentifierValue = readByGlobalIdentifierValue;
-			return this;
-		}
-		
-		public Configuration setReadByGlobalIdentifierCode(Boolean readByGlobalIdentifierCode) {
-			this.readByGlobalIdentifierCode = readByGlobalIdentifierCode;
-			return this;
-		}
-		
-		public Configuration setReadByGlobalIdentifierCodes(Boolean readByGlobalIdentifierCodes) {
-			this.readByGlobalIdentifierCodes = readByGlobalIdentifierCodes;
-			return this;
-		}
-		
-		public Configuration setReadByGlobalIdentifierOrderNumber(Boolean readByGlobalIdentifierOrderNumber) {
-			this.readByGlobalIdentifierOrderNumber = readByGlobalIdentifierOrderNumber;
-			return this;
-		}
-		
-		public Configuration setReadByClasses(Boolean readByClasses) {
-			this.readByClasses = readByClasses;
-			return this;
-		}
-		
-		public Configuration setReadByNotClasses(Boolean readByNotClasses) {
-			this.readByNotClasses = readByNotClasses;
-			return this;
-		}
-		
-		public Configuration setExecuteDelete(Boolean executeDelete) {
-			this.executeDelete = executeDelete;
-			return this;
-		}
-		
-		public Configuration setReadByGlobalIdentifierSearchCriteria(Boolean readByGlobalIdentifierSearchCriteria) {
-			this.readByGlobalIdentifierSearchCriteria = readByGlobalIdentifierSearchCriteria;
-			return this;
-		}
 		
 		/**/
 		

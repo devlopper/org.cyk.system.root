@@ -46,6 +46,7 @@ import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
 import org.cyk.system.root.model.geography.Country;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
@@ -239,6 +240,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				return inject(LanguageBusiness.class).findCurrentLocale();
 			}*/
 		});
+		
+		//Configuration.get(SmtpProperties.class).setReadDefaulted(Boolean.TRUE);
+        
     }
     
     public GenericBusiness getGenericBusiness(){
@@ -291,6 +295,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createFromExcelSheet(Country.class);
         createFromExcelSheet(PhoneNumberType.class);
         createFromExcelSheet(LocationType.class);
+        createFromExcelSheet(ElectronicMail.class);
     }
     
     private void language(){

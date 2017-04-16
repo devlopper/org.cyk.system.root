@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.security.SoftwareBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
-import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.persistence.api.security.SoftwareDao;
 
@@ -19,13 +18,4 @@ public class SoftwareBusinessImpl extends AbstractEnumerationBusinessImpl<Softwa
 		super(dao); 
 	}
 	
-	@Override
-	public Software findDefault() {
-		return dao.read(findDefaultCode());
-	}
-
-	@Override
-	public String findDefaultCode() {
-		return RootConstant.Code.Software.INSTALLED;
-	}
 }

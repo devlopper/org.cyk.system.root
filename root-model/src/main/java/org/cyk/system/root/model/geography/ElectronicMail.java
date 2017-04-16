@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -41,4 +43,30 @@ public class ElectronicMail extends Contact implements Serializable {
 	}
 	
 	public static final String FIELD_ADDRESS = "address";
+	
+	/**/
+	
+	@Getter @Setter
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		protected StringSearchCriteria address =new StringSearchCriteria();
+		
+		public SearchCriteria(){ 
+			this(null);
+		}
+		
+		public SearchCriteria(String name) {
+			super(name);
+			address.setValue(name);
+		}
+		
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			super.set(stringSearchCriteria);
+			address.set(stringSearchCriteria);
+		}
+
+	}
 }

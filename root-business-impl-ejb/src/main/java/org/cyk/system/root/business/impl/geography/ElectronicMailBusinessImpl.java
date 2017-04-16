@@ -8,16 +8,20 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
+import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
@@ -127,6 +131,36 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 		for(ElectronicMail electronicMail : inject(ContactDao.class).readByCollectionsByClass(contactCollections, ElectronicMail.class))
 			addresses.add(electronicMail.getAddress());
 		return addresses;
+	}
+	
+	@Override
+	protected Contact __instanciateOne__(String[] values,InstanciateOneListener<Contact> listener) {
+		listener.getInstance().getGlobalIdentifierCreateIfNull();
+		set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
+		set(listener.getSetListener(), ElectronicMail.FIELD_ADDRESS);
+		return listener.getInstance();
+	}
+	
+	@Override
+	protected AbstractFieldValueSearchCriteriaSet createSearchCriteriaInstance() {
+		return new ElectronicMail.SearchCriteria();
+	}
+	
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<Contact> findBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue())){
+    		return findAll(searchCriteria.getReadConfig());
+    	}
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.readBySearchCriteria(searchCriteria);
+	}
+
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue()))
+    		return countAll();
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.countBySearchCriteria(searchCriteria);
 	}
 
 }

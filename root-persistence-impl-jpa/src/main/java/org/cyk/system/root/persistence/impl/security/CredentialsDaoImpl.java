@@ -4,10 +4,13 @@ import java.io.Serializable;
 
 import javax.persistence.NoResultException;
 
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.persistence.api.security.CredentialsDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
+import org.cyk.system.root.persistence.impl.QueryStringBuilder;
+import org.cyk.system.root.persistence.impl.QueryWrapper;
 
 public class CredentialsDaoImpl extends AbstractTypedDao<Credentials> implements CredentialsDao,Serializable {
 
@@ -36,7 +39,21 @@ public class CredentialsDaoImpl extends AbstractTypedDao<Credentials> implements
                 .resultOne();
 	}
     
-   
+	@Override
+	protected String getReadByCriteriaQuery(String query) {
+		return super.getReadByCriteriaQuery(query)+" OR "+QueryStringBuilder.getLikeString("record.username", ":username");
+	}
+	
+	@Override
+	protected String getReadByCriteriaQueryCodeExcludedWherePart(String where) {
+		return super.getReadByCriteriaQueryCodeExcludedWherePart(where)+" OR "+QueryStringBuilder.getLikeString("record.username", ":username");
+	}
+	
+	@Override
+	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
+		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
+		queryWrapper.parameterLike(Credentials.FIELD_USERNAME, ((Credentials.SearchCriteria)searchCriteria).getUsername());
+	}
 
 }
  

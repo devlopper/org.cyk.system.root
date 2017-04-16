@@ -8,7 +8,6 @@ import java.util.Set;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.file.File;
@@ -34,7 +33,7 @@ public class NotificationBuilderAdapter extends Notification.Builder.Listener.Ad
 	@Override
 	public String getSenderIdentifier(Collection<AbstractIdentifiable> identifiables, RemoteEndPoint remoteEndPoint) {
 		if(RemoteEndPoint.MAIL_SERVER.equals(remoteEndPoint))
-			return inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT).getFrom();
+			return inject(SmtpPropertiesDao.class).readDefaulted().getFrom().getAddress();
 		return super.getSenderIdentifier(identifiables, remoteEndPoint);
 	}
 	

@@ -11,6 +11,7 @@ public interface SmtpPropertiesBusiness extends TypedBusiness<SmtpProperties> {
 	Properties convertToProperties(String host,Integer port,String username,String password);
 	Properties convertToProperties(SmtpProperties smtpProperties);
 	
+	Properties findDefaultProperties();
 	
 	/**/
 	

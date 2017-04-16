@@ -10,6 +10,9 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -43,7 +46,7 @@ public class Credentials extends AbstractIdentifiable implements Serializable {
 	
 	@Override
 	public String getUiString() {
-		return username;
+		return software.getUiString()+Constant.CHARACTER_SLASH+username;
 	}
 
 	/**/
@@ -52,7 +55,31 @@ public class Credentials extends AbstractIdentifiable implements Serializable {
 	public static final String FIELD_USERNAME = "username";
 	public static final String FIELD_PASSWORD = "password";
 
+	/**/
+	
+	@Getter @Setter
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet implements Serializable {
 
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		protected StringSearchCriteria username = new StringSearchCriteria();
+		
+		public SearchCriteria(){ 
+			this(null);
+		}
+		
+		public SearchCriteria(String name) {
+			super(name);
+			username.setValue(name);
+		}
+		
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			super.set(stringSearchCriteria);
+			username.set(stringSearchCriteria);
+		}
+
+	}
 
 	
 }

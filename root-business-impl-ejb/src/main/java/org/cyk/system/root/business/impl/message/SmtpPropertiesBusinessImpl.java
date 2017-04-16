@@ -31,6 +31,7 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
     	set(listener.getSetListener(), SmtpProperties.FIELD_SERVICE);
     	set(listener.getSetListener(), SmtpProperties.FIELD_CREDENTIALS);
     	set(listener.getSetListener(), SmtpProperties.FIELD_FROM);
+    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_DEFAULTED);
     	return listener.getInstance();
 	}
 	
@@ -38,8 +39,6 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
 	protected void beforeCreate(SmtpProperties smtpProperties) {
 		super.beforeCreate(smtpProperties);
 		createIfNotIdentified(smtpProperties.getCredentials());
-		if(StringUtils.isBlank(smtpProperties.getFrom()))
-			smtpProperties.setFrom(smtpProperties.getCredentials().getUsername());
 	}
 	
 	@Override
@@ -84,5 +83,10 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
     	properties.put(RootConstant.Configuration.SmtpProperties.getProperty(name,Boolean.FALSE), value);
     	properties.put(RootConstant.Configuration.SmtpProperties.getProperty(name,Boolean.TRUE), value);
     }
+	
+	@Override
+	public Properties findDefaultProperties() {
+		return convertToProperties(findDefaulted());
+	}
 	
 }

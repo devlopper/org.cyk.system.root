@@ -2,18 +2,18 @@ package org.cyk.system.root.model.message;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.network.Service;
 import org.cyk.system.root.model.security.Credentials;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
-import org.hibernate.validator.constraints.Email;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +25,7 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 	
 	@ManyToOne @NotNull private Service service;
 	
-	@Column(name="csender",nullable=false) @NotNull  @Email
-	private String from;
+	@ManyToOne @NotNull private ElectronicMail from;
 	
 	@ManyToOne @NotNull private Credentials credentials;
 	
@@ -40,7 +39,7 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 	
 	@Override
 	public String getUiString() {
-		return service.getUiString();
+		return service.getUiString()+Constant.CHARACTER_SLASH+credentials.getUiString();
 	}
 	
 	public static final String FIELD_SERVICE = "service";

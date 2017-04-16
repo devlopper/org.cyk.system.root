@@ -125,7 +125,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		administratorAccount.setUser(installation.getApplication());
 		administratorAccount.setCredentials(installation.getAdministratorCredentials());
 		if(installation.getAdministratorCredentials().getSoftware()==null)
-			installation.getAdministratorCredentials().setSoftware(inject(SoftwareBusiness.class).findDefault());
+			installation.getAdministratorCredentials().setSoftware(inject(SoftwareBusiness.class).findDefaulted());
 		//Installer : The one who delivers the system = SUPER SUPER USER = Configure what the system will do
 		//administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
 		//administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getAdministratorRole());
@@ -138,7 +138,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		managerAccount.setUser(installation.getManager());
 		managerAccount.setCredentials(installation.getManagerCredentials());
 		if(installation.getManagerCredentials().getSoftware()==null)
-			installation.getManagerCredentials().setSoftware(inject(SoftwareBusiness.class).findDefault());
+			installation.getManagerCredentials().setSoftware(inject(SoftwareBusiness.class).findDefaulted());
 		//Super User : The one who use the system
 		
 		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(inject(RoleDao.class).read(RootConstant.Code.Role.ADMINISTRATOR))));

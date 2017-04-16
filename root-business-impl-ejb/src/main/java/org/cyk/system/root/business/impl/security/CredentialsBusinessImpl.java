@@ -1,16 +1,19 @@
 package org.cyk.system.root.business.impl.security;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.security.CredentialsBusiness;
 import org.cyk.system.root.business.api.security.SoftwareBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.persistence.api.security.CredentialsDao;
@@ -28,12 +31,12 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 	protected void beforeCreate(Credentials credentials) {
 		super.beforeCreate(credentials);
 		if(credentials.getSoftware()==null)
-			credentials.setSoftware(inject(SoftwareBusiness.class).findDefault());
+			credentials.setSoftware(inject(SoftwareBusiness.class).findDefaulted());
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Credentials findByUsername(String aUsername) {
-		return dao.readBySoftwareByUsername(inject(SoftwareBusiness.class).findDefault(),aUsername);
+		return dao.readBySoftwareByUsername(inject(SoftwareBusiness.class).findDefaulted(),aUsername);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -43,7 +46,8 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Credentials instanciateOne(String username, String password) {
-		return instanciateOne(new String[]{null,inject(SoftwareBusiness.class).findDefaultCode(),username,password});
+		Software software = inject(SoftwareBusiness.class).findDefaulted();
+		return instanciateOne(new String[]{null,software == null ? null : software.getCode(),username,password});
 	}
 	
 	@Override
@@ -59,6 +63,28 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 	@Override
 	public Credentials findBySoftwareByUsernameByPassword(Software software, String aUsername, String password) {
 		return dao.readBySoftwareByUsernameByPassword(software, aUsername, password);
+	}
+	
+	@Override
+	protected AbstractFieldValueSearchCriteriaSet createSearchCriteriaInstance() {
+		return new Credentials.SearchCriteria();
+	}
+	
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<Credentials> findBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue())){
+    		return findAll(searchCriteria.getReadConfig());
+    	}
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.readBySearchCriteria(searchCriteria);
+	}
+
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue()))
+    		return countAll();
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.countBySearchCriteria(searchCriteria);
 	}
 	
 }

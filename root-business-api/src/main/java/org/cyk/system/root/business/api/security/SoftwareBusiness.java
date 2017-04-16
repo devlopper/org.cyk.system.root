@@ -5,6 +5,4 @@ import org.cyk.system.root.model.security.Software;
 
 public interface SoftwareBusiness extends AbstractEnumerationBusiness<Software> {
     
-	Software findDefault();
-	String findDefaultCode();
 }

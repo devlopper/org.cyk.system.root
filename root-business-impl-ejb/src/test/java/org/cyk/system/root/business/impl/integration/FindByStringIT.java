@@ -8,11 +8,15 @@ import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.security.Credentials;
+import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
+import org.cyk.system.root.persistence.api.security.CredentialsDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.file.ExcelSheetReader;
@@ -99,6 +103,25 @@ public class FindByStringIT extends AbstractBusinessIT {
 		assertFindByString(Locality.class,null,null,new DataReadConfiguration().setMaximumResultCount(10l),10,60);
 		assertFindByString(Locality.class,"",allCount);
 		assertFindByString(Locality.class,"ivoire",1);
+	}
+	
+	@Test
+	public void findElectronicMails(){
+		Integer allCount = inject(ElectronicMailDao.class).countAll().intValue();
+		assertFindByString(ElectronicMail.class,null,allCount);
+		assertFindByString(ElectronicMail.class,"",allCount);
+		assertFindByString(ElectronicMail.class,"@",allCount);
+		assertFindByString(ElectronicMail.class,"kycdev@gmail.com",1);
+		assertFindByString(ElectronicMail.class,"examplemail",3);
+	}
+	
+	@Test
+	public void findCredentials(){
+		Integer allCount = inject(CredentialsDao.class).countAll().intValue();
+		assertFindByString(Credentials.class,null,allCount);
+		assertFindByString(Credentials.class,"",allCount);
+		assertFindByString(Credentials.class,"admin",1);
+		
 	}
 	
 	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Collection<String> excludedCodes,DataReadConfiguration configuration,Integer expectedReturnCount,Integer expectedDatabaseCount){

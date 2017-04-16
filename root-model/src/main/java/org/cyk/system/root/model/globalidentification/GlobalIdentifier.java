@@ -101,7 +101,12 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	/**
 	 * True if must be only update by application , False otherwise.
 	 */
-	@Column(name="f_constant") private Boolean constant = Boolean.FALSE;
+	@Column(name="f_constant") private Boolean constant;
+	
+	/**
+	 * True if default value, False otherwise.
+	 */
+	private Boolean defaulted;
 	
 	@Embedded private Period existencePeriod = new Period();
 	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;
@@ -165,6 +170,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_ORDER_NUMBER = "orderNumber";
 	public static final String FIELD_OTHER_DETAILS = "otherDetails";
 	public static final String FIELD_IMAGE = "image";
+	public static final String FIELD_DEFAULTED = "defaulted";
 	
 	/**/
 	

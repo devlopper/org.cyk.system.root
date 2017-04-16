@@ -16,7 +16,7 @@ public class SmtpPropertiesDetails extends AbstractOutputDetails<SmtpProperties>
 
 	private static final long serialVersionUID = -7568711914665423264L;
 
-	@Input @InputText private String from;
+	@Input @InputText private FieldValue from;
 	@Input @InputText private FieldValue service;
 	@Input @InputText private FieldValue credentials;
 	
@@ -29,8 +29,7 @@ public class SmtpPropertiesDetails extends AbstractOutputDetails<SmtpProperties>
 		super.setMaster(smtpProperties);
 		if(master!=null){
 			service = new FieldValue(smtpProperties.getService());
-			from = smtpProperties.getFrom();
-			debug(smtpProperties);
+			from = new FieldValue(smtpProperties.getFrom());
 			credentials = new FieldValue(smtpProperties.getCredentials());
 		}
 	}

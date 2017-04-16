@@ -11,6 +11,7 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
     
     Collection<IDENTIFIABLE> readAll(); 
     Long countAll();
+    IDENTIFIABLE readDefaulted(); 
     
     Collection<IDENTIFIABLE> readByClasses(Collection<Class<?>> classes);
     Long countByClasses(Collection<Class<?>> classes);

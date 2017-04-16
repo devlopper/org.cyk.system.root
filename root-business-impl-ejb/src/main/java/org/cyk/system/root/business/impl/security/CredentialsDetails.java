@@ -15,16 +15,19 @@ import lombok.Setter;
 public class CredentialsDetails extends AbstractOutputDetails<Credentials> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
+	@Input @InputText private FieldValue software;
 	@Input @InputText private String username,password;
 	
 	public CredentialsDetails(Credentials credentials) {
 		super(credentials);
 		if(credentials!=null){
+			software = new FieldValue(credentials.getSoftware());
 			username = credentials.getUsername();
 			password = credentials.getPassword();
 		}
 	}
 	
+	public static final String FIELD_SOFTWARE = "software";
 	public static final String FIELD_USERNAME = "username";
 	public static final String FIELD_PASSWORD = "password";
 }

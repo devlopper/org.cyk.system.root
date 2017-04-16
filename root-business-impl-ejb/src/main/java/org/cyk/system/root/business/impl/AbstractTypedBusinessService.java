@@ -413,6 +413,11 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public IDENTIFIABLE findDefaulted() {
+		return dao.readDefaulted();
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findAllExclude(Collection<IDENTIFIABLE> identifiables) {
 		//FIXME find how to handle pagination
 		//applyDataReadConfigToDao(getDataReadConfig());
