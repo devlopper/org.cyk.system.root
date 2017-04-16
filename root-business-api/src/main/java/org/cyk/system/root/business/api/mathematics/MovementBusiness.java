@@ -15,7 +15,7 @@ public interface MovementBusiness extends AbstractCollectionItemBusiness<Movemen
 	Movement instanciateOne(String collectionCode, String value,String supportingDocumentCode,String supportingDocumentPhysicalCreator,String supportingDocumentContentWriter,String actionCode);
 	Movement instanciateOne(MovementCollection movementCollection,MovementAction movementAction, String value);
 	
-	@Getter @Setter
+	@Getter @Setter @Deprecated
 	public static class CompleteMovementInstanciationOfOneFromValuesArguments extends AbstractCompleteInstanciationOfOneFromValuesArguments<Movement> implements Serializable{
 
 		private static final long serialVersionUID = 6568108456054174796L;
@@ -28,7 +28,7 @@ public interface MovementBusiness extends AbstractCollectionItemBusiness<Movemen
 		}
 	}
 	
-	@Getter @Setter
+	@Getter @Setter @Deprecated
 	public static class CompleteMovementInstanciationOfManyFromValuesArguments extends AbstractCompleteInstanciationOfManyFromValuesArguments<Movement> implements Serializable{
 
 		private static final long serialVersionUID = 6568108456054174796L;

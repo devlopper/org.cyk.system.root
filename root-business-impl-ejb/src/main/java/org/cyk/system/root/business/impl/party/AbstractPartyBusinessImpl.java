@@ -87,7 +87,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	@Override
 	public void completeInstanciationOfOneFromValues(PARTY party,AbstractCompleteInstanciationOfOneFromValuesArguments<PARTY> completeInstanciationOfOneFromValuesArguments) {
 		CompletePartyInstanciationOfOneFromValuesArguments<PARTY> arguments = (CompletePartyInstanciationOfOneFromValuesArguments<PARTY>) completeInstanciationOfOneFromValuesArguments;
-		completeInstanciationOfOneFromValuesBeforeProcessing(party,arguments.getValues(),arguments.getListener());
+		//completeInstanciationOfOneFromValuesBeforeProcessing(party,arguments.getValues(),arguments.getListener());
 		
 		if(arguments.getCodeIndex()!=null)
 			party.setCode(arguments.getValues()[arguments.getCodeIndex()]);
@@ -101,7 +101,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		if(arguments.getCreationDateIndex()!=null)
 			party.setBirthDate(timeBusiness.parse(arguments.getValues()[arguments.getCreationDateIndex()]));
 		
-		completeInstanciationOfOneFromValuesAfterProcessing(party,arguments.getValues(),arguments.getListener());
+		//completeInstanciationOfOneFromValuesAfterProcessing(party,arguments.getValues(),arguments.getListener());
 		
 	}
 
@@ -109,12 +109,12 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	public void completeInstanciationOfManyFromValues(List<PARTY> parties,AbstractCompleteInstanciationOfManyFromValuesArguments<PARTY> completeInstanciationOfManyFromValuesArguments) {
 		CompletePartyInstanciationOfManyFromValuesArguments<PARTY> arguments = (CompletePartyInstanciationOfManyFromValuesArguments<PARTY>) completeInstanciationOfManyFromValuesArguments;
 		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
-		completeInstanciationOfManyFromValuesBeforeProcessing(parties,values,arguments.getListener());
+		//completeInstanciationOfManyFromValuesBeforeProcessing(parties,values,arguments.getListener());
 		for(int index = 0; index < arguments.getValues().size(); index++ ){
 			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
 			completeInstanciationOfOneFromValues(parties.get(index), arguments.getInstanciationOfOneFromValuesArguments());
 		}
-		completeInstanciationOfManyFromValuesAfterProcessing(parties,values,arguments.getListener());
+		//completeInstanciationOfManyFromValuesAfterProcessing(parties,values,arguments.getListener());
 	}
 	
 }

@@ -414,7 +414,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 		completeInstanciationOfOne(person);
 		
-		completeInstanciationOfOneFromValuesAfterProcessing(person,arguments.getValues(),arguments.getListener());
+		//completeInstanciationOfOneFromValuesAfterProcessing(person,arguments.getValues(),arguments.getListener());
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -439,12 +439,12 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	public void completeInstanciationOfManyFromValues(List<Person> persons,AbstractCompleteInstanciationOfManyFromValuesArguments<Person> completeInstanciationOfManyFromValuesArguments) {
 		CompletePersonInstanciationOfManyFromValuesArguments arguments = (CompletePersonInstanciationOfManyFromValuesArguments) completeInstanciationOfManyFromValuesArguments;
 		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
-		completeInstanciationOfManyFromValuesBeforeProcessing(persons,values, arguments.getListener());
+		//completeInstanciationOfManyFromValuesBeforeProcessing(persons,values, arguments.getListener());
 		for(int index = 0; index < arguments.getValues().size(); index++ ){
 			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
 			completeInstanciationOfOneFromValues(persons.get(index), arguments.getInstanciationOfOneFromValuesArguments());
 		}
-		completeInstanciationOfManyFromValuesAfterProcessing(persons,values, arguments.getListener());
+		//completeInstanciationOfManyFromValuesAfterProcessing(persons,values, arguments.getListener());
 	}
 
 	private JobInformations getJobInformations(Person person){

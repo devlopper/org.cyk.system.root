@@ -404,13 +404,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	@Override
 	public void completeInstanciationOfManyFromValues(List<IDENTIFIABLE> identifiables,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments) {
-		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
-		completeInstanciationOfManyFromValuesBeforeProcessing(identifiables,values, arguments.getListener());
-		for(int index = 0; index < arguments.getValues().size(); index++ ){
-			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
-			completeInstanciationOfOneFromValues(identifiables.get(index), arguments.getInstanciationOfOneFromValuesArguments());
-		}
-		completeInstanciationOfManyFromValuesAfterProcessing(identifiables,values, arguments.getListener());
+		
 	}
 
 	@Override
@@ -429,25 +423,6 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		
 		completeInstanciationOfManyFromValues(identifiables,arguments);
 		return identifiables;
-	}
-
-	protected void completeInstanciationOfOneFromValuesBeforeProcessing(IDENTIFIABLE identifiable,String[] values,CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener){
-		if(listener!=null)
-			listener.beforeProcessing(identifiable,values);
-	}
-	
-	protected void completeInstanciationOfOneFromValuesAfterProcessing(IDENTIFIABLE identifiable,String[] values,CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener){
-		if(listener!=null)
-			listener.afterProcessing(identifiable,values);
-	}
-	
-	protected void completeInstanciationOfManyFromValuesBeforeProcessing(List<IDENTIFIABLE> identifiables,List<String[]> values,CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE> listener){
-		if(listener!=null)
-			listener.beforeProcessing(identifiables,values);
-	}
-	protected void completeInstanciationOfManyFromValuesAfterProcessing(List<IDENTIFIABLE> identifiables,List<String[]> values,CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE> listener){
-		if(listener!=null)
-			listener.afterProcessing(identifiables,values);
 	}
 
 	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){

@@ -208,9 +208,31 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     }
     
     @Override
+    public void pingAll() {
+    	for(SmtpProperties smtpProperties : inject(SmtpPropertiesDao.class).readAll()){
+    		MailSender sender = new MailSender();
+    		sender.setProperties(inject(SmtpPropertiesBusiness.class).convertToProperties(smtpProperties));
+    		sender.ping();
+    	}
+    }
+    
+    @Override
     public void ping() {
     	SmtpProperties smtpProperties = inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT);
     	ping(smtpProperties);
+    }
+    
+    @Override
+    public void send(org.cyk.utility.common.message.Message message,SmtpProperties smtpProperties) {
+    	MailSender sender = new MailSender();
+    	sender.setInput(message)
+    		.setProperties(inject(SmtpPropertiesBusiness.class).convertToProperties(smtpProperties))
+    		.execute();
+    }
+    
+    @Override
+    public void send(org.cyk.utility.common.message.Message message) {
+    	send(message, inject(SmtpPropertiesDao.class).readDefaulted());
     }
     
     /**/

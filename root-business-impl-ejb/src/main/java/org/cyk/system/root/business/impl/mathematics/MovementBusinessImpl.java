@@ -170,7 +170,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	public void completeInstanciationOfOneFromValues(Movement movement,AbstractCompleteInstanciationOfOneFromValuesArguments<Movement> completeInstanciationOfOneFromValuesArguments) {
 		super.completeInstanciationOfOneFromValues(movement, completeInstanciationOfOneFromValuesArguments);
 		CompleteMovementInstanciationOfOneFromValuesArguments arguments = (CompleteMovementInstanciationOfOneFromValuesArguments) completeInstanciationOfOneFromValuesArguments;
-		completeInstanciationOfOneFromValuesBeforeProcessing(movement,arguments.getValues(),arguments.getListener());
+		//completeInstanciationOfOneFromValuesBeforeProcessing(movement,arguments.getValues(),arguments.getListener());
 		
 		if(arguments.getMovementCollectionCodeIndex()!=null){
 			movement.setCollection(new MovementCollection());

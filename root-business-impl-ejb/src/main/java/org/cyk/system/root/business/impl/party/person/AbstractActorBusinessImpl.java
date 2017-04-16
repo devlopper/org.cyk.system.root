@@ -135,7 +135,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	@Override
 	public void completeInstanciationOfOneFromValues(ACTOR actor,AbstractCompleteInstanciationOfOneFromValuesArguments<ACTOR> completeInstanciationOfManyFromValuesArguments) {
 		CompleteActorInstanciationOfOneFromValuesArguments<ACTOR> arguments = (CompleteActorInstanciationOfOneFromValuesArguments<ACTOR>) completeInstanciationOfManyFromValuesArguments;
-		completeInstanciationOfOneFromValuesBeforeProcessing(actor, arguments.getValues(),arguments.getListener());
+		//completeInstanciationOfOneFromValuesBeforeProcessing(actor, arguments.getValues(),arguments.getListener());
 		
 		if(arguments.getPersonCodeColumnIndex()!=null){
 			//if(actor.getPerson()==null)
@@ -159,19 +159,19 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		*/
 		completeInstanciationOfOne(actor);
 		
-		completeInstanciationOfOneFromValuesAfterProcessing(actor, arguments.getValues(),arguments.getListener());
+		//completeInstanciationOfOneFromValuesAfterProcessing(actor, arguments.getValues(),arguments.getListener());
 	} 
 
 	@Override
 	public void completeInstanciationOfManyFromValues(List<ACTOR> actors,AbstractCompleteInstanciationOfManyFromValuesArguments<ACTOR> completeInstanciationOfManyFromValuesArguments) {
 		CompleteActorInstanciationOfManyFromValuesArguments<ACTOR> arguments = (CompleteActorInstanciationOfManyFromValuesArguments<ACTOR>) completeInstanciationOfManyFromValuesArguments;
 		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
-		completeInstanciationOfManyFromValuesBeforeProcessing(actors,values,arguments.getListener());
+		//completeInstanciationOfManyFromValuesBeforeProcessing(actors,values,arguments.getListener());
 		for(int index = 0; index < arguments.getValues().size(); index++ ){
 			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
 			completeInstanciationOfOneFromValues(actors.get(index), arguments.getInstanciationOfOneFromValuesArguments());
 		}
-		completeInstanciationOfManyFromValuesAfterProcessing(actors,values,arguments.getListener());
+		//completeInstanciationOfManyFromValuesAfterProcessing(actors,values,arguments.getListener());
 	}
 /*
 	@Override

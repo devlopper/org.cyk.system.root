@@ -7,20 +7,15 @@ import java.util.Collection;
 import javax.mail.internet.InternetAddress;
 
 import org.cyk.system.root.model.message.SmtpProperties;
+import org.cyk.utility.common.message.Message;
 
 public interface MailBusiness extends MessageSendingBusiness<InternetAddress> {
 
 	void ping(SmtpProperties smtpProperties);
+	void pingAll();
 	
-	//Properties convert(SmtpProperties smtpProperties);
-	
-	/*
-	SmtpProperties getSmtpProperties();
-	
-	void setProperties(String localhost,Integer port,String username,String password,Boolean secured);
-	void setProperties(String localhost,Integer port,String username,String password);
-	*/
-	/**/
+	void send(Message message,SmtpProperties smtpProperties);
+	void send(Message message);
 	
 	/**/
 	
@@ -42,5 +37,9 @@ public interface MailBusiness extends MessageSendingBusiness<InternetAddress> {
     	}
     	
     }
+	
+	/**/
+	
+	
 	
 }

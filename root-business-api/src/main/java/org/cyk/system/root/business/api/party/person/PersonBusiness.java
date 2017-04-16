@@ -56,7 +56,7 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person> {
 		
 	}
 	
-	@Getter @Setter
+	@Getter @Setter @Deprecated
 	public static class CompletePersonInstanciationOfOneFromValuesArguments extends AbstractCompleteInstanciationOfOneFromValuesArguments<Person> implements Serializable{
 
 		private static final long serialVersionUID = 6568108456054174796L;
@@ -70,7 +70,7 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person> {
 		}
 	}
 	
-	@Getter @Setter
+	@Getter @Setter @Deprecated
 	public static class CompletePersonInstanciationOfManyFromValuesArguments extends AbstractCompleteInstanciationOfManyFromValuesArguments<Person> implements Serializable{
 
 		private static final long serialVersionUID = 6568108456054174796L;
