@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
@@ -34,6 +35,11 @@ public class Service extends AbstractIdentifiable implements Serializable {
 	@Override
 	public String toString() {
 		return computer.getCode()+Constant.CHARACTER_COLON+port;
+	}
+	
+	@Override
+	public String getUiString() {
+		return StringUtils.defaultIfBlank(StringUtils.defaultIfBlank(getCode(),getName()),computer.getUiString())+Constant.CHARACTER_COLON+port;
 	}
 	
 	public static final String FIELD_COMPUTER = "computer";

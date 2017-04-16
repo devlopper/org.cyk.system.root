@@ -47,6 +47,12 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		super(dao); 
 	}  
 	
+	@Override
+	protected void beforeCreate(UserAccount userAccount) {
+		super.beforeCreate(userAccount);
+		createIfNotIdentified(userAccount.getCredentials());
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public UserAccount findByCredentials(Credentials credentials) {
 		return dao.readByCredentials(credentials);

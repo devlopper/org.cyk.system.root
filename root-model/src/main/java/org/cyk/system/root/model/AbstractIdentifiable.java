@@ -179,6 +179,13 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getSupportingDocument();
 	}
 	
+	public void setUsable(Boolean usable){
+		getGlobalIdentifierCreateIfNull().setUsable(usable);
+	}
+	public Boolean getUsable(){
+		return globalIdentifier == null ? null : globalIdentifier.getUsable();
+	}
+	
 	public Collection<AbstractIdentifiable> getParents(){
 		if(parents==null)
 			parents =  new ArrayList<>();

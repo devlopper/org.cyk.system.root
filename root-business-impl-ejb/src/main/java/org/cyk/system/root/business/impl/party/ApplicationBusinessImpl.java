@@ -27,6 +27,7 @@ import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.ApplicationPropertiesProvider;
 import org.cyk.system.root.business.api.security.LicenseBusiness;
 import org.cyk.system.root.business.api.security.ShiroConfigurator;
+import org.cyk.system.root.business.api.security.SoftwareBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
@@ -37,7 +38,6 @@ import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.party.Application;
-import org.cyk.system.root.model.security.ApplicationAccount;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.PersistenceManager;
@@ -120,9 +120,12 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		logInfo("Creating administrator account");
 		//installation.getAdministratorCredentials().setUsername(null);
 		create(installation.getApplication());
-		ApplicationAccount administratorAccount = new ApplicationAccount();
+		UserAccount administratorAccount = new UserAccount();
+		administratorAccount.setCode(RootConstant.Code.UserAccount.APPLICATION);
 		administratorAccount.setUser(installation.getApplication());
 		administratorAccount.setCredentials(installation.getAdministratorCredentials());
+		if(installation.getAdministratorCredentials().getSoftware()==null)
+			installation.getAdministratorCredentials().setSoftware(inject(SoftwareBusiness.class).findDefault());
 		//Installer : The one who delivers the system = SUPER SUPER USER = Configure what the system will do
 		//administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getUserRole());
 		//administratorAccount.getRoles().add(RootBusinessLayer.getInstance().getAdministratorRole());
@@ -134,7 +137,8 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		UserAccount managerAccount = new UserAccount();
 		managerAccount.setUser(installation.getManager());
 		managerAccount.setCredentials(installation.getManagerCredentials());
-		
+		if(installation.getManagerCredentials().getSoftware()==null)
+			installation.getManagerCredentials().setSoftware(inject(SoftwareBusiness.class).findDefault());
 		//Super User : The one who use the system
 		
 		managerAccount.getRoles().addAll(roleDao.readAllExclude(Arrays.asList(inject(RoleDao.class).read(RootConstant.Code.Role.ADMINISTRATOR))));

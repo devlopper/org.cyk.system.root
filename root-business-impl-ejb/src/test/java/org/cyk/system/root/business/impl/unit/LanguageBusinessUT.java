@@ -6,14 +6,13 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.cyk.system.root.model.CommonBusinessAction;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindClassLabelTextParameters;
 import org.cyk.system.root.business.api.language.LanguageBusiness.FindDoSomethingTextParameters;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
+import org.cyk.system.root.model.CommonBusinessAction;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.security.ApplicationAccount;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
@@ -65,7 +64,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     public void findClassLabelText() {
 		assertEquals("Compte utilisateur",languageBusiness.findClassLabelText(UserAccount.class));
 		assertEquals("Comptes utilisateurs",languageBusiness.findClassLabelText(new FindClassLabelTextParameters(UserAccount.class, Boolean.FALSE)));
-		assertEquals("Compte administrateur",languageBusiness.findClassLabelText(ApplicationAccount.class));
+		//assertEquals("Compte administrateur",languageBusiness.findClassLabelText(ApplicationAccount.class));
 	}
 	
 	@Test

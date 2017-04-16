@@ -75,6 +75,7 @@ import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.BusinessServiceCollection;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.model.value.MeasureType;
@@ -331,6 +332,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createRole(RootConstant.Code.Role.SECURITY_MANAGER, "Security Manager");
         createRole(RootConstant.Code.Role.USER, "User",SHIRO_PRIVATE_FOLDER);
         
+        createFromExcelSheet(Software.class);
         createFromExcelSheet(Credentials.class);
         createFromExcelSheet(BusinessServiceCollection.class);
     }

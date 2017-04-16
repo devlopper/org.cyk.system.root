@@ -16,7 +16,6 @@ import org.cyk.system.root.persistence.api.security.UserAccountDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
 import org.cyk.system.root.persistence.impl.Utils;
-import org.cyk.utility.common.computation.LogicalOperator;
 
 public class UserAccountDaoImpl extends AbstractTypedDao<UserAccount> implements UserAccountDao,Serializable {
 
@@ -35,7 +34,9 @@ public class UserAccountDaoImpl extends AbstractTypedDao<UserAccount> implements
     @Override
     protected void namedQueriesInitialisation() {
         super.namedQueriesInitialisation();
-        registerNamedQuery(readByCredentials, _select().where("credentials.username","username",EQ).where(LogicalOperator.AND,"credentials.password","password",EQ));
+        registerNamedQuery(readByCredentials, _select().where(commonUtils.attributePath(UserAccount.FIELD_CREDENTIALS, Credentials.FIELD_SOFTWARE),Credentials.FIELD_SOFTWARE)
+        		.and(commonUtils.attributePath(UserAccount.FIELD_CREDENTIALS, Credentials.FIELD_USERNAME),Credentials.FIELD_USERNAME,EQ)
+        		.and(commonUtils.attributePath(UserAccount.FIELD_CREDENTIALS, Credentials.FIELD_PASSWORD),Credentials.FIELD_PASSWORD,EQ));
         registerNamedQuery(readAllSortedByDate,READ_BY_CRITERIA_SELECT_FORMAT+" ORDER BY userAccount.globalIdentifier.creationDate DESC");
         registerNamedQuery(readAllExcludeRoles,READ_BY_CRITERIA_SELECT_FORMAT+" WHERE "+WHERE_EXCLUDE_ROLE);
         registerNamedQuery(readByCriteria,READ_BY_CRITERIA_NOTORDERED_FORMAT);
@@ -47,8 +48,8 @@ public class UserAccountDaoImpl extends AbstractTypedDao<UserAccount> implements
     
     @Override
     public UserAccount readByCredentials(Credentials credentials) {
-        return namedQuery(readByCredentials).ignoreThrowable(NoResultException.class).parameter("username", credentials.getUsername())
-        	.parameter("password", credentials.getPassword())
+        return namedQuery(readByCredentials).ignoreThrowable(NoResultException.class).parameter(Credentials.FIELD_SOFTWARE, credentials.getSoftware())
+        		.parameter(Credentials.FIELD_USERNAME, credentials.getUsername()).parameter(Credentials.FIELD_PASSWORD, credentials.getPassword())
             .resultOne();
     }
     

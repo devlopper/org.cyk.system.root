@@ -48,6 +48,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public AbstractIdentifiable create(AbstractIdentifiable anIdentifiable) {	    
 	    TypedBusiness<AbstractIdentifiable> businessBean = inject(BusinessInterfaceLocator.class).injectTypedByObject(anIdentifiable);
 	    if(businessBean==null){
+	    	System.out.println("GenericBusinessImpl.create() : "+anIdentifiable);
 	    	inject(ValidationPolicy.class).validateCreate(anIdentifiable);
 	        return genericDao.create(anIdentifiable);
         }else{

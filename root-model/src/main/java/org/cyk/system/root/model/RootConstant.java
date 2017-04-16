@@ -47,6 +47,21 @@ public interface RootConstant {
 		
 		/**/
 		
+		public static class Software implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String INSTALLED = "INSTALLED";
+			public static String GOOGLEMAIL = "GOOGLEMAIL";
+			public static String YAHOOMAIL = "YAHOOMAIL";
+		}
+		
+		public static class UserAccount implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String APPLICATION = "APPLICATION";
+			
+		}
+		
 		public static class Sex implements Serializable {
 			private static final long serialVersionUID = 1L;
 			

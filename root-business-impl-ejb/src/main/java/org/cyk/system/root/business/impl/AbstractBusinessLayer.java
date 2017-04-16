@@ -23,6 +23,7 @@ import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
+import org.cyk.system.root.business.api.security.CredentialsBusiness;
 import org.cyk.system.root.business.api.security.PermissionBusiness;
 import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
 import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
@@ -48,7 +49,6 @@ import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.License;
 import org.cyk.system.root.model.security.Permission;
@@ -209,13 +209,13 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Installation buildInstallation() {
 		Installation installation = new Installation();
-    	installation.setAdministratorCredentials(new Credentials("admin", "123"));
+    	installation.setAdministratorCredentials(inject(CredentialsBusiness.class).instanciateOne("admin", "123"));
     	installation.setApplication(new Application());
     	installation.getApplication().setName("Application");
     	installation.setLicense(new License());
     	installation.getLicense().setPeriod(new Period(new Date(), new Date()));
     	installation.setManager(new Person("ManagerFirstName","ManagerLastName"));
-    	installation.setManagerCredentials(new Credentials("manager", "123"));
+    	installation.setManagerCredentials(inject(CredentialsBusiness.class).instanciateOne("manager", "123"));
     	return installation;
 	}
 	

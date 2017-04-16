@@ -2,12 +2,9 @@ package org.cyk.system.root.model.message;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -31,14 +28,19 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 	@Column(name="csender",nullable=false) @NotNull  @Email
 	private String from;
 	
-	@OneToOne(cascade=CascadeType.ALL) private Credentials credentials;
+	@ManyToOne @NotNull private Credentials credentials;
 	
-	@Embedded private SmtpSocketFactory socketFactory = new SmtpSocketFactory();
+	/*@Embedded private SmtpSocketFactory socketFactory = new SmtpSocketFactory();
 	
 	public SmtpSocketFactory getSocketFactory(){
 		if(socketFactory==null)
 			socketFactory = new SmtpSocketFactory();
 		return socketFactory;
+	}*/
+	
+	@Override
+	public String getUiString() {
+		return service.getUiString();
 	}
 	
 	public static final String FIELD_SERVICE = "service";

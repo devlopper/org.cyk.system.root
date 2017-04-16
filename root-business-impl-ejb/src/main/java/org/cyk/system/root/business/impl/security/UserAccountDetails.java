@@ -24,7 +24,7 @@ public class UserAccountDetails extends AbstractOutputDetails<UserAccount> imple
 			user = ((Application)userAccount.getUser()).getName();
 		username = userAccount.getCredentials().getUsername();
 		roles = StringUtils.join(userAccount.getRoles(),Constant.CHARACTER_COMA);
-		disabled = formatResponse(Boolean.TRUE.equals(userAccount.getDisabled()));
+		disabled = formatResponse(Boolean.TRUE.equals(userAccount.getUsable()));
 	}
 	
 	public static final String FIELD_USER = "user";

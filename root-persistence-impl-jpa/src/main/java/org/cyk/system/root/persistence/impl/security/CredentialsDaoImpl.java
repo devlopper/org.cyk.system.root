@@ -1,13 +1,11 @@
 package org.cyk.system.root.persistence.impl.security;
 
-import static org.cyk.utility.common.computation.ArithmeticOperator.EQ;
-import static org.cyk.utility.common.computation.LogicalOperator.AND;
-
 import java.io.Serializable;
 
 import javax.persistence.NoResultException;
 
 import org.cyk.system.root.model.security.Credentials;
+import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.persistence.api.security.CredentialsDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 
@@ -15,26 +13,28 @@ public class CredentialsDaoImpl extends AbstractTypedDao<Credentials> implements
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-   private String readByUsername,readByUsernameByPassword;
+   private String readBySoftwareByUsername,readBySoftwareByUsernameByPassword;
     
     @Override
     protected void namedQueriesInitialisation() {
         super.namedQueriesInitialisation();
-        registerNamedQuery(readByUsername, _select().where("username",EQ));
-        registerNamedQuery(readByUsernameByPassword, _select().where("username",EQ).where(AND,"password", "password",EQ));
+        registerNamedQuery(readBySoftwareByUsername, _select().where(Credentials.FIELD_SOFTWARE).and(Credentials.FIELD_USERNAME));
+        registerNamedQuery(readBySoftwareByUsernameByPassword, _select().where(Credentials.FIELD_SOFTWARE).and(Credentials.FIELD_USERNAME).and(Credentials.FIELD_PASSWORD));
     }
     
     @Override
-    public Credentials readByUsername(String username) {
-        return namedQuery(readByUsername).ignoreThrowable(NoResultException.class).parameter("username", username)
+	public Credentials readBySoftwareByUsername(Software software, String aUsername) {
+    	return namedQuery(readBySoftwareByUsername).ignoreThrowable(NoResultException.class).parameter(Credentials.FIELD_SOFTWARE, software)
+    			.parameter(Credentials.FIELD_USERNAME, aUsername)
                 .resultOne();
-    }
+	}
     
-    @Override
-    public Credentials readByUsernameByPassword(String username,String password) {
-        return namedQuery(readByUsernameByPassword).ignoreThrowable(NoResultException.class).parameter("username", username).parameter("password", password)
+	@Override
+	public Credentials readBySoftwareByUsernameByPassword(Software software, String aUsername,String password) {
+		return namedQuery(readBySoftwareByUsernameByPassword).ignoreThrowable(NoResultException.class).parameter(Credentials.FIELD_SOFTWARE, software)
+    			.parameter(Credentials.FIELD_USERNAME, aUsername).parameter(Credentials.FIELD_PASSWORD, password)
                 .resultOne();
-    }
+	}
     
    
 

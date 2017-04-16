@@ -5,9 +5,12 @@ import javax.interceptor.Interceptors;
 
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.ExecutedMethod;
+import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.persistence.api.event.ExecutedMethodDao;
 import org.cyk.system.root.persistence.api.security.CredentialsDao;
+import org.cyk.system.root.persistence.api.security.SoftwareDao;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.file.ExcelSheetReader;
 
@@ -36,7 +39,8 @@ public class ExecutedMethodBusinessIT extends AbstractBusinessIT {
     
 	@Override
 	protected void businesses() {
-		inject(UserAccountBusiness.class).connect(inject(CredentialsDao.class).readByUsernameByPassword("admin", "123"));
+		Software software = inject(SoftwareDao.class).read(RootConstant.Code.Software.INSTALLED);
+		inject(UserAccountBusiness.class).connect(inject(CredentialsDao.class).readBySoftwareByUsernameByPassword(software,"admin", "123"));
 		System.out.println("ExecutedMethodBusinessIT.businesses() : "+inject(ExecutedMethodDao.class).countAll());
 		for(ExecutedMethod executedMethod : inject(ExecutedMethodDao.class).readAll())
 			System.out.println(executedMethod);

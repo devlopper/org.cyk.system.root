@@ -13,7 +13,6 @@ import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.message.SmtpProperties;
-import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 
 public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<SmtpProperties, SmtpPropertiesDao> implements SmtpPropertiesBusiness,Serializable {
@@ -26,9 +25,8 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
 	}
 	
 	@Override
-	protected SmtpProperties __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<SmtpProperties> listener) {
+	protected SmtpProperties __instanciateOne__(String[] values,InstanciateOneListener<SmtpProperties> listener) {
 		listener.getInstance().getGlobalIdentifierCreateIfNull();
-		listener.getInstance().setCredentials(new Credentials());
     	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
     	set(listener.getSetListener(), SmtpProperties.FIELD_SERVICE);
     	set(listener.getSetListener(), SmtpProperties.FIELD_CREDENTIALS);

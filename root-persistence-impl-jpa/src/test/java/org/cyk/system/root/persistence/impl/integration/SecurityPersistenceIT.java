@@ -5,13 +5,16 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;
+import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.security.CredentialsDao;
+import org.cyk.system.root.persistence.api.security.SoftwareDao;
 import org.cyk.system.root.persistence.api.security.UserAccountDao;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -55,14 +58,15 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 	 
 	@Override
 	protected void queries() {
-		Assert.assertNotNull(credentialsDao.readByUsername("admin"));
-		Assert.assertNotNull(credentialsDao.readByUsernameByPassword("admin","123"));
+		Software software = inject(SoftwareDao.class).read(RootConstant.Code.Software.INSTALLED);
+		Assert.assertNotNull(credentialsDao.readBySoftwareByUsername(software,"admin"));
+		Assert.assertNotNull(credentialsDao.readBySoftwareByUsernameByPassword(software,"admin","123"));
 		
-		Assert.assertNull(credentialsDao.readByUsername("admin1"));
-		Assert.assertNull(credentialsDao.readByUsernameByPassword("admin","1231"));
+		Assert.assertNull(credentialsDao.readBySoftwareByUsername(software,"admin1"));
+		Assert.assertNull(credentialsDao.readBySoftwareByUsernameByPassword(software,"admin","1231"));
 		
-		Assert.assertNotNull(userAccountDao.readByCredentials(new Credentials("admin", "123")));
-		Assert.assertNull(userAccountDao.readByCredentials(new Credentials("admin", "1234")));
+		Assert.assertNotNull(userAccountDao.readByCredentials(new Credentials(software,"admin", "123")));
+		Assert.assertNull(userAccountDao.readByCredentials(new Credentials(software,"admin", "1234")));
 		
 		Assert.assertEquals(2l,userAccountDao.readAll().size());
 		Assert.assertEquals(2l,userAccountDao.countAll().longValue());
@@ -108,6 +112,7 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 	
 	
 	private void createAccount(String personName,String username,String password,String email,Role...roles){
+		Software software = inject(SoftwareDao.class).read(RootConstant.Code.Software.INSTALLED);
 		ElectronicMail electronicMail = new ElectronicMail(email);
 		Person person = new Person(personName, null);
 		electronicMail.setCollection(person.getContactCollection());
@@ -116,7 +121,7 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 		create(electronicMail);
 		create(person);
 	    
-		UserAccount userAccount = new UserAccount(person, new Credentials(username, password),new Date(), roles);
+		UserAccount userAccount = new UserAccount(person, new Credentials(software,username, password),new Date(), roles);
 	    create(userAccount);
 	}
 	

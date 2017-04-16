@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
+import org.cyk.system.root.business.api.security.CredentialsBusiness;
 import org.cyk.system.root.business.api.security.RoleBusiness;
 import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
@@ -15,7 +16,6 @@ import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
@@ -68,7 +68,7 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     	//userAccountBusiness.create(new UserAccount(RootBusinessLayer.getInstance().getPersonBusiness().findOneRandomly()
     	//		, new Credentials("123456789", "789456123"), new Date(), RootBusinessLayer.getInstance().getRoleManager()));
     	
-    	userAccountBusiness.connect(new Credentials("manager", "123"));
+    	userAccountBusiness.connect(inject(CredentialsBusiness.class).instanciateOne("manager", "123"));
     	
     	UserAccountSearchCriteria criteria = new UserAccountSearchCriteria(null);
     	//System.out.println(RootBusinessLayer.getInstance().getAdministratorRole());

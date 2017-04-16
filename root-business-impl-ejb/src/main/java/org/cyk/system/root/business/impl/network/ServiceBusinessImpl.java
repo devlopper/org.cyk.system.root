@@ -2,6 +2,8 @@ package org.cyk.system.root.business.impl.network;
 
 import java.io.Serializable;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.network.ServiceBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -14,6 +16,7 @@ public class ServiceBusinessImpl extends AbstractTypedBusinessService<Service,Se
 
 	private static final long serialVersionUID = 1L;
 
+	@Inject
 	public ServiceBusinessImpl(ServiceDao dao) {
 		super(dao);
 	}

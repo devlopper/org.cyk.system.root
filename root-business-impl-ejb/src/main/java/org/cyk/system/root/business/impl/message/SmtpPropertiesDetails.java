@@ -3,10 +3,7 @@ package org.cyk.system.root.business.impl.message;
 import java.io.Serializable;
 
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
-import org.cyk.system.root.business.impl.network.ServiceDetails;
-import org.cyk.system.root.business.impl.security.CredentialsDetails;
 import org.cyk.system.root.model.message.SmtpProperties;
-import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
@@ -20,8 +17,8 @@ public class SmtpPropertiesDetails extends AbstractOutputDetails<SmtpProperties>
 	private static final long serialVersionUID = -7568711914665423264L;
 
 	@Input @InputText private String from;
-	@IncludeInputs private ServiceDetails service = new ServiceDetails();
-	@IncludeInputs private CredentialsDetails credentials = new CredentialsDetails();
+	@Input @InputText private FieldValue service;
+	@Input @InputText private FieldValue credentials;
 	
 	public SmtpPropertiesDetails(SmtpProperties smtpProperties) {
 		super(smtpProperties);
@@ -31,9 +28,10 @@ public class SmtpPropertiesDetails extends AbstractOutputDetails<SmtpProperties>
 	public void setMaster(SmtpProperties smtpProperties) {
 		super.setMaster(smtpProperties);
 		if(master!=null){
-			service.setMaster(smtpProperties.getService());
+			service = new FieldValue(smtpProperties.getService());
 			from = smtpProperties.getFrom();
-			credentials.setMaster(smtpProperties.getCredentials());
+			debug(smtpProperties);
+			credentials = new FieldValue(smtpProperties.getCredentials());
 		}
 	}
 	

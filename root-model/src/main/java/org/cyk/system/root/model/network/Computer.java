@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
@@ -23,5 +24,9 @@ public class Computer extends AbstractIdentifiable implements Serializable {
 	
 	public static final String FIELD_IP_ADDRESS = "ipAddress";
 	public static final String FIELD_IP_ADDRESS_NAME = "ipAddressName";
-	
+
+	@Override
+	public String getUiString() {
+		return StringUtils.defaultIfBlank(StringUtils.defaultIfBlank(getCode(),getName()),StringUtils.defaultIfBlank(ipAddressName, ipAddress));
+	}
 }

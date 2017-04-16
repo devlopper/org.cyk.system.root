@@ -18,6 +18,10 @@ public class ComputerDetails extends AbstractOutputDetails<Computer> implements 
 
 	@Input @InputText private String ipAddress,ipAddressName;
 	
+	public ComputerDetails(Computer computer) {
+		super(computer);
+	}
+	
 	@Override
 	public void setMaster(Computer computer) {
 		super.setMaster(computer);
