@@ -198,4 +198,6 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 	public static final String LAZY = "lazy";
 	public static final String LAZY_TRUE = "true";
 	public static final String LAZY_FALSE = "false";
+	
+	public static final String FILTER = "filter";
 }
