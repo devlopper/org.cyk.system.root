@@ -84,7 +84,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     		inject(ContactCollectionBusiness.class).load(party.getContactCollection());
     }
 
-	@Override
+	@Override @Deprecated
 	public void completeInstanciationOfOneFromValues(PARTY party,AbstractCompleteInstanciationOfOneFromValuesArguments<PARTY> completeInstanciationOfOneFromValuesArguments) {
 		CompletePartyInstanciationOfOneFromValuesArguments<PARTY> arguments = (CompletePartyInstanciationOfOneFromValuesArguments<PARTY>) completeInstanciationOfOneFromValuesArguments;
 		//completeInstanciationOfOneFromValuesBeforeProcessing(party,arguments.getValues(),arguments.getListener());
@@ -105,7 +105,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		
 	}
 
-	@Override
+	@Override @Deprecated
 	public void completeInstanciationOfManyFromValues(List<PARTY> parties,AbstractCompleteInstanciationOfManyFromValuesArguments<PARTY> completeInstanciationOfManyFromValuesArguments) {
 		CompletePartyInstanciationOfManyFromValuesArguments<PARTY> arguments = (CompletePartyInstanciationOfManyFromValuesArguments<PARTY>) completeInstanciationOfManyFromValuesArguments;
 		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());

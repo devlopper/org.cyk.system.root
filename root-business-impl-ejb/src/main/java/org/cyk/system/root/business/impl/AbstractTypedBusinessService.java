@@ -536,10 +536,18 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		searchCriteria.set(stringSearchCriteria);
 		return countBySearchCriteria(searchCriteria);
 	}
-
+	
+	@Deprecated
 	protected void applyDataReadConfigToDao(DataReadConfiguration dataReadConfig){
 		dao.getDataReadConfig().setFirstResultIndex(dataReadConfig.getFirstResultIndex());
 		dao.getDataReadConfig().setMaximumResultCount(dataReadConfig.getMaximumResultCount());
+	}
+	
+	protected void setDaoDataReadConfiguration(DataReadConfiguration dataReadConfiguration){
+		if(dataReadConfiguration==null)
+			dao.getDataReadConfig().clear();
+		else
+			dao.getDataReadConfig().set(dataReadConfiguration);
 	}
 	
 	/**

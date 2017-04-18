@@ -14,6 +14,7 @@ public interface ElectronicMailBusiness extends AbstractContactBusiness<Electron
 	List<ElectronicMail> instanciateMany(ContactCollection collection,List<String[]> values);
 	List<ElectronicMail> instanciateMany(ContactCollection collection,String[] addresses);
 	
+	@Deprecated
 	Collection<String> findAddresses(Collection<ElectronicMail> electronicMails);
 	
 	void setAddress(Party party,String value);

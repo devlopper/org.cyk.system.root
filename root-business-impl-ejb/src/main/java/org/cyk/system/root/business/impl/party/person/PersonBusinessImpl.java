@@ -358,7 +358,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 	}
 
-	@Override
+	@Override @Deprecated
 	public void completeInstanciationOfOneFromValues(Person person,AbstractCompleteInstanciationOfOneFromValuesArguments<Person> completeInstanciationOfOneFromValuesArguments) {
 		CompletePersonInstanciationOfOneFromValuesArguments arguments = (CompletePersonInstanciationOfOneFromValuesArguments) completeInstanciationOfOneFromValuesArguments;
 		super.completeInstanciationOfOneFromValues(person,arguments.getPartyInstanciationOfOneFromValuesArguments());
@@ -435,7 +435,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		}
 	}
 	
-	@Override
+	@Override @Deprecated 
 	public void completeInstanciationOfManyFromValues(List<Person> persons,AbstractCompleteInstanciationOfManyFromValuesArguments<Person> completeInstanciationOfManyFromValuesArguments) {
 		CompletePersonInstanciationOfManyFromValuesArguments arguments = (CompletePersonInstanciationOfManyFromValuesArguments) completeInstanciationOfManyFromValuesArguments;
 		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
@@ -471,7 +471,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	
 	/**/
-	
+	@Deprecated
 	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Person>{
 		
 		Collection<Listener> COLLECTION = new ArrayList<>();
@@ -486,7 +486,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	
 	/**/
-	
+	@Deprecated
 	public static class CompleteInstanciationOfOneFromValuesAdapter implements CompleteInstanciationOfOneFromValuesListener<Person> {
 
 		@Override

@@ -190,4 +190,12 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 	public static final String URL = "url";
 	public static final String VIEW_IDENTIFIER = "outcome";
 	public static final String VIEW_IDENTIFIER_REPORT = "report";
+	
+	public static final String DATA_COLLECTION_RENDERING_MODE = "datacollectionrenderingmode";
+	public static final String DATA_COLLECTION_RENDERING_MODE_TABLE = "table";
+	public static final String DATA_COLLECTION_RENDERING_MODE_HIERARCHY = "hierarchy";
+	
+	public static final String LAZY = "lazy";
+	public static final String LAZY_TRUE = "true";
+	public static final String LAZY_FALSE = "false";
 }

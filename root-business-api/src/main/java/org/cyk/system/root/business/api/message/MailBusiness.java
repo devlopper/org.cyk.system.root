@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import javax.mail.internet.InternetAddress;
 
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.utility.common.message.Message;
 
@@ -14,8 +15,8 @@ public interface MailBusiness extends MessageSendingBusiness<InternetAddress> {
 	void ping(SmtpProperties smtpProperties);
 	void pingAll();
 	
-	void send(Message message,SmtpProperties smtpProperties);
-	void send(Message message);
+	void send(Message message,Collection<ElectronicMail> electronicMails,SmtpProperties smtpProperties);
+	void send(Message message,Collection<ElectronicMail> electronicMails);
 	
 	/**/
 	

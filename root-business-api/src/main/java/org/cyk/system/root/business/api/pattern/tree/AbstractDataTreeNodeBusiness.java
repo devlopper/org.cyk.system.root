@@ -4,13 +4,19 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public interface AbstractDataTreeNodeBusiness<NODE extends AbstractEnumeration> extends AbstractEnumerationBusiness<NODE> {
     
+	Collection<NODE> findRoots(DataReadConfiguration readConfiguration);
+	Collection<NODE> findRoots();
+    Long countRoots();
+	
     void findHierarchy(NODE anEnumeration);
     
     Collection<NODE> findHierarchies();
     Collection<NODE> findByParent(NODE parent);
+    Collection<NODE> findByParent(NODE parent,DataReadConfiguration readConfiguration);
     
     void move(NODE anEnumeration,NODE parent);
     void move(String code,String parentCode);
@@ -28,6 +34,7 @@ public interface AbstractDataTreeNodeBusiness<NODE extends AbstractEnumeration> 
     NODE instanciateOne(NODE parent);
     
     Collection<NODE> findDirectChildrenByParent(NODE parent);
+    Collection<NODE> findDirectChildrenByParent(NODE parent,DataReadConfiguration readConfiguration);
 	Long countDirectChildrenByParent(NODE parent);
-    
+	
 }

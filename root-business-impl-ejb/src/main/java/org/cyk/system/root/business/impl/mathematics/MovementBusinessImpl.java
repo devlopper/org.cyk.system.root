@@ -159,14 +159,14 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		return movement;
 	}
 	
-	@Override
+	@Override @Deprecated
 	public void completeInstanciationOfOne(Movement movement) {
 		super.completeInstanciationOfOne(movement);
 		if(movement.getCollection()!=null && movement.getCollection().getIdentifier()==null)
 			movement.setCollection(inject(MovementCollectionDao.class).read(movement.getCollection().getCode()));
 	}
 	
-	@Override
+	@Override @Deprecated
 	public void completeInstanciationOfOneFromValues(Movement movement,AbstractCompleteInstanciationOfOneFromValuesArguments<Movement> completeInstanciationOfOneFromValuesArguments) {
 		super.completeInstanciationOfOneFromValues(movement, completeInstanciationOfOneFromValuesArguments);
 		CompleteMovementInstanciationOfOneFromValuesArguments arguments = (CompleteMovementInstanciationOfOneFromValuesArguments) completeInstanciationOfOneFromValuesArguments;
@@ -207,7 +207,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		}
 		
 	}
-	
+	@Deprecated
 	public static interface CrudListener {
 		
 		public static class Adapter extends BeanAdapter implements CrudListener, Serializable {
@@ -217,7 +217,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		}
 		
 	}
-	
+	@Deprecated
 	public static interface UpdateListener extends CrudListener {
 		
 		public static class Adapter extends CrudListener.Adapter implements UpdateListener, Serializable {

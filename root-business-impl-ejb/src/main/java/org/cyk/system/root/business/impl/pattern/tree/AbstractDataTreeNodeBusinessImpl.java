@@ -18,6 +18,7 @@ import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
 public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractDataTreeNode,DAO extends AbstractDataTreeNodeDao<NODE>>  
     extends AbstractEnumerationBusinessImpl<NODE, DAO> implements AbstractDataTreeNodeBusiness<NODE> {
@@ -238,4 +239,39 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 	protected Integer getInstanciateOneDataTreeNodeStartIndex(String[] values) {
 		return 10;
 	}
+
+	
+	@Override
+	public Collection<NODE> findRoots(DataReadConfiguration readConfiguration) {
+		setDaoDataReadConfiguration(readConfiguration);
+		return dao.readRoots();
+	}
+
+	
+	@Override
+	public Collection<NODE> findRoots() {
+		return findRoots(null);
+	}
+	
+
+	@Override
+	public Long countRoots() {
+		return dao.countRoots();
+	}
+	
+
+	@Override
+	public Collection<NODE> findByParent(NODE parent, DataReadConfiguration readConfiguration) {
+		setDaoDataReadConfiguration(readConfiguration);
+		return dao.readByParent(parent);
+	}
+	
+
+	@Override
+	public Collection<NODE> findDirectChildrenByParent(NODE parent, DataReadConfiguration readConfiguration) {
+		setDaoDataReadConfiguration(readConfiguration);
+		return dao.readDirectChildrenByParent(parent);
+	}
+	
+
 }
