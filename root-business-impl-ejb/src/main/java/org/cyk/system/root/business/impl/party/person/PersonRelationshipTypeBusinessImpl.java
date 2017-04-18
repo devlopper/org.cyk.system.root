@@ -17,5 +17,11 @@ public class PersonRelationshipTypeBusinessImpl extends AbstractDataTreeBusiness
         super(dao);
     } 
 	
-	
+	/*@Override
+	protected PersonRelationshipType __instanciateOne__(String[] values,InstanciateOneListener<PersonRelationshipType> listener) {
+		PersonRelationshipType personRelationshipType = super.__instanciateOne__(values, listener);
+		System.out.println(commonUtils.convertToString(values, "|"));
+		debug(personRelationshipType);
+		return personRelationshipType;
+	}*/
 }

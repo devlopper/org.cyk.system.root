@@ -166,11 +166,34 @@ public interface RootConstant {
 		public static class PersonRelationshipType implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
-			public static String FAMILY_FATHER = generate(PersonRelationshipTypeGroup.FAMILY,"FATHER");
-			public static String FAMILY_MOTHER = generate(PersonRelationshipTypeGroup.FAMILY,"MOTHER");
+			public static String FAMILY_PARENT = generate(PersonRelationshipTypeGroup.FAMILY,"PARENT");
+			public static String FAMILY_SPOUSE = generate(PersonRelationshipTypeGroup.FAMILY,"SPOUSE");
+			public static String FAMILY_BROTHER = generate(PersonRelationshipTypeGroup.FAMILY,"BROTHER");
 			
 			public static String SOCIETY_TO_CONTACT_IN_EMERGENCY_CASE = generate(PersonRelationshipTypeGroup.SOCIETY,"TOCONTACTINEMERGENCYCASE");
 			public static String SOCIETY_DOCTOR = generate(PersonRelationshipTypeGroup.SOCIETY,"DOCTOR");
+			
+		}
+		
+		public static class PersonRelationshipTypeRoleName implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String HUSBAND = "HUSBAND";
+			public static String WIFE = "WIFE";
+			public static String FATHER = "FATHER";
+			public static String MOTHER = "MOTHER";
+			public static String SON = "SON";
+			public static String DAUGHTER = "DAUGHTER";
+			public static String BROTHER = "BROTHER";
+			public static String SISTER = "SISTER";
+			
+		}
+		
+		public static class PersonRelationshipTypeRole implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String FATHER = generate(PersonRelationshipTypeGroup.FAMILY,"PARENT","FATHER");
+			public static String MOTHER = generate(PersonRelationshipTypeGroup.FAMILY,"PARENT","MOTHER");
 			
 		}
 		

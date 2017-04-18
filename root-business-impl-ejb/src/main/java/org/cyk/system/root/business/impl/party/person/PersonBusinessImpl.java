@@ -164,7 +164,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			for(PersonRelationship personRelationship : person.getRelationships())
 				if(personRelationship.getType().getCode().equals(relationshipTypeCode))
 					return personRelationship;
-		PersonRelationship personRelationship = new PersonRelationship(instanciateOne(), inject(PersonRelationshipTypeDao.class).read(relationshipTypeCode), person);
+		PersonRelationship personRelationship = null;//new PersonRelationship(instanciateOne(), inject(PersonRelationshipTypeDao.class).read(relationshipTypeCode), person);
 		person.getRelationships().add(personRelationship);
 		return personRelationship;
 	}

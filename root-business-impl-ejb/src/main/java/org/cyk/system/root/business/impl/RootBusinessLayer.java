@@ -13,6 +13,9 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
@@ -71,6 +74,8 @@ import org.cyk.system.root.model.party.person.Medication;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRoleName;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.security.BusinessServiceCollection;
@@ -93,9 +98,6 @@ import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.generator.AbstractGeneratable;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
@@ -328,6 +330,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	createFromExcelSheet(Medication.class);
     	createFromExcelSheet(PersonRelationshipTypeGroup.class);
     	createFromExcelSheet(PersonRelationshipType.class);
+    	createFromExcelSheet(PersonRelationshipTypeRoleName.class);
+    	createFromExcelSheet(PersonRelationshipTypeRole.class);
+    	
     }
     
     private void security(){ 
