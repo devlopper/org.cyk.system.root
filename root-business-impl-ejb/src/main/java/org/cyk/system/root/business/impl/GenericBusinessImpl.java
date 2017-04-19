@@ -2,7 +2,9 @@ package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -213,4 +215,17 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 			exceptionUtils().exception("no.businessEntityInfos."+identifiableClassIdentifier);
 		return inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)businessEntityInfos.getClazz()).read(code);
 	}
+
+	
+	@Override
+	public <T extends AbstractIdentifiable> void deleteByCodes(Class<T> aClass,Collection<String> codes) {
+		inject(BusinessInterfaceLocator.class).injectTyped(aClass).delete(new HashSet<>(codes));
+	}
+
+	@Override
+	public <T extends AbstractIdentifiable> void deleteByCode(Class<T> aClass,String code) {
+		deleteByCodes(aClass, Arrays.asList(code));
+	}
+
+	
 }

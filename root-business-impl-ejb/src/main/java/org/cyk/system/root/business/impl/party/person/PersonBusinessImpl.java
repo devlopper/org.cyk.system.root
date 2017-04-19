@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -37,14 +35,12 @@ import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.person.AbstractActor;
-import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.JobInformations;
-import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MedicalInformations;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonRelationship;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
@@ -57,12 +53,10 @@ import org.cyk.system.root.persistence.api.party.person.MedicalInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.party.person.PersonExtendedInformationsDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
-import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
 import org.cyk.system.root.persistence.api.party.person.PersonTitleDao;
 import org.cyk.system.root.persistence.api.party.person.SexDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.file.ExcelSheetReader;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
@@ -95,14 +89,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		Collection<Person> persons = new ArrayList<>();
 		for(AbstractActor actor : actors)
 			persons.add(actor.getPerson());
-		return persons;
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Collection<Person> getPerson1(Collection<PersonRelationship> personRelationships) {
-		Set<Person> persons = new LinkedHashSet<>();
-		for(PersonRelationship personRelationship : personRelationships)
-			persons.add(personRelationship.getPerson1());
 		return persons;
 	}
 	
@@ -156,7 +142,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return person;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	/*@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public PersonRelationship addRelationship(Person person, String relationshipTypeCode) {
 		if(person.getRelationships()==null)
 			person.setRelationships(new ArrayList<PersonRelationship>());
@@ -174,7 +160,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		for(String relationshipTypeCode : relationshipTypeCodes){
 			addRelationship(person, relationshipTypeCode);
 		}
-	}
+	}*/
 	
 	@Override
 	protected void beforeCreate(Person person) {
@@ -238,13 +224,13 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		if(person.getMedicalInformations()!=null)
 			inject(MedicalInformationsBusiness.class).update(person.getMedicalInformations());
 		
-		if(person.getRelationships()!=null)
+		/*if(person.getRelationships()!=null)
 			for(PersonRelationship personRelationship : person.getRelationships())
 				if(isNotIdentified(personRelationship))
 					inject(PersonRelationshipBusiness.class).create(personRelationship);
 				else{
 					update(personRelationship.getPerson1().equals(person)?personRelationship.getPerson2():personRelationship.getPerson1());
-				}
+				}*/
 					
 	}
 		
@@ -309,14 +295,15 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Collection<Person> findByPersonByRelationshipType(Person person, String personRelationshipTypeCode) {
+	public Collection<Person> findByPersonByRelationshipTypeRole(String personCode, String personRelationshipTypeRoleCode) {
 		Collection<Person> persons = new ArrayList<>();
-		for(PersonRelationship personRelationship : inject(PersonRelationshipDao.class).readByPerson2ByType(person, inject(PersonRelationshipTypeDao.class)
-				.read(personRelationshipTypeCode)))
-			persons.add(personRelationship.getPerson1());	
+		for(PersonRelationship personRelationship : inject(PersonRelationshipDao.class).readByPersonByRole(read(Person.class, personCode)
+				, read(PersonRelationshipTypeRole.class,personRelationshipTypeRoleCode)))
+			persons.add(personRelationship.getExtremity1().getPerson().getCode().equals(personCode) ? personRelationship.getExtremity2().getPerson() 
+				: personRelationship.getExtremity1().getPerson() );	
 		return persons;
 	}
-	
+	/*
 	@Override
 	public Person findOneByPersonByRelationshipType(Person person, String personRelationshipTypeCode) {
 		Collection<Person> persons = findByPersonByRelationshipType(person, personRelationshipTypeCode);
@@ -331,7 +318,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 			collection.add(personRelationship.getPerson1());
 		return collection;
 	}
-	
+	*/
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(Person person) {
 		super.load(person);
@@ -358,65 +345,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 	}
 
-	@Override @Deprecated
-	public void completeInstanciationOfOneFromValues(Person person,AbstractCompleteInstanciationOfOneFromValuesArguments<Person> completeInstanciationOfOneFromValuesArguments) {
-		CompletePersonInstanciationOfOneFromValuesArguments arguments = (CompletePersonInstanciationOfOneFromValuesArguments) completeInstanciationOfOneFromValuesArguments;
-		super.completeInstanciationOfOneFromValues(person,arguments.getPartyInstanciationOfOneFromValuesArguments());
-		
-		if(arguments.getBirthLocationOtherDetailsIndex()!=null){
-			if(getExtendedInformations(person).getBirthLocation()==null)
-				person.getExtendedInformations().setBirthLocation(new Location());
-			getExtendedInformations(person).getBirthLocation().setOtherDetails(arguments.getValues()[arguments.getBirthLocationOtherDetailsIndex()]);
-		}
-		
-		if(arguments.getJobFunctionCodeIndex()!=null){
-			if(getJobInformations(person).getFunction()==null)
-				getJobInformations(person).setFunction(new JobFunction());
-			getJobInformations(person).getFunction().setCode(arguments.getValues()[arguments.getJobFunctionCodeIndex()]);
-		}
-		
-		if(arguments.getJobTitleCodeIndex()!=null){
-			if(getJobInformations(person).getTitle()==null)
-				getJobInformations(person).setTitle(new JobTitle());
-			getJobInformations(person).getTitle().setCode(arguments.getValues()[arguments.getJobTitleCodeIndex()]);
-		}
-		
-		if(arguments.getLastnameIndex()!=null){
-			person.setLastnames(arguments.getValues()[arguments.getLastnameIndex()]);
-		}
-		
-		if("M".equals(arguments.getValues()[arguments.getSexCodeIndex()]))
-			arguments.getValues()[arguments.getSexCodeIndex()] = RootConstant.Code.Sex.MALE;
-		else if("F".equals(arguments.getValues()[arguments.getSexCodeIndex()]))
-			arguments.getValues()[arguments.getSexCodeIndex()] = RootConstant.Code.Sex.FEMALE;
-		//setFieldValue(person, Sex.class, Person.FIELD_SEX, arguments.getSexCodeIndex(), arguments.getValues());
-		//setFieldValue(person.getExtendedInformations(), PersonTitle.class, PersonExtendedInformations.FIELD_TITLE, arguments.getTitleCodeIndex(), arguments.getValues());
-		
-		if(arguments.getSexCodeIndex()!=null){
-			if(person.getSex()==null){
-				person.setSex(inject(SexDao.class).read(arguments.getValues()[arguments.getSexCodeIndex()]));
-				//if(person.getSex()==null)
-				//	person.setSex(inject(SexBusiness.class).instanciateOne(arguments.getValues()[arguments.getSexCodeIndex()]));
-			}
-			
-		}
-		
-		if(arguments.getTitleCodeIndex()!=null){
-			//System.out.println(StringUtils.join(arguments.getValues(),";")+" : "+arguments.getTitleCodeIndex());
-			if(getExtendedInformations(person).getTitle()==null){
-				person.getExtendedInformations().setTitle(inject(PersonTitleDao.class).read(arguments.getValues()[arguments.getTitleCodeIndex()]));
-				
-				//System.out.println(arguments.getValues()[arguments.getTitleCodeIndex()]+" : "+inject(PersonTitleDao.class).read(arguments.getValues()[arguments.getTitleCodeIndex()]));
-				//if(person.getExtendedInformations().getTitle()==null)
-				//	person.getExtendedInformations().setTitle(inject(PersonTitleBusiness.class).instanciateOne(arguments.getValues()[arguments.getTitleCodeIndex()]));
-			}
-		}
-		
-		completeInstanciationOfOne(person);
-		
-		//completeInstanciationOfOneFromValuesAfterProcessing(person,arguments.getValues(),arguments.getListener());
-	}
-	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected <T extends AbstractIdentifiable> void setFieldValue(Object master,Class<T> fieldType,String fieldName,Integer index,String[] values){
 		T fieldValue = (T) commonUtils.readField(master, commonUtils.getFieldFromClass(master.getClass(), fieldName), Boolean.FALSE);
@@ -435,43 +363,13 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		}
 	}
 	
-	@Override @Deprecated 
-	public void completeInstanciationOfManyFromValues(List<Person> persons,AbstractCompleteInstanciationOfManyFromValuesArguments<Person> completeInstanciationOfManyFromValuesArguments) {
-		CompletePersonInstanciationOfManyFromValuesArguments arguments = (CompletePersonInstanciationOfManyFromValuesArguments) completeInstanciationOfManyFromValuesArguments;
-		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
-		//completeInstanciationOfManyFromValuesBeforeProcessing(persons,values, arguments.getListener());
-		for(int index = 0; index < arguments.getValues().size(); index++ ){
-			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
-			completeInstanciationOfOneFromValues(persons.get(index), arguments.getInstanciationOfOneFromValuesArguments());
-		}
-		//completeInstanciationOfManyFromValuesAfterProcessing(persons,values, arguments.getListener());
-	}
-
-	private JobInformations getJobInformations(Person person){
-		if(person.getJobInformations()==null){
-			person.setJobInformations(inject(JobInformationsDao.class).readByParty(person));
-			if(person.getJobInformations()==null)
-				person.setJobInformations(new JobInformations(person));
-		}
-		return person.getJobInformations();
-	}
-	
-	private PersonExtendedInformations getExtendedInformations(Person person){
-		if(person.getExtendedInformations()==null){
-			person.setExtendedInformations(inject(PersonExtendedInformationsDao.class).readByParty(person));
-			if(person.getExtendedInformations()==null)
-				person.setExtendedInformations(new PersonExtendedInformations(person));
-		}
-		return person.getExtendedInformations();
-	}
-
 	@Override
 	protected Class<? extends AbstractFieldValueSearchCriteriaSet> getSearchCriteriaClass() {
 		return Person.SearchCriteria.class;
 	}
 	
 	/**/
-	@Deprecated
+
 	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Person>{
 		
 		Collection<Listener> COLLECTION = new ArrayList<>();
@@ -486,25 +384,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	
 	/**/
-	@Deprecated
-	public static class CompleteInstanciationOfOneFromValuesAdapter implements CompleteInstanciationOfOneFromValuesListener<Person> {
-
-		@Override
-		public void beforeProcessing(Person person, String[] values) {
-			
-		}
-
-		@Override
-		public void afterProcessing(Person person, String[] values) {
-			if(person.getIdentifier()==null){
-				
-			}else{
-				
-			}
-			//if(person.getSex()!=null)
-			//	person.setSex(inject(SexDao.class).read(person.getSex().getCode()));
-		}
-		
-	}
+	
 }
  

@@ -7,27 +7,32 @@ import lombok.Setter;
 
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.model.party.person.PersonRelationship;
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputText;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
 
 @Getter @Setter
 public class PersonRelationshipDetails extends AbstractOutputDetails<PersonRelationship> implements Serializable {
 	
 	private static final long serialVersionUID = -1498269103849317057L;
 	
-	@Input @InputText private FieldValue type;
-	@Input @InputText private FieldValue person1;
-	@Input @InputText private FieldValue person2;
+	@IncludeInputs private PersonRelationshipExtremityDetails extremity1 = new PersonRelationshipExtremityDetails();
+	@IncludeInputs private PersonRelationshipExtremityDetails extremity2 = new PersonRelationshipExtremityDetails();
 	
 	public PersonRelationshipDetails(PersonRelationship personRelationship) {
 		super(personRelationship);
-		person1 = new FieldValue(personRelationship.getPerson1());
-		type = new FieldValue(personRelationship.getType());
-		person2 = new FieldValue(personRelationship.getPerson2());
-		
+
 	}
 	
-	public static final String FIELD_PERSON1 = "person1";
-	public static final String FIELD_TYPE = "type";
-	public static final String FIELD_PERSON2 = "person2";
+	@Override
+	public void setMaster(PersonRelationship personRelationship) {
+		super.setMaster(personRelationship);
+		if(personRelationship==null){
+			
+		}else{
+			extremity1.setMaster(personRelationship.getExtremity1());
+			extremity2.setMaster(personRelationship.getExtremity2());
+		}
+	}
+	
+	public static final String FIELD_EXTREMITY1 = "extremity1";
+	public static final String FIELD_EXTREMITY2 = "extremity2";
 }

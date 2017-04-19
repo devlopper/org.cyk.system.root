@@ -3,17 +3,15 @@ package org.cyk.system.root.business.api.party.person;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
-import org.cyk.system.root.model.party.person.AbstractActor;
-import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.PersonRelationship;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
-import org.cyk.utility.common.Constant;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
+import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.utility.common.Constant;
 
 public interface PersonBusiness extends AbstractPartyBusiness<Person> {
 
@@ -26,15 +24,13 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person> {
 	String findInitials(Person person);
 	
 	Person instanciateOne(String code,String[] names);
-	
+	/*
 	PersonRelationship addRelationship(Person person,String relationshipTypeCode);
 	void addRelationships(Person person,Collection<String> relationshipTypeCodes);
+	*/
+	Collection<Person> findByPersonByRelationshipTypeRole(String personCode,String personRelationshipTypeRoleCode);
 	
-	Collection<Person> findByPersonByRelationshipType(Person person,String personRelationshipTypeCode);
-	Person findOneByPersonByRelationshipType(Person person,String personRelationshipTypeCode);
-	
-	Collection<Person> findByPersonRelationshipPerson2ByPersonRelationshipTypes(Collection<Person> persons,Collection<PersonRelationshipType> personRelationshipTypes);
-	Collection<Person> getPerson1(Collection<PersonRelationship> personRelationships);
+	//Collection<Person> findByPersonRelationshipPerson2ByPersonRelationshipTypes(Collection<Person> persons,Collection<PersonRelationshipType> personRelationshipTypes);
 	
 	/**/
 	
@@ -56,27 +52,4 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person> {
 		
 	}
 	
-	@Getter @Setter @Deprecated
-	public static class CompletePersonInstanciationOfOneFromValuesArguments extends AbstractCompleteInstanciationOfOneFromValuesArguments<Person> implements Serializable{
-
-		private static final long serialVersionUID = 6568108456054174796L;
-		
-		private CompletePartyInstanciationOfOneFromValuesArguments<Person> partyInstanciationOfOneFromValuesArguments = new CompletePartyInstanciationOfOneFromValuesArguments<>();
-		protected Integer lastnameIndex,sexCodeIndex,titleCodeIndex,jobFunctionCodeIndex,jobTitleCodeIndex;
-		
-		public void setValues(String[] values){
-			this.values = values;
-			partyInstanciationOfOneFromValuesArguments.setValues(values);
-		}
-	}
-	
-	@Getter @Setter @Deprecated
-	public static class CompletePersonInstanciationOfManyFromValuesArguments extends AbstractCompleteInstanciationOfManyFromValuesArguments<Person> implements Serializable{
-
-		private static final long serialVersionUID = 6568108456054174796L;
-		
-		private CompletePersonInstanciationOfOneFromValuesArguments instanciationOfOneFromValuesArguments = new CompletePersonInstanciationOfOneFromValuesArguments();
-		
-	}
-
 }

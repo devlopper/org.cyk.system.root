@@ -17,6 +17,9 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
@@ -53,6 +56,7 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalStat
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
@@ -68,9 +72,6 @@ import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -107,9 +108,20 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		return create(identifiable, null);
 	}
 	
-	@SuppressWarnings("unchecked")
+	public <T extends AbstractIdentifiable> T update(final T identifiable,String expectedThrowableMessage){
+		if(expectedThrowableMessage!=null){
+    		new Try(expectedThrowableMessage){ 
+    			private static final long serialVersionUID = -8176804174113453706L;
+    			@Override protected void code() {inject(GenericBusiness.class).update(identifiable);}
+    		}.execute();
+    	}else{
+    		inject(GenericBusiness.class).update(identifiable);
+    		assertThat("Updated", inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier())!=null);
+    	}
+		return identifiable;
+	}
 	public <T extends AbstractIdentifiable> T update(T identifiable){
-		return (T) inject(GenericBusiness.class).update(identifiable);
+		return (T) update(identifiable,null);
 	}
 	
 	public <T extends AbstractIdentifiable> T delete(final T identifiable,String expectedThrowableMessage){
@@ -657,15 +669,84 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 				identifiables = new ArrayList<>();
 			identifiables.add(identifiable);
 		}
+		
+		public void remove(AbstractIdentifiable identifiable){
+			if(identifiables!=null){
+				for(int i = 0 ; i< identifiables.size() ; )
+					if(identifiables.get(i).equals(identifiable)){
+						identifiables.remove(i);
+						break;
+					}else
+						i++;
+			}
+				
+		}
 
 		public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
+			@SuppressWarnings("unchecked")
+			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
+			if(StringUtils.isNotBlank(identifiable.getCode()))
+				assertThat("Object to create not found", dao.read(identifiable.getCode())==null);
 			T created = helper.create(identifiable,expectedThrowableMessage);
+			created = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier());
+			assertThat("Object created found", created!=null);
 			add(created);
 			return created;
 		}
 		
 		public <T extends AbstractIdentifiable> T create(final T identifiable){
 			return create(identifiable,null);
+		}
+		
+		public <T extends AbstractIdentifiable> T update(final T identifiable,Object[][] values,String expectedThrowableMessage){
+			@SuppressWarnings("unchecked")
+			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
+			assertThat("Object to update found", dao.read(identifiable.getCode())!=null);
+			if(values!=null)
+				for(int i = 0 ; i < values.length ; i++){
+					commonUtils.setProperty(identifiable, (String)values[i][0], values[i][1]);
+				}
+			T updated = helper.update(identifiable,expectedThrowableMessage);
+			updated = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier());
+			if(values!=null)
+				for(int i = 0 ; i < values.length ; i++){
+					assertThat("Updated "+values[i][0], commonUtils.readProperty(updated, (String)values[i][0]).equals(values[i][1]));
+				}
+			assertThat("Object updated found", updated!=null);
+			return updated;
+		}
+		
+		public <T extends AbstractIdentifiable> T update(Class<T> aClass,String code,Object[][] values){
+			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
+			T identifiable = dao.read(code);
+			return update(identifiable, values, null);
+		}
+		
+		public <T extends AbstractIdentifiable> T update(final T identifiable){
+			return update(identifiable,null,null);
+		}
+		
+		public <T extends AbstractIdentifiable> T delete(final T identifiable,String expectedThrowableMessage){
+			T deleted = null;
+			if(identifiable!=null){
+				deleted = helper.delete(identifiable,expectedThrowableMessage);
+				remove(deleted);
+			}
+			return deleted;
+		}
+		
+		public <T extends AbstractIdentifiable> T delete(final T identifiable){
+			return delete(identifiable,null);
+		}
+		
+		public <T extends AbstractIdentifiable> T deleteByCode(final Class<T> aClass,final String code){
+			TypedDao<T> dao = inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
+			T identifiable = dao.read(code);
+			assertThat("Object to delete found", dao.read(code)!=null);
+			delete(identifiable);
+			identifiable = dao.read(code);
+			assertThat("Object deleted not found", dao.read(code)==null);
+			return identifiable;
 		}
 		
 		public void clean(){

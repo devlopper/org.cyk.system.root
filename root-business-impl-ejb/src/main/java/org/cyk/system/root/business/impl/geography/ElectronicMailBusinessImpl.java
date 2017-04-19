@@ -82,9 +82,9 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 		party.getContactCollection().setElectronicMail(value);
 	}
 	
-	@Override
+	@Override @Deprecated
 	public void setAddress(Person person, String personRelationshipTypeCode, String value) {//TODO must be moved to person business
-		PersonRelationshipType personRelationshipType = inject(PersonRelationshipTypeDao.class).read(personRelationshipTypeCode);
+		/*PersonRelationshipType personRelationshipType = inject(PersonRelationshipTypeDao.class).read(personRelationshipTypeCode);
 		Collection<PersonRelationship> personRelationships = inject(PersonRelationshipDao.class).readByPerson2ByType(person, personRelationshipType);
 		if(personRelationships.isEmpty()){
 			inject(PersonBusiness.class).addRelationship(person, personRelationshipTypeCode);
@@ -97,7 +97,7 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 		}else{
 			personRelationship.setPerson1(existing);
 		}
-			
+		*/	
 		
 	}
 	
@@ -110,18 +110,22 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 		return electronicMails.isEmpty() ? null : electronicMails.iterator().next().getAddress();
 	}
 
-	@Override
+	@Override @Deprecated
 	public String findAddress(Person person, String personRelationshipTypeCode) {
+		/*
 		PersonRelationshipType personRelationshipType = inject(PersonRelationshipTypeDao.class).read(personRelationshipTypeCode);
 		Collection<PersonRelationship> personRelationships = inject(PersonRelationshipDao.class).readByPerson2ByType(person, personRelationshipType);
 		if(personRelationships.isEmpty())
 			return null;
 		Person parent = inject(PersonRelationshipBusiness.class).findOneByType(person.getRelationships(), personRelationshipType).getPerson1();
 		return findAddress(parent);
+		*/
+		return null;
 	}
 	
-	@Override
+	@Override @Deprecated
 	public Collection<String> findAddresses(Person person, Collection<String> personRelationshipTypeCodes) {
+		/*
 		Collection<PersonRelationshipType> personRelationshipTypes = inject(PersonRelationshipTypeDao.class).read(personRelationshipTypeCodes);
 		Collection<PersonRelationship> personRelationships = inject(PersonRelationshipDao.class).readByPerson2ByTypes(Arrays.asList(person), personRelationshipTypes);
 		Collection<String> addresses = new ArrayList<>();
@@ -131,6 +135,8 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 		for(ElectronicMail electronicMail : inject(ContactDao.class).readByCollectionsByClass(contactCollections, ElectronicMail.class))
 			addresses.add(electronicMail.getAddress());
 		return addresses;
+		*/
+		return null;
 	}
 	
 	@Override

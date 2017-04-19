@@ -17,12 +17,12 @@ import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
-import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeRoleDao;
 
 public class NotificationBuilderAdapter extends Notification.Builder.Listener.Adapter.Default implements Serializable {
 
@@ -38,8 +38,8 @@ public class NotificationBuilderAdapter extends Notification.Builder.Listener.Ad
 	}
 	
 	@Override
-	public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Boolean areIdentifiablesReceivers,Collection<String> partyCodes,Collection<String> personRelationshipTypeCodes) {
-		Set<String> receiverIdentifiers = super.getReceiverIdentifiers(identifiables, remoteEndPoint,areIdentifiablesReceivers,partyCodes,personRelationshipTypeCodes);
+	public Set<String> getReceiverIdentifiers(Collection<AbstractIdentifiable> identifiables,RemoteEndPoint remoteEndPoint,Boolean areIdentifiablesReceivers,Collection<String> partyCodes,Collection<String> personRelationshipTypeRoleCodes) {
+		Set<String> receiverIdentifiers = super.getReceiverIdentifiers(identifiables, remoteEndPoint,areIdentifiablesReceivers,partyCodes,personRelationshipTypeRoleCodes);
 		Collection<Party> parties = new LinkedHashSet<>();
 		Collection<Person> persons = new LinkedHashSet<>(),relatedPersons = new LinkedHashSet<>();
 		if(identifiables!=null)
@@ -51,10 +51,11 @@ public class NotificationBuilderAdapter extends Notification.Builder.Listener.Ad
 				}else if(identifiable instanceof AbstractActor)
 					persons.add( ((AbstractActor)identifiable).getPerson());
 				
-		if(personRelationshipTypeCodes!=null){
-			Collection<PersonRelationshipType> personRelationshipTypes = inject(PersonRelationshipTypeDao.class).readByGlobalIdentifierCodes(personRelationshipTypeCodes);
-			for(PersonRelationship personRelationship : inject(PersonRelationshipDao.class).readByPerson2ByTypes(persons, personRelationshipTypes))
-				relatedPersons.add(personRelationship.getPerson1());
+		if(personRelationshipTypeRoleCodes!=null){
+			Collection<PersonRelationshipTypeRole> personRelationshipTypeRoles = inject(PersonRelationshipTypeRoleDao.class).readByGlobalIdentifierCodes(personRelationshipTypeRoleCodes);
+			for(PersonRelationship personRelationship : inject(PersonRelationshipDao.class).readOppositeByPersonsByRoles(persons, personRelationshipTypeRoles))
+				relatedPersons.add(persons.contains(personRelationship.getExtremity1().getPerson()) ? personRelationship.getExtremity2().getPerson() 
+						: personRelationship.getExtremity1().getPerson() );
 		}
 		
 		if(!Boolean.TRUE.equals(areIdentifiablesReceivers)){

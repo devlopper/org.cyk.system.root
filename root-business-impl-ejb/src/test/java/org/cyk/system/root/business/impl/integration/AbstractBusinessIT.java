@@ -10,6 +10,7 @@ import org.cyk.system.root.business.api.AbstractBusinessException;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
+import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
@@ -105,6 +106,10 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     	});
     	installApplication();
     }
+    
+    protected TestCase instanciateTestCase(){
+		return rootBusinessTestHelper.instanciateTestCase();
+	}
 	 
     @Override
     protected void _execute_() {
@@ -150,6 +155,14 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     @SuppressWarnings("unchecked")
 	protected <T extends AbstractIdentifiable> T delete(T object){
         return (T) genericBusiness.delete(object);
+    }
+    
+    protected <T extends AbstractIdentifiable> void deleteByCodes(Class<T> aClass,Collection<String> codes){
+        genericBusiness.deleteByCodes(aClass,codes);
+    }
+    
+    protected <T extends AbstractIdentifiable> void deleteByCode(Class<T> aClass,String code){
+        genericBusiness.deleteByCode(aClass,code);
     }
     
     protected void validate(Object object){

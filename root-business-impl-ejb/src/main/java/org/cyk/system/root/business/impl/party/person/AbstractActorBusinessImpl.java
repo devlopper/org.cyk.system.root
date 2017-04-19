@@ -3,8 +3,6 @@ package org.cyk.system.root.business.impl.party.person;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
@@ -17,8 +15,6 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
-import org.cyk.system.root.persistence.api.party.person.PersonDao;
-import org.cyk.utility.common.file.ExcelSheetReader;
 
 public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO extends AbstractActorDao<ACTOR,SEARCH_CRITERIA>,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends AbstractTypedBusinessService<ACTOR, DAO> implements AbstractActorBusiness<ACTOR,SEARCH_CRITERIA>,Serializable {
 
@@ -122,68 +118,6 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	protected void __load__(ACTOR actor){
 		inject(PersonBusiness.class).load(actor.getPerson());
 	}
-
-	@Override
-	public void completeInstanciationOfOne(ACTOR actor) {
-		super.completeInstanciationOfOne(actor);
-		if(actor.getPerson().getIdentifier()==null)
-			inject(PersonBusiness.class).completeInstanciationOfOne(actor.getPerson());
-		if(StringUtils.isBlank(actor.getName()))
-			actor.setName(actor.getPerson().getName());
-	}
-
-	@Override @Deprecated
-	public void completeInstanciationOfOneFromValues(ACTOR actor,AbstractCompleteInstanciationOfOneFromValuesArguments<ACTOR> completeInstanciationOfManyFromValuesArguments) {
-		CompleteActorInstanciationOfOneFromValuesArguments<ACTOR> arguments = (CompleteActorInstanciationOfOneFromValuesArguments<ACTOR>) completeInstanciationOfManyFromValuesArguments;
-		//completeInstanciationOfOneFromValuesBeforeProcessing(actor, arguments.getValues(),arguments.getListener());
-		
-		if(arguments.getPersonCodeColumnIndex()!=null){
-			//if(actor.getPerson()==null)
-				actor.setPerson(inject(PersonDao.class).read(arguments.getValues()[arguments.getPersonCodeColumnIndex()]));
-			
-			actor.setCode(actor.getPerson().getCode());
-		}else{
-			
-		}
-		
-		if(actor.getPerson()==null){
-			actor.setPerson(new Person());
-			inject(PersonBusiness.class).completeInstanciationOfOneFromValues(actor.getPerson(), arguments.getPersonInstanciationOfOneFromValuesArguments());
-		}
-		
-		/*if(arguments.getRegistrationCodeIndex()!=null)
-			actor.setCode(arguments.getValues()[arguments.getRegistrationCodeIndex()]);
-		
-		if(arguments.getRegistrationDateIndex()!=null)
-			actor.setBirthDate(timeBusiness.parse(arguments.getValues()[arguments.getRegistrationDateIndex()]));
-		*/
-		completeInstanciationOfOne(actor);
-		
-		//completeInstanciationOfOneFromValuesAfterProcessing(actor, arguments.getValues(),arguments.getListener());
-	} 
-
-	@Override @Deprecated
-	public void completeInstanciationOfManyFromValues(List<ACTOR> actors,AbstractCompleteInstanciationOfManyFromValuesArguments<ACTOR> completeInstanciationOfManyFromValuesArguments) {
-		CompleteActorInstanciationOfManyFromValuesArguments<ACTOR> arguments = (CompleteActorInstanciationOfManyFromValuesArguments<ACTOR>) completeInstanciationOfManyFromValuesArguments;
-		List<String[]> values =  ExcelSheetReader.Adapter.getValues(arguments.getValues());
-		//completeInstanciationOfManyFromValuesBeforeProcessing(actors,values,arguments.getListener());
-		for(int index = 0; index < arguments.getValues().size(); index++ ){
-			arguments.getInstanciationOfOneFromValuesArguments().setValues(arguments.getValues().get(index).getValues());
-			completeInstanciationOfOneFromValues(actors.get(index), arguments.getInstanciationOfOneFromValuesArguments());
-		}
-		//completeInstanciationOfManyFromValuesAfterProcessing(actors,values,arguments.getListener());
-	}
-/*
-	@Override
-	public List<ACTOR> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<ACTOR> arguments) {
-		List<ACTOR> actors = new ArrayList<>();
-		for(int index = 0; index < arguments.getValues().size(); index++ ){
-			ACTOR actor = newInstance(getClazz());
-			actors.add(actor);
-		}
-		completeInstanciationOfManyFromValues(actors,arguments);
-		return actors;
-	}*/
 
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<ACTOR> findByCriteria(SEARCH_CRITERIA criteria) {

@@ -1,6 +1,5 @@
 package org.cyk.system.root.business.impl.party.person;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -9,8 +8,7 @@ import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
-import org.cyk.system.root.persistence.api.party.person.PersonDao;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
 
 public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService<PersonRelationship,PersonRelationshipDao> implements PersonRelationshipBusiness {
@@ -25,6 +23,7 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 	@Override
 	protected void beforeCreate(PersonRelationship personRelationship) {
 		super.beforeCreate(personRelationship);
+		/*
 		for(Person person : new Person[]{personRelationship.getPerson1(),personRelationship.getPerson2()}){
 			Person existing = null;
 			if(person.getContactCollection()!=null && person.getContactCollection().getElectronicMails()!=null && !person.getContactCollection().getElectronicMails().isEmpty())
@@ -37,6 +36,7 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 				personRelationship.setPerson2(existing);
 		}
 		exceptionUtils().exception(personRelationship.getPerson1().equals(personRelationship.getPerson2()), "person1.cannotbe.person2");
+		*/
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 	public Collection<PersonRelationship> findByPerson(Person person) {
 		return dao.readByPerson(person);
 	}
-
+	/*
 	@Override
 	public Collection<PersonRelationship> findByType(PersonRelationshipType type) {
 		return dao.readByType(type);
@@ -78,7 +78,7 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 	public Collection<PersonRelationship> findByType(Collection<PersonRelationship> personRelationships,PersonRelationshipType type) {
 		Collection<PersonRelationship> collection = new ArrayList<>();
 		for(PersonRelationship personRelationship : personRelationships)
-			if(personRelationship.getType().equals(type))
+			if(personRelationship.getExtremity1().getRole().getPersonRelationshipType().equals(type))
 				collection.add(personRelationship);
 		return collection;
 	}
@@ -88,15 +88,74 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 		Collection<PersonRelationship> collection = findByType(personRelationships, type);
 		exceptionUtils().exception(collection.size()>1, "toomuch.PersonRelationship.found");
 		return collection.isEmpty() ? null : collection.iterator().next();
-	}
+	}*/
 
 	
 	@Override
-	public PersonRelationship instanciateOne(String person1Code,String personRelationshipTypeCode, String person2Code) {
+	public PersonRelationship instanciateOne(String person1Code,String person1RoleCode,String person2Code,String person2RoleCode) {
 		PersonRelationship personRelationship = instanciateOne();
-		personRelationship.setPerson1(read(Person.class, person1Code));
-		personRelationship.setType(read(PersonRelationshipType.class, personRelationshipTypeCode));
-		personRelationship.setPerson2(read(Person.class, person2Code));
+		personRelationship.getExtremity1().setPerson(read(Person.class, person1Code));
+		personRelationship.getExtremity1().setRole(read(PersonRelationshipTypeRole.class, person1RoleCode));
+		
+		personRelationship.getExtremity2().setPerson(read(Person.class, person2Code));
+		personRelationship.getExtremity2().setRole(read(PersonRelationshipTypeRole.class, person2RoleCode));
 		return personRelationship;
-	} 
+	}
+
+	@Override
+	public Collection<PersonRelationship> findByPersons(Collection<Person> persons) {
+		return dao.readByPersons(persons);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findByRole(PersonRelationshipTypeRole role) {
+		return dao.readByRole(role);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findByRoles(Collection<PersonRelationshipTypeRole> roles) {
+		return dao.readByRoles(roles);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findByPersonByRole(Person person,PersonRelationshipTypeRole role) {
+		return dao.readByPersonByRole(person, role);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findByPersonsByRoles(Collection<Person> persons,Collection<PersonRelationshipTypeRole> roles) {
+		return dao.readByPersonsByRoles(persons, roles);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findByPersonsByRole(Collection<Person> persons, PersonRelationshipTypeRole role) {
+		return dao.readByPersonsByRole(persons, role);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findByPersonByRoles(Person person,Collection<PersonRelationshipTypeRole> roles) {
+		return dao.readByPersonByRoles(person, roles);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findOppositeByPersonByRole(Person person, PersonRelationshipTypeRole role) {
+		return dao.readOppositeByPersonByRole(person, role);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findOppositeByPersonsByRoles(Collection<Person> persons,Collection<PersonRelationshipTypeRole> roles) {
+		return dao.readOppositeByPersonsByRoles(persons, roles);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findOppositeByPersonsByRole(Collection<Person> persons, PersonRelationshipTypeRole role) {
+		return dao.readOppositeByPersonsByRole(persons, role);
+	}
+
+	@Override
+	public Collection<PersonRelationship> findOppositeByPersonByRoles(Person person, Collection<PersonRelationshipTypeRole> roles) {
+		return dao.readOppositeByPersonByRoles(person, roles);
+	}
+	
+	
 }

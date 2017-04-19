@@ -192,8 +192,10 @@ public interface RootConstant {
 		public static class PersonRelationshipTypeRole implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
-			public static String FATHER = generate(PersonRelationshipTypeGroup.FAMILY,"PARENT","FATHER");
-			public static String MOTHER = generate(PersonRelationshipTypeGroup.FAMILY,"PARENT","MOTHER");
+			public static String FAMILY_PARENT_FATHER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.FATHER);
+			public static String FAMILY_PARENT_MOTHER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.MOTHER);
+			public static String FAMILY_PARENT_SON = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.SON);
+			public static String FAMILY_PARENT_DAUGHTER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.DAUGHTER);
 			
 		}
 		

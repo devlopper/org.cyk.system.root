@@ -18,4 +18,7 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode, Locale locale);
     <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode);
     <IDENTIFIABLE extends AbstractIdentifiable> Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables, String reportTemplateCode);
+    
+    <T extends AbstractIdentifiable> void deleteByCodes(Class<T> aClass,Collection<String> codes);
+    <T extends AbstractIdentifiable> void deleteByCode(Class<T> aClass,String code);
 }
