@@ -28,7 +28,11 @@ public class PersonRelationshipDetails extends AbstractOutputDetails<PersonRelat
 		if(personRelationship==null){
 			
 		}else{
+			if(extremity1==null)
+				extremity1 = new PersonRelationshipExtremityDetails();
 			extremity1.setMaster(personRelationship.getExtremity1());
+			if(extremity2==null)
+				extremity2 = new PersonRelationshipExtremityDetails();
 			extremity2.setMaster(personRelationship.getExtremity2());
 		}
 	}

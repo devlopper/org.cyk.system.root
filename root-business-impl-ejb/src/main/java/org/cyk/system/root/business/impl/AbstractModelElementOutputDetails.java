@@ -10,6 +10,8 @@ import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.CommonBusinessAction;
 import org.cyk.system.root.model.network.UniformResourceLocator;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.cdi.AbstractBean;
 
 import lombok.Getter;
@@ -28,6 +30,8 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	
 	@Getter protected MODEL_ELEMENT master;
 	
+	@Getter @Setter @Input @InputText protected String text;
+	
 	public AbstractModelElementOutputDetails(MODEL_ELEMENT master) {
 		super();
 		clazz = getClassParameter();
@@ -41,6 +45,11 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	
 	public void setMaster(MODEL_ELEMENT master){
 		this.master = master;
+		if(this.master==null){
+			
+		}else{
+			text = this.master.getUiString();
+		}
 	}
 	
 	protected String formatNumber(Number number) {
@@ -88,5 +97,7 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 			return value;
 		}
 	}
+	
+	public static final String FIELD_TEXT = "text";
 	
 }
