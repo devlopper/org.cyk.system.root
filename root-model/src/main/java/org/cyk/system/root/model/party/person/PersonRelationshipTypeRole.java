@@ -37,6 +37,11 @@ public class PersonRelationshipTypeRole extends AbstractIdentifiable implements 
 		return personRelationshipType.toString()+Constant.CHARACTER_SLASH+role;
 	}
 	
+	@Override
+	public String getUiString() {
+		return personRelationshipType.getUiString()+Constant.CHARACTER_SLASH+role.getUiString();
+	}
+	
 	public static final String FIELD_PERSON_RELATIONSHIP_TYPE = "personRelationshipType";
 	public static final String FIELD_ROLE = "role";
 	
