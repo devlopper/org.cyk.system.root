@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.Valid;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,13 +29,13 @@ public class PersonRelationship extends AbstractIdentifiable implements Serializ
 	@Embedded @AssociationOverrides(value={
 			@AssociationOverride(name=PersonRelationshipExtremity.FIELD_PERSON,joinColumns={@JoinColumn(name=COLUMN_PERSON1)})
 			,@AssociationOverride(name=PersonRelationshipExtremity.FIELD_ROLE,joinColumns={@JoinColumn(name=COLUMN_ROLE_1)})
-	}) 
+	}) @Valid
 	private PersonRelationshipExtremity extremity1 = new PersonRelationshipExtremity();
 	
 	@Embedded @AssociationOverrides(value={
 			@AssociationOverride(name=PersonRelationshipExtremity.FIELD_PERSON,joinColumns={@JoinColumn(name=COLUMN_PERSON2)})
 			,@AssociationOverride(name=PersonRelationshipExtremity.FIELD_ROLE,joinColumns={@JoinColumn(name=COLUMN_ROLE_2)})
-	}) 
+	}) @Valid
 	private PersonRelationshipExtremity extremity2 = new PersonRelationshipExtremity();
 	
 	public PersonRelationshipExtremity getExtremity1(){

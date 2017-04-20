@@ -1,5 +1,12 @@
 package org.cyk.system.root.business.impl;
 
+import static org.cyk.system.root.model.RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_DAUGHTER;
+import static org.cyk.system.root.model.RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_FATHER;
+import static org.cyk.system.root.model.RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_MOTHER;
+import static org.cyk.system.root.model.RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_SON;
+import static org.cyk.system.root.model.RootConstant.Code.PersonRelationshipTypeRole.FAMILY_SPOUSE_HUSBAND;
+import static org.cyk.system.root.model.RootConstant.Code.PersonRelationshipTypeRole.FAMILY_SPOUSE_WIFE;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,9 +14,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,6 +30,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -36,6 +46,8 @@ import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineAlphabetBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
+import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.FileRepresentationType;
@@ -56,12 +68,17 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalStat
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
+import org.cyk.system.root.persistence.api.party.person.PersonDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeRoleDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ClassRepository.ClassField;
 import org.cyk.utility.common.Constant;
@@ -108,6 +125,23 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		return create(identifiable, null);
 	}
 	
+	public <T extends AbstractIdentifiable> T read(final Class<T> aClass,final String code,String expectedThrowableMessage){
+		T read = null;
+		if(expectedThrowableMessage!=null){
+    		new Try(expectedThrowableMessage){ 
+    			private static final long serialVersionUID = -8176804174113453706L;
+    			@Override protected void code() {inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code);}
+    		}.execute();
+    	}else{
+    		read = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code);
+    		assertThat("Read", read!=null);
+    	}
+		return read;
+	}
+	public <T extends AbstractIdentifiable> T read(final Class<T> aClass,final String code){
+		return read(aClass,code, null);
+	}
+	
 	public <T extends AbstractIdentifiable> T update(final T identifiable,String expectedThrowableMessage){
 		if(expectedThrowableMessage!=null){
     		new Try(expectedThrowableMessage){ 
@@ -141,7 +175,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	public <T extends AbstractIdentifiable> T delete(Class<T> aClass,String code,String expectedThrowableMessage){
 		T identifiable = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code);
-		assertThat("Found identifiable to delete", identifiable!=null);
+		assertThat("Found "+aClass.getSimpleName()+" with code "+code+" to delete", identifiable!=null);
 		return delete(identifiable,expectedThrowableMessage);
 	}
 	public <T extends AbstractIdentifiable> T delete(Class<T> aClass,String code){
@@ -237,22 +271,22 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		//listener.assertEquals(message, expected, actual);	
 	}
 	
-	protected void assertEquals(String message,Object expected,Object actual){
+	protected static void assertEquals(String message,Object expected,Object actual){
 		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertEquals(message, expected, actual);
 	}
 	
-	public void assertCodeExists(Class<? extends AbstractIdentifiable> aClass,String code){
+	public static void assertCodeExists(Class<? extends AbstractIdentifiable> aClass,String code){
 		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertCodeExists(aClass, code);
 	}
 	
-	protected void assertBigDecimalEquals(String message,BigDecimal expected,BigDecimal actual){
+	protected static void assertBigDecimalEquals(String message,BigDecimal expected,BigDecimal actual){
 		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertBigDecimalEquals(message, expected, actual);
 	}
 	
-	protected void assertBigDecimalEquals(String message,String expected,BigDecimal actual){
+	protected static void assertBigDecimalEquals(String message,String expected,BigDecimal actual){
 		assertBigDecimalEquals(message,new BigDecimal(expected),actual);
 	}
 	
@@ -658,6 +692,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 
 		private AbstractBusinessTestHelper helper;
 		private List<AbstractIdentifiable> identifiables;
+		private Boolean cleaned = Boolean.FALSE;
 		
 		public TestCase(AbstractBusinessTestHelper helper) {
 			super();
@@ -696,6 +731,16 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		public <T extends AbstractIdentifiable> T create(final T identifiable){
 			return create(identifiable,null);
+		}
+		
+		public <T extends AbstractIdentifiable> T read(Class<T> aClass,String code,String expectedThrowableMessage){
+			T read = helper.read(aClass,code,expectedThrowableMessage);
+			assertThat("Object read found", read!=null);
+			return read;
+		}
+		
+		public <T extends AbstractIdentifiable> T read(Class<T> aClass,String code){
+			return read(aClass,code,null);
 		}
 		
 		public <T extends AbstractIdentifiable> T update(final T identifiable,Object[][] values,String expectedThrowableMessage){
@@ -750,18 +795,84 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		}
 		
 		public void clean(){
+			if(Boolean.TRUE.equals(cleaned))
+				return;
 			if(identifiables!=null){
 				Collections.reverse(identifiables);
 				for(AbstractIdentifiable identifiable : identifiables)
 					helper.delete(identifiable.getClass(), identifiable.getCode()); //inject(GenericBusiness.class).delete(identifiable);
 			}
+			cleaned = Boolean.TRUE;
 		}
+		
+		/**/
+		
+		public Person createOnePersonRandomly(String code){
+			return create(inject(PersonBusiness.class).instanciateOneRandomly(code));
+		}
+		
+		public void createManyPersonRandomly(String[] codes){
+			for(Person person : inject(PersonBusiness.class).instanciateManyRandomly(new HashSet<>(Arrays.asList(codes))))
+				create(person);
+		}
+		
+		public PersonRelationship createOnePersonRelationship(String person1Code,String role1Code,String person2Code,String role2Code){
+			return create((PersonRelationship) inject(PersonRelationshipBusiness.class).instanciateOne(person1Code,role1Code,person2Code,role2Code));
+		}
+		
+		public void createParentChildrenPersonRelationship(String parentPersonCode,String parentRoleCode,String[] sonPersonCodes,String[] daughterPersonCodes){
+			if(StringUtils.isBlank(parentPersonCode))
+				return;
+			if(sonPersonCodes!=null)
+				for(String sonPersonCode : sonPersonCodes)
+					createOnePersonRelationship(parentPersonCode, parentRoleCode, sonPersonCode, FAMILY_PARENT_SON);
+			
+			if(daughterPersonCodes!=null)
+				for(String daughterPersonCode : daughterPersonCodes)
+					createOnePersonRelationship(parentPersonCode, parentRoleCode, daughterPersonCode, FAMILY_PARENT_DAUGHTER);
+		}
+		
+		public void createFamilyPersonRelationship(String fatherPersonCode,String motherPersonCode,String[] sonPersonCodes,String[] daughterPersonCodes){
+			for(String personCode : ArrayUtils.addAll(ArrayUtils.addAll(sonPersonCodes, daughterPersonCodes),new String[]{fatherPersonCode,motherPersonCode})){
+				if(inject(PersonDao.class).read(personCode)==null)
+					createOnePersonRandomly(personCode);
+			}
+			createOnePersonRelationship(fatherPersonCode,FAMILY_SPOUSE_HUSBAND,motherPersonCode,FAMILY_SPOUSE_WIFE);
+			createParentChildrenPersonRelationship(fatherPersonCode, FAMILY_PARENT_FATHER, sonPersonCodes, daughterPersonCodes);
+			createParentChildrenPersonRelationship(motherPersonCode, FAMILY_PARENT_MOTHER, sonPersonCodes, daughterPersonCodes);
+						
+			assertNumberOfPersonRelationship(fatherPersonCode, FAMILY_PARENT_FATHER, FAMILY_PARENT_SON, sonPersonCodes);
+			assertNumberOfPersonRelationship(motherPersonCode, FAMILY_PARENT_MOTHER, FAMILY_PARENT_SON, sonPersonCodes);
+			assertNumberOfPersonRelationship(fatherPersonCode, FAMILY_PARENT_FATHER, FAMILY_PARENT_DAUGHTER, daughterPersonCodes);
+			assertNumberOfPersonRelationship(motherPersonCode, FAMILY_PARENT_MOTHER, FAMILY_PARENT_DAUGHTER, daughterPersonCodes);
+		}
+		
+		protected void assertNumberOfPersonRelationship(String person1Code,String role1Code,String role2Code,String[] expectedPersonCodes){
+			assertEquals("Number of "+role1Code+" of "+person1Code, expectedPersonCodes==null ? 0 : expectedPersonCodes.length, inject(PersonRelationshipDao.class)
+					.readByPersonByRoleByOppositeRole(inject(PersonDao.class).read(person1Code), inject(PersonRelationshipTypeRoleDao.class).read(role1Code)
+							, inject(PersonRelationshipTypeRoleDao.class).read(role2Code)).size());
+		}
+		
+		/**/
+		
+		public <T extends AbstractIdentifiable> void crud(final Class<T> aClass,T instance,Object[][] values){
+			create(instance);
+	    	String code = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(instance.getIdentifier()).getCode();
+	    	read(aClass,code);
+	    	update(aClass,code, values);    	
+	    	deleteByCode(aClass,code);
+	    	clean();
+	    }
 		
 	}
 
-	public TestCase instanciateTestCase(){
-		TestCase testCase = new TestCase(this);
+	public TestCase instanciateTestCase(AbstractBusinessTestHelper helper){
+		TestCase testCase = new TestCase(helper);
 		
 		return testCase;
+	}
+	
+	public TestCase instanciateTestCase(){
+		return instanciateTestCase(this);
 	}
 }

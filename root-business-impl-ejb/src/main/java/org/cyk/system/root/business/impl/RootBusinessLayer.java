@@ -72,6 +72,7 @@ import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.MaritalStatus;
 import org.cyk.system.root.model.party.person.Medication;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
@@ -156,7 +157,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         inject(RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator.class).register();
         inject(RootFormattingConfigurationsRegistrator.class).register();
         
-        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, ReportTemplate.class);
+        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, ReportTemplate.class
+        		,PersonRelationshipTypeRole.class,PersonRelationship.class);
         
         rootBusinessTestHelper.setReportBusiness(reportBusiness);
         

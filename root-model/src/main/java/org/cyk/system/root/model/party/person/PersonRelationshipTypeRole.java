@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -30,6 +31,11 @@ public class PersonRelationshipTypeRole extends AbstractIdentifiable implements 
 	@ManyToOne @JoinColumn(name=COLUMN_ROLE) @NotNull private PersonRelationshipTypeRoleName role;
 	
 	/**/
+	
+	@Override
+	public String toString() {
+		return personRelationshipType.toString()+Constant.CHARACTER_SLASH+role;
+	}
 	
 	public static final String FIELD_PERSON_RELATIONSHIP_TYPE = "personRelationshipType";
 	public static final String FIELD_ROLE = "role";

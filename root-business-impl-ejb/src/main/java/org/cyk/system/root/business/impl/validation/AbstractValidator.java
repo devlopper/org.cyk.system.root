@@ -123,7 +123,17 @@ public abstract class AbstractValidator<OBJECT> extends AbstractBean implements 
 	}
 	
 	protected String formatMessage(Object anObject,ConstraintViolation<?> constraintViolation){
-		Field field = commonUtils.getFieldFromClass(anObject.getClass(), constraintViolation.getPropertyPath().toString());
+		Class<?> clazz = anObject.getClass();
+		Field field = null;
+		if(StringUtils.contains(constraintViolation.getPropertyPath().toString(), Constant.CHARACTER_DOT.toString())){
+			for(String fieldName : StringUtils.split(constraintViolation.getPropertyPath().toString(), Constant.CHARACTER_DOT.toString())){
+				field = commonUtils.getFieldFromClass(clazz, fieldName);
+				clazz = field.getType();
+			}	
+		}else{
+			field = commonUtils.getFieldFromClass(clazz, constraintViolation.getPropertyPath().toString());
+		}
+		
 		//Formating should be moved to ValidationMessageInterpolator. But how to get field ???
 		return languageBusiness.findFieldLabelText(field).getValue()+Constant.CHARACTER_SPACE+constraintViolation.getMessage();
 	}

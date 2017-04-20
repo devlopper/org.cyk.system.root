@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
@@ -26,20 +25,18 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 
 	@ManyToOne @NotNull private UniformResourceLocator uniformResourceLocator;
 	
-	@Column(nullable=false) @NotNull private String name;
-	
 	private String value;
 	
 	public UniformResourceLocatorParameter(UniformResourceLocator uniformResourceLocator, String name, String value) {
 		super();
 		this.uniformResourceLocator = uniformResourceLocator;
-		this.name = name;
 		this.value = value;
+		setName(name);
 	}
 	
 	@Override
 	public String toString() {
-		return name+"="+value;
+		return getName()+"="+value;
 	}
 	
 	/**/

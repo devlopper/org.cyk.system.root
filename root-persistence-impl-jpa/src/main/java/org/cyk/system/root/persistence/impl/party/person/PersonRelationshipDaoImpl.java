@@ -1,5 +1,6 @@
 package org.cyk.system.root.persistence.impl.party.person;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -11,12 +12,13 @@ import org.cyk.system.root.model.party.person.PersonRelationshipExtremity;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
+import org.cyk.utility.common.computation.ArithmeticOperator;
 
-public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationship> implements PersonRelationshipDao {
+public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationship> implements PersonRelationshipDao,Serializable {
 
 	private static final long serialVersionUID = 6920278182318788380L;
 
-	private String readByPersons,readByRoles,readByPersonsByRoles,readOppositeByPersonsByRoles,readByPerson1ByRole1ByPerson2;
+	private String readByPersons,readByRoles,readByPersonsByRoles,readOppositeByPersonsByRoles,readByPersonByRoleByOppositePerson,readByPersonByRoleByOppositeRole;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -35,6 +37,7 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 			.or().whereIdentifierIn(role2,PersonRelationshipExtremity.FIELD_ROLE));
 		
 		registerNamedQuery(readByPersonsByRoles, _select()
+			.where()
 			.parenthesis(Boolean.TRUE)
 				.whereIdentifierIn(person1,PersonRelationshipExtremity.FIELD_PERSON)
 				.and().whereIdentifierIn(role1,PersonRelationshipExtremity.FIELD_ROLE)
@@ -46,6 +49,7 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 				);
 		
 		registerNamedQuery(readOppositeByPersonsByRoles, _select()
+			.where()
 			.parenthesis(Boolean.TRUE)
 				.whereIdentifierIn(person1,PersonRelationshipExtremity.FIELD_PERSON)
 				.and().whereIdentifierIn(role2,PersonRelationshipExtremity.FIELD_ROLE)
@@ -56,10 +60,15 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 			.parenthesis(Boolean.FALSE)	
 				);
 		
-		registerNamedQuery(readByPerson1ByRole1ByPerson2, _select()
-			.whereIdentifierIn(person1,PersonRelationshipExtremity.FIELD_PERSON)
-			.and().whereIdentifierIn(role1,PersonRelationshipExtremity.FIELD_ROLE)
-			.and().whereIdentifierIn(role2,PersonRelationshipExtremity.FIELD_ROLE));
+		registerNamedQuery(readByPersonByRoleByOppositePerson, _select()
+				.where(person1,PersonRelationshipExtremity.FIELD_PERSON+"1")
+				.and(role1,PersonRelationshipExtremity.FIELD_ROLE,ArithmeticOperator.EQ)
+				.and(person2,PersonRelationshipExtremity.FIELD_PERSON+"2",ArithmeticOperator.EQ));
+		
+		registerNamedQuery(readByPersonByRoleByOppositeRole, _select()
+			.where(person1,PersonRelationshipExtremity.FIELD_PERSON)
+			.and(role1,PersonRelationshipExtremity.FIELD_ROLE+"1",ArithmeticOperator.EQ)
+			.and(role2,PersonRelationshipExtremity.FIELD_ROLE+"2",ArithmeticOperator.EQ));
 		
 	}
 	
@@ -126,10 +135,17 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 	}
 	
 	@Override
-	public PersonRelationship readByPerson1ByRole1ByPerson2(Person person1,PersonRelationshipTypeRole role,Person person2) {
-		return namedQuery(readByPerson1ByRole1ByPerson2).parameter(PersonRelationshipExtremity.FIELD_PERSON, person1)
-				.parameter(PersonRelationshipExtremity.FIELD_ROLE, role).parameter(PersonRelationshipExtremity.FIELD_PERSON, person2)
+	public PersonRelationship readByPersonByRoleByOppositePerson(Person person1,PersonRelationshipTypeRole role,Person person2) {
+		return namedQuery(readByPersonByRoleByOppositePerson).parameter(PersonRelationshipExtremity.FIELD_PERSON+"1", person1)
+				.parameter(PersonRelationshipExtremity.FIELD_ROLE, role).parameter(PersonRelationshipExtremity.FIELD_PERSON+"2", person2)
 				.ignoreThrowable(NoResultException.class).resultOne();
+	}
+
+	@Override
+	public Collection<PersonRelationship> readByPersonByRoleByOppositeRole(Person person1, PersonRelationshipTypeRole role1,PersonRelationshipTypeRole role2) {
+		return namedQuery(readByPersonByRoleByOppositeRole).parameter(PersonRelationshipExtremity.FIELD_PERSON, person1)
+				.parameter(PersonRelationshipExtremity.FIELD_ROLE+"1", role1).parameter(PersonRelationshipExtremity.FIELD_ROLE+"2", role2)
+				.resultMany();
 	}
 
 }

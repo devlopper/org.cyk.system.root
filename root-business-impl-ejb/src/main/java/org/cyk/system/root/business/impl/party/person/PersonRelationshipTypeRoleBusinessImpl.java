@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.party.person;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeRoleBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -18,6 +19,18 @@ public class PersonRelationshipTypeRoleBusinessImpl extends AbstractTypedBusines
     }
 	
 	@Override
+	protected Object[] getPropertyValueTokens(PersonRelationshipTypeRole personRelationshipTypeRole, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, name))
+			return new Object[]{personRelationshipTypeRole.getPersonRelationshipType(),personRelationshipTypeRole.getRole()};
+		return super.getPropertyValueTokens(personRelationshipTypeRole, name);
+	}
+	
+	@Override
+	public PersonRelationshipTypeRole instanciateOne(String typeCode,String roleCode) {
+		return instanciateOne(new String[]{null,null,typeCode,roleCode});
+	}
+	
+	@Override
 	protected PersonRelationshipTypeRole __instanciateOne__(String[] values,InstanciateOneListener<PersonRelationshipTypeRole> listener) {
 		super.__instanciateOne__(values, listener);
 		set(listener.getSetListener(), PersonRelationshipTypeRole.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
@@ -26,5 +39,7 @@ public class PersonRelationshipTypeRoleBusinessImpl extends AbstractTypedBusines
 		set(listener.getSetListener(), PersonRelationshipTypeRole.FIELD_ROLE);
 		return listener.getInstance();
 	}
+
+	
 	
 }

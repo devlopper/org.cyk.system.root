@@ -108,6 +108,14 @@ public interface PersonRelationshipDao extends TypedDao<PersonRelationship> {
 	 * @param person2
 	 * @return
 	 */
-	PersonRelationship readByPerson1ByRole1ByPerson2(Person person1,PersonRelationshipTypeRole role1,Person person2);
+	PersonRelationship readByPersonByRoleByOppositePerson(Person person1,PersonRelationshipTypeRole role1,Person person2);
 	
+	/**
+	 * Read where the couple of person1 and role1 on a side and role2 on the other side participates to a relationship
+	 * @param person1
+	 * @param role1
+	 * @param role2
+	 * @return
+	 */
+	Collection<PersonRelationship> readByPersonByRoleByOppositeRole(Person person1,PersonRelationshipTypeRole role1,PersonRelationshipTypeRole role2);
 }

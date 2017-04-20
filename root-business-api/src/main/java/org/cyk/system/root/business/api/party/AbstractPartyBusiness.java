@@ -1,39 +1,15 @@
 package org.cyk.system.root.business.api.party;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public interface AbstractPartyBusiness<PARTY extends Party> extends TypedBusiness<PARTY> {
 
 	Collection<ContactCollection> getContactCollections(Collection<PARTY> parties);
 	
 	/**/
-	/*
-	void completeInstanciationOfOneFromValues(PARTY party,CompletePartyInstanciationOfOneFromValuesArguments<PARTY> arguments);
-	void completeInstanciationOfManyFromValues(List<PARTY> parties,CompletePartyInstanciationOfManyFromValuesArguments<PARTY> arguments);
-	*/
-	@Getter @Setter
-	public static class CompletePartyInstanciationOfOneFromValuesArguments<PARTY extends Party> extends AbstractCompleteInstanciationOfOneFromValuesArguments<PARTY> implements Serializable{
 
-		private static final long serialVersionUID = 6568108456054174796L;
-		
-		
-		
-	}
-	
-	@Getter @Setter
-	public static class CompletePartyInstanciationOfManyFromValuesArguments<PARTY extends Party> extends AbstractCompleteInstanciationOfManyFromValuesArguments<PARTY> implements Serializable{
-
-		private static final long serialVersionUID = 6568108456054174796L;
-		
-		private CompletePartyInstanciationOfOneFromValuesArguments<PARTY> instanciationOfOneFromValuesArguments = new CompletePartyInstanciationOfOneFromValuesArguments<>();
-		
-	}
 }

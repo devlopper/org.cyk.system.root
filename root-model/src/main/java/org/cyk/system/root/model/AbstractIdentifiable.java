@@ -81,29 +81,33 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return metricCollectionIdentifiableGlobalIdentifiers;
 	}
 	
-	public void setCode(String code){
+	public AbstractIdentifiable setCode(String code){
 		getGlobalIdentifierCreateIfNull().setCode(code);
+		return this;
 	}
 	public String getCode(){
 		return globalIdentifier == null ? null : globalIdentifier.getCode();
 	}
 	
-	public void setName(String name){
+	public AbstractIdentifiable setName(String name){
 		getGlobalIdentifierCreateIfNull().setName(name);
+		return this;
 	}
 	public String getName(){
 		return globalIdentifier == null ? null : globalIdentifier.getName();
 	}
 	
-	public void setDescription(String description){
+	public AbstractIdentifiable setDescription(String description){
 		getGlobalIdentifierCreateIfNull().setDescription(description);
+		return this;
 	}
 	public String getDescription(){
 		return globalIdentifier == null ? null : globalIdentifier.getDescription();
 	}
 	
-	public void setAbbreviation(String abbreviation){
+	public AbstractIdentifiable setAbbreviation(String abbreviation){
 		getGlobalIdentifierCreateIfNull().setAbbreviation(abbreviation);
+		return this;
 	}
 	public String getAbbreviation(){
 		return globalIdentifier == null ? null : globalIdentifier.getAbbreviation();

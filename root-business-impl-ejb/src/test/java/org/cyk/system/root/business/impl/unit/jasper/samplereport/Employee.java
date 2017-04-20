@@ -18,9 +18,6 @@ public class Employee extends AbstractIdentifiable {
 	@Input @ReportColumn(style=@Style(alignment=@Alignment(horizontal=Horizontal.LEFT))) 
     private Integer empNo;
     
-	@Input
-	private String name;    
-     
 	@Input //@ReportColumn(style=@Style(alignment=@Alignment())) 
 	private Integer salary;
     
@@ -31,8 +28,7 @@ public class Employee extends AbstractIdentifiable {
     }
  
     public Employee(int empNo, String name, int salary, float commission) {
-        this.empNo = empNo;
-        this.name = name;        
+        this.empNo = empNo;        
         this.salary = salary;
         this.commission = salary*commission;
     }

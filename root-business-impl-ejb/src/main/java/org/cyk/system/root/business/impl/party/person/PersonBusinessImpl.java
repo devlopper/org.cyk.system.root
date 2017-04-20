@@ -236,7 +236,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 	@Override
 	protected void beforeDelete(Person person) {
-		super.beforeDelete(person);
 		PersonExtendedInformations extendedInformations = extendedInformationsDao.readByParty(person);
 		if(extendedInformations!=null){
 			if(extendedInformations.getLanguageCollection()!=null){
@@ -256,6 +255,8 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		if(medicalInformations!=null){
 			medicalInformationsDao.delete(medicalInformations);
 		}
+		
+		super.beforeDelete(person);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

@@ -4,8 +4,10 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
@@ -19,6 +21,14 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
     public PersonRelationshipBusinessImpl(PersonRelationshipDao dao) {
         super(dao);
     }
+	
+	@Override
+	protected Object[] getPropertyValueTokens(PersonRelationship personRelationship,String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, name))
+			return new Object[]{personRelationship.getExtremity1().getPerson(),personRelationship.getExtremity1().getRole()
+				,personRelationship.getExtremity2().getPerson(),personRelationship.getExtremity2().getRole()};
+		return super.getPropertyValueTokens(personRelationship, name);
+	}
 	
 	@Override
 	protected void beforeCreate(PersonRelationship personRelationship) {
@@ -37,11 +47,6 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 		}
 		exceptionUtils().exception(personRelationship.getPerson1().equals(personRelationship.getPerson2()), "person1.cannotbe.person2");
 		*/
-	}
-	
-	@Override
-	public PersonRelationship create(PersonRelationship personRelationship) {
-		return super.create(personRelationship);
 	}
 
 	@Override

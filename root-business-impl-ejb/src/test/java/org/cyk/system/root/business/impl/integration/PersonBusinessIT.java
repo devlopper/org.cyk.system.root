@@ -11,6 +11,7 @@ import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeBusiness;
+import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
@@ -30,6 +31,15 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     protected void businesses() {}
 
     @Test
+    public void crudPerson(){
+    	TestCase testCase = instanciateTestCase();
+    	//testCase.createManyPersonRandomly(new String[]{"FATHER01F1","MOTHER01F1","SON01F1","SON02F1","DAUGHTER01F1"});//Family 1
+    	testCase.createOnePersonRandomly("FATHER01F1");
+    	
+    	testCase.clean();
+    }
+    
+    //@Test
     public void relationship(){
     	/*String p1="p1",p2="p2";
     	Set<String> codes = new LinkedHashSet<>();
@@ -47,7 +57,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	*/
     }
     
-    @Test
+    //@Test
     public void crudPersonAndRelationships(){
     	/*Person son = inject(PersonBusiness.class).instanciateOne();
     	son.setCode("P001");
@@ -88,7 +98,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	*/
     }
     
-    @Test
+    //@Test
     public void crudPersonFatherAndMother(){
     	/*Long electronicMailCountBeforeCreateSon = inject(ElectronicMailDao.class).countAll();
     	Person son = inject(PersonBusiness.class).instanciateOne(),father,mother;
@@ -176,7 +186,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	*/
     }
     
-    @Test
+    //@Test
     public void crud2PersonsSameFatherAndSameMother(){
     	/*Long electronicMailCountBeforeCreateSon = inject(ElectronicMailDao.class).countAll();
     	Person son1 = inject(PersonBusiness.class).instanciateOne(),father,mother;
@@ -273,7 +283,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	*/
     }
     
-    @Test
+    //@Test
     public void exceptionCodeExist(){
     	Person person = inject(PersonBusiness.class).instanciateOne();
     	person.setCode("ABC");

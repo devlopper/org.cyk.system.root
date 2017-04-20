@@ -194,6 +194,8 @@ public interface RootConstant {
 			
 			public static String FAMILY_PARENT_FATHER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.FATHER);
 			public static String FAMILY_PARENT_MOTHER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.MOTHER);
+			public static String FAMILY_SPOUSE_HUSBAND = generate(PersonRelationshipType.FAMILY_SPOUSE,PersonRelationshipTypeRoleName.HUSBAND);
+			public static String FAMILY_SPOUSE_WIFE = generate(PersonRelationshipType.FAMILY_SPOUSE,PersonRelationshipTypeRoleName.WIFE);
 			public static String FAMILY_PARENT_SON = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.SON);
 			public static String FAMILY_PARENT_DAUGHTER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.DAUGHTER);
 			
