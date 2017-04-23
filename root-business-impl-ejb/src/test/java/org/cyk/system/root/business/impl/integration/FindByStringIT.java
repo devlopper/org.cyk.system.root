@@ -10,6 +10,7 @@ import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.persistence.api.party.person.JobFunctionDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.file.ExcelSheetReader;
@@ -68,19 +69,18 @@ public class FindByStringIT extends AbstractBusinessIT {
 		
 		assertFindByString(Person.class,"ius",1);
 		
-		assertFindByString(JobFunction.class,null,4);
-		assertFindByString(JobFunction.class,"",4);
+		assertFindByString(JobFunction.class,null,inject(JobFunctionDao.class).countAll().intValue());
+		assertFindByString(JobFunction.class,"",inject(JobFunctionDao.class).countAll().intValue());
 		
-		assertFindByString(JobFunction.class,"rec",1);
+		assertFindByString(JobFunction.class,"rec",2);
 		assertFindByString(JobFunction.class,"m",2);
 		assertFindByString(JobFunction.class,"my",2);
 		assertFindByString(JobFunction.class,"myc",1);
 		assertFindByString(JobFunction.class,"myl",1);
-		assertFindByString(JobFunction.class,"e",3);
+		assertFindByString(JobFunction.class,"e",4);
 		assertFindByString(JobFunction.class,"m",2);
-		assertFindByString(JobFunction.class,"my",2);
-		assertFindByString(JobFunction.class,"c",2);
-		assertFindByString(JobFunction.class,"r",2);
+		assertFindByString(JobFunction.class,"c",3);
+		assertFindByString(JobFunction.class,"r",3);
 		
 	}
 	

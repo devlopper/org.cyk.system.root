@@ -62,6 +62,8 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	//private static final String LIKE_FORMAT = " (((%1$s IS NULL ) AND (LENGTH(%2$s) = 2)) OR ((%1$s IS NOT NULL ) AND (LOWER(%1$s) LIKE LOWER(%2$s)))) ";
 	private static final String LIKE_FORMAT = " (((%1$s IS NULL ) AND (%3$s = 0)) OR ((%1$s IS NOT NULL ) AND (LOWER(%1$s) LIKE LOWER(%2$s)))) ";
 	//private static final String LIKE_FORMAT = " (LOWER(%1$s) LIKE LOWER(%2$s) ) ";
+	private static final String IN_FORMAT = " %1$s IN :%2$s ";
+	private static final String EQUALS_FORMAT = " %1$s = :%2$s ";
 	
 	private static final String SUBQUERY_EXISTS_FORMAT = KW_JPQL_EXISTS+"(%1$s)";
 	
@@ -459,6 +461,22 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	
 	/**/
 	
+	public static String getEqualsString(String field,String parameter){
+		return String.format(EQUALS_FORMAT, field,parameter);
+	}
+	
+	public static String getEqualsString(String field){
+		return getEqualsString(field, getParameterName(field));
+	}
+	
+	public static String getInString(String field,String parameter){
+		return String.format(IN_FORMAT, field,parameter);
+	}
+	
+	public static String getInString(String field){
+		return getInString(field, getParameterName(field));
+	}
+	
 	public static String getLikeString(String field,String parameter,String length){
 		return String.format(LIKE_FORMAT, field,parameter,length);
 	}
@@ -467,9 +485,19 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 		return getLikeString(field,parameter,parameter+"Length");
 	}
 	
+	public static String getLikeString(String field){
+		String parameter = Constant.CHARACTER_COLON+getParameterName(field);
+		return getLikeString(field,parameter,parameter+"Length");
+	}
+	
 	public static String getLengthParameterName(String parameter){
 		return parameter+"Length";
 	}
 	
+	/**/
+	
+	public static String getParameterName(String field){
+		return StringUtils.contains(field, Constant.CHARACTER_DOT.toString()) ? StringUtils.substringAfterLast(field, Constant.CHARACTER_DOT.toString()) : field;
+	}
 	
 }

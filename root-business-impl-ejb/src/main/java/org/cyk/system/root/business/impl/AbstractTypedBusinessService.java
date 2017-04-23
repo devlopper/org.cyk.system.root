@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.TransactionAttribute;
@@ -583,8 +584,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	@Override
-	public File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode, Locale locale) {
+	public File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode, Locale locale,Map<String, Boolean> fieldSortingMap) {
 		CreateReportFileArguments<IDENTIFIABLE> createSaleReportFileArguments = new CreateReportFileArguments<IDENTIFIABLE>(identifiable);
+		if(fieldSortingMap!=null)
+			createSaleReportFileArguments.getFieldSortingMap().putAll(fieldSortingMap);
     	createSaleReportFileArguments.setLocale(locale);
     	createSaleReportFileArguments.setReportTemplate(inject(ReportTemplateDao.class).read(reportTemplateCode));	
     	Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers =  inject(FileIdentifiableGlobalIdentifierDao.class)
@@ -595,16 +598,31 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	@Override
+	public File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode, Locale locale) {
+		return createReportFile(identifiable,reportTemplateCode,locale,null);
+	}
+	
+	@Override
+	public File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode,Map<String, Boolean> fieldSortingMap) {
+		return createReportFile(identifiable, reportTemplateCode, RootConstant.Configuration.ReportTemplate.LOCALE,fieldSortingMap);
+	}
+	
+	@Override
 	public File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode) {
-		return createReportFile(identifiable, reportTemplateCode, RootConstant.Configuration.ReportTemplate.LOCALE);
+		return createReportFile(identifiable, reportTemplateCode, RootConstant.Configuration.ReportTemplate.LOCALE,null);
+	}
+	
+	@Override
+	public Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables, String reportTemplateCode,Map<String, Boolean> fieldSortingMap) {
+		Collection<File> files = new ArrayList<>();
+		for(IDENTIFIABLE identifiable : identifiables)
+			files.add(createReportFile(identifiable, reportTemplateCode,fieldSortingMap));
+		return files;
 	}
 	
 	@Override
 	public Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables, String reportTemplateCode) {
-		Collection<File> files = new ArrayList<>();
-		for(IDENTIFIABLE identifiable : identifiables)
-			files.add(createReportFile(identifiable, reportTemplateCode));
-		return files;
+		return createReportFiles(identifiables, reportTemplateCode,null);
 	}
 
 	protected <REPORT extends AbstractReportTemplateFile<REPORT>> void createReportFile(Class<REPORT> reportClass,CreateReportFileArguments<IDENTIFIABLE> arguments){

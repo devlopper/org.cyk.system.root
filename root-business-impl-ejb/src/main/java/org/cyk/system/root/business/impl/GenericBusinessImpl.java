@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.ejb.Stateless;
@@ -174,21 +175,36 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	}
 	
 	@Override 
+	public <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale,Map<String, Boolean> fieldSortingMap){
+		return inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, reportTemplateCode, locale,fieldSortingMap);
+	}
+	
+	@Override 
 	public <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale){
-		return inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, reportTemplateCode, locale);
+		return createReportFile(identifiable, reportTemplateCode, locale,null);
+	}
+	
+	@Override 
+	public <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Map<String, Boolean> fieldSortingMap){
+		return inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, reportTemplateCode,fieldSortingMap);
 	}
 	
 	@Override 
 	public <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode){
-		return inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, reportTemplateCode);
+		return createReportFile(identifiable, reportTemplateCode,(Map<String, Boolean>)null);
+	}
+	
+	@Override 
+	public <IDENTIFIABLE extends AbstractIdentifiable> Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables,String reportTemplateCode,Map<String, Boolean> fieldSortingMap){
+		Collection<File> files = new ArrayList<>();
+		for(IDENTIFIABLE identifiable : identifiables)
+			files.add(createReportFile(identifiable, reportTemplateCode,fieldSortingMap));
+		return files;
 	}
 	
 	@Override 
 	public <IDENTIFIABLE extends AbstractIdentifiable> Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables,String reportTemplateCode){
-		Collection<File> files = new ArrayList<>();
-		for(IDENTIFIABLE identifiable : identifiables)
-			files.add(createReportFile(identifiable, reportTemplateCode));
-		return files;
+		return createReportFiles(identifiables, reportTemplateCode,null);
 	}
 	
 	@Override
