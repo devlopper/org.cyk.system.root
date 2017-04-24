@@ -15,7 +15,7 @@ public class RemoteConnectivityCheckerImpl extends AbstractBusinessServiceImpl i
 
 	@Override
     public void echo(String message) {
-		logInfo("Echo to server {}", message);
+		System.out.println("Echo to server : "+message);
     }
 
     @Override
