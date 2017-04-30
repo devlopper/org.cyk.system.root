@@ -18,6 +18,7 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 	protected VALUE_TYPE value,nullValue;
 	protected Boolean ascendingOrdered=Boolean.FALSE;
 	protected Collection<VALUE_TYPE> excluded;
+	protected Collection<VALUE_TYPE> required;
 	
 	public AbstractFieldValueSearchCriteria(VALUE_TYPE value) {
 		super();
@@ -35,12 +36,20 @@ public abstract class AbstractFieldValueSearchCriteria<VALUE_TYPE> implements Se
 		this.ascendingOrdered = criteria.ascendingOrdered;
 		if(criteria.excluded!=null)
 			this.excluded = new ArrayList<>(criteria.excluded);
+		if(criteria.required!=null)
+			this.required = new ArrayList<>(criteria.required);
 	}
 	
 	public Collection<VALUE_TYPE> getExcluded(){
 		if(excluded == null)
 			excluded = new ArrayList<>();
 		return excluded;
+	}
+	
+	public Collection<VALUE_TYPE> getRequired(){
+		if(required == null)
+			required = new ArrayList<>();
+		return required;
 	}
 	
 	public VALUE_TYPE getPreparedValue(){

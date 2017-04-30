@@ -15,6 +15,7 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
+import org.cyk.system.root.persistence.api.party.person.JobFunctionDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.security.CredentialsDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
@@ -82,8 +83,8 @@ public class FindByStringIT extends AbstractBusinessIT {
 	
 	@Test
 	public void findJobFunction(){
-		assertFindByString(JobFunction.class,null,5);
-		assertFindByString(JobFunction.class,"",5);
+		assertFindByString(JobFunction.class,null,inject(JobFunctionDao.class).countAll().intValue());
+		assertFindByString(JobFunction.class,"",inject(JobFunctionDao.class).countAll().intValue());
 		
 		assertFindByString(JobFunction.class,"rec",2);
 		assertFindByString(JobFunction.class,"m",2);

@@ -13,6 +13,7 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -53,6 +54,10 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 		    query.setParameter(name, value);
 		
 		return this;
+	}
+	
+	public QueryWrapper<T> parameter(String name,AbstractFieldValueSearchCriteria<?> fieldValueSearchCriteria){
+		return parameter(name, fieldValueSearchCriteria.getPreparedValue());
 	}
 	
 	public QueryWrapper<T> parameterIdentifiers(String name,Collection<? extends AbstractIdentifiable> identifiables){

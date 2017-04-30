@@ -5,8 +5,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -97,8 +99,11 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	Collection<IDENTIFIABLE> find(Collection<String> globalIdentifierCodes);
     
 	File createReportFile(CreateReportFileArguments<IDENTIFIABLE> arguments);
+	File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale,Map<String, Boolean> fieldSortingMap);
 	File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale);
+	File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Map<String, Boolean> fieldSortingMap);
 	File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode);
+	Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables,String reportTemplateCode,Map<String, Boolean> fieldSortingMap);
 	Collection<File> createReportFiles(Collection<IDENTIFIABLE> identifiables,String reportTemplateCode);
 	
 	File findReportFile(IDENTIFIABLE identifiable,ReportTemplate reportTemplate,Boolean createIfNull);
@@ -118,6 +123,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 		private Person createdBy;
 		private Date creationDate;
 		private Locale locale;
+		private Map<String, Boolean> fieldSortingMap = new HashMap<String, Boolean>();
 		/**/
 		
 		public CreateReportFileArguments(IDENTIFIABLE identifiable){
@@ -135,9 +141,10 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 			private String reportTemplateCode;
 			private ReportTemplate reportTemplate;
 			private File file;
-			@Getter @Setter private File backgroundImageFile;
+			private File backgroundImageFile;
 			private RootReportProducer reportProducer;
 			private Boolean joinFileToIdentifiable,isDraft = Boolean.FALSE,updateExisting=Boolean.TRUE;
+			private Map<String, Boolean> fieldSortingMap = new HashMap<String, Boolean>();
 			
 			public Builder(IDENTIFIABLE identifiable,Builder<IDENTIFIABLE> builder) {
 				super(CreateReportFileArguments.class);
@@ -209,6 +216,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 					arguments.setFile(new File());
 				arguments.setReportProducer(reportProducer);
 				arguments.setIsDraft(isDraft);
+				arguments.getFieldSortingMap().putAll(getFieldSortingMap());
 				return arguments;
 			}
 			

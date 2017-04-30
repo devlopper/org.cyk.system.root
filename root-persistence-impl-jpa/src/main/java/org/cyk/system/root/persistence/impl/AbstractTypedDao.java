@@ -21,6 +21,8 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.Abst
 import org.cyk.system.root.persistence.api.TypedDao;
 
 import lombok.Getter;
+
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -103,12 +105,16 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		String readByGlobalIdentifierSearchCriteriaCodeExcludedQuery = null;
 		String readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart = null;
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierSearchCriteria())) {
-			String codeLike = QueryStringBuilder.getLikeString("record.globalIdentifier.code", ":code");
-			String nameLike = QueryStringBuilder.getLikeString("record.globalIdentifier.name", ":name");
+			String codeLike = QueryStringBuilder.getLikeString("record.globalIdentifier.code");
+			String nameLike = QueryStringBuilder.getLikeString("record.globalIdentifier.name");
+			String orderNumberIn = QueryStringBuilder.getInString("record.globalIdentifier.orderNumber");
 			
-			registerNamedQuery(readByGlobalIdentifierSearchCriteria, readByGlobalIdentifierSearchCriteriaQuery = "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "+codeLike+" OR "+nameLike);
+			String predicates = StringUtils.join(new String[]{codeLike,nameLike/*,orderNumberIn*/}," OR ");
 			
-			readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart = codeLike+" OR "+nameLike;
+			registerNamedQuery(readByGlobalIdentifierSearchCriteria, readByGlobalIdentifierSearchCriteriaQuery = "SELECT record FROM "+clazz.getSimpleName()
+				+" record WHERE "+predicates);
+			
+			readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart = predicates;
 			registerNamedQuery(readByGlobalIdentifierSearchCriteriaCodeExcluded, readByGlobalIdentifierSearchCriteriaCodeExcludedQuery = "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
 		    		+ " record.globalIdentifier.code NOT IN :excludedCodes "+ " AND ("+ 
 		    		getReadByCriteriaQueryCodeExcludedWherePart(readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart) + ")");
@@ -163,15 +169,11 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			globalIdentifier = ((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet) searchCriteria).getGlobalIdentifier();
 		
 		if(globalIdentifier!=null){
-			//System.out.println("AbstractTypedDao.applySearchCriteriaParameters() : "+((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getLikeValue());
 			queryWrapper.parameterLike(GlobalIdentifier.FIELD_CODE, globalIdentifier.getCode());
-			//queryWrapper.parameterLike(GlobalIdentifier.FIELD_CODE, ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getLikeValue());
-			//queryWrapper.parameter(QueryStringBuilder.getLengthParameterName(GlobalIdentifier.FIELD_CODE), ((GlobalIdentifier.SearchCriteria)searchCriteria).getCode().getPreparedValue().length());
 			if(!globalIdentifier.getCode().getExcluded().isEmpty())
 				queryWrapper.parameter("excludedCodes", globalIdentifier.getCode().getExcluded());
 			queryWrapper.parameterLike(GlobalIdentifier.FIELD_NAME, globalIdentifier.getName());
-			//queryWrapper.parameterLike(GlobalIdentifier.FIELD_NAME, ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getLikeValue());
-			//queryWrapper.parameter(QueryStringBuilder.getLengthParameterName(GlobalIdentifier.FIELD_NAME), ((GlobalIdentifier.SearchCriteria)searchCriteria).getName().getPreparedValue().length());
+			//queryWrapper.parameter(GlobalIdentifier.FIELD_ORDER_NUMBER, globalIdentifier.getOrderNumber());
 		}
 		getDataReadConfig().set(searchCriteria.getReadConfig());
 	}

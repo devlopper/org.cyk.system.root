@@ -18,6 +18,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.Identifiable;
@@ -26,6 +27,7 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.LongSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria.LocationType;
 import org.cyk.system.root.model.time.Period;
@@ -180,23 +182,30 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		private static final long serialVersionUID = 6796076474234170332L;
 
 		protected StringSearchCriteria code=new StringSearchCriteria(),name=new StringSearchCriteria();
+		protected LongSearchCriteria orderNumber = new LongSearchCriteria();
 		
 		public SearchCriteria(){
 			code.setLocationType(LocationType.INSIDE);
 			criterias.add(code);
 			name.setLocationType(LocationType.INSIDE);
 			criterias.add(name);
+			
+			criterias.add(orderNumber);
 		}
 		
 		public void set(String value){
 			code.setValue(value);
 			name.setValue(value);
+			if(NumberUtils.isNumber(value))
+				orderNumber.setValue(NumberUtils.createLong(value));
 		}
 		
 		@Override
 		public void set(StringSearchCriteria stringSearchCriteria) {
 			code.set(stringSearchCriteria);
 			name.set(stringSearchCriteria);
+			if(NumberUtils.isNumber(stringSearchCriteria.getValue()))
+				orderNumber.setValue(NumberUtils.createLong(stringSearchCriteria.getValue()));
 		}
 		
 		@Override

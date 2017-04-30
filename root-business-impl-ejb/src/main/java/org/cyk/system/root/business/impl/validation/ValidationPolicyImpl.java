@@ -106,7 +106,9 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         	exceptionUtils().exception(countInDB>0,"exception.value.duplicate",new Object[]{inject(LanguageBusiness.class).findText(fieldLabelId),fieldValue});
         }else{
         	AbstractIdentifiable inDB = genericDao.use(identifiable.getClass()).read(identifiable.getIdentifier());
-            if(!commonUtils.readProperty(inDB, fieldName).equals(fieldValue))
+            Object oldValue = commonUtils.readProperty(inDB, fieldName);
+            //TODO more check are required. 1 both null 2 1st null second not null 3 first not null second null
+        	if(oldValue!=null && fieldValue!=null && !oldValue.equals(fieldValue))
                 //field value has changed
                 exceptionUtils().exception(genericDao.use(identifiable.getClass()).select(Function.COUNT).where(null,fieldName,"uniqueValue", fieldValue,ArithmeticOperator.EQ).oneLong()>0,
                     "exception.value.duplicate",new Object[]{inject(LanguageBusiness.class).findText(fieldLabelId),fieldValue});
