@@ -23,12 +23,13 @@ public class GenericIT extends AbstractPersistenceIT {
 		
 	@Override
 	protected void populate() {
-		create(new PersonTest("m01", "ali", "Bamba"));
+		/*create(new PersonTest("m01", "ali", "Bamba"));
 		create(identifiable = new PersonTest("m103", "Ange", "Kessi"));
 		create(new PersonTest("m123", "ali", "milla"));
 		create(new PersonTest("m128", "ali1", "milla1"));
 		create(new PersonTest("m129", "ali2", "milla2"));
 		create(new PersonTest("m130", "ali3", "milla3"));
+		*/
 		pid = identifiable.getIdentifier();
 	}
 					
@@ -41,8 +42,8 @@ public class GenericIT extends AbstractPersistenceIT {
 	
 	@Override
 	protected void create() {
-		AbstractIdentifiable identifiable;
-		create(identifiable = new PersonTest("m21", "Roger", "milla"));
+		AbstractIdentifiable identifiable=null;
+		//create(identifiable = new PersonTest("m21", "Roger", "milla"));
 		createId = identifiable.getIdentifier();
 		Assert.assertTrue("Create", getGenericDao().use(PersonTest.class).read(createId)!=null);
 	}

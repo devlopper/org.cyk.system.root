@@ -27,9 +27,6 @@ public class UserAccountLock extends AbstractIdentifiable implements Serializabl
 	@ManyToOne @NotNull(groups=org.cyk.utility.common.validation.System.class)
 	private UserAccount userAccount;
 	
-	@Column(unique=true,nullable=false) @NotNull(groups=org.cyk.utility.common.validation.System.class)
-	private String code;
-	
 	@ManyToOne @NotNull(groups=org.cyk.utility.common.validation.System.class)
 	private LockCause lockCause;
 	

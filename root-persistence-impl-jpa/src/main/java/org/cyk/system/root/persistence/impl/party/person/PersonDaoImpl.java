@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.cyk.system.root.model.event.Event;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
@@ -16,14 +17,19 @@ public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,SearchCriteria> i
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
+	static String r = 
+			"(EXISTS(SELECT email FROM ElectronicMail email WHERE ("+QueryStringBuilder.getLikeString("email."+ElectronicMail.FIELD_ADDRESS)+")"
+					+ " AND email.collection = record.contactCollection"
+					+ "))";
+	
 	@Override
 	protected String getReadByCriteriaQuery(String query) {
-		return super.getReadByCriteriaQuery(query)+" OR "+QueryStringBuilder.getLikeString("record.lastnames", ":lastnames");
+		return or(super.getReadByCriteriaQuery(query),QueryStringBuilder.getLikeString("record.lastnames"),r);
 	}
 	
 	@Override
 	protected String getReadByCriteriaQueryCodeExcludedWherePart(String where) {
-		return super.getReadByCriteriaQueryCodeExcludedWherePart(where)+" OR "+QueryStringBuilder.getLikeString("record.lastnames", ":lastnames");
+		return or(super.getReadByCriteriaQueryCodeExcludedWherePart(where),QueryStringBuilder.getLikeString("record.lastnames"),r);
 	}
 
 	@Override
@@ -36,6 +42,7 @@ public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,SearchCriteria> i
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
 		queryWrapper.parameterLike(Person.FIELD_LASTNAMES, ((Person.SearchCriteria)searchCriteria).getLastnames());
+		queryWrapper.parameterLike(ElectronicMail.FIELD_ADDRESS, ((Person.SearchCriteria)searchCriteria).getContactCollection().getElectronicMail().getAddress());
 	}
 
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
@@ -498,6 +499,16 @@ public class QueryStringBuilder extends AbstractBean implements Serializable {
 	
 	public static String getParameterName(String field){
 		return StringUtils.contains(field, Constant.CHARACTER_DOT.toString()) ? StringUtils.substringAfterLast(field, Constant.CHARACTER_DOT.toString()) : field;
+	}
+	
+	/**/
+	
+	public static String and(String predicate,String...predicates){
+		return CommonUtils.getInstance().concatenate(predicate, predicates, Constant.CHARACTER_SPACE+KW_JPQL_AND+Constant.CHARACTER_SPACE);
+	}
+	
+	public static String or(String predicate,String...predicates){
+		return CommonUtils.getInstance().concatenate(predicate, predicates, Constant.CHARACTER_SPACE+KW_JPQL_OR+Constant.CHARACTER_SPACE);
 	}
 	
 }

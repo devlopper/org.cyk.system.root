@@ -23,8 +23,6 @@ public class PersonTest extends AbstractIdentifiable implements Serializable {
 	@Column(unique=true)
 	private String matricule; 
 	
-	private String name;
-	
 	private String lastname;
 
 	

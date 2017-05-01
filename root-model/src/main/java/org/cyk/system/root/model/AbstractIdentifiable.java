@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,9 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,9 +39,6 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /*lombok*/
 
@@ -80,29 +81,33 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return metricCollectionIdentifiableGlobalIdentifiers;
 	}
 	
-	public void setCode(String code){
+	public AbstractIdentifiable setCode(String code){
 		getGlobalIdentifierCreateIfNull().setCode(code);
+		return this;
 	}
 	public String getCode(){
 		return globalIdentifier == null ? null : globalIdentifier.getCode();
 	}
 	
-	public void setName(String name){
+	public AbstractIdentifiable setName(String name){
 		getGlobalIdentifierCreateIfNull().setName(name);
+		return this;
 	}
 	public String getName(){
 		return globalIdentifier == null ? null : globalIdentifier.getName();
 	}
 	
-	public void setDescription(String description){
+	public AbstractIdentifiable setDescription(String description){
 		getGlobalIdentifierCreateIfNull().setDescription(description);
+		return this;
 	}
 	public String getDescription(){
 		return globalIdentifier == null ? null : globalIdentifier.getDescription();
 	}
 	
-	public void setAbbreviation(String abbreviation){
+	public AbstractIdentifiable setAbbreviation(String abbreviation){
 		getGlobalIdentifierCreateIfNull().setAbbreviation(abbreviation);
+		return this;
 	}
 	public String getAbbreviation(){
 		return globalIdentifier == null ? null : globalIdentifier.getAbbreviation();
@@ -178,10 +183,31 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getSupportingDocument();
 	}
 	
+	public void setUsable(Boolean usable){
+		getGlobalIdentifierCreateIfNull().setUsable(usable);
+	}
+	public Boolean getUsable(){
+		return globalIdentifier == null ? null : globalIdentifier.getUsable();
+	}
+		
 	public Collection<AbstractIdentifiable> getParents(){
 		if(parents==null)
 			parents =  new ArrayList<>();
 		return parents;
+	}
+	
+	public AbstractIdentifiable getParent(){
+		return (AbstractIdentifiable) (parents == null || parents.isEmpty() ? null : ((List<AbstractIdentifiable>)parents).get(((List<AbstractIdentifiable>)parents).size()-1));
+	}
+	
+	/**
+	 * Set the parent.
+	 * Clear existing parents and add this parent to the list
+	 * @param parent
+	 */
+	public void setParent(AbstractIdentifiable parent){
+		getParents().clear();
+		getParents().add(parent);
 	}
 	
 	public Collection<AbstractIdentifiable> getChildren(){

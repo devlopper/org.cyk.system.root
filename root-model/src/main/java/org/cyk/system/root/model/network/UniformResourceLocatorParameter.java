@@ -4,20 +4,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.AbstractBuilder;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.cdi.BeanAdapter;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @Entity
 public class UniformResourceLocatorParameter extends AbstractIdentifiable implements Serializable {
@@ -26,20 +25,18 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 
 	@ManyToOne @NotNull private UniformResourceLocator uniformResourceLocator;
 	
-	@Column(nullable=false) @NotNull private String name;
-	
 	private String value;
 	
 	public UniformResourceLocatorParameter(UniformResourceLocator uniformResourceLocator, String name, String value) {
 		super();
 		this.uniformResourceLocator = uniformResourceLocator;
-		this.name = name;
+		setName(name);
 		this.value = value;
 	}
 	
 	@Override
 	public String toString() {
-		return name+"="+value;
+		return getName()+"="+value;
 	}
 	
 	/**/
