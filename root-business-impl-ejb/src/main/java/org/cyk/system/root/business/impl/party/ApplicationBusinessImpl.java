@@ -65,10 +65,10 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	@Inject private LicenseBusiness licenseBusiness;
 	@Inject private SmtpPropertiesBusiness smtpPropertiesBusiness;
 	
-	@Inject
+	/*@Inject
 	public ApplicationBusinessImpl(ApplicationDao dao) {
 		super(dao); 
-	}
+	}*/
 
 	/**
 	 * 1 - Creates data<br/>

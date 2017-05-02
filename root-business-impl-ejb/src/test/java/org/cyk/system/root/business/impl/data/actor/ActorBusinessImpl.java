@@ -12,9 +12,9 @@ public class ActorBusinessImpl extends AbstractActorBusinessImpl<Actor, ActorDao
 
 	private static final long serialVersionUID = -7830673760640348717L;
 
-	@Inject
+	/*@Inject
 	public ActorBusinessImpl(ActorDao dao) {
 		super(dao);
-	}
+	}*/
 	
 }

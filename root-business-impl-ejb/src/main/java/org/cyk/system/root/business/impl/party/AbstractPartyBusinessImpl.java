@@ -26,6 +26,10 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		super(dao); 
 	}
 	
+	public AbstractPartyBusinessImpl() {
+		super(); 
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<ContactCollection> getContactCollections(Collection<PARTY> parties) {
 		Collection<ContactCollection> collection = new ArrayList<>();

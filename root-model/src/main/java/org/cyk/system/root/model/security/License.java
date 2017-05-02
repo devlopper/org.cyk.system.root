@@ -3,6 +3,7 @@ package org.cyk.system.root.model.security;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
@@ -37,7 +38,7 @@ public class License extends AbstractIdentifiable implements Serializable {
 	@Column(name="licence_key")
 	private String key;
 	
-	@OneToOne @Valid
+	@Embedded @Valid
 	private Period period = new Period();
 	
 	@NotNull(groups=org.cyk.utility.common.validation.System.class)

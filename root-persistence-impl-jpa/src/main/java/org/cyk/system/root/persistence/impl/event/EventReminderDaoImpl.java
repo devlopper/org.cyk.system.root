@@ -17,7 +17,7 @@ public class EventReminderDaoImpl extends AbstractIdentifiablePeriodDaoImpl<Even
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByEvent, _select().where("event"));
-		registerNamedQuery(deleteByEvent, "DELETE FROM EventReminder eventReminder WHERE eventReminder.event.identifier = :eventId");
+		//registerNamedQuery(deleteByEvent, "DELETE FROM EventReminder eventReminder WHERE eventReminder.event.identifier = :eventId");
 	}
 	
 	@Override

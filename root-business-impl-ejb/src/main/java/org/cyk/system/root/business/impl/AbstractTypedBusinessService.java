@@ -56,6 +56,7 @@ import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -77,6 +78,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		this.dao = dao;
 	}
 	
+	public AbstractTypedBusinessService() {
+		super();
+	}
+	
 	@Override
 	public IDENTIFIABLE delete(String code) {
 		return delete(dao.read(code));
@@ -90,9 +95,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return collection;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected PersistenceService<IDENTIFIABLE, Long> getPersistenceService() {
-	    return dao;
+	    if(dao==null)
+	    	dao = (TYPED_DAO) inject(PersistenceInterfaceLocator.class).injectTyped(clazz);
+		return dao;
 	}
 	
 	protected String generateCode(Object...tokens){

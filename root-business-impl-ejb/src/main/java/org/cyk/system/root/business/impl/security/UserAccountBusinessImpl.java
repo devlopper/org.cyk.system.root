@@ -41,10 +41,10 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	
 	@Inject private UserSessionBusiness userSessionBusiness;
 	
-	@Inject
+	/*@Inject
 	public UserAccountBusinessImpl(UserAccountDao dao) {
 		super(dao); 
-	}  
+	} */ 
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public UserAccount findByCredentials(Credentials credentials) {

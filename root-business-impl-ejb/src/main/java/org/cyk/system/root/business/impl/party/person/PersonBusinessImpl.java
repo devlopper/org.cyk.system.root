@@ -80,10 +80,10 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	@Inject private ContactDao contactDao;
 	@Inject private FileDao fileDao;
 	
-	@Inject
+	/*@Inject
 	public PersonBusinessImpl(PersonDao dao) {
 		super(dao); 
-	}  
+	} */ 
 	
 	@Override
 	protected Collection<? extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<?>> getListeners() {

@@ -19,6 +19,10 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
         super(dao);
     }
 	
+	public AbstractEnumerationBusinessImpl() {
+        super();
+    }
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ENUMERATION instanciateOne(String code,String name) {
 		ObjectFieldValues objectFieldValues = new ObjectFieldValues(clazz);

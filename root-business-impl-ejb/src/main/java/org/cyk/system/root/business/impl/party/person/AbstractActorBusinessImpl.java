@@ -24,9 +24,9 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	public AbstractActorBusinessImpl(DAO dao) {
+	/*public AbstractActorBusinessImpl(DAO dao) {
 		super(dao); 
-	}
+	}*/
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ACTOR instanciateOne(AbstractActor actor) {

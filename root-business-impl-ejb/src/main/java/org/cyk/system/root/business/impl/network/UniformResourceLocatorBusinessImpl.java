@@ -32,10 +32,10 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	
 	@Inject private UniformResourceLocatorParameterDao uniformResourceLocatorParameterDao;
 	
-	@Inject
+	/*@Inject
 	public UniformResourceLocatorBusinessImpl(UniformResourceLocatorDao dao) {
 		super(dao); 
-	}
+	}*/
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public UniformResourceLocator instanciateOne(String name,String relativeUrl, String[] parameters) {

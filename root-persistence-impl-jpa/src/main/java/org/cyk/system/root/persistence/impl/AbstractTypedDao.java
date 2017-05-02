@@ -91,10 +91,10 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			registerNamedQuery(readByClasses, _select().whereClassIn().orderBy(AbstractIdentifiable.FIELD_IDENTIFIER,Boolean.TRUE));
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByNotClasses()))
 			registerNamedQuery(readByNotClasses, _select().whereClassNotIn());
-		
+		/*
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getExecuteDelete()))
 			registerNamedQuery(executeDelete, "DELETE FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
-		
+		*/
 		String readByGlobalIdentifierSearchCriteriaQuery = null;
 		String readByGlobalIdentifierSearchCriteriaCodeExcludedQuery = null;
 		String readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart = null;
