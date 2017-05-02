@@ -2,6 +2,9 @@ package org.cyk.system.root.business.impl.party.person;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.language.LanguageCollectionDetails;
@@ -14,6 +17,7 @@ import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs.Layout;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
+@Getter @Setter
 public abstract class AbstractPersonDetails<PERSON extends AbstractIdentifiable> extends AbstractPartyDetails<PERSON> implements Serializable {
 
 	private static final long serialVersionUID = 1165482775425753790L;
