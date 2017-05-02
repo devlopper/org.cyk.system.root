@@ -14,3 +14,4 @@ public interface RemoteBusiness extends BusinessService {
     <T extends AbstractIdentifiable> void delete(Class<T> aClass,Collection<T> collection);
     <T extends AbstractIdentifiable> void save(Class<T> aClass,Collection<T> collection);
 }
+ 
