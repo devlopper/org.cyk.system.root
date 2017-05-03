@@ -3,22 +3,21 @@ package org.cyk.system.root.business.impl.integration;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.cyk.system.root.business.api.ActorBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.Actor;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
-import org.cyk.system.root.persistence.api.geography.LocalityDao;
-import org.cyk.system.root.persistence.api.party.person.JobFunctionDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
-import org.cyk.system.root.persistence.api.security.CredentialsDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.file.ExcelSheetReader;
 import org.junit.Test;
@@ -40,23 +39,20 @@ public class FindByStringIT extends AbstractBusinessIT {
     		}
     	});
     	super.populate();
-    	Person person = inject(PersonBusiness.class).instanciateOneRandomly();
-    	person.setCode("c001");
-    	person.setName("konan");
-    	person.setLastnames("marius");
-    	create(person);
+    	Actor actor = inject(ActorBusiness.class).instanciateOneRandomly("c001");
+    	actor.getPerson().setName("konan").setLastnames("marius").setElectronicMail("mymail@yahoo.fr"); 
+    	actor.setName("konan");
+    	create(actor);
     	
-    	person = inject(PersonBusiness.class).instanciateOneRandomly();
-    	person.setCode("c002");
-    	person.setName("zanga");
-    	person.setLastnames("alice");
-    	create(person);
+    	actor = inject(ActorBusiness.class).instanciateOneRandomly("c002");
+    	actor.getPerson().setName("zanga").setLastnames("alice").setElectronicMail("konan@mail.com");
+    	actor.setName("zanga");
+    	create(actor);
     	
-    	person = inject(PersonBusiness.class).instanciateOneRandomly();
-    	person.setCode("c003a");
-    	person.setName("doudou");
-    	person.setLastnames("cherif");
-    	create(person);
+    	actor = inject(ActorBusiness.class).instanciateOneRandomly("c003a");
+    	actor.getPerson().setName("doudou").setLastnames("cherif").setElectronicMail(null);
+    	actor.setName("doudou");
+    	create(actor);
     	
     	create(new JobFunction(null, null));
     	create(new JobFunction("mycode", null));
@@ -70,21 +66,41 @@ public class FindByStringIT extends AbstractBusinessIT {
 	@Test
 	public void findPerson(){
 		assertEquals(4l, inject(PersonDao.class).countAll());
+		assertWithBlankStringFindByString(Person.class);
+		
 		assertFindByString(Person.class,"WXWX",0);
-		assertFindByString(Person.class,null,4);
-		assertFindByString(Person.class,"",4);
 		
 		assertFindByString(Person.class,"ko",Arrays.asList("c002"),1);
 		assertFindByString(Person.class,"a",4);
 		assertFindByString(Person.class,"a",Arrays.asList("c002"),3);
 		
 		assertFindByString(Person.class,"ius",1);
+		assertFindByString(Person.class,"konan@mail.com",1);
+		assertFindByString(Person.class,"@",2);
+		assertFindByString(Person.class,"konan",2);
+		assertFindByString(Person.class,"konan@",1);
+	}
+	
+	@Test
+	public void findActor(){
+		assertWithBlankStringFindByString(Actor.class);
+		
+		assertFindByString(Actor.class,"WXWX",0);
+		
+		assertFindByString(Actor.class,"ko",Arrays.asList("c002"),1);
+		assertFindByString(Actor.class,"a",3);
+		assertFindByString(Actor.class,"a",Arrays.asList("c002"),2);
+
+		assertFindByString(Actor.class,"ius",1);
+		assertFindByString(Actor.class,"konan@mail.com",1);
+		assertFindByString(Actor.class,"@",2);
+		assertFindByString(Actor.class,"konan",2);
+		assertFindByString(Actor.class,"konan@",1);
 	}
 	
 	@Test
 	public void findJobFunction(){
-		assertFindByString(JobFunction.class,null,inject(JobFunctionDao.class).countAll().intValue());
-		assertFindByString(JobFunction.class,"",inject(JobFunctionDao.class).countAll().intValue());
+		assertWithBlankStringFindByString(JobFunction.class);
 		
 		assertFindByString(JobFunction.class,"rec",2);
 		assertFindByString(JobFunction.class,"m",2);
@@ -99,30 +115,24 @@ public class FindByStringIT extends AbstractBusinessIT {
 	
 	@Test
 	public void findLocality(){
-		Integer allCount = inject(LocalityDao.class).countAll().intValue();
-		assertFindByString(Locality.class,null,allCount);
+		assertWithBlankStringFindByString(Locality.class);
 		assertFindByString(Locality.class,null,null,new DataReadConfiguration().setMaximumResultCount(10l),10,60);
-		assertFindByString(Locality.class,"",allCount);
 		assertFindByString(Locality.class,"ivoire",1);
 	}
 	
 	@Test
 	public void findElectronicMails(){
+		assertWithBlankStringFindByString(ElectronicMail.class);
 		Integer allCount = inject(ElectronicMailDao.class).countAll().intValue();
-		assertFindByString(ElectronicMail.class,null,allCount);
-		assertFindByString(ElectronicMail.class,"",allCount);
 		assertFindByString(ElectronicMail.class,"@",allCount);
 		assertFindByString(ElectronicMail.class,"kycdev@gmail.com",1);
-		assertFindByString(ElectronicMail.class,"examplemail",3);
+		assertFindByString(ElectronicMail.class,"mymail",1);
 	}
 	
 	@Test
 	public void findCredentials(){
-		Integer allCount = inject(CredentialsDao.class).countAll().intValue();
-		assertFindByString(Credentials.class,null,allCount);
-		assertFindByString(Credentials.class,"",allCount);
+		assertWithBlankStringFindByString(Credentials.class);
 		assertFindByString(Credentials.class,"admin",1);
-		
 	}
 	
 	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Collection<String> excludedCodes,DataReadConfiguration configuration,Integer expectedReturnCount,Integer expectedDatabaseCount){
@@ -146,6 +156,12 @@ public class FindByStringIT extends AbstractBusinessIT {
 	
 	private <T extends AbstractIdentifiable> void assertFindByString(Class<T> aClass,String string,Integer expected){
 		assertFindByString(aClass, string, (DataReadConfiguration)null, expected);
+	}
+	
+	private <T extends AbstractIdentifiable> void assertWithBlankStringFindByString(Class<T> aClass){
+		Integer countAll = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).countAll().intValue();
+		assertFindByString(aClass, (String)null, (DataReadConfiguration)null, countAll);
+		assertFindByString(aClass, Constant.EMPTY_STRING, (DataReadConfiguration)null, countAll);
 	}
 	
 	

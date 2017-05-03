@@ -15,9 +15,5 @@ public interface AbstractActorBusiness<ACTOR extends AbstractActor,SEARCH_CRITER
 	ACTOR instanciateOne(String code,String[] names);
 	
 	Collection<ACTOR> instanciateMany(String[] codes);
-	
-	Collection<ACTOR> findByCriteria(SEARCH_CRITERIA criteria);
-	
-	Long countByCriteria(SEARCH_CRITERIA criteria);
-	
+
 }

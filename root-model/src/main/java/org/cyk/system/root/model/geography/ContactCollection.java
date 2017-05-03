@@ -10,6 +10,8 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.ContentType;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -73,9 +75,15 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 	}
 	
 	public ContactCollection setElectronicMail(String address){
-		if(electronicMails==null || electronicMails.isEmpty())
-			return addElectronicMail(new ElectronicMail(this,address));
-		electronicMails.iterator().next().setAddress(address);
+		if(StringUtils.isBlank(address)){
+			if(electronicMails!=null)
+				electronicMails.clear();
+		}else{
+			if(electronicMails==null || electronicMails.isEmpty())
+				return addElectronicMail(new ElectronicMail(this,address));
+			electronicMails.iterator().next().setAddress(address);	
+		}
+		
 		return this;
 	}
 	
@@ -105,4 +113,34 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 	    return s.toString();
 	}*/
 	
+	/**/
+	
+	@Getter @Setter
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+		
+		private ElectronicMail.SearchCriteria electronicMail = new ElectronicMail.SearchCriteria();
+		
+		public SearchCriteria(){ 
+			this(null);
+		}
+		
+		public SearchCriteria(String name) {
+			super(name);
+		}
+		
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			super.set(stringSearchCriteria);
+			electronicMail.set(stringSearchCriteria);
+		}
+		
+		@Override
+		public void set(String value) {
+			super.set(value);
+			electronicMail.set(value);
+		}
+		
+	}
 }

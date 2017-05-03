@@ -426,7 +426,17 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		return commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, fieldNames);
 	}
 	
+	/**/
 	
+	public static String and(String predicate,String...predicates){
+		return QueryStringBuilder.and(predicate, predicates);
+	}
+	
+	public static String or(String predicate,String...predicates){
+		return QueryStringBuilder.or(predicate, predicates);
+	}
+	
+	/**/
 
 	public static final String PARAMETER_INDEX = "pindex";
 }

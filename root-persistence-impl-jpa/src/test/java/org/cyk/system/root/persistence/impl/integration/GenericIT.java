@@ -21,7 +21,16 @@ public class GenericIT extends AbstractPersistenceIT {
 		
 	@Override
 	protected void populate() {
-		
+
+		/*create(new PersonTest("m01", "ali", "Bamba"));
+		create(identifiable = new PersonTest("m103", "Ange", "Kessi"));
+		create(new PersonTest("m123", "ali", "milla"));
+		create(new PersonTest("m128", "ali1", "milla1"));
+		create(new PersonTest("m129", "ali2", "milla2"));
+		create(new PersonTest("m130", "ali3", "milla3"));
+		*/
+		pid = identifiable.getIdentifier();
+
 	}
 					
 	@Test(expected=RuntimeException.class)
@@ -33,7 +42,7 @@ public class GenericIT extends AbstractPersistenceIT {
 	
 	@Override
 	protected void create() {
-		
+
 	}
 
 	@Override

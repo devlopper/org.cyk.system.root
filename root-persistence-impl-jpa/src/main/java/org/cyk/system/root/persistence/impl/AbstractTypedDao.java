@@ -37,7 +37,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
 		,readByGlobalIdentifierSearchCriteriaCodeExcluded,countByGlobalIdentifierByCodeSearchCriteria
 		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria,readByCriteriaCodeExcluded,countByCriteriaCodeExcluded
-		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode;
+		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode,readByIdentifiers;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -82,6 +82,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			registerNamedQuery(readByGlobalIdentifierCode, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.code = :code");
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierCodes()))
 			registerNamedQuery(readByGlobalIdentifierCodes, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.code IN :code");
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByIdentifiers()))
+			registerNamedQuery(readByIdentifiers, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadDefaulted()))
 			registerNamedQuery(readDefaulted, _select().where(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_DEFAULTED)
@@ -136,6 +138,11 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	public Long countByGlobalIdentifierSupportingDocumentCode(String supportingDocumentIdentifier) {
 		return null;
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readByIdentifiers(Collection<Long> identifiers) {
+		return namedQuery(readByIdentifiers).parameter(QueryStringBuilder.VAR_IDENTIFIERS, identifiers).resultMany();
 	}
 	
 	public Configuration getConfiguration(){
@@ -385,6 +392,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		private Boolean readByGlobalIdentifierCodes = Boolean.TRUE;
 		private Boolean readByGlobalIdentifierOrderNumber = Boolean.TRUE;
 		private Boolean readByGlobalIdentifierSupportingDocumentCode = Boolean.FALSE;
+		private Boolean readByIdentifiers = Boolean.TRUE;
 		
 		private Boolean readByClasses = Boolean.FALSE;
 		private Boolean readByNotClasses = Boolean.FALSE;

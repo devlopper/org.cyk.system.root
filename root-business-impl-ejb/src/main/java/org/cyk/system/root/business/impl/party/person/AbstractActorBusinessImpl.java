@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.party.person;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
@@ -13,6 +14,7 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
 
@@ -94,6 +96,14 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 			if(anActor.getImage() == null)
 				anActor.setImage(anActor.getPerson().getImage());
 		}
+		/*
+		if(StringUtils.isBlank(anActor.getCode()))
+			anActor.setCode(anActor.getPerson().getCode());
+		if(StringUtils.isBlank(anActor.getName()))
+			anActor.setName(anActor.getPerson().getName());
+		if(anActor.getImage() == null)
+			anActor.setImage(anActor.getPerson().getImage());
+		*/
 	}
 
 	@Override
@@ -119,54 +129,30 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		inject(PersonBusiness.class).load(actor.getPerson());
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Collection<ACTOR> findByCriteria(SEARCH_CRITERIA criteria) {
-		if(StringUtils.isBlank(criteria.getPerson().getName().getValue())){
-    		return findAll(criteria.getReadConfig());
+	@Override
+	public <SEARCH_CRITERIA_2 extends AbstractFieldValueSearchCriteriaSet> Collection<ACTOR> findBySearchCriteria(SEARCH_CRITERIA_2 searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue())){
+    		return findAll(searchCriteria.getReadConfig());
     	}
-		prepareFindByCriteria(criteria);
-    	return dao.readByCriteria(criteria);
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.readBySearchCriteria(searchCriteria);
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Long countByCriteria(SEARCH_CRITERIA criteria) {
-		if(StringUtils.isBlank(criteria.getPerson().getName().getValue()))
+	@Override
+	public <SEARCH_CRITERIA_2 extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA_2 searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue()))
     		return countAll();
-		prepareFindByCriteria(criteria);
-    	return dao.countByCriteria(criteria);
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.countBySearchCriteria(searchCriteria);
 	}
 
-	/**/
-	/*
-	public static abstract class BusinessServiceProviderIdentifiable<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends BusinessServiceProvider.Identifiable.Adapter.Default<ACTOR> implements Serializable {
-
-		private static final long serialVersionUID = -3282900979154003071L;
-
-		public BusinessServiceProviderIdentifiable(Class<ACTOR> clazz) {
-			super(clazz);
-		}
-
-		@SuppressWarnings("unchecked")
-		public Collection<ACTOR> find(DataReadConfiguration configuration) {
-			SEARCH_CRITERIA criteria = createSearchCriteria(Service.FIND,configuration);
-			criteria.getReadConfig().set(configuration);
-			return ((AbstractActorBusiness<ACTOR, SEARCH_CRITERIA>)getBusiness()).findByCriteria(criteria);
-		}
-		
-		@SuppressWarnings("unchecked")
-		@Override
-		public Long count(DataReadConfiguration configuration) {
-			SEARCH_CRITERIA criteria = createSearchCriteria(Service.COUNT,configuration);
-			return ((AbstractActorBusiness<ACTOR, SEARCH_CRITERIA>)getBusiness()).countByCriteria(criteria);
-		}
-		
-		protected abstract SEARCH_CRITERIA createSearchCriteria(Service service,DataReadConfiguration configuration);
-		
-		
+	@Override
+	protected AbstractFieldValueSearchCriteriaSet createSearchCriteriaInstance() {
+		return new AbstractActor.AbstractSearchCriteria.Default();
 	}
-	*/
-/**/
-	
+
+
+
 	public static interface Listener<ACTOR extends AbstractActor> extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<ACTOR>{
 		
 		/**/

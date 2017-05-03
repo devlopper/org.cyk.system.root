@@ -28,7 +28,8 @@ public class Employee extends AbstractIdentifiable {
     }
  
     public Employee(int empNo, String name, int salary, float commission) {
-        this.empNo = empNo;        
+        this.empNo = empNo;
+        setName(name);
         this.salary = salary;
         this.commission = salary*commission;
     }

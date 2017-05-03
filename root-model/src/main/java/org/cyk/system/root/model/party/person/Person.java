@@ -7,10 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.party.Party;
@@ -20,7 +16,12 @@ import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Getter @Setter  @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE)
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+@Getter @Setter  @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE) @Accessors(chain=true)
 public class Person extends Party implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -44,6 +45,16 @@ public class Person extends Party implements Serializable{
 	public Person(String firstName,String lastnames) {
 		super(firstName);
 		this.lastnames = lastnames;
+	}
+	
+	@Override
+	public Person setCode(String code) {
+		return (Person) super.setCode(code);
+	}
+	
+	@Override
+	public Person setName(String name) {
+		return (Person) super.setName(name);
 	}
 	
 	public String getNames(){

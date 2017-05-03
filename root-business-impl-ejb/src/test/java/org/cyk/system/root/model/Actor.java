@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl.data.actor;
+package org.cyk.system.root.model;
 
 import java.io.Serializable;
 

@@ -67,6 +67,12 @@ public class ElectronicMail extends Contact implements Serializable {
 			super.set(stringSearchCriteria);
 			address.set(stringSearchCriteria);
 		}
+		
+		@Override
+		public void set(String value) {
+			super.set(value);
+			address.setValue(value);
+		}
 
 	}
 }

@@ -22,12 +22,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+@NoArgsConstructor @Getter @Setter 
 public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractModelElementOutputDetails<IDENTIFIABLE> implements Serializable {
 
 	private static final long serialVersionUID = 7439361240545541931L;
 
-	@Getter @Setter protected String identifier;
+	protected String identifier;
 	
 	@Input @InputFile (extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) protected File image;
 	@Input @InputText protected String code,name,abbreviation,description,weight,orderNumber,otherDetails;
@@ -37,7 +37,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	/**
 	 * The following fields are used to dynamically extend
 	 */
-	@Getter @Setter @Input @InputText protected String 
+	@Input @InputText protected String 
 		__f00__,__f01__,__f02__,__f03__,__f04__,__f05__,__f06__,__f07__,__f08__,__f09__,__f10__,__f11__,__f12__,__f13__,__f14__,__f15__,
 		__f16__,__f17__,__f18__,__f19__,__f20__,__f21__,__f22__,__f23__,__f24__,__f25__,__f26__,__f27__,__f28__,__f29__,__f30__,__f31__;
 	
