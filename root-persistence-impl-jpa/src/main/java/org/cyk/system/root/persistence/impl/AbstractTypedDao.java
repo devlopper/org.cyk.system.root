@@ -11,6 +11,10 @@ import java.util.Set;
 
 import javax.persistence.NoResultException;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -19,12 +23,6 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.TypedDao;
-
-import lombok.Getter;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
 

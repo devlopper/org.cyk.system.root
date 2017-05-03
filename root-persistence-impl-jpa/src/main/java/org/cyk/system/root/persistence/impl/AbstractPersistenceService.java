@@ -402,7 +402,17 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 				.getResultList();
 	}
 	
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<IDENTIFIABLE> readBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		throwNotYetImplemented();
+		return null;
+	}
 	
+	@Override
+	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
+		throwNotYetImplemented();
+		return null;
+	}
 	
 	/**/
 	

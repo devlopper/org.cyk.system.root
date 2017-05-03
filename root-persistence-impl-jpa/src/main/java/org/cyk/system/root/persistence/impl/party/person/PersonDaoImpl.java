@@ -17,19 +17,19 @@ public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,SearchCriteria> i
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-	static String r = 
+	public static final String READ_BY_CRITERIA_QUERY = 
 			"(EXISTS(SELECT email FROM ElectronicMail email WHERE ("+QueryStringBuilder.getLikeString("email."+ElectronicMail.FIELD_ADDRESS)+")"
 					+ " AND email.collection = record.contactCollection"
 					+ "))";
 	
 	@Override
 	protected String getReadByCriteriaQuery(String query) {
-		return or(super.getReadByCriteriaQuery(query),QueryStringBuilder.getLikeString("record.lastnames"),r);
+		return or(super.getReadByCriteriaQuery(query),QueryStringBuilder.getLikeString("record.lastnames"),READ_BY_CRITERIA_QUERY);
 	}
 	
 	@Override
 	protected String getReadByCriteriaQueryCodeExcludedWherePart(String where) {
-		return or(super.getReadByCriteriaQueryCodeExcludedWherePart(where),QueryStringBuilder.getLikeString("record.lastnames"),r);
+		return or(super.getReadByCriteriaQueryCodeExcludedWherePart(where),QueryStringBuilder.getLikeString("record.lastnames"),READ_BY_CRITERIA_QUERY);
 	}
 
 	@Override

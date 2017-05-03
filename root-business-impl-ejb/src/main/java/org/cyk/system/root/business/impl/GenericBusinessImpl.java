@@ -29,6 +29,7 @@ import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ThreadPoolExecutor;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 
 @Stateless 
 public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl<AbstractIdentifiable> implements GenericBusiness,Serializable {
@@ -241,6 +242,24 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	@Override
 	public <T extends AbstractIdentifiable> void deleteByCode(Class<T> aClass,String code) {
 		deleteByCodes(aClass, Arrays.asList(code));
+	}
+
+	@Override
+	public Collection<AbstractIdentifiable> findAll() {
+		throwNotYetImplemented();
+		return null;
+	}
+
+	@Override
+	public Collection<AbstractIdentifiable> findAll(DataReadConfiguration configuration) {
+		throwNotYetImplemented();
+		return null;
+	}
+
+	@Override
+	public Long countAll() {
+		throwNotYetImplemented();
+		return null;
 	}
 
 	

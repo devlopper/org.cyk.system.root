@@ -7,12 +7,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
@@ -33,7 +35,6 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.ObjectFieldValues;
@@ -43,11 +44,7 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
-import org.cyk.utility.common.file.ArrayReader.Dimension;
 import org.cyk.utility.common.file.ExcelSheetReader;
-
-import lombok.Getter;
-import lombok.Setter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -129,13 +126,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		for(IDENTIFIABLE identifiable : identifiables)
 			save(identifiable);
 	}
-	
-	@Override
-	public void synchronize(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments) {
-		Collection<IDENTIFIABLE> identifiables = instanciateMany(excelSheetReader, completeInstanciationOfManyFromValuesArguments);
-		save(identifiables);
-	}
-	
+		
 	@Override
 	public void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter) {
 		logTrace("Synchronize {} from excel", clazz.getSimpleName());
@@ -238,12 +229,20 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	@Override
 	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<IDENTIFIABLE> findBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
-		return null;
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue())){
+    		return findAll(searchCriteria.getReadConfig());
+    	}
+    	prepareFindByCriteria(searchCriteria);
+    	return getPersistenceService().readBySearchCriteria(searchCriteria);
+		//return null;
 	}
 
 	@Override
 	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
-		return null;
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue()))
+    		return countAll();
+    	prepareFindByCriteria(searchCriteria);
+    	return getPersistenceService().countBySearchCriteria(searchCriteria);
 	}
 
 	@Override
@@ -369,62 +368,6 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return identifiables;
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public void completeInstanciationOfOne(IDENTIFIABLE identifiable) {
-		
-	}
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public void completeInstanciationOfMany(Collection<IDENTIFIABLE> identifiables) {
-		for(IDENTIFIABLE identifiable : identifiables)
-			completeInstanciationOfOne(identifiable);
-	}
-	
-	@Override @Deprecated
-	public List<IDENTIFIABLE> instanciateMany(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments) {
-		List<Dimension.Row<String>> list;
-		try {
-			list = excelSheetReader.execute();
-		} catch (Exception e) {
-			exceptionUtils().exception(e);
-			return null;
-		}
-		completeInstanciationOfManyFromValuesArguments.setValues(list);
-    	return  completeInstanciationOfManyFromValues(completeInstanciationOfManyFromValuesArguments);
-	}
-
-	@Override @Deprecated
-	public void completeInstanciationOfOneFromValues(IDENTIFIABLE identifiable,AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> arguments) {
-		
-	}
-
-	@Override @Deprecated
-	public IDENTIFIABLE completeInstanciationOfOneFromValues(AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> arguments) {
-		return null;
-	}
-	
-	@Override @Deprecated
-	public void completeInstanciationOfManyFromValues(List<IDENTIFIABLE> identifiables,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments) {
-		
-	}
-
-	@Override @Deprecated
-	public List<IDENTIFIABLE> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments) {
-		List<IDENTIFIABLE> identifiables = new ArrayList<>();
-		for(Dimension.Row<String> row : arguments.getValues()){
-			IDENTIFIABLE identifiable =  null;
-			if(row.hasPrimaryKey())
-				identifiable = getPersistenceService().readByGlobalIdentifierCode(row.getPrimaryKey());
-			if(identifiable==null)
-				identifiable = instanciateOne((UserAccount)null); //newInstance(getClazz());
-			
-			identifiables.add(identifiable);
-			
-		}
-		
-		completeInstanciationOfManyFromValues(identifiables,arguments);
-		return identifiables;
-	}
-
 	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
 		getPersistenceService().getDataReadConfig().set(searchCriteria.getReadConfig());
 	}
@@ -479,6 +422,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		logTrace("Count {} by global identifier search criteria {}. Found {}", clazz.getSimpleName(),globalIdentifierSearchCriteria,count);
 		return count;
 	}
+	
+	
 
 	/**/
 
@@ -495,10 +440,6 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	/**/
-	
-	public static String computeCodeFromName(String name){
-    	return StringUtils.remove(StringUtils.remove(name, Constant.CHARACTER_SPACE),Constant.CHARACTER_DOT);
-    }
 	
 	/**/
 	public static interface CascadeOperationListener<IDENTIFIABLE extends AbstractIdentifiable,DAO extends TypedDao<IDENTIFIABLE>,BUSINESS extends TypedBusiness<IDENTIFIABLE>>{

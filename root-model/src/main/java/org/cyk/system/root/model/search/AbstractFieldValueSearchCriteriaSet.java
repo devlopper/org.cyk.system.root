@@ -3,7 +3,10 @@ package org.cyk.system.root.model.search;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -19,6 +22,8 @@ public abstract class AbstractFieldValueSearchCriteriaSet extends AbstractModelE
 
 	private static final long serialVersionUID = 2055293289197179106L;
 
+	private static final Map<Class<?>, Class<? extends AbstractFieldValueSearchCriteriaSet>> MAP = new HashMap<>();
+	
 	protected DataReadConfiguration readConfig = new DataReadConfiguration();
 	protected Collection<AbstractFieldValueSearchCriteria<?>> criterias = new ArrayList<>();
 	protected Collection<AbstractIdentifiable> excluded;
@@ -87,4 +92,24 @@ public abstract class AbstractFieldValueSearchCriteriaSet extends AbstractModelE
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static Class<? extends AbstractFieldValueSearchCriteriaSet> get(Class<?> aClass){
+		Class<? extends AbstractFieldValueSearchCriteriaSet> result = MAP.get(aClass);
+		if(result==null){
+			try {
+				result = (Class<? extends AbstractFieldValueSearchCriteriaSet>) ClassUtils.getClass(aClass.getName()+".SearchCriteria");
+			} catch (ClassNotFoundException e) {
+				result = AbstractFieldValueSearchCriteriaSet.class;
+			}
+			if(result!=null)
+				set(aClass, result);
+		}
+		return result;
+	}
+	
+	public static void set(Class<?> aClass,Class<? extends AbstractFieldValueSearchCriteriaSet> searchCriteriaClass){
+		MAP.put(aClass, searchCriteriaClass);
+		if(!AbstractFieldValueSearchCriteriaSet.class.equals(searchCriteriaClass))
+			System.out.println("SearchCriteria class has been registered. "+aClass+" -> "+searchCriteriaClass);
+	}
 }

@@ -40,7 +40,6 @@ public class Person extends Party implements Serializable{
 	@Transient private String names;
 	
 	@Transient protected Collection<PersonRelationship> relationships;
-	//@Transient private String fatherElectronicMail,motherElectronicMail;
 	
 	public Person(String firstName,String lastnames) {
 		super(firstName);

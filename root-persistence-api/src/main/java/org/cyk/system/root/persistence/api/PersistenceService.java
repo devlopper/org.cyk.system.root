@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
@@ -78,6 +79,10 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	                    IDENTIFIABLE readOneRandomly();
 	                    Collection<IDENTIFIABLE> readManyRandomly(Integer count);
 	                    Collection<IDENTIFIABLE> readByIdentifiers(Collection<IDENTIFIER> identifiers);
+	                    
+	                    <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<IDENTIFIABLE> readBySearchCriteria(SEARCH_CRITERIA searchCriteria);
+	                    
+	                	<SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria);
 	                    
 	                    
 }

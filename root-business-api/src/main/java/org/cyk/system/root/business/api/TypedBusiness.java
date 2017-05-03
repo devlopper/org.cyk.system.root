@@ -11,6 +11,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.file.report.RootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -23,14 +27,9 @@ import org.cyk.utility.common.AbstractBuilder;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.BeanAdapter;
-import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.converter.Converter;
 import org.cyk.utility.common.converter.ManyConverter;
 import org.cyk.utility.common.converter.OneConverter;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
 public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extends IdentifiableBusinessService<IDENTIFIABLE, Long> {
 
@@ -56,10 +55,6 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
     Collection<IDENTIFIABLE> instanciateManyRandomly(Set<String> codes);
     
     IDENTIFIABLE findDefaulted(); 
-    
-    Collection<IDENTIFIABLE> findAll(); 
-    Collection<IDENTIFIABLE> findAll(DataReadConfiguration configuration); 
-    Long countAll();
     
     Collection<IDENTIFIABLE> findAllExclude(Collection<IDENTIFIABLE> identifiables); 
     

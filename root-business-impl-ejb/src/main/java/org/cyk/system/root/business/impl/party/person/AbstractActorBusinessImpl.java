@@ -128,30 +128,11 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	protected void __load__(ACTOR actor){
 		inject(PersonBusiness.class).load(actor.getPerson());
 	}
-
+	
 	@Override
-	public <SEARCH_CRITERIA_2 extends AbstractFieldValueSearchCriteriaSet> Collection<ACTOR> findBySearchCriteria(SEARCH_CRITERIA_2 searchCriteria) {
-		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue())){
-    		return findAll(searchCriteria.getReadConfig());
-    	}
-    	prepareFindByCriteria(searchCriteria);
-    	return dao.readBySearchCriteria(searchCriteria);
+	protected Class<? extends AbstractFieldValueSearchCriteriaSet> getSearchCriteriaClass() {
+		return AbstractActor.AbstractSearchCriteria.Default.class;
 	}
-
-	@Override
-	public <SEARCH_CRITERIA_2 extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA_2 searchCriteria) {
-		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue()))
-    		return countAll();
-    	prepareFindByCriteria(searchCriteria);
-    	return dao.countBySearchCriteria(searchCriteria);
-	}
-
-	@Override
-	protected AbstractFieldValueSearchCriteriaSet createSearchCriteriaInstance() {
-		return new AbstractActor.AbstractSearchCriteria.Default();
-	}
-
-
 
 	public static interface Listener<ACTOR extends AbstractActor> extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<ACTOR>{
 		

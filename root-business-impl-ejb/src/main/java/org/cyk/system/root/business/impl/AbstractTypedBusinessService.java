@@ -43,6 +43,7 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.value.Value;
@@ -385,7 +386,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		if(isIdentified(identifiable))
 			__load__(identifiable);
 	}
-	
+	//TODO to be removed , use graph to load what you want
 	protected void __load__(IDENTIFIABLE identifiable) {}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -501,12 +502,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected Class<? extends AbstractFieldValueSearchCriteriaSet> getSearchCriteriaClass() {
-		return null;
+		return AbstractIdentifiableSearchCriteriaSet.get(clazz);
 	}
 	
 	protected AbstractFieldValueSearchCriteriaSet createSearchCriteriaInstance() {
 		Class<? extends AbstractFieldValueSearchCriteriaSet> searchCriteriaClass = getSearchCriteriaClass();
-		if(searchCriteriaClass==null)
+		if(searchCriteriaClass==null || AbstractFieldValueSearchCriteriaSet.class.equals(searchCriteriaClass))
 			return null;
 		AbstractFieldValueSearchCriteriaSet searchCriteria = newInstance(searchCriteriaClass);
 		return searchCriteria;

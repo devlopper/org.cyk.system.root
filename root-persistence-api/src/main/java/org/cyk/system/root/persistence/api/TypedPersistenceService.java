@@ -3,7 +3,6 @@ package org.cyk.system.root.persistence.api;
 import java.util.Collection;
 
 import org.cyk.system.root.model.Identifiable;
-import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 
 public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends PersistenceService<IDENTIFIABLE,IDENTIFIER> {
 		
@@ -33,14 +32,11 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
     void executeDelete(Collection<IDENTIFIABLE> identifiables);
     
     /**/
-    
-    <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<IDENTIFIABLE> readBySearchCriteria(SEARCH_CRITERIA searchCriteria);
-    
-	<SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria);
-    
+    //TODO to be removed
     Collection<IDENTIFIABLE> readDuplicates();
+  //TODO to be removed
     Long countDuplicates();
-    
+  //TODO to be removed
     Collection<IDENTIFIABLE> readDuplicates(IDENTIFIABLE identifiable);
 
 }

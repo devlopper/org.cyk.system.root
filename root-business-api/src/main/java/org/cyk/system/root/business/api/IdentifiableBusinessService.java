@@ -1,8 +1,6 @@
 package org.cyk.system.root.business.api;
 
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
@@ -16,11 +14,7 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
-import org.cyk.utility.common.file.ArrayReader.Dimension;
 import org.cyk.utility.common.file.ExcelSheetReader;
-
-import lombok.Getter;
-import lombok.Setter;
 
 public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends BusinessService {
 	
@@ -34,6 +28,10 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				Collection<IDENTIFIABLE> find(Collection<IDENTIFIABLE> identifiables,Collection<String> codes);
     				Collection<IDENTIFIABLE> find(Collection<IDENTIFIABLE> identifiables,String code);
     				IDENTIFIABLE findOne(Collection<IDENTIFIABLE> identifiables,String code);
+    				
+    				Collection<IDENTIFIABLE> findAll(); 
+    			    Collection<IDENTIFIABLE> findAll(DataReadConfiguration configuration); 
+    			    Long countAll();
     				
     				<SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<IDENTIFIABLE> findBySearchCriteria(SEARCH_CRITERIA searchCriteria);
     			    
@@ -49,7 +47,6 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				
     /* Save   */	IDENTIFIABLE save(IDENTIFIABLE identifiable);
     				void save(Collection<IDENTIFIABLE> identifiables);
-    				void synchronize(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments);
     				void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter);
     				
     /* ------------------------ Dynamic methods ---------------------------- */
@@ -109,18 +106,8 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     IDENTIFIABLE instanciateOne();
                     IDENTIFIABLE instanciateOne(UserAccount userAccount);
                     IDENTIFIABLE instanciateOne(ObjectFieldValues arguments);
-                    void completeInstanciationOfOne(IDENTIFIABLE identifiable);
                     
                     Collection<IDENTIFIABLE> instanciateMany(Collection<ObjectFieldValues> arguments);
-                    void completeInstanciationOfManyFromValues(List<IDENTIFIABLE> actors,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments);
-                    
-                    void completeInstanciationOfOneFromValues(IDENTIFIABLE identifiable,AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> arguments);
-                    IDENTIFIABLE completeInstanciationOfOneFromValues(AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> arguments);
-                    
-                    List<IDENTIFIABLE> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> arguments);
-                    List<IDENTIFIABLE> instanciateMany(ExcelSheetReader excelSheetReader,AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE> completeInstanciationOfManyFromValuesArguments);
-                    
-                    void completeInstanciationOfMany(Collection<IDENTIFIABLE> identifiables);
                     
                     Boolean isIdentified(AbstractIdentifiable identifiable);
                 	
@@ -132,42 +119,6 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     void setParents(Collection<IDENTIFIABLE> identifiables);
                     
                     /**/
-                    @Deprecated
-                	public static interface CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE extends Identifiable<?>>{
-
-                		void beforeProcessing(IDENTIFIABLE identifiable,String[] values);
-                		void afterProcessing(IDENTIFIABLE identifiable,String[] values);
-
-                	}
-                	
-                	@Getter @Setter @Deprecated
-                	public static class AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE extends Identifiable<?>> implements Serializable{
-
-                		private static final long serialVersionUID = 6568108456054174796L;
-                		
-                		protected Integer codeIndex,creationDateIndex,nameIndex,birthDateIndex,isCodeExistIndex,birthLocationOtherDetailsIndex;
-                		protected String[] values;
-                		protected CompleteInstanciationOfOneFromValuesListener<IDENTIFIABLE> listener;
-                		
-                	}
-                	@Deprecated
-                	public static interface CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE extends Identifiable<?>>{
-
-                		void beforeProcessing(List<IDENTIFIABLE> identifiables,List<String[]> values);
-                		void afterProcessing(List<IDENTIFIABLE> identifiables,List<String[]> values);
-                		
-                	}
-                	
-                	@Getter @Setter @Deprecated
-                	public static class AbstractCompleteInstanciationOfManyFromValuesArguments<IDENTIFIABLE extends Identifiable<?>> implements Serializable{
-
-                		private static final long serialVersionUID = 6568108456054174796L;
-                		
-                		protected List<Dimension.Row<String>> values;
-                		protected CompleteInstanciationOfManyFromValuesListener<IDENTIFIABLE> listener;
-                		protected AbstractCompleteInstanciationOfOneFromValuesArguments<IDENTIFIABLE> instanciationOfOneFromValuesArguments;
-                		
-                	}
-    
+                    
 
 }

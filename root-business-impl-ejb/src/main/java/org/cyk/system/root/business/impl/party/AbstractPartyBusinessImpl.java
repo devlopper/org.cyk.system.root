@@ -13,7 +13,6 @@ import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
 
 public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends AbstractPartyDao<PARTY>> extends AbstractTypedBusinessService<PARTY, DAO> implements AbstractPartyBusiness<PARTY>,Serializable {
@@ -32,8 +31,6 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		return collection;
 	}
 	
-	
-
 	@Override
 	protected void beforeCreate(PARTY party) {
 		super.beforeCreate(party);
@@ -60,24 +57,7 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
     		inject(ContactCollectionBusiness.class).delete(contactCollection);
 		}
 	}
-		
-    @Override
-	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<PARTY> findBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
-		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue())){
-    		return findAll(searchCriteria.getReadConfig());
-    	}
-    	prepareFindByCriteria(searchCriteria);
-    	return dao.readBySearchCriteria(searchCriteria);
-	}
-
-	@Override
-	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
-		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue()))
-    		return countAll();
-    	prepareFindByCriteria(searchCriteria);
-    	return dao.countBySearchCriteria(searchCriteria);
-	}
-    
+		    
     /**/
         
 	protected void __load__(PARTY party) {

@@ -27,7 +27,6 @@ import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonExtendedInformationsBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
-import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -41,8 +40,6 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
-import org.cyk.system.root.model.party.person.PersonTitle;
-import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
@@ -304,6 +301,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 				: personRelationship.getExtremity1().getPerson() );	
 		return persons;
 	}
+	
 	/*
 	@Override
 	public Person findOneByPersonByRelationshipType(Person person, String personRelationshipTypeCode) {
@@ -320,6 +318,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return collection;
 	}
 	*/
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void load(Person person) {
 		super.load(person);
@@ -328,24 +327,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		person.setMedicalInformations(medicalInformationsDao.readByParty(person));
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public void completeInstanciationOfOne(Person person) {
-		super.completeInstanciationOfOne(person);
-		if(person.getSex()!=null && person.getSex().getIdentifier()==null)
-			person.setSex(RootDataProducerHelper.getInstance().getEnumeration(Sex.class, person.getSex().getCode()));
-		if(person.getExtendedInformations()!=null && person.getExtendedInformations().getIdentifier()==null){
-			PersonExtendedInformations personExtendedInformations = person.getExtendedInformations();
-			if(personExtendedInformations.getTitle()!=null && personExtendedInformations.getTitle().getIdentifier()==null)
-				personExtendedInformations.setTitle(RootDataProducerHelper.getInstance().getEnumeration(PersonTitle.class, personExtendedInformations.getTitle().getCode()));
-			if(personExtendedInformations.getBirthLocation()!=null){
-				//Location location = personExtendedInformations.getBirthLocation();
-				
-			}
-			
-		}
-		
-	}
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected <T extends AbstractIdentifiable> void setFieldValue(Object master,Class<T> fieldType,String fieldName,Integer index,String[] values){
 		T fieldValue = (T) commonUtils.readField(master, commonUtils.getFieldFromClass(master.getClass(), fieldName), Boolean.FALSE);
