@@ -10,8 +10,6 @@ public abstract class AbstractActorDetails<ACTOR extends AbstractIdentifiable> e
 
 	private static final long serialVersionUID = 1165482775425753790L;
 
-	//@Input @InputText private String registrationDate;
-	
 	public AbstractActorDetails(ACTOR actor) {
 		super(actor);
 	}
@@ -21,8 +19,6 @@ public abstract class AbstractActorDetails<ACTOR extends AbstractIdentifiable> e
 	@Override
 	public void setMaster(ACTOR actor) {
 		super.setMaster(actor);
-		/*if(actor.getBirthDate()!=null)
-			registrationDate = inject(TimeBusiness.class).formatDate(actor.getBirthDate());*/
 	}
 	
 	@Override
@@ -33,8 +29,6 @@ public abstract class AbstractActorDetails<ACTOR extends AbstractIdentifiable> e
 	protected abstract AbstractActor getActor();
 	
 	/**/
-	
-	//public static final String FIELD_REGISTRATION_DATE = "registrationDate";
 	
 	/**/
 	

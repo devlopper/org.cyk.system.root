@@ -15,9 +15,12 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.file.ExcelSheetReader;
 
 public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO extends AbstractActorDao<ACTOR,SEARCH_CRITERIA>,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends AbstractTypedBusinessService<ACTOR, DAO> implements AbstractActorBusiness<ACTOR,SEARCH_CRITERIA>,Serializable {
@@ -91,13 +94,23 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 			anActor.getPerson().getGlobalIdentifierCreateIfNull().setCreatedBy(anActor.getGlobalIdentifierCreateIfNull().getCreatedBy());
 			inject(PersonBusiness.class).create(anActor.getPerson());
 		}else{
+			
 			if(StringUtils.isEmpty(anActor.getCode()))
 				anActor.setCode(anActor.getPerson().getCode());
 			if(StringUtils.isEmpty(anActor.getName()))
 				anActor.setName(anActor.getPerson().getName());
 			if(anActor.getImage() == null)
 				anActor.setImage(anActor.getPerson().getImage());
+			
 		}
+		/*
+		if(StringUtils.isBlank(anActor.getCode()))
+			anActor.setCode(anActor.getPerson().getCode());
+		if(StringUtils.isBlank(anActor.getName()))
+			anActor.setName(anActor.getPerson().getName());
+		if(anActor.getImage() == null)
+			anActor.setImage(anActor.getPerson().getImage());
+		*/
 	}
 
 	@Override
@@ -173,6 +186,9 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		}
 		completeInstanciationOfManyFromValuesAfterProcessing(actors,values,arguments.getListener());
 	}
+	
+	
+	
 /*
 	@Override
 	public List<ACTOR> completeInstanciationOfManyFromValues(AbstractCompleteInstanciationOfManyFromValuesArguments<ACTOR> arguments) {
@@ -184,7 +200,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		completeInstanciationOfManyFromValues(actors,arguments);
 		return actors;
 	}*/
-
+	/*
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<ACTOR> findByCriteria(SEARCH_CRITERIA criteria) {
 		if(StringUtils.isBlank(criteria.getPerson().getName().getValue())){
@@ -201,6 +217,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		prepareFindByCriteria(criteria);
     	return dao.countByCriteria(criteria);
 	}
+	*/
 
 	/**/
 	/*
@@ -233,6 +250,30 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	*/
 /**/
 	
+	@Override
+	public <SEARCH_CRITERIA_2 extends AbstractFieldValueSearchCriteriaSet> Collection<ACTOR> findBySearchCriteria(SEARCH_CRITERIA_2 searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue())){
+    		return findAll(searchCriteria.getReadConfig());
+    	}
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.readBySearchCriteria(searchCriteria);
+	}
+
+	@Override
+	public <SEARCH_CRITERIA_2 extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA_2 searchCriteria) {
+		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue()))
+    		return countAll();
+    	prepareFindByCriteria(searchCriteria);
+    	return dao.countBySearchCriteria(searchCriteria);
+	}
+
+	@Override
+	protected AbstractFieldValueSearchCriteriaSet createSearchCriteriaInstance() {
+		return new AbstractActor.AbstractSearchCriteria.Default();
+	}
+
+
+
 	public static interface Listener<ACTOR extends AbstractActor> extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<ACTOR>{
 		
 		/**/

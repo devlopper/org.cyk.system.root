@@ -44,6 +44,6 @@ public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,SearchCriteria> i
 		queryWrapper.parameterLike(Person.FIELD_LASTNAMES, ((Person.SearchCriteria)searchCriteria).getLastnames());
 		queryWrapper.parameterLike(ElectronicMail.FIELD_ADDRESS, ((Person.SearchCriteria)searchCriteria).getContactCollection().getElectronicMail().getAddress());
 	}
-
+	
 }
  

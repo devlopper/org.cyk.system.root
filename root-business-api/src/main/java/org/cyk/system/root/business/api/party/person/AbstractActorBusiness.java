@@ -20,11 +20,11 @@ public interface AbstractActorBusiness<ACTOR extends AbstractActor,SEARCH_CRITER
 	ACTOR instanciateOne(String code,String[] names);
 	
 	Collection<ACTOR> instanciateMany(String[] codes);
-	
+	/*
 	Collection<ACTOR> findByCriteria(SEARCH_CRITERIA criteria);
 	
 	Long countByCriteria(SEARCH_CRITERIA criteria);
-	
+	*/
 	//void completeInstanciationOfOneFromValues(ACTOR actor,CompleteActorInstanciationOfOneFromValuesArguments<ACTOR> arguments);
 	//void completeInstanciationOfManyFromValues(List<ACTOR> actors,CompleteActorInstanciationOfManyFromValuesArguments<ACTOR> arguments);
 	//List<ACTOR> completeInstanciationOfManyFromValues(CompleteActorInstanciationOfManyFromValuesArguments<ACTOR> arguments);

@@ -3,11 +3,12 @@ package org.cyk.system.root.business.impl.integration;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.cyk.system.root.business.api.ActorBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.Actor;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
@@ -34,17 +35,20 @@ public class FindByStringIT extends AbstractBusinessIT {
     		}
     	});
     	super.populate();
-    	Person person = inject(PersonBusiness.class).instanciateOneRandomly();
-    	person.setCode("c001").setName("konan").setLastnames("marius").setElectronicMail("mymail@yahoo.fr"); 
-    	create(person);
+    	Actor actor = inject(ActorBusiness.class).instanciateOneRandomly("c001");
+    	actor.getPerson().setName("konan").setLastnames("marius").setElectronicMail("mymail@yahoo.fr"); 
+    	actor.setName("konan");
+    	create(actor);
     	
-    	person = inject(PersonBusiness.class).instanciateOneRandomly();
-    	person.setCode("c002").setName("zanga").setLastnames("alice").setElectronicMail("konan@mail.com");
-    	create(person);
+    	actor = inject(ActorBusiness.class).instanciateOneRandomly("c002");
+    	actor.getPerson().setName("zanga").setLastnames("alice").setElectronicMail("konan@mail.com");
+    	actor.setName("zanga");
+    	create(actor);
     	
-    	person = inject(PersonBusiness.class).instanciateOneRandomly();
-    	person.setCode("c003a").setName("doudou").setLastnames("cherif").setElectronicMail(null);
-    	create(person);
+    	actor = inject(ActorBusiness.class).instanciateOneRandomly("c003a");
+    	actor.getPerson().setName("doudou").setLastnames("cherif").setElectronicMail(null);
+    	actor.setName("doudou");
+    	create(actor);
     	
     	create(new JobFunction(null, null));
     	create(new JobFunction("mycode", null));
@@ -71,6 +75,23 @@ public class FindByStringIT extends AbstractBusinessIT {
 		assertFindByString(Person.class,"@",2);
 		assertFindByString(Person.class,"konan",2);
 		assertFindByString(Person.class,"konan@",1);
+	}
+	
+	@Test
+	public void findActor(){
+		assertWithBlankStringFindByString(Actor.class);
+		
+		assertFindByString(Actor.class,"WXWX",0);
+		
+		assertFindByString(Actor.class,"ko",Arrays.asList("c002"),1);
+		assertFindByString(Actor.class,"a",3);
+		assertFindByString(Actor.class,"a",Arrays.asList("c002"),2);
+		
+		assertFindByString(Actor.class,"ius",1);
+		assertFindByString(Actor.class,"konan@mail.com",1);
+		assertFindByString(Actor.class,"@",2);
+		assertFindByString(Actor.class,"konan",2);
+		assertFindByString(Actor.class,"konan@",1);
 	}
 	
 	@Test

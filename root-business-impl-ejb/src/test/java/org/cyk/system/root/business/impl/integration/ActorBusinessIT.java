@@ -2,9 +2,9 @@ package org.cyk.system.root.business.impl.integration;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.ActorBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.impl.data.actor.Actor;
-import org.cyk.system.root.business.impl.data.actor.ActorBusiness;
+import org.cyk.system.root.model.Actor;
 
 public class ActorBusinessIT extends AbstractBusinessIT {
 

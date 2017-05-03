@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
@@ -53,6 +54,25 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 		public AbstractSearchCriteria(String name) {
 			super(name);
 			person = new Person.SearchCriteria(name);
+		}
+		
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			super.set(stringSearchCriteria);
+			person.set(stringSearchCriteria);
+		}
+		
+		@Override
+		public void set(String value) {
+			super.set(value);
+			person.set(value);
+		}
+		
+		/**/
+		
+		public static class Default extends AbstractSearchCriteria<AbstractActor> {
+			private static final long serialVersionUID = 1L;
+			
 		}
 		
 	}
