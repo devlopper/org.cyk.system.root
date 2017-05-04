@@ -311,6 +311,26 @@ public interface RootConstant {
 			
 		}
 		
+		public static class IntervalCollection implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+		}
+		
+		public static class Interval implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String MOVEMENT_ACTION_INCREMENT = "MOVEMENTACTIONINCREMENT";
+			public static String MOVEMENT_ACTION_DECREMENT = "MOVEMENTACTIONDECREMENT";
+			public static String MOVEMENT_COLLECTION_VALUE = "MOVEMENTCOLLECTIONVALUE";
+	
+		}
+		
+		public static class MovementAction implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String INCREMENT = "INCREMENT";
+			public static String DECREMENT = "DECREMENT";
+		}
 		
 		/**/
 		

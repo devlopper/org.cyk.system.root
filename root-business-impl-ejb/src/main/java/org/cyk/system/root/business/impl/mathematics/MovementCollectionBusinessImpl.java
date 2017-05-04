@@ -13,6 +13,7 @@ import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -27,6 +28,15 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Inject
 	public MovementCollectionBusinessImpl(MovementCollectionDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	public MovementCollection instanciateOne(String code,String intervalCode,String incrementActionCode,String decrementActionCode) {
+		MovementCollection movementCollection = super.instanciateOne(code);
+		movementCollection.setInterval(read(Interval.class, intervalCode));
+		movementCollection.setIncrementAction(read(MovementAction.class, incrementActionCode));
+		movementCollection.setDecrementAction(read(MovementAction.class, decrementActionCode));
+		return movementCollection;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -61,7 +71,7 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MovementCollection instanciateOneRandomly(String code) {
-		return instanciateOne(code, MovementAction.INCREMENT,MovementAction.DECREMENT);
+		return instanciateOne(code, RootConstant.Code.MovementAction.INCREMENT,RootConstant.Code.MovementAction.DECREMENT);
 	}
 
 }

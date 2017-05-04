@@ -57,7 +57,10 @@ import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.information.IdentifiableCollectionType;
 import org.cyk.system.root.model.language.Language;
+import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
+import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.network.Computer;
 import org.cyk.system.root.model.network.Service;
@@ -359,7 +362,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void mathematics(){ 
+    	createFromExcelSheet(IntervalCollection.class);
+    	createFromExcelSheet(Interval.class);
     	createFromExcelSheet(MetricCollectionType.class);
+    	createFromExcelSheet(MovementAction.class);
     }
     
     private void values(){ 

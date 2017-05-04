@@ -9,11 +9,12 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
-import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 
-public class MovementActionBusinessImpl extends AbstractTypedBusinessService<MovementAction, MovementActionDao> implements MovementActionBusiness,Serializable {
+public class MovementActionBusinessImpl extends AbstractEnumerationBusinessImpl<MovementAction, MovementActionDao> implements MovementActionBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
@@ -41,9 +42,9 @@ public class MovementActionBusinessImpl extends AbstractTypedBusinessService<Mov
 			return value;
 		BigDecimal temp = increment;
 		increment = increment.abs();
-		if(MovementAction.INCREMENT.equals(movementActionCode))
+		if(RootConstant.Code.MovementAction.INCREMENT.equals(movementActionCode))
 			return value.add(increment);
-		else if(MovementAction.DECREMENT.equals(movementActionCode))
+		else if(RootConstant.Code.MovementAction.DECREMENT.equals(movementActionCode))
 			return value.subtract(increment);
 		return value.add(temp);
 	}
@@ -51,6 +52,13 @@ public class MovementActionBusinessImpl extends AbstractTypedBusinessService<Mov
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public BigDecimal computeValue(MovementAction movementAction,BigDecimal value,BigDecimal increment) {
 		return computeValue(movementAction == null ? null : movementAction.getCode(), value, increment);
+	}
+	
+	@Override
+	protected MovementAction __instanciateOne__(String[] values,InstanciateOneListener<MovementAction> listener) {
+		super.__instanciateOne__(values, listener);
+		set(listener.getSetListener().setIndex(10), MovementAction.FIELD_INTERVAL);
+		return listener.getInstance();
 	}
 	
 }

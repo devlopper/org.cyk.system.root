@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,18 +24,17 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 	
-	@Column(precision=20,scale=FLOAT_SCALE) private BigDecimal value;
+	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE) private BigDecimal value;
  
-	@ManyToOne @JoinColumn(name="theinterval") private Interval interval;
+	@ManyToOne @JoinColumn(name=COLUMN_INTERVAL) private Interval interval;
 	
-	@OneToOne private MovementAction incrementAction;
+	@ManyToOne @JoinColumn(name=COLUMN_INCREMENT_ACTION) private MovementAction incrementAction;
 	
-	@OneToOne private MovementAction decrementAction;
+	@ManyToOne @JoinColumn(name=COLUMN_DECREMENT_ACTION) private MovementAction decrementAction;
 	
 	private Boolean supportDocumentIdentifier = Boolean.FALSE;
 	
-	//private Boolean enableMultipleJoinOfDocumentIdentifier;
-	@ManyToOne @JoinColumn(name="document_identifier_count_interval") private Interval documentIdentifierCountInterval;
+	@ManyToOne @JoinColumn(name=COLUMN_DOCUMENT_IDENTIFIER_COUNT_INTERVAL) private Interval documentIdentifierCountInterval;
 	
 	//TODO to be model using a class which can be called MovementCollectionAlert or something like that. really i do not know so to think about
 	//@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal minimalQuantityAlert = BigDecimal.ZERO;
@@ -56,4 +54,16 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	public static final String LOG_FORMAT = MovementCollection.class.getSimpleName()+"(C=%s V=%s %s)";
 	
 	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_INTERVAL = "interval";
+	public static final String FIELD_INCREMENT_ACTION = "incrementAction";
+	public static final String FIELD_DECREMENT_ACTION = "decrementAction";
+	public static final String FIELD_SUPPORT_DOCUMENT_IDENTIFIER = "supportDocumentIdentifier";
+	public static final String FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL = "documentIdentifierCountInterval";
+	
+	public static final String COLUMN_VALUE = FIELD_VALUE;
+	public static final String COLUMN_INTERVAL = COLUMN_NAME_UNKEYWORD+FIELD_INTERVAL;
+	public static final String COLUMN_INCREMENT_ACTION = FIELD_INCREMENT_ACTION;
+	public static final String COLUMN_DECREMENT_ACTION = FIELD_DECREMENT_ACTION;
+	public static final String COLUMN_SUPPORT_DOCUMENT_IDENTIFIER = FIELD_SUPPORT_DOCUMENT_IDENTIFIER;
+	public static final String COLUMN_DOCUMENT_IDENTIFIER_COUNT_INTERVAL = FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL;
 }

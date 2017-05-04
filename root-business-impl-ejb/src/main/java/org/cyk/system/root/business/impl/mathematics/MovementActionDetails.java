@@ -12,9 +12,19 @@ import lombok.Setter;
 public class MovementActionDetails extends AbstractEnumerationDetails<MovementAction> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
+	private FieldValue interval;
+	
 	public MovementActionDetails(MovementAction movementAction) {
 		super(movementAction);
 		
+	}
+	
+	@Override
+	public void setMaster(MovementAction movementAction) {
+		super.setMaster(movementAction);
+		if(movementAction!=null){
+			interval = new FieldValue(movementAction.getInterval());
+		}
 	}
 	
 }
