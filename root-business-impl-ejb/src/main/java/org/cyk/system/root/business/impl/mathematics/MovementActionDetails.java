@@ -27,4 +27,6 @@ public class MovementActionDetails extends AbstractEnumerationDetails<MovementAc
 		}
 	}
 	
+	public static final String FIELD_INTERVAL = "interval";
+	
 }
