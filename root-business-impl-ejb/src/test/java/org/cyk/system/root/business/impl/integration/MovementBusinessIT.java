@@ -2,10 +2,13 @@ package org.cyk.system.root.business.impl.integration;
 
 import java.math.BigDecimal;
 
+import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
+import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.junit.Test;
 
 public class MovementBusinessIT extends AbstractBusinessIT {
@@ -14,7 +17,6 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 
     private String movementUnlimitedIdentifier="MU",movementLimitedIdentifier="ML",movementOnlyUnlimitedIdentifier="MOL"
     		,movementUpdatesUnlimitedIdentifier="MUPL",movementLimitedIdentifier_Low_100_8_High_2_10_Total_0_150="ML10082100150";
-    private Movement movement;
     
     @Override
     protected void populate() {
@@ -55,20 +57,61 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     
     @Test
     public void doMovementsAndUpdates(){
-    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "15", "15");
-    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "10", "25");
-    	movement = rootBusinessTestHelper.updateMovement(movement,"6", "21");
-    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "1", "22");
-    	movement = rootBusinessTestHelper.updateMovement(movement, "10", "31");
-    	movement = rootBusinessTestHelper.updateMovement(movement, "15", "36");
-    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "4", "40");
-    	movement = rootBusinessTestHelper.updateMovement(movement, "-36", "0");
-    	movement = rootBusinessTestHelper.updateMovement(movement, "1", "37");
-    	movement = rootBusinessTestHelper.deleteMovement(movement, "1", "36");
-    	movement = rootBusinessTestHelper.createMovement(movementUpdatesUnlimitedIdentifier, "-6", "30");
+    	TestCase testCase = instanciateTestCase();
+    	Movement movement = testCase.create(inject(MovementBusiness.class).instanciateOne("M001",movementUpdatesUnlimitedIdentifier, "15",null));
+    	String code001 = movement.getCode();
+    	testCase.read(Movement.class, code001);
+    	rootBusinessTestHelper.assertMovement(code001, "15", "15");
+    	
+    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne("M002",movementUpdatesUnlimitedIdentifier, "10",null));
+    	String code002 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code002, "10", "25");
+    	
+    	movement = inject(MovementDao.class).read(code002);
+    	movement.setValue(new BigDecimal("6"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code002, "6", "21");
+    	
+    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne("M003",movementUpdatesUnlimitedIdentifier, "1",null));
+    	String code003 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code003, "1", "22");
+    	
+    	movement = inject(MovementDao.class).read(code003);
+    	movement.setValue(new BigDecimal("10"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code003, "10", "31");
+    	
+    	movement = inject(MovementDao.class).read(code003);
+    	movement.setValue(new BigDecimal("15"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code003, "15", "36");
+    	
+    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne("M004",movementUpdatesUnlimitedIdentifier, "4",null));
+    	String code004 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code004, "4", "40");
+    	
+    	movement = inject(MovementDao.class).read(code004);
+    	movement.setValue(new BigDecimal("-36"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code004, "-36", "0");
+    	
+    	movement = inject(MovementDao.class).read(code004);
+    	movement.setValue(new BigDecimal("1"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code004, "1", "37");
+    	
+    	movement = inject(MovementDao.class).read(code004);
+    	testCase.delete(movement);
+    	rootBusinessTestHelper.assertMovementCollection(movementUpdatesUnlimitedIdentifier, "36");
+    	
+    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne("M005",movementUpdatesUnlimitedIdentifier, "-6",null));
+    	String code005 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code005, "-6", "30");
+    	
+    	testCase.clean();
     }
     
-    @Test
+    //@Test
     public void doMovementsOnly(){
     	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "1", "1");
     	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "1", "2");
@@ -87,26 +130,28 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	rootBusinessTestHelper.incrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
     }*/
     
-    @Test
+    //@Test
     public void incrementValueMustNotBeGreaterThanIntervalHigh(){
     	rootBusinessTestHelper.incrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
     }
-    @Test
+    
+    //@Test
     public void decrementValueMustNotBeLessThanIntervalLow(){
     	rootBusinessTestHelper.decrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
     }
+    
     /*
     @Test
     public void decrementValueMustNotBeGreaterThanIntervalHigh(){
     	rootBusinessTestHelper.decrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
     }*/
     
-    @Test
+    //@Test
     public void collectionValueMustNotBeLessThanIntervalLow(){
     	rootBusinessTestHelper.collectionValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
     }
     
-    @Test
+    //@Test
     public void collectionValueMustNotBeGreaterThanIntervalHigh(){
     	rootBusinessTestHelper.collectionValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
     }

@@ -17,7 +17,7 @@ public abstract class AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final String COLUMN_NAME_UNKEYWORD = "_";
+	public static final String COLUMN_NAME_UNKEYWORD = "the_";
 	public static final String COLUMN_NAME_WORD_SEPARATOR = "_";
 	public static final int COLUMN_VALUE_PRECISION = 30;
 	public static final int COEFFICIENT_PRECISION = 5;

@@ -18,21 +18,24 @@ import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Getter @Setter @NoArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
+@Getter @Setter @NoArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS) @Accessors(chain=true)
 public class Movement extends AbstractCollectionItem<MovementCollection> implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne @JoinColumn(name="maction") private MovementAction action;	
-	@Column(name="mvalue",precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
+	@ManyToOne @JoinColumn(name=COLUMN_ACTION) private MovementAction action;	
+	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
 	
 	/**
 	 * The person to whom value goes or from whom value comes
 	 */
-	@ManyToOne private Person senderOrReceiverPerson;
+	@ManyToOne @JoinColumn(name=COLUMN_SENDER_OR_RECEIVER_PERSON) private Person senderOrReceiverPerson;
 	
 	private String senderOrReceiverPersonAsString;
+	
+	
 	
 	/**/
 	
@@ -49,5 +52,9 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON = "senderOrReceiverPerson";
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON_AS_STRING = "senderOrReceiverPersonAsString";
+	
+	public static final String COLUMN_ACTION = FIELD_ACTION;
+	public static final String COLUMN_VALUE = FIELD_VALUE;
+	public static final String COLUMN_SENDER_OR_RECEIVER_PERSON = FIELD_SENDER_OR_RECEIVER_PERSON;
 		
 }

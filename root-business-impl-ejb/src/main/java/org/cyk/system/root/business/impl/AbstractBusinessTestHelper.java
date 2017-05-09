@@ -554,15 +554,19 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     }
 	
 	public void assertMovementCollection(MovementCollection movementCollection,String expectedValue){
-    	assertEquals("Value",new BigDecimal(expectedValue), movementCollection.getValue());
+    	assertBigDecimalEquals("Value",new BigDecimal(expectedValue), movementCollection.getValue());
     }
 	
-	public void assertMovement(String code,String expectedValue,Boolean increment,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier,String expectedCollectionValue){
-    	assertMovement(inject(MovementDao.class).read(code), expectedValue, increment, expectedSupportingDocumentProvider, expectedSupportingDocumentIdentifier,expectedCollectionValue);
+	public void assertMovement(String code,String expectedValue,String expectedCollectionValue,Boolean increment,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
+    	assertMovement(inject(MovementDao.class).read(code), expectedValue,expectedCollectionValue, increment, expectedSupportingDocumentProvider, expectedSupportingDocumentIdentifier);
     }
 	
-	public void assertMovement(Movement movement,String expectedValue,Boolean expectedIncrement,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier,String expectedCollectionValue){
-    	assertEquals("Value",new BigDecimal(expectedValue), movement.getValue());
+	public void assertMovement(String code,String expectedValue,String expectedCollectionValue){
+		assertMovement(code, expectedValue, expectedCollectionValue, null, null, null);
+	}
+	
+	public void assertMovement(Movement movement,String expectedValue,String expectedCollectionValue,Boolean expectedIncrement,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
+    	assertBigDecimalEquals("Value",new BigDecimal(expectedValue), movement.getValue());
     	assertEquals("Action",expectedIncrement == null ? null : (Boolean.TRUE.equals(expectedIncrement) ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction()), movement.getAction());
     	//assertEquals("Supporting Document Provider",expectedSupportingDocumentProvider, movement.getSupportingDocumentProvider());
     	//assertEquals("Supporting Document Identifier",expectedSupportingDocumentIdentifier, movement.getSupportingDocumentIdentifier());

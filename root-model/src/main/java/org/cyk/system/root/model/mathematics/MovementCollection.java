@@ -60,7 +60,7 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	public static final String FIELD_SUPPORT_DOCUMENT_IDENTIFIER = "supportDocumentIdentifier";
 	public static final String FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL = "documentIdentifierCountInterval";
 	
-	public static final String COLUMN_VALUE = FIELD_VALUE;
+	public static final String COLUMN_VALUE = COLUMN_NAME_UNKEYWORD+FIELD_VALUE;
 	public static final String COLUMN_INTERVAL = COLUMN_NAME_UNKEYWORD+FIELD_INTERVAL;
 	public static final String COLUMN_INCREMENT_ACTION = FIELD_INCREMENT_ACTION;
 	public static final String COLUMN_DECREMENT_ACTION = FIELD_DECREMENT_ACTION;
