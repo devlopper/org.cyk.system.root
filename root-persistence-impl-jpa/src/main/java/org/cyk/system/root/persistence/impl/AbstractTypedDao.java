@@ -24,6 +24,7 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.utility.common.computation.ArithmeticOperator;
 
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
 
@@ -36,7 +37,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
 		,readByGlobalIdentifierSearchCriteriaCodeExcluded,countByGlobalIdentifierByCodeSearchCriteria
 		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria,readByCriteriaCodeExcluded,countByCriteriaCodeExcluded
-		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode,readByIdentifiers,readFirstWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsLessThan,readPrevious;
+		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode,readByIdentifiers,readFirstWhereExistencePeriodFromDateIsLessThan
+		,readWhereExistencePeriodFromDateIsLessThan;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -103,15 +105,16 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			registerNamedQuery(executeDelete, "DELETE FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadFirstWhereExistencePeriodFromDateIsLessThan())){
-			String query = getReadFirstWhereExistencePeriodFromDateIsLessThanQuery();
-			if(StringUtils.isNotBlank(query))
-				registerNamedQuery(readFirstWhereExistencePeriodFromDateIsLessThan, query);
+			
 		}
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereExistencePeriodFromDateIsLessThan())){
-			String query = getReadWhereExistencePeriodFromDateIsLessThanQuery();
-			if(StringUtils.isNotBlank(query))
-				registerNamedQuery(readWhereExistencePeriodFromDateIsLessThan, query);
+			
+			String dateFieldName = commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE);
+			QueryStringBuilder queryStringBuilder = _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.LT);
+			processQueryStringBuilder(queryStringBuilder, readWhereExistencePeriodFromDateIsLessThan);
+			queryStringBuilder.orderBy(dateFieldName, Boolean.FALSE);
+			registerNamedQuery(readWhereExistencePeriodFromDateIsLessThan, queryStringBuilder);
 		}
 		
 		String readByGlobalIdentifierSearchCriteriaQuery = null;
@@ -174,15 +177,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	protected String getReadByCriteriaQueryCodeExcludedWherePart(String where){
 		return where;
 	}
-	
-	public String getReadFirstWhereExistencePeriodFromDateIsLessThanQuery() {
-		return null;
-	}
-	
-	public String getReadWhereExistencePeriodFromDateIsLessThanQuery() {
-		return null;
-	}
-	
+
 	/**/
 	
 	@Override
@@ -379,21 +374,23 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		return null;
 	}
 	
-	protected QueryWrapper<IDENTIFIABLE> getPreviousQueryWrapper(IDENTIFIABLE identifiable) {
-		return namedQuery(readPrevious).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate());
+	protected QueryWrapper<IDENTIFIABLE> getReadWhereExistencePeriodFromDateIsLessThanQueryWrapper(IDENTIFIABLE identifiable) {
+		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(readWhereExistencePeriodFromDateIsLessThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate());
+		processQueryWrapper(clazz, queryWrapper, readWhereExistencePeriodFromDateIsLessThan,new Object[]{identifiable});
+		return queryWrapper;
 	}
 	
 	@Override
 	public IDENTIFIABLE readFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
 		getDataReadConfig().setMaximumResultCount(1l);
-		Collection<IDENTIFIABLE> collection = getPreviousQueryWrapper(identifiable).resultMany();
+		QueryWrapper<IDENTIFIABLE> queryWrapper  = getReadWhereExistencePeriodFromDateIsLessThanQueryWrapper(identifiable);
+		Collection<IDENTIFIABLE> collection = queryWrapper.resultMany();
 		return collection.isEmpty() ? null : collection.iterator().next();
 	}
 
 	@Override
 	public Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
-		throwNotYetImplemented();
-		return null;
+		return getReadWhereExistencePeriodFromDateIsLessThanQueryWrapper(identifiable).resultMany();
 	}
 	
 	/**/

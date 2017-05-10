@@ -425,6 +425,14 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria){}
 	
+	protected void processQueryStringBuilder(QueryStringBuilder queryStringBuilder,String queryName){
+		
+	}
+	
+	protected <T> void processQueryWrapper(Class<T> aClass,QueryWrapper<T> queryWrapper,String queryName,Object[] arguments){
+		
+	}
+	
 	/**/
 	
 	protected void throwExecuteUpdateExceptionIfAny(Integer expectedNumberOfEntities,Integer actualNumberOfEntities){
