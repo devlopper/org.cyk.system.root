@@ -375,6 +375,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	}
 	
 	protected QueryWrapper<IDENTIFIABLE> getReadWhereExistencePeriodFromDateIsLessThanQueryWrapper(IDENTIFIABLE identifiable) {
+		System.out.println("AbstractTypedDao.getReadWhereExistencePeriodFromDateIsLessThanQueryWrapper() : "+identifiable.getBirthDate());
 		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(readWhereExistencePeriodFromDateIsLessThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate());
 		processQueryWrapper(clazz, queryWrapper, readWhereExistencePeriodFromDateIsLessThan,new Object[]{identifiable});
 		return queryWrapper;
