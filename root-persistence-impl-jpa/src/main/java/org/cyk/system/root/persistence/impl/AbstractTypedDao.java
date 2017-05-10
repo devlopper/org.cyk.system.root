@@ -22,6 +22,7 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCri
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.TypedDao;
 
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
@@ -35,7 +36,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
 		,readByGlobalIdentifierSearchCriteriaCodeExcluded,countByGlobalIdentifierByCodeSearchCriteria
 		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria,readByCriteriaCodeExcluded,countByCriteriaCodeExcluded
-		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode,readByIdentifiers;
+		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode,readByIdentifiers,readFirstWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsLessThan,readPrevious;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -101,6 +102,18 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getExecuteDelete()))
 			registerNamedQuery(executeDelete, "DELETE FROM "+clazz.getSimpleName()+" record WHERE record.identifier IN :identifiers");
 		
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadFirstWhereExistencePeriodFromDateIsLessThan())){
+			String query = getReadFirstWhereExistencePeriodFromDateIsLessThanQuery();
+			if(StringUtils.isNotBlank(query))
+				registerNamedQuery(readFirstWhereExistencePeriodFromDateIsLessThan, query);
+		}
+		
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereExistencePeriodFromDateIsLessThan())){
+			String query = getReadWhereExistencePeriodFromDateIsLessThanQuery();
+			if(StringUtils.isNotBlank(query))
+				registerNamedQuery(readWhereExistencePeriodFromDateIsLessThan, query);
+		}
+		
 		String readByGlobalIdentifierSearchCriteriaQuery = null;
 		String readByGlobalIdentifierSearchCriteriaCodeExcludedQuery = null;
 		String readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart = null;
@@ -160,6 +173,14 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	}
 	protected String getReadByCriteriaQueryCodeExcludedWherePart(String where){
 		return where;
+	}
+	
+	public String getReadFirstWhereExistencePeriodFromDateIsLessThanQuery() {
+		return null;
+	}
+	
+	public String getReadWhereExistencePeriodFromDateIsLessThanQuery() {
+		return null;
 	}
 	
 	/**/
@@ -358,8 +379,25 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		return null;
 	}
 	
-	/**/
+	protected QueryWrapper<IDENTIFIABLE> getPreviousQueryWrapper(IDENTIFIABLE identifiable) {
+		return namedQuery(readPrevious).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate());
+	}
 	
+	@Override
+	public IDENTIFIABLE readFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
+		getDataReadConfig().setMaximumResultCount(1l);
+		Collection<IDENTIFIABLE> collection = getPreviousQueryWrapper(identifiable).resultMany();
+		return collection.isEmpty() ? null : collection.iterator().next();
+	}
+
+	@Override
+	public Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
+		throwNotYetImplemented();
+		return null;
+	}
+	
+	/**/
+
 	protected String criteriaSearchQueryId(AbstractFieldValueSearchCriteria<?> searchCriteria,String ascendingOrderQueryId,String descendingOrderQueryId){
 		if(searchCriteria.getAscendingOrdered()!=null)
 			return Boolean.TRUE.equals(searchCriteria.getAscendingOrdered())?ascendingOrderQueryId:descendingOrderQueryId;
@@ -391,6 +429,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		private Boolean readByGlobalIdentifierOrderNumber = Boolean.TRUE;
 		private Boolean readByGlobalIdentifierSupportingDocumentCode = Boolean.FALSE;
 		private Boolean readByIdentifiers = Boolean.TRUE;
+		private Boolean readFirstWhereExistencePeriodFromDateIsLessThan = Boolean.TRUE;
+		private Boolean readWhereExistencePeriodFromDateIsLessThan = Boolean.TRUE;
 		
 		private Boolean readByClasses = Boolean.FALSE;
 		private Boolean readByNotClasses = Boolean.FALSE;

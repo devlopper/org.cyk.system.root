@@ -423,7 +423,14 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return count;
 	}
 	
-	
+	@Override
+	public IDENTIFIABLE findFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
+		return getPersistenceService().readFirstWhereExistencePeriodFromDateIsLessThan(identifiable);
+	}
+	@Override
+	public Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
+		return getPersistenceService().readWhereExistencePeriodFromDateIsLessThan(identifiable);
+	}
 
 	/**/
 

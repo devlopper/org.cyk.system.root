@@ -36,6 +36,9 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				<SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Collection<IDENTIFIABLE> findBySearchCriteria(SEARCH_CRITERIA searchCriteria);
     			    
     				<SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria);
+    				
+    				IDENTIFIABLE findFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
+    				Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
     
     /* Update */    IDENTIFIABLE update(IDENTIFIABLE identifiable);
     				IDENTIFIABLE update(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);

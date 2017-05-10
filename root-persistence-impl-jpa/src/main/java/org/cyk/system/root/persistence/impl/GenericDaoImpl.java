@@ -34,11 +34,25 @@ public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifia
 
 	@Override
 	public Collection<AbstractIdentifiable> readByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
+		throwNotYetImplemented();
 		return null;
 	}
 
 	@Override
 	public Long countByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
+		throwNotYetImplemented();
+		return null;
+	}
+
+	@Override
+	public AbstractIdentifiable readFirstWhereExistencePeriodFromDateIsLessThan(AbstractIdentifiable identifiable) {
+		throwNotYetImplemented();
+		return null;
+	}
+
+	@Override
+	public Collection<AbstractIdentifiable> readWhereExistencePeriodFromDateIsLessThan(AbstractIdentifiable identifiable) {
+		throwNotYetImplemented();
 		return null;
 	}
 

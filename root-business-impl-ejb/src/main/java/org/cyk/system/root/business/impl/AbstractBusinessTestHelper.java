@@ -857,6 +857,32 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 							, inject(PersonRelationshipTypeRoleDao.class).read(role2Code)).size());
 		}
 		
+		public <T extends AbstractIdentifiable> void assertFirstWhereExistencePeriodFromDateIsLessThan(final Class<T> aClass,final String code,String firstPreviousCode){
+			T identifiable = read(aClass, code);
+			T previous = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).readFirstWhereExistencePeriodFromDateIsLessThan(identifiable);
+			if(previous==null){
+				assertThat("No previous found for "+code+" with dob "+identifiable.getBirthDate(), previous==null && StringUtils.isBlank(firstPreviousCode));
+			}else{
+				T firstPrevious = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(firstPreviousCode);
+				assertEquals("Previous of "+code+"("+identifiable.getBirthDate()+") is "+firstPreviousCode+"("+firstPrevious.getBirthDate()+")", previous, firstPrevious);	
+			}
+			
+		}
+		
+		public <T extends AbstractIdentifiable> void assertOrderBasedOnExistencePeriodFromDate(final Class<T> aClass,Boolean firstIsRoot,final String...codes){
+			if(Boolean.TRUE.equals(firstIsRoot))
+				assertFirstWhereExistencePeriodFromDateIsLessThan(aClass, codes[0], null);
+			
+			if(codes!=null && codes.length > 1)
+				for(int i = 0 ; i < codes.length - 1 ; i++){
+					assertFirstWhereExistencePeriodFromDateIsLessThan(aClass, codes[i+1], codes[i]);
+				}
+		}
+		
+		public <T extends AbstractIdentifiable> void assertOrderBasedOnExistencePeriodFromDate(final Class<T> aClass,final String...codes){
+			assertOrderBasedOnExistencePeriodFromDate(aClass, Boolean.TRUE, codes);
+		}
+		
 		/**/
 		
 		public <T extends AbstractIdentifiable> void crud(final Class<T> aClass,T instance,Object[][] values){

@@ -752,7 +752,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		logTrace(converter.getLogMessageBuilder());
 		return result;
 	}
-	
+		
 	/**/
 	
 }
