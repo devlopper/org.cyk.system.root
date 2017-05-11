@@ -25,4 +25,9 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     
     <T extends AbstractIdentifiable> void deleteByCodes(Class<T> aClass,Collection<String> codes);
     <T extends AbstractIdentifiable> void deleteByCode(Class<T> aClass,String code);
+    
+    <T extends AbstractIdentifiable> Collection<T> findWhereExistencePeriodFromDateIsLessThan(Class<T> aClass,String code);
+    <T extends AbstractIdentifiable> Long countWhereExistencePeriodFromDateIsLessThan(Class<T> aClass,String code);
+    
+    <T extends AbstractIdentifiable> T findFirstWhereExistencePeriodFromDateIsLessThan(Class<T> aClass,String code);
 }

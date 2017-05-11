@@ -38,7 +38,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		,readByGlobalIdentifierSearchCriteriaCodeExcluded,countByGlobalIdentifierByCodeSearchCriteria
 		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria,readByCriteriaCodeExcluded,countByCriteriaCodeExcluded
 		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode,readByIdentifiers,readFirstWhereExistencePeriodFromDateIsLessThan
-		,readWhereExistencePeriodFromDateIsLessThan;
+		,readWhereExistencePeriodFromDateIsLessThan,countWhereExistencePeriodFromDateIsLessThan;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -380,6 +380,12 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		return queryWrapper;
 	}
 	
+	protected QueryWrapper<Long> getCountWhereExistencePeriodFromDateIsLessThanQueryWrapper(IDENTIFIABLE identifiable) {
+		QueryWrapper<Long> queryWrapper = countNamedQuery(countWhereExistencePeriodFromDateIsLessThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate());
+		processQueryWrapper(Long.class, queryWrapper, countWhereExistencePeriodFromDateIsLessThan,new Object[]{identifiable});
+		return queryWrapper;
+	}
+	
 	@Override
 	public IDENTIFIABLE readFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
 		getDataReadConfig().setMaximumResultCount(1l);
@@ -392,6 +398,11 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	@Override
 	public Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
 		return getReadWhereExistencePeriodFromDateIsLessThanQueryWrapper(identifiable).resultMany();
+	}
+	
+	@Override
+	public Long countWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
+		return getCountWhereExistencePeriodFromDateIsLessThanQueryWrapper(identifiable).resultOne();
 	}
 	
 	/**/

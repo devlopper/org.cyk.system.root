@@ -56,6 +56,24 @@ public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifia
 		return null;
 	}
 
+	@Override
+	public AbstractIdentifiable read(String globalIdentifierCode) {
+		throwNotYetImplemented();
+		return null;
+	}
+
+	@Override
+	public Collection<AbstractIdentifiable> read(Collection<String> globalIdentifierCodes) {
+		throwNotYetImplemented();
+		return null;
+	}
+
+	@Override
+	public Long countWhereExistencePeriodFromDateIsLessThan(AbstractIdentifiable identifiable) {
+		throwNotYetImplemented();
+		return null;
+	}
+
    
 	
 }

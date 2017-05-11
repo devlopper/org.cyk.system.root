@@ -63,18 +63,22 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	movement = testCase.create(movement);
     	String code001 = movement.getCode();
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class,code001);
+    	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 0);
     	
     	movement = inject(MovementBusiness.class).instanciateOne("M002",movementUpdatesUnlimitedIdentifier, "10",null);
     	movement.setBirthDate(date(2000, 5, 1));
     	movement = testCase.create(movement);
     	String code002 = movement.getCode();
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class, code002 , code001);
+    	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 1);
     	
     	movement = inject(MovementBusiness.class).instanciateOne("M003",movementUpdatesUnlimitedIdentifier, "10",null);
     	movement.setBirthDate(date(2000, 5, 3));
     	movement = testCase.create(movement);
     	String code003 = movement.getCode();
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class, code002 ,code001, code003);
+    	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 1);
+    	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code003, 2);
     	
     	movement = inject(MovementBusiness.class).instanciateOne("M001",movementUnlimitedIdentifier, "10",null);
     	movement.setBirthDate(date(2000, 4, 1));
@@ -83,6 +87,8 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class, code001A);
     	
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class, code002 ,code001, code003);
+    	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 1);
+    	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code003, 2);
     	
     	testCase.clean();
     }

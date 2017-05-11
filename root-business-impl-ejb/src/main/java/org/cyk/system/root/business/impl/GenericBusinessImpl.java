@@ -26,6 +26,7 @@ import org.cyk.system.root.business.impl.utils.IdentifiableCrudExecution;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.persistence.api.PersistenceService;
+import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ThreadPoolExecutor;
@@ -262,5 +263,26 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 		return null;
 	}
 
+	@Override
+	public <T extends AbstractIdentifiable> Collection<T> findWhereExistencePeriodFromDateIsLessThan(Class<T> aClass, String code) {
+		return getBusiness(aClass).findWhereExistencePeriodFromDateIsLessThan(code);
+	}
+
+	@Override
+	public <T extends AbstractIdentifiable> Long countWhereExistencePeriodFromDateIsLessThan(Class<T> aClass, String code) {
+		return getBusiness(aClass).countWhereExistencePeriodFromDateIsLessThan(code);
+	}
+
+	@Override
+	public <T extends AbstractIdentifiable> T findFirstWhereExistencePeriodFromDateIsLessThan(Class<T> aClass, String code) {
+		return getBusiness(aClass).findFirstWhereExistencePeriodFromDateIsLessThan(code);
+	}
+
+	protected <T extends AbstractIdentifiable> TypedBusiness<T> getBusiness(Class<T> aClass) {
+		return inject(BusinessInterfaceLocator.class).injectTyped(aClass);
+	}
 	
+	protected <T extends AbstractIdentifiable> TypedDao<T> getPersistence(Class<T> aClass) {
+		return inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
+	}
 }

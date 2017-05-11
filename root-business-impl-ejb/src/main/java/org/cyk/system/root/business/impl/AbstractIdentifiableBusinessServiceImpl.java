@@ -431,7 +431,35 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
 		return getPersistenceService().readWhereExistencePeriodFromDateIsLessThan(identifiable);
 	}
+	
+	@Override
+	public IDENTIFIABLE find(String code,Boolean throwableIfNull) {
+		IDENTIFIABLE identifiable = getPersistenceService().read(code);
+		if(identifiable==null && Boolean.TRUE.equals(throwableIfNull))
+			exceptionUtils().exception(Boolean.TRUE, "codedoesnotexist", code);
+		return identifiable;
+	}
 
+	@Override
+	public IDENTIFIABLE findFirstWhereExistencePeriodFromDateIsLessThan(String code) {
+		return findFirstWhereExistencePeriodFromDateIsLessThan(find(code, Boolean.TRUE));
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsLessThan(String code) {
+		return findWhereExistencePeriodFromDateIsLessThan(find(code, Boolean.TRUE));
+	}
+	
+	@Override
+	public Long countWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
+		return getPersistenceService().countWhereExistencePeriodFromDateIsLessThan(identifiable);
+	}
+	
+	@Override
+	public Long countWhereExistencePeriodFromDateIsLessThan(String code) {
+		return countWhereExistencePeriodFromDateIsLessThan(find(code, Boolean.TRUE));
+	}
+	
 	/**/
 
 	protected void logInstanciate(){

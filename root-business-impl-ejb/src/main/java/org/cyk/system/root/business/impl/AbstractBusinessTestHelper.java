@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
@@ -857,6 +858,16 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 							, inject(PersonRelationshipTypeRoleDao.class).read(role2Code)).size());
 		}
 		
+		public <T extends AbstractIdentifiable> void assertWhereExistencePeriodFromDateIsLessThanCount(final Class<T> aClass,final String code,Integer count){
+			T identifiable = getBusiness(aClass).find(code);
+			System.out.println("Children and count of "+toString(identifiable, EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN));
+			Collection<T> collection = getBusiness(aClass).findWhereExistencePeriodFromDateIsLessThan(identifiable);
+			Long dbCount = getBusiness(aClass).countWhereExistencePeriodFromDateIsLessThan(identifiable);
+			assertEquals("collection and count", dbCount.intValue(),collection.size());
+			assertEquals("Collection size", count, collection.size());
+			assertEquals("count", count, dbCount.intValue());
+		}
+		
 		public <T extends AbstractIdentifiable> void assertFirstWhereExistencePeriodFromDateIsLessThan(final Class<T> aClass,final String code,String firstPreviousCode){
 			T identifiable = read(aClass, code);
 			T previous = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).readFirstWhereExistencePeriodFromDateIsLessThan(identifiable);
@@ -894,6 +905,27 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	    	clean();
 	    }
 		
+		/**/
+		
+		protected <T extends AbstractIdentifiable> TypedBusiness<T> getBusiness(Class<T> aClass) {
+			return inject(BusinessInterfaceLocator.class).injectTyped(aClass);
+		}
+		
+		protected <T extends AbstractIdentifiable> TypedDao<T> getPersistence(Class<T> aClass) {
+			return inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
+		} 
+		
+		/**/
+		
+		protected String toString(AbstractIdentifiable identifiable,Integer actionIdentifier){
+			if(actionIdentifier==EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN)
+				return identifiable.getCode()+"("+identifiable.getBirthDate()+")";
+			return null;
+		}
+		
+		/**/
+		
+		protected static final Integer EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN = 0;
 	}
 
 	public TestCase instanciateTestCase(AbstractBusinessTestHelper helper){

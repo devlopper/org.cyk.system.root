@@ -57,11 +57,16 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 						 */
 						Collection<IDENTIFIABLE> readByGlobalIdentifierCodes(Collection<String> codes);
 						
+						IDENTIFIABLE read(String globalIdentifierCode);
+						
+						Collection<IDENTIFIABLE> read(Collection<String> globalIdentifierCodes);
+						
 						Collection<IDENTIFIABLE> readByGlobalIdentifierSearchCriteria(GlobalIdentifier.SearchCriteria globalIdentifierSearchCriteria);
 					    Long countByGlobalIdentifierSearchCriteria(GlobalIdentifier.SearchCriteria globalIdentifierSearchCriteria);
 						
 					    IDENTIFIABLE readFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
 	    				Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
+	    				Long countWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
 					    
 						Long oneLong();	
 	

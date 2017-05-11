@@ -38,7 +38,11 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				<SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria);
     				
     				IDENTIFIABLE findFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
+    				IDENTIFIABLE findFirstWhereExistencePeriodFromDateIsLessThan(String code);
     				Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
+    				Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsLessThan(String code);
+    				Long countWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
+    				Long countWhereExistencePeriodFromDateIsLessThan(String code);
     
     /* Update */    IDENTIFIABLE update(IDENTIFIABLE identifiable);
     				IDENTIFIABLE update(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);
@@ -64,6 +68,8 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
 	                
 	                IDENTIFIABLE findByGlobalIdentifierCode(String code);
 	                Collection<IDENTIFIABLE> findByGlobalIdentifierCodes(Collection<String> codes);
+	                
+	                IDENTIFIABLE find(String code,Boolean throwableIfNull);
 	                
 	                Collection<IDENTIFIABLE> findByGlobalIdentifierSearchCriteria(GlobalIdentifier.SearchCriteria globalIdentifierSearchCriteria);
 	                Long countByGlobalIdentifierSearchCriteria(GlobalIdentifier.SearchCriteria globalIdentifierSearchCriteria);

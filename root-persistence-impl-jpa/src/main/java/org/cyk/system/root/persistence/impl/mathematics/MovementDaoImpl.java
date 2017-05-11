@@ -16,7 +16,7 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 	@Override
 	protected void processQueryStringBuilder(QueryStringBuilder queryStringBuilder, String queryName) {
 		super.processQueryStringBuilder(queryStringBuilder, queryName);
-		if(readWhereExistencePeriodFromDateIsLessThan.equals(queryName)){
+		if(readWhereExistencePeriodFromDateIsLessThan.equals(queryName) || countWhereExistencePeriodFromDateIsLessThan.equals(queryName)){
 			queryStringBuilder.and(Movement.FIELD_COLLECTION);
 		}
 	}
@@ -24,7 +24,7 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 	@Override
 	protected <T> void processQueryWrapper(Class<T> aClass,QueryWrapper<T> queryWrapper, String queryName,Object[] arguments) {
 		super.processQueryWrapper(aClass, queryWrapper, queryName,arguments);
-		if(readWhereExistencePeriodFromDateIsLessThan.equals(queryName)){
+		if(readWhereExistencePeriodFromDateIsLessThan.equals(queryName) || countWhereExistencePeriodFromDateIsLessThan.equals(queryName)){
 			Movement movement = (Movement) arguments[0];
 			queryWrapper.parameter(Movement.FIELD_COLLECTION, movement.getCollection());
 		}
