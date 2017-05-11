@@ -150,8 +150,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				identifiable.setCode(generateCode(tokens));
 			else if(GlobalIdentifier.FIELD_NAME.equals(name) && StringUtils.isBlank(identifiable.getName()))
 				identifiable.setName(generateName(tokens));
-			else if(commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE).equals(name) && (identifiable.getExistencePeriod()!=null 
-					|| identifiable.getGlobalIdentifierCreateIfNull().getExistencePeriod().getFromDate()==null))
+			else if(commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE).equals(name) && identifiable.getExistencePeriod()!=null 
+					&& identifiable.getGlobalIdentifierCreateIfNull().getExistencePeriod().getFromDate()==null)
 				identifiable.getGlobalIdentifierCreateIfNull().getExistencePeriod().setFromDate(generateExistencePeriodBirthDate(tokens));
 		}
 	}
