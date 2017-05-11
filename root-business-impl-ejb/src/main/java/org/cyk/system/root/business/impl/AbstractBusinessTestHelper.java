@@ -860,9 +860,9 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		public <T extends AbstractIdentifiable> void assertWhereExistencePeriodFromDateIsLessThanCount(final Class<T> aClass,final String code,Integer count){
 			T identifiable = getBusiness(aClass).find(code);
-			System.out.println("Children and count of "+toString(identifiable, EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN));
 			Collection<T> collection = getBusiness(aClass).findWhereExistencePeriodFromDateIsLessThan(identifiable);
 			Long dbCount = getBusiness(aClass).countWhereExistencePeriodFromDateIsLessThan(identifiable);
+			System.out.println(toString(identifiable, EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN)+" , Childrens - collection size = "+collection.size()+" , count from db = "+dbCount);
 			assertEquals("collection and count", dbCount.intValue(),collection.size());
 			assertEquals("Collection size", count, collection.size());
 			assertEquals("count", count, dbCount.intValue());
@@ -919,7 +919,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		protected String toString(AbstractIdentifiable identifiable,Integer actionIdentifier){
 			if(actionIdentifier==EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN)
-				return identifiable.getCode()+"("+identifiable.getBirthDate()+")";
+				return identifiable.getCode()+"("+Constant.DATE_TIME_FORMATTER.format(identifiable.getBirthDate())+")";
 			return null;
 		}
 		

@@ -391,7 +391,6 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		getDataReadConfig().setMaximumResultCount(1l);
 		QueryWrapper<IDENTIFIABLE> queryWrapper  = getReadWhereExistencePeriodFromDateIsLessThanQueryWrapper(identifiable);
 		Collection<IDENTIFIABLE> collection = queryWrapper.resultMany();
-		System.out.println("AbstractTypedDao.readFirstWhereExistencePeriodFromDateIsLessThan() : "+collection);
 		return collection.isEmpty() ? null : collection.iterator().next();
 	}
 
