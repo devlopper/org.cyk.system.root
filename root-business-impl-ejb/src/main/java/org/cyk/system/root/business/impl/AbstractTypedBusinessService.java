@@ -671,7 +671,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		ReportBasedOnTemplateFile<REPORT> reportBasedOnTemplateFile = inject(ReportBusiness.class).buildBinaryContent(producedReport, arguments.getReportTemplate().getTemplate()
 				, arguments.getFile().getExtension());
 		inject(FileBusiness.class).process(arguments.getFile(),reportBasedOnTemplateFile.getBytes(), ReportBusiness.DEFAULT_FILE_NAME_AND_EXTENSION);
-		Boolean isNewFile = isNotIdentified(arguments.getFile());
+		Boolean isNewFile = inject(FileBusiness.class).isNotIdentified(arguments.getFile());
 		StringBuilder fileNameBuilder = new StringBuilder(/*arguments.getFile().getRepresentationType().getName()*/);
 		//fileNameBuilder.append(Constant.CHARACTER_SPACE);
 		fileNameBuilder.append(StringUtils.defaultIfBlank(arguments.getIdentifiableName(), inject(FormatterBusiness.class).format(arguments.getIdentifiable())));

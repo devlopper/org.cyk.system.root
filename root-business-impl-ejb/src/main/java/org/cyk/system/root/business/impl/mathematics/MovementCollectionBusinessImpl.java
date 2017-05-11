@@ -55,12 +55,9 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	
 	@Override
 	public MovementCollection create(MovementCollection movementCollection) {
-		if(isNotIdentified(movementCollection.getInterval()))
-			inject(IntervalBusiness.class).create(movementCollection.getInterval());
-		if(isNotIdentified(movementCollection.getIncrementAction()))
-			inject(MovementActionBusiness.class).create(movementCollection.getIncrementAction());
-		if(isNotIdentified(movementCollection.getDecrementAction()))
-			inject(MovementActionBusiness.class).create(movementCollection.getDecrementAction());
+		createIfNotIdentified(movementCollection.getInterval());
+		createIfNotIdentified(movementCollection.getIncrementAction());
+		createIfNotIdentified(movementCollection.getDecrementAction());
 		return super.create(movementCollection);
 	}
 	

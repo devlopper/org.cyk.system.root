@@ -25,7 +25,6 @@ import org.cyk.system.root.business.api.party.person.JobInformationsBusiness;
 import org.cyk.system.root.business.api.party.person.MedicalInformationsBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonExtendedInformationsBusiness;
-import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.party.AbstractPartyBusinessImpl;
 import org.cyk.system.root.model.AbstractEnumeration;
@@ -192,8 +191,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 		if(person.getRelationships()!=null)
 			for(PersonRelationship personRelationship : person.getRelationships())
-				if(isNotIdentified(personRelationship))
-					inject(PersonRelationshipBusiness.class).create(personRelationship);
+				createIfNotIdentified(personRelationship);
 		
 	}
 	

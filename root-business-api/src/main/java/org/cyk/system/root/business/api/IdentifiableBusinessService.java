@@ -56,6 +56,9 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				void save(Collection<IDENTIFIABLE> identifiables);
     				void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter);
     				
+    				Boolean isIdentified(IDENTIFIABLE identifiable);
+    				Boolean isNotIdentified(IDENTIFIABLE identifiable);
+    				
     /* ------------------------ Dynamic methods ---------------------------- */
     
     /* --- Selection --- */
@@ -117,10 +120,6 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     IDENTIFIABLE instanciateOne(ObjectFieldValues arguments);
                     
                     Collection<IDENTIFIABLE> instanciateMany(Collection<ObjectFieldValues> arguments);
-                    
-                    Boolean isIdentified(AbstractIdentifiable identifiable);
-                	
-                    Boolean isNotIdentified(AbstractIdentifiable identifiable);
                     
                     AbstractIdentifiable findParent(IDENTIFIABLE identifiable);
                     Collection<AbstractIdentifiable> findParentRecursively(IDENTIFIABLE identifiable);

@@ -13,12 +13,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
-import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
@@ -35,6 +31,7 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.ObjectFieldValues;
@@ -45,6 +42,9 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -383,25 +383,39 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	@Override
-	public Boolean isIdentified(AbstractIdentifiable identifiable){
+	public Boolean isIdentified(IDENTIFIABLE identifiable){
 		return identifiable!=null && identifiable.getIdentifier()!=null;
 	}
 	
 	@Override
-	public Boolean isNotIdentified(AbstractIdentifiable identifiable){
+	public Boolean isNotIdentified(IDENTIFIABLE identifiable){
 		return identifiable!=null && identifiable.getIdentifier()==null;
 	}
 	
 	protected void createIfNotIdentified(AbstractIdentifiable identifiable){
-		if(isNotIdentified(identifiable))
-			inject(GenericBusiness.class).create(identifiable);
+		@SuppressWarnings("unchecked")
+		Class<AbstractIdentifiable> aClass = (Class<AbstractIdentifiable>) identifiable.getClass();
+		TypedBusiness<AbstractIdentifiable> business = getBusiness(aClass);
+		if(business.isNotIdentified(identifiable))
+			business.create(identifiable);
 	}
 	
 	protected void updateIfNotIdentified(AbstractIdentifiable identifiable){
-		if(isNotIdentified(identifiable))
-			inject(GenericBusiness.class).create(identifiable);
+		@SuppressWarnings("unchecked")
+		Class<AbstractIdentifiable> aClass = (Class<AbstractIdentifiable>) identifiable.getClass();
+		TypedBusiness<AbstractIdentifiable> business = getBusiness(aClass);
+		if(business.isNotIdentified(identifiable))
+			business.create(identifiable);
 		else
-			inject(GenericBusiness.class).update(identifiable);
+			business.update(identifiable);
+	}
+	
+	protected <T extends AbstractIdentifiable> TypedBusiness<T> getBusiness(Class<T> aClass) {
+		return inject(BusinessInterfaceLocator.class).injectTyped(aClass);
+	}
+	
+	protected <T extends AbstractIdentifiable> TypedDao<T> getPersistence(Class<T> aClass) {
+		return inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
 	}
 	
 	@Override
@@ -475,6 +489,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	/**/
+	
+	
 	
 	/**/
 	public static interface CascadeOperationListener<IDENTIFIABLE extends AbstractIdentifiable,DAO extends TypedDao<IDENTIFIABLE>,BUSINESS extends TypedBusiness<IDENTIFIABLE>>{

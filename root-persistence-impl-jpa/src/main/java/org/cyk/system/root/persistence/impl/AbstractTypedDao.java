@@ -111,7 +111,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereExistencePeriodFromDateIsLessThan())){
 			
 			String dateFieldName = commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE);
-			QueryStringBuilder queryStringBuilder = _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.LT);
+			QueryStringBuilder queryStringBuilder = _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.LT)
+					.and(AbstractIdentifiable.FIELD_IDENTIFIER, ArithmeticOperator.NEQ);
 			processQueryStringBuilder(queryStringBuilder, readWhereExistencePeriodFromDateIsLessThan);
 			queryStringBuilder.orderBy(dateFieldName, Boolean.FALSE);
 			registerNamedQuery(readWhereExistencePeriodFromDateIsLessThan, queryStringBuilder);
@@ -375,13 +376,15 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	}
 	
 	protected QueryWrapper<IDENTIFIABLE> getReadWhereExistencePeriodFromDateIsLessThanQueryWrapper(IDENTIFIABLE identifiable) {
-		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(readWhereExistencePeriodFromDateIsLessThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate());
+		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(readWhereExistencePeriodFromDateIsLessThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate())
+				.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, identifiable.getIdentifier());
 		processQueryWrapper(clazz, queryWrapper, readWhereExistencePeriodFromDateIsLessThan,new Object[]{identifiable});
 		return queryWrapper;
 	}
 	
 	protected QueryWrapper<Long> getCountWhereExistencePeriodFromDateIsLessThanQueryWrapper(IDENTIFIABLE identifiable) {
-		QueryWrapper<Long> queryWrapper = countNamedQuery(countWhereExistencePeriodFromDateIsLessThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate());
+		QueryWrapper<Long> queryWrapper = countNamedQuery(countWhereExistencePeriodFromDateIsLessThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate())
+				.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, identifiable.getIdentifier());
 		processQueryWrapper(Long.class, queryWrapper, countWhereExistencePeriodFromDateIsLessThan,new Object[]{identifiable});
 		return queryWrapper;
 	}
