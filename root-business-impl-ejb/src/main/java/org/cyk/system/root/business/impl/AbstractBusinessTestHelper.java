@@ -868,31 +868,37 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			assertEquals("count", count, dbCount.intValue());
 		}
 		
-		public <T extends AbstractIdentifiable> void assertFirstWhereExistencePeriodFromDateIsLessThan(final Class<T> aClass,final String code,String firstPreviousCode){
+		public <T extends AbstractIdentifiable> void assertFirstWhereExistencePeriodFromDateIsLessThan(final Class<T> aClass,final String code,String firstPreviousCode,Integer numberOfPrevious){
 			T identifiable = read(aClass, code);
 			T previous = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).readFirstWhereExistencePeriodFromDateIsLessThan(identifiable);
+			String name = toString(identifiable, EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN);
+			assertEquals("Number of previous of "+name, numberOfPrevious, getPersistence(aClass).countWhereExistencePeriodFromDateIsLessThan(identifiable).intValue());
 			if(previous==null){
-				assertThat("No previous found for "+code+" with dob "+identifiable.getBirthDate(), previous==null && StringUtils.isBlank(firstPreviousCode));
+				assertThat("No previous found for "+name, previous==null && StringUtils.isBlank(firstPreviousCode));
 			}else{
 				T firstPrevious = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(firstPreviousCode);
-				assertEquals("Previous of "+code+"("+identifiable.getBirthDate()+") is "+firstPreviousCode+"("+firstPrevious.getBirthDate()+")", previous, firstPrevious);	
+				assertEquals("Previous of "+name+" is "+firstPreviousCode+"("+firstPrevious.getBirthDate()+")", previous, firstPrevious);	
 			}
 			
 		}
 		
 		public <T extends AbstractIdentifiable> void assertOrderBasedOnExistencePeriodFromDate(final Class<T> aClass,Boolean firstIsRoot,final String...codes){
-			if(Boolean.TRUE.equals(firstIsRoot))
-				assertFirstWhereExistencePeriodFromDateIsLessThan(aClass, codes[0], null);
+			if(Boolean.TRUE.equals(firstIsRoot)){
+				assertFirstWhereExistencePeriodFromDateIsLessThan(aClass, codes[0], null,0);
+			}
 			
 			if(codes!=null && codes.length > 1)
 				for(int i = 0 ; i < codes.length - 1 ; i++){
-					assertFirstWhereExistencePeriodFromDateIsLessThan(aClass, codes[i+1], codes[i]);
+					String code = codes[i+1];
+					assertFirstWhereExistencePeriodFromDateIsLessThan(aClass, code, codes[i],i+1);
 				}
 		}
 		
 		public <T extends AbstractIdentifiable> void assertOrderBasedOnExistencePeriodFromDate(final Class<T> aClass,final String...codes){
 			assertOrderBasedOnExistencePeriodFromDate(aClass, Boolean.TRUE, codes);
 		}
+		
+		
 		
 		/**/
 		

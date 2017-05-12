@@ -393,6 +393,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	protected void createIfNotIdentified(AbstractIdentifiable identifiable){
+		if(identifiable==null)
+			return;
 		@SuppressWarnings("unchecked")
 		Class<AbstractIdentifiable> aClass = (Class<AbstractIdentifiable>) identifiable.getClass();
 		TypedBusiness<AbstractIdentifiable> business = getBusiness(aClass);
@@ -401,6 +403,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	protected void updateIfNotIdentified(AbstractIdentifiable identifiable){
+		if(identifiable==null)
+			return;
 		@SuppressWarnings("unchecked")
 		Class<AbstractIdentifiable> aClass = (Class<AbstractIdentifiable>) identifiable.getClass();
 		TypedBusiness<AbstractIdentifiable> business = getBusiness(aClass);
@@ -408,6 +412,14 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			business.create(identifiable);
 		else
 			business.update(identifiable);
+	}
+	
+	protected void createIfIdentified(AbstractIdentifiable identifiable){
+		@SuppressWarnings("unchecked")
+		Class<AbstractIdentifiable> aClass = (Class<AbstractIdentifiable>) identifiable.getClass();
+		TypedBusiness<AbstractIdentifiable> business = getBusiness(aClass);
+		if(business.isIdentified(identifiable))
+			business.delete(identifiable);
 	}
 	
 	protected <T extends AbstractIdentifiable> TypedBusiness<T> getBusiness(Class<T> aClass) {
@@ -441,11 +453,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public IDENTIFIABLE findFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
 		return getPersistenceService().readFirstWhereExistencePeriodFromDateIsLessThan(identifiable);
 	}
-	@Override
-	public Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
-		return getPersistenceService().readWhereExistencePeriodFromDateIsLessThan(identifiable);
-	}
-	
+
 	@Override
 	public IDENTIFIABLE find(String code,Boolean throwableIfNull) {
 		IDENTIFIABLE identifiable = getPersistenceService().read(code);
@@ -457,6 +465,11 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@Override
 	public IDENTIFIABLE findFirstWhereExistencePeriodFromDateIsLessThan(String code) {
 		return findFirstWhereExistencePeriodFromDateIsLessThan(find(code, Boolean.TRUE));
+	}
+
+	@Override
+	public Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable) {
+		return getPersistenceService().readWhereExistencePeriodFromDateIsLessThan(identifiable);
 	}
 	
 	@Override
@@ -472,6 +485,26 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@Override
 	public Long countWhereExistencePeriodFromDateIsLessThan(String code) {
 		return countWhereExistencePeriodFromDateIsLessThan(find(code, Boolean.TRUE));
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsGreaterThan(IDENTIFIABLE identifiable) {
+		return getPersistenceService().readWhereExistencePeriodFromDateIsGreaterThan(identifiable);
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsGreaterThan(String code) {
+		return findWhereExistencePeriodFromDateIsGreaterThan(find(code, Boolean.TRUE));
+	}
+	
+	@Override
+	public Long countWhereExistencePeriodFromDateIsGreaterThan(IDENTIFIABLE identifiable) {
+		return getPersistenceService().countWhereExistencePeriodFromDateIsGreaterThan(identifiable);
+	}
+	
+	@Override
+	public Long countWhereExistencePeriodFromDateIsGreaterThan(String code) {
+		return countWhereExistencePeriodFromDateIsGreaterThan(find(code, Boolean.TRUE));
 	}
 	
 	/**/

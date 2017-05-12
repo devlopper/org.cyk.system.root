@@ -68,6 +68,9 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	    				Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
 	    				Long countWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
 					    
+	    				Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsGreaterThan(IDENTIFIABLE identifiable);
+	    				Long countWhereExistencePeriodFromDateIsGreaterThan(IDENTIFIABLE identifiable);
+	    				
 						Long oneLong();	
 	
 	/* query */			String getQueryString();

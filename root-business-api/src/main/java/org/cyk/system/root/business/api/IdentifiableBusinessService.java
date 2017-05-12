@@ -43,6 +43,11 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsLessThan(String code);
     				Long countWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
     				Long countWhereExistencePeriodFromDateIsLessThan(String code);
+    				
+    				Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsGreaterThan(IDENTIFIABLE identifiable);
+    				Collection<IDENTIFIABLE> findWhereExistencePeriodFromDateIsGreaterThan(String code);
+    				Long countWhereExistencePeriodFromDateIsGreaterThan(IDENTIFIABLE identifiable);
+    				Long countWhereExistencePeriodFromDateIsGreaterThan(String code);
     
     /* Update */    IDENTIFIABLE update(IDENTIFIABLE identifiable);
     				IDENTIFIABLE update(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);
