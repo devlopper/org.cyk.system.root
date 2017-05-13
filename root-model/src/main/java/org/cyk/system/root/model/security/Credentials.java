@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity @Getter @Setter @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.INTERNAL,genderType=GenderType.MALE)
+@Entity @Getter @Setter @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {Credentials.FIELD_SOFTWARE,Credentials.FIELD_USERNAME})})
 @EqualsAndHashCode(callSuper=false,of={Credentials.FIELD_SOFTWARE,Credentials.FIELD_USERNAME,Credentials.FIELD_PASSWORD})
 @ToString(of={Credentials.FIELD_SOFTWARE,Credentials.FIELD_USERNAME,Credentials.FIELD_PASSWORD})
@@ -31,7 +32,7 @@ public class Credentials extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -3099832512046879464L;
 	
-	@ManyToOne @NotNull private Software software;
+	@ManyToOne @JoinColumn(name=COLUMN_SOFTWARE) @NotNull private Software software;
 	
 	@Column(nullable=false) @NotNull private String username;
 	
@@ -55,6 +56,10 @@ public class Credentials extends AbstractIdentifiable implements Serializable {
 	public static final String FIELD_USERNAME = "username";
 	public static final String FIELD_PASSWORD = "password";
 
+	public static final String COLUMN_SOFTWARE = "software";
+	public static final String COLUMN_USERNAME = "username";
+	public static final String COLUMN_PASSWORD = "password";
+	
 	/**/
 	
 	@Getter @Setter
