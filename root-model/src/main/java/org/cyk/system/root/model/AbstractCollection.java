@@ -23,6 +23,11 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	protected String itemCodeSeparator = ITEM_CODE_SEPARATOR; 
 	
+	/**
+	 * True if aggregated attributes values must be an aggregation of item value specific attribute
+	 */
+	private Boolean itemAggregationApplied;
+	
 	@Transient protected IdentifiableRuntimeCollection<ITEM> items = new IdentifiableRuntimeCollection<>();
 	
 	@Transient protected Collection<ITEM> collectionToDelete;
