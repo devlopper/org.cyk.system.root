@@ -71,6 +71,17 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 		return high;
 	}
 	
+	@Override
+	public String toString() {
+		return low+" "+high;
+	}
+	
+	@Override
+	public String getLogMessage() {
+		return String.format(LOG_FORMAT, Boolean.TRUE.equals(low.getExcluded()) ? "]":"[",low.getValue()==null ? "<-" : low.getValue()
+				,high.getValue()==null ? "->" : high.getValue(),Boolean.TRUE.equals(high.getExcluded()) ? "[":"]");
+	}
+	
 	public static final String FIELD_LOW = "low";
 	public static final String COLUMN_LOW_VALUE = FIELD_LOW+"_"+IntervalExtremity.FIELD_VALUE;
 	public static final String COLUMN_LOW_EXCLUDED = FIELD_LOW+"_"+IntervalExtremity.FIELD_EXCLUDED;
@@ -80,12 +91,6 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	public static final String COLUMN_HIGH_EXCLUDED = FIELD_HIGH+"_"+IntervalExtremity.FIELD_EXCLUDED;
 	
 	public static final String FIELD_VALUE = "value";
-	
-	@Override
-	public String getLogMessage() {
-		return String.format(LOG_FORMAT, Boolean.TRUE.equals(low.getExcluded()) ? "]":"[",low.getValue()==null ? "<-" : low.getValue()
-				,high.getValue()==null ? "->" : high.getValue(),Boolean.TRUE.equals(high.getExcluded()) ? "[":"]");
-	}
 	
 	public static final String LOG_FORMAT = Interval.class.getSimpleName()+"(%s%s , %s%s)";
 	

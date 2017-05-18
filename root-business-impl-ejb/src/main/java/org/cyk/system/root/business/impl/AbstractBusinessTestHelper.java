@@ -183,6 +183,13 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		return delete(aClass,code,null);
 	}
 	
+	public void throwMessage(final Runnable runnable,String expectedThrowableMessage){
+		new Try(expectedThrowableMessage){ 
+			private static final long serialVersionUID = -8176804174113453706L;
+			@Override protected void code() {runnable.run();}
+		}.execute();
+	}
+	
 	public <T extends AbstractIdentifiable> void reportBasedOnTemplateFile(Class<T> aClass,Collection<T> collection,Map<String, String[]> map,String reportIdentifier){
         AbstractReportConfiguration<T, ReportBasedOnTemplateFile<T>> c = reportBusiness.findConfiguration(reportIdentifier);
         ReportBasedOnTemplateFile<T> r = ((ReportBasedOnTemplateFileConfiguration<T, ReportBasedOnTemplateFile<T>>)c)
@@ -726,10 +733,10 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			@SuppressWarnings("unchecked")
 			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
 			if(StringUtils.isNotBlank(identifiable.getCode()))
-				assertThat("Object to create not found", dao.read(identifiable.getCode())==null);
+				assertThat("Object to create with code <<"+identifiable.getCode()+">> already exist", dao.read(identifiable.getCode())==null);
 			T created = helper.create(identifiable,expectedThrowableMessage);
 			created = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier());
-			assertThat("Object created found", created!=null);
+			assertThat("Object created not found", created!=null);
 			add(created);
 			return created;
 		}
@@ -740,7 +747,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		public <T extends AbstractIdentifiable> T read(Class<T> aClass,String code,String expectedThrowableMessage){
 			T read = helper.read(aClass,code,expectedThrowableMessage);
-			assertThat("Object read found", read!=null);
+			assertThat("Object read not found", read!=null);
 			return read;
 		}
 		
@@ -751,7 +758,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public <T extends AbstractIdentifiable> T update(final T identifiable,Object[][] values,String expectedThrowableMessage){
 			@SuppressWarnings("unchecked")
 			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
-			assertThat("Object to update found", dao.read(identifiable.getCode())!=null);
+			assertThat("Object to update not found", dao.read(identifiable.getCode())!=null);
 			if(values!=null)
 				for(int i = 0 ; i < values.length ; i++){
 					commonUtils.setProperty(identifiable, (String)values[i][0], values[i][1]);
@@ -762,7 +769,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 				for(int i = 0 ; i < values.length ; i++){
 					assertThat("Updated "+values[i][0], commonUtils.readProperty(updated, (String)values[i][0]).equals(values[i][1]));
 				}
-			assertThat("Object updated found", updated!=null);
+			assertThat("Object updated not found", updated!=null);
 			return updated;
 		}
 		
@@ -792,11 +799,15 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public <T extends AbstractIdentifiable> T deleteByCode(final Class<T> aClass,final String code){
 			TypedDao<T> dao = inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
 			T identifiable = dao.read(code);
-			assertThat("Object to delete found", dao.read(code)!=null);
+			assertThat("Object to delete not found", dao.read(code)!=null);
 			delete(identifiable);
 			identifiable = dao.read(code);
-			assertThat("Object deleted not found", dao.read(code)==null);
+			assertThat("Object deleted found", dao.read(code)==null);
 			return identifiable;
+		}
+		
+		public void throwMessage(final Runnable runnable,String expectedThrowableMessage){
+			helper.throwMessage(runnable, expectedThrowableMessage);
 		}
 		
 		public void clean(){
