@@ -35,6 +35,10 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	public AbstractCollection(String code, String name, String abbreviation,String description) {
 		super(code, name, abbreviation, description);
 	}
+	
+	public Boolean isItemAggregationApplied(){
+		return itemAggregationApplied == null || Boolean.TRUE.equals(itemAggregationApplied);
+	}
 
 	/*public Collection<ITEM> getCollection(){
 		if(collection==null)
