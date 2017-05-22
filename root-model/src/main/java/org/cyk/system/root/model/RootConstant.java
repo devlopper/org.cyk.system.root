@@ -332,6 +332,13 @@ public interface RootConstant {
 			public static String DECREMENT = "DECREMENT";
 		}
 		
+		public static class UniformResourceLocatorParameter implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String ENCODED="encoded";
+			
+		}
+		
 		/**/
 		
 	}

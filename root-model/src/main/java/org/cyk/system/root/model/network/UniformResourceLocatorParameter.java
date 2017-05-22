@@ -165,7 +165,7 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 	public static final String WINDOW="windowParam";
 	public static final String FILE_EXTENSION="fileExtensionParam";
 	public static final String PRINT="print";
-	public static final String ENCODED="encoded";
+	
 	public static final String PDF="pdf";
 	public static final String XLS="xls";
 	public static final String DETAILS="details";

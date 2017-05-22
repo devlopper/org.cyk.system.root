@@ -101,6 +101,8 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.cyk.utility.common.builder.NameValueCollectionStringBuilder;
+import org.cyk.utility.common.builder.NameValueStringBuilder;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 
 @Singleton
@@ -135,6 +137,29 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	INSTANCE = this; 
         super.initialisation();
         org.cyk.utility.common.cdi.annotation.Log.Interceptor.COLLECTION.add(new LogInterceptorAdapter() /*inject(LogInterceptorAdapter.class)*/);
+        
+        NameValueCollectionStringBuilder.Listener.COLLECTION.add(new NameValueCollectionStringBuilder.Listener.Adapter.Default(){
+			private static final long serialVersionUID = 1546167219574989403L;
+        	
+			@Override
+			public String getEncodedParameterName() {
+				return RootConstant.Code.UniformResourceLocatorParameter.ENCODED;
+			}
+			
+        });
+        
+        NameValueStringBuilder.Listener.COLLECTION.add(new NameValueStringBuilder.Listener.Adapter.Default(){
+			private static final long serialVersionUID = 1546167219574989403L;
+        	
+			@Override
+			public Object getValueToProcessed(Object value) {
+				if(value instanceof AbstractIdentifiable){
+					return ((AbstractIdentifiable)value).getIdentifier();
+				}
+				return super.getValueToProcessed(value);
+			}
+			
+        });
         
         ClazzBusiness.LISTENERS.add(new ClazzBusinessListener.Adapter() {
 			private static final long serialVersionUID = 4056356640763766384L;
