@@ -43,6 +43,7 @@ import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.FileExtension;
 import org.cyk.utility.common.LogMessage;
@@ -138,6 +139,11 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<File> findByRepresentationTypeByIdentifiable(FileRepresentationType fileRepresentationType,AbstractIdentifiable identifiable) {
 		return findByRepresentationTypeByIdentifiables(fileRepresentationType, Arrays.asList(identifiable));
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	public Collection<File> findByRepresentationTypeCodeByIdentifiable(String fileRepresentationTypeCode,AbstractIdentifiable identifiable) {
+		return findByRepresentationTypeByIdentifiable(inject(FileRepresentationTypeDao.class).read(fileRepresentationTypeCode), identifiable);
 	}
 	
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) //TODO is this Support and followings really needed ???

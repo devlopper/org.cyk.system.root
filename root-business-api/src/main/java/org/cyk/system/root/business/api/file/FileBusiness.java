@@ -44,6 +44,7 @@ public interface FileBusiness extends TypedBusiness<File> {
     Collection<File> findByRepresentationTypesByIdentifiables(Collection<FileRepresentationType> fileRepresentationTypes,Collection<? extends AbstractIdentifiable> identifiables);
     Collection<File> findByRepresentationTypeByIdentifiables(FileRepresentationType fileRepresentationType,Collection<? extends AbstractIdentifiable> identifiables);
     Collection<File> findByRepresentationTypeByIdentifiable(FileRepresentationType fileRepresentationType,AbstractIdentifiable identifiable);
+    Collection<File> findByRepresentationTypeCodeByIdentifiable(String fileRepresentationTypeCode,AbstractIdentifiable identifiable);
     
     /* Media Stuff */
     
