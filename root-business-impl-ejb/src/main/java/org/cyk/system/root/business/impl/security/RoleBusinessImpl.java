@@ -3,11 +3,11 @@ package org.cyk.system.root.business.impl.security;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.security.RoleBusiness;
+import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
@@ -18,43 +18,25 @@ public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, Role
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private RoleUniformResourceLocatorDao roleUniformResourceLocatorDao;
-	
 	@Inject
 	public RoleBusinessImpl(RoleDao dao) {
 		super(dao); 
 	}  
 
 	@Override
-	public Role create(Role role) {
-		role = super.create(role);
-		save(role);
-		return role;
-	}
-	
-	@Override //FIXME must call super first
-	public Role save(Role role){
-		for(RoleUniformResourceLocator roleUniformResourceLocator : role.getRoleUniformResourceLocators()){
-			roleUniformResourceLocator.setRole(role);
-			if(roleUniformResourceLocator.getIdentifier()==null)
-				roleUniformResourceLocatorDao.create(roleUniformResourceLocator);
-			else
-				roleUniformResourceLocatorDao.update(roleUniformResourceLocator);		
-		}
-		return role;
+	protected void afterCreate(Role role) {
+		super.afterCreate(role);
+		if(role.getRoleUniformResourceLocators().isSynchonizationEnabled())
+			inject(RoleUniformResourceLocatorBusiness.class).create(role.getRoleUniformResourceLocators().getCollection());
 	}
 	
 	@Override
-	public Role save(Role role,Collection<RoleUniformResourceLocator> roleUniformResourceLocators) {
-		role = dao.update(role);
-		role.setRoleUniformResourceLocators(new HashSet<>(roleUniformResourceLocators));
-	
-		Collection<RoleUniformResourceLocator> database = roleUniformResourceLocatorDao.readByRoles(Arrays.asList(role));
-		
-		delete(RoleUniformResourceLocator.class,database, role.getRoleUniformResourceLocators());
-		
-		save(role);
-		return role;
+	protected void afterUpdate(Role role) {
+		super.afterUpdate(role);
+		if(role.getRoleUniformResourceLocators().isSynchonizationEnabled()){
+			Collection<RoleUniformResourceLocator> database = inject(RoleUniformResourceLocatorDao.class).readByRoles(Arrays.asList(role));	
+			delete(RoleUniformResourceLocator.class,database, role.getRoleUniformResourceLocators().getCollection());
+		}	
 	}
 	
 }

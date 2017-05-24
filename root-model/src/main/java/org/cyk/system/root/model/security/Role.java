@@ -10,15 +10,16 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.model.AbstractEnumeration;
-import org.cyk.utility.common.annotation.ModelBean;
-import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
-import org.cyk.utility.common.annotation.ModelBean.GenderType;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.IdentifiableRuntimeCollection;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 @Getter @Setter @Entity @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS) 
 public class Role extends AbstractEnumeration implements Serializable {
@@ -29,9 +30,9 @@ public class Role extends AbstractEnumeration implements Serializable {
     @JoinTable(name="RolePermissions",joinColumns = { @JoinColumn(name = "roleid") } ,inverseJoinColumns={ @JoinColumn(name = "permissionid") })
 	private Set<Permission> permissions = new HashSet<>();
 	
-	@Transient private Set<RoleUniformResourceLocator> roleUniformResourceLocators = new HashSet<>();
-	@Transient private Set<RoleBusinessService> roleBusinessServices;
-	@Transient private Set<RoleUserInterface> roleUserInterfaces;
+	@Transient private IdentifiableRuntimeCollection<RoleUniformResourceLocator> roleUniformResourceLocators = new IdentifiableRuntimeCollection<>();
+	@Transient private IdentifiableRuntimeCollection<RoleBusinessService> roleBusinessServices;
+	@Transient private IdentifiableRuntimeCollection<RoleUserInterface> roleUserInterfaces;
 	
 	public Role(String code, String name) {
 		super(code, name, null, null);
