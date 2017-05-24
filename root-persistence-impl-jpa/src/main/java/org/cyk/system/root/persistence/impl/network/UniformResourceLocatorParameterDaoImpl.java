@@ -12,7 +12,7 @@ public class UniformResourceLocatorParameterDaoImpl extends AbstractTypedDao<Uni
 
 	private static final long serialVersionUID = 6306356272165070761L;
 
-	private String readByUniformResourceLocator;
+	private String readByUniformResourceLocator,countByUniformResourceLocator;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -20,12 +20,16 @@ public class UniformResourceLocatorParameterDaoImpl extends AbstractTypedDao<Uni
 		registerNamedQuery(readByUniformResourceLocator, _select().where(UniformResourceLocatorParameter.FIELD_UNIFORM_RESOURCE_LOCATOR));
 	}
 	
-	
-
 	@Override
 	public Collection<UniformResourceLocatorParameter> readByUniformResourceLocator(UniformResourceLocator uniformResourceLocator) {
 		return namedQuery(readByUniformResourceLocator).parameter(UniformResourceLocatorParameter.FIELD_UNIFORM_RESOURCE_LOCATOR, uniformResourceLocator)
 				.resultMany();
+	}
+
+	@Override
+	public Long countByUniformResourceLocator(UniformResourceLocator uniformResourceLocator) {
+		return countNamedQuery(countByUniformResourceLocator).parameter(UniformResourceLocatorParameter.FIELD_UNIFORM_RESOURCE_LOCATOR, uniformResourceLocator)
+				.resultOne();
 	}
 
 	

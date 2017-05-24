@@ -7,7 +7,6 @@ import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.network.UniformResourceLocator;
-import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 
 public interface UniformResourceLocatorBusiness extends AbstractEnumerationBusiness<UniformResourceLocator> {
     
@@ -30,7 +29,6 @@ public interface UniformResourceLocatorBusiness extends AbstractEnumerationBusin
 	Boolean isAccessible(URL url,Collection<UniformResourceLocator> uniformResourceLocators);
 	
 	String findPath(UniformResourceLocator uniformResourceLocator);
-	UniformResourceLocator save(UniformResourceLocator uniformResourceLocator,Collection<UniformResourceLocatorParameter> parameters);
 	
 	/**/
 	

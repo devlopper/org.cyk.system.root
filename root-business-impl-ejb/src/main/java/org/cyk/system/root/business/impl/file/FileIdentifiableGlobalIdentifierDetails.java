@@ -18,12 +18,24 @@ public class FileIdentifiableGlobalIdentifierDetails extends AbstractJoinGlobalI
 	//private File file;
 	
 	@Input @InputText
-	private String file;
+	private FieldValue file;
 	
 	public FileIdentifiableGlobalIdentifierDetails(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier) {
 		super(fileIdentifiableGlobalIdentifier);
-		file = formatUsingBusiness(fileIdentifiableGlobalIdentifier.getFile());
+		
 	}
+	
+	@Override
+	public void setMaster(FileIdentifiableGlobalIdentifier fileIdentifiableGlobalIdentifier) {
+		super.setMaster(fileIdentifiableGlobalIdentifier);
+		if(fileIdentifiableGlobalIdentifier==null){
+			
+		}else{
+			file = new FieldValue(fileIdentifiableGlobalIdentifier.getFile());
+		}
+	}
+	
+	/**/
 	
 	public static final String FIELD_FILE = "file";
 	

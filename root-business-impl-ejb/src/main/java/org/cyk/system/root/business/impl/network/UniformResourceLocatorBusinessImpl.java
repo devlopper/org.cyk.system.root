@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -16,25 +15,32 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessExceptionNoRollBack;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
+import org.cyk.system.root.business.api.network.UniformResourceLocatorParameterBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.persistence.api.network.UniformResourceLocatorDao;
 import org.cyk.system.root.persistence.api.network.UniformResourceLocatorParameterDao;
 import org.cyk.utility.common.Constant;
 
-@Stateless
 public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusinessImpl<UniformResourceLocator, UniformResourceLocatorDao> implements UniformResourceLocatorBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private UniformResourceLocatorParameterDao uniformResourceLocatorParameterDao;
-	
 	@Inject
 	public UniformResourceLocatorBusinessImpl(UniformResourceLocatorDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected Object[] getPropertyValueTokens(UniformResourceLocator uniformResourceLocator, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, name))
+			return new Object[]{RootConstant.Code.generateFromString(uniformResourceLocator.getAddress())};
+		return super.getPropertyValueTokens(uniformResourceLocator, name);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -119,36 +125,26 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	}
 	
 	@Override
-	public UniformResourceLocator create(UniformResourceLocator uniformResourceLocator) {
-		uniformResourceLocator = super.create(uniformResourceLocator);
-		save(uniformResourceLocator);
-		return uniformResourceLocator;
+	protected void afterCreate(UniformResourceLocator uniformResourceLocator) {
+		super.afterCreate(uniformResourceLocator);
+		if(uniformResourceLocator.getParameters().isSynchonizationEnabled())
+			inject(UniformResourceLocatorParameterBusiness.class).create(uniformResourceLocator.getParameters().getCollection());
 	}
 	
-	@Override //FIXME must call super first
-	public UniformResourceLocator save(UniformResourceLocator uniformResourceLocator){
-		for(UniformResourceLocatorParameter uniformResourceLocatorParameter : uniformResourceLocator.getParameters()){
-			uniformResourceLocatorParameter.setUniformResourceLocator(uniformResourceLocator);
-			exceptionUtils().exception(uniformResourceLocatorParameter.getName()==null, "no name set");
-			if(uniformResourceLocatorParameter.getIdentifier()==null)
-				uniformResourceLocatorParameterDao.create(uniformResourceLocatorParameter);
-			else
-				uniformResourceLocatorParameterDao.update(uniformResourceLocatorParameter);		
+	@Override
+	protected void afterUpdate(UniformResourceLocator uniformResourceLocator) {
+		super.afterUpdate(uniformResourceLocator);
+		if(uniformResourceLocator.getParameters().isSynchonizationEnabled()){
+			Collection<UniformResourceLocatorParameter> database = inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(uniformResourceLocator);
+			delete(UniformResourceLocatorParameter.class,database, uniformResourceLocator.getParameters().getCollection());
+			inject(UniformResourceLocatorParameterBusiness.class).update(uniformResourceLocator.getParameters().getCollection());
 		}
-		return uniformResourceLocator;
 	}
 	
-	@Override //FIXME this method should delete and use only update and remove state less annoatation
-	public UniformResourceLocator save(UniformResourceLocator uniformResourceLocator,Collection<UniformResourceLocatorParameter> parameters) {
-		uniformResourceLocator = dao.update(uniformResourceLocator);
-		uniformResourceLocator.setParameters(parameters);
-		
-		Collection<UniformResourceLocatorParameter> database = uniformResourceLocatorParameterDao.readByUniformResourceLocator(uniformResourceLocator);
-		
-		delete(UniformResourceLocatorParameter.class,database, uniformResourceLocator.getParameters());
-		
-		save(uniformResourceLocator);
-		return uniformResourceLocator;
+	@Override
+	protected void beforeDelete(UniformResourceLocator uniformResourceLocator) {
+		super.beforeDelete(uniformResourceLocator);
+		inject(UniformResourceLocatorParameterBusiness.class).delete( inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(uniformResourceLocator));
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -159,12 +155,12 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 			return null;
 		}
 		for(UniformResourceLocator uniformResourceLocator : uniformResourceLocators){
-			uniformResourceLocator.setParameters(uniformResourceLocatorParameterDao.readByUniformResourceLocator(uniformResourceLocator));
+			uniformResourceLocator.getParameters().setCollection(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(uniformResourceLocator));
 			logTrace("Uniform Resource Locator : {} parameters : {}", uniformResourceLocator,uniformResourceLocator.getParameters());
 			//if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
 				if(StringUtils.equalsIgnoreCase(url.getPath(),findPath(uniformResourceLocator))){
 					logTrace("Matchs path");
-					if(uniformResourceLocator.getParameters().isEmpty()){
+					if(uniformResourceLocator.getParameters().getCollection().isEmpty()){
 						logTrace("No parameters to check");
 						return uniformResourceLocator;
 					}
@@ -176,7 +172,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 						}
 					
 					Integer count = 0,size=0;
-					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters()){
+					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters().getCollection()){
 						//if(parameter.getValue()!=null)
 							size++;
 						for(UniformResourceLocatorParameter urlParameter : urlParameters){

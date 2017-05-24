@@ -8,15 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.utility.common.AbstractBuilder;
-import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.ListenerUtils;
-import org.cyk.utility.common.cdi.BeanAdapter;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
+
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.AbstractBuilder;
+import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.cdi.BeanAdapter;
 
 @Getter @Setter @NoArgsConstructor @Entity
 public class UniformResourceLocatorParameter extends AbstractIdentifiable implements Serializable {
@@ -49,10 +49,14 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 	
 	/**/
 	
+	@Getter @Setter @Accessors(chain=true)
 	public static class Builder extends AbstractBuilder<UniformResourceLocatorParameter> implements Serializable {
 
 		private static final long serialVersionUID = -4888461643390793029L;
 
+		private UniformResourceLocator uniformResourceLocator;
+		private Object name,value;
+		
 		public Builder() {
 			super(UniformResourceLocatorParameter.class);
 		}
@@ -63,12 +67,19 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 			return builder;
 		}
 		
-		public Builder setName(String name){
-			instance.setName(name);
+		public Builder set(UniformResourceLocator uniformResourceLocator,Object name,Object value){
+			setUniformResourceLocator(uniformResourceLocator);
+			setNameValue(name, value);
 			return this;
 		}
 		
-		public Builder setValue(final Object value){
+		public Builder setNameValue(Object name,Object value){
+			setName(name);
+			setValue(value);
+			return this;
+		}
+		
+		/*public Builder setValue(final Object value){
 			instance.setValue(ListenerUtils.getInstance().getString(Listener.COLLECTION, new ListenerUtils.StringMethod<Listener>() {
 				@Override
 				public String execute(Listener listener) {
@@ -76,7 +87,7 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 				}
 			}));
 			return this;
-		}
+		}*/
 		
 		/**/
 		
@@ -103,6 +114,14 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 		/**/
 		
 		public UniformResourceLocatorParameter build(){
+			if(instance == null)
+				instanciate();
+			if(name!=null)
+				instance.setName(name.toString());
+			if(value!=null)
+				instance.setValue(value.toString());
+			if(uniformResourceLocator!=null)
+				instance.setUniformResourceLocator(uniformResourceLocator);
 			return instance;
 		}
 		

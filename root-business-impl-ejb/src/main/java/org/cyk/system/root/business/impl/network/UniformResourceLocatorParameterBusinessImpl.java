@@ -9,14 +9,17 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.model.CommonBusinessAction;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorParameterBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.CommonBusinessAction;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.persistence.api.network.UniformResourceLocatorParameterDao;
@@ -28,6 +31,13 @@ public class UniformResourceLocatorParameterBusinessImpl extends AbstractTypedBu
 	@Inject
 	public UniformResourceLocatorParameterBusinessImpl(UniformResourceLocatorParameterDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected Object[] getPropertyValueTokens(UniformResourceLocatorParameter uniformResourceLocatorParameter, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE}, name))
+			return new Object[]{uniformResourceLocatorParameter.getUniformResourceLocator().getCode(),RandomStringUtils.randomAlphanumeric(10)};
+		return super.getPropertyValueTokens(uniformResourceLocatorParameter, name);
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

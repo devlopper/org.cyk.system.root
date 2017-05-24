@@ -11,11 +11,13 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.CommonBusinessAction;
+import org.cyk.system.root.model.IdentifiableRuntimeCollection;
 import org.cyk.utility.common.AbstractBuilder;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ListenerUtils;
@@ -34,10 +36,11 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	@Input @InputText @Column(nullable=false/*,unique=true*/) @NotNull(groups=Client.class) private String address;
 	//private Boolean parametersRequired = Boolean.TRUE;
 	
-	@Transient private Collection<UniformResourceLocatorParameter> parameters = new ArrayList<>();
+	@Transient private IdentifiableRuntimeCollection<UniformResourceLocatorParameter> parameters = new IdentifiableRuntimeCollection<>();
 
 	public UniformResourceLocator() {
 		super();
+		getParameters().setSynchonizationEnabled(Boolean.TRUE);
 	}
 
 	public UniformResourceLocator(String address) {
@@ -46,7 +49,7 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	}
 	
 	public void addParameter(String name,String value){
-		parameters.add(new UniformResourceLocatorParameter(this, name, value));
+		getParameters().addOne(new UniformResourceLocatorParameter(this, name, value));
 	}
 	
 	public void addParameter(String name){
@@ -54,13 +57,12 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	}
 	
 	public void addParameters(Collection<UniformResourceLocatorParameter> parameters){
-		if(parameters!=null)
-			this.parameters.addAll(parameters);
+		this.getParameters().addMany(parameters);
 	}
 	
 	@Override
 	public String toString() {
-		return address+(parameters==null || parameters.isEmpty() ? Constant.EMPTY_STRING : Constant.CHARACTER_QUESTION_MARK
+		return address+(parameters==null || getParameters().getCollection().isEmpty() ? Constant.EMPTY_STRING : Constant.CHARACTER_QUESTION_MARK
 				+(StringUtils.join(parameters,Constant.CHARACTER_AMPERSTAMP)));
 	}
 	
@@ -92,10 +94,13 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	
 	/**/
 	
+	@Getter @Setter @Accessors(chain=true)
 	public static class Builder extends AbstractBuilder<UniformResourceLocator> implements Serializable {
 
 		private static final long serialVersionUID = -4888461643390793029L;
 
+		private String address;
+		
 		public Builder() {
 			super(UniformResourceLocator.class);
 		}
@@ -105,14 +110,9 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 			builder.instanciate();
 			return builder;
 		}
-		
-		public Builder setAddress(String address){
-			instance.setAddress(address);
-			return this;
-		}
-		
+				
 		public Builder addParameter(String name,Object value){
-			instance.getParameters().add(UniformResourceLocatorParameter.Builder.create(name, value));
+			instance.getParameters().addOne(UniformResourceLocatorParameter.Builder.create(name, value));
 			return this;
 		}
 		
@@ -158,6 +158,9 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 		/**/
 		
 		public UniformResourceLocator build(){
+			if(instance==null)
+				instanciate();
+			instance.setAddress(address);
 			return instance;
 		}
 		

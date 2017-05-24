@@ -186,7 +186,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         inject(RootFormattingConfigurationsRegistrator.class).register();
         
         AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, ReportTemplate.class
-        		,PersonRelationshipTypeRole.class,PersonRelationship.class);
+        		,PersonRelationshipTypeRole.class,PersonRelationship.class,UniformResourceLocator.class);
+        
+        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE}, UniformResourceLocatorParameter.class);
         
         rootBusinessTestHelper.setReportBusiness(reportBusiness);
         

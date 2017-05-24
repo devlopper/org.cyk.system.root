@@ -9,5 +9,6 @@ import org.cyk.system.root.persistence.api.TypedDao;
 public interface UniformResourceLocatorParameterDao extends TypedDao<UniformResourceLocatorParameter> {
 
 	Collection<UniformResourceLocatorParameter> readByUniformResourceLocator(UniformResourceLocator uniformResourceLocator);
+	Long countByUniformResourceLocator(UniformResourceLocator uniformResourceLocator);
 	
 }

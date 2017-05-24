@@ -25,14 +25,19 @@ public class UniformResourceLocatorBusinessUT extends AbstractUnitTest {
 	}
 	
 	@Test
+	public void crud() {
+		
+	}
+	
+	@Test
 	public void find() {
 		UniformResourceLocator uniformResourceLocator = new UniformResourceLocator("/a/b/xyz");
-		uniformResourceLocator.getParameters().add(new UniformResourceLocatorParameter(null,"param1","value1"));
-		uniformResourceLocator.getParameters().add(new UniformResourceLocatorParameter(null,"param3","value3"));
+		uniformResourceLocator.getParameters().addOne(new UniformResourceLocatorParameter(null,"param1","value1"));
+		uniformResourceLocator.getParameters().addOne(new UniformResourceLocatorParameter(null,"param3","value3"));
 		uniformResourceLocatorBusiness.create(uniformResourceLocator);
 		
 		uniformResourceLocator = new UniformResourceLocator("/d/e");
-		uniformResourceLocator.getParameters().add(new UniformResourceLocatorParameter(null,"param1","value1"));
+		uniformResourceLocator.getParameters().addOne(new UniformResourceLocatorParameter(null,"param1","value1"));
 		uniformResourceLocatorBusiness.create(uniformResourceLocator);
 		
 		
