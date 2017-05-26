@@ -214,13 +214,13 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isAccessible(URL url,Collection<UniformResourceLocator> uniformResourceLocators) {
-		return Boolean.TRUE.equals(inject(ApplicationBusiness.class).findCurrentInstance().getUniformResourceLocatorFilteringEnabled())
+		return Boolean.TRUE.equals(inject(ApplicationBusiness.class).findCurrentInstance().getUniformResourceLocatorFiltered())
 				?find(url,uniformResourceLocators)!=null:Boolean.TRUE;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Boolean isAccessible(URL url) {
-		return Boolean.TRUE.equals(inject(ApplicationBusiness.class).findCurrentInstance().getUniformResourceLocatorFilteringEnabled())?find(url)!=null:Boolean.TRUE;
+		return Boolean.TRUE.equals(inject(ApplicationBusiness.class).findCurrentInstance().getUniformResourceLocatorFiltered())?find(url)!=null:Boolean.TRUE;
 	}
 
 }

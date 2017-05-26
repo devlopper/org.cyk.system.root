@@ -36,7 +36,14 @@ public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, Role
 		if(role.getRoleUniformResourceLocators().isSynchonizationEnabled()){
 			Collection<RoleUniformResourceLocator> database = inject(RoleUniformResourceLocatorDao.class).readByRoles(Arrays.asList(role));	
 			delete(RoleUniformResourceLocator.class,database, role.getRoleUniformResourceLocators().getCollection());
+			inject(RoleUniformResourceLocatorBusiness.class).save(role.getRoleUniformResourceLocators().getCollection());
 		}	
+	}
+	
+	@Override
+	protected void beforeDelete(Role role) {
+		super.beforeDelete(role);
+		inject(RoleUniformResourceLocatorBusiness.class).delete(inject(RoleUniformResourceLocatorDao.class).readByRoles(Arrays.asList(role)));
 	}
 	
 }

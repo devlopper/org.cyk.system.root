@@ -58,7 +58,7 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
 			private static final long serialVersionUID = 6148913289155659043L;
 			@Override
     		public void installationStarted(Installation installation) {
-    			installation.getApplication().setUniformResourceLocatorFilteringEnabled(Boolean.TRUE);
+    			installation.getApplication().setUniformResourceLocatorFiltered(Boolean.TRUE);
     			installation.getApplication().setWebContext("context");
     			super.installationStarted(installation);
     		}
