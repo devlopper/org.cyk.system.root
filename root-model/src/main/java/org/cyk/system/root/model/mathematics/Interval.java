@@ -97,37 +97,7 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	public static final String EXTREMITY_SEPARATOR = Constant.CHARACTER_SPACE+Constant.CHARACTER_COMA+Constant.CHARACTER_SPACE.toString();
 	public static final String FORMAT = "%s"+EXTREMITY_SEPARATOR+"%s";
 	
-	/*
-	public Interval(IntervalManager manager) {
-		this.manager = manager;
-	}
-	
-	public Interval(IntervalManager manager,BigDecimal low, BigDecimal high,String hexColor) {
-		this(manager);
-		this.low = low;
-		this.high = high;
-		setColor(hexColor);
-	}
-	
-	public Interval(IntervalManager manager, String name, String description,BigDecimal low, BigDecimal high, Color color) {
-		super();
-		this.manager = manager;
-		this.name = name;
-		this.description = description;
-		this.low = low;
-		this.high = high;
-		if(color!=null)
-			setColor(String.format("#%06X", (0xFFFFFF & color.getRGB())));
-	}
-	
-	public Interval(IntervalManager manager, String name, String description,BigDecimal low, BigDecimal high) {
-		this(manager,name,description,low,high,null);
-	}
-	
-	public void setColor(String hexadecimalValue){
-		style = "color:"+hexadecimalValue+";";
-	}
-	
+	/*	
 	public String getColor(){
 		if(style==null)
 			return "";
@@ -144,67 +114,6 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	public String getColorAsHexadecimal(){
 		return String.format("#%06X", (0xFFFFFF & color.getRGB()));
 	}
-	*/
-	/*
-	public boolean contains(BigDecimal value,Integer scale){
-		if(low==null && high==null)
-			return(value==null);
-		if(value==null)
-			return false;
-		BigDecimal correctedScale = scale==null?value:value.setScale(scale,RoundingMode.DOWN);//truncates
-		if(low==null)
-			if(excludeHigh)
-				return correctedScale.compareTo(high)<0;
-			else
-				return correctedScale.compareTo(high)<=0;
-		
-		if(high==null)
-			if(excludeLow)
-				return correctedScale.compareTo(low)>0;
-			else
-				return correctedScale.compareTo(low)>=0;
-				
-		int c1 = low.compareTo(correctedScale),c2 = high.compareTo(correctedScale);
-		
-		boolean ok1,ok2;
-		if(excludeLow)
-			ok1 = c1<0;
-		else
-			ok1 = c1<=0;
-		
-		if(excludeHigh)
-			ok2 = c2 >0;
-		else
-			ok2 = c2 >=0;	
-		
-		return ok1 && ok2;
-	}
-	
-	public boolean contains(BigDecimal value){
-		return contains(value,null);
-	}
-	*/
-	/*
-	public String format(String format){
-		if(low==null)
-			if(high==null)
-				return "[-,+]";
-			else
-				return "<"+(excludeHigh?" ":"= ")+NumberUtils.stripTrailingZeros(high);
-		else
-			if(high==null)
-				return ">"+(excludeLow?" ":"= ")+NumberUtils.stripTrailingZeros(low);
-			else{
-				if(format==null)
-					format = "%s - %s";	
-				return String.format(format, NumberUtils.stripTrailingZeros(low),NumberUtils.stripTrailingZeros(high));
-			}
-	}
-	
-	public String format(){
-		return format(null);
-	}
-	*/
-	
+	*/	
 
 }

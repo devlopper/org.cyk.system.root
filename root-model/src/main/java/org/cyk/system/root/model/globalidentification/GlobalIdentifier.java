@@ -81,6 +81,11 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	@Embedded private Rud rud = new Rud();
 	
 	/**
+	 * True if activated by business services , False otherwise
+	 */
+	private Boolean activated;
+	
+	/**
 	 * True if usable in business services , False otherwise.
 	 */
 	private Boolean usable;
@@ -91,7 +96,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	private Boolean closed;
 	
 	/**
-	 * True if is masculin concept , False otherwise.
+	 * True if is masculine concept , False otherwise.
 	 */
 	private Boolean male;
 	

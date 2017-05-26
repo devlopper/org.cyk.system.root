@@ -15,6 +15,7 @@ public class ApplicationDetails extends AbstractOutputDetails<Application> imple
 
 	private static final long serialVersionUID = -7568711914665423264L;
 
+	@Input @InputText private FieldValue license;
 	@Input @InputText private FieldValue smtpProperties;
 	@Input @InputText private String uniformResourceLocatorFiltered,webContext;
 
@@ -31,11 +32,14 @@ public class ApplicationDetails extends AbstractOutputDetails<Application> imple
 			webContext = application.getWebContext();
 			if(application.getSmtpProperties()!=null)
 				smtpProperties = new FieldValue(application.getSmtpProperties());
+			if(application.getLicense()!=null)
+				license = new FieldValue(application.getLicense());
 		}
 	}
 	
 	/**/
 	
+	public static final String FIELD_LICENSE = "license";
 	public static final String FIELD_SMTP_PROPERTIES = "smtpProperties";
 	public static final String FIELD_UNIFORM_RESOURCE_LOCATOR_FILTERED = "uniformResourceLocatorFiltered";
 	public static final String FIELD_WEB_CONTEXT = "webContext";

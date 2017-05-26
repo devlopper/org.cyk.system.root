@@ -2,27 +2,35 @@ package org.cyk.system.root.business.impl.security;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.model.security.License;
-import org.cyk.utility.common.annotation.user.interfaces.Input;
-import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 public class LicenseDetails extends AbstractOutputDetails<License> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String key,expirable,expirationDate,expired;
-	//@Input @InputFile(extensions=@FileExtensions(groups=FileExtensionGroup.RICH_TEXT)) private File file;
+	//@Input @InputText private String expirable,expirationDate,expired,activated;
 	
 	public LicenseDetails(License license) {
 		super(license);
-		key = license.getKey();
-		expirable = formatResponse(license.getExpirable());
-		if(Boolean.TRUE.equals(license.getExpirable())){
-			expirationDate = formatDateTime(license.getPeriod().getToDate());
-		}else{
-			expirationDate = inject(LanguageBusiness.class).findText("never");
-		}
-		expired = formatResponse(license.getExpired());
+		
 	}
+	
+	@Override
+	public void setMaster(License license) {
+		super.setMaster(license);
+		if(license!=null){
+			//activated = formatResponse(license.getActivated());
+			//expirable = formatResponse(license.getExpirable());
+			/*if(Boolean.TRUE.equals(license.getExpirable())){
+				expirationDate = formatDateTime(license.getPeriod().getToDate());
+			}else{
+				expirationDate = inject(LanguageBusiness.class).findText("never");
+			}*/
+			//expired = formatResponse(license.getExpired());
+		}
+	}
+	
+	/**/
+	
+	
 }

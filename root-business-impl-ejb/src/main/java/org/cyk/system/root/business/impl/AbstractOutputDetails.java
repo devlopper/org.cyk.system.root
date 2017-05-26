@@ -30,7 +30,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	protected String identifier;
 	
 	@Input @InputFile (extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) protected File image;
-	@Input @InputText protected String code,name,abbreviation,description,weight,orderNumber,otherDetails;
+	@Input @InputText protected String code,name,abbreviation,description,weight,orderNumber,otherDetails,activated;
 	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod;
 	//@IncludeInputs(layout=Layout.VERTICAL) protected FileDetails supportingDocument;
 	
@@ -59,6 +59,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 			weight = formatNumber(this.master.getWeight());
 			orderNumber = formatNumber(this.master.getOrderNumber());
 			otherDetails = this.master.getOtherDetails();
+			activated = formatResponse(this.master.getGlobalIdentifier().getActivated());
 			//getSupportingDocument().setMaster(this.master.getSupportingDocument());
 		}
 	}

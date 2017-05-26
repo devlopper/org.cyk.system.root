@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -92,23 +93,21 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 
 	@Override
 	protected void afterCreate(COLLECTION collection) {
-		if(collection.getItems().getCollection()!=null){
+		if(collection.getItems().getSynchonizationEnabled()==null || collection.getItems().isSynchonizationEnabled()){
 			for(ITEM item : collection.getItems().getCollection()){
 				item.setCollection(collection);
-				item = createItem(item);
 			}
+			getItemBusiness().create(collection.getItems().getCollection());
 		}
 		super.afterCreate(collection);
 	}
 
-	@Override
+	/*@Override
 	protected void beforeUpdate(COLLECTION collection) {
 		super.beforeUpdate(collection);
 		if(collection.getItems().getSynchonizationEnabled()==null || collection.getItems().isSynchonizationEnabled()){
 			if(collection.getItems().getCollection()!=null){
-				for(ITEM item : collection.getItems().getCollection()){
-					getItemBusiness().update(item);
-				}
+				getItemBusiness().update(collection.getItems().getCollection());
 			}	
 		}
 		
@@ -116,15 +115,28 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 			for(ITEM item : collection.getCollectionToDelete()){
 				getItemBusiness().delete(item);
 			}
+	}*/
+	
+	@Override
+	protected void afterUpdate(COLLECTION collection) {
+		super.afterUpdate(collection);
+		if(collection.getItems().isSynchonizationEnabled()){
+			Collection<ITEM> database = getItemDao().readByCollection(collection);
+			delete(itemClass,database, collection.getItems().getCollection());
+			getItemBusiness().update(collection.getItems().getCollection());
+		}
 	}
 
 	@Override
 	protected void beforeDelete(COLLECTION collection) {
 		super.beforeDelete(collection);
+		getItemBusiness().delete(getItemDao().readByCollection(collection));
+		/*
 		for(ITEM item : getItemDao().readByCollection(collection)){
 			item.setCollection(null);
 			getItemBusiness().delete(item);
 		}
+		*/
 	}
 	
 	@SuppressWarnings("unchecked")

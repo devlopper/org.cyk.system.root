@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 
 import javax.ejb.TransactionAttribute;
@@ -54,7 +53,6 @@ import org.cyk.system.root.model.security.License;
 import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleSecuredView;
-import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
@@ -213,7 +211,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	installation.setApplication(new Application());
     	installation.getApplication().setName("Application");
     	installation.setLicense(new License());
-    	installation.getLicense().setPeriod(new Period(new Date(), new Date()));
+    	//installation.getLicense().setPeriod(new Period(new Date(), new Date()));
     	installation.setManager(new Person("ManagerFirstName","ManagerLastName"));
     	installation.setManagerCredentials(inject(CredentialsBusiness.class).instanciateOne("manager", "123"));
     	return installation;
