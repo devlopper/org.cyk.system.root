@@ -11,13 +11,16 @@ import javax.persistence.ManyToOne;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Entity
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Entity @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS)
 public class ValueProperties extends AbstractIdentifiable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -80,11 +83,6 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	
 	public Boolean isString(){
 		return type == null ? Boolean.FALSE : ValueType.STRING.equals(type);
-	}
-	
-	@Override
-	public String getUiString() {
-		return toString();
 	}
 	
 	public static final String FIELD_INTERVAL_COLLECTION = "intervalCollection";

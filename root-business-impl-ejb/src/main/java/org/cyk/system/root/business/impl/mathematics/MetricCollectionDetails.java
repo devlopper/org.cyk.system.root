@@ -10,15 +10,27 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class MetricCollectionDetails extends AbstractCollectionDetails.Extends<MetricCollection> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String type,valueProperties;
+	@Input @InputText private FieldValue type,valueProperties,value;
 	
 	public MetricCollectionDetails(MetricCollection metricCollection) {
 		super(metricCollection);
-		type = formatUsingBusiness(metricCollection.getType());
-		valueProperties = formatUsingBusiness(metricCollection.getValueProperties());
+	}
+	
+	@Override
+	public void setMaster(MetricCollection metricCollection) {
+		super.setMaster(metricCollection);
+		if(metricCollection!=null){
+			if(metricCollection.getType()!=null)
+				type = new FieldValue(metricCollection.getType());
+			if(metricCollection.getValueProperties()!=null)
+				valueProperties = new FieldValue(metricCollection.getValueProperties());
+			if(metricCollection.getValue()!=null)
+				value = new FieldValue(metricCollection.getValue());
+		}
 	}
 	
 	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_VALUE_PROPERTIES = "valueProperties";
+	public static final String FIELD_VALUE = "value";
 
 }

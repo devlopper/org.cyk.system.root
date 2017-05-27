@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.annotation.ModelBean;
@@ -19,7 +20,7 @@ public class ScriptVariable extends AbstractIdentifiable implements Serializable
 
 	private static final long serialVersionUID = 129506142716551683L;
 	
-	@ManyToOne private Script script;
+	@ManyToOne @NotNull private Script script;
 	
 	public static final String FIELD_SCRIPT = "script";
 }

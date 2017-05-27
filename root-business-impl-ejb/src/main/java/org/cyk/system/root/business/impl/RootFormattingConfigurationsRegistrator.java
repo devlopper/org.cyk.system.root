@@ -62,19 +62,24 @@ public class RootFormattingConfigurationsRegistrator extends AbstractFormattingC
 						,Boolean.TRUE.equals(intervalExtremity.getIsLow())?number:marker);
 			}
 		});
-        register(Interval.class, new AbstractFormatter<Interval>() {
+        
+		register(Interval.class, new AbstractFormatter<Interval>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(Interval interval, ContentType contentType) {
 				return String.format(Interval.FORMAT,inject(FormatterBusiness.class).format(interval.getLow()),inject(FormatterBusiness.class).format(interval.getHigh()));
 			}
 		});
-        register(Value.class, new AbstractFormatter<Value>() {
+        
+		register(Value.class, new AbstractFormatter<Value>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(Value value, ContentType contentType) {
 				if(value.get()==null && Boolean.TRUE.equals(value.getNullable()))
-					return value.getNullString().getAbbreviation();
+					if(value.getNullString()==null)
+						return Boolean.TRUE.equals(value.getInitialized()) ? Constant.EMPTY_STRING : "NI";
+					else
+						return value.getNullString().getAbbreviation();
 				switch(value.getType()){
 				case BOOLEAN:
 					return inject(LanguageBusiness.class).findResponseText(value.getBooleanValue().get());
@@ -91,7 +96,8 @@ public class RootFormattingConfigurationsRegistrator extends AbstractFormattingC
 				return null;
 			}
 		});
-        register(Metric.class, new AbstractFormatter<Metric>() {
+        
+		register(Metric.class, new AbstractFormatter<Metric>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(Metric metric, ContentType contentType) {
@@ -99,7 +105,8 @@ public class RootFormattingConfigurationsRegistrator extends AbstractFormattingC
 						:(Constant.CHARACTER_LEFT_PARENTHESIS+inject(FormatterBusiness.class).format(metric.getMeasure(), contentType)+Constant.CHARACTER_RIGHT_PARENTHESIS));
 			}
 		});
-        register(MetricValue.class, new AbstractFormatter<MetricValue>() {
+        
+		register(MetricValue.class, new AbstractFormatter<MetricValue>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(MetricValue metricValue, ContentType contentType) {
@@ -107,21 +114,24 @@ public class RootFormattingConfigurationsRegistrator extends AbstractFormattingC
 						+inject(FormatterBusiness.class).format(metricValue.getValue(), contentType)+Constant.CHARACTER_RIGHT_PARENTHESIS;
 			}
 		});
-        register(NestedSet.class, new AbstractFormatter<NestedSet>() {
+        
+		register(NestedSet.class, new AbstractFormatter<NestedSet>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(NestedSet nestedSet, ContentType contentType) {
 				return nestedSet.getIdentifier().toString();
 			}
 		});
-        register(NestedSetNode.class, new AbstractFormatter<NestedSetNode>() {
+        
+		register(NestedSetNode.class, new AbstractFormatter<NestedSetNode>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(NestedSetNode nestedSetNode, ContentType contentType) {
 				return nestedSetNode.getLeftIndex()+Constant.CHARACTER_COMA.toString()+nestedSetNode.getRightIndex();
 			}
 		});
-        register(GlobalIdentifier.class, new AbstractFormatter<GlobalIdentifier>() {
+        
+		register(GlobalIdentifier.class, new AbstractFormatter<GlobalIdentifier>() {
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(GlobalIdentifier globalIdentifier, ContentType contentType) {

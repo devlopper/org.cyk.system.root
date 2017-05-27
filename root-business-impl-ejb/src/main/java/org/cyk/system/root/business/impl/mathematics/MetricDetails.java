@@ -15,18 +15,23 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class MetricDetails extends AbstractCollectionItemDetails.AbstractDefault<Metric,MetricCollection> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String valueIntervalCollection;
+	@Input @InputText private FieldValue valueProperties;
 	
 	public MetricDetails(Metric metric) {
 		super(metric);
+	}
+	
+	@Override
+	public void setMaster(Metric metric) {
+		super.setMaster(metric);
 		if(metric==null){
 			
 		}else{
-			if(metric.getValueIntervalCollection()!=null)
-				valueIntervalCollection = formatUsingBusiness(metric.getValueIntervalCollection());
+			if(metric.getValueProperties()!=null)
+				valueProperties = new FieldValue(metric.getValueProperties());
 		}
 	}
 	
-	public static final String FIELD_VALUE_INTERVAL_COLLECTION = "valueIntervalCollection";
+	public static final String FIELD_VALUE_PROPERTIES = "valueProperties";
 	
 }
