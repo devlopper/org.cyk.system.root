@@ -9,7 +9,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
@@ -39,14 +38,14 @@ public class MetricValueBusinessImpl extends AbstractTypedBusinessService<Metric
 	@Override
 	protected void beforeCreate(MetricValue metricValue) {
 		super.beforeCreate(metricValue);
-		if(StringUtils.isBlank(metricValue.getValue().getName()))
-			metricValue.getValue().setName(metricValue.getMetric().getName());
+		setFieldValuesIfBlank(metricValue, metricValue.getValue());
 		createIfNotIdentified(metricValue.getValue());
 	}
 	
 	@Override
 	protected void afterUpdate(MetricValue metricValue) {
 		super.afterUpdate(metricValue);
+		setFieldValuesIfBlank(metricValue, metricValue.getValue());
 		inject(ValueBusiness.class).update(metricValue.getValue());
 	}
 

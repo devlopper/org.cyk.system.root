@@ -14,13 +14,23 @@ import lombok.Setter;
 public class MetricValueDetails extends AbstractOutputDetails<MetricValue> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String value;
+	@Input @InputText private FieldValue metric,value;
 	
 	public MetricValueDetails(MetricValue metricValue) {
 		super(metricValue);
-		value = formatUsingBusiness(metricValue);
 	}
 	
+	@Override
+	public void setMaster(MetricValue metricValue) {
+		super.setMaster(metricValue);
+		if(metricValue!=null){
+			metric = new FieldValue(metricValue.getMetric());
+			if(metricValue.getValue()!=null)
+				value = new FieldValue(metricValue.getValue());
+		}
+	}
+	
+	public static final String FIELD_METRIC = "metric";
 	public static final String FIELD_VALUE = "value";
 	
 }

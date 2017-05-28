@@ -19,6 +19,11 @@ public class IntervalDetails extends AbstractCollectionItemDetails.AbstractDefau
 	
 	public IntervalDetails(Interval interval) {
 		super(interval);
+	}
+	
+	@Override
+	public void setMaster(Interval interval) {
+		super.setMaster(interval);
 		if(interval==null){
 			
 		}else{

@@ -146,6 +146,15 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		listener.setNullValue(null);
 	}
 	
+	protected void setFieldValuesIfBlank(AbstractIdentifiable source,AbstractIdentifiable destination){
+		if(StringUtils.isBlank(destination.getCode()))
+			destination.setCode(source.getCode());
+		if(StringUtils.isBlank(destination.getName()))
+			destination.setCode(source.getName());
+		if(StringUtils.isBlank(destination.getAbbreviation()))
+			destination.setCode(source.getAbbreviation());
+	}
+	
 	/**/
 	
 }
