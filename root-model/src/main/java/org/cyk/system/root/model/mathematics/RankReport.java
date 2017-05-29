@@ -13,7 +13,7 @@ public class RankReport extends AbstractGeneratable<RankReport> implements Seria
 
 	private static final long serialVersionUID = 1L;
 
-	private String sequenceOrder,exaequo,value;
+	private String sequenceOrder,exaequo,value,valueExaequo;
 	
 	@Override
 	public void setSource(Object source) {
@@ -22,6 +22,7 @@ public class RankReport extends AbstractGeneratable<RankReport> implements Seria
 			sequenceOrder = format(((Rank)source).getSequenceOrder());
 			exaequo = format(((Rank)source).getExaequo());
 			value = format(((Rank)source).getValue());
+			valueExaequo = value + exaequo;
 		}
 	}
 	
@@ -30,6 +31,7 @@ public class RankReport extends AbstractGeneratable<RankReport> implements Seria
 		sequenceOrder = String.valueOf(RandomDataProvider.getInstance().randomInt(1, 99));
 		exaequo = String.valueOf(RandomDataProvider.getInstance().randomBoolean());
 		value = String.valueOf(RandomDataProvider.getInstance().randomInt(1, 99));
+		valueExaequo = value + exaequo;
 	}
 
 }
