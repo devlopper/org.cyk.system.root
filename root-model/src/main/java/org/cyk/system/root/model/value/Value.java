@@ -22,6 +22,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Entity @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS)
+/**
+ * Represent an indivisible unit of information which can be derived or directly set.</br>
+ * This can be used as model to get the <strong>value</strong> of a concept <strong>dynamically without having to hard code the computation logic</strong>.</br>
+ * A value can exist by not yet initialized.</br>
+ * @author Christian Yao Komenan
+ *
+ */
 public class Value extends AbstractIdentifiable implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;

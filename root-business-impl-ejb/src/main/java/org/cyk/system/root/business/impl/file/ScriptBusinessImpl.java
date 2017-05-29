@@ -65,6 +65,7 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 	protected Script __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<Script> listener) {
 		listener.getInstance().getGlobalIdentifierCreateIfNull();
     	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
+    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_NAME);
     	set(listener.getSetListener(), Script.FIELD_EVALUATION_ENGINE);
     	Integer index = listener.getSetListener().getIndex();
     	listener.getInstance().setFile(new File());

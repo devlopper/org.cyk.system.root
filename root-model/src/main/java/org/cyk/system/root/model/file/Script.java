@@ -21,6 +21,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
+/**
+ * A series of instructions that is capable of being executed.
+ * @author Christian Yao Komenan
+ *
+ */
 public class Script extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 129506142716551683L;
