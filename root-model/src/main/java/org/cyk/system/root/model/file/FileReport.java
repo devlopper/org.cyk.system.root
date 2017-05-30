@@ -25,9 +25,11 @@ public class FileReport extends AbstractGeneratable<FileReport> implements Seria
 			
 		}else{
 			this.code = ((File)source).getCode();
+			this.name = ((File)source).getName();
 			this.generator = ((File)source).getGenerator();
 			this.sender = ((File)source).getSender();
 			this.contentWriter = ((File)source).getContentWriter();
+			this.image = ((File)source).getInputStream();
 		}
 		
 	}

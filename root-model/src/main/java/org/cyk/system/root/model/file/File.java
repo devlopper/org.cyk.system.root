@@ -1,5 +1,6 @@
 package org.cyk.system.root.model.file;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URI;
 
@@ -8,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,6 +60,8 @@ public class File extends AbstractIdentifiable implements Serializable{
 	private String contentWriter;
 	
 	/****/
+	
+	@Transient transient private InputStream inputStream;
 	
 	@Override
 	public String toString() {

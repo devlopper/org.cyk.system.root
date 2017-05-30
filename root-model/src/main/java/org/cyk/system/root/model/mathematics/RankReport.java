@@ -5,6 +5,7 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.cyk.utility.common.formatter.NumberFormatter;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 import org.cyk.utility.common.generator.RandomDataProvider;
 
@@ -21,8 +22,20 @@ public class RankReport extends AbstractGeneratable<RankReport> implements Seria
 		if(source!=null){
 			sequenceOrder = format(((Rank)source).getSequenceOrder());
 			exaequo = format(((Rank)source).getExaequo());
-			value = format(((Rank)source).getValue());
-			valueExaequo = value + exaequo;
+			if(((Rank)source).getValue()==null){
+				value = NULL_VALUE.toString();
+				valueExaequo = NULL_VALUE.toString();
+			}else{
+				NumberFormatter.String numberFormatter = new NumberFormatter.String.Adapter.Default(((Rank)source).getValue(),null);
+				numberFormatter.setIsAppendOrdinalSuffix(Boolean.TRUE);
+				numberFormatter.setIsOrdinal(Boolean.TRUE);
+				numberFormatter.setLocale(AbstractGeneratable.Listener.Adapter.Default.LOCALE);
+								
+				value = numberFormatter.execute();
+				
+				numberFormatter.setIsAppendExaequo(((Rank)source).getExaequo());
+				valueExaequo = numberFormatter.execute();
+			}
 		}
 	}
 	

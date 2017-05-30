@@ -3,13 +3,13 @@ package org.cyk.system.root.model.party.person;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.party.PartyReport;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter @Setter
 public class PersonReport extends PartyReport implements Serializable {
@@ -42,6 +42,10 @@ public class PersonReport extends PartyReport implements Serializable {
 					this.title = ((Person)source).getExtendedInformations().getTitle().getShortName();
 				if(((Person)source).getExtendedInformations().getMaritalStatus()!=null)
 					this.maritalStatus = ((Person)source).getExtendedInformations().getMaritalStatus().getName();
+				
+				if(((Person)source).getExtendedInformations().getSignatureSpecimen()!=null)
+					signatureSpecimen = ((Person)source).getExtendedInformations().getSignatureSpecimen().getInputStream();
+
 			}
 			if(((Person)source).getNationality()!=null)
 				this.nationality = ((Person)source).getNationality().getName();
@@ -51,6 +55,7 @@ public class PersonReport extends PartyReport implements Serializable {
 				if(((Person)source).getJobInformations().getTitle()!=null)
 					this.jobTitle = ((Person)source).getJobInformations().getTitle().getName();	
 			}
+			
 		}
 	}
 	

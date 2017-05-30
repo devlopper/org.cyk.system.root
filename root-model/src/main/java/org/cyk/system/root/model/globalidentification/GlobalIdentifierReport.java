@@ -3,14 +3,14 @@ package org.cyk.system.root.model.globalidentification;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.model.file.FileReport;
 import org.cyk.system.root.model.time.PeriodReport;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 import org.cyk.utility.common.generator.RandomDataProvider;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter @Setter
 public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifierReport> implements Serializable {
@@ -37,6 +37,8 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 		creationDate = ((GlobalIdentifier)source).getCreationDate().toString();
 		existencePeriod.setSource(((GlobalIdentifier)source).getExistencePeriod());
 		supportingDocument.setSource(((GlobalIdentifier)source).getSupportingDocument());
+		if(((GlobalIdentifier)source).getImage()!=null)
+			image = ((GlobalIdentifier)source).getImage().getInputStream();
 	}
 	
 	@Override
@@ -65,5 +67,7 @@ public class GlobalIdentifierReport extends AbstractGeneratable<GlobalIdentifier
 		return existencePeriod.getFromDateToDate();
 	}
 	
-	
+	public String getFromYearToYear() {
+		return existencePeriod.getFromYearToYear();
+	}
 }

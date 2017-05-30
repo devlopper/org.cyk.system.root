@@ -273,12 +273,12 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			inject(PersonBusiness.class).load(person);
 			report.setSource(person);
 			
-			if(person.getContactCollection()!=null)
-				set(person.getContactCollection(), report.getContactCollection());
-			
+			/*			
 			if(person.getImage()!=null){
 				report.getGlobalIdentifier().setImage(findInputStream(person.getImage()));
 			}
+			*/
+			
 			person.setExtendedInformations(inject(PersonExtendedInformationsDao.class).readByParty(person));
 			if(person.getExtendedInformations()!=null){
 				PersonExtendedInformations extendedInformations = person.getExtendedInformations();
@@ -288,8 +288,6 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 					report.setSignatureSpecimen(findInputStream(extendedInformations.getSignatureSpecimen()));
 				
 			}
-			
-			//System.out.println("AbstractRootReportProducer.set() : "+report.getImage());	
 		}
 	}
 	

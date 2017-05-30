@@ -233,14 +233,15 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     }
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public InputStream findInputStream(File file) {
-        if(file.getBytes()==null)
+    public InputStream findInputStream(File file,Boolean keep) {
+    	InputStream inputStream = null;
+    	if(file.getBytes()==null)
             if(file.getUri()==null)
                 exceptionUtils().exception("exception.file.nocontentnouri");
             else
                 if(FILE.equals(file.getUri().getScheme()))
                     try {
-                        return new FileInputStream(StringUtils.substring(file.getUri().getPath(), 1));
+                    	inputStream = new FileInputStream(StringUtils.substring(file.getUri().getPath(), 1));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         exceptionUtils().resourceNotFound();
@@ -248,8 +249,15 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
                 else
                     exceptionUtils().exception("exception.file.urinothandled");
         else
-            return new ByteArrayInputStream(file.getBytes());
-        return null;
+        	inputStream = new ByteArrayInputStream(file.getBytes());
+        if(Boolean.TRUE.equals(keep))
+        	file.setInputStream(inputStream);
+    	return inputStream;
+    }
+    
+    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public InputStream findInputStream(File file) {
+    	return findInputStream(file, Boolean.FALSE);
     }
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
