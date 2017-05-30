@@ -125,7 +125,8 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		inject(FileBusiness.class).process(photo, randomFile.getBytes(), "photo."+randomFile.getExtension());
 		person.setImage(photo);
 		
-		person.getExtendedInformations().setBirthLocation((Location) inject(LocationBusiness.class).instanciateOneRandomly());
+		person.setBirthLocation((Location) inject(LocationBusiness.class).instanciateOneRandomly());
+		
 		person.getExtendedInformations().setTitle(inject(PersonTitleDao.class).readOneRandomly());
 		person.getJobInformations().setTitle(inject(JobTitleDao.class).readOneRandomly());
 		person.getJobInformations().setFunction(inject(JobFunctionDao.class).readOneRandomly());

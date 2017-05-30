@@ -31,6 +31,12 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     protected void businesses() {}
 
     @Test
+    public void crudPersonRandomly(){
+    	Person person = inject(PersonBusiness.class).instanciateOneRandomly();
+    	System.out.println("PersonBusinessIT.crudPersonRandomly() : "+person.getBirthLocation().getOtherDetails());
+    }
+    
+    @Test
     public void crudPerson(){
     	TestCase testCase = instanciateTestCase();
     	//testCase.createManyPersonRandomly(new String[]{"FATHER01F1","MOTHER01F1","SON01F1","SON02F1","DAUGHTER01F1"});//Family 1

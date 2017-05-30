@@ -2,10 +2,10 @@ package org.cyk.system.root.model.mathematics;
 
 import java.io.Serializable;
 
+import org.cyk.utility.common.generator.AbstractGeneratable;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import org.cyk.utility.common.generator.AbstractGeneratable;
 
 @Getter @Setter
 public class SortReport extends AbstractGeneratable<SortReport> implements Serializable {
@@ -14,6 +14,8 @@ public class SortReport extends AbstractGeneratable<SortReport> implements Seria
 
 	private AverageReport average = new AverageReport();
 	private RankReport rank = new RankReport();
+	private IntervalReport averageAppreciatedInterval = new IntervalReport();
+	private IntervalReport averagePromotedInterval = new IntervalReport();
 	
 	@Override
 	public void setSource(Object source) {
@@ -21,6 +23,8 @@ public class SortReport extends AbstractGeneratable<SortReport> implements Seria
 		if(source!=null){
 			average.setSource(((Sort)source).getAverage());
 			rank.setSource(((Sort)source).getRank());
+			averageAppreciatedInterval.setSource(((Sort)source).getAverageAppreciatedInterval());
+			averagePromotedInterval.setSource(((Sort)source).getAveragePromotedInterval());
 		}
 	}
 	

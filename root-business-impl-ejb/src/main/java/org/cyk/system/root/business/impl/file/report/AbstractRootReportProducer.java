@@ -263,6 +263,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		report.setWebsites(StringUtils.join(contactCollection.getWebsites(),Constant.CHARACTER_COLON));
 	}
 	
+	@Deprecated
 	protected void set(Person person,PersonReport report){
 		if(person==null){
 			report.getGlobalIdentifier().setName(NOT_APPLICABLE);
