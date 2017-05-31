@@ -81,9 +81,8 @@ public class Person extends Party implements Serializable{
 	public static final String FIELD_NATIONALITY = "nationality";
 	public static final String FIELD_EXTENDED_INFORMATIONS = "extendedInformations";
 	public static final String FIELD_JOB_INFORMATIONS = "jobInformations";
-	/*public static final String FIELD_FATHER_ELECTRONIC_MAIL = "fatherElectronicMail";
-	public static final String FIELD_MOTHER_ELECTRONIC_MAIL = "motherElectronicMail";
-	*/
+	public static final String FIELD_MEDICAL_INFORMATIONS = "medicalInformations";
+	
 	/**/
 	
 	@Getter @Setter

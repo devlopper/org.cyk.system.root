@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.api;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
@@ -63,6 +64,11 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				
     				Boolean isIdentified(IDENTIFIABLE identifiable);
     				Boolean isNotIdentified(IDENTIFIABLE identifiable);
+    				
+    				void setRelatedIdentifiables(IDENTIFIABLE identifiable,Boolean image,Set<String> relatedIdentifiableFieldNames);
+    				void setRelatedIdentifiables(IDENTIFIABLE identifiable,Set<String> relatedIdentifiableFieldNames);
+    				void setRelatedIdentifiables(IDENTIFIABLE identifiable,String...relatedIdentifiableFieldNames);
+    				void setRelatedIdentifiables(IDENTIFIABLE identifiable,Boolean image,String...relatedIdentifiableFieldNames);
     				
     /* ------------------------ Dynamic methods ---------------------------- */
     

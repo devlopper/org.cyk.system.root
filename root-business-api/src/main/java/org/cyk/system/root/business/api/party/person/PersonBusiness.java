@@ -32,6 +32,8 @@ public interface PersonBusiness extends AbstractPartyBusiness<Person> {
 	
 	//Collection<Person> findByPersonRelationshipPerson2ByPersonRelationshipTypes(Collection<Person> persons,Collection<PersonRelationshipType> personRelationshipTypes);
 	
+	void setRelatedIdentifiables(Person identifiable,Boolean image,Boolean signature,String...relatedIdentifiableFieldNames);
+	
 	/**/
 	
 	@Getter @Setter @NoArgsConstructor @AllArgsConstructor

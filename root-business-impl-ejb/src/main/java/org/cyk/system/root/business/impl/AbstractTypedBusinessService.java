@@ -374,22 +374,23 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    	delete(identifiable);
 	}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) @Deprecated
 	public IDENTIFIABLE load(Long identifier) {
 		IDENTIFIABLE identifiable = find(identifier);
 		load(identifiable);
 		return identifiable;
 	}
 
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) @Deprecated
 	public void load(IDENTIFIABLE identifiable) {
 		if(isIdentified(identifiable))
 			__load__(identifiable);
 	}
 	//TODO to be removed , use graph to load what you want
+	@Deprecated
 	protected void __load__(IDENTIFIABLE identifiable) {}
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) @Deprecated
 	public void load(Collection<IDENTIFIABLE> identifiables) {
 		for(IDENTIFIABLE identifiable : identifiables)
 			load(identifiable);

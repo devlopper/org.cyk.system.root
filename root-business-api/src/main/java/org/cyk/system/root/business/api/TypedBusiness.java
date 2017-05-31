@@ -35,10 +35,12 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 
 	/* predefined query  */
 	
+	@Deprecated
     IDENTIFIABLE load(Long identifier);
-    
+	@Deprecated
     void load(IDENTIFIABLE identifiable);
-    void load(Collection<IDENTIFIABLE> identifiables);
+	@Deprecated
+	void load(Collection<IDENTIFIABLE> identifiables);
     
     IDENTIFIABLE delete(String code);
     Collection<IDENTIFIABLE> delete(Set<String> codes);

@@ -8,16 +8,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -42,9 +47,6 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
-
-import lombok.Getter;
-import lombok.Setter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -677,6 +679,37 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	protected void addLogMessageBuilderParameters(LogMessage.Builder logMessageBuilder,Object...objects){
 		if(logMessageBuilder!=null)
 			logMessageBuilder.addParameters(objects);
+	}
+	
+	@Override
+	public void setRelatedIdentifiables(IDENTIFIABLE identifiable,Boolean image,Set<String> relatedIdentifiableFieldNames){
+		for(String fieldName : relatedIdentifiableFieldNames){
+			setRelatedIdentifiable(identifiable, fieldName);
+		}
+		if(Boolean.TRUE.equals(image)){
+			inject(FileBusiness.class).findInputStream(identifiable.getImage(), Boolean.TRUE);
+		}
+	}
+	
+	@Override
+	public void setRelatedIdentifiables(IDENTIFIABLE identifiable,Set<String> relatedIdentifiableFieldNames){
+		setRelatedIdentifiables(identifiable,Boolean.FALSE, relatedIdentifiableFieldNames);
+	}
+	
+	@Override
+	public void setRelatedIdentifiables(IDENTIFIABLE identifiable,Boolean image,String...relatedIdentifiableFieldNames){
+		setRelatedIdentifiables(identifiable,image, new HashSet<>(Arrays.asList(relatedIdentifiableFieldNames)));
+		
+	}
+	
+	@Override
+	public void setRelatedIdentifiables(IDENTIFIABLE identifiable,String...relatedIdentifiableFieldNames){
+		setRelatedIdentifiables(identifiable,Boolean.FALSE, relatedIdentifiableFieldNames);
+	}
+	
+	
+	protected void setRelatedIdentifiable(IDENTIFIABLE identifiable,String relatedIdentifiableFieldName){
+		throwNotYetImplemented();
 	}
 	
 	/**/

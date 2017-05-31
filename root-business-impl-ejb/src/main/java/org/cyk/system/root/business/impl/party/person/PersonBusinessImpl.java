@@ -12,6 +12,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -318,12 +319,34 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	*/
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)  @Deprecated
 	public void load(Person person) {
 		super.load(person);
 		person.setExtendedInformations(extendedInformationsDao.readByParty(person));
 		person.setJobInformations(jobInformationsDao.readByParty(person));
 		person.setMedicalInformations(medicalInformationsDao.readByParty(person));
+	}
+	
+	@Override
+	protected void setRelatedIdentifiable(Person person,String relatedIdentifiableFieldName) {
+		if(Person.FIELD_EXTENDED_INFORMATIONS.equals(relatedIdentifiableFieldName)){
+			person.setExtendedInformations(inject(PersonExtendedInformationsDao.class).readByParty(person));
+		}else if(Person.FIELD_JOB_INFORMATIONS.equals(relatedIdentifiableFieldName)){
+			person.setJobInformations(inject(JobInformationsDao.class).readByParty(person));
+		}else if(Person.FIELD_MEDICAL_INFORMATIONS.equals(relatedIdentifiableFieldName)){
+			person.setMedicalInformations(inject(MedicalInformationsDao.class).readByParty(person));
+		}
+	}
+	
+	@Override
+	public void setRelatedIdentifiables(Person person, Boolean image,Boolean signature, String... relatedIdentifiableFieldNames) {
+		if(Boolean.TRUE.equals(signature)){
+			relatedIdentifiableFieldNames = ArrayUtils.add(relatedIdentifiableFieldNames, Person.FIELD_EXTENDED_INFORMATIONS);
+		}
+		setRelatedIdentifiables(person, image, relatedIdentifiableFieldNames);
+		if(Boolean.TRUE.equals(signature)){
+			inject(FileBusiness.class).findInputStream(person.getExtendedInformations().getSignatureSpecimen(), Boolean.TRUE);
+		}
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

@@ -2,6 +2,8 @@ package org.cyk.system.root.model.mathematics;
 
 import java.io.Serializable;
 
+import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.report.AbstractIdentifiableReport;
 
 import lombok.Getter;
@@ -20,6 +22,7 @@ public class IntervalReport extends AbstractIdentifiableReport<IntervalReport> i
 		if(source==null){
 			
 		}else{
+			globalIdentifier.setCode(RootConstant.Code.getRelativeCode( ((AbstractCollectionItem<?>)source) )); //TODO make it global
 			this.value = format(((Interval)source).getValue());
 		}
 	}
