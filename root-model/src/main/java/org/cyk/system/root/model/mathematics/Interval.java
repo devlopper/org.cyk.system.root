@@ -94,7 +94,7 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	
 	public static final String LOG_FORMAT = Interval.class.getSimpleName()+"(%s%s , %s%s)";
 	
-	public static final String EXTREMITY_SEPARATOR = Constant.CHARACTER_SPACE+Constant.CHARACTER_COMA+Constant.CHARACTER_SPACE.toString();
+	public static final String EXTREMITY_SEPARATOR = Constant.CHARACTER_SPACE.toString()+Constant.CHARACTER_COMA+Constant.CHARACTER_SPACE.toString();
 	public static final String FORMAT = "%s"+EXTREMITY_SEPARATOR+"%s";
 	
 	/*	

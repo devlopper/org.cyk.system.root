@@ -19,7 +19,7 @@ public class StringSearchCriteria extends AbstractFieldValueSearchCriteria<Strin
 	private static final String MATCH_ZERO_OR_MANY_CHARACTERS = Constant.CHARACTER_PERCENT.toString(); 
 	//private static final String MATCH_ONE_AND_ONLY_ONE_CHARACTER = Constant.CHARACTER_UNDESCORE.toString(); 
 	
-	public enum LocationType{START,INSIDE,END,EXACT}
+	public enum LocationType{START,INSIDE,END,EXACT}//TODO use the one define in StringHelper
 	
 	private LocationType locationType = LocationType.EXACT;
 	
