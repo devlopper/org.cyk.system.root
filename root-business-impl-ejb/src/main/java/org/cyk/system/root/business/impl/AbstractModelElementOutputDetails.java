@@ -8,10 +8,10 @@ import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.system.root.model.CommonBusinessAction;
-import org.cyk.system.root.model.network.UniformResourceLocator;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
+import org.cyk.utility.common.builder.UrlStringBuilder;
 import org.cyk.utility.common.cdi.AbstractBean;
 
 import lombok.Getter;
@@ -79,17 +79,25 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 		private String value;
 		private String url;
 		
-		public FieldValue(String value,String url) {
+		private void init(String value,String url) {
 			this.value = value;
 			this.url = url;
 		}
 		
+		public FieldValue(String value,String url) {
+			init(value, url);
+		}
+		
 		public FieldValue(String value) {
-			this(value,null);
+			init(value,null);
 		}
 		
 		public FieldValue(Object object) {
-			this(inject(FormatterBusiness.class).format(object),UniformResourceLocator.Builder.create(CommonBusinessAction.CONSULT,object).toString());
+			UrlStringBuilder urlStringBuilder = new UrlStringBuilder();
+			urlStringBuilder.getPathStringBuilder().setIdentifier(new UrlStringBuilder.PathStringBuilder.IdentifierBuilder().setAction(Constant.Action.CONSULT)
+					.setSubject(object).build());
+			urlStringBuilder.getQueryStringBuilder().getNameValueCollectionStringBuilder().addIdentifiable(object);
+			init(inject(FormatterBusiness.class).format(object),urlStringBuilder.build());
 		}
 		
 		@Override

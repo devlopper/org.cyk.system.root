@@ -67,7 +67,9 @@ public class RootFormattingConfigurationsRegistrator extends AbstractFormattingC
 			private static final long serialVersionUID = -4793331650394948152L;
 			@Override
 			public String format(Interval interval, ContentType contentType) {
-				return String.format(Interval.FORMAT,inject(FormatterBusiness.class).format(interval.getLow()),inject(FormatterBusiness.class).format(interval.getHigh()));
+				if(StringUtils.isBlank(interval.getName()))
+					return String.format(Interval.FORMAT,inject(FormatterBusiness.class).format(interval.getLow()),inject(FormatterBusiness.class).format(interval.getHigh()));
+				return interval.getName();
 			}
 		});
         

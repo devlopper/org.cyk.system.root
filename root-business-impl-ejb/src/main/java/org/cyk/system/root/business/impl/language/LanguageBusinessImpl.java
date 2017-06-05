@@ -29,10 +29,10 @@ import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.CommonBusinessAction;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.language.Language;
-import org.cyk.system.root.model.language.LanguageEntry;
 import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.language.LanguageDao;
 import org.cyk.utility.common.CommonUtils;
@@ -601,9 +601,8 @@ public class LanguageBusinessImpl extends AbstractEnumerationBusinessImpl<Langua
 	
 	@Override
 	public String findResponseText(Boolean value) {
-		if(value==null)
-			return Constant.EMPTY_STRING;
-		return findText(Boolean.TRUE.equals(value)?LanguageEntry.YES:LanguageEntry.NO);
+		return findText(value == null ? RootConstant.Code.LanguageEntry.NOT_SPECIFIED : Boolean.TRUE.equals(value) ? RootConstant.Code.LanguageEntry.YES 
+				: RootConstant.Code.LanguageEntry.NO);
 	}
 
 	/**/

@@ -332,6 +332,15 @@ public interface RootConstant {
 			public static String DECREMENT = "DECREMENT";
 		}
 		
+		public static class LanguageEntry implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static final String YES = "yes";
+			public static final String NO = "no";
+			public static final String NOT_SPECIFIED = "not.specified";
+			public static final String NO_RESULT_FOUND = "noresultfound";
+		}
+		
 		public static class UniformResourceLocatorParameter implements Serializable {
 			private static final long serialVersionUID = 1L;
 			

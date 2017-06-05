@@ -25,11 +25,4 @@ public class LanguageEntry extends AbstractEnumeration implements Serializable {
 		super(code, libelle,null, description);
 	}
 	
-
-	/**/
-	
-	public static final String YES = "yes";
-	public static final String NO = "no";
-	public static final String NO_RESULT_FOUND = "noresultfound";
-	
 }

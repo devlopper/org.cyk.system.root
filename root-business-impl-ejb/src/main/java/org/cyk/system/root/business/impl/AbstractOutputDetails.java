@@ -30,7 +30,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	protected String identifier;
 	
 	@Input @InputFile (extensions=@FileExtensions(groups=FileExtensionGroup.IMAGE)) protected File image;
-	@Input @InputText protected String code,name,abbreviation,description,weight,orderNumber,otherDetails,activated;
+	@Input @InputText protected String code,name,abbreviation,description,weight,orderNumber,otherDetails,activated,defaulted;
 	@IncludeInputs(layout=Layout.VERTICAL) protected PeriodDetails existencePeriod;
 	//@IncludeInputs(layout=Layout.VERTICAL) protected FileDetails supportingDocument;
 	
@@ -60,6 +60,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 			orderNumber = formatNumber(this.master.getOrderNumber());
 			otherDetails = this.master.getOtherDetails();
 			activated = formatResponse(this.master.getGlobalIdentifier().getActivated());
+			defaulted = formatResponse(this.master.getGlobalIdentifier().getDefaulted());
 			//getSupportingDocument().setMaster(this.master.getSupportingDocument());
 		}
 	}
@@ -85,6 +86,7 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 	public static final String FIELD_DESCRIPTION = "description";
 	public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
 	public static final String FIELD_WEIGHT = "weight";
+	public static final String FIELD_DEFAULTED = "defaulted";
 	public static final String FIELD_ORDER_NUMBER = "orderNumber";
 	public static final String FIELD_OTHER_DETAILS = "otherDetails";
 	

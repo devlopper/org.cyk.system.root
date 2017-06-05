@@ -83,10 +83,10 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	}
 	
 	public static final String FIELD_LOW = "low";
+	public static final String FIELD_HIGH = "high";
+	
 	public static final String COLUMN_LOW_VALUE = FIELD_LOW+"_"+IntervalExtremity.FIELD_VALUE;
 	public static final String COLUMN_LOW_EXCLUDED = FIELD_LOW+"_"+IntervalExtremity.FIELD_EXCLUDED;
-	
-	public static final String FIELD_HIGH = "high";
 	public static final String COLUMN_HIGH_VALUE = FIELD_HIGH+"_"+IntervalExtremity.FIELD_VALUE;
 	public static final String COLUMN_HIGH_EXCLUDED = FIELD_HIGH+"_"+IntervalExtremity.FIELD_EXCLUDED;
 	
