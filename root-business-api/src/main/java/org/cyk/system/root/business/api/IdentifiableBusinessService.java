@@ -57,7 +57,11 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     /* Delete */    IDENTIFIABLE delete(IDENTIFIABLE identifiable);
     				IDENTIFIABLE delete(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);
     				void delete(Collection<IDENTIFIABLE> identifiables);
-    				
+    				/*
+    				IDENTIFIABLE empty(IDENTIFIABLE identifiable);
+    				IDENTIFIABLE empty(IDENTIFIABLE identifiable,Collection<? extends AbstractIdentifiable> identifiables);
+    				void empty(Collection<IDENTIFIABLE> identifiables);
+    				*/
     /* Save   */	IDENTIFIABLE save(IDENTIFIABLE identifiable);
     				void save(Collection<IDENTIFIABLE> identifiables);
     				void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter);
