@@ -71,7 +71,7 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		}else{
 			//TODO
 			//exceptionUtils().exception(USER_ACCOUNT_MAP.get(credentials.getUsername())!=null,EXCEPTION_ALREADY_CONNECTED, "exception.useraccount.multipleconnect");
-			//logInfo("User account connected : Username={} , Roles={}", account.getCredentials().getUsername(),account.getRoles());
+			logInfo("User account connected : Username={} , Roles={}", account.getCredentials().getUsername(),account.getRoles());
 		}
 		userSessionBusiness.setUserAccount(account);
 		
