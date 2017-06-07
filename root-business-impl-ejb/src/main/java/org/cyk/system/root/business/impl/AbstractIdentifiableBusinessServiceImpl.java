@@ -41,6 +41,7 @@ import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.accessor.InstanceFieldSetter;
+import org.cyk.utility.common.builder.InstanceCopyBuilder;
 import org.cyk.utility.common.cdi.BeanAdapter;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -354,12 +355,31 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		afterInstanciateOne(getListeners(), userAccount, identifiable);
 		return identifiable;
 	}
+	
+	@Override
+	public IDENTIFIABLE instanciateOne(UserAccount userAccount,IDENTIFIABLE copy) {
+		beforeInstanciateOne(getListeners(), userAccount/*,copy*/);
+		IDENTIFIABLE identifiable = copy == null ? instanciateOne() : duplicate(copy);
+		afterInstanciateOne(getListeners(), userAccount, identifiable/*,copy*/);
+		return identifiable;
+	}
 
 	@Override
 	public IDENTIFIABLE instanciateOne(ObjectFieldValues arguments) {
 		IDENTIFIABLE identifiable = instanciateOne();
 		commonUtils.instanciateOne(getClazz(),identifiable, arguments);
 		return identifiable;
+	}
+
+	public InstanceCopyBuilder<IDENTIFIABLE> getInstanceCopyBuilder(){
+		return new InstanceCopyBuilder<IDENTIFIABLE>().addIgnoredFieldAnnotationClasses(javax.persistence.Id.class,javax.persistence.OneToOne.class
+				,javax.persistence.Transient.class,javax.persistence.GeneratedValue.class);
+	}
+	
+	@Override
+	public IDENTIFIABLE duplicate(IDENTIFIABLE identifiable) {
+		IDENTIFIABLE duplicated = getInstanceCopyBuilder().setSource(identifiable).build();
+		return duplicated;
 	}
 	
 	@Override

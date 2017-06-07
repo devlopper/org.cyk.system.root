@@ -35,7 +35,7 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ENUMERATION instanciateOne() {
-		return instanciateOne(null, null);
+		return instanciateOne((String)null, (String)null);
 	}
 	
     @Override

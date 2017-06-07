@@ -11,6 +11,7 @@ import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.accessor.InstanceFieldSetter;
+import org.cyk.utility.common.builder.InstanceCopyBuilder;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
@@ -74,6 +75,9 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				void setRelatedIdentifiables(IDENTIFIABLE identifiable,String...relatedIdentifiableFieldNames);
     				void setRelatedIdentifiables(IDENTIFIABLE identifiable,Boolean image,String...relatedIdentifiableFieldNames);
     				
+    				InstanceCopyBuilder<IDENTIFIABLE> getInstanceCopyBuilder();
+    				IDENTIFIABLE duplicate(IDENTIFIABLE identifiable);
+    				
     /* ------------------------ Dynamic methods ---------------------------- */
     
     /* --- Selection --- */
@@ -132,6 +136,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     Class<IDENTIFIABLE> getClazz();
                     IDENTIFIABLE instanciateOne();
                     IDENTIFIABLE instanciateOne(UserAccount userAccount);
+                    IDENTIFIABLE instanciateOne(UserAccount userAccount,IDENTIFIABLE copy);
                     IDENTIFIABLE instanciateOne(ObjectFieldValues arguments);
                     
                     Collection<IDENTIFIABLE> instanciateMany(Collection<ObjectFieldValues> arguments);
