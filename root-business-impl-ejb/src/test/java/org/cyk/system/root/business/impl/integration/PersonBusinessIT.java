@@ -1,26 +1,11 @@
 package org.cyk.system.root.business.impl.integration;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.cyk.system.root.business.api.geography.ContactBusiness;
-import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
-import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
-import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
-import org.cyk.system.root.persistence.api.geography.ContactDao;
-import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
-import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
-import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeDao;
 import org.junit.Test;
 
 public class PersonBusinessIT extends AbstractBusinessIT {
@@ -32,12 +17,6 @@ public class PersonBusinessIT extends AbstractBusinessIT {
 
     @Test
     public void crudPersonRandomly(){
-    	Person person = inject(PersonBusiness.class).instanciateOneRandomly();
-    	System.out.println("PersonBusinessIT.crudPersonRandomly() : "+person.getBirthLocation().getOtherDetails());
-    }
-    
-    @Test
-    public void crudPerson(){
     	TestCase testCase = instanciateTestCase();
     	//testCase.createManyPersonRandomly(new String[]{"FATHER01F1","MOTHER01F1","SON01F1","SON02F1","DAUGHTER01F1"});//Family 1
     	testCase.createOnePersonRandomly("FATHER01F1");
@@ -45,63 +24,47 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	testCase.clean();
     }
     
-    //@Test
-    public void relationship(){
-    	/*String p1="p1",p2="p2";
-    	Set<String> codes = new LinkedHashSet<>();
-    	codes.add(p1);
-    	codes.add(p2);
-    	create(inject(PersonBusiness.class).instanciateManyRandomly(codes));
+    @Test
+    public void crudPerson(){
     	
-    	PersonRelationship personRelationship1 = inject(PersonRelationshipBusiness.class).instanciateOne("p1", RootConstant.Code.PersonRelationshipTypeRole.FATHER, "p2"
-    			, RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_FATHER);
-    	create( personRelationship1 = new PersonRelationship(inject(PersonBusiness.class).find(p1),inject(PersonRelationshipTypeBusiness.class)
-    			.find(RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_MOTHER)
-    			,inject(PersonBusiness.class).find(p2)));
-    	
-    	delete(personRelationship1);
-    	*/
     }
     
-    //@Test
+    @Test
+    public void relationship(){
+    	TestCase testCase = instanciateTestCase();
+    	String f1="f1",s1="s1",f2="f2",s2="s2";
+    	testCase.createManyPersonRandomly(f1,s1,f2,s2);
+    	
+    	PersonRelationship personRelationship1 = inject(PersonRelationshipBusiness.class).instanciateOne(f1, RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_FATHER
+    			, s1, RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_SON);
+    	testCase.create(personRelationship1);
+    	
+    	PersonRelationship personRelationship2 = inject(PersonRelationshipBusiness.class).instanciateOne(f2, RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_FATHER
+    			, s2, RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_SON);
+    	testCase.create(personRelationship2);
+    	
+    	testCase.assertPersonRelationship(f1, RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_FATHER, RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_SON
+    			, new String[]{s1});
+    	testCase.assertPersonRelationship(f2, RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_FATHER, RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_SON
+    			, new String[]{s2});
+    	
+    	testCase.delete(personRelationship1);
+    	testCase.delete(personRelationship2);
+    	
+    	testCase.clean();
+    }
+    
+    @Test
     public void crudPersonAndRelationships(){
-    	/*Person son = inject(PersonBusiness.class).instanciateOne();
-    	son.setCode("P001");
-    	son.setName("Komenan");
-    	son.setLastnames("Yao Christian");
-    	son.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "stud@gmail.com"));
+    	TestCase testCase = instanciateTestCase();
+    	testCase.createOnePerson("JNK","Komenan","N'Dri Jean","dad@gmail.com");
+    	testCase.createOnePerson("OAK","Komenan","Ahou odette","mom@gmail.com");
+    	testCase.createOnePerson("CYK","Komenan","Yao Christian","stud@gmail.com");
     	
-    	Person father = inject(PersonBusiness.class).addRelationship(son, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER).getPerson1();
-    	father.setName("KOMENAN");
-    	father.setLastnames("N'Dri Jean");
-    	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "dad@gmail.com"));
+    	testCase.createFamilyPersonRelationship("JNK", "OAK", new String[]{"CYK"}, null);
     	
-    	Person mother = inject(PersonBusiness.class).addRelationship(son, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER).getPerson1();
-    	mother.setName("komenan");
-    	mother.setLastnames("Ahou odette");
-    	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "mom@gmail.com"));
+    	testCase.clean();
     	
-    	create(son);
-    	
-    	assertThat("P001 exists", (son=inject(PersonBusiness.class).find("P001"))!=null);
-    	Collection<PersonRelationship> fathers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
-    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER));
-    	assertEquals("Number of father", 1, fathers.size());
-    	father = fathers.iterator().next().getPerson1();
-    	
-    	Collection<PersonRelationship> mothers = inject(PersonRelationshipDao.class).readByPerson2ByType(son,inject(PersonRelationshipTypeDao.class)
-    			.read(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER));
-    	assertEquals("Number of mother", 1, mothers.size());
-    	mother = mothers.iterator().next().getPerson1();
-    	
-    	assertEquals("Son email", "stud@gmail.com", inject(ContactDao.class).readByCollectionByClass(son.getContactCollection(), ElectronicMail.class).iterator().next().getAddress());
-    	assertEquals("Father email", "dad@gmail.com", inject(ContactDao.class).readByCollectionByClass(father.getContactCollection(), ElectronicMail.class).iterator().next().getAddress());
-    	assertEquals("Mother email", "mom@gmail.com", inject(ContactDao.class).readByCollectionByClass(mother.getContactCollection(), ElectronicMail.class).iterator().next().getAddress());
-    	
-    	Collection<ElectronicMail> parentElectronicMails = inject(ContactBusiness.class).findByCollectionsByClass(Arrays.asList(father.getContactCollection(),mother.getContactCollection())
-    			, ElectronicMail.class);
-    	contains(ElectronicMail.class, parentElectronicMails, new Object[]{"address"}, new Object[][]{ {"dad@gmail.com"},{"mom@gmail.com"} });
-    	*/
     }
     
     //@Test

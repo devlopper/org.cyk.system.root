@@ -31,10 +31,11 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 		setName(name);
 	}
 	
-	public void addContact(Contact contact) {
+	public Party addContact(Contact contact) {
 		if(contactCollection==null)
 			contactCollection = new ContactCollection();
 		contactCollection.add(contact);
+		return this;
 	}
 	
 	public Party setElectronicMail(String address){

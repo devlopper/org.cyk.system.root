@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.integration;
 import java.io.FileInputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -10,10 +11,11 @@ import javax.inject.Inject;
 import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.event.NotificationBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
+import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
+import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.business.impl.data.Data;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
@@ -21,10 +23,12 @@ import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
+import org.cyk.system.root.persistence.api.party.person.PersonDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
+import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeRoleDao;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.junit.Test;
 
@@ -41,25 +45,13 @@ public class MailBusinessIT extends AbstractBusinessIT {
     @Override
     protected void populate() {
     	super.populate();
-    	//inject(MailBusiness.class).setProperties("smtp.gmail.com", 465, "kycdev@gmail.com", "p@ssw0rd*");
+    	TestCase testCase = instanciateTestCase();
     	
-    	Person son = inject(PersonBusiness.class).instanciateOneRandomly("P002");
-    	son.setName("Komenan");
-    	son.setLastnames("Yao Christian");
-    	son.getContactCollection().getElectronicMails().clear();
-    	son.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "kycdev@gmail.com"));
+    	testCase.createOnePerson("P001", "Kouagni", "N'Dri Jean", "ckydevbackup@gmail.com");
+    	testCase.createOnePerson("P002", "Tchimou", "Ahou odette", "ckydevbackup0@gmail.com");
+    	testCase.createOnePerson("P003", "Komenan", "Yao Christian", "kycdev@gmail.com");
     	
-    	Person father = null;//inject(PersonBusiness.class).addRelationship(son, RootConstant.Code.PersonRelationshipType.FAMILY_FATHER).getPerson1();
-    	father.setName("Kouagni");
-    	father.setLastnames("N'Dri Jean");
-    	father.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup@gmail.com"));
-    	
-    	Person mother = null;//inject(PersonBusiness.class).addRelationship(son, RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER).getPerson1();
-    	mother.setName("Tchimou");
-    	mother.setLastnames("Ahou odette");
-    	mother.addContact(inject(ElectronicMailBusiness.class).instanciateOne((ContactCollection)null, "ckydevbackup0@gmail.com"));
-    	
-    	create(son);
+    	testCase.createFamilyPersonRelationship("P001", "P002", new String[]{"P003"}, null);
     	
     	java.io.File directory = new java.io.File(System.getProperty("user.dir")+"\\src\\test\\resources\\files\\pdf");
     	File file = null;
@@ -70,7 +62,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 		}
     	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(RootConstant.Code.FileRepresentationType.IDENTITY_DOCUMENT));
 		create(file);
-		create(new FileIdentifiableGlobalIdentifier(file,son));
+		create(new FileIdentifiableGlobalIdentifier(file,inject(PersonDao.class).read("P003")));
 		
 		try {
     		file = inject(FileBusiness.class).process(IOUtils.toByteArray(new FileInputStream(new java.io.File(directory, "2.pdf"))), "image identité de komenan yao christian.pdf");
@@ -79,7 +71,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 		}
     	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE));
 		create(file);
-		create(new FileIdentifiableGlobalIdentifier(file,son));
+		create(new FileIdentifiableGlobalIdentifier(file,inject(PersonDao.class).read("P003")));
 		
 		try {
     		file = inject(FileBusiness.class).process(RandomDataProvider.getInstance().getMale().photo().getBytes(), "image identité de papa.pdf");
@@ -88,7 +80,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 		}
     	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE));
 		create(file);
-		create(new FileIdentifiableGlobalIdentifier(file,father));
+		create(new FileIdentifiableGlobalIdentifier(file,inject(PersonDao.class).read("P001")));
 		
 		try {
     		file = inject(FileBusiness.class).process(RandomDataProvider.getInstance().getFemale().photo().getBytes(), "image identité de maman.pdf");
@@ -97,7 +89,9 @@ public class MailBusinessIT extends AbstractBusinessIT {
 		}
     	file.setRepresentationType(inject(FileRepresentationTypeDao.class).read(RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE));
 		create(file);
-		create(new FileIdentifiableGlobalIdentifier(file,mother));
+		create(new FileIdentifiableGlobalIdentifier(file,inject(PersonDao.class).read("P002")));
+		
+		testCase.clean();
     }
     
     @Override
@@ -145,7 +139,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
 	
 	//@Test
     public void sendMailToFather(){
-		Person son = inject(PersonBusiness.class).find("P002");
+		/*Person son = inject(PersonBusiness.class).find("P002");
     	MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
 		/*inject(MailBusiness.class).send(Notification.Builder.buildMail(son, RootConstant.Code.FileRepresentationType.IDENTITY_DOCUMENT
 				,Arrays.asList(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER),Boolean.FALSE));
@@ -174,16 +168,25 @@ public class MailBusinessIT extends AbstractBusinessIT {
 	
 	//@Test
     public void sendMultipleMails(){
-		/*Person son = inject(PersonBusiness.class).find("P002");
-		Person father = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER))
-				.iterator().next().getPerson1();
-		Person mother = inject(PersonRelationshipDao.class).readByPerson2ByType(son, inject(PersonRelationshipTypeDao.class).read(RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER))
-				.iterator().next().getPerson1();
+		Person son = inject(PersonBusiness.class).find("P002");
+		Collection<Person> fathers = inject(PersonRelationshipBusiness.class).getRelatedPersons(inject(PersonRelationshipDao.class).readByPersonByRoleByOppositeRole(son, inject(PersonRelationshipTypeRoleDao.class)
+				.read(RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_SON), inject(PersonRelationshipTypeRoleDao.class)
+				.read(RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_FATHER)), son);
+		
+		Collection<Person> mothers = inject(PersonRelationshipBusiness.class).getRelatedPersons(inject(PersonRelationshipDao.class).readByPersonByRoleByOppositeRole(son, inject(PersonRelationshipTypeRoleDao.class)
+				.read(RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_SON), inject(PersonRelationshipTypeRoleDao.class)
+				.read(RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_MOTHER)), son);
+		
+		Collection<Person> persons = new ArrayList<>();
+		persons.addAll(fathers);
+		persons.addAll(mothers);
+		persons.add(son);
+		
     	MessageSendingBusiness.SendArguments.BLOCKING=Boolean.TRUE;
-    	inject(MailBusiness.class).send(Notification.Builder.buildMails(Arrays.asList(father,mother,son), RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE
-    			,Arrays.asList(RootConstant.Code.PersonRelationshipType.FAMILY_FATHER,RootConstant.Code.PersonRelationshipType.FAMILY_MOTHER
+    	inject(MailBusiness.class).send(Notification.Builder.buildMails(persons, RootConstant.Code.FileRepresentationType.IDENTITY_IMAGE
+    			,Arrays.asList(RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_FATHER,RootConstant.Code.PersonRelationshipTypeRole.FAMILY_PARENT_MOTHER
     			),Boolean.TRUE));
-    	*/
+    	
     }
 	
 	@Test

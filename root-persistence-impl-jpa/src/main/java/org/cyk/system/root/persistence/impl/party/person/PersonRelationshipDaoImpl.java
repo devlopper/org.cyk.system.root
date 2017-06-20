@@ -18,7 +18,8 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 
 	private static final long serialVersionUID = 6920278182318788380L;
 
-	private String readByPersons,readByRoles,readByPersonsByRoles,readOppositeByPersonsByRoles,readByPersonByRoleByOppositePerson,readByPersonByRoleByOppositeRole;
+	private String readByPersons,readByRoles,readByPersonsByRoles,readOppositeByPersonsByRoles,readByPersonByRoleByOppositePerson,readByPersonByRoleByOppositeRole
+		,countByPersonByRoleByOppositeRole;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
@@ -65,10 +66,23 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 				.and(role1,PersonRelationshipExtremity.FIELD_ROLE,ArithmeticOperator.EQ)
 				.and(person2,PersonRelationshipExtremity.FIELD_PERSON+"2",ArithmeticOperator.EQ));
 		
-		registerNamedQuery(readByPersonByRoleByOppositeRole, _select()
-			.where(person1,PersonRelationshipExtremity.FIELD_PERSON)
-			.and(role1,PersonRelationshipExtremity.FIELD_ROLE+"1",ArithmeticOperator.EQ)
-			.and(role2,PersonRelationshipExtremity.FIELD_ROLE+"2",ArithmeticOperator.EQ));
+		registerNamedQuery(readByPersonByRoleByOppositeRole, _select().where()
+				.parenthesis(Boolean.TRUE)	
+					.where(person1,PersonRelationshipExtremity.FIELD_PERSON)
+					.and(role1,PersonRelationshipExtremity.FIELD_ROLE+"1",ArithmeticOperator.EQ)
+					.and(role2,PersonRelationshipExtremity.FIELD_ROLE+"2",ArithmeticOperator.EQ)
+				.parenthesis(Boolean.FALSE)
+				
+				.or()
+				
+				.parenthesis(Boolean.TRUE)	
+					.where(person2,PersonRelationshipExtremity.FIELD_PERSON)
+					.and(role2,PersonRelationshipExtremity.FIELD_ROLE+"1",ArithmeticOperator.EQ)
+					.and(role1,PersonRelationshipExtremity.FIELD_ROLE+"2",ArithmeticOperator.EQ)
+				.parenthesis(Boolean.FALSE)
+				
+				);
+		
 		
 	}
 	
@@ -146,6 +160,13 @@ public class PersonRelationshipDaoImpl extends AbstractTypedDao<PersonRelationsh
 		return namedQuery(readByPersonByRoleByOppositeRole).parameter(PersonRelationshipExtremity.FIELD_PERSON, person1)
 				.parameter(PersonRelationshipExtremity.FIELD_ROLE+"1", role1).parameter(PersonRelationshipExtremity.FIELD_ROLE+"2", role2)
 				.resultMany();
+	}
+	
+	@Override
+	public Long countByPersonByRoleByOppositeRole(Person person1, PersonRelationshipTypeRole role1,PersonRelationshipTypeRole role2) {
+		return countNamedQuery(countByPersonByRoleByOppositeRole).parameter(PersonRelationshipExtremity.FIELD_PERSON, person1)
+				.parameter(PersonRelationshipExtremity.FIELD_ROLE+"1", role1).parameter(PersonRelationshipExtremity.FIELD_ROLE+"2", role2)
+				.resultOne();
 	}
 
 }

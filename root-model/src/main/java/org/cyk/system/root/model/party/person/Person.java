@@ -61,6 +61,11 @@ public class Person extends Party implements Serializable{
 			names = globalIdentifier.getName()+(StringUtils.isEmpty(lastnames)?Constant.EMPTY_STRING:(Constant.CHARACTER_SPACE+lastnames));
 		return names;
 	}
+	
+	@Override
+	public Person setElectronicMail(String address) {
+		return (Person) super.setElectronicMail(address);
+	}
 
 	@Override
 	public String toString() {
