@@ -16,7 +16,7 @@ import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Entity @Getter @Setter @NoArgsConstructor @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS) 
+@Entity @Getter @Setter @NoArgsConstructor @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS) @Deprecated //Use RoleIdentifiable
 public class RoleUniformResourceLocator extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -1426919647717880937L;

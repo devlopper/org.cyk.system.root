@@ -31,8 +31,6 @@ public class Role extends AbstractEnumeration implements Serializable {
 	private Set<Permission> permissions = new HashSet<>();
 	
 	@Transient private IdentifiableRuntimeCollection<RoleUniformResourceLocator> roleUniformResourceLocators = new IdentifiableRuntimeCollection<>();
-	@Transient private IdentifiableRuntimeCollection<RoleBusinessService> roleBusinessServices;
-	@Transient private IdentifiableRuntimeCollection<RoleUserInterface> roleUserInterfaces;
 	
 	public Role(String code, String name) {
 		super(code, name, null, null);

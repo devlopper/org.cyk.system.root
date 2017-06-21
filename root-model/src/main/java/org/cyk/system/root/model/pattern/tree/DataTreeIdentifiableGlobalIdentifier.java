@@ -5,6 +5,8 @@ import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -24,6 +26,8 @@ import lombok.Setter;
  *
  */
 @Getter @Setter @Entity  @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {DataTreeIdentifiableGlobalIdentifier.FIELD_DATA_TREE
+		,DataTreeIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
 public class DataTreeIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
@@ -31,6 +35,8 @@ public class DataTreeIdentifiableGlobalIdentifier extends AbstractJoinGlobalIden
 	@ManyToOne @NotNull private DataTree dataTree;
 	
 	/**/
+	
+	public static final String FIELD_DATA_TREE = "dataTree";
 	
 	@Getter @Setter
 	public static class SearchCriteria extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria implements Serializable {

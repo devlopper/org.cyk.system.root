@@ -6,16 +6,18 @@ import java.util.Collection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Rud;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * A join between a role and an identifiable
@@ -23,6 +25,8 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
  *
  */
 @Getter @Setter @Entity  @NoArgsConstructor 
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {RoleIdentifiableGlobalIdentifier.FIELD_ROLE
+		,RoleIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
 public class RoleIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
@@ -30,6 +34,8 @@ public class RoleIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifi
 	@ManyToOne @NotNull private Role role;
 	
 	@Embedded private Rud rud = new Rud();
+	
+	public static final String FIELD_ROLE = "role";
 	
 	/**/
 	

@@ -24,7 +24,6 @@ import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.security.CredentialsBusiness;
 import org.cyk.system.root.business.api.security.PermissionBusiness;
-import org.cyk.system.root.business.api.security.RoleSecuredViewBusiness;
 import org.cyk.system.root.business.api.security.RoleUniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.business.impl.datasource.JdbcDataSource;
@@ -52,8 +51,6 @@ import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.License;
 import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;
-import org.cyk.system.root.model.security.RoleSecuredView;
-import org.cyk.system.root.model.userinterface.InputName;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
@@ -87,7 +84,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     @Inject protected LanguageBusiness languageBusiness;
     @Inject @Getter protected JasperReportBusinessImpl reportBusiness;
     @Inject protected PermissionBusiness permissionBusiness;
-    @Inject protected RoleSecuredViewBusiness roleSecuredViewBusiness;
     @Inject @Getter protected FormatterBusiness formatterBusiness;
     
     @Inject protected RootDataProducerHelper rootDataProducerHelper;
@@ -271,14 +267,14 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 			for (Permission permission : permissions)
 				role.getPermissions().add(permission);
 		create(role);
-		createRoleSecuredView(role.getCode(), role, workspaceId);
+		//createRoleSecuredView(role.getCode(), role, workspaceId);
 	}
 	
 	protected void createRole(String code,String name,String[] viewIds) {
 		Role role = new Role(code, name);
 		create(role);
-		for(String viewId : viewIds)
-			createRoleSecuredView(role.getCode(), role, viewId);
+		//for(String viewId : viewIds)
+		//	createRoleSecuredView(role.getCode(), role, viewId);
 	}
     
 	protected void createRole(String code,String name,String workspaceId,String...permissionCodes){
@@ -294,10 +290,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	
 	protected void createRole(String code,String name){
 		createRole(code, name, String.format(SHIRO_ROLE_FOLDER_FORMAT, StringUtils.lowerCase(StringUtils.remove(code, "_"))));
-	}
-	
-	protected void createRoleSecuredView(String code,Role role,String viewId){
-		roleSecuredViewBusiness.create(new RoleSecuredView(role, viewId, code, code));
 	}
 	
 	protected Role createRoleInstance(String code,String name,String...permissionCodes){
@@ -322,13 +314,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	metric.setCode(code);
     	metric.setName(name);
     	return create(metric);
-    }
-    
-    protected InputName inputName(String code,String name){
-    	InputName inputName = new InputName();
-    	inputName.setCode(code);
-    	inputName.setName(name);
-    	return create(inputName);
     }
         
     protected StringGenerator stringGenerator(String leftPrefix,String leftPattern,Long leftLenght,String rightPattern,Long rightLenght,Long lenght){

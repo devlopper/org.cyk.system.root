@@ -16,8 +16,6 @@ public abstract class AbstractDataTreeNodeDetails<NODE extends AbstractDataTreeN
 	
 	public AbstractDataTreeNodeDetails(NODE node) {
 		super(node);
-		setMaster(node);
-		
 	}
 	
 	@Override

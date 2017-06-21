@@ -7,6 +7,8 @@ import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -26,6 +28,8 @@ import lombok.Setter;
  *
  */
 @Getter @Setter @Entity  @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {ValueCollectionIdentifiableGlobalIdentifier.FIELD_VALUE_COLLECTION
+		,ValueCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
 public class ValueCollectionIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
@@ -38,6 +42,8 @@ public class ValueCollectionIdentifiableGlobalIdentifier extends AbstractJoinGlo
 		super(identifiable);
 		this.valueCollection = valueCollection;
 	}
+	
+	public static final String FIELD_VALUE_COLLECTION = "valueCollection";
 	
 	/**/
 	
