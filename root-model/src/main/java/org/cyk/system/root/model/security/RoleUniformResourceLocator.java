@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -16,7 +18,14 @@ import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
-@Entity @Getter @Setter @NoArgsConstructor @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS) @Deprecated //Use RoleIdentifiable
+/**
+ * Define client access , through the uniform resource location , to the system. It is ACCESS CENTRIC.
+ * @author Christian
+ *
+ */
+@Entity @Getter @Setter @NoArgsConstructor @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS)
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {RoleUniformResourceLocator.FIELD_ROLE
+		,RoleUniformResourceLocator.FIELD_UNIFORM_RESOURCE_LOCATOR})})
 public class RoleUniformResourceLocator extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -1426919647717880937L;

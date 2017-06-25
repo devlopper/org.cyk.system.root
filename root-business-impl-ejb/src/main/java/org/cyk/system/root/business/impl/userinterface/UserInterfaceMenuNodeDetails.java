@@ -24,7 +24,7 @@ public class UserInterfaceMenuNodeDetails extends AbstractDataTreeDetails<UserIn
 	public void setMaster(UserInterfaceMenuNode master) {
 		super.setMaster(master);
 		if(master!=null) {
-			command = new FieldValue(master.getCommand());
+			command = createFieldValue(master.getCommand());
 		}
 	}
 	

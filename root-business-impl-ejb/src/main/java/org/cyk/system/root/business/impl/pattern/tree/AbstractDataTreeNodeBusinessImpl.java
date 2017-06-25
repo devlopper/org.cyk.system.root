@@ -34,9 +34,10 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 	@Override
 	public NODE create(NODE enumeration) {
 		if(enumeration.getNode()==null){
-			enumeration.setNode(new NestedSetNode(new NestedSet(), null));
+			enumeration.setNode(new NestedSetNode(new NestedSet(), enumeration.getNewParent()==null ? null : enumeration.getNewParent().getNode()));
 			enumeration.getNode().getSet().setName(enumeration.getName());
 		}
+		
 		if(enumeration.getNode().getIdentifier()==null){
 			if(StringUtils.isBlank(enumeration.getNode().getCode()))
 				enumeration.getNode().setCode(enumeration.getCode());

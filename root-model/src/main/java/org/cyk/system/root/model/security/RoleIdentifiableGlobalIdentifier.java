@@ -20,7 +20,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * A join between a role and an identifiable
+ * A join between a role and an identifiable.
+ * Define authorized actions on persisted data. It is DATA CENTRIC.
  * @author Christian Yao Komenan
  *
  */
