@@ -13,6 +13,7 @@ import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.builder.UrlStringBuilder;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.helper.ClassHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +41,7 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	
 	@SuppressWarnings("unchecked")
 	protected Class<MODEL_ELEMENT> getClassParameter(){
-		return (Class<MODEL_ELEMENT>) commonUtils.getClassParameterAt(getClass(), 0);
+		return (Class<MODEL_ELEMENT>)  new ClassHelper().getParameterAt(getClass(), 0,AbstractModelElement.class);
 	}
 	
 	public void setMaster(MODEL_ELEMENT master){
@@ -68,6 +69,12 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	
 	protected String formatUsingBusiness(Object object) {
 		return rootBusinessLayer.getFormatterBusiness().format(object);
+	}
+	
+	protected FieldValue createFieldValue(Object object){
+		if(object==null)
+			return null;
+		return new FieldValue(object);
 	}
 	
 	/**/
