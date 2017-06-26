@@ -26,7 +26,7 @@ public class UserInterfaceMenuItemBusinessImpl extends AbstractCollectionItemBus
 	@Override
 	protected Object[] getPropertyValueTokens(UserInterfaceMenuItem userInterfaceMenuItem, String name) {
 		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, name)){
-			return new Object[]{userInterfaceMenuItem.getMenuNode()};
+			return new Object[]{userInterfaceMenuItem.getNode()};
 		}
 		return super.getPropertyValueTokens(userInterfaceMenuItem, name);
 	}

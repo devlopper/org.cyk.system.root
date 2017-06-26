@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
 import org.cyk.utility.common.annotation.FieldOverride;
@@ -22,6 +23,8 @@ public class UserInterfaceMenuNode extends AbstractDataTree<UserInterfaceMenuNod
 	private static final long serialVersionUID = -6128937819261060725L;
 
 	@ManyToOne private UserInterfaceCommand command;
+	
+	@Transient private Boolean automaticallyCreateCommand;
 	
 	public UserInterfaceMenuNode(UserInterfaceMenuNode parent, UserInterfaceMenuNodeType type, String code,String name) {
 		super(parent, type, code);

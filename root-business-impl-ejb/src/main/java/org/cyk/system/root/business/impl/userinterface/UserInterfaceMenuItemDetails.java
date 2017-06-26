@@ -15,7 +15,7 @@ import lombok.Setter;
 public class UserInterfaceMenuItemDetails extends AbstractCollectionItemDetails.AbstractDefault<UserInterfaceMenuItem,UserInterfaceMenu> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private FieldValue menuNode;
+	@Input @InputText private FieldValue node;
 	
 	public UserInterfaceMenuItemDetails(UserInterfaceMenuItem userInterfaceMenuItem) {
 		super(userInterfaceMenuItem);
@@ -25,10 +25,10 @@ public class UserInterfaceMenuItemDetails extends AbstractCollectionItemDetails.
 	public void setMaster(UserInterfaceMenuItem userInterfaceMenuItem) {
 		super.setMaster(userInterfaceMenuItem);
 		if(userInterfaceMenuItem!=null){
-			menuNode = createFieldValue(userInterfaceMenuItem.getMenuNode());
+			node = createFieldValue(userInterfaceMenuItem.getNode());
 		}
 	}
 	
-	public static final String FIELD_MENU_NODE = "menuNode";
+	public static final String FIELD_NODE = "node";
 	
 }

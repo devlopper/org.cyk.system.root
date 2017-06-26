@@ -87,7 +87,10 @@ import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.userinterface.UserInterfaceCommand;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenu;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuItem;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuLocation;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuNode;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuNodeType;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuRenderType;
 import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.model.value.MeasureType;
 import org.cyk.system.root.model.value.NullString;
@@ -325,6 +328,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         mathematics();
         information();
         
+        userInterface();
     }
     
     private void geography(){
@@ -409,6 +413,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private void information(){ 
     	createFromExcelSheet(IdentifiableCollectionType.class);
+    }
+    
+    private void userInterface(){ 
+    	createFromExcelSheet(UserInterfaceMenuRenderType.class);
+    	createFromExcelSheet(UserInterfaceMenuLocation.class);
+    	createFromExcelSheet(UserInterfaceMenuNodeType.class);
     }
     
     @Override

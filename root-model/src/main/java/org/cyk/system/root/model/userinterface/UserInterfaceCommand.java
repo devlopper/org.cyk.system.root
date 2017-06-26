@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -32,6 +33,8 @@ public class UserInterfaceCommand extends AbstractIdentifiable implements Serial
 	@ManyToOne private UniformResourceLocator uniformResourceLocator;
 	
 	@ManyToOne private Script script;
+	
+	@Transient private Boolean automaticallyCreateComponent;
 	
 	public static final String FIELD_COMPONENT = "component";
 	public static final String FIELD_UNIFORM_RESOURCE_LOCATOR = "uniformResourceLocator";

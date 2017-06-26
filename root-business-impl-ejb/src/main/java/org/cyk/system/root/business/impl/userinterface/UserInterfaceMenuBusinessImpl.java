@@ -4,9 +4,12 @@ import java.io.Serializable;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.userinterface.UserInterfaceMenuBusiness;
 import org.cyk.system.root.business.api.userinterface.UserInterfaceMenuItemBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenu;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuItem;
 import org.cyk.system.root.persistence.api.userinterface.UserInterfaceMenuDao;
@@ -21,6 +24,12 @@ public class UserInterfaceMenuBusinessImpl extends AbstractCollectionBusinessImp
 		super(dao); 
 	}
 	
-	
+	@Override
+	protected Object[] getPropertyValueTokens(UserInterfaceMenu userInterfaceMenu, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE}, name)){
+			return new Object[]{RandomStringUtils.randomAlphabetic(5)};
+		}
+		return super.getPropertyValueTokens(userInterfaceMenu, name);
+	}
 	
 }

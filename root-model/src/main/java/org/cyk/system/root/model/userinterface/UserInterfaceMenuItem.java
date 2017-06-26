@@ -20,9 +20,9 @@ public class UserInterfaceMenuItem extends AbstractCollectionItem<UserInterfaceM
 
 	private static final long serialVersionUID = 5908328682512231058L;
 
-	@ManyToOne @NotNull private UserInterfaceMenuNode menuNode;//TODO rename it to node
+	@ManyToOne @NotNull private UserInterfaceMenuNode node;
 	
 	/**/
 	
-	public static final String FIELD_MENU_NODE = "menuNode";
+	public static final String FIELD_NODE = "node";
 }
