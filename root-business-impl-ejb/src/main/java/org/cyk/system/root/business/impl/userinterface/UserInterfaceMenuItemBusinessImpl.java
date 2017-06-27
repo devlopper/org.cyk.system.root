@@ -35,6 +35,15 @@ public class UserInterfaceMenuItemBusinessImpl extends AbstractCollectionItemBus
 	protected Collection<? extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<?>> getListeners() {
 		return Listener.COLLECTION;
 	}
+	
+	@Override
+	public Collection<UserInterfaceMenuItem> merge(Collection<Collection<UserInterfaceMenuItem>> userInterfaceMenuItemCollections) {
+		Collection<UserInterfaceMenuItem> results = new ArrayList<>();
+		for(Collection<UserInterfaceMenuItem> userInterfaceMenuItems : userInterfaceMenuItemCollections){
+			results.addAll(userInterfaceMenuItems);
+		}
+		return results;
+	}
 			
 	/**/
 	

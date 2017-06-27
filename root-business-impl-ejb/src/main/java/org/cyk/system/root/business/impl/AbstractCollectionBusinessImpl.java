@@ -15,6 +15,7 @@ import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
+import org.cyk.utility.common.helper.ClassHelper;
 
 public abstract class AbstractCollectionBusinessImpl<COLLECTION extends AbstractCollection<ITEM>,ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionDao<COLLECTION, ITEM>,ITEM_DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,ITEM_BUSINESS extends AbstractCollectionItemBusiness<ITEM,COLLECTION>> extends AbstractEnumerationBusinessImpl<COLLECTION, DAO> implements AbstractCollectionBusiness<COLLECTION,ITEM>,Serializable {
 
@@ -25,7 +26,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	@SuppressWarnings("unchecked")
 	public AbstractCollectionBusinessImpl(DAO dao) {
 		super(dao);
-		itemClass = (Class<ITEM>) commonUtils.getClassParameterAt(getClass(), 1);
+		itemClass = (Class<ITEM>) new ClassHelper().getParameterAt(getClass(), 1,AbstractCollectionItem.class);
 	}
 	
 	protected ITEM instanciateOneItem(String[] values){
@@ -138,7 +139,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		}
 		*/
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected ITEM_DAO getItemDao(){
 		return (ITEM_DAO) inject(PersistenceInterfaceLocator.class).injectTyped(itemClass);

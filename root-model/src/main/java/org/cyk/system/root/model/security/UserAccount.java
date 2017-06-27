@@ -46,8 +46,6 @@ public class UserAccount extends AbstractIdentifiable implements Serializable {
     @JoinTable(name="UserAccountRoles",joinColumns = { @JoinColumn(name = "useraccountid") } ,inverseJoinColumns={ @JoinColumn(name = "roleid") })
 	@Size(min=1)
     private Set<Role> roles =new HashSet<>();
-
-	//private Boolean disabled;
 	
 	/**/
 	

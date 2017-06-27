@@ -178,6 +178,13 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 		return hasRole(userAccount, inject(RoleDao.class).read(roleCode));
 	}
 	
+	@Override
+	public UserAccount instanciateOne() {
+		UserAccount userAccount = super.instanciateOne();
+		userAccount.setCredentials(inject(CredentialsBusiness.class).instanciateOne());
+		return userAccount;
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public UserAccount instanciateOne(Party party,Role...roles) {
 		UserAccount userAccount = new UserAccount();

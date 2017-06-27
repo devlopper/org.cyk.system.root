@@ -24,5 +24,5 @@ public class RoleUserInterfaceMenuDetails extends AbstractOutputDetails<RoleUser
 	}
 	
 	public static final String FIELD_ROLE = "role";
-	public static final String FIELD_USER_INTERFACE_MENU = "uniformResourceLocator";
+	public static final String FIELD_USER_INTERFACE_MENU = "userInterfaceMenu";
 }
