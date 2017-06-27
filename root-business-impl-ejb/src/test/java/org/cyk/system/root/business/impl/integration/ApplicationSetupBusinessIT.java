@@ -6,6 +6,7 @@ import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
+import org.cyk.system.root.persistence.impl.AbstractPersistenceService;
 import org.cyk.utility.common.file.ExcelSheetReader;
 
 public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
@@ -36,6 +37,7 @@ public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
     	//	System.out.println(globalIdentifier.getCode());
     	System.out.println("Class excluded to global identifiers : "+GlobalIdentifier.EXCLUDED);
     	System.out.println("Number of global identifiers : "+inject(GlobalIdentifierDao.class).countAll());
+    	System.out.println("Number of named queries : "+AbstractPersistenceService.NAMED_QUERIES.size());
     }
     
     

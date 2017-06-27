@@ -39,4 +39,5 @@ public interface PersonRelationshipBusiness extends TypedBusiness<PersonRelation
 	*/
 	PersonRelationship instanciateOne(String person1Code,String person1RoleCode,String person2Code,String person2RoleCode);
  
+	Collection<Person> getRelatedPersons(Collection<PersonRelationship> personRelationships,Person person);
 }

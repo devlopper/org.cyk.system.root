@@ -118,4 +118,6 @@ public interface PersonRelationshipDao extends TypedDao<PersonRelationship> {
 	 * @return
 	 */
 	Collection<PersonRelationship> readByPersonByRoleByOppositeRole(Person person1,PersonRelationshipTypeRole role1,PersonRelationshipTypeRole role2);
+	
+	Long countByPersonByRoleByOppositeRole(Person person1,PersonRelationshipTypeRole role1,PersonRelationshipTypeRole role2);
 }

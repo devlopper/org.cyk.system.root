@@ -13,6 +13,7 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
+import org.cyk.utility.common.helper.ClassHelper;
 
 public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,COLLECTION extends AbstractCollection<ITEM>> extends AbstractEnumerationBusinessImpl<ITEM, DAO> implements AbstractCollectionItemBusiness<ITEM,COLLECTION>,Serializable {
 
@@ -27,7 +28,7 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	@SuppressWarnings("unchecked")
 	public Class<COLLECTION> getCollectionClass(){
 		if(collectionClass==null)
-			collectionClass = (Class<COLLECTION>) commonUtils.getClassParameterAt(getClass(), 2);
+			collectionClass = (Class<COLLECTION>) new ClassHelper().getParameterAt(getClass(), 2,AbstractCollection.class);
 		return collectionClass;
 	}
 	

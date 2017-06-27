@@ -348,6 +348,28 @@ public interface RootConstant {
 			
 		}
 		
+		public static class UserInterfaceMenuRenderType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static final String PLAIN="PLAIN";
+			public static final String SLIDE="SLIDE";
+			public static final String PANEL="PANEL";
+			public static final String TAB="TAB";
+			public static final String BREAD_CRUMB="BREAD_CRUMB";
+			public static final String BAR="BAR";
+
+		}
+		
+		public static class UserInterfaceMenuLocation implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String NORTH="NORTH";
+			public static String EAST="EAST";
+			public static String SOUTH="SOUTH";
+			public static String WEST="WEST";
+
+		}
+		
 		/**/
 		
 	}

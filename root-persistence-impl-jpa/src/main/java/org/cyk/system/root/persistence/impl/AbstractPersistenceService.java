@@ -54,6 +54,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	//private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistenceService.class);
 	
 	public final static Set<Class<?>> NAMED_QUERIES_INITIALIZED = new HashSet<>();
+	public final static Set<String> NAMED_QUERIES = new HashSet<>();
 	private final static String SELECT_IDENTIFIER_FORMAT = "SELECT record.identifier FROM %s record";
 	//private final static String SELECT_BYIDENTIFIER_FORMAT = "SELECT record FROM %s record WHERE record.identifier IN :identifiers";
 	
@@ -275,6 +276,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		Query query = aResultClass == null ? entityManager.createQuery(queryString) : entityManager.createQuery(queryString, aResultClass);
 		//logInfo("Register Named Query {} , {}", name,query);
 		entityManager.getEntityManagerFactory().addNamedQuery(name, query);	
+		NAMED_QUERIES.add(name);
 	}
 	
 	protected void registerNamedQuery(String name,String query,Boolean isSelectQuery){

@@ -17,7 +17,7 @@ public class ApplicationDetails extends AbstractOutputDetails<Application> imple
 
 	@Input @InputText private FieldValue license;
 	@Input @InputText private FieldValue smtpProperties;
-	@Input @InputText private String uniformResourceLocatorFiltered,webContext;
+	@Input @InputText private String persistedMenuEnabled,uniformResourceLocatorFiltered,webContext;
 
 	public ApplicationDetails(Application application) {
 		super(application);
@@ -29,6 +29,7 @@ public class ApplicationDetails extends AbstractOutputDetails<Application> imple
 		super.setMaster(application);
 		if(application!=null){
 			uniformResourceLocatorFiltered = formatResponse(application.getUniformResourceLocatorFiltered());
+			persistedMenuEnabled = formatResponse(application.getPersistedMenuEnabled());
 			webContext = application.getWebContext();
 			if(application.getSmtpProperties()!=null)
 				smtpProperties = new FieldValue(application.getSmtpProperties());
@@ -42,5 +43,8 @@ public class ApplicationDetails extends AbstractOutputDetails<Application> imple
 	public static final String FIELD_LICENSE = "license";
 	public static final String FIELD_SMTP_PROPERTIES = "smtpProperties";
 	public static final String FIELD_UNIFORM_RESOURCE_LOCATOR_FILTERED = "uniformResourceLocatorFiltered";
+	public static final String FIELD_PERSISTED_MENU_ENABLED = "persistedMenuEnabled";
 	public static final String FIELD_WEB_CONTEXT = "webContext";
+	public static final String FIELD_MENU_PRIMARY = "menuPrimary";
+	public static final String FIELD_MENU_SECONDARY = "menuSecondary";
 }

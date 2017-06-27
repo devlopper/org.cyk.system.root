@@ -23,11 +23,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.inject.Inject;
-
-import lombok.Getter;
-import lombok.Setter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -59,6 +57,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfigur
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
@@ -71,8 +70,10 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransitio
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
+import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
@@ -90,6 +91,9 @@ import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -823,11 +827,19 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		/**/
 		
+		public Person createOnePerson(String code,String firstname,String lastnames,String email){
+			Person person = inject(PersonBusiness.class).instanciateOne().setCode(code).setName(firstname).setLastnames(lastnames).setElectronicMail(email);
+			create(person);
+			if(StringUtils.isNotBlank(email))
+				assertElectronicMail(code, email);
+			return person;
+		}
+		
 		public Person createOnePersonRandomly(String code){
 			return create(inject(PersonBusiness.class).instanciateOneRandomly(code));
 		}
 		
-		public void createManyPersonRandomly(String[] codes){
+		public void createManyPersonRandomly(String...codes){
 			for(Person person : inject(PersonBusiness.class).instanciateManyRandomly(new HashSet<>(Arrays.asList(codes))))
 				create(person);
 		}
@@ -857,16 +869,44 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			createParentChildrenPersonRelationship(fatherPersonCode, FAMILY_PARENT_FATHER, sonPersonCodes, daughterPersonCodes);
 			createParentChildrenPersonRelationship(motherPersonCode, FAMILY_PARENT_MOTHER, sonPersonCodes, daughterPersonCodes);
 						
-			assertNumberOfPersonRelationship(fatherPersonCode, FAMILY_PARENT_FATHER, FAMILY_PARENT_SON, sonPersonCodes);
-			assertNumberOfPersonRelationship(motherPersonCode, FAMILY_PARENT_MOTHER, FAMILY_PARENT_SON, sonPersonCodes);
-			assertNumberOfPersonRelationship(fatherPersonCode, FAMILY_PARENT_FATHER, FAMILY_PARENT_DAUGHTER, daughterPersonCodes);
-			assertNumberOfPersonRelationship(motherPersonCode, FAMILY_PARENT_MOTHER, FAMILY_PARENT_DAUGHTER, daughterPersonCodes);
+			assertPersonRelationship(fatherPersonCode, FAMILY_PARENT_FATHER, FAMILY_PARENT_SON, sonPersonCodes);
+			assertPersonRelationship(motherPersonCode, FAMILY_PARENT_MOTHER, FAMILY_PARENT_SON, sonPersonCodes);
+			assertPersonRelationship(fatherPersonCode, FAMILY_PARENT_FATHER, FAMILY_PARENT_DAUGHTER, daughterPersonCodes);
+			assertPersonRelationship(motherPersonCode, FAMILY_PARENT_MOTHER, FAMILY_PARENT_DAUGHTER, daughterPersonCodes);
 		}
 		
-		protected void assertNumberOfPersonRelationship(String person1Code,String role1Code,String role2Code,String[] expectedPersonCodes){
-			assertEquals("Number of "+role1Code+" of "+person1Code, expectedPersonCodes==null ? 0 : expectedPersonCodes.length, inject(PersonRelationshipDao.class)
-					.readByPersonByRoleByOppositeRole(inject(PersonDao.class).read(person1Code), inject(PersonRelationshipTypeRoleDao.class).read(role1Code)
-							, inject(PersonRelationshipTypeRoleDao.class).read(role2Code)).size());
+		public void assertPersonRelationship(String person1Code,String role1Code,String role2Code,String[] expectedPersonCodes){
+			__assertPersonRelationship__(person1Code, role1Code, role2Code, expectedPersonCodes,Boolean.TRUE);
+			if(expectedPersonCodes!=null)
+				for(String expectedPersonCode : expectedPersonCodes)
+					__assertPersonRelationship__(expectedPersonCode, role2Code, role1Code, new String[]{person1Code},Boolean.FALSE);
+		}
+		
+		private void __assertPersonRelationship__(String person1Code,String role1Code,String role2Code,String[] expectedPersonCodes,Boolean assertCount){
+			Person person1 = inject(PersonDao.class).read(person1Code);
+			PersonRelationshipTypeRole role1 = inject(PersonRelationshipTypeRoleDao.class).read(role1Code);
+			PersonRelationshipTypeRole role2 = inject(PersonRelationshipTypeRoleDao.class).read(role2Code);
+			Collection<PersonRelationship> personRelationships = inject(PersonRelationshipDao.class).readByPersonByRoleByOppositeRole(person1, role1 , role2);
+			
+			if(Boolean.TRUE.equals(assertCount)){
+				Integer count = inject(PersonRelationshipDao.class).countByPersonByRoleByOppositeRole(person1, role1, role2).intValue();
+				assertEquals("Number of "+role2Code+" of "+person1Code, expectedPersonCodes==null ? 0 : expectedPersonCodes.length, personRelationships.size());
+				assertEquals("Database count "+count+" is not equals to list size "+personRelationships.size(), count, personRelationships.size());
+			}
+			
+			if(expectedPersonCodes!=null){
+				Set<String> codes = new HashSet<>();
+				for(Person person : inject(PersonRelationshipBusiness.class).getRelatedPersons(personRelationships, person1))
+					codes.add(person.getCode());
+				for(String code : expectedPersonCodes)
+					assertThat(code+" is not "+role2Code+" of "+person1Code, codes.contains(code));	
+			}
+		}
+		
+		public void assertElectronicMail(String personCode,String email){
+			Collection<ElectronicMail> electronicMails = commonUtils.castCollection(
+					inject(ElectronicMailDao.class).readByCollection(inject(PersonDao.class).read(personCode).getContactCollection()),ElectronicMail.class);
+			assertEquals("Electronic mail", email, electronicMails.isEmpty() ? Constant.EMPTY_STRING : electronicMails.iterator().next().getAddress());
 		}
 		
 		public <T extends AbstractIdentifiable> void assertWhereExistencePeriodFromDateIsLessThanCount(final Class<T> aClass,final String code,Integer count){

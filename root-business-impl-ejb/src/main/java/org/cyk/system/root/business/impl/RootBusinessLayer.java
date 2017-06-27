@@ -13,9 +13,6 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
@@ -87,6 +84,13 @@ import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.model.time.TimeDivisionType;
+import org.cyk.system.root.model.userinterface.UserInterfaceCommand;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenu;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuItem;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuLocation;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuNode;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuNodeType;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuRenderType;
 import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.model.value.MeasureType;
 import org.cyk.system.root.model.value.NullString;
@@ -104,6 +108,9 @@ import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.builder.NameValueCollectionStringBuilder;
 import org.cyk.utility.common.builder.NameValueStringBuilder;
 import org.cyk.utility.common.generator.AbstractGeneratable;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
@@ -186,9 +193,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         inject(RootFormattingConfigurationsRegistrator.class).register();
         
         AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, ReportTemplate.class
-        		,PersonRelationshipTypeRole.class,PersonRelationship.class,UniformResourceLocator.class);
+        		,PersonRelationshipTypeRole.class,PersonRelationship.class,UniformResourceLocator.class,TimeDivisionType.class,UserInterfaceCommand.class
+        		,UserInterfaceMenuNode.class,UserInterfaceMenuItem.class);
         
-        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE}, UniformResourceLocatorParameter.class);
+        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE}, UniformResourceLocatorParameter.class
+        		,UserInterfaceMenu.class);
         
         rootBusinessTestHelper.setReportBusiness(reportBusiness);
         
@@ -258,8 +267,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		
 		//defaultSmtpProperties = inject(SmtpPropertiesDao.class).read(RootConstant.Code.SmtpProperties.DEFAULT);
 		
-		AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, TimeDivisionType.class);
-    
 		AbstractGeneratable.Listener.COLLECTION.add(new AbstractGeneratable.Listener.Adapter.Default(){
 			private static final long serialVersionUID = 1L;
 			@Override
@@ -321,6 +328,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         mathematics();
         information();
         
+        userInterface();
     }
     
     private void geography(){
@@ -405,6 +413,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     
     private void information(){ 
     	createFromExcelSheet(IdentifiableCollectionType.class);
+    }
+    
+    private void userInterface(){ 
+    	createFromExcelSheet(UserInterfaceMenuRenderType.class);
+    	createFromExcelSheet(UserInterfaceMenuLocation.class);
+    	createFromExcelSheet(UserInterfaceMenuNodeType.class);
     }
     
     @Override

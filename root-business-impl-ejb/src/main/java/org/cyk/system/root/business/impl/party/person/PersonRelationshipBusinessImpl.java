@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl.party.person;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -162,5 +163,12 @@ public class PersonRelationshipBusinessImpl extends AbstractTypedBusinessService
 		return dao.readOppositeByPersonByRoles(person, roles);
 	}
 	
-	
+	@Override
+	public Collection<Person> getRelatedPersons(Collection<PersonRelationship> personRelationships, Person person) {
+		Collection<Person> persons = new ArrayList<>();
+		for(PersonRelationship personRelationship : personRelationships)
+			persons.add(personRelationship.getExtremity1().getPerson().equals(person) ?personRelationship.getExtremity2().getPerson()
+					: personRelationship.getExtremity1().getPerson());
+		return persons;
+	}
 }

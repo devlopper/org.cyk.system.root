@@ -10,6 +10,7 @@ import org.cyk.system.root.business.api.globalidentification.JoinGlobalIdentifie
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdentifierDao;
 
 public abstract class AbstractJoinGlobalIdentifierBusinessImpl<IDENTIFIABLE extends AbstractIdentifiable,DAO extends JoinGlobalIdentifierDao<IDENTIFIABLE, SEARCH_CRITERIA>,SEARCH_CRITERIA extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria> extends AbstractTypedBusinessService<IDENTIFIABLE, DAO> implements JoinGlobalIdentifierBusiness<IDENTIFIABLE,SEARCH_CRITERIA>,Serializable {
@@ -20,6 +21,21 @@ public abstract class AbstractJoinGlobalIdentifierBusinessImpl<IDENTIFIABLE exte
 		super(dao); 
 	}
 	
+	@Override
+	public Collection<IDENTIFIABLE> findByIdentifiableGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers) {
+		return dao.readByIdentifiableGlobalIdentifiers(globalIdentifiers);
+	}
+
+	@Override
+	public Collection<IDENTIFIABLE> findByIdentifiableGlobalIdentifier(GlobalIdentifier globalIdentifier) {
+		return dao.readByIdentifiableGlobalIdentifier(globalIdentifier);
+	}
+
+	@Override
+	public Collection<IDENTIFIABLE> findByIdentifiableGlobalIdentifier(AbstractIdentifiable identifiable) {
+		return dao.readByIdentifiableGlobalIdentifier(identifiable);
+	}
+
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<IDENTIFIABLE> findByCriteria(final SEARCH_CRITERIA searchCriteria) {
 		return dao.readByCriteria(searchCriteria);
