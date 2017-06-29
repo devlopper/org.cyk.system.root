@@ -10,7 +10,7 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class UserInterfaceMenuDetails extends AbstractCollectionDetails.Extends<UserInterfaceMenu> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private FieldValue location,renderType;
+	@Input @InputText private FieldValue type,renderType;
 	
 	public UserInterfaceMenuDetails(UserInterfaceMenu userInterfaceMenu) {
 		super(userInterfaceMenu);
@@ -20,12 +20,12 @@ public class UserInterfaceMenuDetails extends AbstractCollectionDetails.Extends<
 	public void setMaster(UserInterfaceMenu userInterfaceMenu) {
 		super.setMaster(userInterfaceMenu);
 		if(userInterfaceMenu!=null){
-			location = createFieldValue(userInterfaceMenu.getLocation());
+			type = createFieldValue(userInterfaceMenu.getType());
 			renderType = createFieldValue(userInterfaceMenu.getRenderType());
 		}
 	}
 	
-	public static final String FIELD_LOCATION = "location";
+	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_RENDER_TYPE = "renderType";
 
 }

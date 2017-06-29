@@ -20,10 +20,10 @@ public class UserInterfaceMenu extends AbstractCollection<UserInterfaceMenuItem>
 
 	private static final long serialVersionUID = 5908328682512231058L;
 
-	@ManyToOne @NotNull private UserInterfaceMenuLocation location;
+	@ManyToOne @NotNull private UserInterfaceMenuType type;
 	@ManyToOne @NotNull private UserInterfaceMenuRenderType renderType;
 
-	public static final String FIELD_LOCATION = "location";
+	public static final String FIELD_LOCATION = "type";
 	public static final String FIELD_RENDER_TYPE = "renderType";
 	
 }

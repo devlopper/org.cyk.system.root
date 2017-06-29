@@ -15,8 +15,7 @@ public class AbstractDataTree<TYPE extends AbstractDataTreeType> extends Abstrac
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	
-	@ManyToOne @NotNull
-	protected TYPE type;
+	@ManyToOne @NotNull protected TYPE type;
 
 	public AbstractDataTree(AbstractDataTree<TYPE> parent,String code) {
 		super(parent,code);

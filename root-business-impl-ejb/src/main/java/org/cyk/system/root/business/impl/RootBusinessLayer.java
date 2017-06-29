@@ -91,6 +91,7 @@ import org.cyk.system.root.model.userinterface.UserInterfaceMenuLocation;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuNode;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuNodeType;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuRenderType;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuType;
 import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.model.value.MeasureType;
 import org.cyk.system.root.model.value.NullString;
@@ -419,6 +420,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	createFromExcelSheet(UserInterfaceMenuRenderType.class);
     	createFromExcelSheet(UserInterfaceMenuLocation.class);
     	createFromExcelSheet(UserInterfaceMenuNodeType.class);
+    	createFromExcelSheet(UserInterfaceMenuType.class);
     }
     
     @Override

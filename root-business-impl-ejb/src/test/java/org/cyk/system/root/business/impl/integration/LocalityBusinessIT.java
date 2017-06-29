@@ -1,9 +1,13 @@
 package org.cyk.system.root.business.impl.integration;
 
+import java.util.Collection;
+
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
+import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
+import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
 import org.junit.Test;
 
 public class LocalityBusinessIT extends AbstractBusinessIT {
@@ -28,6 +32,25 @@ public class LocalityBusinessIT extends AbstractBusinessIT {
     	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.EUROPE, 8l,3l);
     	updateAndMoveAndUpdateAndMoveItBack(RootConstant.Code.Country.COTE_DIVOIRE, RootConstant.Code.Locality.AFRICA, 8l,3l);
     	
+    }
+    
+    @Test
+    public void crud(){
+    	TestCase testCase = instanciateTestCase();
+    	Locality locality = inject(LocalityBusiness.class).instanciateOne(null,"ML001","");
+    	locality.setType(inject(LocalityTypeDao.class).readOneRandomly());
+    	testCase.create(locality);
+    	
+    	locality = inject(LocalityBusiness.class).instanciateOne("ML002","");
+    	locality.setParentNode(inject(LocalityDao.class).read("ML001"));
+    	locality.setType(inject(LocalityTypeDao.class).readOneRandomly());
+    	testCase.create(locality);
+    	
+    	Collection<Locality> localities = inject(LocalityDao.class).readByParent(inject(LocalityDao.class).read("ML001"));
+    	assertEquals(1, localities.size()); 
+    	assertEquals("ML002", localities.iterator().next().getCode());
+    	
+    	testCase.clean();
     }
     /**/
 
