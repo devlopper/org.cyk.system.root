@@ -14,6 +14,18 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     void create(Collection<AbstractIdentifiable> identifiables,Boolean useThreadPoolExecutor);
     void createIdentifiables(Collection<? extends AbstractIdentifiable> collection,Boolean useThreadPoolExecutor);
     
+    void createIfNotIdentified(Collection<? extends AbstractIdentifiable> collection);
+    void createIfNotIdentified(AbstractIdentifiable...identifiables);
+    
+    void updateIfIdentifiedElseCreate(Collection<? extends AbstractIdentifiable> collection);
+    void updateIfIdentifiedElseCreate(AbstractIdentifiable...identifiables);
+    
+    void deleteIfIdentified(Collection<? extends AbstractIdentifiable> collection);
+    void deleteIfIdentified(AbstractIdentifiable...identifiables);
+    
+    void deleteIfIdentified(Object object,Collection<String> fieldNames);
+    void deleteIfIdentified(Object object,String...fieldNames);
+    
     AbstractIdentifiable find(String identifiableClassIdentifier,String code);
 
     <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable, String reportTemplateCode, Locale locale,Map<String, Boolean> fieldSortingMap);
@@ -30,4 +42,5 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     <T extends AbstractIdentifiable> Long countWhereExistencePeriodFromDateIsLessThan(Class<T> aClass,String code);
     
     <T extends AbstractIdentifiable> T findFirstWhereExistencePeriodFromDateIsLessThan(Class<T> aClass,String code);
+    
 }

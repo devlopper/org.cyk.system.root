@@ -49,6 +49,10 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	public String getUiString() {
 		return getGlobalIdentifier().getName();
 	}
+	
+	/**/
+	
+	public static final String FIELD_CONTACT_COLLECTION = "contactCollection";
 
 	/**/
 	

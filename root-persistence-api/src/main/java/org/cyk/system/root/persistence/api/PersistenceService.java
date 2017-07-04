@@ -95,5 +95,5 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	                    
 	                	<SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria);
 	                    
-	                    
+	                	
 }

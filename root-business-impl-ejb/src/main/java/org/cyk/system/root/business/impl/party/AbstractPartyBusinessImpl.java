@@ -2,12 +2,12 @@ package org.cyk.system.root.business.impl.party;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.party.AbstractPartyBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -32,34 +32,17 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	}
 	
 	@Override
-	protected void beforeCreate(PARTY party) {
-		super.beforeCreate(party);
-		if(party.getContactCollection()!=null){
-			if(StringUtils.isEmpty(party.getContactCollection().getName()))
-				party.getContactCollection().setName(party.getCode());
-			inject(ContactCollectionBusiness.class).create(party.getContactCollection());
-		}
+	public Collection<String> findRelatedInstanceFieldNames(PARTY identifiable) {
+		return Arrays.asList(Party.FIELD_CONTACT_COLLECTION);
 	}
 
-	@Override
-	protected void beforeUpdate(PARTY party) {
-		super.beforeUpdate(party);
-		if(party.getContactCollection()!=null)
-			inject(ContactCollectionBusiness.class).save(party.getContactCollection());
-	}
-
-	@Override
-	protected void beforeDelete(PARTY party) {
-		super.beforeDelete(party);
-		if(party.getContactCollection()!=null){
-    		ContactCollection contactCollection = party.getContactCollection();
-    		party.setContactCollection(null);
-    		inject(ContactCollectionBusiness.class).delete(contactCollection);
-		}
-	}
-		    
     /**/
         
+	@Override
+	protected void deleteFileIdentifiableGlobalIdentifier(PARTY identifiable) {
+		
+	}
+
 	protected void __load__(PARTY party) {
     	if(party.getContactCollection()!=null)
     		inject(ContactCollectionBusiness.class).load(party.getContactCollection());

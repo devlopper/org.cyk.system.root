@@ -102,8 +102,6 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.AbstractMethod;
-import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.builder.NameValueCollectionStringBuilder;
@@ -212,14 +210,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         		inject(ApplicationBusiness.class).findValueGenerator(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER);
         globalIdentifierCodeGenerator.setMethod(new GlobalIdentifierCodeGenerator());
 		
-		AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_VALUE = new StringMethod<AbstractIdentifiable>() {
+		/*AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_VALUE = new StringMethod<AbstractIdentifiable>() {
 			private static final long serialVersionUID = -206221150563679476L;
 			@Override
 			protected String __execute__(AbstractIdentifiable identifiable) {
 				return identifiable.getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE+System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE
 						+RandomStringUtils.randomAlphanumeric(10);
 			}
-		};
+		};*/
 		
 		AbstractIdentifiable.CREATE_GLOBAL_IDENTIFIER = new AbstractMethod<Object, GlobalIdentifier>() {
 			private static final long serialVersionUID = 153358109323471469L;
@@ -236,7 +234,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				return inject(GlobalIdentifierBusiness.class).update(globalIdentifier);
 			}
 		};
-		
+		/*
 		AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_CREATED_BY = new AbstractMethod<Party, AbstractIdentifiable>() {
 			private static final long serialVersionUID = 153358109323471469L;
 			@Override
@@ -251,7 +249,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			protected Date __execute__(AbstractIdentifiable identifiable) {
 				return inject(TimeBusiness.class).findUniversalTimeCoordinated();
 			}
-		};
+		};*/
 		
 		AbstractIdentifiable.GLOBAL_IDENTIFIER_BUILDABLE = new AbstractMethod<Boolean, AbstractIdentifiable>() {
 			private static final long serialVersionUID = 153358109323471469L;

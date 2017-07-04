@@ -25,6 +25,7 @@ import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.file.ExcelSheetReader;
+import org.cyk.utility.common.helper.ThrowableHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.test.ArchiveBuilder;
 import org.cyk.utility.test.integration.AbstractIntegrationTestJpaBased;
@@ -39,7 +40,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 			private static final long serialVersionUID = -2347039842308401189L;
 			@Override
 			protected Throwable getThrowable(Throwable throwable) {
-				return commonUtils.getThrowableInstanceOf(throwable, AbstractBusinessException.class);
+				return new ThrowableHelper().getInstanceOf(throwable, AbstractBusinessException.class);
 			}
 			@Override
     		public void assertEquals(String message, Object expected, Object actual) {
@@ -124,7 +125,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     
 	protected void finds(){}
 	
-	protected abstract void businesses();
+	protected void businesses(){}
 	/*
 	@SuppressWarnings("unchecked")
     protected <T extends AbstractIdentifiable> T create(T anObject){

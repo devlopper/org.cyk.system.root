@@ -31,6 +31,7 @@ import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ThreadPoolExecutor;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.FieldHelper;
 
 @Stateless 
 public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl<AbstractIdentifiable> implements GenericBusiness,Serializable {
@@ -284,5 +285,72 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	
 	protected <T extends AbstractIdentifiable> TypedDao<T> getPersistence(Class<T> aClass) {
 		return inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
+	}
+	
+	@Override
+	public void createIfNotIdentified(Collection<? extends AbstractIdentifiable> collection) {
+		if(collection!=null)
+			for(AbstractIdentifiable relatedIdentifiable : collection){
+				if(isNotIdentified(relatedIdentifiable)){
+					create(relatedIdentifiable);
+				}
+			}
+	}
+	
+	@Override
+	public void createIfNotIdentified(AbstractIdentifiable...identifiables) {
+		createIfNotIdentified(Arrays.asList(identifiables));
+	}
+	
+	@Override
+	public void updateIfIdentifiedElseCreate(Collection<? extends AbstractIdentifiable> collection) {
+		if(collection!=null)
+			for(AbstractIdentifiable relatedIdentifiable : collection){
+				if(isNotIdentified(relatedIdentifiable))
+					create(relatedIdentifiable);
+				else
+					update(relatedIdentifiable);
+			}
+	}
+	
+	@Override
+	public void updateIfIdentifiedElseCreate(AbstractIdentifiable...identifiables) {
+		updateIfIdentifiedElseCreate(Arrays.asList(identifiables));
+	}
+	
+	@Override
+	public void deleteIfIdentified(Collection<? extends AbstractIdentifiable> collection) {
+		if(collection!=null)
+			for(AbstractIdentifiable relatedIdentifiable : collection){
+				if(isIdentified(relatedIdentifiable)){
+					delete(relatedIdentifiable);
+				}
+			}
+	}
+	
+	@Override
+	public void deleteIfIdentified(AbstractIdentifiable...identifiables) {
+		deleteIfIdentified(Arrays.asList(identifiables));
+	}
+
+	@Override
+	public void deleteIfIdentified(Object identifiable, Collection<String> fieldNames) {
+		if(identifiable!=null && fieldNames!=null){
+			Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+			FieldHelper fieldHelper = new FieldHelper();
+			for(String fieldName : fieldNames){
+				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(identifiable, fieldName);
+				if(value!=null)
+					identifiables.add(value);
+				fieldHelper.writeField(fieldHelper.get(identifiable.getClass(), fieldName), identifiable, null);
+			}
+			deleteIfIdentified(identifiables);
+		}
+		
+	}
+
+	@Override
+	public void deleteIfIdentified(Object identifiable, String... fieldNames) {
+		deleteIfIdentified(identifiable,Arrays.asList(fieldNames));
 	}
 }

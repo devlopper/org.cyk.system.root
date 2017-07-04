@@ -139,7 +139,7 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     public void send(Collection<Notification> notifications,SendListener listener,SendArguments arguments) {
     	Collection<Class<?>> classes = new ArrayList<>();
 		//classes.add(MessagingException.class);
-		classes.add(MailConnectException.class);
+		classes.add(MailConnectException.class); 
     	ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(arguments.getCorePoolSize(), arguments.getMaximumPoolSize(), arguments.getKeepAliveTime()
     			, arguments.getKeepAliveTimeUnit(), arguments.getQueueSize(),arguments.getTimeout(), arguments.getTimeoutUnit(),classes);
     	threadPoolExecutor.addListener(arguments.getThreadPoolExecutorListener());

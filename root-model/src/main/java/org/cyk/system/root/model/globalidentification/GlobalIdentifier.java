@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -17,7 +16,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
@@ -32,7 +30,6 @@ import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria.LocationType;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
-import org.cyk.utility.common.Constant;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,6 +48,8 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	@Transient private AbstractIdentifiable identifiable;
 	@Column @Temporal(TemporalType.TIMESTAMP) private Date creationDate;
 	@ManyToOne private Party createdBy;
+	
+	@Transient protected Processing processing;
 	
 	/**
 	 * Common business informations
@@ -116,8 +115,8 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	private Boolean defaulted;
 	
 	@Embedded private Period existencePeriod = new Period();
-	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location birthLocation;
-	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true) private Location deathLocation;
+	@OneToOne private Location birthLocation;
+	@OneToOne private Location deathLocation;
 	
 	@ManyToOne private Party owner;
 	
@@ -152,16 +151,22 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		return cascadeStyleSheet;
 	}
 	
+	public Processing getProcessing(){
+		if(processing==null)
+			processing = new Processing();
+		return  processing;
+	}
+	
 	@Override
 	public String getUiString() {
 		return toString();
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return String.format(LOG_FORMAT, StringUtils.isBlank(code)?identifier:code,creationDate==null?null:Constant.DATE_TIME_FORMATTER.format(creationDate)
 				,createdBy==null?Constant.EMPTY_STRING:createdBy.getGlobalIdentifier().getCode(),rud==null ? null : rud.getUiString());
-	}
+	}*/
 	
 	/**/
 	
@@ -178,6 +183,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_OTHER_DETAILS = "otherDetails";
 	public static final String FIELD_IMAGE = "image";
 	public static final String FIELD_DEFAULTED = "defaulted";
+	public static final String FIELD_SUPPORTING_DOCUMENT = "supportingDocument";
 	
 	/**/
 	
@@ -225,4 +231,17 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	
 	/**/
 	
+	@Getter @Setter
+	/**
+	 * Informations about client processing
+	 * @author Christian Yao Komenan
+	 *
+	 */
+	public static class Processing implements Serializable {
+		private static final long serialVersionUID = -6123968511493504593L;
+		
+		private String identifier;
+		private Party party;
+		private Date date;
+	}
 }

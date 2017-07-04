@@ -12,7 +12,7 @@ public interface AbstractGenericBusinessService<IDENTIFIABLE extends Identifiabl
 	 * @return
 	 */
     IDENTIFIABLE save(IDENTIFIABLE identifiable);
-    
+    @Deprecated
     <T extends IDENTIFIABLE> T load(Class<T> aClass,IDENTIFIER identifier);
     
     IDENTIFIABLE refresh(IDENTIFIABLE identifiable);

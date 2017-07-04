@@ -35,7 +35,6 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.JobInformations;
-import org.cyk.system.root.model.party.person.MedicalInformations;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonRelationship;
@@ -57,6 +56,7 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
+import org.cyk.utility.common.helper.CollectionHelper;
 
 @Stateless
 public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao> implements PersonBusiness,Serializable {
@@ -65,7 +65,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	
 	//@Inject private RepeatedEventBusiness repeatedEventBusiness;
 	 
-	@Inject private PersonExtendedInformationsDao extendedInformationsDao;
 	@Inject private JobInformationsDao jobInformationsDao;
 	@Inject private MedicalInformationsDao medicalInformationsDao;
 	@Inject private ContactDao contactDao;
@@ -125,6 +124,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		RandomFile randomFile = randomPerson.photo();
 		inject(FileBusiness.class).process(photo, randomFile.getBytes(), "photo."+randomFile.getExtension());
 		person.setImage(photo);
+		person.getImage().setName("Identity image");
 		
 		person.setBirthLocation((Location) inject(LocationBusiness.class).instanciateOneRandomly());
 		
@@ -140,25 +140,11 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		return person;
 	}
 	
-	/*@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public PersonRelationship addRelationship(Person person, String relationshipTypeCode) {
-		if(person.getRelationships()==null)
-			person.setRelationships(new ArrayList<PersonRelationship>());
-		else
-			for(PersonRelationship personRelationship : person.getRelationships())
-				if(personRelationship.getType().getCode().equals(relationshipTypeCode))
-					return personRelationship;
-		PersonRelationship personRelationship = null;//new PersonRelationship(instanciateOne(), inject(PersonRelationshipTypeDao.class).read(relationshipTypeCode), person);
-		person.getRelationships().add(personRelationship);
-		return personRelationship;
+	@Override
+	public Collection<String> findRelatedInstanceFieldNames(Person person) {
+		return new CollectionHelper().add(super.findRelatedInstanceFieldNames(person), Boolean.FALSE, Person.FIELD_EXTENDED_INFORMATIONS,Person.FIELD_JOB_INFORMATIONS
+				,Person.FIELD_MEDICAL_INFORMATIONS);
 	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public void addRelationships(Person person, Collection<String> relationshipTypeCodes) {
-		for(String relationshipTypeCode : relationshipTypeCodes){
-			addRelationship(person, relationshipTypeCode);
-		}
-	}*/
 	
 	@Override
 	protected void beforeCreate(Person person) {
@@ -172,13 +158,8 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	@Override
 	protected void afterCreate(Person person) {
 		super.afterCreate(person);
-		if(person.getExtendedInformations()!=null){
-			if(person.getExtendedInformations().getBirthLocation()!=null)
-				contactDao.create(person.getExtendedInformations().getBirthLocation());
-			if(person.getExtendedInformations().getLanguageCollection()!=null)
-				inject(LanguageCollectionBusiness.class).create(person.getExtendedInformations().getLanguageCollection());
-			extendedInformationsDao.create(person.getExtendedInformations());
-		}
+		createIfNotIdentified(person.getExtendedInformations());
+		
 		if(person.getJobInformations()!=null){
 			if(person.getJobInformations().getContactCollection()!=null){
 				if(StringUtils.isEmpty(person.getJobInformations().getContactCollection().getName()))
@@ -233,27 +214,17 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 	@Override
 	protected void beforeDelete(Person person) {
-		PersonExtendedInformations extendedInformations = extendedInformationsDao.readByParty(person);
-		if(extendedInformations!=null){
-			if(extendedInformations.getLanguageCollection()!=null){
-				inject(LanguageCollectionBusiness.class).delete(extendedInformations.getLanguageCollection());
-				extendedInformations.setLanguageCollection(null);
-			}
-			extendedInformationsDao.delete(extendedInformations);
-		}
-		JobInformations jobInformations = jobInformationsDao.readByParty(person);
-		if(jobInformations!=null){
-			if(jobInformations.getContactCollection()!=null)
-	    		inject(ContactCollectionBusiness.class).delete(jobInformations.getContactCollection());
-			jobInformations.setContactCollection(null);
-			jobInformationsDao.delete(jobInformations);
-		}
-		MedicalInformations medicalInformations = medicalInformationsDao.readByParty(person);	
-		if(medicalInformations!=null){
-			medicalInformationsDao.delete(medicalInformations);
-		}
+		inject(PersonExtendedInformationsBusiness.class).delete(inject(PersonExtendedInformationsDao.class).readByParty(person));
+		person.setExtendedInformations(null);
+		
+		inject(JobInformationsBusiness.class).delete(inject(JobInformationsDao.class).readByParty(person));
+		person.setJobInformations(null);
+		
+		inject(MedicalInformationsBusiness.class).delete(inject(MedicalInformationsDao.class).readByParty(person));
+		person.setMedicalInformations(null);
 		
 		super.beforeDelete(person);
+		
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -322,7 +293,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)  @Deprecated
 	public void load(Person person) {
 		super.load(person);
-		person.setExtendedInformations(extendedInformationsDao.readByParty(person));
+		//person.setExtendedInformations(extendedInformationsDao.readByParty(person));
 		person.setJobInformations(jobInformationsDao.readByParty(person));
 		person.setMedicalInformations(medicalInformationsDao.readByParty(person));
 	}

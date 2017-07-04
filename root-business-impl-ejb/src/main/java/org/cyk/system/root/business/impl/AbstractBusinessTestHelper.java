@@ -18,7 +18,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -709,6 +711,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		private AbstractBusinessTestHelper helper;
 		private List<AbstractIdentifiable> identifiables;
 		private Boolean cleaned = Boolean.FALSE;
+		private Set<Class<? extends AbstractIdentifiable>> classes=new LinkedHashSet<>();
+		private Map<Class<AbstractIdentifiable>,Long> countAllMap = new HashMap<>();
 		
 		public TestCase(AbstractBusinessTestHelper helper) {
 			super();
@@ -814,7 +818,13 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			helper.throwMessage(runnable, expectedThrowableMessage);
 		}
 		
+		public TestCase prepare(){
+			countAll(classes);
+			return this;
+		}
+		
 		public void clean(){
+			assertCountAll(classes);
 			if(Boolean.TRUE.equals(cleaned))
 				return;
 			if(identifiables!=null){
@@ -823,6 +833,54 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 					helper.delete(identifiable.getClass(), identifiable.getCode()); //inject(GenericBusiness.class).delete(identifiable);
 			}
 			cleaned = Boolean.TRUE;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public TestCase addClasses(@SuppressWarnings("rawtypes") Class...classes){
+			if(classes!=null){
+				Collection<Class<? extends AbstractIdentifiable>> collection = new ArrayList<>();
+				for(@SuppressWarnings("rawtypes") Class aClass : classes)
+					collection.add(aClass);
+				addClasses(collection);
+			}
+			return this;
+		}
+		
+		public TestCase addClasses(Collection<Class<? extends AbstractIdentifiable>> classes){
+			this.classes.addAll(classes);
+			return this;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public void countAll(Collection<Class<? extends AbstractIdentifiable>> classes){
+			for(@SuppressWarnings("rawtypes") Class aClass : classes){
+				countAllMap.put((Class<AbstractIdentifiable>) aClass, inject(PersistenceInterfaceLocator.class).injectTyped(aClass).countAll());
+			}
+		}
+		
+		public TestCase countAll(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes){
+			if(classes!=null)
+				countAll(Arrays.asList(classes));
+			return this;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public TestCase assertCountAll(@SuppressWarnings("rawtypes") Class aClass,Integer increment){
+			assertEquals(aClass.getSimpleName()+" count all is not correct", new Long(countAllMap.get(aClass)+increment)
+					, inject(PersistenceInterfaceLocator.class).injectTyped(aClass).countAll());
+			return this;
+		}
+		
+		public TestCase assertCountAll(Collection<Class<? extends AbstractIdentifiable>> classes){
+			for(Class<?> aClass : classes)
+				assertCountAll(aClass,0);
+			return this;
+		}
+		
+		public TestCase assertCountAll(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes){
+			if(classes!=null)
+				assertCountAll(Arrays.asList(classes));
+			return this;
 		}
 		
 		/**/

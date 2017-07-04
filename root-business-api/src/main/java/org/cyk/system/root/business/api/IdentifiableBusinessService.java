@@ -143,5 +143,8 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     
                     /**/
                     
+                    Collection<String> findRelatedInstanceFieldNames(IDENTIFIABLE identifiable);
+                    Collection<AbstractIdentifiable> findRelatedInstances(IDENTIFIABLE identifiable,Boolean setNewValue,Object newValue);
+                    Collection<AbstractIdentifiable> findRelatedInstances(IDENTIFIABLE identifiable);
 
 }

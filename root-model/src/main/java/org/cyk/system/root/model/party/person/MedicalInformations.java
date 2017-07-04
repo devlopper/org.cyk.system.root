@@ -1,12 +1,12 @@
 package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+
+import org.cyk.system.root.model.IdentifiableRuntimeCollection;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +19,8 @@ public class MedicalInformations extends AbstractPersonExtendedInformations impl
 
 	@ManyToOne private BloodGroup bloodGroup;
 	
-	@Transient private Collection<MedicalInformationsMedication> medicalInformationsMedications = new ArrayList<>();
-	@Transient private Collection<MedicalInformationsAllergy> medicalInformationsAllergies = new ArrayList<>();
+	@Transient private IdentifiableRuntimeCollection<MedicalInformationsMedication> medicalInformationsMedications = new IdentifiableRuntimeCollection<>();
+	@Transient private IdentifiableRuntimeCollection<MedicalInformationsAllergy> medicalInformationsAllergies = new IdentifiableRuntimeCollection<>();
 	
 	public MedicalInformations(Person party) {
 		super(party);

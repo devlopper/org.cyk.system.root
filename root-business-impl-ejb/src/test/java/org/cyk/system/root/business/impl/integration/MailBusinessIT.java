@@ -111,7 +111,7 @@ public class MailBusinessIT extends AbstractBusinessIT {
         notificationTemplate2.setTitle(fileBusiness.process("Second Temp , Hello ${name}".getBytes(), "template1.txt"));
         notificationTemplate2.setMessage(new File());
         try {
-            notificationTemplate2.getMessage().setUri(Data.class.getResource("template.html").toURI()); 
+            notificationTemplate2.getMessage().setUri(Data.class.getResource("template.html").toURI().toString()); 
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

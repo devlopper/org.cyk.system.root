@@ -5,6 +5,9 @@ import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +25,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter  @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE) @Accessors(chain=true)
+@NamedEntityGraph(name="pl",attributeNodes={@NamedAttributeNode(value="lastnames")},subgraphs={@NamedSubgraph(name="gl",attributeNodes={@NamedAttributeNode(value="owner")})})
 public class Person extends Party implements Serializable{
 
 	private static final long serialVersionUID = 1L;

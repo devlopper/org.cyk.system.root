@@ -78,6 +78,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void install(Installation installation) {
 		if(findCurrentInstance()==null){
+			installation.getApplication().setCode("APP");
 			logInfo("Installation starts.");
 			try {
 				for(Listener listener : Listener.COLLECTION)

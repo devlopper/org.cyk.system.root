@@ -47,6 +47,7 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
+import org.cyk.utility.common.helper.FieldHelper;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -707,9 +708,37 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		setRelatedIdentifiables(identifiable,Boolean.FALSE, relatedIdentifiableFieldNames);
 	}
 	
-	
 	protected void setRelatedIdentifiable(IDENTIFIABLE identifiable,String relatedIdentifiableFieldName){
 		throwNotYetImplemented();
+	}
+	
+	@Override
+	public Collection<String> findRelatedInstanceFieldNames(IDENTIFIABLE identifiable){
+		return null;
+	}
+	
+	@Override
+	public Collection<AbstractIdentifiable> findRelatedInstances(IDENTIFIABLE identifiable,Boolean setNewValue,Object newValue){
+		Collection<AbstractIdentifiable> relatedInstances = null;
+		Collection<String> relatedInstanceFieldNames = findRelatedInstanceFieldNames(identifiable);
+		if(relatedInstanceFieldNames!=null){
+			relatedInstances = new ArrayList<>();
+			FieldHelper fieldHelper = new FieldHelper();
+			for(String relatedInstanceFieldName : relatedInstanceFieldNames){
+				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(identifiable, relatedInstanceFieldName);
+				if(Boolean.TRUE.equals(setNewValue)){
+					fieldHelper.writeField(fieldHelper.get(clazz, relatedInstanceFieldName), identifiable, newValue);
+				}if(value!=null)
+					relatedInstances.add(value);
+			}
+		}
+		logTrace("find related instance. instance {} , field names {} , result {}", identifiable,relatedInstanceFieldNames,relatedInstances);
+		return relatedInstances;
+	}
+	
+	@Override
+	public Collection<AbstractIdentifiable> findRelatedInstances(IDENTIFIABLE identifiable){
+		return findRelatedInstances(identifiable, Boolean.FALSE, null);
 	}
 	
 	/**/

@@ -14,10 +14,30 @@
 	<artifactId>root-model</artifactId>
 	<packaging>jar</packaging>
 
-	<dependencies>
-		
-		
-		
-	</dependencies>
+<!--build>
+<plugins>
+
+<plugin>
+  <groupId>org.codehaus.mojo</groupId>
+  <artifactId>exec-maven-plugin</artifactId>
+  <version>1.2.1</version>
+  <executions>
+    <execution>
+      <id>weave-classes</id>
+      <phase>process-classes</phase>
+      <goals>
+        <goal>java</goal>
+      </goals>
+    </execution>
+  </executions>
+  <configuration>
+    <mainClass>org.eclipse.persistence.tools.weaving.jpa.StaticWeave</mainClass>
+    <commandlineArgs>-classpath %classpath -loglevel ALL -persistenceinfo 'E:/Repositories/source code/git/org/cyk/system/root/root-application-resources/target/classes'</commandlineArgs>
+  </configuration>
+</plugin>
+
+</plugins>
+</build-->
+
 
 </project>
