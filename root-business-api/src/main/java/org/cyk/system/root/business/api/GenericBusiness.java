@@ -43,4 +43,6 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     
     <T extends AbstractIdentifiable> T findFirstWhereExistencePeriodFromDateIsLessThan(Class<T> aClass,String code);
     
+    <T extends AbstractIdentifiable> void setFieldValuesRandomly(T identifiable,Collection<String> fieldNames);
+    <T extends AbstractIdentifiable> void setFieldValuesRandomly(T identifiable,String...fieldNames);
 }

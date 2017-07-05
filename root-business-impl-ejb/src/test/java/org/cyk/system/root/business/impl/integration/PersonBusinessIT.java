@@ -3,7 +3,9 @@ package org.cyk.system.root.business.impl.integration;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.junit.Test;
@@ -13,9 +15,25 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     private static final long serialVersionUID = -6691092648665798471L;
     
     @Override
-    protected void businesses() {}
-
+    protected void listenPopulateStart() {
+    	super.listenPopulateStart();
+    	RootDataProducerHelper.addExcelSheetPersonClasses();
+    }
+    
     @Test
+    public void crudPerson(){
+    	TestCase testCase = instanciateTestCase().addPersonClasses().prepare();
+    	
+    	Person person = inject(PersonBusiness.class).instanciateOneRandomly("p001");
+    	testCase.create(person);
+    	testCase.assertCountAll(File.class, 2);
+    	testCase.deleteByCode(Person.class, "p001");
+    	 	
+    	testCase.clean();
+    	
+    }
+    
+    //@Test
     public void crudPersonRandomly(){
     	TestCase testCase = instanciateTestCase();
     	//testCase.createManyPersonRandomly(new String[]{"FATHER01F1","MOTHER01F1","SON01F1","SON02F1","DAUGHTER01F1"});//Family 1
@@ -24,12 +42,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	testCase.clean();
     }
     
-    @Test
-    public void crudPerson(){
-    	
-    }
-    
-    @Test
+    //@Test
     public void relationship(){
     	TestCase testCase = instanciateTestCase();
     	String f1="f1",s1="s1",f2="f2",s2="s2";
@@ -54,7 +67,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	testCase.clean();
     }
     
-    @Test
+    //@Test
     public void crudPersonAndRelationships(){
     	TestCase testCase = instanciateTestCase();
     	testCase.createOnePerson("JNK","Komenan","N'Dri Jean","dad@gmail.com");

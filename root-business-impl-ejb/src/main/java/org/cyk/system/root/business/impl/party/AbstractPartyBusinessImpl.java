@@ -23,6 +23,15 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		super(dao); 
 	}
 	
+	@Override
+	public PARTY instanciateOneRandomly() {
+		PARTY party = super.instanciateOne();
+		party.setContactCollection(inject(ContactCollectionBusiness.class).instanciateOneRandomly());
+		return party;
+	}
+
+
+
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Collection<ContactCollection> getContactCollections(Collection<PARTY> parties) {
 		Collection<ContactCollection> collection = new ArrayList<>();

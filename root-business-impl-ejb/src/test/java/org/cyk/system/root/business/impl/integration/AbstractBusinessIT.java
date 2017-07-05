@@ -93,18 +93,23 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     protected Boolean populateInTransaction() {
     	return Boolean.FALSE;
     }
-    @Override
-    protected void populate() {
+    
+    protected void listenPopulateStart(){
     	RootDataProducerHelper.Listener.COLLECTION.add(new RootDataProducerHelper.Listener.Adapter.Default(){
     		private static final long serialVersionUID = 1L;
 
 			@Override
     		public ExcelSheetReader processExcelSheetReader(ExcelSheetReader excelSheetReader) {
-    			//if(excelSheetReader.getSheetName().equals("Country"))
-    			//	excelSheetReader.setRowCount(2);
+    			if(excelSheetReader.getSheetName().equals("Country"))
+    				excelSheetReader.setRowCount(2);
     			return super.processExcelSheetReader(excelSheetReader);
     		}
     	});
+    }
+    
+    @Override
+    protected void populate() {
+    	listenPopulateStart();
     	installApplication();
     }
     

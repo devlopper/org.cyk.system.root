@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,7 +33,10 @@ import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.Locality;
+import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.geography.PostalBox;
@@ -48,9 +52,22 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransitio
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.party.person.Allergy;
+import org.cyk.system.root.model.party.person.BloodGroup;
+import org.cyk.system.root.model.party.person.JobFunction;
+import org.cyk.system.root.model.party.person.JobTitle;
+import org.cyk.system.root.model.party.person.MaritalStatus;
+import org.cyk.system.root.model.party.person.Medication;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRoleName;
+import org.cyk.system.root.model.party.person.PersonTitle;
+import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
+import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
@@ -75,6 +92,12 @@ import lombok.Setter;
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
 	
 	private static final long serialVersionUID = 2282674526022995453L;
+	
+	public static final Collection<Class<?>> EXCEL_SHEET_CLASSES = new HashSet<>();
+	public static final Collection<Class<?>> EXCEL_SHEET_REQUIRED_CLASSES = new HashSet<>();
+	static{
+		EXCEL_SHEET_REQUIRED_CLASSES.add(Software.class);
+	}
 	
 	private static RootDataProducerHelper INSTANCE;
 	
@@ -478,56 +501,58 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	
 	public <T extends AbstractIdentifiable> void createFromExcelSheet(Class<?> inputStreamResourceLocation,String woorkbookName,Class<T> aClass){
-		try {
-			final ExcelSheetReader excelSheetReader = new ExcelSheetReader.Adapter.Default(new java.io.File("")).setWorkbookBytes(inputStreamResourceLocation.getResourceAsStream(woorkbookName))
-					.setSheetName(aClass).setFromColumnIndex(0).setFromRowIndex(1);
-			
-			listenerUtils.getValue(ExcelSheetReader.class, Listener.COLLECTION, new ListenerUtils.ResultMethod<Listener, ExcelSheetReader>() {
-
-				@Override
-				public ExcelSheetReader execute(Listener listener) {
-					return listener.processExcelSheetReader(excelSheetReader);
-				}
-
-				@Override
-				public ExcelSheetReader getNullValue() {
-					return null;
-				}
-			});
-			
-			//ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments(inputStreamResourceLocation.getResourceAsStream(woorkbookName),aClass);
-	    	
-			List<Dimension.Row<String>> list = excelSheetReader.execute(); //commonUtils.readExcelSheet(readExcelSheetArguments);
-			TypedBusiness<?> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
-	    	if(AbstractDataTreeNode.class.isAssignableFrom(aClass)){
-	    		if(list==null){
-		    		
+		if(EXCEL_SHEET_CLASSES.isEmpty() || EXCEL_SHEET_CLASSES.contains(aClass) || EXCEL_SHEET_REQUIRED_CLASSES.contains(aClass)){
+			try {
+				final ExcelSheetReader excelSheetReader = new ExcelSheetReader.Adapter.Default(new java.io.File("")).setWorkbookBytes(inputStreamResourceLocation.getResourceAsStream(woorkbookName))
+						.setSheetName(aClass).setFromColumnIndex(0).setFromRowIndex(1);
+				
+				listenerUtils.getValue(ExcelSheetReader.class, Listener.COLLECTION, new ListenerUtils.ResultMethod<Listener, ExcelSheetReader>() {
+	
+					@Override
+					public ExcelSheetReader execute(Listener listener) {
+						return listener.processExcelSheetReader(excelSheetReader);
+					}
+	
+					@Override
+					public ExcelSheetReader getNullValue() {
+						return null;
+					}
+				});
+				
+				//ReadExcelSheetArguments readExcelSheetArguments = new ReadExcelSheetArguments(inputStreamResourceLocation.getResourceAsStream(woorkbookName),aClass);
+		    	
+				List<Dimension.Row<String>> list = excelSheetReader.execute(); //commonUtils.readExcelSheet(readExcelSheetArguments);
+				TypedBusiness<?> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
+		    	if(AbstractDataTreeNode.class.isAssignableFrom(aClass)){
+		    		if(list==null){
+			    		
+			    	}else{
+			    		Integer count = 0;
+			    		for(Dimension.Row<String> row : list){
+			    			@SuppressWarnings("unchecked")
+							T instance = (T) business.instanciateOne(row.getValues());
+			    			if(instance==null){
+			    				
+			    			}else{
+			    				inject(GenericBusiness.class).create(instance);
+			    				count++;
+			    			}
+			    		}
+			    		System.out.println(aClass.getSimpleName()+" created : "+count);	
+			    	}
 		    	}else{
-		    		Integer count = 0;
-		    		for(Dimension.Row<String> row : list){
-		    			@SuppressWarnings("unchecked")
-						T instance = (T) business.instanciateOne(row.getValues());
-		    			if(instance==null){
-		    				
-		    			}else{
-		    				inject(GenericBusiness.class).create(instance);
-		    				count++;
-		    			}
-		    		}
-		    		System.out.println(aClass.getSimpleName()+" created : "+count);	
+		    		@SuppressWarnings("unchecked")
+					Collection<T> collection = (Collection<T>) business.instanciateMany(ExcelSheetReader.Adapter.getValues(list));
+			    	if(collection==null){
+			    		System.out.println("Instanciate many <<"+aClass+">> has return null collection");
+			    	}else{
+			    		inject(GenericBusiness.class).create(commonUtils.castCollection(collection,AbstractIdentifiable.class));
+						System.out.println(aClass.getSimpleName()+" created : "+list.size());	
+			    	}	
 		    	}
-	    	}else{
-	    		@SuppressWarnings("unchecked")
-				Collection<T> collection = (Collection<T>) business.instanciateMany(ExcelSheetReader.Adapter.getValues(list));
-		    	if(collection==null){
-		    		System.out.println("Instanciate many <<"+aClass+">> has return null collection");
-		    	}else{
-		    		inject(GenericBusiness.class).create(commonUtils.castCollection(collection,AbstractIdentifiable.class));
-					System.out.println(aClass.getSimpleName()+" created : "+list.size());	
-		    	}	
-	    	}
-		} catch (Exception e) {
-			e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -559,6 +584,16 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	public static RootDataProducerHelper getInstance() {
 		return INSTANCE;
+	}
+	
+	public static void addExcelSheetGeographyClasses(){
+		EXCEL_SHEET_CLASSES.addAll(Arrays.asList(LocalityType.class,Locality.class,Country.class,PhoneNumberType.class,LocationType.class,Software.class));
+	}
+	
+	public static void addExcelSheetPersonClasses(){
+		addExcelSheetGeographyClasses();
+		EXCEL_SHEET_CLASSES.addAll(Arrays.asList(Sex.class,MaritalStatus.class,JobFunction.class,JobTitle.class,PersonTitle.class,BloodGroup.class,Allergy.class
+				,Medication.class,PersonRelationshipTypeGroup.class,PersonRelationshipType.class,PersonRelationshipTypeRoleName.class,PersonRelationshipTypeRole.class));
 	}
 
 	/**/

@@ -34,6 +34,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.cyk.system.root.business.api.BusinessEntityInfos;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -47,6 +48,7 @@ import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineAlphabetBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
+import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
@@ -59,7 +61,11 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfigur
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.language.LanguageCollection;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
@@ -70,12 +76,16 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalStat
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
 import org.cyk.system.root.model.party.person.AbstractActor;
+import org.cyk.system.root.model.party.person.JobInformations;
+import org.cyk.system.root.model.party.person.MedicalInformations;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
+import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
@@ -711,8 +721,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		private AbstractBusinessTestHelper helper;
 		private List<AbstractIdentifiable> identifiables;
 		private Boolean cleaned = Boolean.FALSE;
-		private Set<Class<? extends AbstractIdentifiable>> classes=new LinkedHashSet<>();
-		private Map<Class<AbstractIdentifiable>,Long> countAllMap = new HashMap<>();
+		private Set<Class<?>> classes=new LinkedHashSet<>();
+		private Map<Class<?>,Long> countAllMap = new HashMap<>();
 		
 		public TestCase(AbstractBusinessTestHelper helper) {
 			super();
@@ -835,10 +845,9 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			cleaned = Boolean.TRUE;
 		}
 		
-		@SuppressWarnings("unchecked")
-		public TestCase addClasses(@SuppressWarnings("rawtypes") Class...classes){
+		public TestCase addClasses(Class<?>...classes){
 			if(classes!=null){
-				Collection<Class<? extends AbstractIdentifiable>> collection = new ArrayList<>();
+				Collection<Class<?>> collection = new ArrayList<>();
 				for(@SuppressWarnings("rawtypes") Class aClass : classes)
 					collection.add(aClass);
 				addClasses(collection);
@@ -846,38 +855,71 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return this;
 		}
 		
-		public TestCase addClasses(Collection<Class<? extends AbstractIdentifiable>> classes){
+		public TestCase addClasses(Collection<Class<?>> classes){
 			this.classes.addAll(classes);
 			return this;
 		}
 		
-		@SuppressWarnings("unchecked")
-		public void countAll(Collection<Class<? extends AbstractIdentifiable>> classes){
-			for(@SuppressWarnings("rawtypes") Class aClass : classes){
-				countAllMap.put((Class<AbstractIdentifiable>) aClass, inject(PersistenceInterfaceLocator.class).injectTyped(aClass).countAll());
+		public TestCase addIdentifiableClasses(){
+			for(BusinessEntityInfos businessEntityInfos : inject(ApplicationBusiness.class).findBusinessEntitiesInfos()){
+				addClasses(businessEntityInfos.getClazz());
+			}
+			
+			/*for(Class aClass : new ClassHelper().get("org.cyk.ui.web.primefaces.page", AbstractIdentifiable.class))
+				addClasses(aClass);
+				*/
+			return this;
+		}
+		
+		public TestCase addRequiredClasses(){
+			return addClasses(GlobalIdentifier.class);
+		}
+		
+		public TestCase addPersonClasses(){
+			addClasses(org.cyk.system.root.model.file.File.class,ContactCollection.class,PersonExtendedInformations.class,JobInformations.class
+					,MedicalInformations.class,LanguageCollection.class,Location.class);
+			addRequiredClasses();
+			return this;
+		}
+		
+		protected Long getCountAll(Class<?> aClass){
+			if(GlobalIdentifier.class.equals(aClass)){
+				return inject(GlobalIdentifierDao.class).countAll();	
+			}else{
+				@SuppressWarnings("unchecked")
+				TypedDao<AbstractIdentifiable> dao = (TypedDao<AbstractIdentifiable>) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass);
+				if(dao==null)
+					return null;
+				else
+					return dao.countAll();
 			}
 		}
 		
-		public TestCase countAll(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes){
+		public void countAll(Collection<Class<?>> classes){
+			for(@SuppressWarnings("rawtypes") Class aClass : classes){
+				countAllMap.put((Class<?>) aClass, getCountAll(aClass));	
+			}
+		}
+		
+		public TestCase countAll(Class<?>...classes){
 			if(classes!=null)
 				countAll(Arrays.asList(classes));
 			return this;
 		}
 		
-		@SuppressWarnings("unchecked")
 		public TestCase assertCountAll(@SuppressWarnings("rawtypes") Class aClass,Integer increment){
-			assertEquals(aClass.getSimpleName()+" count all is not correct", new Long(countAllMap.get(aClass)+increment)
-					, inject(PersistenceInterfaceLocator.class).injectTyped(aClass).countAll());
+			assertEquals(aClass.getSimpleName()+" count all is not correct", new Long(commonUtils.getValueIfNotNullElseDefault(countAllMap.get(aClass),0l)+increment)
+					, getCountAll(aClass));
 			return this;
 		}
 		
-		public TestCase assertCountAll(Collection<Class<? extends AbstractIdentifiable>> classes){
+		public TestCase assertCountAll(Collection<Class<?>> classes){
 			for(Class<?> aClass : classes)
 				assertCountAll(aClass,0);
 			return this;
 		}
 		
-		public TestCase assertCountAll(@SuppressWarnings("unchecked") Class<? extends AbstractIdentifiable>...classes){
+		public TestCase assertCountAll(Class<?>...classes){
 			if(classes!=null)
 				assertCountAll(Arrays.asList(classes));
 			return this;

@@ -53,12 +53,11 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public GlobalIdentifier create(GlobalIdentifier globalIdentifier) {
 		if(StringUtils.isBlank(globalIdentifier.getIdentifier())){
+			globalIdentifier.setIdentifier(globalIdentifier.getIdentifiable().getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE);
 			if(globalIdentifier.getIdentifiable()!=null && StringUtils.isNotBlank(globalIdentifier.getIdentifiable().getCode())){
-				globalIdentifier.setIdentifier(globalIdentifier.getIdentifiable().getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE
-						+globalIdentifier.getIdentifiable().getCode()+Constant.CHARACTER_UNDESCORE);
+				globalIdentifier.setIdentifier(globalIdentifier.getIdentifier()+globalIdentifier.getIdentifiable().getCode()+Constant.CHARACTER_UNDESCORE);
 			}
-			globalIdentifier.setIdentifier(StringUtils.defaultString(globalIdentifier.getIdentifier())+System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE
-					+RandomStringUtils.randomAlphanumeric(10));
+			globalIdentifier.setIdentifier(globalIdentifier.getIdentifier()+System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE+RandomStringUtils.randomAlphanumeric(10));
 		}
 		
 		inject(GenericBusiness.class).createIfNotIdentified(globalIdentifier.getImage(),globalIdentifier.getBirthLocation(),globalIdentifier.getDeathLocation());
@@ -69,12 +68,14 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 		if(globalIdentifier.getOwner()==null)
 			globalIdentifier.setOwner(globalIdentifier.getCreatedBy());
 		globalIdentifier.setCreationDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
-		return globalIdentifierDao.create(globalIdentifier);
+		globalIdentifierDao.create(globalIdentifier);
+		logTrace("global identifier {} created", globalIdentifier.getIdentifier());
+		return globalIdentifier;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public GlobalIdentifier update(GlobalIdentifier globalIdentifier) {
-		logTrace("Updating global identifier {}", globalIdentifier);
+		//logTrace("Updating global identifier {}", globalIdentifier);
 		if(inject(GenericBusiness.class).isNotIdentified(globalIdentifier.getImage())){
 			inject(FileBusiness.class).create(globalIdentifier.getImage());
 		}else if(globalIdentifier.getImage()!=null)
@@ -84,9 +85,11 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public GlobalIdentifier delete(GlobalIdentifier globalIdentifier) {
-		logTrace("Deleting global identifier {}", globalIdentifier);
-		inject(GenericBusiness.class).deleteIfIdentified(globalIdentifier,GlobalIdentifier.FIELD_IMAGE,GlobalIdentifier.FIELD_SUPPORTING_DOCUMENT);
-		return globalIdentifierDao.delete(globalIdentifier);
+		inject(GenericBusiness.class).deleteIfIdentified(globalIdentifier,GlobalIdentifier.FIELD_IMAGE,GlobalIdentifier.FIELD_SUPPORTING_DOCUMENT
+				,GlobalIdentifier.FIELD_BIRTH_LOCATION,GlobalIdentifier.FIELD_DEATH_LOCATION);
+		globalIdentifierDao.delete(globalIdentifier);
+		logTrace("global identifier {} deleted", globalIdentifier.getIdentifier());
+		return globalIdentifier;
 	}
 
 	@Override

@@ -38,6 +38,7 @@ import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportFile;
 import org.cyk.system.root.model.file.report.ReportTemplate;
+import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -354,7 +355,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void deleteFileIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
-		if(identifiable instanceof FileIdentifiableGlobalIdentifier || identifiable instanceof File){
+		if(identifiable instanceof FileIdentifiableGlobalIdentifier || identifiable instanceof File || identifiable instanceof Location){
 			
 		}else{
 			Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);

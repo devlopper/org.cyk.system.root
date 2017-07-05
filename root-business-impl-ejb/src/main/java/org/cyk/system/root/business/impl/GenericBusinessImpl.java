@@ -353,4 +353,17 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public void deleteIfIdentified(Object identifiable, String... fieldNames) {
 		deleteIfIdentified(identifiable,Arrays.asList(fieldNames));
 	}
+
+	@Override
+	public <T extends AbstractIdentifiable> void setFieldValuesRandomly(T identifiable, Collection<String> fieldNames) {
+		if(fieldNames!=null){
+			
+		}
+	}
+
+	@Override
+	public <T extends AbstractIdentifiable> void setFieldValuesRandomly(T identifiable, String... fieldNames) {
+		// TODO Auto-generated method stub
+		
+	}
 }

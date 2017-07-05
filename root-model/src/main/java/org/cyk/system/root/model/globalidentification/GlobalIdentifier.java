@@ -179,6 +179,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_WEIGHT = "weight";
 	public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
 	public static final String FIELD_BIRTH_LOCATION = "birthLocation";
+	public static final String FIELD_DEATH_LOCATION = "deathLocation";
 	public static final String FIELD_ORDER_NUMBER = "orderNumber";
 	public static final String FIELD_OTHER_DETAILS = "otherDetails";
 	public static final String FIELD_IMAGE = "image";

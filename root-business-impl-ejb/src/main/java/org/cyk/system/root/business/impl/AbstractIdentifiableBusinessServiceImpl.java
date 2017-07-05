@@ -741,6 +741,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return findRelatedInstances(identifiable, Boolean.FALSE, null);
 	}
 	
+	protected void setRandomValues(IDENTIFIABLE identifiable,String...fieldNames){
+		
+	}
+	
 	/**/
 	
 	public static interface Listener<IDENTIFIABLE extends AbstractIdentifiable> {
