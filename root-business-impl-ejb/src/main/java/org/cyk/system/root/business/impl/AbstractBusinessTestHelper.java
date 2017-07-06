@@ -73,6 +73,7 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineAlphabet;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
+import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
@@ -868,7 +869,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			Collection<Class<?>> classes = new ArrayList<>();
 			for(Class<?> aClass : new ClassHelper.Get.Adapter.Default(OrgCykSystemPackage.class.getPackage())
 					.setBaseClass(AbstractIdentifiable.class).addAnnotationClasses(Entity.class).execute()){
-				if(!Modifier.isAbstract(aClass.getModifiers())){
+				if(!Modifier.isAbstract(aClass.getModifiers()) && !Party.class.equals(aClass)){
 					@SuppressWarnings("unchecked")
 					TypedDao<AbstractIdentifiable> dao = (TypedDao<AbstractIdentifiable>) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass);
 					if(dao!=null)

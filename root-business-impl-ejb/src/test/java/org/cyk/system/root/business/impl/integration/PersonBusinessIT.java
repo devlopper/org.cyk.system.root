@@ -10,6 +10,7 @@ import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
+import org.cyk.utility.common.helper.MethodHelper;
 import org.junit.Test;
 
 public class PersonBusinessIT extends AbstractBusinessIT {
@@ -24,7 +25,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     
     @Test
     public void crudPersonRandomly(){
-    	TestCase testCase = instanciateTestCase().setName("crud person randomly").prepare();
+    	TestCase testCase = instanciateTestCase().setName(new MethodHelper().getCurrentMethodName()).prepare();
     	Person person = inject(PersonBusiness.class).instanciateOneRandomly("p001");
     	testCase.create(person);
     	testCase.assertCountAll(File.class, 2);
@@ -34,7 +35,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     
     @Test
     public void relationship(){
-    	TestCase testCase = instanciateTestCase().setName("crud relation ship").prepare();
+    	TestCase testCase = instanciateTestCase().setName(new MethodHelper().getCurrentMethodName()).prepare();
     	String f1="f1",s1="s1",f2="f2",s2="s2";
     	testCase.createManyPersonRandomly(f1,s1,f2,s2);
  
@@ -55,7 +56,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     
     @Test
     public void crudPersonAndRelationships(){
-    	TestCase testCase = instanciateTestCase().setName("crud person relationships").prepare();
+    	TestCase testCase = instanciateTestCase().setName(new MethodHelper().getCurrentMethodName()).prepare();
     	testCase.createOnePerson("JNK","Komenan","N'Dri Jean","dad@gmail.com");
     	testCase.createOnePerson("OAK","Komenan","Ahou odette","mom@gmail.com");
     	testCase.createOnePerson("CYK","Komenan","Yao Christian","stud@gmail.com");	
@@ -65,7 +66,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
         
     @Test
     public void exceptionCodeExist(){
-    	TestCase testCase = instanciateTestCase().setName("person code exist").prepare();
+    	TestCase testCase = instanciateTestCase().setName(new MethodHelper().getCurrentMethodName()).prepare();
     	testCase.create(inject(PersonBusiness.class).instanciateOne().setCode("ABC"));
     	testCase.create(inject(PersonBusiness.class).instanciateOne().setCode("ABC"),"Un enregistrement avec pour code = abc existe déja");
 		testCase.clean();
