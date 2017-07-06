@@ -12,12 +12,11 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.file.FileBusiness;
+import org.cyk.system.root.business.api.RudBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.Rud;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.utility.common.Constant;
@@ -28,6 +27,9 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 
 	private static final long serialVersionUID = 7024534251413461778L;
 
+	private static final String[] RELATED = {GlobalIdentifier.FIELD_IMAGE,GlobalIdentifier.FIELD_SUPPORTING_DOCUMENT,GlobalIdentifier.FIELD_BIRTH_LOCATION
+			,GlobalIdentifier.FIELD_DEATH_LOCATION};
+	
 	@Inject private GlobalIdentifierDao globalIdentifierDao;
 	
 	@Override
@@ -37,17 +39,17 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	
 	@Override
 	public Boolean isReadable(AbstractIdentifiable identifiable) {
-		return identifiable.getGlobalIdentifier()==null || isReadable(identifiable.getGlobalIdentifier().getRud());
+		return identifiable.getGlobalIdentifier()==null || inject(RudBusiness.class).isReadable(identifiable.getGlobalIdentifier().getRud());
 	}
 
 	@Override
 	public Boolean isUpdatable(AbstractIdentifiable identifiable) {
-		return identifiable.getGlobalIdentifier()==null || isUpdatable(identifiable.getGlobalIdentifier().getRud());
+		return identifiable.getGlobalIdentifier()==null || inject(RudBusiness.class).isUpdatable(identifiable.getGlobalIdentifier().getRud());
 	}
 
 	@Override
 	public Boolean isDeletable(AbstractIdentifiable identifiable) {
-		return identifiable.getGlobalIdentifier()==null || isDeletable(identifiable.getGlobalIdentifier().getRud());
+		return identifiable.getGlobalIdentifier()==null || inject(RudBusiness.class).isDeletable(identifiable.getGlobalIdentifier().getRud());
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -60,14 +62,14 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 			globalIdentifier.setIdentifier(globalIdentifier.getIdentifier()+System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE+RandomStringUtils.randomAlphanumeric(10));
 		}
 		
-		inject(GenericBusiness.class).createIfNotIdentified(globalIdentifier.getImage(),globalIdentifier.getBirthLocation(),globalIdentifier.getDeathLocation());
-		
 		globalIdentifier.setCreationDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
 		globalIdentifier.setCreatedBy(globalIdentifier.getProcessing().getParty() == null ? RootBusinessLayer.getInstance().getApplication() : globalIdentifier.getProcessing().getParty());
 		
 		if(globalIdentifier.getOwner()==null)
 			globalIdentifier.setOwner(globalIdentifier.getCreatedBy());
 		globalIdentifier.setCreationDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
+		
+		inject(GenericBusiness.class).create(globalIdentifier,RELATED);
 		globalIdentifierDao.create(globalIdentifier);
 		logTrace("global identifier {} created", globalIdentifier.getIdentifier());
 		return globalIdentifier;
@@ -76,17 +78,21 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public GlobalIdentifier update(GlobalIdentifier globalIdentifier) {
 		//logTrace("Updating global identifier {}", globalIdentifier);
-		if(inject(GenericBusiness.class).isNotIdentified(globalIdentifier.getImage())){
+		/*if(inject(GenericBusiness.class).isNotIdentified(globalIdentifier.getImage())){
 			inject(FileBusiness.class).create(globalIdentifier.getImage());
 		}else if(globalIdentifier.getImage()!=null)
 			inject(FileBusiness.class).update(globalIdentifier.getImage());
-		return globalIdentifierDao.update(globalIdentifier);
+		*/
+		inject(GenericBusiness.class).save(globalIdentifier,RELATED);
+		
+		globalIdentifier = globalIdentifierDao.update(globalIdentifier);;
+		logTrace("global identifier {} updated", globalIdentifier.getIdentifier());
+		return globalIdentifier;
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public GlobalIdentifier delete(GlobalIdentifier globalIdentifier) {
-		inject(GenericBusiness.class).deleteIfIdentified(globalIdentifier,GlobalIdentifier.FIELD_IMAGE,GlobalIdentifier.FIELD_SUPPORTING_DOCUMENT
-				,GlobalIdentifier.FIELD_BIRTH_LOCATION,GlobalIdentifier.FIELD_DEATH_LOCATION);
+		inject(GenericBusiness.class).delete(globalIdentifier,RELATED);
 		globalIdentifierDao.delete(globalIdentifier);
 		logTrace("global identifier {} deleted", globalIdentifier.getIdentifier());
 		return globalIdentifier;
@@ -95,20 +101,6 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override
 	public Collection<GlobalIdentifier> findAll() {
 		return globalIdentifierDao.readAll();
-	}
-	
-	/**/
-	
-	public static Boolean isReadable(Rud rud) {
-		return rud.getReadable()==null || rud.getReadable();
-	}
-
-	public static Boolean isUpdatable(Rud rud) {
-		return rud.getUpdatable()==null || rud.getUpdatable();
-	}
-
-	public static Boolean isDeletable(Rud rud) {
-		return rud.getDeletable()==null || rud.getDeletable();
 	}
 	
 	/**/

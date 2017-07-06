@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -28,13 +29,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.persistence.Entity;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.cyk.system.root.business.api.BusinessEntityInfos;
+import org.cyk.system.OrgCykSystemPackage;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -48,7 +50,6 @@ import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineAlphabetBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
-import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
@@ -61,11 +62,8 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfigur
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
-import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
-import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
-import org.cyk.system.root.model.language.LanguageCollection;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
@@ -76,10 +74,7 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalStat
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
 import org.cyk.system.root.model.party.person.AbstractActor;
-import org.cyk.system.root.model.party.person.JobInformations;
-import org.cyk.system.root.model.party.person.MedicalInformations;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.persistence.api.TypedDao;
@@ -100,12 +95,14 @@ import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -714,10 +711,12 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	/**/
 	
+	@Getter @Setter @Accessors(chain=true)
 	public static class TestCase extends AbstractBean implements Serializable {
 
 		private static final long serialVersionUID = -6026836126124339547L;
 
+		private String name;
 		private AbstractBusinessTestHelper helper;
 		private List<AbstractIdentifiable> identifiables;
 		private Boolean cleaned = Boolean.FALSE;
@@ -750,12 +749,14 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
 			@SuppressWarnings("unchecked")
 			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
-			if(StringUtils.isNotBlank(identifiable.getCode()))
+			if(StringUtils.isNotBlank(identifiable.getCode()) && StringUtils.isBlank(expectedThrowableMessage))
 				assertThat("Object to create with code <<"+identifiable.getCode()+">> already exist", dao.read(identifiable.getCode())==null);
 			T created = helper.create(identifiable,expectedThrowableMessage);
-			created = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier());
-			assertThat("Object created not found", created!=null);
-			add(created);
+			if(StringUtils.isBlank(expectedThrowableMessage)){
+				created = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier());
+				assertThat("Object created not found", created!=null);
+				add(created);
+			}
 			return created;
 		}
 		
@@ -829,12 +830,14 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		}
 		
 		public TestCase prepare(){
+			addIdentifiableClasses();
+			addClasses(GlobalIdentifier.class);
+			System.out.println("Preparing "+name+". #Classes="+classes.size());
 			countAll(classes);
 			return this;
 		}
 		
 		public void clean(){
-			assertCountAll(classes);
 			if(Boolean.TRUE.equals(cleaned))
 				return;
 			if(identifiables!=null){
@@ -843,6 +846,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 					helper.delete(identifiable.getClass(), identifiable.getCode()); //inject(GenericBusiness.class).delete(identifiable);
 			}
 			cleaned = Boolean.TRUE;
+			assertCountAll(classes);
 		}
 		
 		public TestCase addClasses(Class<?>...classes){
@@ -861,24 +865,19 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		}
 		
 		public TestCase addIdentifiableClasses(){
-			for(BusinessEntityInfos businessEntityInfos : inject(ApplicationBusiness.class).findBusinessEntitiesInfos()){
-				addClasses(businessEntityInfos.getClazz());
+			Collection<Class<?>> classes = new ArrayList<>();
+			for(Class<?> aClass : new ClassHelper.Get.Adapter.Default(OrgCykSystemPackage.class.getPackage())
+					.setBaseClass(AbstractIdentifiable.class).addAnnotationClasses(Entity.class).execute()){
+				if(!Modifier.isAbstract(aClass.getModifiers())){
+					@SuppressWarnings("unchecked")
+					TypedDao<AbstractIdentifiable> dao = (TypedDao<AbstractIdentifiable>) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass);
+					if(dao!=null)
+						classes.add(aClass);	
+				}
 			}
-			
-			/*for(Class aClass : new ClassHelper().get("org.cyk.ui.web.primefaces.page", AbstractIdentifiable.class))
-				addClasses(aClass);
-				*/
-			return this;
-		}
-		
-		public TestCase addRequiredClasses(){
-			return addClasses(GlobalIdentifier.class);
-		}
-		
-		public TestCase addPersonClasses(){
-			addClasses(org.cyk.system.root.model.file.File.class,ContactCollection.class,PersonExtendedInformations.class,JobInformations.class
-					,MedicalInformations.class,LanguageCollection.class,Location.class);
-			addRequiredClasses();
+				
+			addClasses(classes);
+				
 			return this;
 		}
 		

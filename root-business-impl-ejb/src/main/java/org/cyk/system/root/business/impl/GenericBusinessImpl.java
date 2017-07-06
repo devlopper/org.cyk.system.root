@@ -334,7 +334,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	}
 
 	@Override
-	public void deleteIfIdentified(Object identifiable, Collection<String> fieldNames) {
+	public void delete(Object identifiable, Collection<String> fieldNames) {
 		if(identifiable!=null && fieldNames!=null){
 			Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
 			FieldHelper fieldHelper = new FieldHelper();
@@ -350,8 +350,9 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	}
 
 	@Override
-	public void deleteIfIdentified(Object identifiable, String... fieldNames) {
-		deleteIfIdentified(identifiable,Arrays.asList(fieldNames));
+	public void delete(Object identifiable, String... fieldNames) {
+		if(fieldNames!=null)
+			delete(identifiable,Arrays.asList(fieldNames));
 	}
 
 	@Override
@@ -365,5 +366,45 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public <T extends AbstractIdentifiable> void setFieldValuesRandomly(T identifiable, String... fieldNames) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void create(Object object, Collection<String> fieldNames) {
+		if(object!=null && fieldNames!=null){
+			Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+			FieldHelper fieldHelper = new FieldHelper();
+			for(String fieldName : fieldNames){
+				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(object, fieldName);
+				if(value!=null)
+					identifiables.add(value);
+			}
+			createIfNotIdentified(identifiables);
+		}
+	}
+
+	@Override
+	public void create(Object object, String... fieldNames) {
+		if(fieldNames!=null)
+			create(object,Arrays.asList(fieldNames));
+	}
+
+	@Override
+	public void save(Object object, Collection<String> fieldNames) {
+		if(object!=null && fieldNames!=null){
+			Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+			FieldHelper fieldHelper = new FieldHelper();
+			for(String fieldName : fieldNames){
+				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(object, fieldName);
+				if(value!=null)
+					identifiables.add(value);
+			}
+			updateIfIdentifiedElseCreate(identifiables);
+		}
+	}
+
+	@Override
+	public void save(Object object, String... fieldNames) {
+		if(fieldNames!=null)
+			save(object,Arrays.asList(fieldNames));
 	}
 }

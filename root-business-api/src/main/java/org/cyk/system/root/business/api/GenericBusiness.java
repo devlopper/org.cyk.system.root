@@ -16,6 +16,11 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     
     void createIfNotIdentified(Collection<? extends AbstractIdentifiable> collection);
     void createIfNotIdentified(AbstractIdentifiable...identifiables);
+    void create(Object object,Collection<String> fieldNames);
+    void create(Object object,String...fieldNames);
+    
+    void save(Object object,Collection<String> fieldNames);
+    void save(Object object,String...fieldNames);
     
     void updateIfIdentifiedElseCreate(Collection<? extends AbstractIdentifiable> collection);
     void updateIfIdentifiedElseCreate(AbstractIdentifiable...identifiables);
@@ -23,8 +28,8 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     void deleteIfIdentified(Collection<? extends AbstractIdentifiable> collection);
     void deleteIfIdentified(AbstractIdentifiable...identifiables);
     
-    void deleteIfIdentified(Object object,Collection<String> fieldNames);
-    void deleteIfIdentified(Object object,String...fieldNames);
+    void delete(Object object,Collection<String> fieldNames);
+    void delete(Object object,String...fieldNames);
     
     AbstractIdentifiable find(String identifiableClassIdentifier,String code);
 

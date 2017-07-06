@@ -2,14 +2,13 @@ package org.cyk.system.root.business.impl.security;
 
 import java.io.Serializable;
 
-import lombok.NoArgsConstructor;
-
-import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.RudBusiness;
 import org.cyk.system.root.business.impl.AbstractModelElementOutputDetails;
-import org.cyk.system.root.business.impl.globalidentification.GlobalIdentifierBusinessImpl;
 import org.cyk.system.root.model.Rud;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
+
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class RudDetails extends AbstractModelElementOutputDetails<Rud> implements Serializable {
@@ -25,8 +24,8 @@ public class RudDetails extends AbstractModelElementOutputDetails<Rud> implement
 	@Override
 	public void setMaster(Rud rud) {
 		super.setMaster(rud);
-		this.readable = inject(LanguageBusiness.class).findResponseText(GlobalIdentifierBusinessImpl.isReadable(rud));
-		this.updatable = inject(LanguageBusiness.class).findResponseText(GlobalIdentifierBusinessImpl.isUpdatable(rud));
-		this.deletable = inject(LanguageBusiness.class).findResponseText(GlobalIdentifierBusinessImpl.isDeletable(rud));
+		this.readable = formatResponse(inject(RudBusiness.class).isReadable(rud));
+		this.updatable = formatResponse(inject(RudBusiness.class).isUpdatable(rud));
+		this.deletable = formatResponse(inject(RudBusiness.class).isDeletable(rud));
 	}
 }
