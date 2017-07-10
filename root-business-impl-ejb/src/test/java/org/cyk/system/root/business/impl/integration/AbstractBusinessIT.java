@@ -25,6 +25,7 @@ import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.file.ExcelSheetReader;
+import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.test.ArchiveBuilder;
@@ -114,7 +115,8 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     }
     
     protected TestCase instanciateTestCase(){
-		return rootBusinessTestHelper.instanciateTestCase();
+    	return rootBusinessTestHelper.instanciateTestCase().setName(new MethodHelper().getNameFromStackTraceAt(3))
+    			.prepare();
 	}
 	 
     @Override

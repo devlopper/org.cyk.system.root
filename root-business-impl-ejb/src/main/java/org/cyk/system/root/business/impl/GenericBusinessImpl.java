@@ -171,7 +171,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	}
 	
 	@SuppressWarnings("unchecked")
-    @Override @TransactionAttribute(TransactionAttributeType.NEVER)
+    @Override @TransactionAttribute(TransactionAttributeType.NEVER) @Deprecated
 	public <T extends AbstractIdentifiable> T load(Class<T> aClass, Long identifier) {
 	    TypedBusiness<T> businessBean = (TypedBusiness<T>) BusinessInterfaceLocator.getInstance().injectTyped((Class<AbstractIdentifiable>) aClass);
 	    if(businessBean==null)

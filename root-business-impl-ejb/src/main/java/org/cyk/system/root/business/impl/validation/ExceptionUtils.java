@@ -26,6 +26,9 @@ import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.StringHelper.CaseType;
+import org.cyk.utility.common.helper.ThrowableHelper;
 
 import lombok.Setter;
 
@@ -59,12 +62,13 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     
     public void exception(Boolean condition,String identifier,String messageId,Object[] parameters){
         if(Boolean.TRUE.equals(condition)){
-        	String message = languageBusiness.findText(messageId,parameters);
+        	String message = new StringHelper.ToStringMapping.Adapter.Default(messageId).setCaseType(CaseType.FU).addParameters(parameters).execute();
         	BusinessException exception = new BusinessException(message);
             exception.setIdentifier(identifier);
             throw exception;
         }
     }
+    
     public void exception(Boolean condition,String messageId,Object[] parameters){
     	exception(condition,null,messageId,parameters);
     }
@@ -72,6 +76,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     public void exception(Boolean condition,String identifier,String messageId){
         exception(condition, identifier,messageId, null);
     }
+    
     public void exception(Boolean condition,String messageId){
     	exception(condition,null,messageId);
     }
@@ -79,6 +84,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     public void exception(String identifier,String messageId){
         exception(Boolean.TRUE,identifier, messageId);
     }
+    
     public void exception(String messageId){
     	exception("",messageId);
     }
@@ -158,7 +164,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     
     public String getMessage(Throwable throwable){
     	String message = null;
-    	Throwable cause = commonUtils.getThrowableInstanceOf(throwable, PersistenceException.class);
+    	Throwable cause = new ThrowableHelper().getInstanceOf(throwable, PersistenceException.class);
     	if(cause == null){
     		
     	}else{

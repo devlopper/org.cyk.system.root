@@ -833,7 +833,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public TestCase prepare(){
 			addIdentifiableClasses();
 			addClasses(GlobalIdentifier.class);
-			System.out.println("Preparing "+name+". #Classes="+classes.size());
+			System.out.println("Preparing test case "+name+". #Classes="+classes.size());
 			countAll(classes);
 			return this;
 		}

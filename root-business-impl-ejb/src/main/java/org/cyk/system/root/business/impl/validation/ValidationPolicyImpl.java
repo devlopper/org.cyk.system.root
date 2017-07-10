@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
@@ -21,6 +22,9 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
+import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.StringHelper.CaseType;
+import org.cyk.utility.common.helper.ThrowableHelper;
 
 @Singleton
 public class ValidationPolicyImpl extends AbstractBean implements ValidationPolicy, Serializable {
@@ -103,7 +107,17 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         if(identifiable.getIdentifier()==null){
         	Long countInDB = inject(GenericDao.class).use(identifiable.getClass()).select(Function.COUNT).where(null,fieldName,"uniqueValue", fieldValue,ArithmeticOperator.EQ).oneLong();
         	logTrace("Check for Create. Count existing = {}",countInDB);
-        	exceptionUtils().exception(countInDB>0,"exception.value.duplicate",new Object[]{inject(LanguageBusiness.class).findText(fieldLabelId),fieldValue});
+        	
+        	String message = new StringHelper.ToStringMapping.Adapter.Default("exception.value.duplicate").setCaseType(CaseType.FU).addManyParameters(new StringHelper.ToStringMapping.Adapter
+        			.Default(fieldLabelId).setCaseType(CaseType.L).execute(),fieldValue).execute();
+        	
+        	ThrowableHelper.Throwable throwable = new ThrowableHelper.Throwable.Builder.Adapter.Default<BusinessException>(BusinessException.class)
+    				.addManyParameters(message).setExecutable(countInDB>0).execute();
+        	
+        	ThrowableHelper.getInstance().throw_(throwable);
+        	
+        	//exceptionUtils().exception(countInDB>0,"exception.value.duplicate",new Object[]{new StringHelper.ToStringMapping.Adapter.Default(fieldLabelId)
+        	//		.setCaseType(CaseType.L).execute(),fieldValue});
         }else{
         	AbstractIdentifiable inDB = genericDao.use(identifiable.getClass()).read(identifiable.getIdentifier());
             Object oldValue = commonUtils.readProperty(inDB, fieldName);

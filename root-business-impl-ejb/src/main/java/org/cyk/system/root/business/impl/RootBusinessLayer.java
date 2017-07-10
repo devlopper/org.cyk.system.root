@@ -27,6 +27,7 @@ import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.event.NotificationBuilderAdapter;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
+import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilderAdapter;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -107,6 +108,7 @@ import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.builder.NameValueCollectionStringBuilder;
 import org.cyk.utility.common.builder.NameValueStringBuilder;
 import org.cyk.utility.common.generator.AbstractGeneratable;
+import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -144,6 +146,18 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         super.initialisation();
         org.cyk.utility.common.cdi.annotation.Log.Interceptor.COLLECTION.add(new LogInterceptorAdapter() /*inject(LogInterceptorAdapter.class)*/);
         
+        StringHelper.ToStringMapping.DATASOURCES.add(new StringHelper.ToStringMapping.Datasource.ResourceBundle.Adapter.Default());
+		
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.model.language.i18n",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.model.language.word",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.model.language.entity",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.model.language.field",LanguageBusinessImpl.class.getClassLoader());
+		
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.ui",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.misc",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.exception",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.validation",LanguageBusinessImpl.class.getClassLoader());
+		
         NameValueCollectionStringBuilder.Listener.COLLECTION.add(new NameValueCollectionStringBuilder.Listener.Adapter.Default(){
 			private static final long serialVersionUID = 1546167219574989403L;
         	

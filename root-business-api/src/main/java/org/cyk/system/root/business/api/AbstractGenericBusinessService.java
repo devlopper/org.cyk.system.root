@@ -14,7 +14,7 @@ public interface AbstractGenericBusinessService<IDENTIFIABLE extends Identifiabl
     IDENTIFIABLE save(IDENTIFIABLE identifiable);
     @Deprecated
     <T extends IDENTIFIABLE> T load(Class<T> aClass,IDENTIFIER identifier);
-    
+    @Deprecated
     IDENTIFIABLE refresh(IDENTIFIABLE identifiable);
     
 	/* ------------------------ Dynamic methods ---------------------------- */
