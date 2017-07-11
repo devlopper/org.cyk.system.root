@@ -248,6 +248,10 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return getGlobalIdentifierCreateIfNull().getProcessing();
 	}
 	
+	public void setProcessing(Processing processing){
+		getGlobalIdentifierCreateIfNull().setProcessing(processing);
+	}
+	
 	private String __identifier__(){
 		return //getMemoryAddress()
 				getClass().getSimpleName()
