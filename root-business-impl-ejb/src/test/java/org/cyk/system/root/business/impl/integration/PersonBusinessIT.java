@@ -69,7 +69,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     public void createPersonWithExistingCode(){
     	TestCase testCase = instanciateTestCase();
     	testCase.create(inject(PersonBusiness.class).instanciateOne().setCode("ABC"));
-    	testCase.create(inject(PersonBusiness.class).instanciateOne().setCode("ABC"),"Un enregistrement avec pour code = ABC existe déja");
+    	testCase.create(inject(PersonBusiness.class).instanciateOne().setCode("ABC"),"Un enregistrement de type personne avec pour code <<ABC>> existe déja.");
 		testCase.clean();
     }
 

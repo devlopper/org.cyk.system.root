@@ -105,6 +105,11 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	private Boolean initialized;
 	
 	/**
+	 * True if object has been derived by business process, False otherwise.
+	 */
+	private Boolean derived;
+	
+	/**
 	 * True if must be only update by application , False otherwise.
 	 */
 	@Column(name="f_constant") private Boolean constant;

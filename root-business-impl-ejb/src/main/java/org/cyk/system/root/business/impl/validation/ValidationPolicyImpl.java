@@ -22,9 +22,9 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
+import org.cyk.utility.common.helper.ConditionHelper;
+import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
-import org.cyk.utility.common.helper.StringHelper.CaseType;
-import org.cyk.utility.common.helper.ThrowableHelper;
 
 @Singleton
 public class ValidationPolicyImpl extends AbstractBean implements ValidationPolicy, Serializable {
@@ -99,25 +99,22 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     }
     
     protected void checkUniqueConstraints(AbstractIdentifiable identifiable,String fieldName){
-        Object fieldValue = commonUtils.readProperty(identifiable, fieldName);
+        LoggingHelper.Message.Builder loggingMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
+    	Object fieldValue = commonUtils.readProperty(identifiable, fieldName);
         String fieldLabelId = LanguageBusinessImpl.FIELD_MARKER_START+(StringUtils.contains(fieldName, Constant.CHARACTER_DOT.toString()) 
         		? StringUtils.substringAfterLast(fieldName, Constant.CHARACTER_DOT.toString()) : fieldName);
-    	logTrace("Check field unique constraint for an instance of {} , field={} , value={}",identifiable.getClass().getSimpleName(),fieldName,fieldValue);
     	
+        loggingMessageBuilder.addNamedParameters("Check field unique constraint for an instance",identifiable.getClass().getSimpleName(),"field",fieldName,"value",fieldValue);
+        
         if(identifiable.getIdentifier()==null){
         	Long countInDB = inject(GenericDao.class).use(identifiable.getClass()).select(Function.COUNT).where(null,fieldName,"uniqueValue", fieldValue,ArithmeticOperator.EQ).oneLong();
-        	logTrace("Check for Create. Count existing = {}",countInDB);
+        	loggingMessageBuilder.addNamedParameters("Check for Create. Count existing",countInDB);
         	
-        	String message = new StringHelper.ToStringMapping.Adapter.Default("exception.value.duplicate").setCaseType(CaseType.FU).addManyParameters(new StringHelper.ToStringMapping.Adapter
-        			.Default(fieldLabelId).setCaseType(CaseType.L).execute(),fieldValue).execute();
+        	throw__(new ConditionHelper.Condition.Builder.Duplicate.Adapter.Default()
+        			.setValueNameIdentifier(fieldLabelId).setValueCount(countInDB)
+    				.setDomainNameIdentifier(new StringHelper.Builder.ClassIdentifier.Adapter.Default().setInput(identifiable.getClass()))
+    				.setInput(fieldValue),BusinessException.class);
         	
-        	ThrowableHelper.Throwable throwable = new ThrowableHelper.Throwable.Builder.Adapter.Default<BusinessException>(BusinessException.class)
-    				.addManyParameters(message).setExecutable(countInDB>0).execute();
-        	
-        	ThrowableHelper.getInstance().throw_(throwable);
-        	
-        	//exceptionUtils().exception(countInDB>0,"exception.value.duplicate",new Object[]{new StringHelper.ToStringMapping.Adapter.Default(fieldLabelId)
-        	//		.setCaseType(CaseType.L).execute(),fieldValue});
         }else{
         	AbstractIdentifiable inDB = genericDao.use(identifiable.getClass()).read(identifiable.getIdentifier());
             Object oldValue = commonUtils.readProperty(inDB, fieldName);
@@ -127,6 +124,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
                 exceptionUtils().exception(genericDao.use(identifiable.getClass()).select(Function.COUNT).where(null,fieldName,"uniqueValue", fieldValue,ArithmeticOperator.EQ).oneLong()>0,
                     "exception.value.duplicate",new Object[]{inject(LanguageBusiness.class).findText(fieldLabelId),fieldValue});
         }
+        logTrace(loggingMessageBuilder);
     }
     
     @Override
