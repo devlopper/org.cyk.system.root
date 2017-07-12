@@ -118,7 +118,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     	return rootBusinessTestHelper.instanciateTestCase().setName(new MethodHelper().getNameFromStackTraceAt(3))
     			.prepare();
 	}
-	 
+	  
     @Override
     protected void _execute_() {
         super._execute_();

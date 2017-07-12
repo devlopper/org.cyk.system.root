@@ -29,7 +29,7 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	@Enumerated(EnumType.ORDINAL) @Column(name="thetype") private ValueType type = ValueType.DEFAULT;
 	@Enumerated(EnumType.ORDINAL) @Column(name="theset") private ValueSet set = ValueSet.DEFAULT;
 	
-	private Boolean derived;
+	@Deprecated private Boolean derived;//TODO create getter and setter method in super type
 	@ManyToOne private Script derivationScript;
 	
 	private Boolean nullable;
@@ -91,7 +91,6 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	public static final String FIELD_NULLABLE = "nullable";
 	public static final String FIELD_NULL_STRING = "nullString";
 	public static final String FIELD_MEASURE = "measure";
-	public static final String FIELD_DERIVED = "derived";
 	public static final String FIELD_DERIVATION_SCRIPT = "derivationScript";
 	
 }

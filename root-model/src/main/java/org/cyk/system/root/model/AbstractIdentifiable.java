@@ -203,6 +203,13 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getCascadeStyleSheet();
 	}
 
+	public void setDerived(Boolean derived){
+		getGlobalIdentifierCreateIfNull().setDerived(derived);
+	}
+	public Boolean getDerived(){
+		return globalIdentifier == null ? null : globalIdentifier.getDerived();
+	}
+	
 	public Collection<AbstractIdentifiable> getParents(){
 		if(parents==null)
 			parents =  new ArrayList<>();

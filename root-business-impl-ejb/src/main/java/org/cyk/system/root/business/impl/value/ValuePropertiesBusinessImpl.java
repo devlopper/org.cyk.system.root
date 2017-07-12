@@ -36,7 +36,7 @@ public class ValuePropertiesBusinessImpl extends AbstractTypedBusinessService<Va
 		set(listener.getSetListener(), ValueProperties.FIELD_SET);
 		set(listener.getSetListener(), ValueProperties.FIELD_INTERVAL_COLLECTION);
 		set(listener.getSetListener(), ValueProperties.FIELD_MEASURE);
-		set(listener.getSetListener(), ValueProperties.FIELD_DERIVED);
+		set(listener.getSetListener(), ValueProperties.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_DERIVED);
 		set(listener.getSetListener(), ValueProperties.FIELD_DERIVATION_SCRIPT);
 		set(listener.getSetListener(), ValueProperties.FIELD_NULLABLE);
 		set(listener.getSetListener(), ValueProperties.FIELD_NULL_STRING);

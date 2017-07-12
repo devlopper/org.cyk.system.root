@@ -190,6 +190,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_IMAGE = "image";
 	public static final String FIELD_DEFAULTED = "defaulted";
 	public static final String FIELD_SUPPORTING_DOCUMENT = "supportingDocument";
+	public static final String FIELD_DERIVED = "derived";
 	
 	/**/
 	
