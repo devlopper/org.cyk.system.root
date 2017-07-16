@@ -16,6 +16,8 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
+import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 
 public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<IDENTIFIER>,IDENTIFIER> extends BusinessService {
 	
@@ -64,7 +66,11 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				*/
     /* Save   */	IDENTIFIABLE save(IDENTIFIABLE identifiable);
     				void save(Collection<IDENTIFIABLE> identifiables);
+    				
+    				@Deprecated
     				void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter);
+    				
+    				void synchronize(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<IDENTIFIABLE> instanceBuilder);
     				
     				Boolean isIdentified(IDENTIFIABLE identifiable);
     				Boolean isNotIdentified(IDENTIFIABLE identifiable);

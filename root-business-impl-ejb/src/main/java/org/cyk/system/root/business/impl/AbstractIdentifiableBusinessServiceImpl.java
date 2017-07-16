@@ -48,6 +48,8 @@ import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -130,7 +132,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			save(identifiable);
 	}
 		
-	@Override
+	@Override @Deprecated
 	public void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter) {
 		logTrace("Synchronize {} from excel", clazz.getSimpleName());
 		excelSheetReader.execute();
@@ -138,6 +140,19 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		setter.execute();
 		save(setter.getOutput());
 		logTrace("Synchronization of {} from excel done.", clazz.getSimpleName());
+	}
+	
+	@Override
+	public void synchronize(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<IDENTIFIABLE> instanceBuilder) {
+		logTrace("Synchronize {} from excel sheet", clazz.getSimpleName());
+		InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<IDENTIFIABLE> instancesBuilder = new InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<IDENTIFIABLE>(null);
+		instancesBuilder.setOneDimensionArray(instanceBuilder);
+		
+		if(sheet.getValues()!=null)
+			create(instancesBuilder.setInput(sheet.getValues()).execute());
+		if(sheet.getIgnoreds()!=null)
+			update(instancesBuilder.setInput(sheet.getIgnoreds()).execute());
+		logTrace("Synchronization of {} from excel sheet done.", clazz.getSimpleName());
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

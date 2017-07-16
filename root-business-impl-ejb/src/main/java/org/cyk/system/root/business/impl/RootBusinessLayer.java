@@ -108,6 +108,7 @@ import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.builder.NameValueCollectionStringBuilder;
 import org.cyk.utility.common.builder.NameValueStringBuilder;
 import org.cyk.utility.common.generator.AbstractGeneratable;
+import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
@@ -146,6 +147,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         super.initialisation();
         org.cyk.utility.common.cdi.annotation.Log.Interceptor.COLLECTION.add(new LogInterceptorAdapter() /*inject(LogInterceptorAdapter.class)*/);
         
+        InstanceHelper.Lookup.Source.Adapter.Default.RESULT_METHOD = new InstanciateAdapter.Lookup();
         StringHelper.ToStringMapping.Datasource.Adapter.Default.initialize();
 		
 		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.model.language.i18n",LanguageBusinessImpl.class.getClassLoader());

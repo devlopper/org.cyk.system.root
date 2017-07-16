@@ -301,7 +301,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/**/
 	
-	public void set(AbstractIdentifiable component,String...fieldNames){
+	public void _set(AbstractIdentifiable component,String...fieldNames){
 		for(String fieldName : fieldNames){
 			if(GlobalIdentifier.FIELD_CODE.equals(fieldName)){
 				if(StringUtils.isBlank(component.getCode()))
