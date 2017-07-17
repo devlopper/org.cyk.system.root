@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -18,7 +19,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -26,12 +29,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.persistence.Entity;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.cyk.system.OrgCykSystemPackage;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -58,6 +63,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParamete
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
 import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
@@ -67,6 +73,7 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineAlphabet;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
+import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
@@ -74,6 +81,7 @@ import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
+import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
@@ -88,12 +96,14 @@ import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -702,13 +712,17 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	/**/
 	
+	@Getter @Setter @Accessors(chain=true)
 	public static class TestCase extends AbstractBean implements Serializable {
 
 		private static final long serialVersionUID = -6026836126124339547L;
 
+		private String name;
 		private AbstractBusinessTestHelper helper;
 		private List<AbstractIdentifiable> identifiables;
 		private Boolean cleaned = Boolean.FALSE;
+		private Set<Class<?>> classes=new LinkedHashSet<>();
+		private Map<Class<?>,Long> countAllMap = new HashMap<>();
 		
 		public TestCase(AbstractBusinessTestHelper helper) {
 			super();
@@ -736,12 +750,14 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
 			@SuppressWarnings("unchecked")
 			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
-			if(StringUtils.isNotBlank(identifiable.getCode()))
+			if(StringUtils.isNotBlank(identifiable.getCode()) && StringUtils.isBlank(expectedThrowableMessage))
 				assertThat("Object to create with code <<"+identifiable.getCode()+">> already exist", dao.read(identifiable.getCode())==null);
 			T created = helper.create(identifiable,expectedThrowableMessage);
-			created = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier());
-			assertThat("Object created not found", created!=null);
-			add(created);
+			if(StringUtils.isBlank(expectedThrowableMessage)){
+				created = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier());
+				assertThat("Object created not found", created!=null);
+				add(created);
+			}
 			return created;
 		}
 		
@@ -814,6 +830,14 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			helper.throwMessage(runnable, expectedThrowableMessage);
 		}
 		
+		public TestCase prepare(){
+			addIdentifiableClasses();
+			addClasses(GlobalIdentifier.class);
+			System.out.println("Preparing test case "+name+". #Classes="+classes.size());
+			countAll(classes);
+			return this;
+		}
+		
 		public void clean(){
 			if(Boolean.TRUE.equals(cleaned))
 				return;
@@ -823,6 +847,82 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 					helper.delete(identifiable.getClass(), identifiable.getCode()); //inject(GenericBusiness.class).delete(identifiable);
 			}
 			cleaned = Boolean.TRUE;
+			assertCountAll(classes);
+		}
+		
+		public TestCase addClasses(Class<?>...classes){
+			if(classes!=null){
+				Collection<Class<?>> collection = new ArrayList<>();
+				for(@SuppressWarnings("rawtypes") Class aClass : classes)
+					collection.add(aClass);
+				addClasses(collection);
+			}
+			return this;
+		}
+		
+		public TestCase addClasses(Collection<Class<?>> classes){
+			this.classes.addAll(classes);
+			return this;
+		}
+		
+		public TestCase addIdentifiableClasses(){
+			Collection<Class<?>> classes = new ArrayList<>();
+			for(Class<?> aClass : new ClassHelper.Get.Adapter.Default(OrgCykSystemPackage.class.getPackage())
+					.setBaseClass(AbstractIdentifiable.class).addAnnotationClasses(Entity.class).execute()){
+				if(!Modifier.isAbstract(aClass.getModifiers()) && !Party.class.equals(aClass)){
+					@SuppressWarnings("unchecked")
+					TypedDao<AbstractIdentifiable> dao = (TypedDao<AbstractIdentifiable>) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass);
+					if(dao!=null)
+						classes.add(aClass);	
+				}
+			}
+				
+			addClasses(classes);
+				
+			return this;
+		}
+		
+		protected Long getCountAll(Class<?> aClass){
+			if(GlobalIdentifier.class.equals(aClass)){
+				return inject(GlobalIdentifierDao.class).countAll();	
+			}else{
+				@SuppressWarnings("unchecked")
+				TypedDao<AbstractIdentifiable> dao = (TypedDao<AbstractIdentifiable>) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass);
+				if(dao==null)
+					return null;
+				else
+					return dao.countAll();
+			}
+		}
+		
+		public void countAll(Collection<Class<?>> classes){
+			for(@SuppressWarnings("rawtypes") Class aClass : classes){
+				countAllMap.put((Class<?>) aClass, getCountAll(aClass));	
+			}
+		}
+		
+		public TestCase countAll(Class<?>...classes){
+			if(classes!=null)
+				countAll(Arrays.asList(classes));
+			return this;
+		}
+		
+		public TestCase assertCountAll(@SuppressWarnings("rawtypes") Class aClass,Integer increment){
+			assertEquals(aClass.getSimpleName()+" count all is not correct", new Long(commonUtils.getValueIfNotNullElseDefault(countAllMap.get(aClass),0l)+increment)
+					, getCountAll(aClass));
+			return this;
+		}
+		
+		public TestCase assertCountAll(Collection<Class<?>> classes){
+			for(Class<?> aClass : classes)
+				assertCountAll(aClass,0);
+			return this;
+		}
+		
+		public TestCase assertCountAll(Class<?>...classes){
+			if(classes!=null)
+				assertCountAll(Arrays.asList(classes));
+			return this;
 		}
 		
 		/**/

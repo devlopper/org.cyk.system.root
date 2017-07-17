@@ -38,6 +38,7 @@ import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportFile;
 import org.cyk.system.root.model.file.report.ReportTemplate;
+import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -229,13 +230,19 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    createIfNotIdentified(identifiable.getSupportingDocument());
 	    beforeCreate(getListeners(), identifiable);
 	    beforeCrud(identifiable, Crud.CREATE);
+	    inject(GenericBusiness.class).createIfNotIdentified(findRelatedInstances(identifiable));
 	}
 	
 	@Override
 	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
-		beforeCreate(identifiable);
-        identifiable = dao.create(identifiable);
-        afterCreate(identifiable);
+		if(identifiable==null){
+			
+		}else{
+			beforeCreate(identifiable);
+	        identifiable = dao.create(identifiable);
+	        afterCreate(identifiable);	
+		}
+		
         return identifiable;
 	}
 	
@@ -308,17 +315,23 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		inject(ValidationPolicy.class).validateUpdate(identifiable);
 		beforeUpdate(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.UPDATE);
+		inject(GenericBusiness.class).updateIfIdentifiedElseCreate(findRelatedInstances(identifiable));
 	}
 
 	@Override
 	public IDENTIFIABLE update(IDENTIFIABLE identifiable) {
-		beforeUpdate(identifiable);
-		//IDENTIFIABLE newObject = dao.update(identifiable);
-		dao.update(identifiable);
-	    if(identifiable.getGlobalIdentifier()!=null)
-	    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
-	    afterUpdate(identifiable);
-		//return newObject; We might lost some informations by returning the new managed object. better to keep the old one
+		if(identifiable==null){
+			
+		}else{
+			beforeUpdate(identifiable);
+			//IDENTIFIABLE newObject = dao.update(identifiable);
+			dao.update(identifiable);
+		    if(identifiable.getGlobalIdentifier()!=null)
+		    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
+		    afterUpdate(identifiable);
+			//return newObject; We might lost some informations by returning the new managed object. better to keep the old one
+		}
+		
 		return identifiable;
 	}
 	
@@ -338,12 +351,11 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		deleteFileIdentifiableGlobalIdentifier(identifiable);
 		beforeDelete(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.DELETE);
-		
-		
+		inject(GenericBusiness.class).deleteIfIdentified(findRelatedInstances(identifiable,Boolean.TRUE,null));
 	}
 	
 	protected void deleteFileIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
-		if(identifiable instanceof FileIdentifiableGlobalIdentifier){
+		if(identifiable instanceof FileIdentifiableGlobalIdentifier || identifiable instanceof File || identifiable instanceof Location){
 			
 		}else{
 			Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
@@ -358,13 +370,18 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE delete(IDENTIFIABLE identifiable) {
-		beforeDelete(identifiable);
-		if(identifiable.getGlobalIdentifier()!=null){
-			inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
-			identifiable.setGlobalIdentifier(null);
-		}		
-		/*identifiable = */dao.delete(identifiable);
-		afterDelete(identifiable);
+		if(identifiable==null){
+			
+		}else{
+			beforeDelete(identifiable);
+			if(identifiable.getGlobalIdentifier()!=null){
+				inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
+				identifiable.setGlobalIdentifier(null);
+			}		
+			/*identifiable = */dao.delete(identifiable);
+			afterDelete(identifiable);	
+		}
+		
 		return identifiable;
 	}
 	
@@ -753,7 +770,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		logTrace(converter.getLogMessageBuilder());
 		return result;
 	}
-		
+	
 	/**/
 	
 }

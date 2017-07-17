@@ -27,6 +27,7 @@ import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.event.NotificationBuilderAdapter;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
+import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilderAdapter;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -91,6 +92,7 @@ import org.cyk.system.root.model.userinterface.UserInterfaceMenuLocation;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuNode;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuNodeType;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuRenderType;
+import org.cyk.system.root.model.userinterface.UserInterfaceMenuType;
 import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.model.value.MeasureType;
 import org.cyk.system.root.model.value.NullString;
@@ -101,13 +103,13 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.AbstractMethod;
-import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.StringMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.builder.NameValueCollectionStringBuilder;
 import org.cyk.utility.common.builder.NameValueStringBuilder;
 import org.cyk.utility.common.generator.AbstractGeneratable;
+import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -145,6 +147,19 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         super.initialisation();
         org.cyk.utility.common.cdi.annotation.Log.Interceptor.COLLECTION.add(new LogInterceptorAdapter() /*inject(LogInterceptorAdapter.class)*/);
         
+        InstanceHelper.Lookup.Source.Adapter.Default.RESULT_METHOD = new InstanciateAdapter.Lookup();
+        StringHelper.ToStringMapping.Datasource.Adapter.Default.initialize();
+		
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.model.language.i18n",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.model.language.word",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.model.language.entity",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.model.language.field",LanguageBusinessImpl.class.getClassLoader());
+		
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.ui",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.misc",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.exception",LanguageBusinessImpl.class.getClassLoader());
+		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.validation",LanguageBusinessImpl.class.getClassLoader());
+		
         NameValueCollectionStringBuilder.Listener.COLLECTION.add(new NameValueCollectionStringBuilder.Listener.Adapter.Default(){
 			private static final long serialVersionUID = 1546167219574989403L;
         	
@@ -211,14 +226,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         		inject(ApplicationBusiness.class).findValueGenerator(ValueGenerator.GLOBAL_IDENTIFIER_CODE_IDENTIFIER);
         globalIdentifierCodeGenerator.setMethod(new GlobalIdentifierCodeGenerator());
 		
-		AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_VALUE = new StringMethod<AbstractIdentifiable>() {
+		/*AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_VALUE = new StringMethod<AbstractIdentifiable>() {
 			private static final long serialVersionUID = -206221150563679476L;
 			@Override
 			protected String __execute__(AbstractIdentifiable identifiable) {
 				return identifiable.getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE+System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE
 						+RandomStringUtils.randomAlphanumeric(10);
 			}
-		};
+		};*/
 		
 		AbstractIdentifiable.CREATE_GLOBAL_IDENTIFIER = new AbstractMethod<Object, GlobalIdentifier>() {
 			private static final long serialVersionUID = 153358109323471469L;
@@ -235,7 +250,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 				return inject(GlobalIdentifierBusiness.class).update(globalIdentifier);
 			}
 		};
-		
+		/*
 		AbstractIdentifiable.BUILD_GLOBAL_IDENTIFIER_CREATED_BY = new AbstractMethod<Party, AbstractIdentifiable>() {
 			private static final long serialVersionUID = 153358109323471469L;
 			@Override
@@ -250,7 +265,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			protected Date __execute__(AbstractIdentifiable identifiable) {
 				return inject(TimeBusiness.class).findUniversalTimeCoordinated();
 			}
-		};
+		};*/
 		
 		AbstractIdentifiable.GLOBAL_IDENTIFIER_BUILDABLE = new AbstractMethod<Boolean, AbstractIdentifiable>() {
 			private static final long serialVersionUID = 153358109323471469L;
@@ -419,6 +434,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	createFromExcelSheet(UserInterfaceMenuRenderType.class);
     	createFromExcelSheet(UserInterfaceMenuLocation.class);
     	createFromExcelSheet(UserInterfaceMenuNodeType.class);
+    	createFromExcelSheet(UserInterfaceMenuType.class);
     }
     
     @Override

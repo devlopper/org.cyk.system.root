@@ -13,5 +13,6 @@
 
 	<artifactId>root-application-resources</artifactId>
 	<packaging>jar</packaging>
+
 	
 </project>

@@ -7,5 +7,6 @@ import org.cyk.system.root.model.party.Party;
 public interface AbstractPartyExtendedInformationsBusiness<INFORMATIONS extends AbstractPartyExtendedInformations<PARTY>,PARTY extends Party> extends TypedBusiness<INFORMATIONS> {
 
 	INFORMATIONS findByParty(PARTY party);
-	
+
+	INFORMATIONS instanciateOneRandomly(PARTY party);
 }

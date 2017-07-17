@@ -2,15 +2,13 @@ package org.cyk.system.root.model.party.person.curriculumvitae;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
+import org.cyk.system.root.model.AbstractEnumeration;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractEnumeration;
-
-@Getter @Setter @NoArgsConstructor @Entity
+@Getter @Setter @NoArgsConstructor //@Entity
 public class CurriculumVitaeSectionType extends AbstractEnumeration implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;

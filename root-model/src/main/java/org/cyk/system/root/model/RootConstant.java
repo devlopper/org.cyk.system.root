@@ -363,10 +363,20 @@ public interface RootConstant {
 		public static class UserInterfaceMenuLocation implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
-			public static String NORTH="NORTH";
-			public static String EAST="EAST";
-			public static String SOUTH="SOUTH";
-			public static String WEST="WEST";
+			public static final String NORTH="NORTH";
+			public static final String EAST="EAST";
+			public static final String SOUTH="SOUTH";
+			public static final String WEST="WEST";
+
+		}
+		
+		public static class UserInterfaceMenuType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static final String PRIMARY="PRIMARY";
+			public static final String SECONDARY="SECONDARY";
+			public static final String MAIN="MAIN";
+			
 
 		}
 		

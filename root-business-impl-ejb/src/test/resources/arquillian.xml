@@ -4,9 +4,31 @@
     xsi:schemaLocation="
         http://jboss.org/schema/arquillian
         http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+        
     <container qualifier="glassfish-embedded" default="true">
         <configuration>
             <property name="resourcesXml">src/test/resources-glassfish-embedded/glassfish-resources.xml</property>
         </configuration>
     </container>
+    
+    <container qualifier="glassfish-managed" default="false">
+        <configuration>
+        	<property name="resourcesXml">src/test/resources-glassfish-managed/glassfish-resources.xml</property>
+            <property name="glassFishHome">E:/Servers/Application/Glassfish/4_0/glassfish40/glassfish</property>
+            <property name="domain">root</property>
+            <property name="adminHost">localhost</property>
+            <property name="adminPort">4848</property>
+        </configuration>
+    </container>
+ 
+    <container qualifier="glassfish-auth">
+        <configuration>
+            <property name="glassFishHome">E:/Servers/Application/Glassfish/4_0/glassfish40/glassfish</property>
+            <property name="adminHost">localhost</property>
+            <property name="adminPort">4848</property>
+            <property name="adminUser">admin</property>
+            <property name="adminPassword">admin</property>
+        </configuration>
+    </container>
+    
 </arquillian>

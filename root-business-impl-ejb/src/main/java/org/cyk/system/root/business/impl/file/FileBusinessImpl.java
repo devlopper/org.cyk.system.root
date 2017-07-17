@@ -238,16 +238,18 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     	if(file.getBytes()==null)
             if(file.getUri()==null)
                 exceptionUtils().exception("exception.file.nocontentnouri");
-            else
-                if(FILE.equals(file.getUri().getScheme()))
+            else{
+            	URI uri = URI.create(file.getUri());
+                if(FILE.equals(uri.getScheme()))
                     try {
-                    	inputStream = new FileInputStream(StringUtils.substring(file.getUri().getPath(), 1));
+                    	inputStream = new FileInputStream(StringUtils.substring(uri.getPath(), 1));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         exceptionUtils().resourceNotFound();
                     }
                 else
                     exceptionUtils().exception("exception.file.urinothandled");
+            }
         else
         	inputStream = new ByteArrayInputStream(file.getBytes());
         if(Boolean.TRUE.equals(keep))
@@ -297,12 +299,12 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public URI findThumbnailUri(File file,ThumnailSize size) {
-		return mediaBusiness.findThumbnailUri(file.getUri(), size);
+		return mediaBusiness.findThumbnailUri(URI.create(file.getUri()), size);
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public URI findEmbeddedUri(File file) {
-		return mediaBusiness.findEmbeddedUri(file.getUri());
+		return mediaBusiness.findEmbeddedUri(URI.create(file.getUri()));
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

@@ -56,31 +56,21 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
         aCollection.setPostalBoxs(contactDao.readByCollectionByClass(aCollection,PostalBox.class));
         aCollection.setWebsites(contactDao.readByCollectionByClass(aCollection,Website.class));
     }
+	
+	@Override
+	protected void afterCreate(ContactCollection collection) {
+		super.afterCreate(collection);
+		configure(collection.getPhoneNumbers(), collection);
+	    configure(collection.getLocations(), collection);
+	    configure(collection.getElectronicMails(), collection);
+	    configure(collection.getPostalBoxs(), collection);
+	    configure(collection.getWebsites(), collection);
+	}
 
-    @Override
-    public ContactCollection create(ContactCollection collection) {
-        super.create(collection);
-        configure(collection.getPhoneNumbers(), collection);
-        configure(collection.getLocations(), collection);
-        configure(collection.getElectronicMails(), collection);
-        configure(collection.getPostalBoxs(), collection);
-        configure(collection.getWebsites(), collection);
-        return collection;
-    }
-    
-    @Override
-    public ContactCollection delete(ContactCollection collection) {
-    	delete(collection.getPhoneNumbers(), collection);
-    	delete(collection.getLocations(), collection);
-    	delete(collection.getElectronicMails(), collection);
-    	delete(collection.getPostalBoxs(), collection);
-    	delete(collection.getWebsites(), collection);
-    	return super.delete(collection);
-    }
-    
-    @Override
-    public ContactCollection update(ContactCollection collection) {
-    	update(inject(ContactDao.class).readByCollectionByClass(collection,PhoneNumber.class), collection.getPhoneNumbers(), collection);
+	@Override
+	protected void afterUpdate(ContactCollection collection) {
+		super.afterUpdate(collection);
+		update(inject(ContactDao.class).readByCollectionByClass(collection,PhoneNumber.class), collection.getPhoneNumbers(), collection);
     	update(contactDao.readByCollectionByClass(collection,Location.class), collection.getLocations(), collection);
     	Collection<ElectronicMail> electronicMails = new ArrayList<>();
     	if(collection.getElectronicMails()!=null)
@@ -92,9 +82,18 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
     	update(contactDao.readByCollectionByClass(collection,PostalBox.class), collection.getPostalBoxs(), collection);
     	update(contactDao.readByCollectionByClass(collection,Website.class), collection.getWebsites(), collection);
     	
-    	return super.update(collection);
+	}
+	
+    @Override
+    protected void beforeDelete(ContactCollection collection) {
+    	super.beforeDelete(collection);
+    	delete(collection.getPhoneNumbers(), collection);
+    	delete(collection.getLocations(), collection);
+    	delete(collection.getElectronicMails(), collection);
+    	delete(collection.getPostalBoxs(), collection);
+    	delete(collection.getWebsites(), collection);
     }
-     
+         
     private void configure(Collection<? extends Contact> contacts,ContactCollection collection){
         if(contacts==null)
             return;
@@ -173,5 +172,5 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 		exceptionUtils().exception(collection.getElectronicMails().size() > 1, "toomuchelectronicmailsfound");
 		return collection.getElectronicMails().iterator().next().getAddress();
 	}
-	
+
 }

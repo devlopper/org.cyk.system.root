@@ -2,8 +2,6 @@ package org.cyk.system.root.persistence.impl.integration;
 
 import org.cyk.system.root.persistence.impl.data.PersonTest;
 import org.cyk.utility.common.computation.Function;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,11 +9,6 @@ public class GenericIT extends AbstractPersistenceIT {
 	
 	private static final long serialVersionUID = 5955832118708678179L;
 
-	@Deployment
-	public static Archive<?> createDeployment() {
-		return deployment(new Class<?>[]{PersonTest.class}).getArchive();
-	} 
-	
 	private static PersonTest identifiable;
 	private static Long pid;
 		

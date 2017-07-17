@@ -29,6 +29,8 @@ public class JobInformations extends AbstractPersonExtendedInformations implemen
 		super(party);
 	}
 	
+	public static final String FIELD_COMPANY = "company";
 	public static final String FIELD_FUNCTION = "function";
 	public static final String FIELD_TITLE = "title";
+	public static final String FIELD_CONTACT_COLLECTION = "contactCollection";
 }

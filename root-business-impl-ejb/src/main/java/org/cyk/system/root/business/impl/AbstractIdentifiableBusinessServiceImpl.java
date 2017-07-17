@@ -14,9 +14,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
@@ -48,6 +45,12 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
+import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.MicrosoftExcelHelper;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
 
@@ -130,7 +133,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			save(identifiable);
 	}
 		
-	@Override
+	@Override @Deprecated
 	public void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter) {
 		logTrace("Synchronize {} from excel", clazz.getSimpleName());
 		excelSheetReader.execute();
@@ -138,6 +141,19 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		setter.execute();
 		save(setter.getOutput());
 		logTrace("Synchronization of {} from excel done.", clazz.getSimpleName());
+	}
+	
+	@Override
+	public void synchronize(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<IDENTIFIABLE> instanceBuilder) {
+		logTrace("Synchronize {} from excel sheet", clazz.getSimpleName());
+		InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<IDENTIFIABLE> instancesBuilder = new InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<IDENTIFIABLE>(null);
+		instancesBuilder.setOneDimensionArray(instanceBuilder);
+		
+		if(sheet.getValues()!=null)
+			create(instancesBuilder.setInput(sheet.getValues()).execute());
+		if(sheet.getIgnoreds()!=null)
+			update(instancesBuilder.setInput(sheet.getIgnoreds()).execute());
+		logTrace("Synchronization of {} from excel sheet done.", clazz.getSimpleName());
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -727,9 +743,41 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		setRelatedIdentifiables(identifiable,Boolean.FALSE, relatedIdentifiableFieldNames);
 	}
 	
-	
 	protected void setRelatedIdentifiable(IDENTIFIABLE identifiable,String relatedIdentifiableFieldName){
 		throwNotYetImplemented();
+	}
+	
+	@Override
+	public Collection<String> findRelatedInstanceFieldNames(IDENTIFIABLE identifiable){
+		return null;
+	}
+	
+	@Override
+	public Collection<AbstractIdentifiable> findRelatedInstances(IDENTIFIABLE identifiable,Boolean setNewValue,Object newValue){
+		Collection<AbstractIdentifiable> relatedInstances = null;
+		Collection<String> relatedInstanceFieldNames = findRelatedInstanceFieldNames(identifiable);
+		if(relatedInstanceFieldNames!=null){
+			relatedInstances = new ArrayList<>();
+			FieldHelper fieldHelper = new FieldHelper();
+			for(String relatedInstanceFieldName : relatedInstanceFieldNames){
+				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(identifiable, relatedInstanceFieldName);
+				if(Boolean.TRUE.equals(setNewValue)){
+					fieldHelper.writeField(fieldHelper.get(clazz, relatedInstanceFieldName), identifiable, newValue);
+				}if(value!=null)
+					relatedInstances.add(value);
+			}
+		}
+		logTrace("find related instance. instance {} , field names {} , result {}", identifiable,relatedInstanceFieldNames,relatedInstances);
+		return relatedInstances;
+	}
+	
+	@Override
+	public Collection<AbstractIdentifiable> findRelatedInstances(IDENTIFIABLE identifiable){
+		return findRelatedInstances(identifiable, Boolean.FALSE, null);
+	}
+	
+	protected void setRandomValues(IDENTIFIABLE identifiable,String...fieldNames){
+		
 	}
 	
 	/**/

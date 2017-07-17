@@ -2,12 +2,10 @@ package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import org.cyk.system.root.model.event.EventRepetition;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.language.LanguageCollection;
 
@@ -20,7 +18,7 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 
 	private static final long serialVersionUID = 4416245866978363658L;
 
-	@OneToOne(cascade=CascadeType.ALL) private EventRepetition birthDateAnniversary;//we can do anniversary for any date. so how to handle that ??? 
+	//@OneToOne private EventRepetition birthDateAnniversary;//we can do anniversary for any date. so how to handle that ??? 
 	
 	@ManyToOne private MaritalStatus maritalStatus;
 	@ManyToOne private PersonTitle title;
@@ -28,8 +26,7 @@ public class PersonExtendedInformations extends AbstractPersonExtendedInformatio
 	/**
 	 * This is an image which visually represent the signature
 	 */
-	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)//TODO orphan removal and cascade should be false because of global identifier
-	private File signatureSpecimen;
+	@OneToOne private File signatureSpecimen;
 
 	@OneToOne private LanguageCollection languageCollection;
 	

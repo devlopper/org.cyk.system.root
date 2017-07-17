@@ -13,22 +13,22 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.userinterface.InputName;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @MappedSuperclass
+@Getter @Setter @NoArgsConstructor /*@AllArgsConstructor*/ @MappedSuperclass
 public abstract class AbstractSpreadSheetTemplateColumn<TEMPLATE> extends AbstractSpreadSheetTemplateDimension<TEMPLATE> implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 	
-	@ManyToOne @NotNull
-	protected InputName inputName;
+	//@ManyToOne @NotNull
+	//protected InputName inputName;
 
 	public AbstractSpreadSheetTemplateColumn(TEMPLATE template,InputName inputName) {
 		super(template);
-		this.inputName = inputName;
+		//this.inputName = inputName;
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return inputName.getCode();
-	}
+	}*/
 }
 

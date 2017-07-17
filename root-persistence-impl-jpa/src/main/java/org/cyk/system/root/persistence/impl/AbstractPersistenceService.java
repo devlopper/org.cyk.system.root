@@ -44,6 +44,7 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.helper.FieldHelper;
 
 import lombok.Getter;
 
@@ -76,7 +77,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	@Override 
 	protected void beforeInitialisation() {
 		super.beforeInitialisation();
-		Collection<Field> namedQueriesFields = commonUtils.getAllFields(getClass());
+		Collection<Field> namedQueriesFields = new FieldHelper().get(getClass());
 		//Named queries name initialization
 		for(Field field : namedQueriesFields)
 			//TODO use an array to hold those values
@@ -248,8 +249,8 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 			throw new IllegalArgumentException("Value cannot be blank <<"+value+">>");
 		}
 		switch(type){
-		case JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createQuery(value, aResultClass),getDataReadConfig());break;
-		case NAMED_JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager.createNamedQuery(value, aResultClass),getDataReadConfig());break;
+		case JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager,aResultClass,entityManager.createQuery(value, aResultClass),getDataReadConfig());break;
+		case NAMED_JPQL:__queryWrapper__ = new QueryWrapper<RESULT_CLASS>(entityManager,aResultClass,entityManager.createNamedQuery(value, aResultClass),getDataReadConfig());break;
 		default:__queryWrapper__ = null;logError("Query <{}> cannot be built for {}",value,type);break;
 		}
 		/*
@@ -342,8 +343,9 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 
 	@Override
 	public void clear() {
-		if(Boolean.TRUE.equals(getDataReadConfig().getAutoClear()))
+		if(Boolean.TRUE.equals(getDataReadConfig().getAutoClear())){
 			getDataReadConfig().clear();
+		}
 	}
 	
 	@Override

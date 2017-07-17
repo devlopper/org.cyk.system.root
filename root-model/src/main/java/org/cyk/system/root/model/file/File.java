@@ -2,7 +2,6 @@ package org.cyk.system.root.model.file;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URI;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -11,15 +10,16 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class File extends AbstractIdentifiable implements Serializable{
@@ -39,7 +39,7 @@ public class File extends AbstractIdentifiable implements Serializable{
 	 * Outside storage
 	 */
 	
-	private URI uri;//in case we need to point to a file outside the database
+	private String uri;//in case we need to point to a file outside the database
 	
 	/**
 	 * Text representation of the bytes. This enable lookup into text
@@ -65,7 +65,8 @@ public class File extends AbstractIdentifiable implements Serializable{
 	
 	@Override
 	public String toString() {
-		return identifier==null?super.toString():((uri==null?(extension+Constant.CHARACTER_LEFT_PARENTHESIS+mime+Constant.CHARACTER_RIGHT_PARENTHESIS):(uri.toString()))+"("+identifier+")");
+		return identifier==null?super.toString()
+				:StringUtils.isNotBlank(getName()) ? getName() : ((uri==null?(extension+Constant.CHARACTER_LEFT_PARENTHESIS+mime+Constant.CHARACTER_RIGHT_PARENTHESIS):(uri.toString()))+"("+identifier+")");
 	}
 	
 	public static final String FIELD_EXTENSION = "extension";

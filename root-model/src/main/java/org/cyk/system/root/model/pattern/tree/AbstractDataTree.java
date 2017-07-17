@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @MappedSuperclass
-public class AbstractDataTree<TYPE extends AbstractDataTreeType> extends AbstractDataTreeNode implements Serializable {
+public abstract class AbstractDataTree<TYPE extends AbstractDataTreeType> extends AbstractDataTreeNode implements Serializable {
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	
-	@ManyToOne @NotNull
-	protected TYPE type;
+	@ManyToOne @NotNull protected TYPE type;
 
 	public AbstractDataTree(AbstractDataTree<TYPE> parent,String code) {
 		super(parent,code);

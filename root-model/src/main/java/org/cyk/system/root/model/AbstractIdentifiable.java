@@ -28,13 +28,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier.Processing;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.StringMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,9 +48,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 
 	private static final long serialVersionUID = 1L;
 	
-	public static StringMethod<AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_VALUE;
-	public static AbstractMethod<Party,AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_CREATED_BY;
-	public static AbstractMethod<Date,AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_CREATION_DATE;
+	//public static StringMethod<AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_VALUE;
+	//public static AbstractMethod<Party,AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_CREATED_BY;
+	//public static AbstractMethod<Date,AbstractIdentifiable> BUILD_GLOBAL_IDENTIFIER_CREATION_DATE;
 	public static AbstractMethod<Boolean,AbstractIdentifiable> GLOBAL_IDENTIFIER_BUILDABLE;
 	public static AbstractMethod<Object,GlobalIdentifier> CREATE_GLOBAL_IDENTIFIER;
 	public static AbstractMethod<Object,GlobalIdentifier> UPDATE_GLOBAL_IDENTIFIER;
@@ -67,7 +66,6 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/* Transients */
 	
-	@Transient protected Processing processing;
 	@Transient protected Boolean cascadeOperationToMaster = Boolean.FALSE;
 	@Transient protected Boolean cascadeOperationToChildren = Boolean.FALSE;
 	
@@ -205,6 +203,13 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getCascadeStyleSheet();
 	}
 
+	public void setDerived(Boolean derived){
+		getGlobalIdentifierCreateIfNull().setDerived(derived);
+	}
+	public Boolean getDerived(){
+		return globalIdentifier == null ? null : globalIdentifier.getDerived();
+	}
+	
 	public Collection<AbstractIdentifiable> getParents(){
 		if(parents==null)
 			parents =  new ArrayList<>();
@@ -236,13 +241,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 			globalIdentifier = new GlobalIdentifier(this);
 		return globalIdentifier;
 	}
-	
-	public Processing getProcessing(){
-		if(processing==null)
-			processing = new Processing();
-		return  processing;
-	}
-	
+
 	public String getShortName(){
 		return StringUtils.isBlank(getAbbreviation()) ? getCode() : getAbbreviation();
 	}
@@ -250,6 +249,14 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	protected String getMemoryAddress(){
 		return getClass().getSimpleName()+Constant.CHARACTER_AT+String.valueOf(System.identityHashCode(this)); 
 		//StringUtils.substringBefore(ToStringBuilder.reflectionToString(this, ToStringStyle.NO_FIELD_NAMES_STYLE),"[");
+	}
+	
+	public Processing getProcessing(){
+		return getGlobalIdentifierCreateIfNull().getProcessing();
+	}
+	
+	public void setProcessing(Processing processing){
+		getGlobalIdentifierCreateIfNull().setProcessing(processing);
 	}
 	
 	private String __identifier__(){
@@ -294,7 +301,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/**/
 	
-	public void set(AbstractIdentifiable component,String...fieldNames){
+	public void _set(AbstractIdentifiable component,String...fieldNames){
 		for(String fieldName : fieldNames){
 			if(GlobalIdentifier.FIELD_CODE.equals(fieldName)){
 				if(StringUtils.isBlank(component.getCode()))
@@ -323,7 +330,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 			}
 		}
 		if(globalIdentifier==null && GLOBAL_IDENTIFIER_BUILDABLE!=null && Boolean.TRUE.equals(GLOBAL_IDENTIFIER_BUILDABLE.execute(this)) 
-				&& BUILD_GLOBAL_IDENTIFIER_VALUE!=null && CREATE_GLOBAL_IDENTIFIER!=null){
+				/*&& BUILD_GLOBAL_IDENTIFIER_VALUE!=null*/ && CREATE_GLOBAL_IDENTIFIER!=null){
 			globalIdentifier = getGlobalIdentifierCreateIfNull();
 		}else{
 			
@@ -331,13 +338,14 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		if(globalIdentifier!=null){
 			if(globalIdentifier.getIdentifiable()==null)
 				globalIdentifier.setIdentifiable(this);
-			if(BUILD_GLOBAL_IDENTIFIER_VALUE!=null && StringUtils.isBlank(globalIdentifier.getIdentifier()))
+			/*if(BUILD_GLOBAL_IDENTIFIER_VALUE!=null && StringUtils.isBlank(globalIdentifier.getIdentifier()))
 				globalIdentifier.setIdentifier(BUILD_GLOBAL_IDENTIFIER_VALUE.execute(this));
+			
 			if(BUILD_GLOBAL_IDENTIFIER_CREATION_DATE!=null)
 				globalIdentifier.setCreationDate(BUILD_GLOBAL_IDENTIFIER_CREATION_DATE.execute(this));
 			if(BUILD_GLOBAL_IDENTIFIER_CREATED_BY!=null)
 				globalIdentifier.setCreatedBy(BUILD_GLOBAL_IDENTIFIER_CREATED_BY.execute(this));
-			
+			*/
 			if(CREATE_GLOBAL_IDENTIFIER==null)
 				globalIdentifier = null;
 			else{ 
@@ -426,18 +434,6 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/**/
 	
-	@Getter @Setter
-	/**
-	 * Informations about client processing
-	 * @author Christian Yao Komenan
-	 *
-	 */
-	public static class Processing implements Serializable {
-		private static final long serialVersionUID = -6123968511493504593L;
-		
-		private String identifier;
-		private Party party;
-		private Date date;
-	}
+	
  
 }

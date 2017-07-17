@@ -2,10 +2,15 @@ package org.cyk.system.root.persistence.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
@@ -25,21 +30,28 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 5699283157667217854L;
 
+	private EntityManager entityManager;
 	private Query query;  
 	private DataReadConfiguration readConfig;
 	private Collection<Class<? extends Throwable>> ignoreThrowables = new HashSet<>();
+	private Class<T> resultClass;
 	private T resultOneNullValue;
 	private Collection<T> resultManyNullValue=new ArrayList<T>();
+	
 	
 	/*
 	 * To avoid java.sql.SQLSyntaxErrorException: unexpected token: ) when one of the parameter is a collection and is empty
 	 */
 	private Boolean returnPredefinedNullValue,returnPredefinedNullValueIfOneParameterCollectionIsEmpty=Boolean.TRUE;
 	
-	public QueryWrapper(Query query,DataReadConfiguration readConfig) {
+	public QueryWrapper(EntityManager entityManager,Class<T> resultClass,Query query,DataReadConfiguration readConfig) {
 		super();
+		this.entityManager = entityManager;
+		this.resultClass = resultClass;
 		this.query = query;
 		this.readConfig = readConfig;
+		setAttributes(this.readConfig.getAttributes());
+		setHints(this.readConfig.getHints());
 	}  
 	
 	public QueryWrapper<T> parameter(String name,Object value){
@@ -74,19 +86,21 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 		parameter(name, Utils.getGlobalIdentfierValues(globalIdentifiers));
 		return this;
 	}
+	
 	public QueryWrapper<T> parameterGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers){
 		parameterGlobalIdentifiers(QueryStringBuilder.VAR_IDENTIFIERS, globalIdentifiers);
 		return this;
 	}
+	
 	public QueryWrapper<T> parameterIdentifiers(Collection<? extends AbstractIdentifiable> identifiables){
 		return parameterIdentifiers(QueryStringBuilder.VAR_IDENTIFIERS, identifiables);
 	}
-	
 	
 	public QueryWrapper<T> parameterClasses(Collection<Class<?>> classes){
 		parameter(QueryStringBuilder.VAR_CLASS, classes);
 		return this;
 	}
+	
 	public QueryWrapper<T> parameterClass(Class<?> aClass){
 		Collection<Class<?>> classes = new ArrayList<>();
 		classes.add(aClass);
@@ -184,4 +198,35 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 		if(Boolean.TRUE.equals(readConfig.getAutoClear()))
 	    	readConfig.clear();
 	}
+
+	public QueryWrapper<T> setHint(String name,Object value){
+		query.setHint(name, value);
+		return this;
+	}
+	
+	public QueryWrapper<T> setHints(Map<String, Object> hints){
+		if(hints!=null)
+			for(Entry<String, Object> entry : hints.entrySet())
+				setHint(entry.getKey(), entry.getValue());
+		return this;
+	}
+	
+	public QueryWrapper<T> setAttributes(Collection<String> attributes){
+		if(attributes!=null){
+			EntityGraph<T> entityGraph = entityManager.createEntityGraph(resultClass);
+			entityGraph.addAttributeNodes(attributes.toArray(new String[]{}));
+			setHint(HINT_FETCH_GRAPH, entityGraph);
+		}
+		return this;
+	}
+	
+	public QueryWrapper<T> setAttributes(String...attributes){
+		if(attributes != null)
+			setAttributes(Arrays.asList(attributes));
+		return this;
+	}
+	
+	/**/
+	
+	public static final String HINT_FETCH_GRAPH =  "javax.persistence.fetchgraph";
 }
