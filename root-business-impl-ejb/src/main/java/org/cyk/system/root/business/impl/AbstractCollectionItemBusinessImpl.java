@@ -28,7 +28,7 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	@SuppressWarnings("unchecked")
 	public Class<COLLECTION> getCollectionClass(){
 		if(collectionClass==null)
-			collectionClass = (Class<COLLECTION>) new ClassHelper().getParameterAt(getClass(), 2,AbstractCollection.class);
+			collectionClass = (Class<COLLECTION>) ClassHelper.getInstance().getParameterAt(getClass(), 2,AbstractCollection.class);
 		return collectionClass;
 	}
 	

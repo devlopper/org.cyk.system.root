@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.AbstractMethod;
 
-@Setter
+@Setter //TODO should be moved to common utility helpers
 public class EnumHelper implements Serializable {
     
 	private static final long serialVersionUID = 4330959923308332561L;

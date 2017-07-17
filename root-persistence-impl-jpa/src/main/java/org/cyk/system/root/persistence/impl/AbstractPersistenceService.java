@@ -77,7 +77,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	@Override 
 	protected void beforeInitialisation() {
 		super.beforeInitialisation();
-		Collection<Field> namedQueriesFields = new FieldHelper().get(getClass());
+		Collection<Field> namedQueriesFields = FieldHelper.getInstance().get(getClass());
 		//Named queries name initialization
 		for(Field field : namedQueriesFields)
 			//TODO use an array to hold those values

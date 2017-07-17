@@ -26,7 +26,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	@SuppressWarnings("unchecked")
 	public AbstractCollectionBusinessImpl(DAO dao) {
 		super(dao);
-		itemClass = (Class<ITEM>) new ClassHelper().getParameterAt(getClass(), 1,AbstractCollectionItem.class);
+		itemClass = (Class<ITEM>) ClassHelper.getInstance().getParameterAt(getClass(), 1,AbstractCollectionItem.class);
 	}
 	
 	protected ITEM instanciateOneItem(String[] values){

@@ -164,7 +164,7 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     
     public String getMessage(Throwable throwable){
     	String message = null;
-    	Throwable cause = new ThrowableHelper().getInstanceOf(throwable, PersistenceException.class);
+    	Throwable cause = ThrowableHelper.getInstance().getInstanceOf(throwable, PersistenceException.class);
     	if(cause == null){
     		
     	}else{

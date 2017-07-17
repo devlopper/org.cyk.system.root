@@ -337,7 +337,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public void delete(Object identifiable, Collection<String> fieldNames) {
 		if(identifiable!=null && fieldNames!=null){
 			Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
-			FieldHelper fieldHelper = new FieldHelper();
+			FieldHelper fieldHelper = FieldHelper.getInstance();
 			for(String fieldName : fieldNames){
 				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(identifiable, fieldName);
 				if(value!=null)
@@ -372,7 +372,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public void create(Object object, Collection<String> fieldNames) {
 		if(object!=null && fieldNames!=null){
 			Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
-			FieldHelper fieldHelper = new FieldHelper();
+			FieldHelper fieldHelper = FieldHelper.getInstance();
 			for(String fieldName : fieldNames){
 				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(object, fieldName);
 				if(value!=null)
@@ -392,7 +392,7 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public void save(Object object, Collection<String> fieldNames) {
 		if(object!=null && fieldNames!=null){
 			Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
-			FieldHelper fieldHelper = new FieldHelper();
+			FieldHelper fieldHelper = FieldHelper.getInstance();
 			for(String fieldName : fieldNames){
 				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(object, fieldName);
 				if(value!=null)

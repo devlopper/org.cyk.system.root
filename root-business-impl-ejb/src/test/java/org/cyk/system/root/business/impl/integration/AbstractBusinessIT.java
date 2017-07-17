@@ -41,7 +41,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 			private static final long serialVersionUID = -2347039842308401189L;
 			@Override
 			protected Throwable getThrowable(Throwable throwable) {
-				return new ThrowableHelper().getInstanceOf(throwable, AbstractBusinessException.class);
+				return ThrowableHelper.getInstance().getInstanceOf(throwable, AbstractBusinessException.class);
 			}
 			@Override
     		public void assertEquals(String message, Object expected, Object actual) {
@@ -115,7 +115,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     }
     
     protected TestCase instanciateTestCase(){
-    	return rootBusinessTestHelper.instanciateTestCase().setName(new MethodHelper().getNameFromStackTraceAt(3))
+    	return rootBusinessTestHelper.instanciateTestCase().setName(MethodHelper.getInstance().getNameFromStackTraceAt(3))
     			.prepare();
 	}
 	  

@@ -758,7 +758,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		Collection<String> relatedInstanceFieldNames = findRelatedInstanceFieldNames(identifiable);
 		if(relatedInstanceFieldNames!=null){
 			relatedInstances = new ArrayList<>();
-			FieldHelper fieldHelper = new FieldHelper();
+			FieldHelper fieldHelper = FieldHelper.getInstance();
 			for(String relatedInstanceFieldName : relatedInstanceFieldNames){
 				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(identifiable, relatedInstanceFieldName);
 				if(Boolean.TRUE.equals(setNewValue)){

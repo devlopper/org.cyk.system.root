@@ -130,7 +130,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	
 	@Override
 	public Collection<String> findRelatedInstanceFieldNames(Person person) {
-		return new CollectionHelper().add(super.findRelatedInstanceFieldNames(person), Boolean.FALSE, Person.FIELD_EXTENDED_INFORMATIONS,Person.FIELD_JOB_INFORMATIONS
+		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(person), Boolean.FALSE, Person.FIELD_EXTENDED_INFORMATIONS,Person.FIELD_JOB_INFORMATIONS
 				,Person.FIELD_MEDICAL_INFORMATIONS);
 	}
 	

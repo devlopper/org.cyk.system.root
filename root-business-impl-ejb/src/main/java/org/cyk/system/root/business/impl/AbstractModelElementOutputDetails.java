@@ -41,7 +41,7 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	
 	@SuppressWarnings("unchecked")
 	protected Class<MODEL_ELEMENT> getClassParameter(){
-		return (Class<MODEL_ELEMENT>)  new ClassHelper().getParameterAt(getClass(), 0,AbstractModelElement.class);
+		return (Class<MODEL_ELEMENT>)  ClassHelper.getInstance().getParameterAt(getClass(), 0,AbstractModelElement.class);
 	}
 	
 	public void setMaster(MODEL_ELEMENT master){

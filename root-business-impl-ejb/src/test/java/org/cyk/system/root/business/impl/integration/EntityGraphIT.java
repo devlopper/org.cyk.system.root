@@ -136,7 +136,7 @@ public class EntityGraphIT extends AbstractBusinessIT {
     /**/
     
     private void fetch(Object instance1,Object instance2,String[] nullAttributes) {
-    	FieldHelper fieldHelper = new FieldHelper();
+    	FieldHelper fieldHelper = FieldHelper.getInstance();
     	for(String nullAttribute : nullAttributes){
     		assertThat(nullAttribute+" not fetched", fieldHelper.read(instance1, nullAttribute)!=null);
     		assertThat(nullAttribute+" fetched", fieldHelper.read(instance2, nullAttribute)==null);

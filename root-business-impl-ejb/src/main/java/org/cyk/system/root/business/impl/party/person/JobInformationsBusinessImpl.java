@@ -37,7 +37,7 @@ public class JobInformationsBusinessImpl extends AbstractPersonExtendedInformati
 	
 	@Override
 	public Collection<String> findRelatedInstanceFieldNames(JobInformations jobInformations) {
-		return new CollectionHelper().add(super.findRelatedInstanceFieldNames(jobInformations), Boolean.FALSE, JobInformations.FIELD_CONTACT_COLLECTION);
+		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(jobInformations), Boolean.FALSE, JobInformations.FIELD_CONTACT_COLLECTION);
 	}
 	
 }
