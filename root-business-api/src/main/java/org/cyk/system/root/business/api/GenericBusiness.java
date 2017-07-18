@@ -50,4 +50,6 @@ public interface GenericBusiness extends AbstractGenericBusinessService<Abstract
     
     <T extends AbstractIdentifiable> void setFieldValuesRandomly(T identifiable,Collection<String> fieldNames);
     <T extends AbstractIdentifiable> void setFieldValuesRandomly(T identifiable,String...fieldNames);
+    
+    
 }

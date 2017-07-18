@@ -32,6 +32,8 @@ import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ThreadPoolExecutor;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray;
+import org.cyk.utility.common.helper.MicrosoftExcelHelper.Workbook.Sheet;
 
 @Stateless 
 public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl<AbstractIdentifiable> implements GenericBusiness,Serializable {
@@ -406,5 +408,10 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public void save(Object object, String... fieldNames) {
 		if(fieldNames!=null)
 			save(object,Arrays.asList(fieldNames));
+	}
+
+	@Override
+	public void synchronize(Sheet sheet,OneDimensionArray<AbstractIdentifiable> instanceBuilder) {
+		getBusiness(instanceBuilder.getOutputClass()).synchronize(sheet, instanceBuilder);
 	}
 }

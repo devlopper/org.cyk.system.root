@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -97,6 +98,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.hamcrest.Matcher;
@@ -1049,7 +1051,34 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			assertOrderBasedOnExistencePeriodFromDate(aClass, Boolean.TRUE, codes);
 		}
 		
+		public <T extends AbstractIdentifiable> TestCase assertIdentifiable(Class<T> identifiableClass,String code,Map<String,Object> fieldMap){
+			T identifiable = read(identifiableClass, code);
+			if(identifiable!=null && fieldMap!=null){
+				for(Entry<String, Object> entry : fieldMap.entrySet()){
+					Object value = FieldHelper.getInstance().read(identifiable, entry.getKey());
+					String message = identifiable.getClass().getSimpleName()+" "+entry.getKey()+" is not correct";
+					if(value==null)
+						assertThat(message, entry.getValue()==null);
+					else{
+						assertEquals(message,entry.getValue(), value);
+					}
+				}
+			}
+			return this;
+		}
 		
+		public <T extends AbstractIdentifiable> TestCase assertIdentifiable(Class<T> identifiableClass,String code,String expectedName){
+			Map<String,Object> map = new LinkedHashMap<>();
+			map.put(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME), expectedName);
+			return assertIdentifiable(identifiableClass, code, map);
+		}
+		
+		public TestCase assertPerson(String code,String expectedName,String expectedLastnames){
+			assertIdentifiable(Person.class, code, expectedName);
+			Map<String,Object> map = new LinkedHashMap<>();
+			map.put(Person.FIELD_LASTNAMES, expectedLastnames);
+			return assertIdentifiable(Person.class, code, map);
+		}
 		
 		/**/
 		

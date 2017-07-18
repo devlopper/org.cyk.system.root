@@ -45,6 +45,8 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 	@Override
 	public String toString() {
 		String name = getName();
+		if(StringUtils.isBlank(name))
+			name = getCode();
     	return StringUtils.isBlank(name) ? super.toString() : name;
 	}
 

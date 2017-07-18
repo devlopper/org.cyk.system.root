@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.IdentifiableBusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
@@ -143,6 +144,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		logTrace("Synchronization of {} from excel done.", clazz.getSimpleName());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void synchronize(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<IDENTIFIABLE> instanceBuilder) {
 		logTrace("Synchronize {} from excel sheet", clazz.getSimpleName());
@@ -150,9 +152,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		instancesBuilder.setOneDimensionArray(instanceBuilder);
 		
 		if(sheet.getValues()!=null)
-			create(instancesBuilder.setInput(sheet.getValues()).execute());
+			inject(GenericBusiness.class).create((Collection<AbstractIdentifiable>)instancesBuilder.setInput(sheet.getValues()).execute());
 		if(sheet.getIgnoreds()!=null)
-			update(instancesBuilder.setInput(sheet.getIgnoreds()).execute());
+			inject(GenericBusiness.class).update((Collection<AbstractIdentifiable>)instancesBuilder.setInput(sheet.getIgnoreds()).execute());
 		logTrace("Synchronization of {} from excel sheet done.", clazz.getSimpleName());
 	}
 
