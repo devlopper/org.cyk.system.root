@@ -1,4 +1,4 @@
-SELECT IFNULL(partygid.CODE,'') AS 'Person' , IFNULL(electronicmail.ADDRESS,'') AS 'EMail Address'
+SELECT IFNULL(partygid.CODE,'') AS 'Person' , IFNULL(electronicmail.ADDRESS,'') AS 'Address'
 FROM electronicmail
 
 INNER JOIN contact ON contact.IDENTIFIER = electronicmail.IDENTIFIER

@@ -1,4 +1,4 @@
-SELECT partygid.CODE AS 'User',credentials.USERNAME AS 'Username',credentials.PASSWORD AS 'Password'
+SELECT partygid.CODE AS 'Person',credentials.USERNAME AS 'Username',credentials.PASSWORD AS 'Password'
 FROM useraccount
 
 INNER JOIN party ON party.IDENTIFIER = useraccount.USER_IDENTIFIER

@@ -1,6 +1,7 @@
 SELECT party.GLOBALIDENTIFIER_IDENTIFIER AS 'Global identifier',IFNULL(person.LASTNAMES,'') AS 'Lastnames'
 ,IFNULL(person.SURNAME,'') AS 'Surname',IFNULL(localitygid.CODE,'') AS 'Locality',IFNULL(sexgid.CODE,'') AS 'Sex'
 ,IFNULL(persontitlegid.CODE,'') AS 'Title',IFNULL(jobfunctiongid.CODE,'') AS 'Job function',IFNULL(jobtitlegid.CODE,'') AS 'Job title'
+,file.IDENTIFIER AS 'Signature file name',file.EXTENSION AS 'Signature file extension'
 FROM person
 
 INNER JOIN party ON party.IDENTIFIER = person.IDENTIFIER
@@ -19,3 +20,5 @@ LEFT JOIN globalidentifier AS jobfunctiongid ON jobfunctiongid.IDENTIFIER = jobf
 
 LEFT JOIN jobtitle ON jobtitle.IDENTIFIER = jobinformations.TITLE_IDENTIFIER
 LEFT JOIN globalidentifier AS jobtitlegid ON jobtitlegid.IDENTIFIER = jobtitle.GLOBALIDENTIFIER_IDENTIFIER
+
+LEFT JOIN file ON file.IDENTIFIER = personextendedinformations.SIGNATURESPECIMEN_IDENTIFIER
