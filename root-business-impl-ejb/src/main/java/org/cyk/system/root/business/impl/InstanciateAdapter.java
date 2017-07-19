@@ -47,5 +47,6 @@ public class InstanciateAdapter extends ClassHelper.Instanciation.Get.Adapter.De
 		
 			return super.load(aClass);
 		}
+		
 	}
 }

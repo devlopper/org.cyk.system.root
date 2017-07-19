@@ -1,14 +1,19 @@
 SELECT party.GLOBALIDENTIFIER_IDENTIFIER AS 'Global identifier',IFNULL(person.LASTNAMES,'') AS 'Lastnames'
-,IFNULL(person.SURNAME,'') AS 'Surname',IFNULL(localitygid.CODE,'') AS 'Locality',IFNULL(sexgid.CODE,'') AS 'Sex'
+,IFNULL(person.SURNAME,'') AS 'Surname',IFNULL(birthlocationcontactgid.OTHERDETAILS,'') AS 'Birth location',IFNULL(localitygid.CODE,'') AS 'Nationality',IFNULL(sexgid.CODE,'') AS 'Sex'
 ,IFNULL(persontitlegid.CODE,'') AS 'Title',IFNULL(jobfunctiongid.CODE,'') AS 'Job function',IFNULL(jobtitlegid.CODE,'') AS 'Job title'
-,file.IDENTIFIER AS 'Signature file name',file.EXTENSION AS 'Signature file extension'
+,IFNULL(file.IDENTIFIER,'') AS 'Signature file name',IFNULL(file.EXTENSION,'') AS 'Signature file extension'
 FROM person
 
 INNER JOIN party ON party.IDENTIFIER = person.IDENTIFIER
+INNER JOIN globalidentifier AS partygid ON partygid.IDENTIFIER = party.GLOBALIDENTIFIER_IDENTIFIER
 LEFT JOIN locality ON locality.IDENTIFIER = person.NATIONALITY_IDENTIFIER
 LEFT JOIN globalidentifier AS localitygid ON localitygid.IDENTIFIER = locality.GLOBALIDENTIFIER_IDENTIFIER
 LEFT JOIN sex ON sex.IDENTIFIER = person.SEX_IDENTIFIER
 LEFT JOIN globalidentifier AS sexgid ON sexgid.IDENTIFIER = sex.GLOBALIDENTIFIER_IDENTIFIER
+
+LEFT JOIN location AS birthlocation ON birthlocation.IDENTIFIER = partygid.BIRTHLOCATION_IDENTIFIER
+LEFT JOIN contact AS birthlocationcontact ON birthlocationcontact.IDENTIFIER = birthlocation.IDENTIFIER
+LEFT JOIN globalidentifier AS birthlocationcontactgid ON birthlocationcontactgid.IDENTIFIER = birthlocationcontact.GLOBALIDENTIFIER_IDENTIFIER
 
 LEFT JOIN personextendedinformations ON personextendedinformations.PARTY_IDENTIFIER = party.IDENTIFIER
 LEFT JOIN persontitle ON persontitle.IDENTIFIER = personextendedinformations.TITLE_IDENTIFIER
