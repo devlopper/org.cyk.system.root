@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -32,6 +31,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.persistence.Entity;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -100,15 +103,12 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.DateHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.exolab.castor.types.DateTime;
 import org.hamcrest.Matcher;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -1082,16 +1082,12 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			Map<String,Object> map = new LinkedHashMap<>();
 			map.put(Person.FIELD_LASTNAMES, expectedLastnames);
 			assertEquals("sex is not equals", read(Sex.class, expectedSexCode), person.getSex());
-			try {
-				Date d1 = DateUtils.parseDate(expectedDateOfBirth, "dd/MM/yyyy");
-				assertEquals("year of birth is not equals", new DateTime(d1).getYear(), new DateTime(person.getBirthDate()).getYear());
-				assertEquals("month of birth is not equals", new DateTime(d1).getMonth(), new DateTime(person.getBirthDate()).getMonth());
-				assertEquals("day of birth is not equals", new DateTime(d1).getDay(), new DateTime(person.getBirthDate()).getDay());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			assertEquals("place of birth is not equals", expectedPlaceOfBirth, person.getBirthLocation().getOtherDetails());
+			Date d1 = new DateHelper.Builder.String.Adapter.Default(expectedDateOfBirth).execute();
+			
+			assertEquals("year of birth is not equals", new DateTime(d1).getYear(), new DateTime(person.getBirthDate()).getYear());
+			assertEquals("month of birth is not equals", new DateTime(d1).getMonth(), new DateTime(person.getBirthDate()).getMonth());
+			assertEquals("day of birth is not equals", new DateTime(d1).getDay(), new DateTime(person.getBirthDate()).getDay());
+			assertEquals("place of birth is not equals", expectedPlaceOfBirth, person.getBirthLocation() == null ? null : person.getBirthLocation().getOtherDetails());
 			return assertIdentifiable(Person.class, code, map);
 		}
 		

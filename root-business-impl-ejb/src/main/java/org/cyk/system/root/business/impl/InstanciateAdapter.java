@@ -44,9 +44,13 @@ public class InstanciateAdapter extends ClassHelper.Instanciation.Get.Adapter.De
 		public <T> Collection<T> load(Class<T> aClass) {
 			if(AbstractIdentifiable.class.isAssignableFrom(aClass))
 				return (Collection<T>) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>) ClassHelper.getInstance().getByName(aClass)).readAll();
-		
 			return super.load(aClass);
 		}
 		
+		public <T extends Object> T get(java.lang.Class<T> aClass, Object identifier) {
+			if(AbstractIdentifiable.class.isAssignableFrom(aClass))
+				return (T) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>) ClassHelper.getInstance().getByName(aClass)).read((String)identifier);
+			return super.get(aClass, identifier);
+		}
 	}
 }

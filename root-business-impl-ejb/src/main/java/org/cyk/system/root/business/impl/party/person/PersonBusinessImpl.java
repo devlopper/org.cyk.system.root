@@ -136,6 +136,13 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	
 	@Override
 	protected void beforeCreate(Person person) {
+		if(person.getExtendedInformations()!=null)
+			person.getExtendedInformations().setParty(person);
+		if(person.getJobInformations()!=null)
+			person.getJobInformations().setParty(person);
+		if(person.getMedicalInformations()!=null)
+			person.getMedicalInformations().setParty(person);
+		
 		super.beforeCreate(person);
 		if(StringUtils.isEmpty(person.getCode()))
 			person.setCode(RandomStringUtils.randomAlphanumeric(5));
