@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -79,6 +80,7 @@ import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
+import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
@@ -101,6 +103,7 @@ import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
+import org.exolab.castor.types.DateTime;
 import org.hamcrest.Matcher;
 
 import lombok.Getter;
@@ -1073,10 +1076,22 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return assertIdentifiable(identifiableClass, code, map);
 		}
 		
-		public TestCase assertPerson(String code,String expectedName,String expectedLastnames){
+		public TestCase assertPerson(String code,String expectedName,String expectedLastnames,String expectedSexCode,String expectedDateOfBirth,String expectedPlaceOfBirth){
+			Person person = read(Person.class,code);
 			assertIdentifiable(Person.class, code, expectedName);
 			Map<String,Object> map = new LinkedHashMap<>();
 			map.put(Person.FIELD_LASTNAMES, expectedLastnames);
+			assertEquals("sex is not equals", read(Sex.class, expectedSexCode), person.getSex());
+			try {
+				Date d1 = DateUtils.parseDate(expectedDateOfBirth, "dd/MM/yyyy");
+				assertEquals("year of birth is not equals", new DateTime(d1).getYear(), new DateTime(person.getBirthDate()).getYear());
+				assertEquals("month of birth is not equals", new DateTime(d1).getMonth(), new DateTime(person.getBirthDate()).getMonth());
+				assertEquals("day of birth is not equals", new DateTime(d1).getDay(), new DateTime(person.getBirthDate()).getDay());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			assertEquals("place of birth is not equals", expectedPlaceOfBirth, person.getBirthLocation().getOtherDetails());
 			return assertIdentifiable(Person.class, code, map);
 		}
 		

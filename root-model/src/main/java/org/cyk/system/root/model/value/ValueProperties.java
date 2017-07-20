@@ -29,7 +29,7 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	@Enumerated(EnumType.ORDINAL) @Column(name="thetype") private ValueType type = ValueType.DEFAULT;
 	@Enumerated(EnumType.ORDINAL) @Column(name="theset") private ValueSet set = ValueSet.DEFAULT;
 	
-	@Deprecated private Boolean derived;//TODO create getter and setter method in super type
+	@Deprecated private Boolean derived;//TODO is it the same concept as derived in super type ???
 	@ManyToOne private Script derivationScript;
 	
 	private Boolean nullable;
