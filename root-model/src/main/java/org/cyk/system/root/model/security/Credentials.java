@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -22,21 +21,20 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity @Getter @Setter @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {Credentials.FIELD_SOFTWARE,Credentials.FIELD_USERNAME})})
 @EqualsAndHashCode(callSuper=false,of={Credentials.FIELD_SOFTWARE,Credentials.FIELD_USERNAME,Credentials.FIELD_PASSWORD})
-@ToString(of={Credentials.FIELD_SOFTWARE,Credentials.FIELD_USERNAME,Credentials.FIELD_PASSWORD})
+//@ToString(of={Credentials.FIELD_SOFTWARE,Credentials.FIELD_USERNAME,Credentials.FIELD_PASSWORD})
 public class Credentials extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -3099832512046879464L;
 	
 	@ManyToOne @JoinColumn(name=COLUMN_SOFTWARE) @NotNull private Software software;
 	
-	@Column(nullable=false) @NotNull private String username;
+	@Column(name=COLUMN_USERNAME,nullable=false) @NotNull private String username;
 	
-	@Column(nullable=false) @NotNull private String password;
+	@Column(name=COLUMN_PASSWORD,nullable=false) @NotNull private String password;
 	
 	public Credentials(Software software, String username, String password) {
 		super();
@@ -44,12 +42,12 @@ public class Credentials extends AbstractIdentifiable implements Serializable {
 		this.username = username;
 		this.password = password;
 	}
-	
+	/*
 	@Override
-	public String getUiString() {
-		return software.getUiString()+Constant.CHARACTER_SLASH+username;
+	public String toString() {
+		return software+"/"+username;
 	}
-
+	*/
 	/**/
 	
 	public static final String FIELD_SOFTWARE = "software";

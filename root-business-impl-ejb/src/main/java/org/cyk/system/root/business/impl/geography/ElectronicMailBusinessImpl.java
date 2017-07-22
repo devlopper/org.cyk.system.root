@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.geography.Contact;
@@ -26,6 +27,13 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 	@Inject
 	public ElectronicMailBusinessImpl(ElectronicMailDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected Object[] getPropertyValueTokens(Contact contact, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, name))
+			return new Object[]{((ElectronicMail)contact).getAddress()};
+		return super.getPropertyValueTokens(contact, name);
 	}
 	
 	@Override

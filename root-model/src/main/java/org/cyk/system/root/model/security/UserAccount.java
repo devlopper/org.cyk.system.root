@@ -15,7 +15,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -24,7 +26,6 @@ import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -34,16 +35,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @Entity @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS) 
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {UserAccount.FIELD_USER,UserAccount.FIELD_CREDENTIALS})})
 public class UserAccount extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -23914558440705885L;
 
-	@ManyToOne @NotNull private Party user;
+	@ManyToOne @JoinColumn(name=COLUMN_USER) @NotNull private Party user;
 	
-	@OneToOne private Credentials credentials;
+	@OneToOne @JoinColumn(name=COLUMN_CREDENTIALS) @NotNull private Credentials credentials;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
-    @JoinTable(name="UserAccountRoles",joinColumns = { @JoinColumn(name = "useraccountid") } ,inverseJoinColumns={ @JoinColumn(name = "roleid") })
+    @JoinTable(name=TABLE_USER_ACCOUNT_ROLE,joinColumns = { @JoinColumn(name = COLUMN_USER_ACCOUNT) } ,inverseJoinColumns={ @JoinColumn(name = COLUMN_ROLES) })
 	@Size(min=1)
     private Set<Role> roles =new HashSet<>();
 	
@@ -66,21 +68,17 @@ public class UserAccount extends AbstractIdentifiable implements Serializable {
 			this.roles.addAll(Arrays.asList(roles));
 	}
 	
-	@Override
-	public String getUiString() {
-		return user.getUiString()+Constant.CHARACTER_VERTICAL_BAR+credentials.getUsername();
-	}
-	
 	public static final String FIELD_USER = "user";
 	public static final String FIELD_CREDENTIALS = "credentials";
 	public static final String FIELD_ROLES = "roles";
 	
+	public static final String COLUMN_USER = "user_";
+	public static final String COLUMN_CREDENTIALS = "credentials";
 	
-	@Override
-	public String toString() {
-		return getUiString();
-	}
-	
+	public static final String COLUMN_ROLES = "roleid";
+	public static final String COLUMN_USER_ACCOUNT = "useraccountid";
+	public static final String TABLE_USER_ACCOUNT_ROLE = "UserAccountRoles";
+
 	/**/
 	
 	@Getter @Setter

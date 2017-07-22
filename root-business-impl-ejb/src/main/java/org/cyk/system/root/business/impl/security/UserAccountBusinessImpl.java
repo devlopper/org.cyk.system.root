@@ -11,6 +11,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
@@ -23,6 +24,7 @@ import org.cyk.system.root.business.impl.UserSessionBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.security.Credentials;
@@ -45,12 +47,20 @@ public class UserAccountBusinessImpl extends AbstractTypedBusinessService<UserAc
 	@Inject
 	public UserAccountBusinessImpl(UserAccountDao dao) {
 		super(dao); 
-	}  
+	} 
+	
+	@Override
+	protected Object[] getPropertyValueTokens(UserAccount userAccount, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, name))
+			return new Object[]{userAccount.getUser(),userAccount.getCredentials()};
+		return super.getPropertyValueTokens(userAccount, name);
+	}
 	
 	@Override
 	protected void beforeCreate(UserAccount userAccount) {
-		super.beforeCreate(userAccount);
 		createIfNotIdentified(userAccount.getCredentials());
+		super.beforeCreate(userAccount);
+		
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

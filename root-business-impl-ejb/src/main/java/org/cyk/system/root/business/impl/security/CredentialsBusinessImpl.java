@@ -6,6 +6,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.security.CredentialsBusiness;
 import org.cyk.system.root.business.api.security.SoftwareBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -23,6 +24,13 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 	public CredentialsBusinessImpl(CredentialsDao dao) {
 		super(dao); 
 	}  
+	
+	@Override
+	protected Object[] getPropertyValueTokens(Credentials credentials, String name) {
+		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, name))
+			return new Object[]{credentials.getSoftware(),credentials.getUsername()};
+		return super.getPropertyValueTokens(credentials, name);
+	}
 	
 	@Override
 	protected void beforeCreate(Credentials credentials) {

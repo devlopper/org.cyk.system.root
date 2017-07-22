@@ -16,7 +16,7 @@ public class JdbcDataSource extends AbstractDataSource implements Serializable {
 	public JdbcDataSource() {
 		authenticationQuery = "SELECT password FROM credentials WHERE username = ?";
 		userRolesQuery = "SELECT roleid FROM useraccountroles WHERE useraccountid = "
-				+ "(SELECT useraccount.identifier FROM useraccount,credentials WHERE useraccount.credentials_identifier=credentials.identifier AND credentials.username = ?)";
+				+ "(SELECT useraccount.identifier FROM useraccount,credentials WHERE useraccount.credentials=credentials.identifier AND credentials.username = ?)";
 		permissionsQuery = "SELECT permissionid FROM rolepermissions WHERE roleid = "
 				+ "("+userRolesQuery+")";
 		

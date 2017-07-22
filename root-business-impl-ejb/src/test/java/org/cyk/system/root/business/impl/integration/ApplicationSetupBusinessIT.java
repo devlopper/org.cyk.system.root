@@ -38,6 +38,7 @@ public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
     	System.out.println("Class excluded to global identifiers : "+GlobalIdentifier.EXCLUDED);
     	System.out.println("Number of global identifiers : "+inject(GlobalIdentifierDao.class).countAll());
     	System.out.println("Number of named queries : "+AbstractPersistenceService.NAMED_QUERIES.size());
+    	
     }
     
     

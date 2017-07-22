@@ -85,6 +85,7 @@ import org.cyk.system.root.model.security.BusinessServiceCollection;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.Software;
+import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.userinterface.UserInterfaceCommand;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenu;
@@ -226,10 +227,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME}, ReportTemplate.class
         		,PersonRelationshipTypeRole.class,PersonRelationship.class,UniformResourceLocator.class,TimeDivisionType.class,UserInterfaceCommand.class
-        		,UserInterfaceMenuNode.class,UserInterfaceMenuItem.class);
+        		,UserInterfaceMenuNode.class,UserInterfaceMenuItem.class,UserAccount.class);
         
-        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE}, UniformResourceLocatorParameter.class
-        		,UserInterfaceMenu.class);
+        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE},ElectronicMail.class, UniformResourceLocatorParameter.class
+        		,UserInterfaceMenu.class,Credentials.class);
         
         rootBusinessTestHelper.setReportBusiness(reportBusiness);
         
