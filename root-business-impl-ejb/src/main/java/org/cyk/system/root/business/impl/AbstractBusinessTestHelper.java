@@ -1091,6 +1091,15 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return assertIdentifiable(Person.class, code, map);
 		}
 		
+		public <T extends AbstractIdentifiable> TestCase assertPersonRelarionship(String person1Code,String person1RoleCode,String person2RoleCode,String expectedPerson2Code){
+			PersonRelationship personRelationship = inject(PersonRelationshipDao.class).readByPersonByRoleByOppositePerson(read(Person.class, person1Code)
+					, read(PersonRelationshipTypeRole.class,person1RoleCode), read(Person.class,person2RoleCode));
+			assertThat("relation ship does not exist", personRelationship!=null);
+			assertEquals("opposite role code is not correct", expectedPerson2Code, person1Code.equals(personRelationship.getExtremity1().getRole().getCode()) 
+					? personRelationship.getExtremity2().getRole().getCode() : personRelationship.getExtremity1().getRole().getCode());
+			return this;
+		}
+		
 		/**/
 		
 		public <T extends AbstractIdentifiable> void crud(final Class<T> aClass,T instance,Object[][] values){
