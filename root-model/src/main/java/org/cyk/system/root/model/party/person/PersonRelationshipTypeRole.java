@@ -9,15 +9,14 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @Entity
 @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
@@ -34,12 +33,12 @@ public class PersonRelationshipTypeRole extends AbstractIdentifiable implements 
 	
 	@Override
 	public String toString() {
-		return personRelationshipType.toString()+Constant.CHARACTER_SLASH+role;
+		return /*personRelationshipType.toString()+Constant.CHARACTER_SLASH+*/role.toString();
 	}
 	
 	@Override
 	public String getUiString() {
-		return personRelationshipType.getUiString()+Constant.CHARACTER_SLASH+role.getUiString();
+		return /*personRelationshipType.getUiString()+Constant.CHARACTER_SLASH+*/role.getUiString();
 	}
 	
 	public static final String FIELD_PERSON_RELATIONSHIP_TYPE = "personRelationshipType";
