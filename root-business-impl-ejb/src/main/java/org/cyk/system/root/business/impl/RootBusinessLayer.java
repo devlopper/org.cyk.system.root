@@ -9,9 +9,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Future;
 
+import javax.ejb.AsyncResult;
+import javax.ejb.Asynchronous;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -111,13 +117,8 @@ import org.cyk.utility.common.builder.NameValueCollectionStringBuilder;
 import org.cyk.utility.common.builder.NameValueStringBuilder;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.FieldHelper;
-import org.cyk.utility.common.helper.InstanceHelper;
-import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.InstanceHelper.Lookup.Source;
-
-import lombok.Getter;
-import lombok.Setter;
+import org.cyk.utility.common.helper.StringHelper;
 
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
@@ -154,9 +155,9 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         ClassHelper.Instanciation.Get.CLASSES.add(InstanciateAdapter.class);
         
-        InstanceHelper.Lookup.Source.Adapter.Default.RESULT_METHOD_CLASS = (Class<org.cyk.utility.common.helper.ListenerHelper.Executor.ResultMethod<Object, Source<?, ?>>>) ClassHelper.getInstance().getByName(Lookup.class);
-        InstanceHelper.Pool.Listener.Adapter.Default.CLASSES.add(InstanciateAdapter.Pool.class);
-        InstanceHelper.Listener.COLLECTION.add(new InstanceHelper.Listener.Adapter.Default(){
+        org.cyk.utility.common.helper.InstanceHelper.Lookup.Source.Adapter.Default.RESULT_METHOD_CLASS = (Class<org.cyk.utility.common.helper.ListenerHelper.Executor.ResultMethod<Object, Source<?, ?>>>) ClassHelper.getInstance().getByName(Lookup.class);
+        org.cyk.utility.common.helper.InstanceHelper.Pool.Listener.Adapter.Default.CLASSES.add(InstanciateAdapter.Pool.class);
+        org.cyk.utility.common.helper.InstanceHelper.Listener.COLLECTION.add(new org.cyk.utility.common.helper.InstanceHelper.Listener.Adapter.Default(){
         	private static final long serialVersionUID = 1L;
 
 			@Override
@@ -348,10 +349,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	threadPoolExecutor.waitTermination(1, TimeUnit.MINUTES);
     	*/
     	
-    	rootDataProducerHelper.createIdentifiable(FileRepresentationType.class, getClass().getResourceAsStream(getDataExcelFileName()), Boolean.FALSE
-    			, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE)
-    			, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME));
-    	/*
+    	f1();
+    	f2();
+    	f3();
+    	System.out.println("FINISH");
+    	
     	file();
     	values();
     	geography();
@@ -368,7 +370,28 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         information();
         
         userInterface();
-        */
+        
+    }
+    
+    @Asynchronous
+    public void f1() {
+    	System.out.println("RootBusinessLayer.f1()");
+    	pause(1000 * 5);
+    	System.out.println("RootBusinessLayer.f1 DONE!");
+    }
+    
+    @Asynchronous
+    public void f2() {
+    	System.out.println("RootBusinessLayer.f2()");
+    	pause(1000 * 5);
+    	System.out.println("RootBusinessLayer.f2 DONE!");
+    }
+    
+    @Asynchronous
+    public void f3() {
+    	System.out.println("RootBusinessLayer.f3()");
+    	pause(1000 * 5);
+    	System.out.println("RootBusinessLayer.f3 DONE!");
     }
     
     private void geography(){
@@ -390,9 +413,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void file(){ 
-    	createFromExcelSheet(FileRepresentationType.class);
-    	
-    	createFromExcelSheet(ScriptEvaluationEngine.class);
+    	createIdentifiableFromMicrosoftExcelSheet(FileRepresentationType.class);
+    	createIdentifiableFromMicrosoftExcelSheet(ScriptEvaluationEngine.class);
     	createFromExcelSheet(Script.class);
     }
     

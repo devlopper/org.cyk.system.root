@@ -11,6 +11,8 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import lombok.Getter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessManager;
@@ -34,6 +36,7 @@ import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
@@ -55,8 +58,8 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.AbstractLayer;
-
-import lombok.Getter;
+import org.cyk.utility.common.helper.ArrayHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -433,6 +436,24 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		createFromExcelSheet(getDataExcelFileName(), aClass);
 	}
 	
+	protected <T extends AbstractIdentifiable> void createIdentifiable(Class<T> aClass,String...fields){
+		rootDataProducerHelper.createIdentifiable(aClass, getClass().getResourceAsStream(getDataExcelFileName()), Boolean.FALSE,fields);
+	}
+	
+	protected <T extends AbstractIdentifiable> void createIdentifiable(Class<T> aClass,InstanceHelper.Builder.OneDimensionArray<T> instanceBuilder
+			,ArrayHelper.Dimension.Key.Builder keyBuilder){
+		rootDataProducerHelper.createIdentifiable(aClass, instanceBuilder, keyBuilder, getClass().getResourceAsStream(getDataExcelFileName()));
+	}
+	
+	protected <T extends AbstractIdentifiable> void createIdentifiable(Class<T> aClass,InstanceHelper.Builder.OneDimensionArray<T> instanceBuilder){
+		rootDataProducerHelper.createIdentifiable(aClass, instanceBuilder, new org.cyk.system.root.business.impl.helper.ArrayHelper.KeyBuilder()
+		, getClass().getResourceAsStream(getDataExcelFileName()));
+	}
+	
+	protected <T extends AbstractIdentifiable> void createIdentifiableFromMicrosoftExcelSheet(Class<T> aClass){
+		createIdentifiable(aClass,new org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<T>(aClass).addFieldCodeName());
+	}
+	
 	protected String getDataExcelFileName(){
 		return systemIdentifier+"data.xls";
 	}
@@ -467,5 +488,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	/**/
 	
 	
+    
 	
 }
