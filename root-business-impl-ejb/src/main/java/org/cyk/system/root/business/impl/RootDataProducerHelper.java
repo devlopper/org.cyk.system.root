@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayDeque;
@@ -40,6 +41,7 @@ import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.geography.PostalBox;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MovementAction;
@@ -84,9 +86,15 @@ import org.cyk.utility.common.database.DatabaseUtils.CreateParameters;
 import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
 import org.cyk.utility.common.file.ArrayReader.Dimension;
 import org.cyk.utility.common.file.ExcelSheetReader;
+import org.cyk.utility.common.helper.ArrayHelper;
+import org.cyk.utility.common.helper.DateHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.MicrosoftExcelHelper;
+import org.cyk.utility.common.helper.MicrosoftExcelHelper.Workbook.Sheet.Builder;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -556,6 +564,79 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		}
 	}
 	
+	/*
+	public <T extends AbstractIdentifiable> void createFromExcelSheet(Class<T> aClass,String filePath){
+		if(EXCEL_SHEET_CLASSES.isEmpty() || EXCEL_SHEET_CLASSES.contains(aClass) || EXCEL_SHEET_REQUIRED_CLASSES.contains(aClass)){
+			try {
+				final MicrosoftExcelHelper.Workbook.Sheet.Builder excelSheetReader = new MicrosoftExcelHelper.Workbook.Sheet.Builder.Adapter.Default(filePath,aClass);
+				excelSheetReader.getMatrix().getRow().setFromIndex(1);
+				excelSheetReader.execute();
+				
+				TypedBusiness<?> business = inject(BusinessInterfaceLocator.class).injectTyped(aClass);
+		    	if(AbstractDataTreeNode.class.isAssignableFrom(aClass)){
+		    		if(list==null){
+			    		
+			    	}else{
+			    		Integer count = 0;
+			    		for(Dimension.Row<String> row : list){
+			    			@SuppressWarnings("unchecked")
+							T instance = (T) business.instanciateOne(row.getValues());
+			    			if(instance==null){
+			    				
+			    			}else{
+			    				inject(GenericBusiness.class).create(instance);
+			    				count++;
+			    			}
+			    		}
+			    		System.out.println(aClass.getSimpleName()+" created : "+count);	
+			    	}
+		    	}else{
+		    		@SuppressWarnings("unchecked")
+					Collection<T> collection = (Collection<T>) business.instanciateMany(ExcelSheetReader.Adapter.getValues(list));
+			    	if(collection==null){
+			    		System.out.println("Instanciate many <<"+aClass+">> has return null collection");
+			    	}else{
+			    		inject(GenericBusiness.class).create(commonUtils.castCollection(collection,AbstractIdentifiable.class));
+						System.out.println(aClass.getSimpleName()+" created : "+excelSheetReader.getOutput().getValues().length);	
+			    	}	
+		    	}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	*/
+	
+	public <T extends AbstractIdentifiable> void createIdentifiable(Class<T> aClass,InputStream workbookFileInputStream,final Boolean globalIdentifier,String...fields){
+    	InstanceHelperBuilderOneDimensionArray<T> instanceBuilder = new InstanceHelperBuilderOneDimensionArray<T>(aClass);
+    	instanceBuilder.addParameterArrayElementString(fields);
+    	ArrayHelper.Dimension.Key.Builder keyBuilder = new ArrayHelperDimensionKeyBuilder(globalIdentifier);
+    	createIdentifiable(aClass, instanceBuilder,keyBuilder,workbookFileInputStream);
+    	
+    }
+    
+    public <T extends AbstractIdentifiable> void createIdentifiable(Class<T> aClass,InstanceHelper.Builder.OneDimensionArray<T> instanceBuilder,ArrayHelper.Dimension.Key.Builder keyBuilder,InputStream workbookFileInputStream){
+    	Long millisecond = System.currentTimeMillis();
+    	System.out.print(aClass.getSimpleName()+" ");
+    	InstanceHelper.Pool.getInstance().load(aClass);
+    	MicrosoftExcelHelper.Workbook.Sheet.Builder builder = new MicrosoftExcelHelper.Workbook.Sheet.Builder.Adapter.Default(workbookFileInputStream,aClass);    	
+    	builder.createMatrix().getMatrix().getRow().setFromIndex(1);
+    	builder.getMatrix().getRow().setKeyBuilder(keyBuilder);
+    	builder.getMatrix().getRow().getKeyBuilder().addParameters(new Object[]{0});
+    	builder.getMatrix().getRow().addIgnoredKeyValues(InstanceHelper.getInstance().callGetMethod(InstanceHelper.Pool.getInstance().get(aClass), String.class
+    			, GlobalIdentifier.FIELD_CODE));	
+    	
+    	System.out.print("sheet ");
+    	MicrosoftExcelHelper.Workbook.Sheet sheet = builder.execute();
+    	System.out.print("(#values="+ArrayHelper.getInstance().size(sheet.getValues())+",#ignored="+ArrayHelper.getInstance().size(sheet.getIgnoreds())+") ");
+		InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<T> instancesBuilder = new InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<T>();
+		instanceBuilder.setKeyBuilder(keyBuilder);
+		instancesBuilder.setOneDimensionArray(instanceBuilder);
+		System.out.print("synchronise ");
+		inject(BusinessInterfaceLocator.class).injectTyped(aClass).synchronize(sheet,instanceBuilder);
+		System.out.println("SUCCESS. "+new DateHelper.Stringifier.Duration.Adapter.Default(System.currentTimeMillis()-millisecond).execute());
+    }
+	
 	/**/
 	
 	public void setBasePackage(Package basePackage) {
@@ -604,6 +685,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		
 		void set(Object object);
 		ExcelSheetReader processExcelSheetReader(ExcelSheetReader excelSheetReader);
+		MicrosoftExcelHelper.Workbook.Sheet.Builder processMicrosoftExcelSheetReader(MicrosoftExcelHelper.Workbook.Sheet.Builder excelSheetReader);
+		
 		/**/
 		
 		public static class Adapter extends BeanAdapter implements Listener,Serializable{
@@ -616,6 +699,11 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 				return excelSheetReader;
 			}
 			
+			@Override
+			public Builder processMicrosoftExcelSheetReader(Builder excelSheetReader) {
+				return excelSheetReader;
+			}
+			
 			/**/
 			
 			public static class Default extends Adapter implements Serializable{
@@ -624,6 +712,57 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			}
 		}
 	}
+	
+	public static class InstanceHelperBuilderOneDimensionArray<T extends AbstractIdentifiable> extends InstanceHelper.Builder.OneDimensionArray.Adapter.Default<T> implements Serializable{
+    	private static final long serialVersionUID = 1L;
+    	
+    	public InstanceHelperBuilderOneDimensionArray(Class<T> outputClass) {
+			super(outputClass);
+		}
+		
+		@Override
+		protected T __execute__() {
+			T identifiable = super.__execute__();
+			if(identifiable.getIdentifier()==null){
+				GlobalIdentifier globalIdentifier1 = identifiable.getGlobalIdentifier();
+				setGlobalIdentifier(identifiable);
+				GlobalIdentifier globalIdentifier2 = identifiable.getGlobalIdentifier();
+				if(globalIdentifier1!=null){
+					globalIdentifier2.setBirthLocation(globalIdentifier1.getBirthLocation());
+				}
+			}
+			return identifiable;
+		}
+		
+		protected void setGlobalIdentifier(AbstractIdentifiable identifiable){
+			
+		}
+	}
+    
+    @Getter @Setter @Accessors(chain=true)
+    public static class ArrayHelperDimensionKeyBuilder extends ArrayHelper.Dimension.Key.Builder.Adapter.Default implements Serializable {
+		private static final long serialVersionUID = 1L;
+    	
+		private Boolean isGlobalIdentifier;
+		
+		public ArrayHelperDimensionKeyBuilder(Boolean isGlobalIdentifier) {
+			super();
+			this.isGlobalIdentifier = isGlobalIdentifier;
+		}
+		
+		public ArrayHelperDimensionKeyBuilder() {
+			this(Boolean.FALSE);
+		}
+		
+		@Override
+		protected ArrayHelper.Dimension.Key __execute__() {
+			return new ArrayHelper.Dimension.Key(Boolean.TRUE.equals(isGlobalIdentifier) ? getGlobalIdentifier((String)getInput()[0]).getCode() : (String)getInput()[0]);
+		}
+
+		protected GlobalIdentifier getGlobalIdentifier(String identifier){
+			return null;
+		}
+    }
 	
 	public static final String DATABASE_NAME_FORMAT = "cyk_%s_db";
 	

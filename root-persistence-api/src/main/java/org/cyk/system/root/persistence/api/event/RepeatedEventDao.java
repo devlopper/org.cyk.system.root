@@ -6,6 +6,7 @@ import java.util.Set;
 import org.cyk.system.root.model.event.EventRepetition;
 import org.cyk.system.root.persistence.api.TypedDao;
 
+@Deprecated
 public interface RepeatedEventDao extends TypedDao<EventRepetition> {
 
 	Collection<EventRepetition> readByMonth(Integer month);

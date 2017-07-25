@@ -18,6 +18,7 @@ import org.cyk.system.root.persistence.api.event.EventReminderDao;
 import org.cyk.system.root.persistence.api.event.RepeatedEventDao;
 import org.joda.time.DateTime;
 
+@Deprecated
 public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<EventRepetition, RepeatedEventDao> implements RepeatedEventBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -59,8 +60,7 @@ public class RepeatedEventBusinessImpl extends AbstractTypedBusinessService<Even
 	}
 	
 	private void commonRepeatedEvent(EventRepetition repeatedEvent,Integer dayOfMonth,Integer month){
-		repeatedEvent.getDate().setDay(dayOfMonth);
-    	repeatedEvent.getDate().setMonth(month);
+		
 	} 
 
 	@Override

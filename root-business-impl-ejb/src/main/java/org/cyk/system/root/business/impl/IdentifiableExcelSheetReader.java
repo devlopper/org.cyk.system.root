@@ -5,6 +5,7 @@ import java.io.File;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.file.ExcelSheetReader;
 
+@Deprecated
 public class IdentifiableExcelSheetReader<T extends AbstractIdentifiable> extends ExcelSheetReader.Adapter.Default {
 
 	private static final long serialVersionUID = 325668260905847551L;

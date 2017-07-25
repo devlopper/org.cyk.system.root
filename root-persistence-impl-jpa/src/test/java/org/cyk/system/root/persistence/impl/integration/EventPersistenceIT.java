@@ -16,7 +16,6 @@ import org.cyk.system.root.model.event.EventMissed;
 import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.EventReminder;
-import org.cyk.system.root.model.event.EventRepetition;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
@@ -24,7 +23,6 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
 import org.cyk.system.root.persistence.api.event.EventMissedDao;
 import org.cyk.system.root.persistence.api.event.EventReminderDao;
-import org.cyk.system.root.persistence.api.event.RepeatedEventDao;
 import org.cyk.utility.common.computation.Function;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
@@ -42,7 +40,6 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	@Inject private EventDao eventDao;
 	@Inject private EventMissedDao eventMissedDao/*,eventMissedDao1,eventMissedDao2,eventMissedDao3*/;
 	@Inject private EventReminderDao eventReminderDao;
-	@Inject private RepeatedEventDao repeatedEventDao;
 	
 	private Event event,e1,e2,e3,e4;
 	private Date now = new Date(),oneHourLater,oneHourPast;
@@ -99,11 +96,13 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	    	for(Party party : parties)
 	    		create(new EventParty(party, event));
 	    if(repeatMonth!=null || repeatDay!=null){
-		    EventRepetition repeatedEvent = new EventRepetition();
+		    /*
+	    	EventRepetition repeatedEvent = new EventRepetition();
 		    repeatedEvent.setEvent(event);
 		    repeatedEvent.getDate().setMonth(repeatMonth);
 		    repeatedEvent.getDate().setDay(repeatDay);
 		    repeatedEventDao.create(repeatedEvent);
+		    */
 		}
 	    //System.out.println("EventPersistenceIT.event() : "+eventReminder.getEvent().getIdentifier()+" / "+event.getPeriod()+" | "+eventReminder.getPeriod());
 	    return event;
@@ -258,18 +257,19 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		Assert.assertEquals(0l, eventMissedDao.sumDuration(new ArrayList<Event>(), Boolean.TRUE).longValue());
 		
 		assertRepeatedMonths();
-		
+		/*
 		Assert.assertEquals(1l, repeatedEventDao.countByDayOfMonthByMonth(19, 8).longValue());
 		Assert.assertEquals(2l, repeatedEventDao.countByDayOfMonthByMonth(10,1).longValue());
 		Assert.assertEquals(0l, repeatedEventDao.countByDayOfMonthByMonth(30,12).longValue());
-		
+		*/
 		Set<Integer> allMonths = new HashSet<>();
 		for(int i=1;i<=12;i++)
 			allMonths.add(i);
-		Assert.assertEquals("ALL",8l, repeatedEventDao.countByMonths(allMonths).longValue());
+		//Assert.assertEquals("ALL",8l, repeatedEventDao.countByMonths(allMonths).longValue());
 	}
 	
 	private void assertRepeatedMonths(){
+		/*
 		Assert.assertEquals("Jan",2l, repeatedEventDao.countByMonth(1).longValue());
 		Assert.assertEquals("Feb",0l, repeatedEventDao.countByMonth(2).longValue());
 		Assert.assertEquals("Mar",1l, repeatedEventDao.countByMonth(3).longValue());
@@ -282,7 +282,7 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 		Assert.assertEquals("Oct",1l, repeatedEventDao.countByMonth(10).longValue());
 		Assert.assertEquals("Nov",0l, repeatedEventDao.countByMonth(11).longValue());
 		Assert.assertEquals("Dec",0l, repeatedEventDao.countByMonth(12).longValue());
-		
+		*/
 	}
 	
 	

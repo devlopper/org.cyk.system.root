@@ -6,7 +6,7 @@ import javax.persistence.Embedded;
 import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.time.FlexiblePeriod;
+import org.cyk.system.root.model.time.InstantInterval;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +20,12 @@ public class CurriculumVitaeSectionDetails extends AbstractIdentifiable implemen
 	private CurriculumVitaeSection section;
 	
 	@Embedded
-	private FlexiblePeriod period = new FlexiblePeriod();
+	private InstantInterval instantInterval;
 	
-	private String details;
+	public InstantInterval getInstantInterval(){
+		if(instantInterval==null)
+			instantInterval = new InstantInterval();
+		return instantInterval;
+	}
 	
 }

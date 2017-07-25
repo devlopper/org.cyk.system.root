@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter @Setter 
 //@Entity 
-@NoArgsConstructor
+@NoArgsConstructor @Deprecated
 public class ScheduleCollection extends AbstractIdentifiable implements Serializable  {
 
 	private static final long serialVersionUID = 4094533140633110556L;

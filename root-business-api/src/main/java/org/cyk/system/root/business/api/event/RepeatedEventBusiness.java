@@ -7,6 +7,7 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.model.event.EventRepetition;
 import org.cyk.system.root.model.time.Period;
 
+@Deprecated
 public interface RepeatedEventBusiness extends TypedBusiness<EventRepetition> {
     
 	EventRepetition createAnniversary(Integer dayOfMonth,Integer month,String name);

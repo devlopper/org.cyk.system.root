@@ -33,9 +33,9 @@ public class Event extends AbstractIdentifiablePeriod implements Serializable  {
 
 	private static final long serialVersionUID = 4094533140633110556L;
 	
-	@ManyToOne @JoinColumn(name="thetype") private EventType type;
+	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private EventType type;
 	
-    @OneToOne private ContactCollection contactCollection = new ContactCollection();
+    @OneToOne @JoinColumn(name=COLUMN_CONTACT_COLLECTION) private ContactCollection contactCollection;
     
     @Transient private IdentifiableRuntimeCollection<EventParty> eventParties;
     @Transient private IdentifiableRuntimeCollection<EventReminder> eventReminders;
@@ -56,6 +56,14 @@ public class Event extends AbstractIdentifiablePeriod implements Serializable  {
     		eventReminders = new IdentifiableRuntimeCollection<>();
     	return eventReminders;
     }
+    
+    /**/
+    
+    public static final String FIELD_TYPE = "type";
+    public static final String FIELD_CONTACT_COLLECTION = "contactCollection";
+    
+    public static final String COLUMN_TYPE = "thetype";
+    public static final String COLUMN_CONTACT_COLLECTION = "contactCollection";
     
     /**/
     
