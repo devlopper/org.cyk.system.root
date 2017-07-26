@@ -33,6 +33,7 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 			,@AttributeOverride(name=Instant.FIELD_MINUTE,column=@Column(name=COLUMN_FROM_MINUTE))
 			,@AttributeOverride(name=Instant.FIELD_HOUR,column=@Column(name=COLUMN_FROM_HOUR))
 			,@AttributeOverride(name=Instant.FIELD_DAY,column=@Column(name=COLUMN_FROM_DAY))
+			,@AttributeOverride(name=Instant.FIELD_DAY_IN_WEEK_INDEX,column=@Column(name=COLUMN_FROM_WEEK_DAY_INDEX))
 			,@AttributeOverride(name=Instant.FIELD_MONTH,column=@Column(name=COLUMN_FROM_MONTH))
 			,@AttributeOverride(name=Instant.FIELD_YEAR,column=@Column(name=COLUMN_FROM_YEAR))
 	})
@@ -45,6 +46,7 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 			,@AttributeOverride(name=Instant.FIELD_MINUTE,column=@Column(name=COLUMN_TO_MINUTE))
 			,@AttributeOverride(name=Instant.FIELD_HOUR,column=@Column(name=COLUMN_TO_HOUR))
 			,@AttributeOverride(name=Instant.FIELD_DAY,column=@Column(name=COLUMN_TO_DAY))
+			,@AttributeOverride(name=Instant.FIELD_DAY_IN_WEEK_INDEX,column=@Column(name=COLUMN_TO_WEEK_DAY_INDEX))
 			,@AttributeOverride(name=Instant.FIELD_MONTH,column=@Column(name=COLUMN_TO_MONTH))
 			,@AttributeOverride(name=Instant.FIELD_YEAR,column=@Column(name=COLUMN_TO_YEAR))
 	})
@@ -74,6 +76,9 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 	
 	/**/
 	
+	public static final String FIELD_FROM = "from";
+	public static final String FIELD_TO = "to";
+	
 	private static final String COLUMN_FROM_PREFIX = "from_";
 	public static final String COLUMN_FROM_YEAR = COLUMN_FROM_PREFIX+Instant.COLUMN_YEAR;
 	public static final String COLUMN_FROM_MONTH = COLUMN_FROM_PREFIX+Instant.COLUMN_MONTH;
@@ -82,7 +87,7 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 	public static final String COLUMN_FROM_MINUTE = COLUMN_FROM_PREFIX+Instant.COLUMN_MINUTE;
 	public static final String COLUMN_FROM_SECOND = COLUMN_FROM_PREFIX+Instant.COLUMN_SECOND;
 	public static final String COLUMN_FROM_MILLISECOND = COLUMN_FROM_PREFIX+Instant.COLUMN_MILLISECOND;
-	public static final String COLUMN_FROM_WEEK_DAY_INDEX = COLUMN_FROM_PREFIX+Instant.COLUMN_WEEK_DAY_INDEX;
+	public static final String COLUMN_FROM_WEEK_DAY_INDEX = COLUMN_FROM_PREFIX+Instant.COLUMN_DAY_IN_WEEK_INDEX;
 	
 	private static final String COLUMN_TO_PREFIX = "to_";
 	public static final String COLUMN_TO_YEAR = COLUMN_TO_PREFIX+Instant.COLUMN_YEAR;
@@ -92,6 +97,6 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 	public static final String COLUMN_TO_MINUTE = COLUMN_TO_PREFIX+Instant.COLUMN_MINUTE;
 	public static final String COLUMN_TO_SECOND = COLUMN_TO_PREFIX+Instant.COLUMN_SECOND;
 	public static final String COLUMN_TO_MILLISECOND = COLUMN_TO_PREFIX+Instant.COLUMN_MILLISECOND;
-	public static final String COLUMN_TO_WEEK_DAY_INDEX = COLUMN_TO_PREFIX+Instant.COLUMN_WEEK_DAY_INDEX;
+	public static final String COLUMN_TO_WEEK_DAY_INDEX = COLUMN_TO_PREFIX+Instant.COLUMN_DAY_IN_WEEK_INDEX;
 
 }
