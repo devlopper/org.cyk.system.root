@@ -17,6 +17,7 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
+import org.cyk.system.root.model.time.Instant;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueSet;
 import org.cyk.utility.common.Constant;
@@ -171,6 +172,8 @@ public class RootFormattingConfigurationsRegistrator extends AbstractFormattingC
 				return stringBuilder.toString();
 			}
 		});
+        
+        
 	}
 
 }

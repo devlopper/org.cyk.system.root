@@ -6,11 +6,13 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Embeddable @Getter @Setter
+@Embeddable @Getter @Setter @Accessors(chain=true)
 public class Instant extends AbstractModelElement implements Serializable {
 
 	private static final long serialVersionUID = 6459524990626259467L;
@@ -31,7 +33,11 @@ public class Instant extends AbstractModelElement implements Serializable {
 	
 	@Override
 	public String getUiString() {
-		return hour+" "+minute+" "+second+" "+millisecond+" "+day+" "+month+" "+year;
+		StringHelper.ToStringMapping mapping = new StringHelper.ToStringMapping.Adapter.Default();
+		
+		//if(hour!=null)
+			
+		return hour+mapping.setInput("hour").execute()+" "+minute+" "+second+" "+millisecond+" "+day+" "+month+" "+year;
 	}
 	
 	/**/
