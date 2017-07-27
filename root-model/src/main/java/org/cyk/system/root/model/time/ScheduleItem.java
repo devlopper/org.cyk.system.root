@@ -18,6 +18,11 @@ public class ScheduleItem extends AbstractCollectionItem<Schedule> implements Se
 	
 	@Embedded private InstantInterval instantInterval;
 	
+	{
+		if(instantInterval==null)
+			instantInterval = new InstantInterval();
+	}
+	
 	public InstantInterval getInstantInterval(){
 		if(instantInterval==null)
 			instantInterval = new InstantInterval();

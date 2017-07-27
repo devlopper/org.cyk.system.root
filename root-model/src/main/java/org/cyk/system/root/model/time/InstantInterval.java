@@ -52,6 +52,13 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 	})
 	private Instant to;
 	
+	{
+		if(from==null)
+			from = new Instant();
+		if(to==null)
+			to = new Instant();
+	}
+	
 	public Instant getFrom(){
 		if(from==null)
 			from = new Instant();
