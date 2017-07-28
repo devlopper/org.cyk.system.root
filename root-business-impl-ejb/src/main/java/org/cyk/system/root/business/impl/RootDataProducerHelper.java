@@ -15,6 +15,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -87,14 +91,10 @@ import org.cyk.utility.common.database.DatabaseUtils.DropParameters;
 import org.cyk.utility.common.file.ArrayReader.Dimension;
 import org.cyk.utility.common.file.ExcelSheetReader;
 import org.cyk.utility.common.helper.ArrayHelper;
-import org.cyk.utility.common.helper.DateHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper.Workbook.Sheet.Builder;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import org.cyk.utility.common.helper.TimeHelper;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -616,7 +616,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
     }
     
     public <T extends AbstractIdentifiable> void createIdentifiable(Class<T> aClass,InstanceHelper.Builder.OneDimensionArray<T> instanceBuilder,ArrayHelper.Dimension.Key.Builder keyBuilder,InputStream workbookFileInputStream){
-    	Long millisecond = System.currentTimeMillis();
+    	TimeHelper.Collection timeCollection = new TimeHelper.Collection().addCurrent();
     	System.out.print(aClass.getSimpleName()+" ");
     	InstanceHelper.Pool.getInstance().load(aClass);
     	MicrosoftExcelHelper.Workbook.Sheet.Builder builder = new MicrosoftExcelHelper.Workbook.Sheet.Builder.Adapter.Default(workbookFileInputStream,aClass);    	
@@ -634,7 +634,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		instancesBuilder.setOneDimensionArray(instanceBuilder);
 		System.out.print("synchronise ");
 		inject(BusinessInterfaceLocator.class).injectTyped(aClass).synchronize(sheet,instanceBuilder);
-		System.out.println("SUCCESS. "+new DateHelper.Stringifier.Duration.Adapter.Default(System.currentTimeMillis()-millisecond).execute());
+		timeCollection.addCurrent();
+		System.out.println("SUCCESS. "+new TimeHelper.Stringifier.Duration.Adapter.Default(timeCollection.getDuration()).execute());
     }
 	
 	/**/

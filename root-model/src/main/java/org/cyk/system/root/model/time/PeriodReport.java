@@ -7,8 +7,8 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.value.LongValueReport;
 import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.builder.DatePeriodStringBuilder;
 import org.cyk.utility.common.generator.AbstractGeneratable;
+import org.cyk.utility.common.helper.TimeHelper;
 
 @Getter @Setter
 public class PeriodReport extends AbstractGeneratable<PeriodReport> implements Serializable {
@@ -25,9 +25,20 @@ public class PeriodReport extends AbstractGeneratable<PeriodReport> implements S
 		fromDate = format(((Period)source).getFromDate());
 		toDate = format(((Period)source).getToDate());
 		numberOfMillisecond.setSource(((Period)source).getNumberOfMillisecond());
-		fromDateToDate = new DatePeriodStringBuilder(((Period)source).getFromDate(), ((Period)source).getToDate(), Constant.Date.Part.DATE_ONLY).build();
-		fromYearToYear = new DatePeriodStringBuilder(((Period)source).getFromDate(), ((Period)source).getToDate(), Constant.Date.Part.DATE_YEAR_ONLY)
-			.setSeparator(Constant.CHARACTER_SLASH.toString()).build();
+		
+		fromDateToDate = new TimeHelper.Stringifier.Dates.Adapter.Default(new TimeHelper.Stringifier.Date[]{
+			(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getFromDate())
+				.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_ONLY)
+			,(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getToDate())
+				.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_ONLY)
+		}).execute();
+		
+		fromYearToYear = new TimeHelper.Stringifier.Dates.Adapter.Default(new TimeHelper.Stringifier.Date[]{
+				(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getFromDate())
+					.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_YEAR_ONLY)
+				,(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getToDate())
+					.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_YEAR_ONLY)
+			}).execute();
 	}
 	
 	@Override
