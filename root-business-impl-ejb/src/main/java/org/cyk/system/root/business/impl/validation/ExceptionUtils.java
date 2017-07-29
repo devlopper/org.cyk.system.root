@@ -165,8 +165,16 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     public String getMessage(Throwable throwable){
     	String message = null;
     	Throwable cause = ThrowableHelper.getInstance().getInstanceOf(throwable, PersistenceException.class);
+    	
     	if(cause == null){
-    		
+    		//System.out.println("ExceptionUtils.getMessage() : "+throwable);
+    		//cause = ThrowableHelper.getInstance().getInstanceOf(throwable, RuntimeException.class);
+    		if(cause==null)
+    			cause = throwable.getCause();
+    		if(cause==null)
+    			message = throwable.toString();
+    		else
+    			message = cause.toString();
     	}else{
     		List<String> tokens = DatabaseManagementSystemMessageProvider.Adapter.DEFAULT.getTokens(cause);	
     		message = languageBusiness.findText(tokens.remove(0),tokens.toArray());	

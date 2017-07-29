@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.TimeHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,11 +33,12 @@ public class Instant extends AbstractModelElement implements Serializable {
 	
 	@Override
 	public String getUiString() {
-		StringHelper.ToStringMapping mapping = new StringHelper.ToStringMapping.Adapter.Default();
-		
-		//if(hour!=null)
-			
-		return hour+mapping.setInput("hour").execute()+" "+minute+" "+second+" "+millisecond+" "+day+" "+month+" "+year;
+		return new TimeHelper.Stringifier.Unit.Adapter.Default()
+		.setProperty(TimeHelper.Builder.Part.PROPERTY_NAME_YEAR, year).setProperty(TimeHelper.Builder.Part.PROPERTY_NAME_MONTHOFYEAR, month)
+		.setProperty(TimeHelper.Builder.Part.PROPERTY_NAME_DAYOFMONTH, day).setProperty(TimeHelper.Builder.Part.PROPERTY_NAME_HOUROFDAY, hour)
+		.setProperty(TimeHelper.Builder.Part.PROPERTY_NAME_MINUTEOFHOUR, minute).setProperty(TimeHelper.Builder.Part.PROPERTY_NAME_SECONDOFMINUTE, second)
+		.setProperty(TimeHelper.Builder.Part.PROPERTY_NAME_MILLISOFSECOND, millisecond)
+		.execute();
 	}
 	
 	/**/
