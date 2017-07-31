@@ -16,7 +16,7 @@ public class InstantIntervalDetails extends AbstractModelElementOutputDetails<In
 
 	private static final long serialVersionUID = 1307822857551633645L;
 
-	@Input @InputText private String from,to;
+	@Input @InputText private String from,to,distanceInMillisecond;
 	
 	public InstantIntervalDetails(InstantInterval instantInterval) {
 		super(instantInterval);
@@ -35,6 +35,7 @@ public class InstantIntervalDetails extends AbstractModelElementOutputDetails<In
 	public InstantIntervalDetails set(InstantInterval instantInterval){
 		from = instantInterval.getFrom().getUiString();
 		to = instantInterval.getTo().getUiString();
+		distanceInMillisecond = formatNumber(instantInterval.getDistanceInMillisecond());
 		return this;
 	}
 	
@@ -45,5 +46,6 @@ public class InstantIntervalDetails extends AbstractModelElementOutputDetails<In
 	
 	public static final String FIELD_FROM = "from";
 	public static final String FIELD_TO = "to";
+	public static final String FIELD_DISTANCE_IN_MILLISECOND = "distanceInMillisecond";
 	
 }

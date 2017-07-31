@@ -17,14 +17,14 @@ public class Instant extends AbstractModelElement implements Serializable {
 
 	private static final long serialVersionUID = 6459524990626259467L;
 
-	@Column(name=COLUMN_YEAR)				private Short year;
-	@Column(name=COLUMN_MONTH)				private Byte month;
-	@Column(name=COLUMN_DAY)				private Byte day;
-	@Column(name=COLUMN_DAY_IN_WEEK_INDEX)	private Byte dayInWeekIndex;
-	@Column(name=COLUMN_HOUR)				private Byte hour;
-	@Column(name=COLUMN_MINUTE)				private Byte minute;
-	@Column(name=COLUMN_SECOND)				private Byte second;	
-	@Column(name=COLUMN_MILLISECOND)		private Short millisecond;
+	@Column(name=COLUMN_YEAR)				private Long year;
+	@Column(name=COLUMN_MONTH)				private Long month;
+	@Column(name=COLUMN_DAY)				private Long day;
+	@Column(name=COLUMN_DAY_IN_WEEK_INDEX)	private Long dayInWeekIndex;
+	@Column(name=COLUMN_HOUR)				private Long hour;
+	@Column(name=COLUMN_MINUTE)				private Long minute;
+	@Column(name=COLUMN_SECOND)				private Long second;	
+	@Column(name=COLUMN_MILLISECOND)		private Long millisecond;
 	
 	@Override
 	public String toString() {
