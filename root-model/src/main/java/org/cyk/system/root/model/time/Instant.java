@@ -23,7 +23,7 @@ public class Instant extends AbstractModelElement implements Serializable {
 	@Column(name=COLUMN_DAY_IN_WEEK_INDEX)	private Long dayInWeekIndex;
 	@Column(name=COLUMN_HOUR)				private Long hour;
 	@Column(name=COLUMN_MINUTE)				private Long minute;
-	@Column(name=COLUMN_SECOND)				private Long second;	
+	@Column(name=COLUMN_SECOND)				private Long second;
 	@Column(name=COLUMN_MILLISECOND)		private Long millisecond;
 	
 	@Override
