@@ -54,6 +54,8 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 	
 	@Column(name=COLUMN_DISTANCE_IN_MILLISECOND) private Long distanceInMillisecond;
 	
+	@Column(name=COLUMN_DURATION_IN_MILLISECOND) private Long durationInMillisecond;
+	
 	{
 		if(from==null)
 			from = new Instant();
@@ -87,6 +89,8 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 	
 	public static final String FIELD_FROM = "from";
 	public static final String FIELD_TO = "to";
+	public static final String FIELD_DISTANCE_IN_MILLISECOND = "distanceInMillisecond";
+	public static final String FIELD_DURATION_IN_MILLISECOND = "durationInMillisecond";
 	
 	private static final String COLUMN_FROM_PREFIX = "from_";
 	public static final String COLUMN_FROM_YEAR = COLUMN_FROM_PREFIX+Instant.COLUMN_YEAR;
@@ -109,4 +113,5 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 	public static final String COLUMN_TO_WEEK_DAY_INDEX = COLUMN_TO_PREFIX+Instant.COLUMN_DAY_IN_WEEK_INDEX;
 
 	public static final String COLUMN_DISTANCE_IN_MILLISECOND = "distanceInMillisecond";
+	public static final String COLUMN_DURATION_IN_MILLISECOND = "durationInMillisecond";
 }
