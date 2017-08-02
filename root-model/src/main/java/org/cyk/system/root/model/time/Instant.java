@@ -5,12 +5,19 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.utility.common.helper.TimeHelper;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.ByteSearchCriteria;
+import org.cyk.system.root.model.search.ShortSearchCriteria;
+import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.utility.common.helper.NumberHelper;
+import org.cyk.utility.common.helper.TimeHelper;
 
 @Embeddable @Getter @Setter @Accessors(chain=true)
 public class Instant extends AbstractModelElement implements Serializable {
@@ -28,6 +35,18 @@ public class Instant extends AbstractModelElement implements Serializable {
 	
 	public TimeHelper.Instant getTimeHelperInstant(){
 		return new TimeHelper.Instant(year, monthOfYear, dayOfMonth, dayOfWeek, hourOfDay, minuteOfHour, secondOfMinute, millisecondOfSecond);
+	}
+	
+	public Instant set(Integer year,Integer monthOfYear,Integer dayOfMonth,Integer dayOfWeek,Integer hourOfDay,Integer minuteOfHour,Integer secondOfMinute,Integer millisecondOfSecond){
+		setYear(NumberHelper.getInstance().get(Short.class, year));
+		setMonthOfYear(NumberHelper.getInstance().get(Byte.class, monthOfYear));
+		setDayOfMonth(NumberHelper.getInstance().get(Byte.class, dayOfMonth));
+		setDayOfWeek(NumberHelper.getInstance().get(Byte.class, dayOfWeek));
+		setHourOfDay(NumberHelper.getInstance().get(Byte.class, hourOfDay));
+		setMinuteOfHour(NumberHelper.getInstance().get(Byte.class, minuteOfHour));
+		setSecondOfMinute(NumberHelper.getInstance().get(Byte.class, secondOfMinute));
+		setMillisecondOfSecond(NumberHelper.getInstance().get(Short.class, millisecondOfSecond));
+		return this;
 	}
 	
 	@Override
@@ -67,4 +86,47 @@ public class Instant extends AbstractModelElement implements Serializable {
 	public static final String COLUMN_SECOND_OF_MINUTE = COLUMN_PREFIX+FIELD_SECOND_OF_MINUTE;
 	public static final String COLUMN_MILLISECOND_OF_SECOND = COLUMN_PREFIX+FIELD_MILLISECOND_OF_SECOND;
 	
+	/**/
+	
+	@Getter @Setter @Accessors(chain=true)
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		private ShortSearchCriteria year = new ShortSearchCriteria();
+		private ByteSearchCriteria monthOfYear = new ByteSearchCriteria();
+		private ByteSearchCriteria dayOfMonth = new ByteSearchCriteria();
+		private ByteSearchCriteria dayOfWeek = new ByteSearchCriteria();
+		private ByteSearchCriteria hourOfDay = new ByteSearchCriteria();
+		private ByteSearchCriteria minuteOfHour = new ByteSearchCriteria();
+		private ByteSearchCriteria secondOfMinute = new ByteSearchCriteria();
+		private ShortSearchCriteria millisecondOfSecond = new ShortSearchCriteria();
+
+		@Override
+		public void set(String value) {
+			
+		}
+
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
+		}
+		
+		public SearchCriteria set(Integer year,Integer monthOfYear,Integer dayOfMonth,Integer dayOfWeek,Integer hourOfDay,Integer minuteOfHour,Integer secondOfMinute,Integer millisecondOfSecond){
+			getYear().setValue(NumberHelper.getInstance().get(Short.class, year));
+			getMonthOfYear().setValue(NumberHelper.getInstance().get(Byte.class, monthOfYear));
+			getDayOfMonth().setValue(NumberHelper.getInstance().get(Byte.class, dayOfMonth));
+			getDayOfWeek().setValue(NumberHelper.getInstance().get(Byte.class, dayOfWeek));
+			getHourOfDay().setValue(NumberHelper.getInstance().get(Byte.class, hourOfDay));
+			getMinuteOfHour().setValue(NumberHelper.getInstance().get(Byte.class, minuteOfHour));
+			getSecondOfMinute().setValue(NumberHelper.getInstance().get(Byte.class, secondOfMinute));
+			getMillisecondOfSecond().setValue(NumberHelper.getInstance().get(Short.class, millisecondOfSecond));
+			return this;
+		}
+		
+		@Override
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+		}
+	}
 }

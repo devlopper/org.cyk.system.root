@@ -36,7 +36,6 @@ import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;

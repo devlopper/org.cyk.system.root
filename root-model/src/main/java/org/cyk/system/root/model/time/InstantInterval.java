@@ -12,8 +12,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.helper.TimeHelper;
 
 /**
@@ -119,4 +124,34 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 
 	public static final String COLUMN_DISTANCE_IN_MILLISECOND = "distanceInMillisecond";
 	public static final String COLUMN_PORTION_IN_MILLISECOND = "portionInMillisecond";
+	
+	/**/
+	
+	@Getter @Setter @Accessors(chain=true)
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		private Instant.SearchCriteria from = new Instant.SearchCriteria();
+		private Instant.SearchCriteria to = new Instant.SearchCriteria();
+		
+		@Override
+		public void set(String value) {
+			
+		}
+
+		@Override
+		public void set(StringSearchCriteria stringSearchCriteria) {
+			
+		}
+		
+		public void set(){
+			
+		}
+		
+		@Override
+		public String toString() {
+			return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+		}
+	}
 }

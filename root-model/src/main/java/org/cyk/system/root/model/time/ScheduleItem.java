@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 
 @Entity 
 @Getter @Setter
@@ -27,6 +28,25 @@ public class ScheduleItem extends AbstractCollectionItem<Schedule> implements Se
 		if(instantInterval==null)
 			instantInterval = new InstantInterval();
 		return instantInterval;
+	}
+	
+	/**/
+	
+	@Getter @Setter
+	public static class SearchCriteria extends AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet implements Serializable {
+
+		private static final long serialVersionUID = 6796076474234170332L;
+
+		protected InstantInterval.SearchCriteria instantInterval = new InstantInterval.SearchCriteria();
+		
+		public SearchCriteria(){ 
+			this(null);
+		}
+		
+		public SearchCriteria(String name) {
+			super(name);
+		}
+		
 	}
 	
 	/**/
