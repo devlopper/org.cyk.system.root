@@ -16,7 +16,7 @@ public class InstantDetails extends AbstractModelElementOutputDetails<Instant> i
 
 	private static final long serialVersionUID = 1307822857551633645L;
 
-	@Input @InputText private String year,month,day,dayInWeekIndex,hour,minute,second,millisecond;
+	@Input @InputText private String year,monthOfYear,dayOfMonth,dayOfWeek,hourOfDay,minuteOfHour,secondOfMinute,millisecondOfSecond;
 	
 	public InstantDetails(Instant instant) {
 		super(instant);
@@ -34,22 +34,23 @@ public class InstantDetails extends AbstractModelElementOutputDetails<Instant> i
 	
 	public InstantDetails set(Instant instant){
 		year = formatNumber(instant.getYear());
-		month = formatNumber(instant.getMonth());
-		day = formatNumber(instant.getDay());
-		dayInWeekIndex = formatNumber(instant.getDayInWeekIndex());
-		hour = formatNumber(instant.getHour());
-		minute = formatNumber(instant.getMinute());
-		second = formatNumber(instant.getSecond());
-		millisecond = formatNumber(instant.getMillisecond());
+		monthOfYear = formatNumber(instant.getMonthOfYear());
+		dayOfMonth = formatNumber(instant.getDayOfMonth());
+		dayOfWeek = formatNumber(instant.getDayOfWeek());
+		hourOfDay = formatNumber(instant.getHourOfDay());
+		minuteOfHour = formatNumber(instant.getMinuteOfHour());
+		secondOfMinute = formatNumber(instant.getSecondOfMinute());
+		millisecondOfSecond = formatNumber(instant.getMillisecondOfSecond());
 		return this;
 	}
 	
 	public static final String FIELD_YEAR = "year";
-	public static final String FIELD_MONTH = "month";
-	public static final String FIELD_DAY = "day";
-	public static final String FIELD_HOUR = "hour";
-	public static final String FIELD_MINUTE = "minute";
-	public static final String FIELD_SECOND = "second";
-	public static final String FIELD_MILLISECOND = "millisecond";
-	public static final String FIELD_DAY_IN_WEEK_INDEX = "dayInWeekIndex";
+	public static final String FIELD_MONTH_OF_YEAR = "monthOfYear";
+	public static final String FIELD_DAY_OF_MONTH = "dayOfMonth";
+	public static final String FIELD_DAY_OF_WEEK = "dayOfWeek";
+	public static final String FIELD_HOUR_OF_DAY = "hourOfDay";
+	public static final String FIELD_MINUTE_OF_HOUR = "minuteOfHour";
+	public static final String FIELD_SECOND_OF_MINUTE = "secondOfMinute";
+	public static final String FIELD_MILLISECOND_OF_SECOND = "millisecondOfSecond";
+	
 }
