@@ -30,7 +30,7 @@ public class ScheduleItemBusinessImpl extends AbstractCollectionItemBusinessImpl
 		Collection<EventHelper.Event> events = new ArrayList<>();
 		for(ScheduleItem scheduleItem : scheduleItems){
 			events.addAll(new EventHelper.Event.Builder.Interval.Adapter.Default()
-				.setProperty(EventHelper.Event.Builder.PROPERTY_NAME, "Mon évènement")
+				.setProperty(EventHelper.Event.Builder.PROPERTY_NAME, scheduleItem.getName())
 				.setProperty(EventHelper.Event.Builder.PROPERTY_NAME_INSTANT_INTERVAL, new TimeHelper.Instant.Interval(scheduleItem.getInstantInterval().getFrom().getTimeHelperInstant()
 						, scheduleItem.getInstantInterval().getTo().getTimeHelperInstant(), scheduleItem.getInstantInterval().getDistanceInMillisecond()
 						, scheduleItem.getInstantInterval().getPortionInMillisecond()))
