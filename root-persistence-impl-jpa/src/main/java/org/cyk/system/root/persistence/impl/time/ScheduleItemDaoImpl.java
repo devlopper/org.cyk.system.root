@@ -9,7 +9,7 @@ import org.cyk.system.root.model.time.Schedule;
 import org.cyk.system.root.model.time.ScheduleItem;
 import org.cyk.system.root.persistence.api.time.ScheduleItemDao;
 import org.cyk.system.root.persistence.impl.AbstractCollectionItemDaoImpl;
-import org.cyk.utility.common.helper.StructureQueryLanguageHelper;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 
 public class ScheduleItemDaoImpl extends AbstractCollectionItemDaoImpl<ScheduleItem,Schedule> implements ScheduleItemDao,Serializable {
@@ -21,7 +21,10 @@ public class ScheduleItemDaoImpl extends AbstractCollectionItemDaoImpl<ScheduleI
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
-		StructureQueryLanguageHelper structureQueryLanguageHelper = StructureQueryLanguageHelper.getInstance();
+		StructuredQueryLanguageHelper structureQueryLanguageHelper = StructuredQueryLanguageHelper.getInstance();
+		System.out.println( _select().whereString(structureQueryLanguageHelper.getBetween("r.instantInterval.from.year", ":fromYear", ":toYear")
+				+ " AND "+structureQueryLanguageHelper.getBetween("r.instantInterval.from.monthOfYear", ":fromMonthOfYear", ":toMonthOfYear")
+				+ " AND "+structureQueryLanguageHelper.getBetween("r.instantInterval.from.dayOfMonth", ":fromDayOfMonth", ":toDayOfMonth")));
 		registerNamedQuery(readWhereFromBetween, _select().whereString(structureQueryLanguageHelper.getBetween("r.instantInterval.from.year", ":fromYear", ":toYear")
 				+ " AND "+structureQueryLanguageHelper.getBetween("r.instantInterval.from.monthOfYear", ":fromMonthOfYear", ":toMonthOfYear")
 				+ " AND "+structureQueryLanguageHelper.getBetween("r.instantInterval.from.dayOfMonth", ":fromDayOfMonth", ":toDayOfMonth")));
