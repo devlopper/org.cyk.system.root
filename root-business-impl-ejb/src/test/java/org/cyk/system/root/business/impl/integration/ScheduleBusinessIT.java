@@ -6,6 +6,7 @@ import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.time.Schedule;
 import org.cyk.system.root.model.time.ScheduleItem;
 import org.cyk.system.root.persistence.api.time.ScheduleItemDao;
+import org.cyk.utility.common.helper.AssertionHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 
 public class ScheduleBusinessIT extends AbstractBusinessIT {
@@ -31,13 +32,20 @@ public class ScheduleBusinessIT extends AbstractBusinessIT {
 		scheduleItem.getInstantInterval().getTo().set(2005, 6, 5, 1, 7, 30, 0, 0);
 		testCase.create(scheduleItem);
 		
-		System.out.println("0 : "+inject(ScheduleItemDao.class).readWhereFromBetween(TimeHelper.getInstance().getDate(2004, 1, 1),TimeHelper.getInstance().getDate(2004, 3, 1)));
+		AssertionHelper.getInstance().assertEquals(0l, inject(ScheduleItemDao.class).countWhereFromBetween(TimeHelper.getInstance().getDate(2004, 1, 1),TimeHelper.getInstance().getDate(2004, 3, 1)));
+		//System.out.println("0 : "+inject(ScheduleItemDao.class).readWhereFromBetween(TimeHelper.getInstance().getDate(2004, 1, 1),TimeHelper.getInstance().getDate(2004, 3, 1)));
 		
-		System.out.println("1 : "+inject(ScheduleItemDao.class).readWhereFromBetween(TimeHelper.getInstance().getDate(2005, 1, 1),TimeHelper.getInstance().getDate(2005, 3, 31)));
+		//AssertionHelper.getInstance().assertEquals(2l, inject(ScheduleItemDao.class).countWhereFromBetween(TimeHelper.getInstance().getDate(2005, 1, 1),TimeHelper.getInstance().getDate(2005, 1, 31)));
+		//AssertionHelper.getInstance().assertEquals(2l, inject(ScheduleItemDao.class).countWhereFromBetween(TimeHelper.getInstance().getDate(2005, 2, 1),TimeHelper.getInstance().getDate(2005, 2, 28)));
+		//AssertionHelper.getInstance().assertEquals(2l, inject(ScheduleItemDao.class).countWhereFromBetween(TimeHelper.getInstance().getDate(2005, 3, 1),TimeHelper.getInstance().getDate(2005, 3, 31)));
+		AssertionHelper.getInstance().assertEquals(2l, inject(ScheduleItemDao.class).countWhereFromBetween(TimeHelper.getInstance().getDate(2005, 1, 1),TimeHelper.getInstance().getDate(2005, 3, 31)));
+		//System.out.println("1 : "+inject(ScheduleItemDao.class).readWhereFromBetween(TimeHelper.getInstance().getDate(2005, 1, 1),TimeHelper.getInstance().getDate(2005, 3, 31)));
 		
-		System.out.println("2 : "+inject(ScheduleItemDao.class).readWhereFromBetween(TimeHelper.getInstance().getDate(2005, 4, 1),TimeHelper.getInstance().getDate(2005, 6, 30)));
+		AssertionHelper.getInstance().assertEquals(2l, inject(ScheduleItemDao.class).countWhereFromBetween(TimeHelper.getInstance().getDate(2005, 4, 1),TimeHelper.getInstance().getDate(2005, 6, 30)));
+		//System.out.println("2 : "+inject(ScheduleItemDao.class).readWhereFromBetween(TimeHelper.getInstance().getDate(2005, 4, 1),TimeHelper.getInstance().getDate(2005, 6, 30)));
 		
-		System.out.println("3 : "+inject(ScheduleItemDao.class).readWhereFromBetween(TimeHelper.getInstance().getDate(2005, 1, 1),TimeHelper.getInstance().getDate(2005, 6, 30)));
+		AssertionHelper.getInstance().assertEquals(3l, inject(ScheduleItemDao.class).countWhereFromBetween(TimeHelper.getInstance().getDate(2005, 1, 1),TimeHelper.getInstance().getDate(2005, 6, 30)));
+		//System.out.println("3 : "+inject(ScheduleItemDao.class).readWhereFromBetween(TimeHelper.getInstance().getDate(2005, 1, 1),TimeHelper.getInstance().getDate(2005, 6, 30)));
 	}
    
 	//@Test

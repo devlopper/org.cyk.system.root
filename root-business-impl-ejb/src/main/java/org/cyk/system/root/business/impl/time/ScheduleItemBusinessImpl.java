@@ -26,7 +26,7 @@ public class ScheduleItemBusinessImpl extends AbstractCollectionItemBusinessImpl
 
 	@Override
 	public Collection<EventHelper.Event> findEvents(Date from, Date to) {
-		Collection<ScheduleItem> scheduleItems = inject(ScheduleItemBusiness.class).findAll();
+		Collection<ScheduleItem> scheduleItems = inject(ScheduleItemDao.class).readWhereFromBetween(from, to);
 		Collection<EventHelper.Event> events = new ArrayList<>();
 		for(ScheduleItem scheduleItem : scheduleItems){
 			events.addAll(new EventHelper.Event.Builder.Interval.Adapter.Default()
