@@ -42,6 +42,7 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 			,@AttributeOverride(name=Instant.FIELD_DAY_OF_WEEK,column=@Column(name=COLUMN_FROM_DAY_OF_WEEK))
 			,@AttributeOverride(name=Instant.FIELD_MONTH_OF_YEAR,column=@Column(name=COLUMN_FROM_MONTH_OF_YEAR))
 			,@AttributeOverride(name=Instant.FIELD_YEAR,column=@Column(name=COLUMN_FROM_YEAR))
+			,@AttributeOverride(name=Instant.FIELD_DATE,column=@Column(name=COLUMN_FROM_DATE))
 	})
 	private Instant from;
 	
@@ -55,6 +56,7 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 			,@AttributeOverride(name=Instant.FIELD_DAY_OF_WEEK,column=@Column(name=COLUMN_TO_DAY_OF_WEEK))
 			,@AttributeOverride(name=Instant.FIELD_MONTH_OF_YEAR,column=@Column(name=COLUMN_TO_MONTH_OF_YEAR))
 			,@AttributeOverride(name=Instant.FIELD_YEAR,column=@Column(name=COLUMN_TO_YEAR))
+			,@AttributeOverride(name=Instant.FIELD_DATE,column=@Column(name=COLUMN_TO_DATE))
 	})
 	private Instant to;
 	
@@ -110,6 +112,7 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 	public static final String COLUMN_FROM_MINUTE_OF_HOUR = COLUMN_FROM_PREFIX+Instant.COLUMN_MINUTE_OF_HOUR;
 	public static final String COLUMN_FROM_SECOND_OF_MINUTE = COLUMN_FROM_PREFIX+Instant.COLUMN_SECOND_OF_MINUTE;
 	public static final String COLUMN_FROM_MILLISECOND_OF_SECOND = COLUMN_FROM_PREFIX+Instant.COLUMN_MILLISECOND_OF_SECOND;
+	public static final String COLUMN_FROM_DATE = COLUMN_FROM_PREFIX+Instant.COLUMN_DATE;
 	public static final String COLUMN_FROM_DAY_OF_WEEK = COLUMN_FROM_PREFIX+Instant.COLUMN_DAY_OF_WEEK;
 	
 	private static final String COLUMN_TO_PREFIX = "to_";
@@ -120,6 +123,7 @@ public class InstantInterval extends AbstractModelElement implements Serializabl
 	public static final String COLUMN_TO_MINUTE_OF_HOUR = COLUMN_TO_PREFIX+Instant.COLUMN_MINUTE_OF_HOUR;
 	public static final String COLUMN_TO_SECOND_OF_MINUTE = COLUMN_TO_PREFIX+Instant.COLUMN_SECOND_OF_MINUTE;
 	public static final String COLUMN_TO_MILLISECOND_OF_SECOND = COLUMN_TO_PREFIX+Instant.COLUMN_MILLISECOND_OF_SECOND;
+	public static final String COLUMN_TO_DATE = COLUMN_TO_PREFIX+Instant.COLUMN_DATE;
 	public static final String COLUMN_TO_DAY_OF_WEEK = COLUMN_TO_PREFIX+Instant.COLUMN_DAY_OF_WEEK;
 
 	public static final String COLUMN_DISTANCE_IN_MILLISECOND = "distanceInMillisecond";

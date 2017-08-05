@@ -16,7 +16,7 @@ public class InstantDetails extends AbstractModelElementOutputDetails<Instant> i
 
 	private static final long serialVersionUID = 1307822857551633645L;
 
-	@Input @InputText private String year,monthOfYear,dayOfMonth,dayOfWeek,hourOfDay,minuteOfHour,secondOfMinute,millisecondOfSecond;
+	@Input @InputText private String year,monthOfYear,dayOfMonth,dayOfWeek,hourOfDay,minuteOfHour,secondOfMinute,millisecondOfSecond,date;
 	
 	public InstantDetails(Instant instant) {
 		super(instant);
@@ -41,6 +41,7 @@ public class InstantDetails extends AbstractModelElementOutputDetails<Instant> i
 		minuteOfHour = formatNumber(instant.getMinuteOfHour());
 		secondOfMinute = formatNumber(instant.getSecondOfMinute());
 		millisecondOfSecond = formatNumber(instant.getMillisecondOfSecond());
+		date = formatDateTime(instant.getDate());
 		return this;
 	}
 	
@@ -52,5 +53,6 @@ public class InstantDetails extends AbstractModelElementOutputDetails<Instant> i
 	public static final String FIELD_MINUTE_OF_HOUR = "minuteOfHour";
 	public static final String FIELD_SECOND_OF_MINUTE = "secondOfMinute";
 	public static final String FIELD_MILLISECOND_OF_SECOND = "millisecondOfSecond";
+	public static final String FIELD_DATE = "date";
 	
 }

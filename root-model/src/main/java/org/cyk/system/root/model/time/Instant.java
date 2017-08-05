@@ -1,13 +1,13 @@
 package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -18,6 +18,10 @@ import org.cyk.system.root.model.search.ShortSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.TimeHelper;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Embeddable @Getter @Setter @Accessors(chain=true)
 public class Instant extends AbstractModelElement implements Serializable {
@@ -32,6 +36,9 @@ public class Instant extends AbstractModelElement implements Serializable {
 	@Column(name=COLUMN_MINUTE_OF_HOUR)			private Byte minuteOfHour;
 	@Column(name=COLUMN_SECOND_OF_MINUTE)		private Byte secondOfMinute;
 	@Column(name=COLUMN_MILLISECOND_OF_SECOND)	private Short millisecondOfSecond;
+	
+	@Column(name=COLUMN_DATE) @Temporal(TemporalType.TIMESTAMP)	private Date date;
+	private @Transient Boolean synchronizeDate = Boolean.TRUE;
 	
 	public TimeHelper.Instant getTimeHelperInstant(){
 		return new TimeHelper.Instant(year, monthOfYear, dayOfMonth, dayOfWeek, hourOfDay, minuteOfHour, secondOfMinute, millisecondOfSecond);
@@ -74,7 +81,7 @@ public class Instant extends AbstractModelElement implements Serializable {
 	public static final String FIELD_MINUTE_OF_HOUR = "minuteOfHour";
 	public static final String FIELD_SECOND_OF_MINUTE = "secondOfMinute";
 	public static final String FIELD_MILLISECOND_OF_SECOND = "millisecondOfSecond";
-	
+	public static final String FIELD_DATE = "date";
 	
 	public static final String COLUMN_PREFIX = "instant_";
 	public static final String COLUMN_YEAR = COLUMN_PREFIX+FIELD_YEAR;
@@ -85,6 +92,7 @@ public class Instant extends AbstractModelElement implements Serializable {
 	public static final String COLUMN_MINUTE_OF_HOUR = COLUMN_PREFIX+FIELD_MINUTE_OF_HOUR;
 	public static final String COLUMN_SECOND_OF_MINUTE = COLUMN_PREFIX+FIELD_SECOND_OF_MINUTE;
 	public static final String COLUMN_MILLISECOND_OF_SECOND = COLUMN_PREFIX+FIELD_MILLISECOND_OF_SECOND;
+	public static final String COLUMN_DATE = COLUMN_PREFIX+FIELD_DATE;
 	
 	/**/
 	
@@ -101,6 +109,7 @@ public class Instant extends AbstractModelElement implements Serializable {
 		private ByteSearchCriteria minuteOfHour = new ByteSearchCriteria();
 		private ByteSearchCriteria secondOfMinute = new ByteSearchCriteria();
 		private ShortSearchCriteria millisecondOfSecond = new ShortSearchCriteria();
+		//private LongSearchCriteria millisecond = new LongSearchCriteria();
 
 		@Override
 		public void set(String value) {
