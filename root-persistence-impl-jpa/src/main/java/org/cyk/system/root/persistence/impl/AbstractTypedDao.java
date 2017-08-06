@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -25,6 +26,7 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.Abst
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
 
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
 
@@ -39,7 +41,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria,readByCriteriaCodeExcluded,countByCriteriaCodeExcluded
 		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode,readByIdentifiers,readFirstWhereExistencePeriodFromDateIsLessThan
 		,readWhereExistencePeriodFromDateIsLessThan,countWhereExistencePeriodFromDateIsLessThan
-		,readWhereExistencePeriodFromDateIsGreaterThan,countWhereExistencePeriodFromDateIsGreaterThan;
+		,readWhereExistencePeriodFromDateIsGreaterThan,countWhereExistencePeriodFromDateIsGreaterThan,readWhereExistencePeriodCross,countWhereExistencePeriodCross;
 	/*
 	@SuppressWarnings("unchecked")
 	@Override
@@ -154,6 +156,25 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			registerNamedQuery(readByCriteriaCodeExcluded, getReadByCriteriaQueryCodeExcluded(readByGlobalIdentifierSearchCriteriaCodeExcludedQuery));
 		}
 		// record.globalIdentifier.code NOT IN :exceludedCodes OR
+		
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereExistencePeriodCross())) {
+			registerNamedQuery(readWhereExistencePeriodCross, new StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage(clazz.getSimpleName())
+					.setFieldName("globalIdentifier.existencePeriod").where().lp().bw("fromDate").or().bw("toDate").rp().or().lp().lte("fromDate","fromFromDate").and().gte("toDate","toToDate")
+					.rp().getParent().execute());	
+		}
+		
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readWhereExistencePeriodCross(Date from, Date to) {
+		return namedQuery(readWhereExistencePeriodCross).parameter("fromFromDate", from).parameter("toFromDate", to)
+				.parameter("fromToDate", from).parameter("toToDate", to).resultMany();
+	}
+	
+	@Override
+	public Long countWhereExistencePeriodCross(Date from, Date to) {
+		return countNamedQuery(countWhereExistencePeriodCross).parameter("fromFromDate", from).parameter("toToDate", to)
+				.parameter("fromToDate", from).parameter("toToDate", to).resultOne();
 	}
 	
 	@Override
@@ -486,6 +507,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		private Boolean readByGlobalIdentifierSearchCriteria = Boolean.TRUE;
 		private Boolean readBySearchCriteria = Boolean.TRUE;
 		
+		private Boolean readWhereExistencePeriodCross = Boolean.TRUE;
 		/**/
 		
 		/**/

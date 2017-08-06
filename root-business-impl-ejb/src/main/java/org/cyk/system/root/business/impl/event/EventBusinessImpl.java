@@ -1,7 +1,9 @@
 package org.cyk.system.root.business.impl.event;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -20,6 +22,7 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.event.EventDao;
 import org.cyk.system.root.persistence.api.event.EventPartyDao;
 import org.cyk.system.root.persistence.api.event.EventReminderDao;
+import org.cyk.utility.common.helper.EventHelper;
 
 public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Event, EventDao> implements EventBusiness,Serializable {
 
@@ -122,18 +125,18 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
 		return dao.countWhereFromDateGreaterThanByDateByParties(universalTimeCoordinated(),parties);
 	}
 
-	/*
 	@Override
-	public Collection<Event> findPersonBirthDateAnniversariesByPeriod(Period period) {
-		return dao.readPersonBirthDateByMonthIndexes(timeBusiness.findMonthIndexes(period));
+	public Collection<EventHelper.Event> findEvents(Date from, Date to) {
+		Collection<EventHelper.Event> events = new ArrayList<>();
+		for(Event event : dao.readWhereExistencePeriodCross(from, to)){
+			events.add(new EventHelper.Event.Builder.Property.Adapter.Default()
+				.setProperty(EventHelper.Event.Builder.PROPERTY_NAME, event.getName())
+				.setProperty(EventHelper.Event.Builder.PROPERTY_NAME_FROM, event.getExistencePeriod().getFromDate())
+				.setProperty(EventHelper.Event.Builder.PROPERTY_NAME_TO, event.getExistencePeriod().getToDate())
+				.execute());
+		}
+		return events;
 	}
 
-	@Override
-	public Long countPersonBirthDateAnniversariesByPeriod(Period period) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	*/
-	
 
 }

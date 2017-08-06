@@ -1,12 +1,14 @@
 package org.cyk.system.root.business.api.event;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.cyk.system.root.business.api.time.AbstractIdentifiablePeriodBusiness;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.event.Event.SearchCriteria;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.Period;
+import org.cyk.utility.common.helper.EventHelper;
 
 public interface EventBusiness extends AbstractIdentifiablePeriodBusiness<Event> {
     
@@ -24,8 +26,7 @@ public interface EventBusiness extends AbstractIdentifiablePeriodBusiness<Event>
     
     Collection<Event> findOnComings(Collection<Party> parties);
     Long countOnComings(Collection<Party> parties);
-    /*
-    Collection<Event> findPersonBirthDateAnniversariesByPeriod(Period period);
-    Long countPersonBirthDateAnniversariesByPeriod(Period period);
-    */
+    
+    Collection<EventHelper.Event> findEvents(Date from,Date to);
+    
 }

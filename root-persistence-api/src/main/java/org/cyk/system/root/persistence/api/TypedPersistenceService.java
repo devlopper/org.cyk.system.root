@@ -1,6 +1,7 @@
 package org.cyk.system.root.persistence.api;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.cyk.system.root.model.Identifiable;
 
@@ -39,4 +40,6 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
   //TODO to be removed
     Collection<IDENTIFIABLE> readDuplicates(IDENTIFIABLE identifiable);
 
+    Collection<IDENTIFIABLE> readWhereExistencePeriodCross(Date from,Date to);
+	Long countWhereExistencePeriodCross(Date from,Date to);
 }

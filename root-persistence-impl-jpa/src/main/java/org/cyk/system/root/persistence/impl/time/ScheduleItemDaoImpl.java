@@ -9,7 +9,6 @@ import org.cyk.system.root.model.time.ScheduleItem;
 import org.cyk.system.root.persistence.api.time.ScheduleItemDao;
 import org.cyk.system.root.persistence.impl.AbstractCollectionItemDaoImpl;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
-import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Where;
 
 public class ScheduleItemDaoImpl extends AbstractCollectionItemDaoImpl<ScheduleItem,Schedule> implements ScheduleItemDao,Serializable {
 
@@ -20,12 +19,9 @@ public class ScheduleItemDaoImpl extends AbstractCollectionItemDaoImpl<ScheduleI
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();		
-		StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage jpql = new StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage();
-		Where where = new Where.Adapter.Default.JavaPersistenceQueryLanguage().setStructuredQueryLanguageBuilder(jpql);		
-		where.leftParathensis().addBetween("r.instantInterval.from.date").or().addBetween("r.instantInterval.to.date").rightParathensis().or()
-		.leftParathensis().addLessThanOrEqual("r.instantInterval.from.date","fromDate").and().addGreaterThanOrEqual("r.instantInterval.to.date","toDate").rightParathensis()
-		;
-		registerNamedQuery(readWhereFromBetween, jpql.addTupleCollection("ScheduleItem", "r").addWhere(where.execute()).execute());
+		registerNamedQuery(readWhereFromBetween, new StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage("ScheduleItem")
+				.setFieldName("instantInterval").where().lp().bw("from.date").or().bw("to.date").rp().or().lp().lte("from.date","fromDate").and().gte("to.date","toDate")
+				.rp().getParent().execute());
 	}
 	
 	@Override
