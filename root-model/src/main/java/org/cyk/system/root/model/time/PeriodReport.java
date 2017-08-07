@@ -26,19 +26,21 @@ public class PeriodReport extends AbstractGeneratable<PeriodReport> implements S
 		toDate = format(((Period)source).getToDate());
 		numberOfMillisecond.setSource(((Period)source).getNumberOfMillisecond());
 		
-		fromDateToDate = new TimeHelper.Stringifier.Dates.Adapter.Default(new TimeHelper.Stringifier.Date[]{
-			(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getFromDate())
-				.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_ONLY)
-			,(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getToDate())
-				.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_ONLY)
-		}).execute();
-		
-		fromYearToYear = new TimeHelper.Stringifier.Dates.Adapter.Default(new TimeHelper.Stringifier.Date[]{
+		if(((Period)source).getFromDate()!=null && ((Period)source).getToDate()!=null){
+			fromDateToDate = new TimeHelper.Stringifier.Dates.Adapter.Default(new TimeHelper.Stringifier.Date[]{
 				(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getFromDate())
-					.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_YEAR_ONLY)
+					.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_ONLY)
 				,(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getToDate())
-					.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_YEAR_ONLY)
+					.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_ONLY)
 			}).execute();
+			
+			fromYearToYear = new TimeHelper.Stringifier.Dates.Adapter.Default(new TimeHelper.Stringifier.Date[]{
+					(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getFromDate())
+						.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_YEAR_ONLY)
+					,(TimeHelper.Stringifier.Date) new TimeHelper.Stringifier.Date.Adapter.Default(((Period)source).getToDate())
+						.setProperty(TimeHelper.Stringifier.PROPERTY_NAME_TIME_PART, Constant.Date.Part.DATE_YEAR_ONLY)
+				}).execute();
+		}
 	}
 	
 	@Override
