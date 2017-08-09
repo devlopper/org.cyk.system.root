@@ -174,6 +174,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	 
     protected void registerResourceBundle(String id, ClassLoader aClassLoader) {
 		languageBusiness.registerResourceBundle(id, aClassLoader);
+		org.cyk.utility.common.helper.StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put(id, aClassLoader);
 	}
     
     protected <T> void registerValidator(Class<T> clazz,AbstractValidator<T> validator){
