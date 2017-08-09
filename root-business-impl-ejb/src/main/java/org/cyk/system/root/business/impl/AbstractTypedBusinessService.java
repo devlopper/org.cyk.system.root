@@ -31,6 +31,7 @@ import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.IdentifiableRuntimeCollection;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
@@ -58,6 +59,7 @@ import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -65,6 +67,7 @@ import org.cyk.utility.common.converter.Converter;
 import org.cyk.utility.common.converter.ManyConverter;
 import org.cyk.utility.common.converter.OneConverter;
 import org.cyk.utility.common.formatter.DateFormatter;
+import org.cyk.utility.common.helper.InstanceHelper;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -165,6 +168,20 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			setProperty(identifiable,property);
 		if(isAutoSetPropertyValueClass(property = commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE), identifiable.getClass()))
 			setProperty(identifiable,property);
+	}
+	
+	protected <ITEM extends AbstractIdentifiable> void synchronise(Class<ITEM> itemClass,IDENTIFIABLE master,IdentifiableRuntimeCollection<ITEM> collection){
+		if(collection.isSynchonizationEnabled()){
+			TypedDao<ITEM> dao = inject(PersistenceInterfaceLocator.class).injectTyped(itemClass);
+			@SuppressWarnings("unchecked")
+			Collection<ITEM> database = (Collection<ITEM>) InstanceHelper.getInstance().call(dao,Collection.class,"readBy"+master.getClass().getSimpleName(),master);
+			synchronise(itemClass, database, collection.getCollection());
+		}
+	}
+	
+	protected <ITEM extends AbstractIdentifiable> void synchronise(Class<ITEM> itemClass,Collection<ITEM> database,Collection<ITEM> runtime){
+		delete(itemClass,database, runtime);
+		inject(BusinessInterfaceLocator.class).injectTyped(itemClass).update(runtime);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

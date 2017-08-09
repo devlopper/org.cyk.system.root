@@ -12,6 +12,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.PersistenceException;
 
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
@@ -29,8 +31,6 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
 import org.cyk.utility.common.helper.ThrowableHelper;
-
-import lombok.Setter;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class ExceptionUtils extends AbstractBean implements Serializable {
@@ -171,10 +171,8 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     		//cause = ThrowableHelper.getInstance().getInstanceOf(throwable, RuntimeException.class);
     		if(cause==null)
     			cause = throwable.getCause();
-    		if(cause==null)
-    			message = throwable.toString();
-    		else
-    			message = cause.toString();
+    		
+    		message = org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(cause == null ? throwable : cause );
     	}else{
     		List<String> tokens = DatabaseManagementSystemMessageProvider.Adapter.DEFAULT.getTokens(cause);	
     		message = languageBusiness.findText(tokens.remove(0),tokens.toArray());	
