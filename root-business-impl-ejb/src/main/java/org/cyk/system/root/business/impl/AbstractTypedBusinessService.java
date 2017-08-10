@@ -43,6 +43,7 @@ import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
+import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
@@ -57,6 +58,7 @@ import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifier
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
@@ -68,6 +70,7 @@ import org.cyk.utility.common.converter.ManyConverter;
 import org.cyk.utility.common.converter.OneConverter;
 import org.cyk.utility.common.formatter.DateFormatter;
 import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.MethodHelper;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -174,7 +177,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		if(collection.isSynchonizationEnabled()){
 			TypedDao<ITEM> dao = inject(PersistenceInterfaceLocator.class).injectTyped(itemClass);
 			@SuppressWarnings("unchecked")
-			Collection<ITEM> database = (Collection<ITEM>) InstanceHelper.getInstance().call(dao,Collection.class,"readBy"+master.getClass().getSimpleName(),master);
+			Collection<ITEM> database = (Collection<ITEM>) InstanceHelper.getInstance().call(dao,Collection.class,"readBy"+master.getClass().getSimpleName()
+					,MethodHelper.Method.Parameter.buildArray(master.getClass(),master));
 			synchronise(itemClass, database, collection.getCollection());
 		}
 	}
@@ -366,6 +370,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	protected void beforeDelete(IDENTIFIABLE identifiable){
 		inject(ValidationPolicy.class).validateDelete(identifiable);
 		deleteFileIdentifiableGlobalIdentifier(identifiable);
+		deleteMetricCollectionIdentifiableGlobalIdentifier(identifiable);
 		beforeDelete(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.DELETE);
 		inject(GenericBusiness.class).deleteIfIdentified(findRelatedInstances(identifiable,Boolean.TRUE,null));
@@ -377,6 +382,15 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}else{
 			Collection<FileIdentifiableGlobalIdentifier> fileIdentifiableGlobalIdentifiers = inject(FileIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
 			inject(FileIdentifiableGlobalIdentifierBusiness.class).delete(fileIdentifiableGlobalIdentifiers);	
+		}
+	}
+	
+	protected void deleteMetricCollectionIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
+		if(identifiable instanceof MetricCollectionIdentifiableGlobalIdentifier || identifiable instanceof MetricCollection || identifiable instanceof File || identifiable instanceof Location){
+			
+		}else{
+			Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = inject(MetricCollectionIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
+			inject(MetricCollectionIdentifiableGlobalIdentifierBusiness.class).delete(metricCollectionIdentifiableGlobalIdentifiers);	
 		}
 	}
 	

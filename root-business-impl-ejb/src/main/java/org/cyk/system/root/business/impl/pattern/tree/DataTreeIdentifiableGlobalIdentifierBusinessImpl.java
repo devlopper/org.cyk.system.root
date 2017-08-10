@@ -18,25 +18,4 @@ public class DataTreeIdentifiableGlobalIdentifierBusinessImpl extends AbstractJo
 		super(dao); 
 	}
 	
-	@Override
-	public DataTreeIdentifiableGlobalIdentifier create(DataTreeIdentifiableGlobalIdentifier dataTreeIdentifiableGlobalIdentifier) {
-		//if(fileIdentifiableGlobalIdentifier.getFile().getIdentifier()==null)
-		//	RootBusinessLayer.getInstance().getFileBusiness().create(fileIdentifiableGlobalIdentifier.getFile());
-		return super.create(dataTreeIdentifiableGlobalIdentifier);
-	}
-	
-	@Override
-	public DataTreeIdentifiableGlobalIdentifier update(DataTreeIdentifiableGlobalIdentifier dataTreeIdentifiableGlobalIdentifier) {
-		//RootBusinessLayer.getInstance().getFileBusiness().update(fileIdentifiableGlobalIdentifier.getFile());
-		return super.update(dataTreeIdentifiableGlobalIdentifier);
-	}
-	
-	@Override
-	public DataTreeIdentifiableGlobalIdentifier delete(DataTreeIdentifiableGlobalIdentifier dataTreeIdentifiableGlobalIdentifier) {
-		//RootBusinessLayer.getInstance().getFileBusiness().delete(dataTreeIdentifiableGlobalIdentifier.getFile());
-		//fileIdentifiableGlobalIdentifier.setFile(null);
-		//fileIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(null);
-		return super.delete(dataTreeIdentifiableGlobalIdentifier);
-	}
-	
 }

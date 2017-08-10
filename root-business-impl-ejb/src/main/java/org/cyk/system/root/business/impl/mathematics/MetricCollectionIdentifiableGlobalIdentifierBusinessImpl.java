@@ -30,23 +30,16 @@ public class MetricCollectionIdentifiableGlobalIdentifierBusinessImpl extends Ab
 	}
 	
 	@Override
-	public MetricCollectionIdentifiableGlobalIdentifier create(MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier) {
+	protected void beforeCreate(MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier) {
+		super.beforeCreate(metricCollectionIdentifiableGlobalIdentifier);
 		createIfNotIdentified(metricCollectionIdentifiableGlobalIdentifier.getMetricCollection());
 		createIfNotIdentified(metricCollectionIdentifiableGlobalIdentifier.getValue());
-		return super.create(metricCollectionIdentifiableGlobalIdentifier);
 	}
 	
 	@Override
-	public MetricCollectionIdentifiableGlobalIdentifier update(MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier) {
+	protected void beforeUpdate(MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier) {
+		super.beforeUpdate(metricCollectionIdentifiableGlobalIdentifier);
 		inject(MetricCollectionBusiness.class).update(metricCollectionIdentifiableGlobalIdentifier.getMetricCollection());
-		return super.update(metricCollectionIdentifiableGlobalIdentifier);
-	}
-	
-	@Override
-	public MetricCollectionIdentifiableGlobalIdentifier delete(MetricCollectionIdentifiableGlobalIdentifier metricCollectionIdentifiableGlobalIdentifier) {
-		metricCollectionIdentifiableGlobalIdentifier.setMetricCollection(null);
-		metricCollectionIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(null);
-		return super.delete(metricCollectionIdentifiableGlobalIdentifier);
 	}
 	
 	@Override

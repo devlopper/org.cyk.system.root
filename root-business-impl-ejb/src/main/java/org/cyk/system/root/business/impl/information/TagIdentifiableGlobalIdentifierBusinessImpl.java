@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.information.TagBusiness;
 import org.cyk.system.root.business.api.information.TagIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.globalidentification.AbstractJoinGlobalIdentifierBusinessImpl;
 import org.cyk.system.root.model.information.TagIdentifiableGlobalIdentifier;
@@ -17,27 +16,6 @@ public class TagIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGlo
 	@Inject
 	public TagIdentifiableGlobalIdentifierBusinessImpl(TagIdentifiableGlobalIdentifierDao dao) {
 		super(dao); 
-	}
-	
-	@Override
-	public TagIdentifiableGlobalIdentifier create(TagIdentifiableGlobalIdentifier tagIdentifiableGlobalIdentifier) {
-		if(tagIdentifiableGlobalIdentifier.getTag().getIdentifier()==null)
-			inject(TagBusiness.class).create(tagIdentifiableGlobalIdentifier.getTag());
-		return super.create(tagIdentifiableGlobalIdentifier);
-	}
-	
-	@Override
-	public TagIdentifiableGlobalIdentifier update(TagIdentifiableGlobalIdentifier tagIdentifiableGlobalIdentifier) {
-		inject(TagBusiness.class).update(tagIdentifiableGlobalIdentifier.getTag());
-		return super.update(tagIdentifiableGlobalIdentifier);
-	}
-	
-	@Override
-	public TagIdentifiableGlobalIdentifier delete(TagIdentifiableGlobalIdentifier tagIdentifiableGlobalIdentifier) {
-		inject(TagBusiness.class).delete(tagIdentifiableGlobalIdentifier.getTag());
-		tagIdentifiableGlobalIdentifier.setTag(null);
-		tagIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(null);
-		return super.delete(tagIdentifiableGlobalIdentifier);
 	}
 	
 }

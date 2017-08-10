@@ -87,11 +87,13 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
     @Override
     protected void beforeDelete(ContactCollection collection) {
     	super.beforeDelete(collection);
+    	/*
     	delete(collection.getPhoneNumbers(), collection);
     	delete(collection.getLocations(), collection);
     	delete(collection.getElectronicMails(), collection);
     	delete(collection.getPostalBoxs(), collection);
     	delete(collection.getWebsites(), collection);
+    	*/
     }
          
     private void configure(Collection<? extends Contact> contacts,ContactCollection collection){
@@ -136,7 +138,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
         }
         
     }
-        
+    /*   
     private void delete(Collection<? extends Contact> contacts,ContactCollection collection){
         if(contacts==null)
             return;
@@ -144,7 +146,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
         	contact.setCollection(null);
         	contactDao.delete(contact);
         }
-    }
+    }*/
 
 	@Override
 	public ContactCollection instanciateOne(String[] phoneNumbers, String[] electronicMails, String[] postalBoxes,String[] websites) {

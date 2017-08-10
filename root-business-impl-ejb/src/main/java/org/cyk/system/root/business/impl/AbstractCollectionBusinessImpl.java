@@ -132,12 +132,6 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	protected void beforeDelete(COLLECTION collection) {
 		super.beforeDelete(collection);
 		getItemBusiness().delete(getItemDao().readByCollection(collection));
-		/*
-		for(ITEM item : getItemDao().readByCollection(collection)){
-			item.setCollection(null);
-			getItemBusiness().delete(item);
-		}
-		*/
 	}
 
 	@SuppressWarnings("unchecked")
