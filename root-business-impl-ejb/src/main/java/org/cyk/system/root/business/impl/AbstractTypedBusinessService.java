@@ -28,6 +28,7 @@ import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBus
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
+import org.cyk.system.root.business.api.mathematics.MetricValueIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -45,6 +46,7 @@ import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricValue;
+import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
@@ -60,6 +62,7 @@ import org.cyk.system.root.persistence.api.file.report.ReportTemplateDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
+import org.cyk.system.root.persistence.api.mathematics.MetricValueIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
@@ -185,7 +188,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	protected <ITEM extends AbstractIdentifiable> void synchronise(Class<ITEM> itemClass,Collection<ITEM> database,Collection<ITEM> runtime){
 		delete(itemClass,database, runtime);
-		inject(BusinessInterfaceLocator.class).injectTyped(itemClass).update(runtime);
+		inject(BusinessInterfaceLocator.class).injectTyped(itemClass).save(runtime);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -370,6 +373,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	protected void beforeDelete(IDENTIFIABLE identifiable){
 		inject(ValidationPolicy.class).validateDelete(identifiable);
 		deleteFileIdentifiableGlobalIdentifier(identifiable);
+		deleteMetricValueIdentifiableGlobalIdentifier(identifiable);
 		deleteMetricCollectionIdentifiableGlobalIdentifier(identifiable);
 		beforeDelete(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.DELETE);
@@ -391,6 +395,15 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}else{
 			Collection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers = inject(MetricCollectionIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
 			inject(MetricCollectionIdentifiableGlobalIdentifierBusiness.class).delete(metricCollectionIdentifiableGlobalIdentifiers);	
+		}
+	}
+	
+	protected void deleteMetricValueIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
+		if(identifiable instanceof MetricValueIdentifiableGlobalIdentifier || identifiable instanceof MetricValue || identifiable instanceof File || identifiable instanceof Location){
+			
+		}else{
+			Collection<MetricValueIdentifiableGlobalIdentifier> metricValueIdentifiableGlobalIdentifiers = inject(MetricValueIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
+			inject(MetricValueIdentifiableGlobalIdentifierBusiness.class).delete(metricValueIdentifiableGlobalIdentifiers);	
 		}
 	}
 	

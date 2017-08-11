@@ -57,13 +57,13 @@ public class MetricValueIdentifiableGlobalIdentifierBusinessImpl extends Abstrac
 		return super.update(metricValueIdentifiableGlobalIdentifier);
 	}
 	
-	@Override
+	/*@Override
 	public MetricValueIdentifiableGlobalIdentifier delete(MetricValueIdentifiableGlobalIdentifier metricValueIdentifiableGlobalIdentifier) {
 		inject(MetricValueBusiness.class).delete(metricValueIdentifiableGlobalIdentifier.getMetricValue());
 		metricValueIdentifiableGlobalIdentifier.setMetricValue(null);
 		metricValueIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(null);
 		return super.delete(metricValueIdentifiableGlobalIdentifier);
-	}
+	}*/
 	
 	@Override
 	public void delete(Collection<MetricCollection> metricCollections,Collection<? extends AbstractIdentifiable> identifiables) {
