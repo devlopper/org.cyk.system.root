@@ -180,7 +180,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		if(collection.isSynchonizationEnabled()){
 			TypedDao<ITEM> dao = inject(PersistenceInterfaceLocator.class).injectTyped(itemClass);
 			@SuppressWarnings("unchecked")
-			Collection<ITEM> database = (Collection<ITEM>) InstanceHelper.getInstance().call(dao,Collection.class,"readBy"+master.getClass().getSimpleName()
+			Collection<ITEM> database = (Collection<ITEM>) MethodHelper.getInstance().call(dao,Collection.class,"readBy"+master.getClass().getSimpleName()
 					,MethodHelper.Method.Parameter.buildArray(master.getClass(),master));
 			synchronise(itemClass, database, collection.getCollection());
 		}

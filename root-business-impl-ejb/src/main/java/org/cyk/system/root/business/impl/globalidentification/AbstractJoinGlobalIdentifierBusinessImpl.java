@@ -14,7 +14,7 @@ import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifi
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdentifierDao;
 import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.StringHelper.CaseType;
 
@@ -51,7 +51,7 @@ public abstract class AbstractJoinGlobalIdentifierBusinessImpl<IDENTIFIABLE exte
 		if(aClass==null){
 			return;
 		}
-		InstanceHelper.getInstance().callSetMethod(identifiable, StringHelper.getInstance().applyCaseType(aClass.getSimpleName(), CaseType.FU), aClass, null);
+		MethodHelper.getInstance().callSet(identifiable, StringHelper.getInstance().applyCaseType(aClass.getSimpleName(), CaseType.FU), aClass, null);
 	}
 	
 	@Override
