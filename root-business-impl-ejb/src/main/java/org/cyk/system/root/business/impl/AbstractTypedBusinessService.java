@@ -72,7 +72,6 @@ import org.cyk.utility.common.converter.Converter;
 import org.cyk.utility.common.converter.ManyConverter;
 import org.cyk.utility.common.converter.OneConverter;
 import org.cyk.utility.common.formatter.DateFormatter;
-import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
