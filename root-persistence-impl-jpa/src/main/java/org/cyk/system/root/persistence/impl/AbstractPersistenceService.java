@@ -45,6 +45,7 @@ import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.LoggingHelper;
 
 import lombok.Getter;
 
@@ -108,10 +109,34 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	}
 	
 	@Override
-    public IDENTIFIABLE create(IDENTIFIABLE object) {
+    public IDENTIFIABLE create(final IDENTIFIABLE object) {
+		/*new LoggingHelper.Run.Adapter.Default(object.getClass(),"create"){
+			private static final long serialVersionUID = 1L;
+			
+			public void addParameters(org.cyk.utility.common.helper.LoggingHelper.Message.Builder builder, Boolean before) {
+				builder.addManyParameters(before ? "create" : "created",new Object[]{"entity",object.getClass().getSimpleName()}
+		    	,new Object[]{"code",object.getCode()},new Object[]{"identifier",object.getIdentifier()});
+			}
+			
+			public Object __execute__() {
+				entityManager.persist(object);
+				return null;
+			}
+			
+		}.execute();
+		*/
+		
+		LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("create",new Object[]{"entity",object.getClass().getSimpleName()}
+    	,new Object[]{"code",object.getCode()},new Object[]{"identifier",object.getIdentifier()}).getLogger().execute(getClass(),LoggingHelper.Logger.Level.TRACE
+    			,LoggingHelper.getInstance().getMarkerName(object.getClass().getSimpleName(),"CREATE"));
+		
 	    entityManager.persist(object);
-	    logTrace("{} persisted. {}",object.getClass().getSimpleName(),ToStringBuilder.reflectionToString(object, ToStringStyle.SHORT_PREFIX_STYLE));
-        return object;
+	    
+	    LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("created",new Object[]{"entity",object.getClass().getSimpleName()}
+    		,new Object[]{"code",object.getCode()},new Object[]{"identifier",object.getIdentifier()}).getLogger().execute(getClass(),LoggingHelper.Logger.Level.DEBUG
+    				,LoggingHelper.getInstance().getMarkerName(object.getClass().getSimpleName(),"CREATED"));
+	    
+	    return object;
     }
     
 	@Override

@@ -17,6 +17,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.persistence.api.mathematics.IntervalCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
+import org.cyk.utility.common.helper.NumberHelper;
 
 public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Interval, IntervalDao,IntervalCollection> implements IntervalBusiness,Serializable {
 
@@ -204,6 +205,9 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		return result;
 	}
 
-	
+	@Override
+	public Collection<Long> findIntegers(Interval interval) {
+		return NumberHelper.getInstance().getIntegers(findGreatestLowestValue(interval), findLowestGreatestValue(interval));
+	}
 
 }

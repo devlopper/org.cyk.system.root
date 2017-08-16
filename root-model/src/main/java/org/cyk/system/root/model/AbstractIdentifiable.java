@@ -176,6 +176,13 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getInitialized();
 	}
 	
+	public void setRequired(Boolean required){
+		getGlobalIdentifierCreateIfNull().setRequired(required);
+	}
+	public Boolean getRequired(){
+		return globalIdentifier == null ? null : globalIdentifier.getRequired();
+	}
+	
 	public void setSupportingDocument(File supportingDocument){
 		getGlobalIdentifierCreateIfNull().setSupportingDocument(supportingDocument);
 	}

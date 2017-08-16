@@ -24,5 +24,6 @@ public interface IntervalBusiness extends AbstractCollectionItemBusiness<Interva
     BigDecimal findGreatestLowestValue(Interval interval);
     
     Collection<BigDecimal> findByContains(Interval interval,Integer scale,Collection<BigDecimal> values);
-     
+    
+    Collection<Long> findIntegers(Interval interval);
 }
