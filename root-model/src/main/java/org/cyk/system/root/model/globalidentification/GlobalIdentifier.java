@@ -199,6 +199,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_USABLE = "usable";
 	public static final String FIELD_DESCRIPTION = "description";
 	public static final String FIELD_EXTERNAL_IDENTIFIER = "externalIdentifier";
+	public static final String FIELD_REQUIRED = "required";
 	
 	/**/
 	

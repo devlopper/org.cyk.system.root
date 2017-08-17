@@ -72,6 +72,7 @@ import org.cyk.utility.common.converter.Converter;
 import org.cyk.utility.common.converter.ManyConverter;
 import org.cyk.utility.common.converter.OneConverter;
 import org.cyk.utility.common.formatter.DateFormatter;
+import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
@@ -186,8 +187,16 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected <ITEM extends AbstractIdentifiable> void synchronise(Class<ITEM> itemClass,Collection<ITEM> database,Collection<ITEM> runtime){
+		LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("synchronise",new Object[]{"class",itemClass.getSimpleName()}
+    	,new Object[]{"#runtime",runtime.size()},new Object[]{"#database",database.size()}).getLogger().execute(getClass(),LoggingHelper.Logger.Level.TRACE
+    			,LoggingHelper.getInstance().getMarkerName(itemClass.getSimpleName(),"SYNCHRONISE"));
 		delete(itemClass,database, runtime);
 		inject(BusinessInterfaceLocator.class).injectTyped(itemClass).save(runtime);
+	}
+	
+	protected <ITEM extends AbstractIdentifiable> void create(Class<ITEM> itemClass,IdentifiableRuntimeCollection<ITEM> collection){
+		if(collection.isSynchonizationEnabled())
+			inject(BusinessInterfaceLocator.class).injectTyped(itemClass).create(collection.getCollection());
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

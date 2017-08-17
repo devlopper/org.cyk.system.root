@@ -769,7 +769,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 					relatedInstances.add(value);
 			}
 		}
-		logTrace("find related instance. instance {} , field names {} , result {}", identifiable,relatedInstanceFieldNames,relatedInstances);
+		//logTrace("find related instance. instance {} , field names {} , result {}", identifiable,relatedInstanceFieldNames,relatedInstances);
 		return relatedInstances;
 	}
 	
