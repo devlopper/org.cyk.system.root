@@ -112,15 +112,15 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		anActor.getPerson().setName(anActor.getName());//TODO i think it is better to align those names because there are same concept . is it ?
 		inject(PersonBusiness.class).update(anActor.getPerson());
 	}
-	
+	 
 	@Override
 	protected void beforeDelete(ACTOR actor) {
 		super.beforeDelete(actor);
 		inject(PersonBusiness.class).delete(actor.getPerson());
 		actor.setPerson(null);
 		if(actor.getImage()!=null){
-			inject(FileBusiness.class).delete(actor.getImage());
-			actor.setImage(null);
+			//inject(FileBusiness.class).delete(actor.getImage());
+			actor.setImage(null);//FIXME to be generalized
 		}
 	}
 	
