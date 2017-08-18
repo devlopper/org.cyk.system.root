@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
@@ -48,7 +49,6 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		actor.getPerson().setLastnames(commonUtils.getValueAt(names, 1));
 		return actor;
 	}
-	
 
 	@Override
 	public Collection<ACTOR> instanciateMany(String[] codes) {
@@ -118,6 +118,10 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		super.beforeDelete(actor);
 		inject(PersonBusiness.class).delete(actor.getPerson());
 		actor.setPerson(null);
+		if(actor.getImage()!=null){
+			inject(FileBusiness.class).delete(actor.getImage());
+			actor.setImage(null);
+		}
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
