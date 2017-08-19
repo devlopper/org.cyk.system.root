@@ -74,6 +74,7 @@ import org.cyk.utility.common.converter.OneConverter;
 import org.cyk.utility.common.formatter.DateFormatter;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
+import org.cyk.utility.common.helper.TimeHelper;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -270,9 +271,21 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		if(identifiable==null){
 			
 		}else{
+			Long millisecond = System.currentTimeMillis();
+			LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("create",new Object[]{"entity",identifiable.getClass().getSimpleName()}
+	    	,new Object[]{"code",identifiable.getCode()},new Object[]{"identifier",identifiable.getIdentifier()}).getLogger().execute(getClass(),LoggingHelper.Logger.Level.TRACE
+	    			,LoggingHelper.getInstance().getMarkerName(identifiable.getClass().getSimpleName(),"CREATE"));
+			
 			beforeCreate(identifiable);
 	        identifiable = dao.create(identifiable);
 	        afterCreate(identifiable);	
+	        
+	        String duration = new TimeHelper.Stringifier.Duration.Adapter.Default(System.currentTimeMillis()-millisecond).execute();
+	        
+	        LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("created",new Object[]{"entity",identifiable.getClass().getSimpleName()}
+    		,new Object[]{"code",identifiable.getCode()},new Object[]{"identifier",identifiable.getIdentifier()},new Object[]{"duration",duration}).getLogger().execute(getClass(),LoggingHelper.Logger.Level.DEBUG
+    				,LoggingHelper.getInstance().getMarkerName(identifiable.getClass().getSimpleName(),"CREATED"));
+	        
 		}
 		
         return identifiable;
@@ -442,28 +455,6 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public void delete(Collection<IDENTIFIABLE> identifiables) {
 	    for(IDENTIFIABLE identifiable : identifiables)
 	    	delete(identifiable);
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) @Deprecated
-	public IDENTIFIABLE load(Long identifier) {
-		IDENTIFIABLE identifiable = find(identifier);
-		load(identifiable);
-		return identifiable;
-	}
-
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) @Deprecated
-	public void load(IDENTIFIABLE identifiable) {
-		if(isIdentified(identifiable))
-			__load__(identifiable);
-	}
-	//TODO to be removed , use graph to load what you want
-	@Deprecated
-	protected void __load__(IDENTIFIABLE identifiable) {}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS) @Deprecated
-	public void load(Collection<IDENTIFIABLE> identifiables) {
-		for(IDENTIFIABLE identifiable : identifiables)
-			load(identifiable);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

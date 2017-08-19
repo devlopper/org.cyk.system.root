@@ -52,9 +52,4 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 		
 	}
 
-	protected void __load__(PARTY party) {
-    	if(party.getContactCollection()!=null)
-    		inject(ContactCollectionBusiness.class).load(party.getContactCollection());
-    }
-
 }

@@ -124,11 +124,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	public ACTOR findByPerson(Person person) {
 		return dao.readByPerson(person);
 	}
-	
-	protected void __load__(ACTOR actor){
-		inject(PersonBusiness.class).load(actor.getPerson());
-	}
-	
+
 	@Override
 	protected Class<? extends AbstractFieldValueSearchCriteriaSet> getSearchCriteriaClass() {
 		return AbstractActor.AbstractSearchCriteria.Default.class;

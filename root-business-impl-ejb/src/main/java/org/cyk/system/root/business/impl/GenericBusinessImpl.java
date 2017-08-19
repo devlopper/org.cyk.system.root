@@ -172,16 +172,6 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	        return update(identifiable);
 	}
 	
-	@SuppressWarnings("unchecked")
-    @Override @TransactionAttribute(TransactionAttributeType.NEVER) @Deprecated
-	public <T extends AbstractIdentifiable> T load(Class<T> aClass, Long identifier) {
-	    TypedBusiness<T> businessBean = (TypedBusiness<T>) BusinessInterfaceLocator.getInstance().injectTyped((Class<AbstractIdentifiable>) aClass);
-	    if(businessBean==null)
-	        return (T) use(aClass).find(identifier);
-	    else
-	        return businessBean.load(identifier);
-	}
-	
 	@Override 
 	public <IDENTIFIABLE extends AbstractIdentifiable> File createReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Locale locale,Map<String, Boolean> fieldSortingMap){
 		return inject(BusinessInterfaceLocator.class).injectTypedByObject(identifiable).createReportFile(identifiable, reportTemplateCode, locale,fieldSortingMap);
@@ -215,13 +205,6 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 		return createReportFiles(identifiables, reportTemplateCode,null);
 	}
 	
-	@Override
-	public AbstractIdentifiable refresh(AbstractIdentifiable identifiable) {
-	    if(identifiable.getIdentifier()==null)
-	        return identifiable;
-	    return genericDao.refresh(identifiable);
-	}
-
 	@Override
 	public void flushEntityManager() {
 		genericDaoImpl.getEntityManager().flush();

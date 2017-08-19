@@ -55,11 +55,4 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
     	return 0;
     }
 
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-    public ENUMERATION load(String code) {
-    	ENUMERATION enumeration = findByGlobalIdentifierCode(code);
-    	load(enumeration);
-    	return enumeration;
-    }
-    
 }

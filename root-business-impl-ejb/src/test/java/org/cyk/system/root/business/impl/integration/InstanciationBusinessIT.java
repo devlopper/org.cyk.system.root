@@ -45,8 +45,8 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	
     	assertThat("Is null", metricCollectionBusiness.findByGlobalIdentifierCode("MC0")==null);
     	assertThat("Is not loaded", metricCollectionBusiness.findByGlobalIdentifierCode("MC2").getItems().getCollection().isEmpty());
-    	assertThat("Is loaded", metricCollectionBusiness.load("MC2").getItems().getCollection().size()==3);
-    	assertThat("Is loaded and empty", metricCollectionBusiness.load("MC1").getItems().getCollection().size()==0);
+    	//assertThat("Is loaded", metricCollectionBusiness.load("MC2").getItems().getCollection().size()==3);
+    	//assertThat("Is loaded and empty", metricCollectionBusiness.load("MC1").getItems().getCollection().size()==0);
     	
     	assertThat("Has no interval collection", metricBusiness.find("MC2_1").getValueIntervalCollection()==null);
     	

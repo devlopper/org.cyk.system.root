@@ -271,7 +271,6 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 			report.setLastnames(Constant.EMPTY_STRING);
 		}else{
 			report.setNames(inject(PersonBusiness.class).findNames(person));
-			inject(PersonBusiness.class).load(person);
 			report.setSource(person);
 			
 			/*			

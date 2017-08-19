@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -48,7 +49,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	@Id private String identifier;
 	@Transient private AbstractIdentifiable identifiable;
 	@Column @Temporal(TemporalType.TIMESTAMP) private Date creationDate;
-	@ManyToOne private Party createdBy;
+	@ManyToOne @JoinColumn(name=COLUMN_CREATED_BY) private Party createdBy;
 	
 	@Transient protected Processing processing;
 	
@@ -56,8 +57,8 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 * Common business informations
 	 */
 	
-	@OneToOne private File image;
-	@OneToOne private File supportingDocument;
+	@ManyToOne @JoinColumn(name=COLUMN_IMAGE) private File image; //an image can be shared for better space management
+	@ManyToOne @JoinColumn(name=COLUMN_SUPPORTING_DOCUMENT) private File supportingDocument; //a file can be shared for better space management
 	
 	private String code;
 	
@@ -126,10 +127,10 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	private Boolean defaulted;
 	
 	@Embedded private Period existencePeriod = new Period();
-	@OneToOne private Location birthLocation;
-	@OneToOne private Location deathLocation;
+	@OneToOne @JoinColumn(name=COLUMN_BIRTH_LOCATION) private Location birthLocation;
+	@OneToOne @JoinColumn(name=COLUMN_DEATH_LOCATION) private Location deathLocation;
 	
-	@ManyToOne private Party owner;
+	@ManyToOne @JoinColumn(name=COLUMN_OWNER) private Party owner;
 	
 	@Embedded private CascadeStyleSheet cascadeStyleSheet;
 	
@@ -201,6 +202,13 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_DESCRIPTION = "description";
 	public static final String FIELD_EXTERNAL_IDENTIFIER = "externalIdentifier";
 	public static final String FIELD_REQUIRED = "required";
+	
+	public static final String COLUMN_CREATED_BY = "createdby";
+	public static final String COLUMN_OWNER = "owner";
+	public static final String COLUMN_IMAGE = "image";
+	public static final String COLUMN_SUPPORTING_DOCUMENT = "supportingdocument";
+	public static final String COLUMN_BIRTH_LOCATION = "birthlocation";
+	public static final String COLUMN_DEATH_LOCATION = "deathlocation";
 	
 	/**/
 	

@@ -285,14 +285,6 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	}
 	*/
 	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)  @Deprecated
-	public void load(Person person) {
-		super.load(person);
-		//person.setExtendedInformations(extendedInformationsDao.readByParty(person));
-		person.setJobInformations(jobInformationsDao.readByParty(person));
-		person.setMedicalInformations(medicalInformationsDao.readByParty(person));
-	}
-	
 	@Override
 	protected void setRelatedIdentifiable(Person person,String relatedIdentifiableFieldName) {
 		if(Person.FIELD_EXTENDED_INFORMATIONS.equals(relatedIdentifiableFieldName)){

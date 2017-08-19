@@ -88,7 +88,7 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     }
     
     private void contains(ContactCollection collection,String[] numbers){
-    	collection = inject(ContactCollectionBusiness.class).load(collection.getIdentifier());
+    	//collection = inject(ContactCollectionBusiness.class).load(collection.getIdentifier());
     	Object[][] values = new Object[numbers.length][1];
     	for(int i = 0;i<numbers.length;i++){
     		values[i][0] = numbers[i];

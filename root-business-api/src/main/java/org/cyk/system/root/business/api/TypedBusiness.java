@@ -35,13 +35,6 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 
 	/* predefined query  */
 	
-	@Deprecated
-    IDENTIFIABLE load(Long identifier);
-	@Deprecated
-    void load(IDENTIFIABLE identifiable);
-	@Deprecated
-	void load(Collection<IDENTIFIABLE> identifiables);
-    
     IDENTIFIABLE delete(String code);
     Collection<IDENTIFIABLE> delete(Set<String> codes);
     
@@ -332,14 +325,14 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	<T> T convert(ManyConverter<IDENTIFIABLE, T> converter);
 
 	/**/
-	
+	@Deprecated
 	public static interface InstanciateOneListener<T> extends Serializable {
 		
 		SetListener getSetListener();
 		InstanciateOneListener<T> setSetListener(SetListener setListener);
 		T getInstance();
 		
-		@Getter @Setter
+		@Getter @Setter @Deprecated
 		public static class Adapter<T> extends BeanAdapter implements InstanciateOneListener<T>,Serializable {
 			private static final long serialVersionUID = 1L;
 			
@@ -351,7 +344,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 				return this;
 			}
 			
-			@Getter @Setter
+			@Getter @Setter @Deprecated
 			public static class Default<T> extends InstanciateOneListener.Adapter<T> implements Serializable {
 				private static final long serialVersionUID = 1L;
 				
