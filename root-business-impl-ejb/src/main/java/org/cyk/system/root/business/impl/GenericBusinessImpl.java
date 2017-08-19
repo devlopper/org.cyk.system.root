@@ -339,12 +339,12 @@ public class GenericBusinessImpl extends AbstractIdentifiableBusinessServiceImpl
 	public void delete(Object identifiable, Collection<String> fieldNames) {
 		if(identifiable!=null && fieldNames!=null){
 			Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
-			FieldHelper fieldHelper = FieldHelper.getInstance();
 			for(String fieldName : fieldNames){
-				AbstractIdentifiable value = (AbstractIdentifiable) fieldHelper.read(identifiable, fieldName);
-				if(value!=null)
+				AbstractIdentifiable value = (AbstractIdentifiable) FieldHelper.getInstance().read(identifiable, fieldName);
+				if(value!=null){
 					identifiables.add(value);
-				fieldHelper.writeField(fieldHelper.get(identifiable.getClass(), fieldName), identifiable, null);
+				}
+				FieldHelper.getInstance().set(identifiable, (Object)null, fieldName);			
 			}
 			deleteIfIdentified(identifiables);
 		}

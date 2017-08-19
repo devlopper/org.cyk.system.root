@@ -8,8 +8,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
@@ -34,9 +36,8 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -58,17 +59,18 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/* Persisted */
 	
-	@Id @GeneratedValue protected Long identifier;// Generation is customizable using mapping file
+	@Id @GeneratedValue @Column(name=COLUMN_IDENTIFIER) protected Long identifier;// Generation is customizable using mapping file
 	
 	/**
 	 * Used to join subsystem
 	 */
-	@OneToOne protected GlobalIdentifier globalIdentifier;
+	@OneToOne @JoinColumn(name=COLUMN_GLOBAL_IDENTIFIER) protected GlobalIdentifier globalIdentifier;
 	
 	/* Transients */
 	
 	@Transient protected Boolean cascadeOperationToMaster = Boolean.FALSE;
 	@Transient protected Boolean cascadeOperationToChildren = Boolean.FALSE;
+	@Transient protected Boolean checkIfExistOnDelete = Boolean.FALSE;
 	
 	@Transient private Collection<AbstractIdentifiable> parents;
 	@Transient private Collection<AbstractIdentifiable> children;
@@ -335,7 +337,8 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private void onPrePersist() {
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
-				getLogger().trace("Pre persist called for {}",this);
+				LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("before persist",new Object[]{"object",this}).getLogger()
+				.execute(getClass(),LoggingHelper.Logger.Level.TRACE,null);
 				entry.getValue().onPrePersist(this);
 			}
 		}
@@ -373,7 +376,8 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	private void onPostPersist() {
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
-				getLogger().trace("Post persist called for {}",this);
+				LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("before persist",new Object[]{"object",this}).getLogger()
+				.execute(getClass(),LoggingHelper.Logger.Level.TRACE,null);
 				entry.getValue().onPostPersist(this);
 			}
 		}
@@ -438,9 +442,8 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public static final String FIELD_IDENTIFIER = "identifier";
 	public static final String FIELD_GLOBAL_IDENTIFIER = "globalIdentifier";
 	
-	protected Logger getLogger(){
-		return LoggerFactory.getLogger(getClass());
-	}
+	public static final String COLUMN_IDENTIFIER = "identifier";
+	public static final String COLUMN_GLOBAL_IDENTIFIER = "globalidentifier";
 	
 	/**/
 	

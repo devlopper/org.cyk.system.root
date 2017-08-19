@@ -425,15 +425,16 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		if(identifiable==null){
 			
 		}else{
-			beforeDelete(identifiable);
-			if(identifiable.getGlobalIdentifier()!=null){
-				inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
-				identifiable.setGlobalIdentifier(null);
-			}		
-			/*identifiable = */dao.delete(identifiable);
-			afterDelete(identifiable);	
+			if(Boolean.TRUE.equals(identifiable.getCheckIfExistOnDelete()) ? getPersistenceService().read(identifiable.getIdentifier())!=null : Boolean.TRUE){
+				beforeDelete(identifiable);
+				if(identifiable.getGlobalIdentifier()!=null){
+					inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
+					identifiable.setGlobalIdentifier(null);
+				}		
+				/*identifiable = */dao.delete(identifiable);
+				afterDelete(identifiable);		
+			}
 		}
-		
 		return identifiable;
 	}
 	

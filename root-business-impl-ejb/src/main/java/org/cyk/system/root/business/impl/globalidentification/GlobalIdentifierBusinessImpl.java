@@ -59,6 +59,11 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 			if(globalIdentifier.getIdentifiable()!=null && StringUtils.isNotBlank(globalIdentifier.getIdentifiable().getCode())){
 				globalIdentifier.setIdentifier(globalIdentifier.getIdentifier()+globalIdentifier.getIdentifiable().getCode()+Constant.CHARACTER_UNDESCORE);
 			}
+			/*
+			RandomStringGenerator generator = new RandomStringGenerator.Builder()
+					.withinRange('a', 'z').build();
+				 String randomLetters = generator.generate(20);
+			*/
 			globalIdentifier.setIdentifier(globalIdentifier.getIdentifier()+System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE+RandomStringUtils.randomAlphanumeric(10));
 		}
 		

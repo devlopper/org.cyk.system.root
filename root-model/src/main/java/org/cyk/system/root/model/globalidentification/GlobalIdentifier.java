@@ -30,6 +30,7 @@ import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria.LocationType;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
+import org.cyk.utility.common.helper.NumberHelper;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -223,7 +224,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		public void set(String value){
 			code.setValue(value);
 			name.setValue(value);
-			if(NumberUtils.isNumber(value))
+			if(NumberHelper.getInstance().isNumber(value))
 				orderNumber.setValue(NumberUtils.createLong(value));
 		}
 		
@@ -231,7 +232,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		public void set(StringSearchCriteria stringSearchCriteria) {
 			code.set(stringSearchCriteria);
 			name.set(stringSearchCriteria);
-			if(NumberUtils.isNumber(stringSearchCriteria.getValue()))
+			if(NumberHelper.getInstance().isNumber(stringSearchCriteria.getValue()))
 				orderNumber.setValue(NumberUtils.createLong(stringSearchCriteria.getValue()));
 		}
 		
