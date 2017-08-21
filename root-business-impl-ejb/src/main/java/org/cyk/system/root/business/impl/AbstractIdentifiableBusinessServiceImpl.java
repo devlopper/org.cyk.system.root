@@ -144,6 +144,19 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		logTrace("Synchronization of {} from excel done.", clazz.getSimpleName());
 	}
 	
+	@Override
+	public Collection<IDENTIFIABLE> instanciateMany(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<IDENTIFIABLE> instanceBuilder) {
+		Collection<IDENTIFIABLE> identifiables = new ArrayList<>();
+		InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<IDENTIFIABLE> instancesBuilder = new InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<IDENTIFIABLE>(null);
+		instancesBuilder.setOneDimensionArray(instanceBuilder);
+		
+		if(sheet.getValues()!=null)
+			identifiables.addAll((Collection<IDENTIFIABLE>)instancesBuilder.setInput(sheet.getValues()).execute());
+		if(sheet.getIgnoreds()!=null)
+			identifiables.addAll((Collection<IDENTIFIABLE>)instancesBuilder.setInput(sheet.getIgnoreds()).execute());
+		return identifiables;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void synchronize(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<IDENTIFIABLE> instanceBuilder) {

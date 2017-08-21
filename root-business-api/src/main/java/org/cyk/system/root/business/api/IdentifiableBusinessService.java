@@ -71,6 +71,7 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				@Deprecated
     				void synchronize(ExcelSheetReader excelSheetReader,InstanceFieldSetter.TwoDimensionObjectArray<IDENTIFIABLE> setter);
     				
+    				Collection<IDENTIFIABLE> instanciateMany(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<IDENTIFIABLE> instanceBuilder);
     				void synchronize(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<IDENTIFIABLE> instanceBuilder);
     				
     				Boolean isIdentified(IDENTIFIABLE identifiable);

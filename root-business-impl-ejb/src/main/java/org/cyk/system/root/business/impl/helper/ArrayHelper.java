@@ -16,7 +16,7 @@ public class ArrayHelper implements Serializable {
     	
 		@Override
 		protected org.cyk.utility.common.helper.ArrayHelper.Dimension.Key __execute__() {
-			return new org.cyk.utility.common.helper.ArrayHelper.Dimension.Key((String)getInput()[0]);
+			return new org.cyk.utility.common.helper.ArrayHelper.Dimension.Key(getInput()[0]);
 		}
 
     }

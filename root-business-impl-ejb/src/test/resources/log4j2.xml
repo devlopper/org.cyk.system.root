@@ -17,7 +17,13 @@
 			<AppenderRef ref="Console" />
 		</Logger-->
 		
-	
+		
+		
+		<!--Logger name="org.cyk.utility.common.helper.InstanceHelper$Builder$OneDimensionArray$Adapter$Default"
+			level="trace">
+			<AppenderRef ref="Console" />
+		</Logger-->
+		
 		<Root level="trace">
 			<!--AppenderRef ref="Console"/ -->
 		</Root>

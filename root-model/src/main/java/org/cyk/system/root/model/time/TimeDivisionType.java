@@ -20,5 +20,6 @@ public class TimeDivisionType extends AbstractEnumeration implements Serializabl
 	
 	@ManyToOne @NotNull private Measure measure;
 	
+	public static final String FIELD_MEASURE = "measure";
 }
 
