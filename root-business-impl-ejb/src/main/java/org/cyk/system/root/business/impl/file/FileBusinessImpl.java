@@ -41,6 +41,7 @@ import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier.SearchCriteria;
 import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.persistence.api.file.FileDao;
 import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
@@ -91,25 +92,25 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		if(StringUtils.isNotBlank(relativePath)){
 			if(StringUtils.isBlank(listener.getInstance().getName()))
 				listener.getInstance().setName(FilenameUtils.getName(relativePath));
-			process(listener.getInstance(),getResourceAsBytes(basePackage,relativePath),listener.getInstance().getName()+Constant.CHARACTER_DOT+extension);
+			process(listener.getInstance(),getResourceAsBytes(getClass(),basePackage,relativePath),listener.getInstance().getName()+Constant.CHARACTER_DOT+extension);
 			//if(StringUtils.isNotBlank(listener.getInstance().getCode()))
 			//	listener.getInstance().setCode(listener.getInstance().getCode());
 		}
     	return listener.getInstance();
 	}
 	
-	protected byte[] getResourceAsBytes(Package basePackage,String relativePath){
+	protected static byte[] getResourceAsBytes(Class aClass,Package basePackage,String relativePath){
 		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Get", "resource as bytes");
 		String path = "/"+StringUtils.replace(basePackage.getName(), Constant.CHARACTER_DOT.toString(), "/")+"/";
     	path += relativePath;
     	logMessageBuilder.addParameters("Path",path);
     	try {
-    		return IOUtils.toByteArray(this.getClass().getResourceAsStream(path));
+    		return IOUtils.toByteArray(aClass.getResourceAsStream(path));
 		} catch (IOException e) {
 			logMessageBuilder.addParameters("Exception",e.toString());
 			return null;
 		} finally {
-			logTrace(logMessageBuilder);
+			//logTrace(logMessageBuilder);
 		}
     }
 
@@ -353,5 +354,34 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 				}
 			}
 		}
+	}
+
+	/**/
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<File> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(File.class);
+			addFieldCodeName();
+		}
+		
+		@Override
+		protected File __execute__() {
+			File file =  super.__execute__();
+			file.getGlobalIdentifierCreateIfNull();
+	    	Package basePackage = PersistDataListener.Adapter.process(File.class, file.getCode(),PersistDataListener.BASE_PACKAGE, Package.getPackage((java.lang.String)getInput()[2]));
+			String relativePath = PersistDataListener.Adapter.process(File.class, file.getCode(), PersistDataListener.RELATIVE_PATH, (java.lang.String)getInput()[3]);
+			String extension = FilenameUtils.getExtension(relativePath);
+			if(StringUtils.isNotBlank(relativePath)){
+				if(StringUtils.isBlank(file.getName()))
+					file.setName(FilenameUtils.getName(relativePath));
+				inject(FileBusiness.class).process(file,getResourceAsBytes(getClass(),basePackage,relativePath),file.getName()+Constant.CHARACTER_DOT+extension);
+				//if(StringUtils.isNotBlank(listener.getInstance().getCode()))
+				//	listener.getInstance().setCode(listener.getInstance().getCode());
+			}
+			return file;
+		}
+		
 	}
 }

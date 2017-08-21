@@ -63,4 +63,22 @@ public class ReportTemplateBusinessImpl extends AbstractEnumerationBusinessImpl<
 		return reportTemplate;
 	}
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<ReportTemplate> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(ReportTemplate.class);
+			addParameterArrayElementString(10, ReportTemplate.FIELD_HEADER_IMAGE);
+			addParameterArrayElementString(11, ReportTemplate.FIELD_FOOTER_IMAGE);
+			addParameterArrayElementString(12, ReportTemplate.FIELD_BACKGROUND_IMAGE);
+			addParameterArrayElementString(13, ReportTemplate.FIELD_DRAFT_BACKGROUND_IMAGE);
+			addParameterArrayElementString(14, ReportTemplate.FIELD_SIGNER);
+			addParameterArrayElementString(15, ReportTemplate.FIELD_RESULT_FILE_NAMING_SCRIPT);
+			addParameterArrayElementString(16, ReportTemplate.FIELD_HEADER_SCRIPT);
+			addParameterArrayElementString(17, ReportTemplate.FIELD_FOOTER_SCRIPT);
+			addParameterArrayElementString(18, ReportTemplate.FIELD_NAME_SCRIPT);
+		}
+		
+	}
+	
 }

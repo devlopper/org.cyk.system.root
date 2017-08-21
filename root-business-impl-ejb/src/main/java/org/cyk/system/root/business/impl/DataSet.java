@@ -45,6 +45,7 @@ public class DataSet extends AbstractBean implements Serializable {
 	private final Collection<Class<?>> excelSheetRequiredClasses = new LinkedHashSet<>();
 	
 	private Package basePackage;
+	private Class<?> baseClass;
 	private Deque<Package> basePackageQueue = new ArrayDeque<>();
 	private Boolean basePackageQueueingEnabled = Boolean.FALSE;
 	
@@ -52,13 +53,10 @@ public class DataSet extends AbstractBean implements Serializable {
 	private Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceBuilderMap = new LinkedHashMap<>();
 	private Map<Class<AbstractIdentifiable>,Collection<AbstractIdentifiable>> instanceMap = new LinkedHashMap<>();
 	
-	public DataSet(Package basePackage) {
-		this.basePackage = basePackage;
+	public DataSet(Class<?> baseClass) {
+		this.baseClass = baseClass;
+		this.basePackage = this.baseClass.getPackage();
 		this.systemIdentifier = StringUtils.substringBetween(basePackage.getName(), "system.", ".business");
-	}
-	
-	public DataSet(Class<?> basePackageClass) {
-		this(basePackageClass.getPackage());
 	}
 	
 	public String getExcelWorkbookFileName(){
@@ -70,7 +68,8 @@ public class DataSet extends AbstractBean implements Serializable {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void instanciate(){
 		Long millisecond = System.currentTimeMillis();
-		logTrace("instanciate system data {} running", systemIdentifier);
+		String fileName = getExcelWorkbookFileName();
+		logTrace("instanciate {} system data using file {} running...", systemIdentifier,fileName);
 		/*
 		 * Fetch data from excel sheets
 		 */
@@ -81,9 +80,9 @@ public class DataSet extends AbstractBean implements Serializable {
 		//Integer count = 0;
 		for(Class<AbstractIdentifiable> aClass : classes){
 			LoggingHelper.Logger<?, ?, ?> logger = LoggingHelper.getInstance().getLogger();
-			logger.getMessageBuilder(Boolean.TRUE).addManyParameters("create",new Object[]{"entity",aClass.getSimpleName()});
+			logger.getMessageBuilder(Boolean.TRUE).addManyParameters("instanciate",new Object[]{"entity",aClass.getSimpleName()});
 			
-			workbookFileInputStream = getClass().getResourceAsStream(getExcelWorkbookFileName());
+			workbookFileInputStream = baseClass.getResourceAsStream(fileName);
 			TimeHelper.Collection timeCollection = new TimeHelper.Collection().addCurrent();
 			org.cyk.system.root.business.impl.helper.ArrayHelper.KeyBuilder keyBuilder = new org.cyk.system.root.business.impl.helper.ArrayHelper.KeyBuilder();
 			org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<AbstractIdentifiable> instanceBuilder = (BuilderOneDimensionArray<AbstractIdentifiable>) instanceBuilderMap.get(aClass);
