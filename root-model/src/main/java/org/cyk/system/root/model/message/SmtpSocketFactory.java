@@ -11,7 +11,7 @@ import org.cyk.system.root.model.AbstractModelElement;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @Embeddable
+@Getter @Setter @Embeddable @Deprecated
 public class SmtpSocketFactory extends AbstractModelElement implements Serializable {
 
 	private static final long serialVersionUID = 8430989676173921303L;

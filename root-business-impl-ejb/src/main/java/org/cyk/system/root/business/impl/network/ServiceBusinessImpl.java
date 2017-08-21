@@ -41,4 +41,15 @@ public class ServiceBusinessImpl extends AbstractTypedBusinessService<Service,Se
     	set(listener.getSetListener(), Service.FIELD_SECURED);
     	return listener.getInstance();
 	}
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<Service> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Service.class);
+			addFieldCodeName();
+			addParameterArrayElementString(Service.FIELD_COMPUTER,Service.FIELD_PORT,Service.FIELD_AUTHENTICATED,Service.FIELD_SECURED);
+		}
+		
+	}
 }

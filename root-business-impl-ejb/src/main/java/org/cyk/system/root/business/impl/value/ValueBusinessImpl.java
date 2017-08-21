@@ -56,10 +56,10 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 	public void setRandomly(Collection<Value> values) {
 		for(Value value : values){
 			if(Boolean.TRUE.equals(value.getNullable()) && RandomDataProvider.getInstance().randomBoolean())
-				value.set(null);
+				value.set_(null);
 			else{
 				if(ValueType.BOOLEAN.equals(value.getType())){
-					value.set(RandomDataProvider.getInstance().randomBoolean());
+					value.set_(RandomDataProvider.getInstance().randomBoolean());
 				}else if(ValueType.NUMBER.equals(value.getType())){
 					if(value.getIntervalCollection()==null){
 						value.getNumberValue().set(new BigDecimal(RandomDataProvider.getInstance().randomInt(0, 100)));
@@ -67,17 +67,17 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 							value.getNumberValue().set(inject(MeasureBusiness.class).computeMultiple(value.getMeasure(), value.getNumberValue().get()));
 						}
 					}else
-						value.set(inject(IntervalCollectionBusiness.class).generateRandomValue(value.getIntervalCollection()));
+						value.set_(inject(IntervalCollectionBusiness.class).generateRandomValue(value.getIntervalCollection()));
 				}else if(ValueType.STRING.equals(value.getType())){
 					if(ValueSet.INTERVAL_RELATIVE_CODE.equals(value.getSet()))
 						if(value.getIntervalCollection()!=null){
 							Interval interval = ((Interval)RandomDataProvider.getInstance().randomFromList(new ArrayList<>(inject(IntervalBusiness.class)
 									.findByCollection(value.getIntervalCollection()))));
-							value.set(RootConstant.Code.getRelativeCode(interval));
+							value.set_(RootConstant.Code.getRelativeCode(interval));
 						}else
 							;
 					else
-						value.set( RandomStringUtils.randomAlphabetic(1));
+						value.set_( RandomStringUtils.randomAlphabetic(1));
 				}
 			}
 		}	
@@ -95,7 +95,7 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 				listener.processInputs(value,inputs);
 				script.getInputs().putAll(inputs);
 			}
-			value.set(inject(ScriptBusiness.class).evaluate(script));//TODO be carefull with concurrent access
+			value.set_(inject(ScriptBusiness.class).evaluate(script));//TODO be carefull with concurrent access
 		}
 		logTrace("Value {} , derivable {} , old value = {} , new value = {}", value.getName(),value.isDerived(),oldValue,value.get());
 		return value.get();
@@ -147,5 +147,16 @@ public class ValueBusinessImpl extends AbstractTypedBusinessService<Value, Value
 			}
 			
 		}
+	}
+
+	/**/
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<Value> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Value.class);
+			addFieldCode().addParameterArrayElementString(Value.FIELD_PROPERTIES);
+		}	
 	}
 }

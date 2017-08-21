@@ -29,4 +29,15 @@ public class ComputerBusinessImpl extends AbstractTypedBusinessService<Computer,
     	set(listener.getSetListener(), Computer.FIELD_IP_ADDRESS_NAME);
     	return listener.getInstance();
 	}
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<Computer> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Computer.class);
+			addFieldCodeName();
+			addParameterArrayElementString(Computer.FIELD_IP_ADDRESS,Computer.FIELD_IP_ADDRESS_NAME);
+		}
+		
+	}
 }

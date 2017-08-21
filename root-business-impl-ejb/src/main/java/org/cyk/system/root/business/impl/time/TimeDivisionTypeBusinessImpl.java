@@ -37,4 +37,16 @@ public class TimeDivisionTypeBusinessImpl extends AbstractEnumerationBusinessImp
 		return timeDivisionType;
 	}
 	
+	/**/
+	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<TimeDivisionType> implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(TimeDivisionType.class);
+			addParameterArrayElementStringIndexInstance(10,TimeDivisionType.FIELD_MEASURE);
+		}
+	}
+	
 }

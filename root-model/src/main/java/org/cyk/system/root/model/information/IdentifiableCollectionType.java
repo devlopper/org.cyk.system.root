@@ -22,5 +22,4 @@ public class IdentifiableCollectionType extends AbstractDataTreeType implements 
 		super(parent, code,label);
 	}
 	
-	
 }

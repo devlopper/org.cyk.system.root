@@ -18,4 +18,11 @@ public class AllergyBusinessImpl extends AbstractEnumerationBusinessImpl<Allergy
 		super(dao); 
 	}   
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<Allergy> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Allergy.class);
+		}
+	}
 }

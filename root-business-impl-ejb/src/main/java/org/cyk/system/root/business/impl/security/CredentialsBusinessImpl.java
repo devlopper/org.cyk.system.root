@@ -76,5 +76,15 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 	public Credentials findBySoftwareByUsernameByPassword(Software software, String aUsername, String password) {
 		return dao.readBySoftwareByUsernameByPassword(software, aUsername, password);
 	}
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<Credentials> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Credentials.class);
+			addFieldCode().addParameterArrayElementString(Credentials.FIELD_SOFTWARE,Credentials.FIELD_USERNAME,Credentials.FIELD_PASSWORD);
+		}
+		
+	}
 			
 }

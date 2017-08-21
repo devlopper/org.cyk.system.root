@@ -1,5 +1,7 @@
 package org.cyk.system.root.business.impl;
 
+import java.io.Serializable;
+
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
@@ -54,5 +56,16 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 	protected Integer getInstanciateOneEnumerationStartIndex(String[] values){
     	return 0;
     }
+	
+	public static class BuilderOneDimensionArray<T extends AbstractEnumeration> extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<T> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray(Class<T> outputClass) {
+			super(outputClass);
+			addFieldCodeName();
+		}
+		
+		
+	}
 
 }

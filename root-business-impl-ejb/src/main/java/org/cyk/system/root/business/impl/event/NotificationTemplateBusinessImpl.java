@@ -10,8 +10,12 @@ import org.cyk.system.root.business.api.event.NotificationTemplateBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.model.event.NotificationTemplate;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.message.SmtpProperties;
+import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.helper.FieldHelper;
 
 public class NotificationTemplateBusinessImpl extends AbstractEnumerationBusinessImpl<NotificationTemplate, NotificationTemplateDao> implements NotificationTemplateBusiness,Serializable {
 
@@ -43,5 +47,13 @@ public class NotificationTemplateBusinessImpl extends AbstractEnumerationBusines
 	protected void beforeDelete(NotificationTemplate notificationTemplate) {
 		super.beforeDelete(notificationTemplate);
 		inject(FileBusiness.class).delete(Arrays.asList(notificationTemplate.getTitle(),notificationTemplate.getMessage()));
+	}
+	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<NotificationTemplate> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(NotificationTemplate.class);
+		}
 	}
 }

@@ -29,7 +29,11 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	@Enumerated(EnumType.ORDINAL) @Column(name="thetype") private ValueType type = ValueType.DEFAULT;
 	@Enumerated(EnumType.ORDINAL) @Column(name="theset") private ValueSet set = ValueSet.DEFAULT;
 	
-	@Deprecated private Boolean derived;//TODO is it the same concept as derived in super type ???
+	/*
+	 * it is not the same concept as derived in global identifier
+	 * Means if the value is derived
+	 */
+	private Boolean derived;//TODO  ???
 	@ManyToOne private Script derivationScript;
 	
 	private Boolean nullable;
@@ -91,6 +95,7 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	public static final String FIELD_NULLABLE = "nullable";
 	public static final String FIELD_NULL_STRING = "nullString";
 	public static final String FIELD_MEASURE = "measure";
+	public static final String FIELD_DERIVED = "derived";
 	public static final String FIELD_DERIVATION_SCRIPT = "derivationScript";
 	
 }

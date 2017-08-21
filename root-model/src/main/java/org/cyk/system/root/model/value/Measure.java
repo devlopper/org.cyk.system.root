@@ -37,5 +37,8 @@ public class Measure extends AbstractEnumeration implements Serializable{
 		this.value = value;
 	}
 	
+	public static final String FIELD_TYPE = "type";
+	public static final String FIELD_VALUE = "value";
+	
 }
 

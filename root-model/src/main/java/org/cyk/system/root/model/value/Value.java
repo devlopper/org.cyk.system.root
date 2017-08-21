@@ -71,7 +71,7 @@ public class Value extends AbstractIdentifiable implements Serializable {
 		this.properties = properties;
 	}
 	
-	public void set(Object value) {
+	public void set_(Object value) {
 		switch(getType()){
 		case BOOLEAN:
 			getBooleanValue().set(value == null ? null :  (Boolean) value);
@@ -155,5 +155,5 @@ public class Value extends AbstractIdentifiable implements Serializable {
 		return null;
 	}
 
-	
+	public static final String FIELD_PROPERTIES = "properties";
 }

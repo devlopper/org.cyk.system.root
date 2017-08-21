@@ -103,7 +103,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 				logInfo("Installation done.");
 			} catch (Exception e) {
 				e.printStackTrace();
-				logThrowable(e);
+				//logThrowable(e);
 				exceptionUtils().exception(Boolean.TRUE,"exception.install",new Object[]{e});
 			}
 		}

@@ -17,6 +17,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.persistence.api.mathematics.IntervalCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 
 public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Interval, IntervalDao,IntervalCollection> implements IntervalBusiness,Serializable {
@@ -210,4 +211,19 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		return NumberHelper.getInstance().getIntegers(findGreatestLowestValue(interval), findLowestGreatestValue(interval));
 	}
 
+	public static class BuilderOneDimensionArray extends AbstractCollectionItemBusinessImpl.BuilderOneDimensionArray<Interval> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Interval.class);
+			addParameterArrayElementString(15,FieldHelper.getInstance().buildPath(Interval.FIELD_LOW,IntervalExtremity.FIELD_VALUE));
+			addParameterArrayElementString(16,FieldHelper.getInstance().buildPath(Interval.FIELD_HIGH,IntervalExtremity.FIELD_VALUE));
+			addParameterArrayElementString(17,Interval.FIELD_VALUE);
+			
+			addParameterArrayElementString(18,FieldHelper.getInstance().buildPath(Interval.FIELD_LOW,IntervalExtremity.FIELD_EXCLUDED));
+			addParameterArrayElementString(19,FieldHelper.getInstance().buildPath(Interval.FIELD_HIGH,IntervalExtremity.FIELD_EXCLUDED));
+			
+		}
+		
+	}
 }

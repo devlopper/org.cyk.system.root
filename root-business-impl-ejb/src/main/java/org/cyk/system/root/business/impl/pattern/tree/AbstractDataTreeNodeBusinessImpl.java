@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl.pattern.tree;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.StringHelper;
 
 public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractDataTreeNode,DAO extends AbstractDataTreeNodeDao<NODE>>  
     extends AbstractEnumerationBusinessImpl<NODE, DAO> implements AbstractDataTreeNodeBusiness<NODE> {
@@ -274,5 +276,24 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		return dao.readDirectChildrenByParent(parent);
 	}
 	
+	/**/
+	
+	public static class BuilderOneDimensionArray<T extends AbstractDataTreeNode> extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<T> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray(Class<T> outputClass) {
+			super(outputClass);
+		}
+		
+		@Override
+		protected T __execute__() {
+			T t = super.__execute__();
+			if(getInput().length>9 && !StringHelper.getInstance().isBlank( (java.lang.String)getInput()[10] ))
+				t.setParentNode(org.cyk.utility.common.helper.InstanceHelper.Pool.getInstance().get(getOutputClass(), getInput()[10]));
+			return t;
+		}
+		
+		
+	}
 
 }

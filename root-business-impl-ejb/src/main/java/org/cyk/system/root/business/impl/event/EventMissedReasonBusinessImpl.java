@@ -18,4 +18,12 @@ public class EventMissedReasonBusinessImpl extends AbstractEnumerationBusinessIm
 		super(dao); 
 	}   
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<EventMissedReason> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(EventMissedReason.class);
+		}
+	}
+	
 }

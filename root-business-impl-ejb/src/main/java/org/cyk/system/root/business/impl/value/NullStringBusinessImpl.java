@@ -18,4 +18,12 @@ public class NullStringBusinessImpl extends AbstractEnumerationBusinessImpl<Null
 		super(dao); 
 	}
 
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<NullString> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(NullString.class);
+		}
+		
+	}
 }

@@ -18,4 +18,12 @@ public class BloodGroupBusinessImpl extends AbstractEnumerationBusinessImpl<Bloo
 		super(dao); 
 	}   
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<BloodGroup> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(BloodGroup.class);
+		}
+	}
+	
 }

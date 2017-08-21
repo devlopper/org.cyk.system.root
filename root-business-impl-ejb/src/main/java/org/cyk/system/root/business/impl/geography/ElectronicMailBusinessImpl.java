@@ -144,5 +144,15 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 		set(listener.getSetListener(), ElectronicMail.FIELD_ADDRESS);
 		return listener.getInstance();
 	}
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<ElectronicMail> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(ElectronicMail.class);
+			addFieldCode().addParameterArrayElementString(ElectronicMail.FIELD_ADDRESS);
+		}
+		
+	}
 		
 }

@@ -18,4 +18,12 @@ public class PersonRelationshipTypeRoleNameBusinessImpl extends AbstractEnumerat
 		super(dao); 
 	}   
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<PersonRelationshipTypeRoleName> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(PersonRelationshipTypeRoleName.class);
+		}
+	}
+	
 }

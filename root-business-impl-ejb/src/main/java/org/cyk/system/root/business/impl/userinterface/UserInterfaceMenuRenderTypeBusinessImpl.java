@@ -18,4 +18,12 @@ public class UserInterfaceMenuRenderTypeBusinessImpl extends AbstractEnumeration
 		super(dao); 
 	}
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<UserInterfaceMenuRenderType> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(UserInterfaceMenuRenderType.class);
+		}
+		
+	}
 }

@@ -18,4 +18,11 @@ public class JobFunctionBusinessImpl extends AbstractEnumerationBusinessImpl<Job
 		super(dao); 
 	}   
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<JobFunction> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(JobFunction.class);
+		}
+	}
 }

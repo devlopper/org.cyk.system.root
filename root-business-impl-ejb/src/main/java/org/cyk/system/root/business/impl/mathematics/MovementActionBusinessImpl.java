@@ -61,4 +61,13 @@ public class MovementActionBusinessImpl extends AbstractEnumerationBusinessImpl<
 		return listener.getInstance();
 	}
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<MovementAction> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(MovementAction.class);
+			addParameterArrayElementString(10, MovementAction.FIELD_INTERVAL);
+		}
+		
+	}
 }

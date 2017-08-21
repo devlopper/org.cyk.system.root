@@ -43,4 +43,16 @@ public class ValuePropertiesBusinessImpl extends AbstractTypedBusinessService<Va
 		return listener.getInstance();
 	}
 	
+	/**/
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<ValueProperties> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(ValueProperties.class);
+			addFieldCode().addParameterArrayElementString(ValueProperties.FIELD_TYPE,ValueProperties.FIELD_SET,ValueProperties.FIELD_INTERVAL_COLLECTION
+					,ValueProperties.FIELD_MEASURE,ValueProperties.FIELD_DERIVED,ValueProperties.FIELD_DERIVATION_SCRIPT,ValueProperties.FIELD_NULLABLE,ValueProperties.FIELD_NULL_STRING);
+		}	
+	}
+
 }

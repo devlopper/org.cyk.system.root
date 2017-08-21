@@ -151,4 +151,14 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	protected void __load__(COLLECTION collection) {
 		collection.getItems().setCollection(getItemDao().readByCollection(collection));
 	}
+	
+	/**/
+	
+	public static class BuilderOneDimensionArray<T extends AbstractCollection<?>> extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<T> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray(Class<T> outputClass) {
+			super(outputClass);
+		}	
+	}
 }

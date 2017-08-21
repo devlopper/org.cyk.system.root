@@ -1,5 +1,7 @@
 package org.cyk.system.root.business.impl.geography;
 
+import java.io.Serializable;
+
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
@@ -16,4 +18,15 @@ public class LocalityTypeBusinessImpl extends AbstractDataTreeTypeBusinessImpl<L
         super(dao);
     } 
 
+	/**/
+	
+	public static class BuilderOneDimensionArray extends AbstractDataTreeTypeBusinessImpl.BuilderOneDimensionArray<LocalityType> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(LocalityType.class);
+		}
+		
+	}
+	
 }

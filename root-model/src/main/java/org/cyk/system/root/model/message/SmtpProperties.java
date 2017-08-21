@@ -17,8 +17,9 @@ import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Getter @Setter @Entity @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS)
+@Getter @Setter @Entity @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS) @Accessors(chain=true)
 public class SmtpProperties extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -5516162693913912313L;
@@ -29,14 +30,6 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 	
 	@ManyToOne @NotNull private Credentials credentials;
 	
-	/*@Embedded private SmtpSocketFactory socketFactory = new SmtpSocketFactory();
-	
-	public SmtpSocketFactory getSocketFactory(){
-		if(socketFactory==null)
-			socketFactory = new SmtpSocketFactory();
-		return socketFactory;
-	}*/
-	
 	@Override
 	public String getUiString() {
 		return service.getUiString()+Constant.CHARACTER_SLASH+credentials.getUiString();
@@ -45,5 +38,5 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 	public static final String FIELD_SERVICE = "service";
 	public static final String FIELD_FROM = "from";
 	public static final String FIELD_CREDENTIALS = "credentials";
-	public static final String FIELD_SOCKET_FACTORY = "socketFactory";
+	
 }

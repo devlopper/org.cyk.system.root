@@ -18,4 +18,13 @@ public class LocationTypeBusinessImpl extends AbstractEnumerationBusinessImpl<Lo
 		super(dao); 
 	}   
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<LocationType> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(LocationType.class);
+		}
+		
+	}
+	
 }

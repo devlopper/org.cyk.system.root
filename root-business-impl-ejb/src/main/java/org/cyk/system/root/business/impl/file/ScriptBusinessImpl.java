@@ -160,4 +160,26 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		}
 	}
 
+	/**/
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<Script> {
+
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Script.class);
+			addFieldCodeName();
+			addParameterArrayElementString(Script.FIELD_EVALUATION_ENGINE);
+		}
+		
+		@Override
+		protected Script __execute__() {
+			Script script = super.__execute__();
+			script.setFile(new File());
+			script.getFile().setBytes( ((java.lang.String)getInput()[3]).getBytes());
+			return script;
+		}
+		
+	}
+
 }

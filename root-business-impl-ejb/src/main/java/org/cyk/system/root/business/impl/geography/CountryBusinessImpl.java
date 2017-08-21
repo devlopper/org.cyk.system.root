@@ -73,4 +73,16 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 		inject(LocalityBusiness.class).update(country.getLocality());
 	}
 	
+	/**/
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<Country> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Country.class);
+			addFieldCodeName();
+		}
+		
+	}
+	
 }

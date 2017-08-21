@@ -114,6 +114,14 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	
 	/**/
 
-	
+	public static class BuilderOneDimensionArray<T extends AbstractCollectionItem<?>> extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<T> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray(Class<T> outputClass) {
+			super(outputClass);
+			addParameterArrayElementString(10,AbstractCollectionItem.FIELD_COLLECTION);
+		}
+		
+	}
 	
 }

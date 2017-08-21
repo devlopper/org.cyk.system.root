@@ -18,4 +18,12 @@ public class IdentifiableCollectionTypeBusinessImpl extends AbstractDataTreeType
         super(dao);
     } 
 
+	public static class BuilderOneDimensionArray extends AbstractDataTreeTypeBusinessImpl.BuilderOneDimensionArray<IdentifiableCollectionType> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(IdentifiableCollectionType.class);
+		}
+		
+	}
 }

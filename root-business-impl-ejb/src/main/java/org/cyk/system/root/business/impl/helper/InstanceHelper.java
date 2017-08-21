@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
-import org.cyk.utility.common.Action;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 
@@ -20,9 +19,14 @@ public class InstanceHelper implements Serializable {
 			super(outputClass);
 		}
     	
+    	public BuilderOneDimensionArray<T> addFieldCode() {
+			addParameterArrayElementString(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE));
+			return this;
+		}
+    	
     	public BuilderOneDimensionArray<T> addFieldCodeName() {
-			addParameterArrayElementString(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE)
-    			, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME));
+    		addFieldCode();
+			addParameterArrayElementString(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME));
 			return this;
 		}
     	
@@ -40,6 +44,9 @@ public class InstanceHelper implements Serializable {
     	public BuilderOneDimensionArray<T> addParameterArrayElementStringIndexInstance(Object... arg0) {
     		return (BuilderOneDimensionArray<T>) super.addParameterArrayElementStringIndexInstance(arg0);
     	}
+    	
+    	/**/
+    	
 	}
 	
 	public static class Lookup extends org.cyk.utility.common.helper.InstanceHelper.Lookup.Source.Adapter.Default.ResultMethod {

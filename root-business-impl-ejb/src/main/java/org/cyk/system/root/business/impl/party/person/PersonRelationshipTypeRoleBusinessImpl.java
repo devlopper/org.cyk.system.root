@@ -1,5 +1,7 @@
 package org.cyk.system.root.business.impl.party.person;
 
+import java.io.Serializable;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -40,6 +42,15 @@ public class PersonRelationshipTypeRoleBusinessImpl extends AbstractTypedBusines
 		return listener.getInstance();
 	}
 
-	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<PersonRelationshipTypeRole> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(PersonRelationshipTypeRole.class);
+			addFieldCodeName();
+			addParameterArrayElementString(PersonRelationshipTypeRole.FIELD_PERSON_RELATIONSHIP_TYPE,PersonRelationshipTypeRole.FIELD_ROLE);
+		}
+		
+	}
 	
 }

@@ -27,10 +27,12 @@ import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.event.NotificationBuilderAdapter;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
-import org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray;
+import org.cyk.system.root.business.impl.geography.LocalityBusinessImpl;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilderAdapter;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
+import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeBusinessImpl;
+import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeTypeBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.RootConstant;
@@ -104,7 +106,6 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
-import org.cyk.system.root.persistence.api.value.MeasureDao;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
@@ -113,6 +114,7 @@ import org.cyk.utility.common.builder.NameValueStringBuilder;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.EventHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.InstanceHelper.Lookup.Source;
 import org.cyk.utility.common.helper.ListenerHelper;
@@ -338,18 +340,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Override
     protected void persistStructureData() {
     	super.persistStructureData();
-    	/*ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 50, 10l, TimeUnit.SECONDS, 50, 50l, TimeUnit.SECONDS, null);
-    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { file(); }});
-    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { values(); }});
-    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { geography(); }});
-    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { event(); }});
-    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { time(); }});
-    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { language(); }});
-    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { party(); }});
-    	threadPoolExecutor.execute(new Runnable() { @Override public void run() { security(); }});
-    	threadPoolExecutor.waitTermination(1, TimeUnit.MINUTES);
-    	*/
-    	
+    
     	DataSet dataSet = new DataSet(getClass());
     	
     	file(dataSet);
@@ -375,12 +366,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     }
     
     private void geography(DataSet dataSet){
-        createFromExcelSheet(LocalityType.class);
-        createFromExcelSheet(Locality.class);
-        createFromExcelSheet(Country.class);
-        createFromExcelSheet(PhoneNumberType.class);
-        createFromExcelSheet(LocationType.class);
-        createFromExcelSheet(ElectronicMail.class);
+    	dataSet.addClass(LocalityType.class);
+    	dataSet.addClass(Locality.class);
+        dataSet.addClass(Country.class);
+        dataSet.addClass(PhoneNumberType.class);
+        dataSet.addClass(LocationType.class);
+        dataSet.addClass(ElectronicMail.class);
     }
     
     private void language(DataSet dataSet){
@@ -395,24 +386,11 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     private void file(DataSet dataSet){ 
     	dataSet.addClass(FileRepresentationType.class);
     	dataSet.addClass(ScriptEvaluationEngine.class);
-    	dataSet.addClass(Script.class,new org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<Script>(Script.class){
-			private static final long serialVersionUID = 1L;
-    		@Override
-    		protected Script __execute__() {
-    			Script script = super.__execute__();
-    			script.setFile(new File());
-    			script.getFile().setBytes( ((java.lang.String)getInput()[3]).getBytes());
-    			return script;
-    		}
-    	}.addFieldCodeName().addParameterArrayElementString(Script.FIELD_EVALUATION_ENGINE));
-    	
+    	dataSet.addClass(Script.class);
     }
     
     private void time(DataSet dataSet){ 
-    	dataSet.addClass(TimeDivisionType.class,new org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<TimeDivisionType>(TimeDivisionType.class){
-			private static final long serialVersionUID = 1L;
-    		
-    	}.addFieldCodeName().addParameterArrayElementStringIndexInstance(10,TimeDivisionType.FIELD_MEASURE));
+    	dataSet.addClass(TimeDivisionType.class);
     }
     
     private void party(DataSet dataSet){
@@ -424,10 +402,10 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	dataSet.addClass(BloodGroup.class);
     	dataSet.addClass(Allergy.class);
     	dataSet.addClass(Medication.class);
-    	createFromExcelSheet(PersonRelationshipTypeGroup.class);
-    	createFromExcelSheet(PersonRelationshipType.class);
-    	createFromExcelSheet(PersonRelationshipTypeRoleName.class);
-    	createFromExcelSheet(PersonRelationshipTypeRole.class);
+    	dataSet.addClass(PersonRelationshipTypeGroup.class);
+    	dataSet.addClass(PersonRelationshipType.class);
+    	dataSet.addClass(PersonRelationshipTypeRoleName.class);
+    	dataSet.addClass(PersonRelationshipTypeRole.class);
     	
     }
     
@@ -438,44 +416,44 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         createRole(RootConstant.Code.Role.SECURITY_MANAGER, "Security Manager");
         createRole(RootConstant.Code.Role.USER, "User",SHIRO_PRIVATE_FOLDER);
         
-        createFromExcelSheet(Software.class);
-        createFromExcelSheet(Credentials.class);
-        createFromExcelSheet(BusinessServiceCollection.class);
+        dataSet.addClass(Software.class);
+        dataSet.addClass(Credentials.class);
+        dataSet.addClass(BusinessServiceCollection.class);
     }
     
     private void network(DataSet dataSet){ 
-    	createFromExcelSheet(Computer.class);
-        createFromExcelSheet(Service.class);
+    	dataSet.addClass(Computer.class);
+        dataSet.addClass(Service.class);
     }
     
     private void message(DataSet dataSet){ 
-    	createFromExcelSheet(SmtpProperties.class);
+    	dataSet.addClass(SmtpProperties.class);
     }
     
     private void mathematics(DataSet dataSet){ 
-    	createFromExcelSheet(IntervalCollection.class);
-    	createFromExcelSheet(Interval.class);
-    	createFromExcelSheet(MetricCollectionType.class);
-    	createFromExcelSheet(MovementAction.class);
+    	dataSet.addClass(IntervalCollection.class);
+    	dataSet.addClass(Interval.class);
+    	dataSet.addClass(MetricCollectionType.class);
+    	dataSet.addClass(MovementAction.class);
     }
     
     private void values(DataSet dataSet){ 
-    	createFromExcelSheet(MeasureType.class);
-    	createFromExcelSheet(Measure.class);
-    	createFromExcelSheet(NullString.class);
-    	createFromExcelSheet(ValueProperties.class);
-    	createFromExcelSheet(Value.class);
+    	dataSet.addClass(MeasureType.class);
+    	dataSet.addClass(Measure.class);
+    	dataSet.addClass(NullString.class);
+    	dataSet.addClass(ValueProperties.class);
+    	dataSet.addClass(Value.class);
     }
     
     private void information(DataSet dataSet){ 
-    	createFromExcelSheet(IdentifiableCollectionType.class);
+    	dataSet.addClass(IdentifiableCollectionType.class);
     }
     
     private void userInterface(DataSet dataSet){ 
-    	createFromExcelSheet(UserInterfaceMenuRenderType.class);
-    	createFromExcelSheet(UserInterfaceMenuLocation.class);
-    	createFromExcelSheet(UserInterfaceMenuNodeType.class);
-    	createFromExcelSheet(UserInterfaceMenuType.class);
+    	dataSet.addClass(UserInterfaceMenuRenderType.class);
+    	dataSet.addClass(UserInterfaceMenuLocation.class);
+    	dataSet.addClass(UserInterfaceMenuNodeType.class);
+    	dataSet.addClass(UserInterfaceMenuType.class);
     }
     
     @Override

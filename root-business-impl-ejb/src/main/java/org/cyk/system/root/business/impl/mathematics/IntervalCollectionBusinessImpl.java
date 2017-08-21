@@ -65,5 +65,14 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 		collection.setLowestValue(findLowestValue(collection));
 		collection.setHighestValue(findHighestValue(collection));
 	}
+	
+	public static class BuilderOneDimensionArray extends AbstractCollectionBusinessImpl.BuilderOneDimensionArray<IntervalCollection> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(IntervalCollection.class);
+		}
+		
+	}
 
 }

@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl.pattern.tree;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
@@ -44,5 +45,16 @@ public abstract class AbstractDataTreeBusinessImpl<ENUMERATION extends AbstractD
 	protected Integer getInstanciateOneDataTreeTypeStartIndex(String[] values) {
 		return 15;
 	}
+	
+	/**/
+	
+	public static class BuilderOneDimensionArray<T extends AbstractDataTree<?>> extends AbstractDataTreeNodeBusinessImpl.BuilderOneDimensionArray<T> implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
+		public BuilderOneDimensionArray(Class<T> outputClass) {
+			super(outputClass);
+			addParameterArrayElementStringIndexInstance(15,AbstractDataTree.FIELD_TYPE);
+		}		        		
+	}		
 	
 }

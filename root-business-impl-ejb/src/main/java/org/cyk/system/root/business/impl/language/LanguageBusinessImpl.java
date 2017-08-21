@@ -679,4 +679,12 @@ public class LanguageBusinessImpl extends AbstractEnumerationBusinessImpl<Langua
 			}
 		}
 	}
+	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<Language> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Language.class);
+		}
+	}
 }

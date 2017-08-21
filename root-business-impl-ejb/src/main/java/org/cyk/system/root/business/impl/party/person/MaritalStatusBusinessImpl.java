@@ -18,4 +18,12 @@ public class MaritalStatusBusinessImpl extends AbstractEnumerationBusinessImpl<M
 		super(dao); 
 	}   
 	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<MaritalStatus> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(MaritalStatus.class);
+		}
+	}
+	
 }

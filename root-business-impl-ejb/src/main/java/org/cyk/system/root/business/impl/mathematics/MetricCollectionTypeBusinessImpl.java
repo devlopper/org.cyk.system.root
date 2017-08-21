@@ -18,5 +18,13 @@ public class MetricCollectionTypeBusinessImpl extends AbstractEnumerationBusines
 		super(dao); 
 	}
 
-	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<MetricCollectionType> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(MetricCollectionType.class);
+			
+		}
+		
+	}
 }

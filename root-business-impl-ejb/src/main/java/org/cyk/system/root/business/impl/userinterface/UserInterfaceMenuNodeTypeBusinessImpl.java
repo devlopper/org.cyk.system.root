@@ -1,5 +1,7 @@
 package org.cyk.system.root.business.impl.userinterface;
 
+import java.io.Serializable;
+
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.userinterface.UserInterfaceMenuNodeTypeBusiness;
@@ -16,4 +18,12 @@ public class UserInterfaceMenuNodeTypeBusinessImpl extends AbstractDataTreeTypeB
         super(dao);
     } 
 
+	public static class BuilderOneDimensionArray extends AbstractDataTreeTypeBusinessImpl.BuilderOneDimensionArray<UserInterfaceMenuNodeType> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(UserInterfaceMenuNodeType.class);
+		}
+		
+	}
 }

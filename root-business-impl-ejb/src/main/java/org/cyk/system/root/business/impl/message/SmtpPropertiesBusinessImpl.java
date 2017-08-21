@@ -14,6 +14,7 @@ import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
+import org.cyk.utility.common.helper.FieldHelper;
 
 public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<SmtpProperties, SmtpPropertiesDao> implements SmtpPropertiesBusiness,Serializable {
 
@@ -87,6 +88,17 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
 	@Override
 	public Properties findDefaultProperties() {
 		return convertToProperties(findDefaulted());
+	}
+	
+	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<SmtpProperties> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(SmtpProperties.class);
+			addFieldCode().addParameterArrayElementString(SmtpProperties.FIELD_SERVICE,SmtpProperties.FIELD_CREDENTIALS,SmtpProperties.FIELD_FROM,
+	    			FieldHelper.getInstance().buildPath(SmtpProperties.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_DEFAULTED));
+		}
+		
 	}
 	
 }

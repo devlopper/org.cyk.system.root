@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.ENUMERATION,genderType=GenderType.MALE)
 public class PersonRelationshipTypeGroup extends AbstractDataTreeType implements Serializable {
@@ -21,6 +21,5 @@ public class PersonRelationshipTypeGroup extends AbstractDataTreeType implements
 	public PersonRelationshipTypeGroup(PersonRelationshipTypeGroup parent, String code,String name) {
 		super(parent, code,name);
 	}
-	
 	
 }

@@ -1,5 +1,7 @@
 package org.cyk.system.root.business.impl.party.person;
 
+import java.io.Serializable;
+
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeGroupBusiness;
@@ -14,6 +16,15 @@ public class PersonRelationshipTypeGroupBusinessImpl extends AbstractDataTreeTyp
 	@Inject
     public PersonRelationshipTypeGroupBusinessImpl(PersonRelationshipTypeGroupDao dao) {
         super(dao);
-    } 
+    }
+	
+	public static class BuilderOneDimensionArray extends AbstractDataTreeTypeBusinessImpl.BuilderOneDimensionArray<PersonRelationshipTypeGroup> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(PersonRelationshipTypeGroup.class);
+		}
+		
+	}
 
 }

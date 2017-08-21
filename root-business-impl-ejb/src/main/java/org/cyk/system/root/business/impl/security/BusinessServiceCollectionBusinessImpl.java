@@ -21,4 +21,12 @@ public class BusinessServiceCollectionBusinessImpl extends AbstractCollectionBus
 		super(dao); 
 	}
 	
+	public static class BuilderOneDimensionArray extends AbstractCollectionBusinessImpl.BuilderOneDimensionArray<BusinessServiceCollection> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(BusinessServiceCollection.class);
+		}
+		
+	}
 }

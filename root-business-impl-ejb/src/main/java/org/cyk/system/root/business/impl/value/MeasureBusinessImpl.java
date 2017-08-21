@@ -68,4 +68,17 @@ public class MeasureBusinessImpl extends AbstractEnumerationBusinessImpl<Measure
 	/**/
 	
 	public static MathContext MATH_CONTEXT = new MathContext(0, RoundingMode.HALF_DOWN);
+	
+	/**/
+	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<Measure> implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Measure.class);
+			addParameterArrayElementStringIndexInstance(10,Measure.FIELD_TYPE,11,Measure.FIELD_VALUE);
+		}		
+	}
+	
 }
