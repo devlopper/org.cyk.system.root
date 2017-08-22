@@ -31,8 +31,6 @@ public class Installation extends AbstractModelElement implements Serializable {
 	
 	private SmtpProperties smtpProperties;
 	
-	private Boolean faked = Boolean.FALSE;
-	
 	private Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
 	
 	private Map<String, Set<String>> urlRolesMap = new HashMap<>();

@@ -115,12 +115,10 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     }
     
     @Override
-    public void createInitialData(Boolean runFakeTransactions) {
+    public void createInitialData() {
     	rootDataProducerHelper.setBasePackage(getClass().getPackage());
     	persistData();
     	setConstants();
-    	if(Boolean.TRUE.equals(runFakeTransactions))
-    		fakeTransactions();
     }
     
     protected void persistData(){
@@ -155,8 +153,8 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		
 	}
     
+    @Deprecated
     protected abstract void setConstants();
-    protected abstract void fakeTransactions();
     
     protected void registerResourceBundles(String systemName){
     	for(String format : RESOURCE_BUNDLE_FORMATS)
@@ -227,13 +225,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 	
 	@Override
 	public void installApplication() {
-		installApplication(buildInstallation());	
-	}
-	
-	@Override
-	public void installApplication(Boolean fake) {
 		Installation installation = buildInstallation();
-		installation.setFaked(fake);
 		installApplication(installation);
 	}
 	

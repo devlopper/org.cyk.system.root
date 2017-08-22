@@ -484,11 +484,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     		applicationIdentifier = this.application.getIdentifier();
     }
     
-    @Override
-    protected void fakeTransactions() {
-    	
-    }
-    
     public static RootBusinessLayer getInstance() {
 		return INSTANCE;
 	}

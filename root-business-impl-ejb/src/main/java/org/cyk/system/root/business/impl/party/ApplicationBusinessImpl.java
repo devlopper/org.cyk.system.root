@@ -113,7 +113,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		logInfo("Creating data");
 		for(BusinessLayer layer : businessManager.findBusinessLayers()){
 			logInfo("Layer : "+ ((AbstractBusinessLayer)layer).getId());
-			layer.createInitialData(installation.getFaked());
+			layer.createInitialData();
 		}
 	}
 	

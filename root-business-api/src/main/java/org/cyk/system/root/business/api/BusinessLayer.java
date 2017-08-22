@@ -12,7 +12,7 @@ public interface BusinessLayer {
     /**
      * Create application initial data. 
      */
-    void createInitialData(Boolean runFakeTransactions);
+    void createInitialData();
      
     //void registerDataTreeBusinessBean(Map<Class<AbstractDataTree<DataTreeType>>, AbstractDataTreeBusiness<AbstractDataTree<DataTreeType>, DataTreeType>> beansMap);
     
@@ -22,7 +22,6 @@ public interface BusinessLayer {
     Installation buildInstallation();
     
     void installApplication(Installation installation);
-    void installApplication(Boolean fake);
     void installApplication();
     
 }

@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@Deprecated
 //TODO Faked to be removed from class name
 public abstract class AbstractFakedDataProducer extends AbstractBean implements Serializable {
 
