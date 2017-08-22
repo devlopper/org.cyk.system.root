@@ -15,7 +15,6 @@ import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessTestHelper;
-import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
@@ -24,7 +23,6 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.utility.common.ObjectFieldValues;
-import org.cyk.utility.common.file.ExcelSheetReader;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
@@ -35,7 +33,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 
 public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased {
-
+	private static final long serialVersionUID = 7531234257367131255L;
+	
 	static {
 		TestEnvironmentListener.COLLECTION.add(new TestEnvironmentListener.Adapter.Default(){
 			private static final long serialVersionUID = -2347039842308401189L;
@@ -65,17 +64,6 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
         return createRootDeployment();
     }
 	
-    /*
-	public static ArchiveBuilder deployment(Class<?>[] classes){
-		ArchiveBuilder builder = new ArchiveBuilder();
-		builder.create().addClasses(BusinessIntegrationTestHelper.BASE_CLASSES).business(classes);
-		return builder;
-	}*/
-	 
-	/**
-	 *  
-	 */
-	private static final long serialVersionUID = 7531234257367131255L;
 	@Inject protected ExceptionUtils exceptionUtils;
 	@Inject protected DefaultValidator defaultValidator;
 	@Inject private GenericDaoImpl g;
@@ -95,18 +83,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     	return Boolean.FALSE;
     }
     
-    protected void listenPopulateStart(){
-    	RootDataProducerHelper.Listener.COLLECTION.add(new RootDataProducerHelper.Listener.Adapter.Default(){
-    		private static final long serialVersionUID = 1L;
-
-			@Override
-    		public ExcelSheetReader processExcelSheetReader(ExcelSheetReader excelSheetReader) {
-    			if(excelSheetReader.getSheetName().equals("Country"))
-    				excelSheetReader.setRowCount(2);
-    			return super.processExcelSheetReader(excelSheetReader);
-    		}
-    	});
-    }
+    protected void listenPopulateStart(){}
     
     @Override
     protected void populate() {
@@ -133,11 +110,6 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 	protected void finds(){}
 	
 	protected void businesses(){}
-	/*
-	@SuppressWarnings("unchecked")
-    protected <T extends AbstractIdentifiable> T create(T anObject){
-        return (T) genericBusiness.create(anObject);
-    }*/
 	
 	/* Shortcut */
     
