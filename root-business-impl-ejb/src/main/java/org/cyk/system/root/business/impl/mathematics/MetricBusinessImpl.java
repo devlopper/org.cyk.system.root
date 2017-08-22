@@ -8,10 +8,13 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
+import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
+import org.cyk.utility.common.helper.FieldHelper;
 
 public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metric,MetricDao,MetricCollection> implements MetricBusiness,Serializable {
 
@@ -77,4 +80,15 @@ public class MetricBusinessImpl extends AbstractCollectionItemBusinessImpl<Metri
 		}
 	}
 	
+	/**/
+	
+	public static class BuilderOneDimensionArray extends AbstractCollectionItemBusinessImpl.BuilderOneDimensionArray<Metric> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Metric.class);
+			addParameterArrayElementString(15,Metric.FIELD_VALUE_PROPERTIES);
+		}
+		
+	}
 }

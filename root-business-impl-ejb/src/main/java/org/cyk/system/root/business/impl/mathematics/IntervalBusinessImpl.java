@@ -224,6 +224,6 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 			addParameterArrayElementString(19,FieldHelper.getInstance().buildPath(Interval.FIELD_HIGH,IntervalExtremity.FIELD_EXCLUDED));
 			
 		}
-		
+
 	}
 }

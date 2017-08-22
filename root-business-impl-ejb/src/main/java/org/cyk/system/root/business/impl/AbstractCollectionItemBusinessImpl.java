@@ -38,7 +38,7 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		item.setCode(StringUtils.defaultIfBlank(item.getCode(), /*RandomStringUtils.randomAlphanumeric(5)*/ RootConstant.Code.generateFromString(item.getName())));
 		if(item.getCollection()!=null && StringUtils.isNotBlank(item.getCollection().getCode()) && StringUtils.isNotBlank(item.getCollection().getItemCodeSeparator()) 
 				&& !StringUtils.contains(item.getCode(), item.getCollection().getItemCodeSeparator()))
-			item.setCode(item.getCollection().getCode()+item.getCollection().getItemCodeSeparator()+item.getCode());
+			item.setCode(RootConstant.Code.generate(item));
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -121,6 +121,26 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 			super(outputClass);
 			addParameterArrayElementString(10,AbstractCollectionItem.FIELD_COLLECTION);
 		}
+		
+		@Override
+		protected T __execute__() {
+			T item = super.__execute__();
+			if(item.getCollection()!=null)
+				item.setCode(RootConstant.Code.generate(item));
+			return item;
+		}
+		
+		/**/
+		
+		public static class KeyBuilder extends org.cyk.system.root.business.impl.helper.ArrayHelper.KeyBuilder implements Serializable {
+			private static final long serialVersionUID = 1L;
+	    	/*
+			@Override
+			protected org.cyk.utility.common.helper.ArrayHelper.Dimension.Key __execute__() {
+				return new org.cyk.utility.common.helper.ArrayHelper.Dimension.Key(RootConstant.Code.generate(getInput()[0]));
+			}*/
+
+	    }
 		
 	}
 	

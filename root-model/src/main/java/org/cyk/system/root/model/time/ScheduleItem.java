@@ -10,9 +10,10 @@ import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.utility.common.annotation.FieldOverride;
 
 @Entity 
-@Getter @Setter
+@Getter @Setter @FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=Schedule.class)
 public class ScheduleItem extends AbstractCollectionItem<Schedule> implements Serializable {
 
 	private static final long serialVersionUID = 6459524990626259467L;

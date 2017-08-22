@@ -8,12 +8,13 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.utility.common.annotation.FieldOverride;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @Entity @NoArgsConstructor
+@Getter @Setter @Entity @NoArgsConstructor @FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=ValueCollection.class)
 public class ValueCollectionItem extends AbstractCollectionItem<ValueCollection> implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;

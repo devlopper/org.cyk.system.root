@@ -10,17 +10,20 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.annotation.FieldOverride;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.StringHelper;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractCollectionItem;
-import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.annotation.ModelBean;
-import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
-import org.cyk.utility.common.annotation.ModelBean.GenderType;
-
 @Getter @Setter @Entity @Table(name="TABLE_INTERVAL") @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
+@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=IntervalCollection.class)
 public class Interval extends AbstractCollectionItem<IntervalCollection> implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
@@ -73,7 +76,7 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	
 	@Override
 	public String toString() {
-		return low+" "+high;
+		return (StringHelper.getInstance().isBlank(getCode()) ? Constant.EMPTY_STRING : (getCode() + " - ") ) + (low+" "+high);
 	}
 	
 	@Override

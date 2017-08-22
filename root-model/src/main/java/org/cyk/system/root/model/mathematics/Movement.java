@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.utility.common.annotation.FieldOverride;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -21,6 +22,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS) @Accessors(chain=true)
+@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MovementCollection.class)
 public class Movement extends AbstractCollectionItem<MovementCollection> implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;

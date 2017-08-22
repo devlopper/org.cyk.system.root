@@ -49,7 +49,7 @@ public class DataSet extends AbstractBean implements Serializable {
 	private Deque<Package> basePackageQueue = new ArrayDeque<>();
 	private Boolean basePackageQueueingEnabled = Boolean.FALSE;
 	
-	private Map<Class<AbstractIdentifiable>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceKeyBuilderMap = new LinkedHashMap<>();
+	private Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceKeyBuilderMap = new LinkedHashMap<>();
 	private Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceBuilderMap = new LinkedHashMap<>();
 	private Map<Class<AbstractIdentifiable>,Collection<AbstractIdentifiable>> instanceMap = new LinkedHashMap<>();
 	

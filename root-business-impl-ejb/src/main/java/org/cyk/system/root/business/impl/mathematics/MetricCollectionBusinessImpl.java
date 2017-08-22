@@ -111,4 +111,15 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 		return findByTypesByIdentifiables(Arrays.asList(metricCollectionType),Arrays.asList(identifiable));
 	}
 	
+	/**/
+	
+	public static class BuilderOneDimensionArray extends AbstractCollectionBusinessImpl.BuilderOneDimensionArray<MetricCollection> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(MetricCollection.class);
+			addParameterArrayElementStringIndexInstance(10,MetricCollection.FIELD_TYPE,11,MetricCollection.FIELD_VALUE_PROPERTIES,12,MetricCollection.FIELD_VALUE);
+		}
+		
+	}
 }

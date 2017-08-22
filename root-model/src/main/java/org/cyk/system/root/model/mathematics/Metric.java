@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.value.Measure;
 import org.cyk.system.root.model.value.ValueProperties;
+import org.cyk.utility.common.annotation.FieldOverride;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -21,6 +22,7 @@ import lombok.Setter;
  *
  */
 @Getter @Setter /*@NoArgsConstructor @AllArgsConstructor*/ @Entity @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS)
+@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MetricCollection.class)
 public class Metric extends AbstractCollectionItem<MetricCollection> implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;

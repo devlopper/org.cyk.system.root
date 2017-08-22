@@ -51,4 +51,13 @@ public class ValueCollectionBusinessImpl extends AbstractCollectionBusinessImpl<
 		return valueCollection;
 	}
 	
+	public static class BuilderOneDimensionArray extends AbstractCollectionBusinessImpl.BuilderOneDimensionArray<ValueCollection> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(ValueCollection.class);
+		}
+		
+	}
+	
 }

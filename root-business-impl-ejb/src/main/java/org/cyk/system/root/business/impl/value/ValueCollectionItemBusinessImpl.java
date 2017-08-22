@@ -70,5 +70,17 @@ public class ValueCollectionItemBusinessImpl extends AbstractCollectionItemBusin
 		derive(valueCollectionItem,listener);
 		return valueCollectionItem;
 	}
+
+	/**/
+	
+	public static class BuilderOneDimensionArray extends AbstractCollectionItemBusinessImpl.BuilderOneDimensionArray<ValueCollectionItem> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(ValueCollectionItem.class);
+			addParameterArrayElementString(15,ValueCollectionItem.FIELD_VALUE);
+			
+		}
 		
+	}
 }

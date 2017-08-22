@@ -37,6 +37,10 @@ public interface RootConstant {
 				return collection.getCode()+collection.getItemCodeSeparator()+ code;
 		}
 		
+		public static String generate(AbstractCollectionItem<?> item){
+			return generate((AbstractCollection<?>)item.getCollection(),item.getCode());
+		}
+		
 		public static String getRelativeCode(AbstractCollection<?> collection,String code){
 			return StringUtils.isBlank(collection.getItemCodeSeparator()) ? code : StringUtils.split(code,collection.getItemCodeSeparator())[1];
 		}
