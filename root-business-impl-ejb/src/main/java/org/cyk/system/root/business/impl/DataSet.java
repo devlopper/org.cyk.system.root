@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedHashMap;
@@ -39,19 +40,19 @@ public class DataSet extends AbstractBean implements Serializable {
 	
 	private static final String INSTANCE_BUILDER_FROM_ARRAY_CLASS_NAME = "BuilderOneDimensionArray";
 	
-	private String systemIdentifier;
-	private String excelWorkbookFileName;
-	private final Collection<Class<?>> excelSheetClasses = new LinkedHashSet<>();
-	private final Collection<Class<?>> excelSheetRequiredClasses = new LinkedHashSet<>();
+	protected String systemIdentifier;
+	protected String excelWorkbookFileName;
+	protected final Collection<Class<?>> excelSheetClasses = new LinkedHashSet<>();
+	protected final Collection<Class<?>> excelSheetRequiredClasses = new LinkedHashSet<>();
 	
-	private Package basePackage;
-	private Class<?> baseClass;
-	private Deque<Package> basePackageQueue = new ArrayDeque<>();
-	private Boolean basePackageQueueingEnabled = Boolean.FALSE;
+	protected Package basePackage;
+	protected Class<?> baseClass;
+	protected Deque<Package> basePackageQueue = new ArrayDeque<>();
+	protected Boolean basePackageQueueingEnabled = Boolean.FALSE;
 	
-	private Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceKeyBuilderMap = new LinkedHashMap<>();
-	private Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceBuilderMap = new LinkedHashMap<>();
-	private Map<Class<AbstractIdentifiable>,Collection<AbstractIdentifiable>> instanceMap = new LinkedHashMap<>();
+	protected Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceKeyBuilderMap = new LinkedHashMap<>();
+	protected Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceBuilderMap = new LinkedHashMap<>();
+	protected Map<Class<AbstractIdentifiable>,Collection<AbstractIdentifiable>> instanceMap = new LinkedHashMap<>();
 	
 	public DataSet(Class<?> baseClass) {
 		this.baseClass = baseClass;
@@ -105,7 +106,7 @@ public class DataSet extends AbstractBean implements Serializable {
 			instanceBuilder.setKeyBuilder(keyBuilder);
 			instancesBuilder.setOneDimensionArray(instanceBuilder);
 			Collection<AbstractIdentifiable> identifiables = inject(BusinessInterfaceLocator.class).injectTyped(aClass).instanciateMany(sheet,instanceBuilder);
-			instanceMap.put(aClass, identifiables);
+			addInstances(aClass, identifiables);
 			Pool.getInstance().add(aClass, identifiables);
 			timeCollection.addCurrent();
 			logger.getMessageBuilder().addManyParameters(new Object[]{"duration",new TimeHelper.Stringifier.Duration.Adapter.Default(timeCollection.getDuration()).execute()});
@@ -149,5 +150,24 @@ public class DataSet extends AbstractBean implements Serializable {
 	
 	public <T extends AbstractIdentifiable> DataSet addClass(Class<T> aClass){
 		return addClass(aClass, null);
+	}
+
+	public <T extends AbstractIdentifiable> DataSet addInstances(Class<T> aClass,@SuppressWarnings("unchecked") T...instances){
+		if(!ArrayHelper.getInstance().isEmpty(instances))
+			addInstances(aClass, Arrays.asList(instances));
+		return this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractIdentifiable> DataSet addInstances(Class<T> aClass,Collection<T> instances){
+		if(!CollectionHelper.getInstance().isEmpty(instances)){
+			Collection<T> collection = (Collection<T>) instanceMap.get(aClass);
+			if(collection==null){
+				collection = new ArrayList<>();
+				instanceMap.put((Class<AbstractIdentifiable>)aClass, (Collection<AbstractIdentifiable>)collection);
+			}
+			collection.addAll(instances);
+		}
+		return this;
 	}
 }
