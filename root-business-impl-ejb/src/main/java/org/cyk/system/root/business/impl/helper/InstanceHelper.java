@@ -48,7 +48,7 @@ public class InstanceHelper implements Serializable {
     	/**/
     	
 	}
-	
+		
 	public static class Lookup extends org.cyk.utility.common.helper.InstanceHelper.Lookup.Source.Adapter.Default.ResultMethod {
 		
 		private static final long serialVersionUID = 1L;

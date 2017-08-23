@@ -34,9 +34,12 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 	
 	@Override
 	protected void beforeCreate(Credentials credentials) {
-		super.beforeCreate(credentials);
+		for(Software software : inject(SoftwareBusiness.class).findAll())
+			System.out.println(software+" : "+software.getDefaulted());
 		if(credentials.getSoftware()==null)
 			credentials.setSoftware(inject(SoftwareBusiness.class).findDefaulted());
+		super.beforeCreate(credentials);
+		
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)

@@ -17,10 +17,13 @@ import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBus
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.helper.FieldHelper;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NEVER)
 public class GlobalIdentifierBusinessImpl extends AbstractBean implements GlobalIdentifierBusiness,Serializable {
@@ -126,5 +129,20 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 			
 		}
 		
+	}
+	
+	/**/
+	
+	public static class BuilderOneDimensionArray extends org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray.Adapter.Default<GlobalIdentifier> implements Serializable{
+    	private static final long serialVersionUID = 1L;
+    	
+    	public BuilderOneDimensionArray() {
+			super(GlobalIdentifier.class);
+			addParameterArrayElementString(GlobalIdentifier.FIELD_IDENTIFIER,GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME);
+			addParameterArrayElementStringIndexInstance(10,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
+			addParameterArrayElementStringIndexInstance(11,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_TO_DATE));
+			addParameterArrayElementStringIndexInstance(10,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_MIME));
+			addParameterArrayElementStringIndexInstance(10,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_EXTENSION));
+		}
 	}
 }

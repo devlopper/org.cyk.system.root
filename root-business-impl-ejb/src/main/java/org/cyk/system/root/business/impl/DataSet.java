@@ -53,7 +53,7 @@ public class DataSet extends AbstractBean implements Serializable {
 	
 	protected Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceKeyBuilderMap = new LinkedHashMap<>();
 	protected Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceBuilderMap = new LinkedHashMap<>();
-	protected Map<Class<AbstractIdentifiable>,Collection<AbstractIdentifiable>> instanceMap = new LinkedHashMap<>();
+	protected Map<Class<?>,Collection<?>> instanceMap = new LinkedHashMap<>();
 	protected Map<Class<?>,Integer> identifiableCountByTransactionMap = new LinkedHashMap<>();
 	
 	public DataSet(Class<?> baseClass) {
@@ -120,14 +120,14 @@ public class DataSet extends AbstractBean implements Serializable {
 	}
 	
 	public void __create__(){
-		for(Entry<Class<AbstractIdentifiable>,Collection<AbstractIdentifiable>> entry : instanceMap.entrySet()){
-			if(!CollectionHelper.getInstance().isEmpty(entry.getValue())){
+		for(Entry<Class<?>,Collection<?>> entry : instanceMap.entrySet()){
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, entry.getKey()) && !CollectionHelper.getInstance().isEmpty(entry.getValue())){
 				Long millisecond1 = System.currentTimeMillis();
 				Integer count = identifiableCountByTransactionMap.get(entry.getKey());
 				if(count==null)
 					inject(GenericBusiness.class).create(entry.getValue());
-				else for(AbstractIdentifiable identifiable : entry.getValue())
-					inject(GenericBusiness.class).create(identifiable);
+				else for(Object identifiable : entry.getValue())
+					inject(GenericBusiness.class).create((AbstractIdentifiable)identifiable);
 				
 				logTrace("create {}. count {} , duration is {}", entry.getKey().getSimpleName(),CollectionHelper.getInstance().getSize(entry.getValue())
 						,new TimeHelper.Stringifier.Duration.Adapter.Default(System.currentTimeMillis()-millisecond1).execute());
@@ -144,15 +144,17 @@ public class DataSet extends AbstractBean implements Serializable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractIdentifiable> DataSet addClass(Class<T> aClass,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<T> instanceBuilder){
+	public <T> DataSet addClass(Class<T> aClass,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?> instanceBuilder){
 		excelSheetClasses.add(aClass);
 		if(instanceBuilder==null){
-			String instanceBuilderClassName = inject(BusinessInterfaceLocator.class).injectTyped(aClass).getClass().getName()+Constant.CHARACTER_DOLLAR+INSTANCE_BUILDER_FROM_ARRAY_CLASS_NAME;
-			Class<?> instanceBuilderClass = ClassHelper.getInstance().getByName(instanceBuilderClassName,Boolean.TRUE);	
-			if(instanceBuilderClass==null)
-				System.out.println("No instance builder set for "+aClass+" : "+instanceBuilderClassName);
-			else
-				instanceBuilder = (BuilderOneDimensionArray<T>) ClassHelper.getInstance().instanciateOne(instanceBuilderClass);
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass)){
+				String instanceBuilderClassName = inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).getClass().getName()+Constant.CHARACTER_DOLLAR+INSTANCE_BUILDER_FROM_ARRAY_CLASS_NAME;
+				Class<?> instanceBuilderClass = ClassHelper.getInstance().getByName(instanceBuilderClassName,Boolean.TRUE);	
+				if(instanceBuilderClass==null)
+					System.out.println("No instance builder set for "+aClass+" : "+instanceBuilderClassName);
+				else
+					instanceBuilder = (BuilderOneDimensionArray<?>) ClassHelper.getInstance().instanciateOne(instanceBuilderClass);	
+			}
 		}
 		
 		if(instanceBuilder!=null)
@@ -160,23 +162,23 @@ public class DataSet extends AbstractBean implements Serializable {
 		return this;
 	}
 	
-	public <T extends AbstractIdentifiable> DataSet addClass(Class<T> aClass){
+	public <T> DataSet addClass(Class<T> aClass){
 		return addClass(aClass, null);
 	}
 
-	public <T extends AbstractIdentifiable> DataSet addInstances(Class<T> aClass,@SuppressWarnings("unchecked") T...instances){
+	public <T> DataSet addInstances(Class<T> aClass,@SuppressWarnings("unchecked") T...instances){
 		if(!ArrayHelper.getInstance().isEmpty(instances))
 			addInstances(aClass, Arrays.asList(instances));
 		return this;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractIdentifiable> Collection<T> getInstances(Class<T> aClass){
+	public <T> Collection<T> getInstances(Class<T> aClass){
 		return (Collection<T>) instanceMap.get(aClass);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractIdentifiable> DataSet addInstances(Class<T> aClass,Collection<T> instances){
+	public <T> DataSet addInstances(Class<T> aClass,Collection<T> instances){
 		if(!CollectionHelper.getInstance().isEmpty(instances)){
 			Collection<T> collection = (Collection<T>) instanceMap.get(aClass);
 			if(collection==null){

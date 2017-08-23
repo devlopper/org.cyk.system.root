@@ -15,10 +15,10 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<!--Logger name="org.cyk.system.root.business.impl.DataSet"
+		<Logger name="org.cyk.system.root.business.impl.DataSet"
 			level="trace">
 			<AppenderRef ref="Console" />
-		</Logger-->
+		</Logger>
 		<!--Logger name="org.cyk"
 			level="trace">
 			<AppenderRef ref="BusinessConsole" />
