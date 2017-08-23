@@ -119,13 +119,14 @@ public class DataSet extends AbstractBean implements Serializable {
 				.Default(System.currentTimeMillis()-millisecond).execute());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void __create__(){
 		for(Entry<Class<?>,Collection<?>> entry : instanceMap.entrySet()){
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, entry.getKey()) && !CollectionHelper.getInstance().isEmpty(entry.getValue())){
 				Long millisecond1 = System.currentTimeMillis();
 				Integer count = identifiableCountByTransactionMap.get(entry.getKey());
 				if(count==null)
-					inject(GenericBusiness.class).create(entry.getValue());
+					inject(GenericBusiness.class).create((Collection<AbstractIdentifiable>)entry.getValue());
 				else for(Object identifiable : entry.getValue())
 					inject(GenericBusiness.class).create((AbstractIdentifiable)identifiable);
 				
