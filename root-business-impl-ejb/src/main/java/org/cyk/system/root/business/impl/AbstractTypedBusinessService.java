@@ -66,7 +66,6 @@ import org.cyk.system.root.persistence.api.mathematics.MetricValueIdentifiableGl
 import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.converter.Converter;
 import org.cyk.utility.common.converter.ManyConverter;
@@ -74,7 +73,7 @@ import org.cyk.utility.common.converter.OneConverter;
 import org.cyk.utility.common.formatter.DateFormatter;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
-import org.cyk.utility.common.helper.TimeHelper;
+import org.cyk.utility.common.helper.StackTraceHelper;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -267,10 +266,34 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	@Override
-	public IDENTIFIABLE create(IDENTIFIABLE identifiable) {
+	public IDENTIFIABLE create(final IDENTIFIABLE identifiable) {
 		if(identifiable==null){
 			
 		}else{
+			new LoggingHelper.Run.Adapter.Default(StackTraceHelper.getInstance().getAt(2),getClass()){
+				private static final long serialVersionUID = 1L;
+				
+				@Override
+				public void addParameters(org.cyk.utility.common.helper.LoggingHelper.Message.Builder builder, Boolean before) {
+					super.addParameters(builder, before);
+					builder.addNamedParameters("entity",identifiable.getClass().getSimpleName(),"code",identifiable.getCode());
+					if(Boolean.TRUE.equals(before)){
+						
+					}else{
+						builder.addNamedParameters("identifier",identifiable.getIdentifier());
+					}
+				}
+				
+				@Override
+				public Object __execute__() {
+					beforeCreate(identifiable);
+			        dao.create(identifiable);
+			        afterCreate(identifiable);	
+					return null;
+				}
+				
+			}.execute();
+			/*
 			Long millisecond = System.currentTimeMillis();
 			LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("create",new Object[]{"entity",identifiable.getClass().getSimpleName()}
 	    	,new Object[]{"code",identifiable.getCode()},new Object[]{"identifier",identifiable.getIdentifier()}).getLogger().execute(getClass(),LoggingHelper.Logger.Level.TRACE
@@ -285,7 +308,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	        LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("created",new Object[]{"entity",identifiable.getClass().getSimpleName()}
     		,new Object[]{"code",identifiable.getCode()},new Object[]{"identifier",identifiable.getIdentifier()},new Object[]{"duration",duration}).getLogger().execute(getClass(),LoggingHelper.Logger.Level.DEBUG
     				,LoggingHelper.getInstance().getMarkerName(identifiable.getClass().getSimpleName(),"CREATED"));
-	        
+	        */
 		}
 		
         return identifiable;
@@ -364,10 +387,34 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 
 	@Override
-	public IDENTIFIABLE update(IDENTIFIABLE identifiable) {
+	public IDENTIFIABLE update(final IDENTIFIABLE identifiable) {
 		if(identifiable==null){
 			
 		}else{
+			new LoggingHelper.Run.Adapter.Default(StackTraceHelper.getInstance().getAt(2),getClass()){
+				private static final long serialVersionUID = 1L;
+				
+				@Override
+				public void addParameters(org.cyk.utility.common.helper.LoggingHelper.Message.Builder builder, Boolean before) {
+					super.addParameters(builder, before);
+					builder.addNamedParameters("entity",identifiable.getClass().getSimpleName(),"code",identifiable.getCode());
+					builder.addNamedParameters("identifier",identifiable.getIdentifier());
+				}
+				
+				@Override
+				public Object __execute__() {
+					beforeUpdate(identifiable);
+					//IDENTIFIABLE newObject = dao.update(identifiable);
+					dao.update(identifiable);
+				    if(identifiable.getGlobalIdentifier()!=null)
+				    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
+				    afterUpdate(identifiable);
+					//return newObject; We might lost some informations by returning the new managed object. better to keep the old one
+					return identifiable;
+				}
+				
+			}.execute();
+			/*
 			beforeUpdate(identifiable);
 			//IDENTIFIABLE newObject = dao.update(identifiable);
 			dao.update(identifiable);
@@ -375,6 +422,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
 		    afterUpdate(identifiable);
 			//return newObject; We might lost some informations by returning the new managed object. better to keep the old one
+		    */
 		}
 		
 		return identifiable;
@@ -434,19 +482,46 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 
 	@Override
-	public IDENTIFIABLE delete(IDENTIFIABLE identifiable) {
+	public IDENTIFIABLE delete(final IDENTIFIABLE identifiable) {
 		if(identifiable==null){
 			
 		}else{
+			new LoggingHelper.Run.Adapter.Default(StackTraceHelper.getInstance().getAt(2),getClass()){
+				private static final long serialVersionUID = 1L;
+				
+				@Override
+				public void addParameters(org.cyk.utility.common.helper.LoggingHelper.Message.Builder builder, Boolean before) {
+					super.addParameters(builder, before);
+					builder.addNamedParameters("entity",identifiable.getClass().getSimpleName(),"code",identifiable.getCode());
+					builder.addNamedParameters("identifier",identifiable.getIdentifier());
+				}
+				
+				@Override
+				public Object __execute__() {
+					if(Boolean.TRUE.equals(identifiable.getCheckIfExistOnDelete()) ? getPersistenceService().read(identifiable.getIdentifier())!=null : Boolean.TRUE){
+						beforeDelete(identifiable);
+						if(identifiable.getGlobalIdentifier()!=null){
+							inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
+							identifiable.setGlobalIdentifier(null);
+						}		
+						dao.delete(identifiable);
+						afterDelete(identifiable);		
+					}
+					return null;
+				}
+				
+			}.execute();
+			/*
 			if(Boolean.TRUE.equals(identifiable.getCheckIfExistOnDelete()) ? getPersistenceService().read(identifiable.getIdentifier())!=null : Boolean.TRUE){
 				beforeDelete(identifiable);
 				if(identifiable.getGlobalIdentifier()!=null){
 					inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
 					identifiable.setGlobalIdentifier(null);
 				}		
-				/*identifiable = */dao.delete(identifiable);
+				dao.delete(identifiable);
 				afterDelete(identifiable);		
 			}
+			*/
 		}
 		return identifiable;
 	}
@@ -783,13 +858,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 
 	@Override
 	public IDENTIFIABLE instanciateOne(String[] values) {
-		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Instanciate one",getClass().getSimpleName());
-		InstanciateOneListener<IDENTIFIABLE> listener = new InstanciateOneListener.Adapter.Default<IDENTIFIABLE>(instanciateOne(),values,0,logMessageBuilder);
+		InstanciateOneListener<IDENTIFIABLE> listener = new InstanciateOneListener.Adapter.Default<IDENTIFIABLE>(instanciateOne(),values,0,null);
 		IDENTIFIABLE identifiable = __instanciateOne__(values,listener);
-		logTrace(logMessageBuilder);
 		return identifiable;
 	}
 
+	@Deprecated
 	protected IDENTIFIABLE __instanciateOne__(String[] values,InstanciateOneListener<IDENTIFIABLE> listener) {
 		return null;
 	}
@@ -797,21 +871,18 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@Override
 	public <T> T convert(Converter<IDENTIFIABLE, T> converter) {
 		T result = converter.execute();
-		logTrace(converter.getLogMessageBuilder());
 		return result;
 	}
 	
 	@Override
 	public <T> T convert(OneConverter<IDENTIFIABLE, T> converter) {
 		T result = converter.execute();
-		logTrace(converter.getLogMessageBuilder());
 		return result;
 	}
 	
 	@Override
 	public <T> T convert(ManyConverter<IDENTIFIABLE, T> converter) {
 		T result = converter.execute();
-		logTrace(converter.getLogMessageBuilder());
 		return result;
 	}
 	
