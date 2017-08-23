@@ -27,6 +27,7 @@ import org.cyk.utility.common.helper.InstanceHelper.Pool;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
+import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 
 import lombok.Getter;
@@ -53,24 +54,21 @@ public class DataSet extends AbstractBean implements Serializable {
 	protected Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceKeyBuilderMap = new LinkedHashMap<>();
 	protected Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceBuilderMap = new LinkedHashMap<>();
 	protected Map<Class<AbstractIdentifiable>,Collection<AbstractIdentifiable>> instanceMap = new LinkedHashMap<>();
+	protected Map<Class<?>,Integer> identifiableCountByTransactionMap = new LinkedHashMap<>();
 	
 	public DataSet(Class<?> baseClass) {
 		this.baseClass = baseClass;
 		this.basePackage = this.baseClass.getPackage();
 		this.systemIdentifier = StringUtils.substringBetween(basePackage.getName(), "system.", ".business");
-	}
-	
-	public String getExcelWorkbookFileName(){
-		if(excelWorkbookFileName==null)
-			excelWorkbookFileName = systemIdentifier+"data.xls";
-		return excelWorkbookFileName;
+		this.excelWorkbookFileName = systemIdentifier+"data.xls";
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void instanciate(){
-		Long millisecond = System.currentTimeMillis();
+	public void __instanciate__(){
 		String fileName = getExcelWorkbookFileName();
-		logTrace("instanciate {} system data using file {} running...", systemIdentifier,fileName);
+		if(StringHelper.getInstance().isBlank(fileName))
+			return;
+		logTrace("instanciation from excel file {}",fileName);
 		/*
 		 * Fetch data from excel sheets
 		 */
@@ -112,21 +110,35 @@ public class DataSet extends AbstractBean implements Serializable {
 			logger.getMessageBuilder().addManyParameters(new Object[]{"duration",new TimeHelper.Stringifier.Duration.Adapter.Default(timeCollection.getDuration()).execute()});
 			logger.execute(getClass(),LoggingHelper.Logger.Level.TRACE,null);
 		}
+	}
+	
+	public void instanciate(){
+		Long millisecond = System.currentTimeMillis();
+		__instanciate__();
 		logTrace("instanciate system data {} done. duration is {}", systemIdentifier,new TimeHelper.Stringifier.Duration.Adapter
 				.Default(System.currentTimeMillis()-millisecond).execute());
+	}
+	
+	public void __create__(){
+		for(Entry<Class<AbstractIdentifiable>,Collection<AbstractIdentifiable>> entry : instanceMap.entrySet()){
+			if(!CollectionHelper.getInstance().isEmpty(entry.getValue())){
+				Long millisecond1 = System.currentTimeMillis();
+				Integer count = identifiableCountByTransactionMap.get(entry.getKey());
+				if(count==null)
+					inject(GenericBusiness.class).create(entry.getValue());
+				else for(AbstractIdentifiable identifiable : entry.getValue())
+					inject(GenericBusiness.class).create(identifiable);
+				
+				logTrace("create {}. count {} , duration is {}", entry.getKey().getSimpleName(),CollectionHelper.getInstance().getSize(entry.getValue())
+						,new TimeHelper.Stringifier.Duration.Adapter.Default(System.currentTimeMillis()-millisecond1).execute());
+			}
+		}
 	}
 	
 	public void create(){
 		Long millisecond = System.currentTimeMillis();
 		logTrace("create system data {} running", systemIdentifier);
-		for(Entry<Class<AbstractIdentifiable>,Collection<AbstractIdentifiable>> entry : instanceMap.entrySet()){
-			if(!CollectionHelper.getInstance().isEmpty(entry.getValue())){
-				Long millisecond1 = System.currentTimeMillis();
-				inject(GenericBusiness.class).create(entry.getValue());
-				logTrace("create {}. count {} , duration is {}", entry.getKey().getSimpleName(),CollectionHelper.getInstance().getSize(entry.getValue())
-						,new TimeHelper.Stringifier.Duration.Adapter.Default(System.currentTimeMillis()-millisecond1).execute());
-			}
-		}
+		__create__();
 		logTrace("create system data {} done. duration is {}", systemIdentifier,new TimeHelper.Stringifier.Duration.Adapter
 				.Default(System.currentTimeMillis()-millisecond).execute());
 	}
@@ -159,6 +171,11 @@ public class DataSet extends AbstractBean implements Serializable {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public <T extends AbstractIdentifiable> Collection<T> getInstances(Class<T> aClass){
+		return (Collection<T>) instanceMap.get(aClass);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public <T extends AbstractIdentifiable> DataSet addInstances(Class<T> aClass,Collection<T> instances){
 		if(!CollectionHelper.getInstance().isEmpty(instances)){
 			Collection<T> collection = (Collection<T>) instanceMap.get(aClass);
@@ -169,5 +186,16 @@ public class DataSet extends AbstractBean implements Serializable {
 			collection.addAll(instances);
 		}
 		return this;
+	}
+
+	public <T extends AbstractIdentifiable> DataSet create(Class<T> aClass,Integer countByTransaction){
+		for(T instance : getInstances(aClass)){
+    		inject(GenericBusiness.class).create(instance);
+    	}
+		return this;
+	}
+	
+	public <T extends AbstractIdentifiable> DataSet create(Class<T> aClass){
+		return create(aClass, null);
 	}
 }
