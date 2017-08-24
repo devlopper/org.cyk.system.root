@@ -140,7 +140,7 @@ public class DataSet extends AbstractBean implements Serializable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void __create__(){
+	public void __save__(){
 		for(Entry<Class<?>,Collection<?>> entry : instanceMap.entrySet()){
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, entry.getKey()) && !CollectionHelper.getInstance().isEmpty(entry.getValue())){
 				Long millisecond1 = System.currentTimeMillis();
@@ -156,11 +156,11 @@ public class DataSet extends AbstractBean implements Serializable {
 		}
 	}
 	
-	public void create(){
+	public void save(){
 		Long millisecond = System.currentTimeMillis();
-		logTrace("create system data {} running", systemIdentifier);
-		__create__();
-		logTrace("create system data {} done. duration is {}", systemIdentifier,new TimeHelper.Stringifier.Duration.Adapter
+		logTrace("save {} system data running", systemIdentifier);
+		__save__();
+		logTrace("save {} system data done. duration is {}", systemIdentifier,new TimeHelper.Stringifier.Duration.Adapter
 				.Default(System.currentTimeMillis()-millisecond).execute());
 	}
 	
