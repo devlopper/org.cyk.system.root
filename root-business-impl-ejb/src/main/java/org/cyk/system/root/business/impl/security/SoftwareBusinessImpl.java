@@ -29,15 +29,6 @@ public class SoftwareBusinessImpl extends AbstractEnumerationBusinessImpl<Softwa
 			addParameterArrayElementString(5,FieldHelper.getInstance().buildPath(SmtpProperties.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_DEFAULTED));
 		}
 		
-		@Override
-		protected Software __execute__() {
-			// TODO Auto-generated method stub
-			Software software =  super.__execute__();
-			System.out
-					.println("SoftwareBusinessImpl.BuilderOneDimensionArray.__execute__() : "+software.getCode()+" : " +software.getDefaulted());
-			return software;
-		}
-		
 	}
 	
 }

@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 
 public interface GlobalIdentifierBusiness {
 
@@ -17,4 +19,6 @@ public interface GlobalIdentifierBusiness {
 	GlobalIdentifier delete(GlobalIdentifier globalIdentifier);
 	
 	Collection<GlobalIdentifier> findAll();
+	
+	Collection<GlobalIdentifier> instanciateMany(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<GlobalIdentifier> instanceBuilder);
 }

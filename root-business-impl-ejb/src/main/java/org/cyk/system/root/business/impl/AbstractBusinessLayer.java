@@ -126,17 +126,17 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	
     	persistSecurityData();
     	if(RootDataProducerHelper.getInstance().getUniformResourceLocators()!=null){
-    		System.out.println("Uniform resource locators : "+RootDataProducerHelper.getInstance().getUniformResourceLocators().size());
+    		//System.out.println("Uniform resource locators : "+RootDataProducerHelper.getInstance().getUniformResourceLocators().size());
     		inject(UniformResourceLocatorBusiness.class).create(RootDataProducerHelper.getInstance().getUniformResourceLocators());
     		RootDataProducerHelper.getInstance().setUniformResourceLocators(null);
     	}
     	if(RootDataProducerHelper.getInstance().getRoleUniformResourceLocators()!=null){
-    		System.out.println("Role uniform resource locators : "+RootDataProducerHelper.getInstance().getRoleUniformResourceLocators().size());
+    		//System.out.println("Role uniform resource locators : "+RootDataProducerHelper.getInstance().getRoleUniformResourceLocators().size());
     		inject(RoleUniformResourceLocatorBusiness.class).create(RootDataProducerHelper.getInstance().getRoleUniformResourceLocators());
     		RootDataProducerHelper.getInstance().setRoleUniformResourceLocators(null);
     	}
     	if(RootDataProducerHelper.getInstance().getUserAccounts()!=null){
-    		System.out.println("User accounts : "+RootDataProducerHelper.getInstance().getUserAccounts().size());
+    		//System.out.println("User accounts : "+RootDataProducerHelper.getInstance().getUserAccounts().size());
     		inject(UserAccountBusiness.class).create(RootDataProducerHelper.getInstance().getUserAccounts());	
     		RootDataProducerHelper.getInstance().setUserAccounts(null);
     	}

@@ -24,6 +24,8 @@ import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifier
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NEVER)
 public class GlobalIdentifierBusinessImpl extends AbstractBean implements GlobalIdentifierBusiness,Serializable {
@@ -109,6 +111,19 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override
 	public Collection<GlobalIdentifier> findAll() {
 		return globalIdentifierDao.readAll();
+	}
+	
+	@Override
+	public Collection<GlobalIdentifier> instanciateMany(MicrosoftExcelHelper.Workbook.Sheet sheet,InstanceHelper.Builder.OneDimensionArray<GlobalIdentifier> instanceBuilder) {
+		Collection<GlobalIdentifier> identifiables = new ArrayList<>();
+		InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<GlobalIdentifier> instancesBuilder = new InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<GlobalIdentifier>(null);
+		instancesBuilder.setOneDimensionArray(instanceBuilder);
+		
+		if(sheet.getValues()!=null)
+			identifiables.addAll((Collection<GlobalIdentifier>)instancesBuilder.setInput(sheet.getValues()).execute());
+		if(sheet.getIgnoreds()!=null)
+			identifiables.addAll((Collection<GlobalIdentifier>)instancesBuilder.setInput(sheet.getIgnoreds()).execute());
+		return identifiables;
 	}
 	
 	/**/

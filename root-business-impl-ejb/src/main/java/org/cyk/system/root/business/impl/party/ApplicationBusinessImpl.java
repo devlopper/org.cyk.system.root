@@ -44,6 +44,8 @@ import org.cyk.system.root.persistence.api.PersistenceManager;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.StackTraceHelper;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Application, ApplicationDao> implements ApplicationBusiness,Serializable {
@@ -76,36 +78,40 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	 * 
 	 */
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	public void install(Installation installation) {
+	public void install(final Installation installation) {
 		if(findCurrentInstance()==null){
-			installation.getApplication().setCode("APP");
-			logInfo("Installation starts.");
-			try {
-				for(Listener listener : Listener.COLLECTION)
-					listener.installationStarted(installation);
+			new LoggingHelper.Run.Adapter.Default(StackTraceHelper.getInstance().getAt(2),getClass()){
+				private static final long serialVersionUID = 1L;
 				
-				installData(installation);
-				installAccounts(installation);
-				installLicense(installation);
-				
-				if(installation.getSmtpProperties()!=null){
-					smtpPropertiesBusiness.create(installation.getSmtpProperties());
-					installation.getApplication().setSmtpProperties(installation.getSmtpProperties());
+				public Object __execute__() {
+					installation.getApplication().setCode("APP");
+					try {
+						for(Listener listener : Listener.COLLECTION)
+							listener.installationStarted(installation);
+						
+						installData(installation);
+						installAccounts(installation);
+						installLicense(installation);
+						
+						if(installation.getSmtpProperties()!=null){
+							smtpPropertiesBusiness.create(installation.getSmtpProperties());
+							installation.getApplication().setSmtpProperties(installation.getSmtpProperties());
+						}
+						RootBusinessLayer.getInstance().setApplication(INSTANCE = dao.select().one());
+						
+						for(AbstractIdentifiable identifiable : installation.getIdentifiables())
+							RootBusinessLayer.getInstance().getGenericBusiness().create(identifiable);
+						
+						for(Listener listener : Listener.COLLECTION)
+							listener.installationEnded(installation);
+					} catch (Exception e) {
+						e.printStackTrace();
+						//logThrowable(e);
+						exceptionUtils().exception(Boolean.TRUE,"exception.install",new Object[]{e});
+					}
+					return null;
 				}
-				RootBusinessLayer.getInstance().setApplication(INSTANCE = dao.select().one());
-				
-				for(AbstractIdentifiable identifiable : installation.getIdentifiables())
-					RootBusinessLayer.getInstance().getGenericBusiness().create(identifiable);
-				
-				for(Listener listener : Listener.COLLECTION)
-					listener.installationEnded(installation);
-				
-				logInfo("Installation done.");
-			} catch (Exception e) {
-				e.printStackTrace();
-				//logThrowable(e);
-				exceptionUtils().exception(Boolean.TRUE,"exception.install",new Object[]{e});
-			}
+			}.execute();
 		}
 	}
 	
