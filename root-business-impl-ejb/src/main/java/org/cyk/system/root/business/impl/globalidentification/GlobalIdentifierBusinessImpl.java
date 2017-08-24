@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl.globalidentification;
 
+import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,10 +10,12 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.RudBusiness;
+import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
@@ -26,6 +29,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NEVER)
 public class GlobalIdentifierBusinessImpl extends AbstractBean implements GlobalIdentifierBusiness,Serializable {
@@ -60,16 +64,14 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public GlobalIdentifier create(GlobalIdentifier globalIdentifier) {
 		if(StringUtils.isBlank(globalIdentifier.getIdentifier())){
+			globalIdentifier.setIdentifier(InstanceHelper.getInstance().generateFieldValue(globalIdentifier, GlobalIdentifier.FIELD_IDENTIFIER, String.class));
+			/*
 			globalIdentifier.setIdentifier(globalIdentifier.getIdentifiable().getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE);
 			if(globalIdentifier.getIdentifiable()!=null && StringUtils.isNotBlank(globalIdentifier.getIdentifiable().getCode())){
 				globalIdentifier.setIdentifier(globalIdentifier.getIdentifier()+globalIdentifier.getIdentifiable().getCode()+Constant.CHARACTER_UNDESCORE);
 			}
-			/*
-			RandomStringGenerator generator = new RandomStringGenerator.Builder()
-					.withinRange('a', 'z').build();
-				 String randomLetters = generator.generate(20);
-			*/
 			globalIdentifier.setIdentifier(globalIdentifier.getIdentifier()+System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE+RandomStringUtils.randomAlphanumeric(10));
+			*/
 		}
 		
 		globalIdentifier.setCreationDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
@@ -151,6 +153,10 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	public static class BuilderOneDimensionArray extends org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray.Adapter.Default<GlobalIdentifier> implements Serializable{
     	private static final long serialVersionUID = 1L;
     	
+    	public static String IMAGE_DIRECTORY_PATH = null;
+    	
+    	private String imageDirectoryPath = IMAGE_DIRECTORY_PATH;
+    	
     	public BuilderOneDimensionArray() {
 			super(GlobalIdentifier.class);
 			addParameterArrayElementString(GlobalIdentifier.FIELD_IDENTIFIER,GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME);
@@ -159,5 +165,23 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 			addParameterArrayElementStringIndexInstance(10,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_MIME));
 			addParameterArrayElementStringIndexInstance(10,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_EXTENSION));
 		}
+    	
+    	protected GlobalIdentifier __execute__() {
+    		GlobalIdentifier globalIdentifier = super.__execute__();
+			if(globalIdentifier.getImage()!=null && !StringHelper.getInstance().isBlank(globalIdentifier.getImage().getUri())){
+				String name = globalIdentifier.getImage().getUri()+"."+globalIdentifier.getImage().getExtension();
+				String path = imageDirectoryPath+name;
+				byte[] bytes;
+				try {
+					bytes = IOUtils.toByteArray(new FileInputStream(path));
+					globalIdentifier.setImage(inject(FileBusiness.class).process(bytes, name));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else if(globalIdentifier.getImage()!=null){
+				globalIdentifier.setImage(null);
+			}
+			return globalIdentifier;
+    	};
 	}
 }

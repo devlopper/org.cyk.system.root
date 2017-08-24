@@ -12,6 +12,18 @@ import org.cyk.utility.common.helper.FieldHelper;
 public class InstanceHelper implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	public static class Listener extends org.cyk.utility.common.helper.InstanceHelper.Listener.Adapter.Default{
+    	private static final long serialVersionUID = 1L;
+		@Override
+    	public Object getIdentifier(Object instance) {
+    		if(instance instanceof AbstractIdentifiable)
+    			return ((AbstractIdentifiable)instance).getCode();
+    		else if(instance instanceof GlobalIdentifier)
+    			return ((GlobalIdentifier)instance).getIdentifier();
+    		return super.getIdentifier(instance);
+    	}
+    }
+	
 	public static class BuilderOneDimensionArray<T extends AbstractIdentifiable> extends org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray.Adapter.Default<T> implements Serializable{
     	private static final long serialVersionUID = 1L;
     	
@@ -56,11 +68,13 @@ public class InstanceHelper implements Serializable {
 		@Override
 		protected java.lang.Object __execute__(java.lang.Object instance) {
 			if(instance==null){
-				if(AbstractIdentifiable.class.isAssignableFrom(getOutputClass())){
+				if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, getOutputClass())){
 					@SuppressWarnings("unchecked")
 					AbstractIdentifiable identifiable =  inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>) ClassHelper.getInstance().getByName(getOutputClass().getName()))
 							.read((java.lang.String)getInput());
 					return identifiable;
+				}else{
+					
 				}
 			}
 			return super.__execute__(instance);

@@ -54,7 +54,7 @@ public class DataSet extends AbstractBean implements Serializable {
 	protected Deque<Package> basePackageQueue = new ArrayDeque<>();
 	protected Boolean basePackageQueueingEnabled = Boolean.FALSE;
 	
-	protected Map<Class<?>,org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<?>> instanceKeyBuilderMap = new LinkedHashMap<>();
+	protected Map<Class<?>,org.cyk.utility.common.helper.ArrayHelper.Dimension.Key.Builder> instanceKeyBuilderMap = new LinkedHashMap<>();
 	protected Map<Class<?>,org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray<?>> instanceBuilderMap = new LinkedHashMap<>();
 	protected Map<Class<?>,Collection<?>> instanceMap = new LinkedHashMap<>();
 	protected Map<Class<?>,Integer> identifiableCountByTransactionMap = new LinkedHashMap<>();
@@ -89,7 +89,13 @@ public class DataSet extends AbstractBean implements Serializable {
 				logError("file {} cannot be loaded", fileName);
 			}
 			TimeHelper.Collection timeCollection = new TimeHelper.Collection().addCurrent();
-			org.cyk.system.root.business.impl.helper.ArrayHelper.KeyBuilder keyBuilder = new org.cyk.system.root.business.impl.helper.ArrayHelper.KeyBuilder();
+			org.cyk.utility.common.helper.ArrayHelper.Dimension.Key.Builder keyBuilder = instanceKeyBuilderMap.get(aClass);
+			if(keyBuilder==null)
+				if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
+					keyBuilder = new org.cyk.system.root.business.impl.helper.ArrayHelper.KeyBuilder();
+				else
+					keyBuilder = new org.cyk.system.root.business.impl.helper.ArrayHelper.KeyBuilder();
+			
 			org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray<?> instanceBuilder = (OneDimensionArray<Object>) instanceBuilderMap.get(aClass);
 			if(instanceBuilder==null)
 				instanceBuilder = new org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray(aClass).addFieldCodeName();
@@ -140,9 +146,9 @@ public class DataSet extends AbstractBean implements Serializable {
 				Long millisecond1 = System.currentTimeMillis();
 				Integer count = identifiableCountByTransactionMap.get(entry.getKey());
 				if(count==null)
-					inject(GenericBusiness.class).create((Collection<AbstractIdentifiable>)entry.getValue());
+					inject(GenericBusiness.class).save((Collection<AbstractIdentifiable>)entry.getValue());
 				else for(Object identifiable : entry.getValue())
-					inject(GenericBusiness.class).create((AbstractIdentifiable)identifiable);
+					inject(GenericBusiness.class).save((AbstractIdentifiable)identifiable);
 				
 				logTrace("create {}. count {} , duration is {}", entry.getKey().getSimpleName(),CollectionHelper.getInstance().getSize(entry.getValue())
 						,new TimeHelper.Stringifier.Duration.Adapter.Default(System.currentTimeMillis()-millisecond1).execute());

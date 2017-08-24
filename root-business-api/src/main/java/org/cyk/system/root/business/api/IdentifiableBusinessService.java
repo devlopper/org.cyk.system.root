@@ -85,6 +85,8 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
     				InstanceCopyBuilder<IDENTIFIABLE> getInstanceCopyBuilder();
     				IDENTIFIABLE duplicate(IDENTIFIABLE identifiable);
     				
+    				//<T> T generateFieldValue(IDENTIFIABLE identifiable,String name,Class<T> valueClass);
+    				
     /* ------------------------ Dynamic methods ---------------------------- */
     
     /* --- Selection --- */

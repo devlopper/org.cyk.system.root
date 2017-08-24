@@ -116,9 +116,8 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	}
 	
 	private void installData(Installation installation){
-		logInfo("Creating data");
 		for(BusinessLayer layer : businessManager.findBusinessLayers()){
-			logInfo("Layer : "+ ((AbstractBusinessLayer)layer).getId());
+			logInfo("Installing {} system data...", ((AbstractBusinessLayer)layer).getId());
 			layer.createInitialData();
 		}
 	}

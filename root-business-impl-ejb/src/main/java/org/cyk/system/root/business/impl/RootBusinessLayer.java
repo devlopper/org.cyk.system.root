@@ -13,8 +13,12 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -27,12 +31,9 @@ import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.event.NotificationBuilderAdapter;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
-import org.cyk.system.root.business.impl.geography.LocalityBusinessImpl;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.business.impl.network.UniformResourceLocatorBuilderAdapter;
 import org.cyk.system.root.business.impl.party.person.PersonValidator;
-import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeBusinessImpl;
-import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeTypeBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.RootConstant;
@@ -107,6 +108,7 @@ import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.utility.common.AbstractMethod;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
 import org.cyk.utility.common.builder.NameValueCollectionStringBuilder;
@@ -115,15 +117,11 @@ import org.cyk.utility.common.generator.AbstractGeneratable;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.ClassHelper.Instanciation.Get;
 import org.cyk.utility.common.helper.EventHelper;
-import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.InstanceHelper.Lookup.Source;
 import org.cyk.utility.common.helper.ListenerHelper;
 import org.cyk.utility.common.helper.ListenerHelper.Executor.ResultMethod;
 import org.cyk.utility.common.helper.StringHelper;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Singleton
 @Deployment(initialisationType=InitialisationType.EAGER,order=RootBusinessLayer.DEPLOYMENT_ORDER) @Getter
@@ -163,14 +161,26 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         InstanceHelper.Lookup.Source.Adapter.Default.RESULT_METHOD_CLASS = (Class<ListenerHelper.Executor.ResultMethod<Object, Source<?, ?>>>) ClassHelper.getInstance().getByName(org.cyk.system.root.business.impl.helper.InstanceHelper.Lookup.class);
         InstanceHelper.Pool.Listener.Adapter.Default.CLASSES.add(org.cyk.system.root.business.impl.helper.InstanceHelper.Pool.class);
-        InstanceHelper.Listener.COLLECTION.add(new InstanceHelper.Listener.Adapter.Default(){
-        	private static final long serialVersionUID = 1L;
+        InstanceHelper.Listener.COLLECTION.add(new org.cyk.system.root.business.impl.helper.InstanceHelper.Listener());
+        
+        InstanceHelper.getInstance().setFieldValueGenerator(GlobalIdentifier.class, GlobalIdentifier.FIELD_IDENTIFIER, new InstanceHelper.Listener.FieldValueGenerator
+    		.Adapter.Default<String>(String.class){
+			private static final long serialVersionUID = 1L;
 			@Override
-        	public Object getIdentifier(Object instance) {
-        		if(instance instanceof AbstractIdentifiable)
-        			return ((AbstractIdentifiable)instance).getCode();
-        		return super.getIdentifier(instance);
-        	}
+			protected String __execute__(Object instance,String fieldName, Class<String> outputClass) {
+				GlobalIdentifier globalIdentifier = (GlobalIdentifier) instance;
+				StringBuilder stringBuilder = new StringBuilder();
+    			if(globalIdentifier.getIdentifiable()==null){
+    				
+    			}else{
+    				stringBuilder.append(globalIdentifier.getIdentifiable().getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE);
+    				if(StringUtils.isNotBlank(globalIdentifier.getCode())){
+        				stringBuilder.append(globalIdentifier.getCode()+Constant.CHARACTER_UNDESCORE);
+        			}
+    			}
+    			stringBuilder.append(System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE+RandomStringUtils.randomAlphanumeric(10));
+    			return stringBuilder.toString();
+			}				
         });
         
         StringHelper.ToStringMapping.Datasource.Adapter.Default.initialize();

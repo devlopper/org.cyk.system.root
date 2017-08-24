@@ -277,6 +277,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				public void addParameters(org.cyk.utility.common.helper.LoggingHelper.Message.Builder builder, Boolean before) {
 					super.addParameters(builder, before);
 					builder.addNamedParameters("entity",identifiable.getClass().getSimpleName(),"code",identifiable.getCode());
+					if(identifiable.getGlobalIdentifier()!=null)
+						builder.addNamedParameters("gid",identifiable.getGlobalIdentifier().getIdentifier());
 					if(Boolean.TRUE.equals(before)){
 						
 					}else{
@@ -399,6 +401,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					super.addParameters(builder, before);
 					builder.addNamedParameters("entity",identifiable.getClass().getSimpleName(),"code",identifiable.getCode());
 					builder.addNamedParameters("identifier",identifiable.getIdentifier());
+					if(identifiable.getGlobalIdentifier()!=null)
+						builder.addNamedParameters("gid",identifiable.getGlobalIdentifier().getIdentifier());
 				}
 				
 				@Override
@@ -494,6 +498,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					super.addParameters(builder, before);
 					builder.addNamedParameters("entity",identifiable.getClass().getSimpleName(),"code",identifiable.getCode());
 					builder.addNamedParameters("identifier",identifiable.getIdentifier());
+					if(identifiable.getGlobalIdentifier()!=null)
+						builder.addNamedParameters("gid",identifiable.getGlobalIdentifier().getIdentifier());
 				}
 				
 				@Override
