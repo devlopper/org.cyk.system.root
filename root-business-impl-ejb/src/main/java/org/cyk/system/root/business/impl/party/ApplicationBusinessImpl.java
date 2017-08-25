@@ -79,7 +79,8 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	 */
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void install(final Installation installation) {
-		if(findCurrentInstance()==null){
+		Long count = dao.countAll();
+		if(/*findCurrentInstance()==null*/ count == 0){
 			new LoggingHelper.Run.Adapter.Default(StackTraceHelper.getInstance().getAt(2),getClass()){
 				private static final long serialVersionUID = 1L;
 				
