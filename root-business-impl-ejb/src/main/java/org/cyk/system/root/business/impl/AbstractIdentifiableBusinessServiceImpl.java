@@ -1145,4 +1145,34 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			}
 		}
 	}
+	
+	public static class OneDimensionArrayBuilderFromGlobalIdentifier<IDENTIFIABLE extends AbstractIdentifiable> extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<IDENTIFIABLE>{
+		private static final long serialVersionUID = 1L;
+		
+		public OneDimensionArrayBuilderFromGlobalIdentifier(Class<IDENTIFIABLE> outputClass) {
+			super(outputClass);
+		}
+		
+		@Override
+		protected IDENTIFIABLE __execute__() {
+			IDENTIFIABLE identifiable = super.__execute__();
+			if(identifiable.getIdentifier()==null)
+				onIdentifierIsNull(identifiable);
+			else{
+				onIdentifierIsNotNull(identifiable);
+			}
+			return identifiable;
+		}
+		
+		protected void onIdentifierIsNull(IDENTIFIABLE identifiable){
+			GlobalIdentifier globalIdentifier = InstanceHelper.Pool.getInstance().get(GlobalIdentifier.class, getInput()[0]);
+			identifiable.setGlobalIdentifier(new InstanceHelper.Copy.Adapter.Default<GlobalIdentifier>(globalIdentifier).execute());
+			identifiable.getGlobalIdentifier().setIdentifier(null);
+		}
+		
+		protected void onIdentifierIsNotNull(IDENTIFIABLE identifiable){
+			identifiable.getGlobalIdentifier().setIdentifiable(identifiable);
+			identifiable.getGlobalIdentifier().setIdentifier(InstanceHelper.getInstance().generateFieldValue(identifiable.getGlobalIdentifier(), GlobalIdentifier.FIELD_IDENTIFIER, String.class));
+		}
+	}
 }

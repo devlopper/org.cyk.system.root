@@ -122,8 +122,7 @@ public class DataSet extends AbstractBean implements Serializable {
 			}else{
 				instances = inject(GlobalIdentifierBusiness.class).instanciateMany(sheet, (InstanceHelper.Builder.OneDimensionArray<GlobalIdentifier>)instanceBuilder);
 			}
-			//Collection<AbstractIdentifiable> identifiables = inject(BusinessInterfaceLocator.class).injectTyped(aClass).instanciateMany(sheet,instanceBuilder);
-			
+			logger.getMessageBuilder().addNamedParameters("#instances",CollectionHelper.getInstance().getSize(instances));
 			addInstances(aClass, commonUtils.castCollection(instances, aClass));
 			
 			timeCollection.addCurrent();
@@ -143,6 +142,13 @@ public class DataSet extends AbstractBean implements Serializable {
 	public void __save__(){
 		for(Entry<Class<?>,Collection<?>> entry : instanceMap.entrySet()){
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, entry.getKey()) && !CollectionHelper.getInstance().isEmpty(entry.getValue())){
+				Integer saveCount = CollectionHelper.getInstance().getSize(entry.getValue());
+				Integer createCount = CollectionHelper.getInstance().getSize(new CollectionHelper.Filter.Adapter.Default<Object>((Collection<Object>) entry.getValue())
+						.setProperty(CollectionHelper.Filter.PROPERTY_NAME_FIELD_NAME, AbstractIdentifiable.FIELD_IDENTIFIER)
+						.setProperty(CollectionHelper.Filter.PROPERTY_NAME_FIELD_VALUE, null)
+						.execute());
+				Integer updateCount = saveCount - createCount;
+				
 				Long millisecond1 = System.currentTimeMillis();
 				Integer count = identifiableCountByTransactionMap.get(entry.getKey());
 				if(count==null)
@@ -150,7 +156,7 @@ public class DataSet extends AbstractBean implements Serializable {
 				else for(Object identifiable : entry.getValue())
 					inject(GenericBusiness.class).save((AbstractIdentifiable)identifiable);
 				
-				logTrace("create {}. count {} , duration is {}", entry.getKey().getSimpleName(),CollectionHelper.getInstance().getSize(entry.getValue())
+				logTrace("save {}. count {} #create {} #update {} , duration is {}", entry.getKey().getSimpleName(),saveCount,createCount,updateCount
 						,new TimeHelper.Stringifier.Duration.Adapter.Default(System.currentTimeMillis()-millisecond1).execute());
 			}
 		}
