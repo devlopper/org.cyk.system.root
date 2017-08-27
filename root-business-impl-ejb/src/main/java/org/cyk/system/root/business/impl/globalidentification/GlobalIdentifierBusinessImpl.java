@@ -160,8 +160,8 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 			addParameterArrayElementString(GlobalIdentifier.FIELD_IDENTIFIER,GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME);
 			addParameterArrayElementStringIndexInstance(10,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
 			addParameterArrayElementStringIndexInstance(11,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_TO_DATE));
-			addParameterArrayElementStringIndexInstance(10,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_MIME));
-			addParameterArrayElementStringIndexInstance(10,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_EXTENSION));
+			addParameterArrayElementStringIndexInstance(12,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_URI));
+			addParameterArrayElementStringIndexInstance(13,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_EXTENSION));
 		}
     	
     	protected GlobalIdentifier __execute__() {
@@ -180,6 +180,14 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 				globalIdentifier.setImage(null);
 			}
 			return globalIdentifier;
-    	};
+    	}
+    	
+    	@Override
+    	protected GlobalIdentifier instanciate() {
+    		GlobalIdentifier globalIdentifier = super.instanciate();
+    		if(!StringHelper.getInstance().isBlank((String)getInput()[12]))
+    			globalIdentifier.setImage(new File());
+    		return globalIdentifier;
+    	}
 	}
 }
