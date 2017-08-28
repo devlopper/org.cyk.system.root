@@ -38,13 +38,14 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		if(enumeration.getNode()==null){
 			if(enumeration.getNewParent()==null){
 				enumeration.setNode(new NestedSetNode(new NestedSet(), null));
+				enumeration.getNode().getSet().setName(enumeration.getName());
 			}else{
 				enumeration.setParentNode(enumeration.getNewParent());
 				//enumeration.setNode(new NestedSetNode(new NestedSet(), enumeration.getNewParent().getNode()));
 			}
 			//enumeration.setNode(new NestedSetNode(new NestedSet(), enumeration.getNewParent()==null ? null : enumeration.getNewParent().getNode()));
-			//enumeration.getNode().getSet().setName(enumeration.getName());
 		}
+		
 		super.beforeCreate(enumeration);
 		if(enumeration.getNode().getIdentifier()==null){
 			if(StringUtils.isBlank(enumeration.getNode().getCode()))

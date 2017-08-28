@@ -46,4 +46,15 @@ public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, Role
 		inject(RoleUniformResourceLocatorBusiness.class).delete(inject(RoleUniformResourceLocatorDao.class).readByRoles(Arrays.asList(role)));
 	}
 	
+	/**/
+	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<Role> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Role.class);
+		}
+		
+	}
+	
 }

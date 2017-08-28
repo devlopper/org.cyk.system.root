@@ -130,6 +130,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 	public static final int DEPLOYMENT_ORDER = 0;
 	private static final long serialVersionUID = 4576531258594638L;
 	
+	public static Class<? extends DataSet> DATA_SET_CLASS = RealDataSet.class;
 	public static final Collection<Class<?>> GLOBAL_IDENTIFIER_UNBUILDABLE_CLASSES = new HashSet<>();
 	
 	private static RootBusinessLayer INSTANCE;
@@ -353,7 +354,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     protected void persistStructureData() {
     	super.persistStructureData();
     
-    	DataSet dataSet = new DataSet(getClass());
+    	/*DataSet dataSet = new DataSet(getClass());
     	
     	file(dataSet);
     	values(dataSet);
@@ -374,7 +375,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         dataSet.instanciate();
     	dataSet.save();
-        
+    	*/
+    	if(DATA_SET_CLASS==null)
+    		;
+    	else{
+    		DataSet dataSet = ClassHelper.getInstance().instanciateOne(DATA_SET_CLASS);
+        	dataSet.instanciate().save();	
+    	}
+    	
     }
     
     private void geography(DataSet dataSet){

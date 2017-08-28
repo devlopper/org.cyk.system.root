@@ -132,11 +132,12 @@ public class DataSet extends AbstractBean implements Serializable {
 		}
 	}
 	
-	public void instanciate(){
+	public DataSet instanciate(){
 		Long millisecond = System.currentTimeMillis();
 		__instanciate__();
 		logTrace("instanciate system data {} done. duration is {}", systemIdentifier,new TimeHelper.Stringifier.Duration.Adapter
 				.Default(System.currentTimeMillis()-millisecond).execute());
+		return this;
 	}
 	
 	@SuppressWarnings("unchecked")
