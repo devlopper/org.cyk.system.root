@@ -19,6 +19,7 @@ import org.cyk.system.root.business.impl.globalidentification.GlobalIdentifierBu
 import org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ArrayHelper;
@@ -112,10 +113,9 @@ public class DataSet extends AbstractBean implements Serializable {
 	    	MicrosoftExcelHelper.Workbook.Sheet sheet = builder.execute();
 	    	logger.getMessageBuilder(Boolean.TRUE).addManyParameters(new Object[]{"#values",ArrayHelper.getInstance().size(sheet.getValues())}
 	    		,new Object[]{"#ignored",ArrayHelper.getInstance().size(sheet.getIgnoreds())});
-	    	InstanceHelper.Builder.TwoDimensionArray.Adapter.Default instancesBuilder = new InstanceHelper.Builder.TwoDimensionArray.Adapter.Default<Object>();
+	    
 			instanceBuilder.setKeyBuilder(keyBuilder);
-			instancesBuilder.setOneDimensionArray(instanceBuilder);
-			
+			instanceBuilder.setIsAddInstanceToPool(ClassHelper.getInstance().isInstanceOf(AbstractDataTreeNode.class, aClass));
 			Collection<?> instances = null;
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass)){
 				instances = inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).instanciateMany(sheet,(InstanceHelper.Builder.OneDimensionArray<AbstractIdentifiable>) instanceBuilder);
@@ -123,7 +123,8 @@ public class DataSet extends AbstractBean implements Serializable {
 				instances = inject(GlobalIdentifierBusiness.class).instanciateMany(sheet, (InstanceHelper.Builder.OneDimensionArray<GlobalIdentifier>)instanceBuilder);
 			}
 			logger.getMessageBuilder().addNamedParameters("#instances",CollectionHelper.getInstance().getSize(instances));
-			addInstances(aClass, commonUtils.castCollection(instances, aClass));
+			//if(!ClassHelper.getInstance().isInstanceOf(AbstractDataTreeNode.class, fClass))
+			addInstances(aClass, commonUtils.castCollection(instances, aClass),Boolean.TRUE/*!ClassHelper.getInstance().isInstanceOf(AbstractDataTreeNode.class, aClass)*/);
 			
 			timeCollection.addCurrent();
 			logger.getMessageBuilder().addManyParameters(new Object[]{"duration",new TimeHelper.Stringifier.Duration.Adapter.Default(timeCollection.getDuration()).execute()});
@@ -198,7 +199,7 @@ public class DataSet extends AbstractBean implements Serializable {
 
 	public <T> DataSet addInstances(Class<T> aClass,@SuppressWarnings("unchecked") T...instances){
 		if(!ArrayHelper.getInstance().isEmpty(instances))
-			addInstances(aClass, Arrays.asList(instances));
+			addInstances(aClass, Arrays.asList(instances),Boolean.TRUE);
 		return this;
 	}
 	
@@ -208,7 +209,7 @@ public class DataSet extends AbstractBean implements Serializable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> DataSet addInstances(Class<T> aClass,Collection<?> instances){
+	public <T> DataSet addInstances(Class<T> aClass,Collection<?> instances,Boolean addToPool){
 		if(!CollectionHelper.getInstance().isEmpty(instances)){
 			Collection<T> collection = (Collection<T>) instanceMap.get(aClass);
 			if(collection==null){
@@ -217,7 +218,8 @@ public class DataSet extends AbstractBean implements Serializable {
 			}
 			Collection<T> classInstances = CollectionHelper.getInstance().cast(aClass, instances);
 			collection.addAll(classInstances);
-			Pool.getInstance().add(aClass, classInstances);
+			if(Boolean.TRUE.equals(addToPool))
+				Pool.getInstance().add(aClass, classInstances);
 		}
 		return this;
 	}

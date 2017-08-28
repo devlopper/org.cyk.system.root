@@ -41,10 +41,11 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 				.orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_LEFT_INDEX), Boolean.TRUE));
 		registerNamedQuery(readRoots, _select().where(null,"node.set.root", QueryStringBuilder.VAR+".node",ArithmeticOperator.EQ,false));
 		
-		registerNamedQuery(readDirectChildrenByParent, _select().where(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE, NestedSetNode.FIELD_PARENT)
-					,NestedSetNode.FIELD_PARENT)
-				 .orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_ORDER_NUMBER), Boolean.TRUE)
-				 .orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_LEFT_INDEX), Boolean.TRUE));
+		registerNamedQuery(readDirectChildrenByParent, _select()
+				.where(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE, NestedSetNode.FIELD_PARENT),NestedSetNode.FIELD_PARENT)
+				 //.orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_ORDER_NUMBER), Boolean.TRUE)
+				 .orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_LEFT_INDEX), Boolean.TRUE)
+				 );
 	}
 	
 	@Override
@@ -78,12 +79,14 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 	
 	@Override
 	public Collection<ENUMERATION> readDirectChildrenByParent(ENUMERATION parent) {
-	    return namedQuery(readDirectChildrenByParent).parameter(NestedSetNode.FIELD_PARENT, parent.getNode()).resultMany();
+		return namedQuery(readDirectChildrenByParent).parameter(NestedSetNode.FIELD_PARENT, parent.getNode())
+	    		.resultMany();
 	}
 	
 	@Override
 	public Long countDirectChildrenByParent(ENUMERATION parent) {
-        return countNamedQuery(countDirectChildrenByParent).parameter(NestedSetNode.FIELD_PARENT, parent.getNode()).resultOne();
+        return countNamedQuery(countDirectChildrenByParent).parameter(NestedSetNode.FIELD_PARENT, parent.getNode())
+        		.resultOne();
 	}
 	
 	@Override

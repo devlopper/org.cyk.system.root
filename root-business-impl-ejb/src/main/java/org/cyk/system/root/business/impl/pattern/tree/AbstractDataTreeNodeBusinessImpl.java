@@ -34,20 +34,25 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
     }
 	
 	@Override
-	public NODE create(NODE enumeration) {
+	protected void beforeCreate(NODE enumeration) {
 		if(enumeration.getNode()==null){
-			enumeration.setNode(new NestedSetNode(new NestedSet(), enumeration.getNewParent()==null ? null : enumeration.getNewParent().getNode()));
-			enumeration.getNode().getSet().setName(enumeration.getName());
+			if(enumeration.getNewParent()==null){
+				enumeration.setNode(new NestedSetNode(new NestedSet(), null));
+			}else{
+				enumeration.setParentNode(enumeration.getNewParent());
+				//enumeration.setNode(new NestedSetNode(new NestedSet(), enumeration.getNewParent().getNode()));
+			}
+			//enumeration.setNode(new NestedSetNode(new NestedSet(), enumeration.getNewParent()==null ? null : enumeration.getNewParent().getNode()));
+			//enumeration.getNode().getSet().setName(enumeration.getName());
 		}
-		
+		super.beforeCreate(enumeration);
 		if(enumeration.getNode().getIdentifier()==null){
 			if(StringUtils.isBlank(enumeration.getNode().getCode()))
 				enumeration.getNode().setCode(enumeration.getCode());
 			if(StringUtils.isBlank(enumeration.getNode().getName()))
 				enumeration.getNode().setName(enumeration.getName());
-			nestedSetNodeBusiness.create(enumeration.getNode());
+			inject(NestedSetNodeBusiness.class).create(enumeration.getNode());
 		}
-		return super.create(enumeration);
 	}
 	
 	@Override
@@ -288,8 +293,11 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		@Override
 		protected T __execute__() {
 			T t = super.__execute__();
-			if(getInput().length>9 && !StringHelper.getInstance().isBlank( (java.lang.String)getInput()[10] ))
-				t.setParentNode(org.cyk.utility.common.helper.InstanceHelper.Pool.getInstance().get(getOutputClass(), getInput()[10]));
+			if(getInput().length>10 && !StringHelper.getInstance().isBlank( (java.lang.String)getInput()[10] )){
+				//t.setParentNode(org.cyk.utility.common.helper.InstanceHelper.Pool.getInstance().get(getOutputClass(), getInput()[10]));
+				t.setNewParent(org.cyk.utility.common.helper.InstanceHelper.Pool.getInstance().get(getOutputClass(), getInput()[10]));
+				//System.out.println(getInput()[0]+" : parent = "+t.getNewParent().getCode());
+			}
 			return t;
 		}
 		
