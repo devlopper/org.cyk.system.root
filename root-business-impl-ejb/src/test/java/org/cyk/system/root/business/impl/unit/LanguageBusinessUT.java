@@ -246,7 +246,7 @@ public class LanguageBusinessUT extends AbstractUnitTest {
     	@Input private String userUnitPrice;
     	@Input private String userCount;
     	@Input private String color;
-    	@Input(label=@Text(type=ValueType.VALUE,value="Une autre couleur")) private String color2;
+    	@Input(label=@Text(valueType=ValueType.VALUE,value="Une autre couleur")) private String color2;
     	@Input private String index;
     	@Input private String unitType;
     	

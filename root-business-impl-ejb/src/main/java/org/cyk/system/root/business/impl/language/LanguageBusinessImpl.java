@@ -287,7 +287,7 @@ public class LanguageBusinessImpl extends AbstractEnumerationBusinessImpl<Langua
 			type = ValueType.VALUE; 
 		else{
 			specifiedValue = text.value();
-			type = ValueType.AUTO.equals(text.type())?ValueType.ID:text.type();
+			type = ValueType.AUTO.equals(text.valueType())?ValueType.ID:text.valueType();
 		}
 		
 		if(StringUtils.isNotBlank(specifiedValue)){

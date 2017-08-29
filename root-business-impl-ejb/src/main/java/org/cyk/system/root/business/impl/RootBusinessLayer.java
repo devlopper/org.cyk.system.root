@@ -183,6 +183,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     			return stringBuilder.toString();
 			}				
         });
+        InstanceHelper.Stringifier.Label.Adapter.Default.DEFAULT_CLASS = org.cyk.system.root.business.impl.helper.InstanceHelper.Label.class;
         
         StringHelper.ToStringMapping.Datasource.Adapter.Default.initialize();
 		

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.helper.ClassHelper;
@@ -101,6 +102,18 @@ public class InstanceHelper implements Serializable {
 					return (T) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>) ClassHelper.getInstance().getByName(aClass)).read((String)identifier);
 			return instance;
 		}
+	}
+	
+	public static class Label extends org.cyk.utility.common.helper.InstanceHelper.Stringifier.Label.Adapter.Default implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
+		@Override
+		protected String __execute__() {
+			if( getInput() instanceof AbstractModelElement )
+				return ((AbstractModelElement)getInput()).getUiString();
+			return super.__execute__();
+		}
+		
 	}
 	
 }
