@@ -116,4 +116,15 @@ public class InstanceHelper implements Serializable {
 		
 	}
 	
+	public static class Mapping extends org.cyk.utility.common.helper.InstanceHelper.Mapping.Adapter.Default implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
+		@Override
+		protected Object __execute__() {
+			if( getInput() instanceof AbstractIdentifiable )
+				return ((AbstractIdentifiable)getInput()).getIdentifier();
+			return super.__execute__();
+		}
+		
+	}
 }

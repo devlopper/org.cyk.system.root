@@ -121,6 +121,7 @@ import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.InstanceHelper.Lookup.Source;
 import org.cyk.utility.common.helper.ListenerHelper;
 import org.cyk.utility.common.helper.ListenerHelper.Executor.ResultMethod;
+import org.cyk.utility.common.helper.MapHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
 @Singleton
@@ -184,6 +185,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}				
         });
         InstanceHelper.Stringifier.Label.Adapter.Default.DEFAULT_CLASS = org.cyk.system.root.business.impl.helper.InstanceHelper.Label.class;
+        
+        MapHelper.Stringifier.Entry.Adapter.Default.DEFAULT_LISTENER_CLASS = org.cyk.system.root.business.impl.helper.MapHelper.EntryStringifierListener.class;
         
         StringHelper.ToStringMapping.Datasource.Adapter.Default.initialize();
 		
