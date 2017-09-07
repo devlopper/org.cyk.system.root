@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.CommonUtils;
@@ -25,7 +24,7 @@ public class ParallelOperationUsingThreadIT extends AbstractBusinessIT {
     
     @Test
     public void serial(){
-    	org.cyk.utility.common.CommonUtils.Execution execution = CommonUtils.getInstance().execute("Serial", new Runnable() {
+    	/*org.cyk.utility.common.CommonUtils.Execution execution = CommonUtils.getInstance().execute("Serial", new Runnable() {
 			@Override
 			public void run() {
 				Integer count = 2000;
@@ -35,6 +34,7 @@ public class ParallelOperationUsingThreadIT extends AbstractBusinessIT {
 		});
     	System.out.println(execution);
     	CommonUtils.getInstance().pause(10 * 1000);
+    	*/
     }
     
     @Test
@@ -70,7 +70,7 @@ public class ParallelOperationUsingThreadIT extends AbstractBusinessIT {
     	
 		@Override
 		public void run() {
-			System.out.println("Running "+name);
+			/*System.out.println("Running "+name);
 			org.cyk.utility.common.CommonUtils.Execution execution = commonUtils.execute(name, new Runnable() {
 				@Override
 				public void run() {
@@ -78,6 +78,7 @@ public class ParallelOperationUsingThreadIT extends AbstractBusinessIT {
 				}
 			});
 			System.out.println("Done "+execution);
+			*/
 		}
     	
     }

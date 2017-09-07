@@ -21,6 +21,7 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.helper.StringHelper;
 
 public abstract class AbstractBusinessServiceImpl extends AbstractBean implements BusinessService, Serializable {
 
@@ -86,7 +87,7 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 				if(value==null)
 					addLogMessageBuilderParameters(logMessageBuilder,"no "+fieldType.getSimpleName()+" found for ",values[index]);	
 			}else
-				value = commonUtils.convertString(values[index], fieldType);
+				value = StringHelper.getInstance().convert(values[index], fieldType);
 			
 			//if(BigDecimal.class.equals(fieldType))
 			//	System.out.println(values[index]+" => "+value);

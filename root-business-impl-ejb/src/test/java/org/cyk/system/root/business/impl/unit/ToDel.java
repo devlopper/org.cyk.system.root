@@ -1,9 +1,5 @@
 package org.cyk.system.root.business.impl.unit;
 
-import java.math.BigDecimal;
-
-import org.cyk.utility.common.CommonUtils;
-
 public class ToDel {
 
 	//static OpticalDecoderOptions decoderOptions = new OpticalDecoderOptions();
@@ -26,7 +22,7 @@ public class ToDel {
 			}  
 		}*/
 		
-		System.out.println(CommonUtils.getInstance().convertString("50.99", BigDecimal.class));
+		//System.out.println(CommonUtils.getInstance().convertString("50.99", BigDecimal.class));
 	}
 		
 }

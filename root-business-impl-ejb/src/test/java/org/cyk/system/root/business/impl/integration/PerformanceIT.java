@@ -1,11 +1,5 @@
 package org.cyk.system.root.business.impl.integration;
 
-import java.util.Collection;
-
-import org.cyk.system.root.business.api.party.person.PersonBusiness;
-import org.cyk.system.root.model.party.person.Person;
-import org.cyk.utility.common.CommonUtils;
-import org.cyk.utility.common.CommonUtils.Execution;
 import org.junit.Test;
 
 public class PerformanceIT extends AbstractBusinessIT {
@@ -63,7 +57,7 @@ public class PerformanceIT extends AbstractBusinessIT {
     }
     
     private void createPersons(final Integer numberOfPerson){
-    	Execution executionUsingOneCall = CommonUtils.getInstance().execute("Create "+numberOfPerson+" persons using one business call", new Runnable() {
+    	/*Execution executionUsingOneCall = CommonUtils.getInstance().execute("Create "+numberOfPerson+" persons using one business call", new Runnable() {
 			@Override
 			public void run() {
 				Collection<Person> persons = inject(PersonBusiness.class).instanciateManyRandomly(numberOfPerson);
@@ -82,6 +76,7 @@ public class PerformanceIT extends AbstractBusinessIT {
     	
     	System.out.println(executionUsingOneCall+" / "+executionUsingManyCall +" / Ratio = " 
     			+( (executionUsingOneCall.getDuration() - executionUsingManyCall.getDuration())) / 100 );
+    	*/
     }
     
 }
