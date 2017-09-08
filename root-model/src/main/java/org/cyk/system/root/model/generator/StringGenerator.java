@@ -22,4 +22,6 @@ public class StringGenerator extends AbstractIdentifiable implements Serializabl
 
 	@OneToOne private Script script;
 	
+	public static final String FIELD_CONFIGURATION = "configuration";
+	public static final String FIELD_SCRIPT = "script";
 }

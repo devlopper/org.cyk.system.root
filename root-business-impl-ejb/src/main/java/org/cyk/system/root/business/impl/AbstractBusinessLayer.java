@@ -311,21 +311,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	return create(metric);
     }
         
-    protected StringGenerator stringGenerator(String leftPrefix,String leftPattern,Long leftLenght,String rightPattern,Long rightLenght,Long lenght){
-    	StringGenerator stringGenerator = new StringGenerator();
-    	stringGenerator.setConfiguration(new StringValueGeneratorConfiguration());
-    	stringGenerator.getConfiguration().getLeftPadding().setPrefix(leftPrefix);
-    	stringGenerator.getConfiguration().getLeftPadding().setPattern(leftPattern);
-    	stringGenerator.getConfiguration().getLeftPadding().setLenght(leftLenght);
-    	
-    	stringGenerator.getConfiguration().getRightPadding().setPattern(rightPattern);
-    	stringGenerator.getConfiguration().getRightPadding().setLenght(rightLenght);
-    	
-    	stringGenerator.getConfiguration().setLenght(lenght);
-    	
-    	return stringGenerator;
-    }
-    
     protected StringGenerator stringGenerator(String script,String name){
     	StringGenerator stringGenerator = new StringGenerator();
     	stringGenerator.setScript(script(script, script));

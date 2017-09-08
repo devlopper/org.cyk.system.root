@@ -29,6 +29,22 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 	}
 
 	@Override
+	public StringGenerator instanciateOne(String leftPrefix,String leftPattern,Long leftLength,String rightPattern,Long rightLength,Long length){
+    	StringGenerator stringGenerator = instanciateOne();
+    	stringGenerator.setConfiguration(new StringValueGeneratorConfiguration());
+    	stringGenerator.getConfiguration().getLeftPadding().setPrefix(leftPrefix);
+    	stringGenerator.getConfiguration().getLeftPadding().setPattern(leftPattern);
+    	stringGenerator.getConfiguration().getLeftPadding().setLength(leftLength);
+    	
+    	stringGenerator.getConfiguration().getRightPadding().setPattern(rightPattern);
+    	stringGenerator.getConfiguration().getRightPadding().setLength(rightLength);
+    	
+    	stringGenerator.getConfiguration().setLength(length);
+    	
+    	return stringGenerator;
+    }
+	
+	@Override
 	public String generate(StringGenerator generator,Object input) {
 		if(generator.getScript()==null){
 			return generate(generator.getConfiguration(), input);
@@ -59,10 +75,10 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 		logTrace("Generating string. configuration={} , input={}",configuration.getLogMessage(), input);
 		StringBuilder stringBuilder = new StringBuilder(getPaddingString(configuration.getLeftPadding())+input+getPaddingString(configuration.getRightPadding()));
 		logTrace("With padding = {} , {} character(s)", stringBuilder,stringBuilder.length());
-		if(configuration.getLenght()==null)
+		if(configuration.getLength()==null)
 			return stringBuilder.toString();
-		String a = StringUtils.right(stringBuilder.toString(), configuration.getLenght().intValue());
-		logTrace("Max lenght = {} , Adjusted lenght = {} , {} character(s)",configuration.getLenght(), a,a.length());
+		String a = StringUtils.right(stringBuilder.toString(), configuration.getLength().intValue());
+		logTrace("Max length = {} , Adjusted length = {} , {} character(s)",configuration.getLength(), a,a.length());
 		String s = prefix(configuration.getLeftPadding())+suffix(configuration.getLeftPadding())
 				+a+prefix(configuration.getRightPadding())+suffix(configuration.getLeftPadding());
 		logTrace("With prefixes and suffixes = {} , {} character(s)", s,s.length());
@@ -70,9 +86,9 @@ public class StringGeneratorBusinessImpl extends AbstractTypedBusinessService<St
 	}
     
 	private String getPaddingString(StringValueGeneratorPadding padding){
-		if(padding==null || padding.getLenght()==null)
+		if(padding==null || padding.getLength()==null)
 			return Constant.EMPTY_STRING;
-		String s = StringUtils.repeat(padding.getPattern(), padding.getLenght().intValue());
+		String s = StringUtils.repeat(padding.getPattern(), padding.getLength().intValue());
 		logTrace("Padding string : {} , {} charater(s)", s,s.length());
 		return s;
 	}

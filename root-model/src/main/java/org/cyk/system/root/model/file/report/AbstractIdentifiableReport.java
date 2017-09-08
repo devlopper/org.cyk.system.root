@@ -5,17 +5,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.FileReport;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifierReport;
 import org.cyk.system.root.model.time.PeriodReport;
 import org.cyk.utility.common.generator.AbstractGeneratable;
+import org.cyk.utility.common.helper.RandomHelper;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor
 public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGeneratable<MODEL> implements Serializable {
@@ -37,7 +37,7 @@ public abstract class AbstractIdentifiableReport<MODEL> extends AbstractGenerata
 		globalIdentifier.generate();
 		globalIdentifier.setName(getFieldRandomValue(String.class, commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_NAME)));
 		
-		text = RandomStringUtils.randomAlphanumeric(20);
+		text = RandomHelper.getInstance().getAlphanumeric(20);
 	}
 
 	public String getBirthLocation() {

@@ -2,9 +2,6 @@ package org.cyk.system.root.business.impl.helper;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.AbstractModelElement;
-
 public class MapHelper implements Serializable {
 	private static final long serialVersionUID = 1L;
 

@@ -22,6 +22,7 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.ThrowableHelper;
 
 public abstract class AbstractBusinessServiceImpl extends AbstractBean implements BusinessService, Serializable {
 
@@ -73,8 +74,9 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		return inject(GenericDao.class).read(aClass, code);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") @Deprecated
 	protected void set(Object instance,Field field,Class<?> fieldType,Integer index,String[] values,LogMessage.Builder logMessageBuilder) {
+		System.out.println("*************************** AbstractBusinessServiceImpl.set() ***********************************");
 		if(index >= values.length || StringUtils.isBlank(values[index])){
 			if(index >= values.length)
 				addLogMessageBuilderParameters(logMessageBuilder,"Cannot access "+field.getName()+" at index "+index,"*");
@@ -89,43 +91,15 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 			}else
 				value = StringHelper.getInstance().convert(values[index], fieldType);
 			
-			//if(BigDecimal.class.equals(fieldType))
-			//	System.out.println(values[index]+" => "+value);
-			
-			/*else if(Date.class.equals(fieldType))
-				value = inject(TimeBusiness.class).parse(values[index]);
-			else if(String.class.equals(fieldType))
-				value = values[index];
-			else if(BigDecimal.class.equals(fieldType))
-				value = new BigDecimal(values[index]);
-			else if(Long.class.equals(fieldType))
-				value = new Long(values[index]);
-			else if(Byte.class.equals(fieldType))
-				value = new Byte(values[index]);
-			else if(Integer.class.equals(fieldType))
-				value = new Integer(values[index]);
-			else if(Boolean.class.equals(fieldType))
-				value = new Boolean(values[index]);
-			else if(fieldType.isEnum()){
-				for(Object object : fieldType.getEnumConstants()){
-					if(object.toString().equals(values[index])){
-						value = object;
-						break;
-					}
-				}
-				if(value==null)
-					addLogMessageBuilderParameters(logMessageBuilder,"no enum constant found for ",values[index]);	
-			}else{
-				addLogMessageBuilderParameters(logMessageBuilder,fieldType+" fo field named "+field.getName()+" not handled","*");
-				return;
-			}
-			*/
 			commonUtils.writeField(field, instance, value);
 			addLogMessageBuilderParameters(logMessageBuilder,"set field "+field.getName()+" to",value);	
 		}
 	}
 	
+	@Deprecated
 	protected void set(SetListener listener,String...fieldNames) {
+		System.out.println("################################ AbstractBusinessServiceImpl.set() ###################################");
+		ThrowableHelper.getInstance().throwNotYetImplemented();
 		String fieldName = StringUtils.join(fieldNames,Constant.CHARACTER_DOT.toString());
 		addLogMessageBuilderParameters(listener.getLogMessageBuilder(), "set",fieldName);
 		Object instance = StringUtils.contains(fieldName, Constant.CHARACTER_DOT.toString()) ? commonUtils.readProperty(listener.getInstance(),

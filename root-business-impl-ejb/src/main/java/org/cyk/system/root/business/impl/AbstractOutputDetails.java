@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.impl.time.PeriodDetails;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -17,6 +16,7 @@ import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs.Layout;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputFile;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
+import org.cyk.utility.common.helper.RandomHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -103,15 +103,15 @@ public abstract class AbstractOutputDetails<IDENTIFIABLE extends AbstractIdentif
 		return fields.toArray(new String[]{});
 	}
 	
-	public static final String IDENTIFIER_1 = RandomStringUtils.randomAlphanumeric(10);
-	public static final String IDENTIFIER_2 = RandomStringUtils.randomAlphanumeric(10);
-	public static final String IDENTIFIER_3 = RandomStringUtils.randomAlphanumeric(10);
-	public static final String IDENTIFIER_4 = RandomStringUtils.randomAlphanumeric(10);
-	public static final String IDENTIFIER_5 = RandomStringUtils.randomAlphanumeric(10);
-	public static final String IDENTIFIER_6 = RandomStringUtils.randomAlphanumeric(10);
-	public static final String IDENTIFIER_7 = RandomStringUtils.randomAlphanumeric(10);
-	public static final String IDENTIFIER_8 = RandomStringUtils.randomAlphanumeric(10);
-	public static final String IDENTIFIER_9 = RandomStringUtils.randomAlphanumeric(10);
+	public static final String IDENTIFIER_1 = RandomHelper.getInstance().getAlphanumeric(10);
+	public static final String IDENTIFIER_2 = RandomHelper.getInstance().getAlphanumeric(10);
+	public static final String IDENTIFIER_3 = RandomHelper.getInstance().getAlphanumeric(10);
+	public static final String IDENTIFIER_4 = RandomHelper.getInstance().getAlphanumeric(10);
+	public static final String IDENTIFIER_5 = RandomHelper.getInstance().getAlphanumeric(10);
+	public static final String IDENTIFIER_6 = RandomHelper.getInstance().getAlphanumeric(10);
+	public static final String IDENTIFIER_7 = RandomHelper.getInstance().getAlphanumeric(10);
+	public static final String IDENTIFIER_8 = RandomHelper.getInstance().getAlphanumeric(10);
+	public static final String IDENTIFIER_9 = RandomHelper.getInstance().getAlphanumeric(10);
 	
 	private static final String __F__PREFIX = "__f";
 	private static final String __F__SUFFIX = "__";

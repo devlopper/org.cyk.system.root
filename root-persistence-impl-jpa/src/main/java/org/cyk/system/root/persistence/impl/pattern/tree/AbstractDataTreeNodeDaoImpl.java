@@ -6,7 +6,6 @@ import static org.cyk.utility.common.computation.ArithmeticOperator.LT;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
@@ -19,11 +18,6 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 
 	private static final long serialVersionUID = 6306356272165070761L;
 
-	//@Inject protected NestedSetNodeDao nestedSetNodeDao;
-	
-	/* 
-	 *Named Queries Identifiers Declaration 
-	 */
 	private String readByParent,countByParent,readRoots,countRoots,readByLeftIndexByRightIndex,readByLeftIndexLowerThanByRightIndexGreaterThan
 		,readDirectChildrenByParent,countDirectChildrenByParent; 
 	

@@ -14,5 +14,7 @@ public interface StringGeneratorBusiness extends TypedBusiness<StringGenerator> 
     String generate(StringValueGeneratorConfiguration configuration,Object input);
     
     String generateIdentifier(AbstractIdentifiable identifiable,String runtimeGeneratorIdentifier,StringGenerator databaseGenerator);
+
+	StringGenerator instanciateOne(String leftPrefix, String leftPattern, Long leftLength, String rightPattern,Long rightLength, Long length);
 	
 } 

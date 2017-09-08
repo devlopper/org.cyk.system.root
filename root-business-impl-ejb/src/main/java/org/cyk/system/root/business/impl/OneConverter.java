@@ -6,6 +6,7 @@ import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.LogMessage.Builder;
 
+@Deprecated
 public class OneConverter<T,R> extends org.cyk.utility.common.converter.OneConverter.Adapter.Default<T,R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -13,7 +14,7 @@ public class OneConverter<T,R> extends org.cyk.utility.common.converter.OneConve
 	public OneConverter(Class<T> instanceClass,T instance, Class<R> resultClass, Builder logMessageBuilder) {
 		super(instanceClass,instance, resultClass, logMessageBuilder);
 	}
-	
+	@Deprecated
 	public static class ConverterToArray<T,R> extends org.cyk.utility.common.converter.OneConverter.OneConverterToArray.Adapter.Default<T,R> implements Serializable {
 		private static final long serialVersionUID = 1L;
 

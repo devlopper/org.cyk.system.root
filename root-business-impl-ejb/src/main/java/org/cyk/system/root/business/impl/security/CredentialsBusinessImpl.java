@@ -60,7 +60,11 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Credentials instanciateOne(String username, String password) {
 		Software software = inject(SoftwareBusiness.class).findDefaulted();
-		return instanciateOne(new String[]{null,software == null ? null : software.getCode(),username,password});
+		Credentials credentials = instanciateOne();
+		credentials.setSoftware(software);
+		credentials.setUsername(username);
+		credentials.setPassword(password);
+		return credentials;
 	}
 	
 	@Override

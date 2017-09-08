@@ -11,9 +11,9 @@ import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
-import org.cyk.utility.common.builder.UrlStringBuilder;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.UniformResourceLocatorHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -100,11 +100,8 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 		}
 		
 		public FieldValue(Object object) {
-			UrlStringBuilder urlStringBuilder = new UrlStringBuilder();
-			urlStringBuilder.getPathStringBuilder().setIdentifier(new UrlStringBuilder.PathStringBuilder.IdentifierBuilder().setAction(Constant.Action.CONSULT)
-					.setSubject(object).build());
-			urlStringBuilder.getQueryStringBuilder().getNameValueCollectionStringBuilder().addIdentifiable(object);
-			init(inject(FormatterBusiness.class).format(object),urlStringBuilder.build());
+			init(inject(FormatterBusiness.class).format(object),new UniformResourceLocatorHelper.Stringifier.Adapter.Default()
+				.addQueryParameterAction(Constant.Action.CONSULT).addQueryParameterIdentifiable(object).execute());
 		}
 		
 		@Override

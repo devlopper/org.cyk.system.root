@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.cyk.utility.common.LogMessage.Builder;
 
+@Deprecated
 public class ManyConverter<T,R> extends org.cyk.utility.common.converter.ManyConverter.Adapter.Default<T,R> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -12,7 +13,7 @@ public class ManyConverter<T,R> extends org.cyk.utility.common.converter.ManyCon
 	public ManyConverter(Collection<T> instances, Class<R> resultClass, Builder logMessageBuilder) {
 		super(instances, resultClass, logMessageBuilder);
 	}
-	
+	@Deprecated
 	public static class ConverterToArray<T,R> extends org.cyk.utility.common.converter.ManyConverter.ManyConverterToArray.Adapter.Default<T,R> implements Serializable {
 		private static final long serialVersionUID = 1L;
 

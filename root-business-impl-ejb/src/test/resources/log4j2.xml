@@ -15,7 +15,7 @@
 		</Console>
 		<Console name="InstallConsole" target="SYSTEM_OUT">
 			<Filters>
-				<MarkerFilter marker="install" onMatch="ACCEPT" onMismatch="DENY" />
+				<MarkerFilter marker="org.cyk.system.root.business.impl.RealDataSet" onMatch="ACCEPT" onMismatch="DENY" />
 			</Filters>
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %msg%n" />
 		</Console>
@@ -29,8 +29,7 @@
 			level="trace">
 			<AppenderRef ref="BusinessConsole" />
 		</Logger-->
-		<Logger name="org.cyk"
-			level="trace">
+		<Logger name="org.cyk.system.root.business.impl.RealDataSet" level="trace">
 			<AppenderRef ref="InstallConsole" />
 		</Logger>
 		

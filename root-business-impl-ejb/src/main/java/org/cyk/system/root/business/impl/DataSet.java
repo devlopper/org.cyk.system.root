@@ -31,6 +31,7 @@ import org.cyk.utility.common.helper.InstanceHelper.Pool;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
+import org.cyk.utility.common.helper.StackTraceHelper;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 
@@ -133,10 +134,25 @@ public class DataSet extends AbstractBean implements Serializable {
 	}
 	
 	public DataSet instanciate(){
+		new LoggingHelper.Run.Adapter.Default(StackTraceHelper.getInstance().getAt(2),getClass()){
+			private static final long serialVersionUID = 1L;
+			
+			public Object __execute__() {
+				__instanciate__();
+				return null;
+			}
+			
+			public String getName() {
+				return super.getName()+Constant.CHARACTER_SPACE+systemIdentifier;
+			}
+			
+		}.execute();
+		/*
 		Long millisecond = System.currentTimeMillis();
 		__instanciate__();
 		logTrace("instanciate system data {} done. duration is {}", systemIdentifier,new TimeHelper.Stringifier.Duration.Adapter
 				.Default(System.currentTimeMillis()-millisecond).execute());
+		*/
 		return this;
 	}
 	
@@ -165,11 +181,26 @@ public class DataSet extends AbstractBean implements Serializable {
 	}
 	
 	public void save(){
+		new LoggingHelper.Run.Adapter.Default(StackTraceHelper.getInstance().getAt(2),getClass()){
+			private static final long serialVersionUID = 1L;
+			
+			public Object __execute__() {
+				__save__();
+				return null;
+			}
+			
+			public String getName() {
+				return super.getName()+Constant.CHARACTER_SPACE+systemIdentifier;
+			}
+			
+		}.execute();
+		/*
 		Long millisecond = System.currentTimeMillis();
 		logTrace("save {} system data running", systemIdentifier);
 		__save__();
 		logTrace("save {} system data done. duration is {}", systemIdentifier,new TimeHelper.Stringifier.Duration.Adapter
 				.Default(System.currentTimeMillis()-millisecond).execute());
+				*/
 	}
 	
 	@SuppressWarnings("unchecked")

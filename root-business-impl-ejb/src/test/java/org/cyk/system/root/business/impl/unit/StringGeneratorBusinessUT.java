@@ -29,7 +29,7 @@ public class StringGeneratorBusinessUT extends AbstractUnitTest {
 		stringGenerator.setConfiguration(new StringValueGeneratorConfiguration());
 		stringGenerator.getConfiguration().setLeftPadding(padding("FACT", "0", 8l, null));
 		stringGenerator.getConfiguration().setRightPadding(padding(null, null, null, null));
-		stringGenerator.getConfiguration().setLenght(8l);
+		stringGenerator.getConfiguration().setLength(8l);
 		
 	    Assert.assertEquals("FACT00000001",stringGeneratorBusiness.generate(stringGenerator, "1"));
 	    Assert.assertEquals("FACT00000751",stringGeneratorBusiness.generate(stringGenerator, "751"));
@@ -40,7 +40,7 @@ public class StringGeneratorBusinessUT extends AbstractUnitTest {
 		StringValueGeneratorPadding padding = new StringValueGeneratorPadding();
 		padding.setPrefix(prefix);
 		padding.setPattern(pattern);
-		padding.setLenght(lenght);
+		padding.setLength(lenght);
 		padding.setSuffix(suffix);
 		return padding;
 	}

@@ -15,7 +15,7 @@ public class StringValueGeneratorPadding extends AbstractModelElement implements
 	private static final long serialVersionUID = 2700928054823690772L;
 
 	private String prefix,pattern,suffix;
-	private Long lenght;
+	private Long length;
 	
 	@Override
 	public String getUiString() {
@@ -25,6 +25,6 @@ public class StringValueGeneratorPadding extends AbstractModelElement implements
 	public static final String FIELD_PREFIX = "prefix";
 	public static final String FIELD_PATTERN = "pattern";
 	public static final String FIELD_SUFFIX = "suffix";
-	public static final String FIELD_LENGHT = "lenght";
+	public static final String FIELD_LENGTH = "length";
 
 }

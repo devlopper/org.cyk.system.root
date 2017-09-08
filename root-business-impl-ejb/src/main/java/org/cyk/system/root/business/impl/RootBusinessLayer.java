@@ -200,29 +200,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.exception",LanguageBusinessImpl.class.getClassLoader());
 		StringHelper.ToStringMapping.Datasource.Adapter.Default.ResourceBundle.REPOSITORY.put("org.cyk.system.root.business.impl.language.validation",LanguageBusinessImpl.class.getClassLoader());
 		
-        NameValueCollectionStringBuilder.Listener.COLLECTION.add(new NameValueCollectionStringBuilder.Listener.Adapter.Default(){
-			private static final long serialVersionUID = 1546167219574989403L;
-        	
-			@Override
-			public String getEncodedParameterName() {
-				return RootConstant.Code.UniformResourceLocatorParameter.ENCODED;
-			}
-			
-        });
-        
-        NameValueStringBuilder.Listener.COLLECTION.add(new NameValueStringBuilder.Listener.Adapter.Default(){
-			private static final long serialVersionUID = 1546167219574989403L;
-        	
-			@Override
-			public Object getValueToProcessed(Object value) {
-				if(value instanceof AbstractIdentifiable){
-					return ((AbstractIdentifiable)value).getIdentifier();
-				}
-				return super.getValueToProcessed(value);
-			}
-			
-        });
-        
         ClazzBusiness.LISTENERS.add(new ClazzBusinessListener.Adapter() {
 			private static final long serialVersionUID = 4056356640763766384L;
 			@Override

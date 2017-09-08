@@ -44,6 +44,7 @@ import org.cyk.system.root.persistence.api.PersistenceManager;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
 
@@ -189,7 +190,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
                 Collection<Class<? extends Annotation>> annotations = new ArrayList<>();
                 annotations.add(ManyToOne.class);
                 for(Class<? extends Identifiable<?>> childClass : persistenceManager.findEntities()){
-                	for(Field field : commonUtils.getAllFields(childClass, annotations)){
+                	for(Field field : FieldHelper.getInstance().get(childClass, annotations)){
                 		if(field.getType().equals(entityClass))
                 			b.getManyToOneClasses().add(childClass);
                 	}
@@ -198,7 +199,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
                 annotations.clear();
                 annotations.add(OneToOne.class);
                 for(Class<? extends Identifiable<?>> childClass : persistenceManager.findEntities()){
-                	for(Field field : commonUtils.getAllFields(childClass, annotations)){
+                	for(Field field : FieldHelper.getInstance().get(childClass, annotations)){
                 		if(field.getType().equals(entityClass))
                 			b.getOneToOneClasses().add(childClass);
                 	}
