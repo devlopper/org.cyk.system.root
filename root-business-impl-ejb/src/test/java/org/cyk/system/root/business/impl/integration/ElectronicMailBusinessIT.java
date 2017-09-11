@@ -19,6 +19,6 @@ public class ElectronicMailBusinessIT extends AbstractBusinessIT {
     public void exceptionFormat(){
     	TestCase testCase = instanciateTestCase();
     	ElectronicMail electronicMail = new ElectronicMail("may...mail@mail.com");
-    	testCase.create(electronicMail);
+    	testCase.create(electronicMail,"adresse Adresse email mal formée");
     }
 }

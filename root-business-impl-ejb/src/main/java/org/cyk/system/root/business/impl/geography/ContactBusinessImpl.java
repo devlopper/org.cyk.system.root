@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.geography.ContactBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.geography.Contact;
@@ -22,6 +23,11 @@ public class ContactBusinessImpl extends AbstractCollectionItemBusinessImpl<Cont
 	public ContactBusinessImpl(ContactDao dao) {
 		super(dao); 
 	}
+	
+	/*@Override
+	public Contact create(Contact contact) {
+		return (Contact) inject(GenericBusiness.class).create(contact);
+	}*/
 	
 	@Override
 	public Collection<Contact> findByCollections(Collection<ContactCollection> collections) {

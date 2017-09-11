@@ -25,6 +25,7 @@ import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.ThrowableHelper;
 import org.cyk.utility.common.helper.ValidationHelper;
 
 @Singleton
@@ -65,7 +66,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         if(validator==null)
             //DefaultValidator.getInstance().validate(anIdentifiable);
         	//inject(DefaultValidator.class).validate(anIdentifiable);
-        	new ValidationHelper.Validate.Adapter.Default(anIdentifiable);
+        	ThrowableHelper.getInstance().throw_(new ValidationHelper.Validate.Adapter.Default(anIdentifiable).execute(), BusinessException.class);
         else
             validator.validate(anIdentifiable);
     }

@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
-import org.cyk.system.root.business.api.geography.CountryBusiness;
-import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.PhoneNumber;
+import org.junit.Test;
 
 public class ContactCollectionBusinessIT extends AbstractBusinessIT {
 
@@ -19,6 +19,14 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     protected void businesses() {
     	createAndUpdateOnePhoneNumber();
     	createAndUpdateManyPhoneNumbers();
+    }
+    
+    @Test
+    public void e(){
+    	ContactCollection contactCollection = new ContactCollection();
+    	contactCollection.add(new ElectronicMail(contactCollection, "a..@m.com"));
+    	create(contactCollection);
+    	
     }
     
     private void createAndUpdateOnePhoneNumber(){
