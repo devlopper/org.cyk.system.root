@@ -21,17 +21,16 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<!--Logger name="org.cyk.system.root.business.impl.DataSet"
+		<!--Logger name="org.cyk.system.root.persistence.impl.geography.ElectronicMailDaoImpl"
 			level="trace">
 			<AppenderRef ref="Console" />
 		</Logger-->
-		<!--Logger name="org.cyk"
-			level="trace">
-			<AppenderRef ref="BusinessConsole" />
+		<!--Logger name="org.cyk.system.root.business.impl.RealDataSet" level="trace">
+			<AppenderRef ref="Console" />
 		</Logger-->
-		<Logger name="org.cyk.system.root.business.impl.RealDataSet" level="trace">
+		<!--Logger name="org.cyk.system.root.business.impl.RealDataSet" level="trace">
 			<AppenderRef ref="InstallConsole" />
-		</Logger>
+		</Logger-->
 		
 		<Root level="trace">
 			<!--AppenderRef ref="Console"/ -->

@@ -60,11 +60,12 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 	@Override
 	protected void afterCreate(ContactCollection collection) {
 		super.afterCreate(collection);
-		configure(collection.getPhoneNumbers(), collection);
+		/*configure(collection.getPhoneNumbers(), collection);
 	    configure(collection.getLocations(), collection);
 	    configure(collection.getElectronicMails(), collection);
 	    configure(collection.getPostalBoxs(), collection);
 	    configure(collection.getWebsites(), collection);
+	    */
 	}
 
 	@Override
@@ -96,16 +97,13 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
     	*/
     }
          
-    private void configure(Collection<? extends Contact> contacts,ContactCollection collection){
+    /*private void configure(Collection<? extends Contact> contacts,ContactCollection collection){
         if(contacts==null)
             return;
-        long order = 0;
         for(Contact contact : contacts){
-            contact.setCollection(collection);
-            contact.setOrderNumber(order++);
             contactDao.create(contact);
         }
-    }
+    }*/
     
     private void update(Collection<? extends Contact> databaseContacts,Collection<? extends Contact> inputContacts,ContactCollection collection){
         if(inputContacts==null)

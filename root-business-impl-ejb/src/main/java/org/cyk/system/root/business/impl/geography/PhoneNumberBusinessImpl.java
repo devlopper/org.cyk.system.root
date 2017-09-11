@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.Contact;
@@ -16,6 +15,7 @@ import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
+import org.cyk.utility.common.helper.RandomHelper;
 
 public class PhoneNumberBusinessImpl extends AbstractContactBusinessImpl<PhoneNumber, PhoneNumberDao> implements PhoneNumberBusiness,Serializable {
 
@@ -29,7 +29,7 @@ public class PhoneNumberBusinessImpl extends AbstractContactBusinessImpl<PhoneNu
 	@Override
 	public Contact instanciateOneRandomly() {
 		Country country = inject(CountryDao.class).readOneRandomly();
-		return instanciateOne(null,country==null ?null:country.getCode(), RootConstant.Code.PhoneNumberType.MOBILE, RandomStringUtils.randomNumeric(8));
+		return instanciateOne(null,country==null ?null:country.getCode(), RootConstant.Code.PhoneNumberType.MOBILE, String.valueOf(RandomHelper.getInstance().getNumeric(8)));
 	}
 
 	@Override

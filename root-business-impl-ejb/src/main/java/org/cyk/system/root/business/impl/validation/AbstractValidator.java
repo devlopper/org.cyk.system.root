@@ -34,6 +34,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
  *
  * @param <OBJECT>
  */
+@Deprecated
 public abstract class AbstractValidator<OBJECT> extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = -261860698364195138L;

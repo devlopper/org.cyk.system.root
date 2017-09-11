@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
+import org.cyk.system.root.business.api.geography.CountryBusiness;
+import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;

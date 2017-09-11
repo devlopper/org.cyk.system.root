@@ -231,7 +231,7 @@ public class DataSet extends AbstractBean implements Serializable {
 
 	public <T> DataSet addInstances(Class<T> aClass,@SuppressWarnings("unchecked") T...instances){
 		if(!ArrayHelper.getInstance().isEmpty(instances))
-			addInstances(aClass, Arrays.asList(instances),Boolean.TRUE);
+			addInstances(aClass, Arrays.asList(instances));
 		return this;
 	}
 	
@@ -254,6 +254,10 @@ public class DataSet extends AbstractBean implements Serializable {
 				Pool.getInstance().add(aClass, classInstances);
 		}
 		return this;
+	}
+	
+	public <T> DataSet addInstances(Class<T> aClass,Collection<?> instances){
+		return addInstances(aClass, instances, Boolean.TRUE);
 	}
 
 	public <T extends AbstractIdentifiable> DataSet create(Class<T> aClass,Integer countByTransaction){

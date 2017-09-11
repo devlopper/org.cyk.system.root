@@ -29,7 +29,7 @@ public class Country extends AbstractIdentifiable implements Serializable{
 	@OneToOne @JoinColumn(nullable=false) @NotNull 
 	private Locality locality;
 	
-	@Column(nullable=false) @NotNull
+	@Column//(nullable=false) @NotNull
 	private Integer phoneNumberCode;
 	
 	@Transient private Locality continent;

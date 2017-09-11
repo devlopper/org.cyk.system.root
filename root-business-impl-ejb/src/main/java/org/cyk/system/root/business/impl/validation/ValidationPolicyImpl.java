@@ -25,6 +25,7 @@ import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.ValidationHelper;
 
 @Singleton
 public class ValidationPolicyImpl extends AbstractBean implements ValidationPolicy, Serializable {
@@ -63,7 +64,8 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         AbstractValidator<Identifiable<?>> validator = (AbstractValidator<Identifiable<?>>) ValidatorMap.getInstance().validatorOf(anIdentifiable.getClass());
         if(validator==null)
             //DefaultValidator.getInstance().validate(anIdentifiable);
-        	inject(DefaultValidator.class).validate(anIdentifiable);
+        	//inject(DefaultValidator.class).validate(anIdentifiable);
+        	new ValidationHelper.Validate.Adapter.Default(anIdentifiable);
         else
             validator.validate(anIdentifiable);
     }

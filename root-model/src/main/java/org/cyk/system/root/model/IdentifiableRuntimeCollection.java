@@ -20,6 +20,7 @@ public class IdentifiableRuntimeCollection<T> implements Serializable {
 
 	private Collection<T> collection;
 	private Boolean synchonizationEnabled;
+	private Boolean isOrderNumberComputeEnabled;
 	private Collection<String> fieldNames;
 	
 	public IdentifiableRuntimeCollection<T> addOne(T item){

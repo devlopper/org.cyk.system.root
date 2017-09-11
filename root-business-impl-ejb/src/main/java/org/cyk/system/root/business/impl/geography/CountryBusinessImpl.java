@@ -47,17 +47,16 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 			locality = new Locality(country.getContinent(), inject(LocalityTypeDao.class).read(RootConstant.Code.LocalityType.COUNTRY), country.getCode(), country.getName());
 			country.setLocality(locality);
 		}
-		if(locality.getIdentifier()==null)
-			inject(LocalityBusiness.class).create(locality);
 		super.beforeCreate(country);
+		createIfNotIdentified(locality);
 	}
 	
-	@Override
+	/*@Override
 	public Country create(Country country) {
 		if(country.getContinent()==null)
 			return null;
 		return super.create(country);
-	}
+	}*/
 
 	@Override
 	protected void beforeUpdate(Country country) {

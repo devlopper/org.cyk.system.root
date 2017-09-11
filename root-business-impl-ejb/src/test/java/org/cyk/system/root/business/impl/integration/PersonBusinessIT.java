@@ -32,7 +32,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	testCase.clean();
     }
     
-    @Test
+    //@Test
     public void crudPersonRelationshipRandomly(){
     	TestCase testCase = instanciateTestCase();
     	String f1="f1",s1="s1",f2="f2",s2="s2";
