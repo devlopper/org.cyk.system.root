@@ -8,6 +8,10 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.model.geography.ContactCollection;
+import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.geography.PhoneNumber;
+import org.cyk.system.root.model.geography.PostalBox;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
@@ -23,10 +27,10 @@ public class ContactCollectionDetails extends AbstractOutputDetails<ContactColle
 		if(contactCollection==null){
 			
 		}else{
-			phoneNumbers = StringUtils.join(contactCollection.getPhoneNumbers(),Constant.CHARACTER_COMA);
-			electronicMails = StringUtils.join(contactCollection.getElectronicMails(),Constant.CHARACTER_COMA);
-			locations = StringUtils.join(contactCollection.getLocations(),Constant.CHARACTER_COMA);
-			postalBoxes = StringUtils.join(contactCollection.getPostalBoxs(),Constant.CHARACTER_COMA);
+			phoneNumbers = StringUtils.join(contactCollection.getItems().filter(PhoneNumber.class),Constant.CHARACTER_COMA);
+			electronicMails = StringUtils.join(contactCollection.getItems().filter(ElectronicMail.class),Constant.CHARACTER_COMA);
+			locations = StringUtils.join(contactCollection.getItems().filter(Location.class),Constant.CHARACTER_COMA);
+			postalBoxes = StringUtils.join(contactCollection.getItems().filter(PostalBox.class),Constant.CHARACTER_COMA);
 		}
 		
 	}

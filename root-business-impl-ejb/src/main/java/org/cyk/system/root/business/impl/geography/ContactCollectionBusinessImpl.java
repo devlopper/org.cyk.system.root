@@ -20,10 +20,9 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.geography.PhoneNumber;
-import org.cyk.system.root.model.geography.PostalBox;
-import org.cyk.system.root.model.geography.Website;
 import org.cyk.system.root.persistence.api.geography.ContactCollectionDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
+import org.cyk.utility.common.helper.CollectionHelper;
 
 public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImpl<ContactCollection,Contact, ContactCollectionDao,ContactDao,ContactBusiness> implements ContactCollectionBusiness,Serializable {
 
@@ -46,7 +45,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 		//collection.addWebsite((Website) inject(WebsiteBusiness.class).instanciateOneRandomly());
 		return collection;
 	}
-	
+	/*
 	protected void __load__(ContactCollection aCollection) {
 		if(aCollection==null)
 			return;
@@ -55,7 +54,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
         aCollection.setElectronicMails(contactDao.readByCollectionByClass(aCollection,ElectronicMail.class));
         aCollection.setPostalBoxs(contactDao.readByCollectionByClass(aCollection,PostalBox.class));
         aCollection.setWebsites(contactDao.readByCollectionByClass(aCollection,Website.class));
-    }
+    }*/
 	
 	@Override
 	protected void afterCreate(ContactCollection collection) {
@@ -71,18 +70,21 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 	@Override
 	protected void afterUpdate(ContactCollection collection) {
 		super.afterUpdate(collection);
+		
+		//new CollectionHelper.Filter.Adapter.Default<T>(collection).setProperty(CollectionHelper.Filter.PROPERTY_NAME_CLASS, aClass).execute()
+		/*
 		update(inject(ContactDao.class).readByCollectionByClass(collection,PhoneNumber.class), collection.getPhoneNumbers(), collection);
-    	update(contactDao.readByCollectionByClass(collection,Location.class), collection.getLocations(), collection);
+    	update(inject(ContactDao.class).readByCollectionByClass(collection,Location.class), collection.getLocations(), collection);
     	Collection<ElectronicMail> electronicMails = new ArrayList<>();
     	if(collection.getElectronicMails()!=null)
     		for(ElectronicMail electronicMail : collection.getElectronicMails())
     			if(StringUtils.isNotBlank(electronicMail.getAddress()))
     				electronicMails.add(electronicMail);
-    	update(contactDao.readByCollectionByClass(collection,ElectronicMail.class), electronicMails, collection);
+    	update(inject(ContactDao.class).readByCollectionByClass(collection,ElectronicMail.class), electronicMails, collection);
     	
-    	update(contactDao.readByCollectionByClass(collection,PostalBox.class), collection.getPostalBoxs(), collection);
-    	update(contactDao.readByCollectionByClass(collection,Website.class), collection.getWebsites(), collection);
-    	
+    	update(inject(ContactDao.class).readByCollectionByClass(collection,PostalBox.class), collection.getPostalBoxs(), collection);
+    	update(inject(ContactDao.class).readByCollectionByClass(collection,Website.class), collection.getWebsites(), collection);
+    	*/
 	}
 	
     @Override
@@ -148,9 +150,9 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 
 	@Override
 	public ContactCollection instanciateOne(String[] phoneNumbers, String[] electronicMails, String[] postalBoxes,String[] websites) {
-		ContactCollection contactCollection = new ContactCollection();
-		contactCollection.setPhoneNumbers(inject(PhoneNumberBusiness.class).instanciateMany(contactCollection, phoneNumbers));
-		contactCollection.setElectronicMails(inject(ElectronicMailBusiness.class).instanciateMany(contactCollection, electronicMails));
+		ContactCollection contactCollection = instanciateOne();
+		contactCollection.addPhoneNumbers(inject(PhoneNumberBusiness.class).instanciateMany(contactCollection, phoneNumbers));
+		contactCollection.addElectronicMails(inject(ElectronicMailBusiness.class).instanciateMany(contactCollection, electronicMails));
 		//contactCollection.setPostalBoxes(inject(Postalb.class).instanciateMany(contactCollection, phoneNumbers));
 		//contactCollection.setWebsites(inject(PhoneNumberBusiness.class).instanciateMany(contactCollection, phoneNumbers));
 		return contactCollection;
@@ -158,19 +160,26 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 	
 	@Override
 	public void setElectronicMail(ContactCollection collection, String address) {
-		if(collection.getElectronicMails()==null || collection.getElectronicMails().isEmpty())
+		Collection<ElectronicMail> electronicMails = collection.getItems().filter(ElectronicMail.class);
+		if(CollectionHelper.getInstance().isEmpty(electronicMails))
 			collection.add(new ElectronicMail(collection,address));
-		exceptionUtils().exception(collection.getElectronicMails().size() > 1, "toomuchelectronicmailsfound");
-		collection.getElectronicMails().iterator().next().setAddress(address);
-	
+		else if(CollectionHelper.getInstance().getSize(electronicMails)==1)
+			electronicMails.iterator().next().setAddress(address);
+		else
+			//ThrowableHelper.getInstance().t
+			exceptionUtils().exception(Boolean.TRUE, "toomuchelectronicmailsfound");
 	}
 	
 	@Override
-	public String getElectronicMail(ContactCollection collection) {
-		if(collection.getElectronicMails()==null || collection.getElectronicMails().isEmpty())
-			return null;
-		exceptionUtils().exception(collection.getElectronicMails().size() > 1, "toomuchelectronicmailsfound");
-		return collection.getElectronicMails().iterator().next().getAddress();
+	public String getElectronicMailAddress(ContactCollection collection) {
+		Collection<ElectronicMail> electronicMails = collection.getItems().filter(ElectronicMail.class);
+		if(CollectionHelper.getInstance().isNotEmpty(electronicMails)){
+			if(CollectionHelper.getInstance().getSize(electronicMails)==1)
+				return electronicMails.iterator().next().getAddress();
+			else
+				exceptionUtils().exception(electronicMails.size() > 1, "toomuchelectronicmailsfound");	
+		}
+		return null;
 	}
 
 }

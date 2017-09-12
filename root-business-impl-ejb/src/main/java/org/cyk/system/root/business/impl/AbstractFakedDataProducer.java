@@ -107,11 +107,11 @@ public abstract class AbstractFakedDataProducer extends AbstractBean implements 
 		return rootDataProducerHelper.getEnumeration(aClass, code);
 	}
 	
-	public void addContacts(ContactCollection collection, String[] addresses, String[] landNumbers,
+	/*public void addContacts(ContactCollection collection, String[] addresses, String[] landNumbers,
 			String[] mobileNumbers, String[] postalBoxes, String[] emails, String[] websites) {
 		rootDataProducerHelper.addContacts(collection, addresses, landNumbers, mobileNumbers, postalBoxes, emails,
 				websites);
-	}
+	}*/
 
 	
 	

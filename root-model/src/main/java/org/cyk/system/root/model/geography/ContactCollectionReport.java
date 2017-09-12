@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.file.report.AbstractIdentifiableReport;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.helper.CollectionHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,20 @@ public class ContactCollectionReport extends AbstractIdentifiableReport<ContactC
 
 	private String phoneNumbers,emails,postalBoxs,locations,websites,all,separatror=Constant.CHARACTER_SLASH.toString();
 
+	@Override
+	public void setSource(Object source) {
+		super.setSource(source);
+		if(source==null){
+			
+		}else{
+			phoneNumbers = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(PhoneNumber.class),Constant.CHARACTER_COMA);
+			emails = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(ElectronicMail.class),Constant.CHARACTER_COMA);
+			postalBoxs = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(PostalBox.class),Constant.CHARACTER_COMA);
+			locations = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(Location.class),Constant.CHARACTER_COMA);
+			websites = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(Website.class),Constant.CHARACTER_COMA);
+		}
+	}
+	
 	@Override
 	public void generate() {
 		locations = provider.randomWord(RandomDataProvider.WORD_LOCATION, 0, 1);

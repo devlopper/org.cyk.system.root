@@ -61,11 +61,11 @@ public class ReportBasedOnDynamicBuilderIT extends AbstractBusinessIT {
         owner.setImage(fileBusiness.process(randomFile.getBytes(), "image."+randomFile.getExtension()));
         PhoneNumber phoneNumber = new PhoneNumber();
         phoneNumber.setNumber("00112233");
-        owner.getContactCollection().setPhoneNumbers(new ArrayList<PhoneNumber>());
-        owner.getContactCollection().getPhoneNumbers().add(phoneNumber);
+        //owner.getContactCollection().setPhoneNumbers(new ArrayList<PhoneNumber>());
+        //owner.getContactCollection().getPhoneNumbers().add(phoneNumber);
         phoneNumber = new PhoneNumber();
         phoneNumber.setNumber("99887744");
-        owner.getContactCollection().getPhoneNumbers().add(phoneNumber);
+        //owner.getContactCollection().getPhoneNumbers().add(phoneNumber);
         
         ReportBasedOnDynamicBuilderListener.GLOBALS.add(new ReportBasedOnDynamicBuilderAdapter(){
         	@Override

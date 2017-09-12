@@ -122,10 +122,9 @@ public class ContactBusinessImpl extends AbstractCollectionItemBusinessImpl<Cont
 		for(ContactCollection contactCollection : contactCollections){
 			for(Class<?> aClass : classes){
 				if(ElectronicMail.class.equals(aClass)){
-					contactCollection.setElectronicMails(new ArrayList<ElectronicMail>());
 					for(Contact contact : contacts)
 						if(contact.getCollection().equals(contactCollection) && contact.getClass().equals(aClass))
-							contactCollection.getElectronicMails().add((ElectronicMail) contact);
+							contactCollection.add((ElectronicMail) contact);
 				}
 			}
 		}

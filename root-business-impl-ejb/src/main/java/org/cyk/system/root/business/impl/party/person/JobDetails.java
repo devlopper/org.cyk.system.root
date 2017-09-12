@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
+import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
@@ -33,7 +34,7 @@ public class JobDetails extends AbstractOutputDetails<Person> implements Seriali
 			if(person.getJobInformations().getTitle()!=null)
 				title = formatUsingBusiness(person.getJobInformations().getTitle());
 			if(person.getJobInformations().getContactCollection()!=null)
-				contacts = StringUtils.join(person.getJobInformations().getContactCollection().getPhoneNumbers(),Constant.CHARACTER_COMA);
+				contacts = StringUtils.join(person.getJobInformations().getContactCollection().getItems().filter(PhoneNumber.class),Constant.CHARACTER_COMA);
 		}
 	}
 	

@@ -21,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.geography.LocationTypeBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
 import org.cyk.system.root.model.AbstractCollection;
@@ -31,16 +30,11 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.ReportTemplate;
-import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
-import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
-import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.geography.LocationType;
-import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.geography.PhoneNumberType;
-import org.cyk.system.root.model.geography.PostalBox;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
@@ -72,8 +66,6 @@ import org.cyk.system.root.model.security.RoleUniformResourceLocator;
 import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.GenericDao;
-import org.cyk.system.root.persistence.api.geography.CountryDao;
-import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineStateDao;
 import org.cyk.utility.common.Constant;
@@ -288,7 +280,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			collection.add((T) identifiable);
 		return collection;
 	}
-	
+	/*
 	public PhoneNumber addPhoneNumber(ContactCollection collection,Country country,PhoneNumberType type,String number){
 		PhoneNumber phoneNumber = new PhoneNumber();
 		phoneNumber.setCollection(collection);
@@ -312,6 +304,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return addPhoneNumber(collection,inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class)
 				.read(RootConstant.Code.PhoneNumberType.MOBILE), number);
 	}
+	*/
+	/*
 	public void addContacts(ContactCollection collection,String[] addresses,String[] landNumbers,String[] mobileNumbers,String[] postalBoxes,String[] emails,String[] websites){
 		if(addresses!=null)
 			for(String address : addresses){
@@ -342,16 +336,8 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 					collection.setElectronicMails(new ArrayList<ElectronicMail>());
 				collection.getElectronicMails().add(electronicMail);
 			}
-		/*if(websites!=null)
-			for(String websitev : websites){
-				Website website;
-				website = new Website(websitev);
-				if(collection.getWebsites()==null)
-					collection.setWebsites(new ArrayList<Website>());
-				collection.getWebsites().add(website);
-			}
-		*/
 	}
+	*/
 	
 	public MovementCollection createMovementCollection(String code,String incrementActionName,String decrementActionName){
 		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, createInterval(null, code+"int", code+"int", "0", null));

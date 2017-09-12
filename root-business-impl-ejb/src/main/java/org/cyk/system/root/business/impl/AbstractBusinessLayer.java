@@ -11,8 +11,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import lombok.Getter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessLayer;
 import org.cyk.system.root.business.api.BusinessManager;
@@ -40,8 +38,6 @@ import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.generator.StringGenerator;
-import org.cyk.system.root.model.generator.StringValueGeneratorConfiguration;
-import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -59,6 +55,8 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.cdi.AbstractLayer;
 import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
+
+import lombok.Getter;
 
 public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdentifiableBusinessServiceImpl<?>> implements BusinessLayer, Serializable {
     
@@ -377,11 +375,11 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
 		return rootDataProducerHelper.getEnumeration(aClass, code);
 	}
 
-	public void addContacts(ContactCollection collection, String[] addresses, String[] landNumbers,
+	/*public void addContacts(ContactCollection collection, String[] addresses, String[] landNumbers,
 			String[] mobileNumbers, String[] postalBoxes, String[] emails, String[] websites) {
 		rootDataProducerHelper.addContacts(collection, addresses, landNumbers, mobileNumbers, postalBoxes, emails,
 				websites);
-	}
+	}*/
 	
 	public MovementCollection createMovementCollection(String code,String incrementActionName,String decrementActionName){
 		return rootDataProducerHelper.createMovementCollection(code, incrementActionName, decrementActionName);

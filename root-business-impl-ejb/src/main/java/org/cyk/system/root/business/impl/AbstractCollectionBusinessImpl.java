@@ -93,7 +93,8 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 
 	@Override
 	protected void afterCreate(COLLECTION collection) {
-		if(collection.getItems().getSynchonizationEnabled()==null || collection.getItems().isSynchonizationEnabled()){
+		super.afterCreate(collection);
+		if(collection.getItems().isSynchonizationEnabled()){
 			Long orderNumber = 0l;
 			for(ITEM item : collection.getItems().getCollection()){
 				item.setCollection(collection);
@@ -102,7 +103,6 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 			}
 			getItemBusiness().create(collection.getItems().getCollection());
 		}
-		super.afterCreate(collection);
 	}
 
 	/*@Override

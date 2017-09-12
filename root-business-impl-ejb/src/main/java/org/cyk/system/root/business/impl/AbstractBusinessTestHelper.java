@@ -32,10 +32,6 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.Entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -67,6 +63,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderConfigur
 import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParameters;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -103,12 +100,18 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.exolab.castor.types.DateTime;
 import org.hamcrest.Matcher;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -849,7 +852,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			if(identifiables!=null){
 				Collections.reverse(identifiables);
 				for(AbstractIdentifiable identifiable : identifiables)
-					helper.delete(identifiable.getClass(), identifiable.getCode()); //inject(GenericBusiness.class).delete(identifiable);
+					if(identifiable.getCode()==null)
+						helper.delete(identifiable);
+					else
+						helper.delete(identifiable.getClass(), identifiable.getCode()); //inject(GenericBusiness.class).delete(identifiable);
+						
 			}
 			cleaned = Boolean.TRUE;
 			assertCountAll(classes);
@@ -980,6 +987,15 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			assertPersonRelationship(motherPersonCode, FAMILY_PARENT_MOTHER, FAMILY_PARENT_DAUGHTER, daughterPersonCodes);
 		}
 		
+		/**/
+		
+		private void assertList(List<?> collection,List<?> expected){
+			assertEquals("collection size not equals", expected.size(), collection.size());
+			for(Integer index = 0 ; index < collection.size() ; index++){
+				assertEquals("element at position "+index+" not equals", expected.get(index.intValue()), collection.get(index.intValue()));
+			}
+		}
+		
 		public void assertPersonRelationship(String person1Code,String role1Code,String role2Code,String[] expectedPersonCodes){
 			__assertPersonRelationship__(person1Code, role1Code, role2Code, expectedPersonCodes,Boolean.TRUE);
 			if(expectedPersonCodes!=null)
@@ -1012,6 +1028,14 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			Collection<ElectronicMail> electronicMails = commonUtils.castCollection(
 					inject(ElectronicMailDao.class).readByCollection(inject(PersonDao.class).read(personCode).getContactCollection()),ElectronicMail.class);
 			assertEquals("Electronic mail", email, electronicMails.isEmpty() ? Constant.EMPTY_STRING : electronicMails.iterator().next().getAddress());
+		}
+		
+		public void assertContactCollectionElectronicMails(String contactCollectionCode,String[] electronicMailAddresses){
+			ContactCollection contactCollection = read(ContactCollection.class, contactCollectionCode);
+			Collection<ElectronicMail> electronicMails = CollectionHelper.getInstance().cast(ElectronicMail.class
+					,inject(ElectronicMailDao.class).readByCollection(contactCollection)); 
+			assertList(new ArrayList<>(MethodHelper.getInstance().callGet(electronicMails, String.class, ElectronicMail.FIELD_ADDRESS))
+					, Arrays.asList(electronicMailAddresses));
 		}
 		
 		public <T extends AbstractIdentifiable> void assertWhereExistencePeriodFromDateIsLessThanCount(final Class<T> aClass,final String code,Integer count){

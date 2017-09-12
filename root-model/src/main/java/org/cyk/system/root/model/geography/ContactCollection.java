@@ -25,16 +25,18 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 
 	private static final long serialVersionUID = 8675998527199168142L;
 	
+	/*
 	@Transient private Collection<PhoneNumber> phoneNumbers;
 	@Transient private Collection<Location> locations;
 	@Transient private Collection<PostalBox> postalBoxs;
 	@Transient private Collection<ElectronicMail> electronicMails;
 	@Transient private Collection<Website> websites;
+	*/
 
 	@Override
 	public ContactCollection add(Contact contact) {
 		super.add(contact);
-		if(contact instanceof PhoneNumber)
+		/*if(contact instanceof PhoneNumber)
 			addPhoneNumber((PhoneNumber) contact);
 		else if(contact instanceof Location)
 			addLocation((Location) contact);
@@ -44,9 +46,23 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 			addElectronicMail((ElectronicMail) contact);
 		else if(contact instanceof Website)
 			addWebsite((Website) contact);
+		*/
 		return this;
 	}
 	
+	public ContactCollection addPhoneNumbers(Collection<PhoneNumber> phoneNumbers) {
+		for(PhoneNumber phoneNumber : phoneNumbers)
+			add(phoneNumber);
+		return this;
+	}
+	
+	public ContactCollection addElectronicMails(Collection<ElectronicMail> electronicMails) {
+		for(ElectronicMail electronicMail : electronicMails)
+			add(electronicMail);
+		return this;
+	}
+	
+	/*
 	private ContactCollection addPhoneNumber(PhoneNumber phoneNumber){
 		if(phoneNumbers==null)
 			phoneNumbers = new ArrayList<>();
@@ -102,6 +118,7 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 	    s.append("Locations : "+StringUtils.join(locations,","));
 	    return s.toString();
 	}
+	*/
 
 	/**/
 	

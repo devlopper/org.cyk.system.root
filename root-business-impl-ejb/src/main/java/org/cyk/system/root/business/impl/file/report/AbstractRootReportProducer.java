@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.FormatterBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -22,8 +21,6 @@ import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.report.AbstractIdentifiableReport;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.LabelValueCollectionReport;
-import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ContactCollectionReport;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifierReport;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -259,14 +256,6 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		if(identifiable==null || identifiable.getGlobalIdentifier()==null)
 			return ;
 		setGlobalIdentifier(identifiable.getGlobalIdentifier(), report.getGlobalIdentifier());
-	}
-	
-	protected void set(ContactCollection contactCollection,ContactCollectionReport report){
-		report.setPhoneNumbers(StringUtils.join(contactCollection.getPhoneNumbers(),Constant.CHARACTER_COLON));
-		report.setEmails(StringUtils.join(contactCollection.getElectronicMails(),Constant.CHARACTER_COLON));
-		report.setLocations(StringUtils.join(contactCollection.getLocations(),Constant.CHARACTER_COLON));
-		report.setPostalBoxs(StringUtils.join(contactCollection.getPostalBoxs(),Constant.CHARACTER_COLON));
-		report.setWebsites(StringUtils.join(contactCollection.getWebsites(),Constant.CHARACTER_COLON));
 	}
 	
 	@Deprecated

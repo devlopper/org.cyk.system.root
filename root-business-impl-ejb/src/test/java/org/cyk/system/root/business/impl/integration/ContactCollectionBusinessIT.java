@@ -1,34 +1,84 @@
 package org.cyk.system.root.business.impl.integration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
-import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
-import org.cyk.system.root.model.geography.Contact;
+import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
-import org.cyk.system.root.model.geography.PhoneNumber;
+import org.cyk.system.root.persistence.api.geography.ContactDao;
+import org.cyk.utility.common.helper.RandomHelper;
 import org.junit.Test;
 
 public class ContactCollectionBusinessIT extends AbstractBusinessIT {
 
     private static final long serialVersionUID = -6691092648665798471L;
  
-    @Override
-    protected void businesses() {
-    	createAndUpdateOnePhoneNumber();
-    	createAndUpdateManyPhoneNumbers();
+    @Test
+    public void emailBadFormat(){
+    	TestCase testCase = instanciateTestCase();
+    	ContactCollection contactCollection = new ContactCollection();
+    	contactCollection.add(new ElectronicMail(contactCollection, "a..@m.com"));
+    	testCase.create(contactCollection,"adresse : a..@m.com n'est pas une adresse de courrier électronique bien formée");    	
     }
     
     @Test
-    public void e(){
-    	ContactCollection contactCollection = new ContactCollection();
-    	contactCollection.add(new ElectronicMail(contactCollection, "a..@m.com"));
-    	create(contactCollection);
+    public void crudContactCollection(){
+    	TestCase testCase = instanciateTestCase();
+    	ContactCollection contactCollection = inject(ContactCollectionBusiness.class).instanciateOne();
+    	testCase.create(contactCollection);
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudContactCollectionWithOnlyOneElectronicMail(){
+    	TestCase testCase = instanciateTestCase();
+    	String code001 = RandomHelper.getInstance().getAlphanumeric(10);
+    	//create
+    	ContactCollection contactCollection = inject(ContactCollectionBusiness.class).instanciateOne();
+    	contactCollection.setCode(code001);
+    	inject(ContactCollectionBusiness.class).setElectronicMail(contactCollection, "m1@mail.com");
+    	testCase.create(contactCollection);
+    	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m1@mail.com"});
+    	//update
+    	contactCollection = testCase.read(ContactCollection.class, code001);
+    	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setCollection(inject(ContactDao.class).readByCollection(contactCollection));
+    	inject(ContactCollectionBusiness.class).setElectronicMail(contactCollection, "m12@mail.com");
+    	testCase.update(contactCollection);
+    	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m12@mail.com"});
+    	//update
+    	contactCollection = testCase.read(ContactCollection.class, code001);
+    	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setCollection(inject(ContactDao.class).readByCollection(contactCollection));
+    	inject(ContactCollectionBusiness.class).setElectronicMail(contactCollection, "another@gmail.com");
+    	testCase.update(contactCollection);
+    	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another@gmail.com"});
+    	
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudContactCollectionWithOnlyOnePhoneNumber(){
     	
     }
     
+    @Test
+    public void crudContactCollectionWithManyElectronicMails(){
+    	
+    }
+    
+    @Test
+    public void crudContactCollectionWithManyPhoneNumbers(){
+    	
+    }
+    
+    @Test
+    public void crudContactCollectionWithOnlyOneElectronicMailAndPhoneNumber(){
+    	
+    }
+    
+    @Test
+    public void crudContactCollectionWithManyElectronicMailsAndPhoneNumbers(){
+    	
+    }
+    /*
     private void createAndUpdateOnePhoneNumber(){
     	ContactCollection collection = new ContactCollection();
     	collection.setPhoneNumbers(new ArrayList<PhoneNumber>());
@@ -111,5 +161,6 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	for(PhoneNumber phoneNumber : collection.getPhoneNumbers())
     		assertThat("Belongs to collection", phoneNumber.getCollection().equals(collection));
     }
+    */
         
 }
