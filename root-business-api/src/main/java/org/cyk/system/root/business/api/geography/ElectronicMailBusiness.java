@@ -17,7 +17,9 @@ public interface ElectronicMailBusiness extends AbstractContactBusiness<Electron
 	@Deprecated
 	Collection<String> findAddresses(Collection<ElectronicMail> electronicMails);
 	
+	@Deprecated //move it to else where
 	void setAddress(Party party,String value);
+	@Deprecated //move it to else where
 	void setAddress(Person person, String personRelationshipTypeCode, String value);
 	
 	String findAddress(Party party);

@@ -69,10 +69,10 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	}
 	
 	@SuppressWarnings("unchecked")
-	public ITEM add(ITEM item){
-		items.getCollection().add(item);
+	public AbstractCollection<ITEM> add(ITEM item){
 		((AbstractCollectionItem<AbstractIdentifiable>)item).setCollection(this);
-		return item;
+		items.addOne(item);
+		return this;
 	}
 	
 	public ITEM addToDelete(ITEM item){

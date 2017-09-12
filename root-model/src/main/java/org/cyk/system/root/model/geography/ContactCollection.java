@@ -32,49 +32,50 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 	@Transient private Collection<Website> websites;
 
 	@Override
-	public Contact add(Contact item) {
-		if(item instanceof PhoneNumber)
-			addPhoneNumber((PhoneNumber) item);
-		else if(item instanceof Location)
-			addLocation((Location) item);
-		else if(item instanceof PostalBox)
-			addPostalBox((PostalBox) item);
-		else if(item instanceof ElectronicMail)
-			addElectronicMail((ElectronicMail) item);
-		else if(item instanceof Website)
-			addWebsite((Website) item);
-		return super.add(item);
+	public ContactCollection add(Contact contact) {
+		super.add(contact);
+		if(contact instanceof PhoneNumber)
+			addPhoneNumber((PhoneNumber) contact);
+		else if(contact instanceof Location)
+			addLocation((Location) contact);
+		else if(contact instanceof PostalBox)
+			addPostalBox((PostalBox) contact);
+		else if(contact instanceof ElectronicMail)
+			addElectronicMail((ElectronicMail) contact);
+		else if(contact instanceof Website)
+			addWebsite((Website) contact);
+		return this;
 	}
 	
-	public ContactCollection addPhoneNumber(PhoneNumber phoneNumber){
+	private ContactCollection addPhoneNumber(PhoneNumber phoneNumber){
 		if(phoneNumbers==null)
 			phoneNumbers = new ArrayList<>();
 		phoneNumbers.add(phoneNumber);
 		return this;
 	}
 	
-	public ContactCollection addLocation(Location location){
+	private ContactCollection addLocation(Location location){
 		if(locations==null)
 			locations = new ArrayList<>();
 		locations.add(location);
 		return this;
 	}
 	
-	public ContactCollection addPostalBox(PostalBox postalBox){
+	private ContactCollection addPostalBox(PostalBox postalBox){
 		if(postalBoxs==null)
 			postalBoxs = new ArrayList<>();
 		postalBoxs.add(postalBox);
 		return this;
 	}
 	
-	public ContactCollection addElectronicMail(ElectronicMail electronicMail){
+	private ContactCollection addElectronicMail(ElectronicMail electronicMail){
 		if(electronicMails==null)
 			electronicMails = new ArrayList<>();
 		electronicMails.add(electronicMail);
 		return this;
 	}
 	
-	public ContactCollection setElectronicMail(String address){
+	private ContactCollection setElectronicMail(String address){
 		if(StringUtils.isBlank(address)){
 			if(electronicMails!=null)
 				electronicMails.clear();
@@ -87,7 +88,7 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 		return this;
 	}
 	
-	public ContactCollection addWebsite(Website website){
+	private ContactCollection addWebsite(Website website){
 		if(websites==null)
 			websites = new ArrayList<>();
 		websites.add(website);
@@ -101,18 +102,7 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 	    s.append("Locations : "+StringUtils.join(locations,","));
 	    return s.toString();
 	}
-	/*
-	@Override
-	public String getUiString() {
-		StringBuilder s = new StringBuilder(super.toString()+ContentType.DEFAULT.getNewLineMarker());
-	    s.append(StringUtils.join(phoneNumbers,",")+ContentType.DEFAULT.getNewLineMarker());
-	    s.append(StringUtils.join(electronicMails,",")+ContentType.DEFAULT.getNewLineMarker());
-	    s.append(StringUtils.join(locations,",")+ContentType.DEFAULT.getNewLineMarker());
-	    s.append(StringUtils.join(postalBoxs,",")+ContentType.DEFAULT.getNewLineMarker());
-	    s.append(StringUtils.join(websites,","));
-	    return s.toString();
-	}*/
-	
+
 	/**/
 	
 	@Getter @Setter

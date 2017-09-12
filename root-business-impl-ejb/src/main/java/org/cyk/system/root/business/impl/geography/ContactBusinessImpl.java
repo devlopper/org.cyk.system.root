@@ -24,10 +24,20 @@ public class ContactBusinessImpl extends AbstractCollectionItemBusinessImpl<Cont
 		super(dao); 
 	}
 	
-	/*@Override
+	@Override
 	public Contact create(Contact contact) {
 		return (Contact) inject(GenericBusiness.class).create(contact);
-	}*/
+	}
+	
+	@Override
+	public Contact update(Contact contact) {
+		return (Contact) inject(GenericBusiness.class).update(contact);
+	}
+	
+	@Override
+	public Contact delete(Contact contact) {
+		return (Contact) inject(GenericBusiness.class).delete(contact);
+	}
 	
 	@Override
 	public Collection<Contact> findByCollections(Collection<ContactCollection> collections) {

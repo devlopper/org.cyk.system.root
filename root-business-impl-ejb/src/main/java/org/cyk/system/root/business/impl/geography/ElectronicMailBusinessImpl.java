@@ -77,7 +77,7 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 	public void setAddress(Party party, String value) {
 		if(party.getContactCollection()==null)
 			party.setContactCollection(new ContactCollection());
-		party.getContactCollection().setElectronicMail(value);
+		party.getContactCollection().add(new ElectronicMail(value));
 	}
 	
 	@Override @Deprecated

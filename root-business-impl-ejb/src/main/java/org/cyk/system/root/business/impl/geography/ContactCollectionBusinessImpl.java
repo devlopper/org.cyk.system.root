@@ -39,9 +39,9 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public ContactCollection instanciateOneRandomly() {
 		ContactCollection collection = new ContactCollection();
-		collection.addElectronicMail((ElectronicMail) inject(ElectronicMailBusiness.class).instanciateOneRandomly());
-		collection.addLocation((Location) inject(LocationBusiness.class).instanciateOneRandomly());
-		collection.addPhoneNumber((PhoneNumber) inject(PhoneNumberBusiness.class).instanciateOneRandomly());
+		collection.add((ElectronicMail) inject(ElectronicMailBusiness.class).instanciateOneRandomly());
+		collection.add((Location) inject(LocationBusiness.class).instanciateOneRandomly());
+		collection.add((PhoneNumber) inject(PhoneNumberBusiness.class).instanciateOneRandomly());
 		//collection.addPostalBox((PostalBox) inject(PostalBoxBusiness.class).instanciateOneRandomly());
 		//collection.addWebsite((Website) inject(WebsiteBusiness.class).instanciateOneRandomly());
 		return collection;
@@ -159,7 +159,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 	@Override
 	public void setElectronicMail(ContactCollection collection, String address) {
 		if(collection.getElectronicMails()==null || collection.getElectronicMails().isEmpty())
-			collection.addElectronicMail(new ElectronicMail(collection,address));
+			collection.add(new ElectronicMail(collection,address));
 		exceptionUtils().exception(collection.getElectronicMails().size() > 1, "toomuchelectronicmailsfound");
 		collection.getElectronicMails().iterator().next().setAddress(address);
 	
