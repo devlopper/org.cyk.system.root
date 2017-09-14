@@ -65,6 +65,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.Movement;
@@ -84,6 +85,7 @@ import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
+import org.cyk.system.root.persistence.api.geography.PhoneNumberDao;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
@@ -99,6 +101,7 @@ import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
@@ -990,10 +993,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		/**/
 		
 		private void assertList(List<?> collection,List<?> expected){
-			assertEquals("collection size not equals", expected.size(), collection.size());
-			for(Integer index = 0 ; index < collection.size() ; index++){
-				assertEquals("element at position "+index+" not equals", expected.get(index.intValue()), collection.get(index.intValue()));
-			}
+			assertEquals("collection size not equals", CollectionHelper.getInstance().getSize(expected), CollectionHelper.getInstance().getSize(collection));
+			if(collection!=null)
+				for(Integer index = 0 ; index < collection.size() ; index++){
+					assertEquals("element at position "+index+" not equals", expected.get(index.intValue()), collection.get(index.intValue()));
+				}
 		}
 		
 		public void assertPersonRelationship(String person1Code,String role1Code,String role2Code,String[] expectedPersonCodes){
@@ -1033,9 +1037,17 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public void assertContactCollectionElectronicMails(String contactCollectionCode,String[] electronicMailAddresses){
 			ContactCollection contactCollection = read(ContactCollection.class, contactCollectionCode);
 			Collection<ElectronicMail> electronicMails = CollectionHelper.getInstance().cast(ElectronicMail.class
-					,inject(ElectronicMailDao.class).readByCollection(contactCollection)); 
-			assertList(new ArrayList<>(MethodHelper.getInstance().callGet(electronicMails, String.class, ElectronicMail.FIELD_ADDRESS))
-					, Arrays.asList(electronicMailAddresses));
+					,inject(ElectronicMailDao.class).readByCollection(contactCollection));
+			assertList(CollectionHelper.getInstance().createList(MethodHelper.getInstance().callGet(electronicMails, String.class, ElectronicMail.FIELD_ADDRESS))
+					, ArrayHelper.getInstance().isEmpty(electronicMailAddresses) ? new ArrayList<>() : Arrays.asList(electronicMailAddresses));
+		}
+		
+		public void assertContactCollectionPhoneNumbers(String contactCollectionCode,String[] phoneNumberValues){
+			ContactCollection contactCollection = read(ContactCollection.class, contactCollectionCode);
+			Collection<PhoneNumber> phoneNumbers = CollectionHelper.getInstance().cast(PhoneNumber.class
+					,inject(PhoneNumberDao.class).readByCollection(contactCollection));
+			assertList(CollectionHelper.getInstance().createList(MethodHelper.getInstance().callGet(phoneNumbers, String.class, PhoneNumber.FIELD_NUMBER))
+					, ArrayHelper.getInstance().isEmpty(phoneNumberValues) ? new ArrayList<>() : Arrays.asList(phoneNumberValues));
 		}
 		
 		public <T extends AbstractIdentifiable> void assertWhereExistencePeriodFromDateIsLessThanCount(final Class<T> aClass,final String code,Integer count){

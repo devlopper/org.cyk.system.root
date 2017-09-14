@@ -66,7 +66,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         if(validator==null)
             //DefaultValidator.getInstance().validate(anIdentifiable);
         	//inject(DefaultValidator.class).validate(anIdentifiable);
-        	ThrowableHelper.getInstance().throw_(new ValidationHelper.Validate.Adapter.Default(anIdentifiable).execute(), BusinessException.class);
+        	new ValidationHelper.Validate.Adapter.Default(anIdentifiable).setIsThrowMessages(Boolean.TRUE).setThrowableClass(BusinessException.class).execute();
         else
             validator.validate(anIdentifiable);
     }

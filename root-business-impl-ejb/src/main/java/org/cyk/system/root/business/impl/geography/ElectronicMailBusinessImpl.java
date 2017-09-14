@@ -45,6 +45,7 @@ public class ElectronicMailBusinessImpl extends AbstractContactBusinessImpl<Elec
 	public ElectronicMail instanciateOne(ContactCollection collection, String address) {
 		ElectronicMail electronicMail = new ElectronicMail();
 		electronicMail.setAddress(address);
+		collection.add(electronicMail);
 		return electronicMail;
 	}
 

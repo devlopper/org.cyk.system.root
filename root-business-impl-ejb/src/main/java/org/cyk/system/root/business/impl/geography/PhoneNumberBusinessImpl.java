@@ -31,6 +31,11 @@ public class PhoneNumberBusinessImpl extends AbstractContactBusinessImpl<PhoneNu
 		Country country = inject(CountryDao.class).readOneRandomly();
 		return instanciateOne(null,country==null ?null:country.getCode(), RootConstant.Code.PhoneNumberType.MOBILE, String.valueOf(RandomHelper.getInstance().getNumeric(8)));
 	}
+	
+	@Override
+	public PhoneNumber instanciateOne(ContactCollection collection, String number) {
+		return instanciateOne(collection, RootConstant.Code.Country.__DEFAULT__, RootConstant.Code.PhoneNumberType.__DEFAULT__, number);
+	}
 
 	@Override
 	public PhoneNumber instanciateOne(ContactCollection collection,String countryCode,String typeCode, String number) {

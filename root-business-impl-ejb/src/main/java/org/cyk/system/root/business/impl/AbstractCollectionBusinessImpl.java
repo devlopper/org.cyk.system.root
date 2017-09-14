@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
@@ -15,6 +16,8 @@ import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.ThrowableHelper;
 
 public abstract class AbstractCollectionBusinessImpl<COLLECTION extends AbstractCollection<ITEM>,ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionDao<COLLECTION, ITEM>,ITEM_DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,ITEM_BUSINESS extends AbstractCollectionItemBusiness<ITEM,COLLECTION>> extends AbstractEnumerationBusinessImpl<COLLECTION, DAO> implements AbstractCollectionBusiness<COLLECTION,ITEM>,Serializable {
 
@@ -105,21 +108,6 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		}
 	}
 
-	/*@Override
-	protected void beforeUpdate(COLLECTION collection) {
-		super.beforeUpdate(collection);
-		if(collection.getItems().getSynchonizationEnabled()==null || collection.getItems().isSynchonizationEnabled()){
-			if(collection.getItems().getCollection()!=null){
-				getItemBusiness().update(collection.getItems().getCollection());
-			}	
-		}
-		
-		if(collection.getCollectionToDelete()!=null)
-			for(ITEM item : collection.getCollectionToDelete()){
-				getItemBusiness().delete(item);
-			}
-	}*/
-	
 	@Override
 	protected void afterUpdate(COLLECTION collection) {
 		super.afterUpdate(collection);
@@ -152,6 +140,31 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	
 	protected void __load__(COLLECTION collection) {
 		collection.getItems().setCollection(getItemDao().readByCollection(collection));
+	}
+	
+	public Collection<ITEM> remove(COLLECTION collection,Class<? extends ITEM> aClass){
+		@SuppressWarnings("unchecked")
+		Collection<ITEM> items = (Collection<ITEM>) collection.getItems().filter(aClass);
+		for(ITEM item : items){
+			remove(collection, item);
+		}
+		return items;
+	}
+	
+	@Override
+	public void removeNullItems(COLLECTION collection){
+		Collection<ITEM> items = new ArrayList<>();
+		Collection<ITEM> candiateItems = collection.getItems().getCollection();
+		for(ITEM item : candiateItems){
+			if(!Boolean.TRUE.equals(isNullItem(item)))
+				items.add(item);
+		}
+		collection.getItems().setCollection(items);
+	}
+	
+	protected Boolean isNullItem(ITEM item){
+		ThrowableHelper.getInstance().throwNotYetImplemented();
+		return null;
 	}
 	
 	/**/

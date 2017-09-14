@@ -95,6 +95,8 @@ public interface RootConstant {
 		
 			public static String LAND = "LAND";
 			public static String MOBILE = "MOBILE";
+			
+			public static String __DEFAULT__ = MOBILE;
 		}
 		
 		public static class LocalityType implements Serializable {
@@ -117,8 +119,10 @@ public interface RootConstant {
 		
 		public static class Country implements Serializable {
 			private static final long serialVersionUID = 1L;
-		
+			
 			public static String COTE_DIVOIRE = "CI";
+			
+			public static String __DEFAULT__ = COTE_DIVOIRE;
 		}
 		
 		public static class MaritalStatus implements Serializable {

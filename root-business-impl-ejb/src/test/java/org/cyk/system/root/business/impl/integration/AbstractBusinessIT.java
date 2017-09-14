@@ -15,7 +15,6 @@ import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessTestHelper;
-import org.cyk.system.root.business.impl.validation.AbstractValidator;
 import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
@@ -143,25 +142,6 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     
     protected <T extends AbstractIdentifiable> void deleteByCode(Class<T> aClass,String code){
         genericBusiness.deleteByCode(aClass,code);
-    }
-    
-    protected void validate(Object object){
-        if(object==null)
-            return;
-        @SuppressWarnings("unchecked")
-        AbstractValidator<Object> validator = (AbstractValidator<Object>) validatorMap.validatorOf(object.getClass());
-        if(validator==null){
-            //log.warning("No validator has been found. The default one will be used");
-            //validator = defaultValidator;
-            return;
-        }
-        try {
-            validator.validate(object);
-        } catch (Exception e) {}
-        
-        //if(!Boolean.TRUE.equals(validator.isSuccess()))
-         //   ystem.out.println(validator.getMessagesAsString());
-        
     }
     
     protected void installApplication(){

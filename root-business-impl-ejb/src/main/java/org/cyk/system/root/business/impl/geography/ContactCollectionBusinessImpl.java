@@ -1,14 +1,12 @@
 package org.cyk.system.root.business.impl.geography;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.ContactBusiness;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
@@ -23,13 +21,12 @@ import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.persistence.api.geography.ContactCollectionDao;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImpl<ContactCollection,Contact, ContactCollectionDao,ContactDao,ContactBusiness> implements ContactCollectionBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
 	
-	@Inject private ContactDao contactDao;
-
 	@Inject
 	public ContactCollectionBusinessImpl(ContactCollectionDao dao) {
 		super(dao); 
@@ -107,7 +104,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
         }
     }*/
     
-    private void update(Collection<? extends Contact> databaseContacts,Collection<? extends Contact> inputContacts,ContactCollection collection){
+    /*private void update(Collection<? extends Contact> databaseContacts,Collection<? extends Contact> inputContacts,ContactCollection collection){
         if(inputContacts==null)
             return;
         logDebug("Contacts inputed {}",StringUtils.join(inputContacts,","));
@@ -137,7 +134,7 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
         	logDebug("Contact deleted {}",contact);
         }
         
-    }
+    }*/
     /*   
     private void delete(Collection<? extends Contact> contacts,ContactCollection collection){
         if(contacts==null)
@@ -159,18 +156,6 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 	}
 	
 	@Override
-	public void setElectronicMail(ContactCollection collection, String address) {
-		Collection<ElectronicMail> electronicMails = collection.getItems().filter(ElectronicMail.class);
-		if(CollectionHelper.getInstance().isEmpty(electronicMails))
-			collection.add(new ElectronicMail(collection,address));
-		else if(CollectionHelper.getInstance().getSize(electronicMails)==1)
-			electronicMails.iterator().next().setAddress(address);
-		else
-			//ThrowableHelper.getInstance().t
-			exceptionUtils().exception(Boolean.TRUE, "toomuchelectronicmailsfound");
-	}
-	
-	@Override
 	public String getElectronicMailAddress(ContactCollection collection) {
 		Collection<ElectronicMail> electronicMails = collection.getItems().filter(ElectronicMail.class);
 		if(CollectionHelper.getInstance().isNotEmpty(electronicMails)){
@@ -181,5 +166,14 @@ public class ContactCollectionBusinessImpl extends AbstractCollectionBusinessImp
 		}
 		return null;
 	}
-
+	
+	@Override
+	protected Boolean isNullItem(Contact contact) {
+		if(contact instanceof ElectronicMail)
+			return StringHelper.getInstance().isBlank(((ElectronicMail)contact).getAddress());
+		if(contact instanceof PhoneNumber)
+			return StringHelper.getInstance().isBlank(((PhoneNumber)contact).getNumber());
+		return Boolean.FALSE;
+	}
+	
 }

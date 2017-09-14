@@ -39,16 +39,14 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	public Boolean isItemAggregationApplied(){
 		return itemAggregationApplied == null || Boolean.TRUE.equals(itemAggregationApplied);
 	}
-
-	/*public Collection<ITEM> getCollection(){
-		if(collection==null)
-			collection = new ArrayList<>();
-		return collection;
-	}*/
 	
+	public AbstractCollection<ITEM> setItemsSynchonizationEnabled(Boolean synchonizationEnabled){
+		items.setSynchonizationEnabled(synchonizationEnabled);
+		return this;
+	}
+
 	public ITEM addItem(String name){
 		ITEM item = addItem(null,name);
-		//item.setCode( (StringUtils.isBlank(itemCodeSeparator) ? Constant.EMPTY_STRING : (getCode()+itemCodeSeparator))+code);
 		return item;
 	}
 	
@@ -73,6 +71,20 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		((AbstractCollectionItem<AbstractIdentifiable>)item).setCollection(this);
 		items.addOne(item);
 		return this;
+	}
+	
+	public <CLASS> CLASS getItemAt(Class<CLASS> aClass,Integer index){
+		return items == null ? null : items.getItemAt(aClass, index);
+	}
+	
+	public <CLASS> void removeItem(ITEM item){
+		if(items!=null)
+			items.removeItem(item);
+	}
+	
+	public <CLASS> void removeItemAt(Class<CLASS> aClass,Integer index){
+		if(items!=null)
+			items.removeItemAt(aClass, index);
 	}
 	
 	public ITEM addToDelete(ITEM item){
