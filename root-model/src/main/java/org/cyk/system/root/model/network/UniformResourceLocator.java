@@ -62,7 +62,7 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 	
 	@Override
 	public String toString() {
-		return address+(parameters==null || getParameters().getCollection().isEmpty() ? Constant.EMPTY_STRING : Constant.CHARACTER_QUESTION_MARK
+		return address+(parameters==null || getParameters().getElements().isEmpty() ? Constant.EMPTY_STRING : Constant.CHARACTER_QUESTION_MARK
 				+(StringUtils.join(parameters,Constant.CHARACTER_AMPERSTAMP)));
 	}
 	

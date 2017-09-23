@@ -33,7 +33,7 @@ public class ScriptBusinessIT extends AbstractBusinessIT {
         	ScriptVariable scriptVariable = new ScriptVariable();
         	scriptVariable.setCode(v);
         	scriptVariable.setScript(script);
-        	script.getVariables().getCollection().add(scriptVariable);
+        	script.getVariables().getElements().add(scriptVariable);
         }
         return script;
     }

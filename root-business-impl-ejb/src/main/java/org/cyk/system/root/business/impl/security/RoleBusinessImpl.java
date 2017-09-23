@@ -27,7 +27,7 @@ public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, Role
 	protected void afterCreate(Role role) {
 		super.afterCreate(role);
 		if(role.getRoleUniformResourceLocators().isSynchonizationEnabled())
-			inject(RoleUniformResourceLocatorBusiness.class).create(role.getRoleUniformResourceLocators().getCollection());
+			inject(RoleUniformResourceLocatorBusiness.class).create(role.getRoleUniformResourceLocators().getElements());
 	}
 	
 	@Override
@@ -35,8 +35,8 @@ public class RoleBusinessImpl extends AbstractEnumerationBusinessImpl<Role, Role
 		super.afterUpdate(role);
 		if(role.getRoleUniformResourceLocators().isSynchonizationEnabled()){
 			Collection<RoleUniformResourceLocator> database = inject(RoleUniformResourceLocatorDao.class).readByRoles(Arrays.asList(role));	
-			delete(RoleUniformResourceLocator.class,database, role.getRoleUniformResourceLocators().getCollection());
-			inject(RoleUniformResourceLocatorBusiness.class).save(role.getRoleUniformResourceLocators().getCollection());
+			delete(RoleUniformResourceLocator.class,database, role.getRoleUniformResourceLocators().getElements());
+			inject(RoleUniformResourceLocatorBusiness.class).save(role.getRoleUniformResourceLocators().getElements());
 		}	
 	}
 	

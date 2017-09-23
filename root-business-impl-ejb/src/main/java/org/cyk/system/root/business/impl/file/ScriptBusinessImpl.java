@@ -52,7 +52,7 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 	protected void afterCreate(Script script) {
 		super.afterCreate(script);
 		if(script.getVariables().isSynchonizationEnabled())
-			inject(ScriptVariableBusiness.class).create(script.getVariables().getCollection());
+			inject(ScriptVariableBusiness.class).create(script.getVariables().getElements());
 	}
 	
 	@Override

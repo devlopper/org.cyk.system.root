@@ -53,9 +53,9 @@ public class EventBusinessImpl extends AbstractIdentifiablePeriodBusinessImpl<Ev
     protected void afterCreate(Event event) {
     	super.afterCreate(event);
     	if(event.getEventParties().isSynchonizationEnabled())
-    		inject(EventPartyBusiness.class).create(event.getEventParties().getCollection());
+    		inject(EventPartyBusiness.class).create(event.getEventParties().getElements());
     	if(event.getEventReminders().isSynchonizationEnabled())
-    		inject(EventReminderBusiness.class).create(event.getEventReminders().getCollection());
+    		inject(EventReminderBusiness.class).create(event.getEventReminders().getElements());
     }
     
     @Override

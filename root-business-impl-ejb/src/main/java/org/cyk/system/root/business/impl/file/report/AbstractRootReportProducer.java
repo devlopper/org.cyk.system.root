@@ -87,9 +87,9 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 		ValueCollection valueCollection = inject(ValueCollectionBusiness.class).deriveByCode(code,listener);
 		if(Boolean.TRUE.equals(create))
 			report.addLabelValueCollection(valueCollection.getName());
-		Collection<ValueCollectionItem> items = valueCollection.getItems().getCollection();
+		Collection<ValueCollectionItem> items = valueCollection.getItems().getElements();
 		Collection<Value> values = new ArrayList<>();
-		for(ValueCollectionItem item : valueCollection.getItems().getCollection()){
+		for(ValueCollectionItem item : valueCollection.getItems().getElements()){
 			values.add(item.getValue());
 		}
 		/*

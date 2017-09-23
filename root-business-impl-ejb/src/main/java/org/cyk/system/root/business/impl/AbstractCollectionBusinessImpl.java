@@ -16,7 +16,6 @@ import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 
 public abstract class AbstractCollectionBusinessImpl<COLLECTION extends AbstractCollection<ITEM>,ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionDao<COLLECTION, ITEM>,ITEM_DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,ITEM_BUSINESS extends AbstractCollectionItemBusiness<ITEM,COLLECTION>> extends AbstractEnumerationBusinessImpl<COLLECTION, DAO> implements AbstractCollectionBusiness<COLLECTION,ITEM>,Serializable {
@@ -74,8 +73,8 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		//LogMessage.Builder logMessageBuilder = new LogMessage.Builder(Boolean.TRUE.equals(add) ? "Add":"Remove", item.getClass().getSimpleName());
 		if(Boolean.TRUE.equals(add)){
 			Boolean found = Boolean.FALSE;
-			if(collection.getItems().getCollection()!=null)
-				for(ITEM index : collection.getItems().getCollection())
+			if(collection.getItems().getElements()!=null)
+				for(ITEM index : collection.getItems().getElements())
 					if(index == item){
 						found = Boolean.TRUE;
 						break;
@@ -86,8 +85,8 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 				//logMessageBuilder.addParameters("item",item);
 			}
 		}else{
-			if(collection.getItems().getCollection()!=null)
-				collection.getItems().getCollection().remove(item);
+			if(collection.getItems().getElements()!=null)
+				collection.getItems().getElements().remove(item);
 			collection.addToDelete(item);
 		}
 		//logTrace(logMessageBuilder);
@@ -99,12 +98,12 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		super.afterCreate(collection);
 		if(collection.getItems().isSynchonizationEnabled()){
 			Long orderNumber = 0l;
-			for(ITEM item : collection.getItems().getCollection()){
+			for(ITEM item : collection.getItems().getElements()){
 				item.setCollection(collection);
 				if(Boolean.TRUE.equals(collection.getItems().getIsOrderNumberComputeEnabled()))
 					item.setOrderNumber(orderNumber++);
 			}
-			getItemBusiness().create(collection.getItems().getCollection());
+			getItemBusiness().create(collection.getItems().getElements());
 		}
 	}
 
@@ -113,8 +112,8 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		super.afterUpdate(collection);
 		if(collection.getItems().isSynchonizationEnabled()){
 			Collection<ITEM> database = getItemDao().readByCollection(collection);
-			delete(itemClass,database, collection.getItems().getCollection());
-			getItemBusiness().update(collection.getItems().getCollection());
+			delete(itemClass,database, collection.getItems().getElements());
+			getItemBusiness().update(collection.getItems().getElements());
 		}
 	}
 
@@ -139,7 +138,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	}
 	
 	protected void __load__(COLLECTION collection) {
-		collection.getItems().setCollection(getItemDao().readByCollection(collection));
+		collection.getItems().setElements(getItemDao().readByCollection(collection));
 	}
 	
 	public Collection<ITEM> remove(COLLECTION collection,Class<? extends ITEM> aClass){
@@ -154,12 +153,12 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	@Override
 	public void removeNullItems(COLLECTION collection){
 		Collection<ITEM> items = new ArrayList<>();
-		Collection<ITEM> candiateItems = collection.getItems().getCollection();
+		Collection<ITEM> candiateItems = collection.getItems().getElements();
 		for(ITEM item : candiateItems){
 			if(!Boolean.TRUE.equals(isNullItem(item)))
 				items.add(item);
 		}
-		collection.getItems().setCollection(items);
+		collection.getItems().setElements(items);
 	}
 	
 	protected Boolean isNullItem(ITEM item){

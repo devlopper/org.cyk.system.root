@@ -29,11 +29,11 @@ public class LanguageCollectionDetails extends AbstractOutputDetails<LanguageCol
 	@Override
 	public void setMaster(LanguageCollection languageCollection) {
 		super.setMaster(languageCollection);
-		if(languageCollection==null || languageCollection.getItems().getCollection()==null){
+		if(languageCollection==null || languageCollection.getItems().getElements()==null){
 			
 		}else{
 			Set<String> values = new LinkedHashSet<>();
-			for(LanguageCollectionItem item : languageCollection.getItems().getCollection()){
+			for(LanguageCollectionItem item : languageCollection.getItems().getElements()){
 				values.add(item.getLanguage().getName());
 			}
 			languages = StringUtils.join(values,Constant.CHARACTER_COMA);

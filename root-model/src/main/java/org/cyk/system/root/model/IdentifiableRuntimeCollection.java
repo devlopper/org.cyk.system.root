@@ -13,5 +13,9 @@ public class IdentifiableRuntimeCollection<T> extends CollectionHelper.Instance<
 
 	private static final long serialVersionUID = -130189077130420874L;
 
+	@Override
+	public IdentifiableRuntimeCollection<T> setSynchonizationEnabled(Boolean synchonizationEnabled) {
+		return (IdentifiableRuntimeCollection<T>) super.setSynchonizationEnabled(synchonizationEnabled);
+	}
 
 }

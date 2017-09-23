@@ -30,35 +30,35 @@ public class UniformResourceLocatorBusinessIT extends AbstractBusinessIT {
     	assertEquals(1l, inject(UniformResourceLocatorParameterDao.class).countByUniformResourceLocator(u1));
     	
     	u1 = testCase.read(UniformResourceLocator.class, "myadress01");
-    	u1.getParameters().setCollection(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(u1));
+    	u1.getParameters().setElements(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(u1));
     	u1.getParameters().addOne(inject(UniformResourceLocatorParameter.Builder.class).set(u1,"p2", "v2").build() );
     	testCase.update(u1);
     	assertEquals(2l, inject(UniformResourceLocatorParameterDao.class).countByUniformResourceLocator(u1));
     	
     	u1 = testCase.read(UniformResourceLocator.class, "myadress01");
-    	u1.getParameters().setCollection(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(u1));
+    	u1.getParameters().setElements(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(u1));
     	u1.getParameters().addOne(inject(UniformResourceLocatorParameter.Builder.class).set(u1,"p3", "v3").build() );
     	testCase.update(u1);
     	assertEquals(3l, inject(UniformResourceLocatorParameterDao.class).countByUniformResourceLocator(u1));
     	
     	u1 = testCase.read(UniformResourceLocator.class, "myadress01");
-    	u1.getParameters().setCollection(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(u1));
+    	u1.getParameters().setElements(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(u1));
     	u1.getParameters().addOne(inject(UniformResourceLocatorParameter.Builder.class).set(u1,"p4", "v5").build() );
     	
     	Collection<UniformResourceLocatorParameter> collection = new ArrayList<>();
-    	for(UniformResourceLocatorParameter parameter : u1.getParameters().getCollection()){
+    	for(UniformResourceLocatorParameter parameter : u1.getParameters().getElements()){
     		if(parameter.getName().equals("p3"))
     			parameter.setValue("newvalue");
     		if(!parameter.getName().equals("p2"))
     			collection.add(parameter);
     	}
-    	u1.getParameters().setCollection(collection);
+    	u1.getParameters().setElements(collection);
     	testCase.update(u1);
     	assertEquals(3l, inject(UniformResourceLocatorParameterDao.class).countByUniformResourceLocator(u1));
     	
     	u1 = testCase.read(UniformResourceLocator.class, "myadress01");
-    	u1.getParameters().setCollection(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(u1));
-    	for(UniformResourceLocatorParameter parameter : u1.getParameters().getCollection())
+    	u1.getParameters().setElements(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(u1));
+    	for(UniformResourceLocatorParameter parameter : u1.getParameters().getElements())
     		if(parameter.getName().equals("p1"))
     			assertEquals("v1", parameter.getValue());
     		else if(parameter.getName().equals("p3"))

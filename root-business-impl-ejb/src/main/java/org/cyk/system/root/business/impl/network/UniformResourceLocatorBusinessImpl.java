@@ -128,7 +128,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	protected void afterCreate(UniformResourceLocator uniformResourceLocator) {
 		super.afterCreate(uniformResourceLocator);
 		if(uniformResourceLocator.getParameters().isSynchonizationEnabled())
-			inject(UniformResourceLocatorParameterBusiness.class).create(uniformResourceLocator.getParameters().getCollection());
+			inject(UniformResourceLocatorParameterBusiness.class).create(uniformResourceLocator.getParameters().getElements());
 	}
 	
 	@Override
@@ -136,8 +136,8 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 		super.afterUpdate(uniformResourceLocator);
 		if(uniformResourceLocator.getParameters().isSynchonizationEnabled()){
 			Collection<UniformResourceLocatorParameter> database = inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(uniformResourceLocator);
-			delete(UniformResourceLocatorParameter.class,database, uniformResourceLocator.getParameters().getCollection());
-			inject(UniformResourceLocatorParameterBusiness.class).update(uniformResourceLocator.getParameters().getCollection());
+			delete(UniformResourceLocatorParameter.class,database, uniformResourceLocator.getParameters().getElements());
+			inject(UniformResourceLocatorParameterBusiness.class).update(uniformResourceLocator.getParameters().getElements());
 		}
 	}
 	
@@ -155,12 +155,12 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 			return null;
 		}
 		for(UniformResourceLocator uniformResourceLocator : uniformResourceLocators){
-			uniformResourceLocator.getParameters().setCollection(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(uniformResourceLocator));
+			uniformResourceLocator.getParameters().setElements(inject(UniformResourceLocatorParameterDao.class).readByUniformResourceLocator(uniformResourceLocator));
 			logTrace("Uniform Resource Locator : {} parameters : {}", uniformResourceLocator,uniformResourceLocator.getParameters());
 			//if(StringUtils.startsWith(url.getPath(),uniformResourceLocator.getPath())){
 				if(StringUtils.equalsIgnoreCase(url.getPath(),findPath(uniformResourceLocator))){
 					logTrace("Matchs path");
-					if(uniformResourceLocator.getParameters().getCollection().isEmpty()){
+					if(uniformResourceLocator.getParameters().getElements().isEmpty()){
 						logTrace("No parameters to check");
 						return uniformResourceLocator;
 					}
@@ -172,7 +172,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 						}
 					
 					Integer count = 0,size=0;
-					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters().getCollection()){
+					for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters().getElements()){
 						//if(parameter.getValue()!=null)
 							size++;
 						for(UniformResourceLocatorParameter urlParameter : urlParameters){

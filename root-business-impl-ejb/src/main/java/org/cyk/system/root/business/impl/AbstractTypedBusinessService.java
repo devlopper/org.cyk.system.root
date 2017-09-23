@@ -182,7 +182,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			@SuppressWarnings("unchecked")
 			Collection<ITEM> database = (Collection<ITEM>) MethodHelper.getInstance().call(dao,Collection.class,"readBy"+master.getClass().getSimpleName()
 					,MethodHelper.Method.Parameter.buildArray(master.getClass(),master));
-			synchronise(itemClass, database, collection.getCollection());
+			synchronise(itemClass, database, collection.getElements());
 		}
 	}
 	
@@ -196,7 +196,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	protected <ITEM extends AbstractIdentifiable> void create(Class<ITEM> itemClass,IdentifiableRuntimeCollection<ITEM> collection){
 		if(collection.isSynchonizationEnabled())
-			inject(BusinessInterfaceLocator.class).injectTyped(itemClass).create(collection.getCollection());
+			inject(BusinessInterfaceLocator.class).injectTyped(itemClass).create(collection.getElements());
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -319,7 +319,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void afterCreate(IDENTIFIABLE identifiable){
 		if(identifiable.getMetricCollectionIdentifiableGlobalIdentifiers().isSynchonizationEnabled())
-			inject(MetricCollectionIdentifiableGlobalIdentifierBusiness.class).create(identifiable.getMetricCollectionIdentifiableGlobalIdentifiers().getCollection());
+			inject(MetricCollectionIdentifiableGlobalIdentifierBusiness.class).create(identifiable.getMetricCollectionIdentifiableGlobalIdentifiers().getElements());
 		
 		Collection<String> metricValueMetricCollectionCodes = null;
 		/*metricValueMetricCollectionCodes = listenerUtils.getCollection(getListeners(), new ListenerUtils.CollectionMethod<Listener<AbstractIdentifiable>, String>(){

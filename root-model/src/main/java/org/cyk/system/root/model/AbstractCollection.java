@@ -74,17 +74,17 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	}
 	
 	public <CLASS> CLASS getItemAt(Class<CLASS> aClass,Integer index){
-		return items == null ? null : items.getItemAt(aClass, index);
+		return items == null ? null : items.getOneAt(aClass, index);
 	}
 	
 	public <CLASS> void removeItem(ITEM item){
 		if(items!=null)
-			items.removeItem(item);
+			items.removeOne(item);
 	}
 	
 	public <CLASS> void removeItemAt(Class<CLASS> aClass,Integer index){
 		if(items!=null)
-			items.removeItemAt(aClass, index);
+			items.removeOneAt(aClass, index);
 	}
 	
 	public ITEM addToDelete(ITEM item){

@@ -32,7 +32,7 @@ public class ValueCollectionBusinessImpl extends AbstractCollectionBusinessImpl<
 
 	@Override
 	public void derive(ValueCollection valueCollection,Derive listener) {
-		inject(ValueCollectionItemBusiness.class).derive(valueCollection.getItems().getCollection(),listener);
+		inject(ValueCollectionItemBusiness.class).derive(valueCollection.getItems().getElements(),listener);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class ValueCollectionBusinessImpl extends AbstractCollectionBusinessImpl<
 	@Override
 	public ValueCollection deriveByCode(String valueCollectionCode,Derive listener) {
 		ValueCollection valueCollection = dao.read(valueCollectionCode);
-		valueCollection.getItems().setCollection(inject(ValueCollectionItemDao.class).readByCollection(valueCollection));
+		valueCollection.getItems().setElements(inject(ValueCollectionItemDao.class).readByCollection(valueCollection));
 		derive(valueCollection,listener);
 		return valueCollection;
 	}

@@ -44,7 +44,7 @@ public class InstanciationBusinessIT extends AbstractBusinessIT {
     	metricCollectionBusiness.create(metricCollection);
     	
     	assertThat("Is null", metricCollectionBusiness.findByGlobalIdentifierCode("MC0")==null);
-    	assertThat("Is not loaded", metricCollectionBusiness.findByGlobalIdentifierCode("MC2").getItems().getCollection().isEmpty());
+    	assertThat("Is not loaded", metricCollectionBusiness.findByGlobalIdentifierCode("MC2").getItems().getElements().isEmpty());
     	//assertThat("Is loaded", metricCollectionBusiness.load("MC2").getItems().getCollection().size()==3);
     	//assertThat("Is loaded and empty", metricCollectionBusiness.load("MC1").getItems().getCollection().size()==0);
     	
