@@ -26,7 +26,7 @@ public class PhoneNumber extends Contact implements Serializable{
 	
 	@ManyToOne private LocationType locationType;
 	
-	@NotNull @Column(nullable=false) private String number;
+	@NotNull @Column(unique=true,nullable=false) private String number;
 	
 	@Override
 	public String toString() {

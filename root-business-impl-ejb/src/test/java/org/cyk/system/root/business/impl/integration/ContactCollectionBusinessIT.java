@@ -1,5 +1,7 @@
 package org.cyk.system.root.business.impl.integration;
 
+import java.util.Arrays;
+
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
 import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
@@ -9,6 +11,7 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMail;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
+import org.cyk.utility.common.Constant;
 import org.junit.Test;
 
 public class ContactCollectionBusinessIT extends AbstractBusinessIT {
@@ -29,6 +32,28 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	TestCase testCase = instanciateTestCase();
     	ContactCollection contactCollection = inject(ContactCollectionBusiness.class).instanciateOne();
     	testCase.create(contactCollection);
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudContactCollectionWithPhoneNumbers(){
+    	TestCase testCase = instanciateTestCase();
+    	ContactCollection contactCollection = inject(ContactCollectionBusiness.class).instanciateOne();
+    	contactCollection.setCode("mc01");
+    	/*
+    	PhoneNumber phoneNumber = new PhoneNumber();
+    	contactCollection.addPhoneNumbers(Arrays.asList(phoneNumber));
+    	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE);
+    	*/
+    	testCase.create(contactCollection);
+    	
+    	contactCollection = testCase.read(ContactCollection.class, "mc01");
+    	PhoneNumber phoneNumber = new PhoneNumber();
+    	contactCollection.addPhoneNumbers(Arrays.asList(phoneNumber));
+    	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE);
+    	testCase.update(contactCollection,null,"1 Type : ne peut pas être nul"+Constant.LINE_DELIMITER+"2 Pays : ne peut pas être nul"
+    			+Constant.LINE_DELIMITER+"3 Numero : ne peut pas être nul");
+    	
     	testCase.clean();
     }
     

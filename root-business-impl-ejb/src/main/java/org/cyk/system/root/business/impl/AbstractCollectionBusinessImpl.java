@@ -11,6 +11,7 @@ import org.cyk.system.root.business.api.AbstractCollectionBusiness;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.AbstractCollectionDao;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
@@ -113,7 +114,9 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		if(collection.getItems().isSynchonizationEnabled()){
 			Collection<ITEM> database = getItemDao().readByCollection(collection);
 			delete(itemClass,database, collection.getItems().getElements());
-			getItemBusiness().update(collection.getItems().getElements());
+			//for(ITEM item : collection.getItems().getElements())
+			//	inject(BusinessInterfaceLocator.class).injectTypedByObject((AbstractIdentifiable)item).update(item);
+			getItemBusiness().save(collection.getItems().getElements());
 		}
 	}
 

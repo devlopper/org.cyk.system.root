@@ -67,6 +67,6 @@ public class PhoneNumberBusinessImpl extends AbstractContactBusinessImpl<PhoneNu
 				list.add(instanciateOne(collection,inject(CountryDao.class).readOneRandomly().getCode(),RootConstant.Code.PhoneNumberType.MOBILE,number));
 		return list;
 	}
-	
+
 	
 }

@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.helper;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -23,6 +24,14 @@ public class InstanceHelper implements Serializable {
     			return ((GlobalIdentifier)instance).getIdentifier();
     		return super.getIdentifier(instance);
     	}
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> Collection<T> get(Class<T> aClass) {
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
+				return (Collection<T>) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).findAll();
+			return super.get(aClass);
+		}
     }
 	
 	public static class BuilderOneDimensionArray<T extends AbstractIdentifiable> extends org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray.Adapter.Default<T> implements Serializable{
