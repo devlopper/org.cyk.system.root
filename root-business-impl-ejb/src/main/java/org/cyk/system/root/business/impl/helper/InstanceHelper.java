@@ -3,7 +3,10 @@ package org.cyk.system.root.business.impl.helper;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
+import org.cyk.system.root.model.AbstractCollection;
+import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -31,6 +34,15 @@ public class InstanceHelper implements Serializable {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return (Collection<T>) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).findAll();
 			return super.get(aClass);
+		}
+		
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+		public <T> Collection<T> get(Class<T> aClass, Object master) {
+			if(ClassHelper.getInstance().isInstanceOf(AbstractCollectionItem.class, aClass))
+				if(master instanceof AbstractIdentifiable)
+					return ((AbstractCollectionItemBusiness)inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass)).findByCollection((AbstractCollection<?>)master);
+			return super.get(aClass, master);
 		}
     }
 	
