@@ -18,16 +18,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter @Entity @AllArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE)
-public class ElectronicMail extends Contact implements Serializable {
+public class ElectronicMailAddress extends Contact implements Serializable {
 
 	private static final long serialVersionUID = 923076998880521464L;
 
 	@Email @NotNull @Column(unique=true,nullable=false)
 	private String address;
 	
-	public ElectronicMail() {}
+	public ElectronicMailAddress() {}
 
-	public ElectronicMail(ContactCollection collection,String address) {
+	public ElectronicMailAddress(ContactCollection collection,String address) {
 		super(collection,null);
 		this.address = address;
 	}

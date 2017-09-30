@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.network.Service;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.utility.common.Constant;
@@ -26,7 +26,7 @@ public class SmtpProperties extends AbstractIdentifiable implements Serializable
 	
 	@ManyToOne @NotNull private Service service;
 	
-	@ManyToOne @NotNull private ElectronicMail from;
+	@ManyToOne @NotNull private ElectronicMailAddress from;
 	
 	@ManyToOne @NotNull private Credentials credentials;
 	

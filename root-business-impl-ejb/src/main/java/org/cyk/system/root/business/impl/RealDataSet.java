@@ -8,7 +8,7 @@ import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.ScriptEvaluationEngine;
 import org.cyk.system.root.model.geography.Country;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
@@ -79,7 +79,7 @@ public class RealDataSet extends DataSet implements Serializable {
         addClass(Country.class);
         addClass(PhoneNumberType.class);
         addClass(LocationType.class);
-        addClass(ElectronicMail.class);
+        addClass(ElectronicMailAddress.class);
     }
     
     private void language(){

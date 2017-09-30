@@ -16,7 +16,7 @@ import org.cyk.system.root.model.event.EventMissed;
 import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.EventParty;
 import org.cyk.system.root.model.event.EventReminder;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.time.Period;
@@ -123,7 +123,7 @@ public class EventPersistenceIT extends AbstractPersistenceIT {
 	
 	private Person person(String code,String firstName,String lastnames,String email){
 		Person person = new Person(firstName, lastnames);
-		create(new ElectronicMail(person.getContactCollection(), email));
+		create(new ElectronicMailAddress(person.getContactCollection(), email));
 		create(person.getContactCollection());
 		create(person);
 		return person;

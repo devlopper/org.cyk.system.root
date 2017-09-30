@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.cyk.system.root.model.event.Event;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
@@ -18,7 +18,7 @@ public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,SearchCriteria> i
 	private static final long serialVersionUID = 6306356272165070761L;
 	
 	public static final String READ_BY_CRITERIA_QUERY = 
-			"(EXISTS(SELECT email FROM ElectronicMail email WHERE ("+QueryStringBuilder.getLikeString("email."+ElectronicMail.FIELD_ADDRESS)+")"
+			"(EXISTS(SELECT email FROM ElectronicMailAddress email WHERE ("+QueryStringBuilder.getLikeString("email."+ElectronicMailAddress.FIELD_ADDRESS)+")"
 					+ " AND email.collection = record.contactCollection"
 					+ "))";
 	
@@ -42,7 +42,7 @@ public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,SearchCriteria> i
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
 		queryWrapper.parameterLike(Person.FIELD_LASTNAMES, ((Person.SearchCriteria)searchCriteria).getLastnames());
-		queryWrapper.parameterLike(ElectronicMail.FIELD_ADDRESS, ((Person.SearchCriteria)searchCriteria).getContactCollection().getElectronicMail().getAddress());
+		queryWrapper.parameterLike(ElectronicMailAddress.FIELD_ADDRESS, ((Person.SearchCriteria)searchCriteria).getContactCollection().getElectronicMailAddress().getAddress());
 	}
 	
 }

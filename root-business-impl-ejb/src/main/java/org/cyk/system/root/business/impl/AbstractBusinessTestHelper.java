@@ -64,7 +64,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnDynamicBuilderParamete
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -84,7 +84,7 @@ import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
-import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
+import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberDao;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
@@ -1029,16 +1029,16 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		}
 		
 		public void assertElectronicMail(String personCode,String email){
-			Collection<ElectronicMail> electronicMails = commonUtils.castCollection(
-					inject(ElectronicMailDao.class).readByCollection(inject(PersonDao.class).read(personCode).getContactCollection()),ElectronicMail.class);
-			assertEquals("Electronic mail", email, electronicMails.isEmpty() ? Constant.EMPTY_STRING : electronicMails.iterator().next().getAddress());
+			Collection<ElectronicMailAddress> electronicMailAddresses = commonUtils.castCollection(
+					inject(ElectronicMailAddressDao.class).readByCollection(inject(PersonDao.class).read(personCode).getContactCollection()),ElectronicMailAddress.class);
+			assertEquals("Electronic mail", email, electronicMailAddresses.isEmpty() ? Constant.EMPTY_STRING : electronicMailAddresses.iterator().next().getAddress());
 		}
 		
 		public void assertContactCollectionElectronicMails(String contactCollectionCode,String[] electronicMailAddresses){
 			ContactCollection contactCollection = read(ContactCollection.class, contactCollectionCode);
-			Collection<ElectronicMail> electronicMails = CollectionHelper.getInstance().cast(ElectronicMail.class
-					,inject(ElectronicMailDao.class).readByCollection(contactCollection));
-			assertList(CollectionHelper.getInstance().createList(MethodHelper.getInstance().callGet(electronicMails, String.class, ElectronicMail.FIELD_ADDRESS))
+			Collection<ElectronicMailAddress> electronicMails = CollectionHelper.getInstance().cast(ElectronicMailAddress.class
+					,inject(ElectronicMailAddressDao.class).readByCollection(contactCollection));
+			assertList(CollectionHelper.getInstance().createList(MethodHelper.getInstance().callGet(electronicMails, String.class, ElectronicMailAddress.FIELD_ADDRESS))
 					, ArrayHelper.getInstance().isEmpty(electronicMailAddresses) ? new ArrayList<>() : Arrays.asList(electronicMailAddresses));
 		}
 		

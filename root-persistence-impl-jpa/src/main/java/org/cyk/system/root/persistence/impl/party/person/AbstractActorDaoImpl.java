@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.NoResultException;
 
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
@@ -26,7 +26,7 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_FORMAT+" "+ORDER_BY_FORMAT;
 	
 	static String r = 
-			"(EXISTS(SELECT email FROM ElectronicMail email WHERE ("+QueryStringBuilder.getLikeString("email."+ElectronicMail.FIELD_ADDRESS)+")"
+			"(EXISTS(SELECT email FROM ElectronicMailAddress email WHERE ("+QueryStringBuilder.getLikeString("email."+ElectronicMailAddress.FIELD_ADDRESS)+")"
 					+ " AND email.collection = record.person.contactCollection"
 					+ "))";
 	
@@ -63,7 +63,7 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
 		queryWrapper.parameterLike(Person.FIELD_LASTNAMES, ((SEARCH_CRITERIA)searchCriteria).getPerson().getLastnames());
-		queryWrapper.parameterLike(ElectronicMail.FIELD_ADDRESS, ((SEARCH_CRITERIA)searchCriteria).getPerson().getContactCollection().getElectronicMail().getAddress());
+		queryWrapper.parameterLike(ElectronicMailAddress.FIELD_ADDRESS, ((SEARCH_CRITERIA)searchCriteria).getPerson().getContactCollection().getElectronicMailAddress().getAddress());
 	}
 	
 	/**/

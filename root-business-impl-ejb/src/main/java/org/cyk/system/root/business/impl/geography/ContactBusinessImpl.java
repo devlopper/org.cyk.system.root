@@ -12,7 +12,7 @@ import org.cyk.system.root.business.api.geography.ContactBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 
 public class ContactBusinessImpl extends AbstractCollectionItemBusinessImpl<Contact, ContactDao,ContactCollection> implements ContactBusiness,Serializable {
@@ -37,6 +37,11 @@ public class ContactBusinessImpl extends AbstractCollectionItemBusinessImpl<Cont
 	@Override
 	public Contact delete(Contact contact) {
 		return (Contact) inject(GenericBusiness.class).delete(contact);
+	}
+	
+	@Override
+	public Contact save(Contact contact) {
+		return (Contact) inject(GenericBusiness.class).save(contact);
 	}
 	
 	@Override
@@ -121,10 +126,10 @@ public class ContactBusinessImpl extends AbstractCollectionItemBusinessImpl<Cont
 	private <T extends Contact> void setCollection(Collection<ContactCollection> contactCollections,Collection<? extends Contact> contacts,Collection<Class<T>> classes){
 		for(ContactCollection contactCollection : contactCollections){
 			for(Class<?> aClass : classes){
-				if(ElectronicMail.class.equals(aClass)){
+				if(ElectronicMailAddress.class.equals(aClass)){
 					for(Contact contact : contacts)
 						if(contact.getCollection().equals(contactCollection) && contact.getClass().equals(aClass))
-							contactCollection.add((ElectronicMail) contact);
+							contactCollection.add((ElectronicMailAddress) contact);
 				}
 			}
 		}

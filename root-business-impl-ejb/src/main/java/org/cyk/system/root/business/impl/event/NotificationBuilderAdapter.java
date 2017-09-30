@@ -6,13 +6,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
+import org.cyk.system.root.business.api.geography.ElectronicMailAddressBusiness;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
@@ -69,11 +69,11 @@ public class NotificationBuilderAdapter extends Notification.Builder.Listener.Ad
 		Collection<ContactCollection> contactCollections = new LinkedHashSet<>();
 		for(Party party : parties)
 			contactCollections.add(party.getContactCollection());
-		Collection<ElectronicMail> electronicMails = inject(ContactDao.class).readByCollectionsByClass(contactCollections, ElectronicMail.class);	
-		if(!electronicMails.isEmpty()){
+		Collection<ElectronicMailAddress> electronicMailAddresses = inject(ContactDao.class).readByCollectionsByClass(contactCollections, ElectronicMailAddress.class);	
+		if(!electronicMailAddresses.isEmpty()){
 			if(receiverIdentifiers==null)
 				receiverIdentifiers = new LinkedHashSet<>();
-			receiverIdentifiers.addAll(inject(ElectronicMailBusiness.class).findAddresses(electronicMails));
+			receiverIdentifiers.addAll(inject(ElectronicMailAddressBusiness.class).findAddresses(electronicMailAddresses));
 		}
 		return receiverIdentifiers;
 	}

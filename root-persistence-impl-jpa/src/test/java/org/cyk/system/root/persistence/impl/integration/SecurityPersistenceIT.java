@@ -6,7 +6,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Permission;
@@ -113,12 +113,12 @@ public class SecurityPersistenceIT extends AbstractPersistenceIT {
 	
 	private void createAccount(String personName,String username,String password,String email,Role...roles){
 		Software software = inject(SoftwareDao.class).read(RootConstant.Code.Software.INSTALLED);
-		ElectronicMail electronicMail = new ElectronicMail(email);
+		ElectronicMailAddress electronicMailAddress = new ElectronicMailAddress(email);
 		Person person = new Person(personName, null);
-		electronicMail.setCollection(person.getContactCollection());
+		electronicMailAddress.setCollection(person.getContactCollection());
 		
 		create(person.getContactCollection());
-		create(electronicMail);
+		create(electronicMailAddress);
 		create(person);
 	    
 		UserAccount userAccount = new UserAccount(person, new Credentials(software,username, password),new Date(), roles);

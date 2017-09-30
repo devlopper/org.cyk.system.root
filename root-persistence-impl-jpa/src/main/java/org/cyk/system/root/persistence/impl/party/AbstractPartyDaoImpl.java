@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.NoResultException;
 
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
@@ -20,13 +20,13 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA e
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByEmail, "SELECT party FROM "+clazz.getSimpleName()+" party WHERE EXISTS("
-				+ " SELECT email FROM ElectronicMail email WHERE email.address = :"+ElectronicMail.FIELD_ADDRESS+" AND email.collection = party.contactCollection"
+				+ " SELECT email FROM ElectronicMailAddress email WHERE email.address = :"+ElectronicMailAddress.FIELD_ADDRESS+" AND email.collection = party.contactCollection"
 				+ ")");
 	}
 	
 	@Override
 	public PARTY readByEmail(String email) {
-		return namedQuery(readByEmail).parameter(ElectronicMail.FIELD_ADDRESS, email).ignoreThrowable(NoResultException.class).resultOne();
+		return namedQuery(readByEmail).parameter(ElectronicMailAddress.FIELD_ADDRESS, email).ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
 	

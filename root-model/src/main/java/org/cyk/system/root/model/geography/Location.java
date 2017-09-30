@@ -3,6 +3,7 @@ package org.cyk.system.root.model.geography;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,9 +20,9 @@ public class Location extends Contact implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@ManyToOne private LocationType type;
+	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private LocationType type;
 	
-	@ManyToOne private Locality locality;
+	@ManyToOne @JoinColumn(name=COLUMN_LOCALITY) private Locality locality;
 
 	public Location() {}
 	
@@ -54,4 +55,6 @@ public class Location extends Contact implements Serializable{
 	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_LOCALITY = "locality";
 	
+	public static final String COLUMN_TYPE = "type_";
+	public static final String COLUMN_LOCALITY = "locality";
 }

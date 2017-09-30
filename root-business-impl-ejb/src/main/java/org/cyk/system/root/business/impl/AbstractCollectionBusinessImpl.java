@@ -9,9 +9,9 @@ import javax.ejb.TransactionAttributeType;
 
 import org.cyk.system.root.business.api.AbstractCollectionBusiness;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
-import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.persistence.api.AbstractCollectionDao;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
@@ -93,30 +93,27 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		//logTrace(logMessageBuilder);
 		return item;
 	}
-
+	
 	@Override
-	protected void afterCreate(COLLECTION collection) {
-		super.afterCreate(collection);
-		if(collection.getItems().isSynchonizationEnabled()){
-			Long orderNumber = 0l;
-			for(ITEM item : collection.getItems().getElements()){
-				item.setCollection(collection);
-				if(Boolean.TRUE.equals(collection.getItems().getIsOrderNumberComputeEnabled()))
-					item.setOrderNumber(orderNumber++);
-			}
-			getItemBusiness().create(collection.getItems().getElements());
-		}
-	}
-
-	@Override
-	protected void afterUpdate(COLLECTION collection) {
-		super.afterUpdate(collection);
-		if(collection.getItems().isSynchonizationEnabled()){
-			Collection<ITEM> database = getItemDao().readByCollection(collection);
-			delete(itemClass,database, collection.getItems().getElements());
-			//for(ITEM item : collection.getItems().getElements())
-			//	inject(BusinessInterfaceLocator.class).injectTypedByObject((AbstractIdentifiable)item).update(item);
-			getItemBusiness().save(collection.getItems().getElements());
+	protected void afterCrud(COLLECTION collection,Crud crud) {
+		super.afterCrud(collection,crud);
+		if(Crud.isCreateOrUpdate(crud)){
+			if(collection.getItems().isSynchonizationEnabled()){
+				if(Crud.UPDATE.equals(crud)){
+					Collection<ITEM> database = getItemDao().readByCollection(collection);
+					delete(itemClass,database, collection.getItems().getElements());
+				}
+				Long orderNumber = 0l;
+				for(ITEM item : collection.getItems().getElements()){
+					item.setCollection(collection);
+					if(Boolean.TRUE.equals(collection.getItems().getIsOrderNumberComputeEnabled()))
+						item.setOrderNumber(orderNumber++);
+				}
+				if(Crud.CREATE.equals(crud))
+					getItemBusiness().create(collection.getItems().getElements());
+				else if(Crud.UPDATE.equals(crud))
+					getItemBusiness().save(collection.getItems().getElements()); 
+			}	
 		}
 	}
 

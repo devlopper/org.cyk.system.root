@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 
@@ -42,7 +42,7 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	public Party setElectronicMail(String address){
 		if(contactCollection==null)
 			contactCollection = new ContactCollection();
-		contactCollection.add(new ElectronicMail(address));
+		contactCollection.add(new ElectronicMailAddress(address));
 		return this;
 	}
 	

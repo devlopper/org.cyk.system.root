@@ -25,7 +25,7 @@ public class ContactCollectionReport extends AbstractIdentifiableReport<ContactC
 			
 		}else{
 			phoneNumbers = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(PhoneNumber.class),Constant.CHARACTER_COMA);
-			emails = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(ElectronicMail.class),Constant.CHARACTER_COMA);
+			emails = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(ElectronicMailAddress.class),Constant.CHARACTER_COMA);
 			postalBoxs = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(PostalBox.class),Constant.CHARACTER_COMA);
 			locations = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(Location.class),Constant.CHARACTER_COMA);
 			websites = CollectionHelper.getInstance().concatenate(((ContactCollection)source).getItems().filter(Website.class),Constant.CHARACTER_COMA);

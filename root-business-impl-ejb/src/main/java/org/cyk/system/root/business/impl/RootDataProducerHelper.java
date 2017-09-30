@@ -280,64 +280,6 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			collection.add((T) identifiable);
 		return collection;
 	}
-	/*
-	public PhoneNumber addPhoneNumber(ContactCollection collection,Country country,PhoneNumberType type,String number){
-		PhoneNumber phoneNumber = new PhoneNumber();
-		phoneNumber.setCollection(collection);
-		phoneNumber.setCountry(country);
-		phoneNumber.setType(type);
-		phoneNumber.setNumber(number);
-		if(collection.getPhoneNumbers()==null)
-			collection.setPhoneNumbers(new ArrayList<PhoneNumber>());
-		collection.getPhoneNumbers().add(phoneNumber);
-		return phoneNumber;
-	}
-	
-	public PhoneNumber addPhoneNumber(ContactCollection collection,PhoneNumberType type,String number){
-		return addPhoneNumber(collection,inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE), type, number);
-	}
-	public PhoneNumber addLandPhoneNumber(ContactCollection collection,String number){
-		return addPhoneNumber(collection,inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class)
-				.read(RootConstant.Code.PhoneNumberType.LAND), number);
-	}
-	public PhoneNumber addMobilePhoneNumber(ContactCollection collection,String number){
-		return addPhoneNumber(collection,inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE), inject(PhoneNumberTypeDao.class)
-				.read(RootConstant.Code.PhoneNumberType.MOBILE), number);
-	}
-	*/
-	/*
-	public void addContacts(ContactCollection collection,String[] addresses,String[] landNumbers,String[] mobileNumbers,String[] postalBoxes,String[] emails,String[] websites){
-		if(addresses!=null)
-			for(String address : addresses){
-				Location location = new Location(collection, inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE).getLocality());
-				location.setOtherDetails(address);
-				location.setType(inject(LocationTypeBusiness.class).find(RootConstant.Code.LocationType.OFFICE));
-				if(collection.getLocations()==null)
-					collection.setLocations(new ArrayList<Location>());
-				collection.getLocations().add(location);
-			}
-		if(landNumbers!=null)
-			for(String number : landNumbers)
-				addLandPhoneNumber(collection, number);
-		if(mobileNumbers!=null)
-			for(String number : mobileNumbers)
-				addMobilePhoneNumber(collection, number);
-		if(postalBoxes!=null)
-			for(String postalbox : postalBoxes){
-				PostalBox postalBox = new PostalBox(postalbox);
-				if(collection.getPostalBoxs()==null)
-					collection.setPostalBoxs(new ArrayList<PostalBox>());
-				collection.getPostalBoxs().add(postalBox);
-			}
-		if(emails!=null)
-			for(String email : emails){
-				ElectronicMail electronicMail = new ElectronicMail(collection, email);
-				if(collection.getElectronicMails()==null)
-					collection.setElectronicMails(new ArrayList<ElectronicMail>());
-				collection.getElectronicMails().add(electronicMail);
-			}
-	}
-	*/
 	
 	public MovementCollection createMovementCollection(String code,String incrementActionName,String decrementActionName){
 		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, createInterval(null, code+"int", code+"int", "0", null));

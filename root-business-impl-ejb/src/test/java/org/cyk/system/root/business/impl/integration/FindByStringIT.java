@@ -9,12 +9,12 @@ import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Actor;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Credentials;
-import org.cyk.system.root.persistence.api.geography.ElectronicMailDao;
+import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
@@ -122,11 +122,11 @@ public class FindByStringIT extends AbstractBusinessIT {
 	
 	@Test
 	public void findElectronicMails(){
-		assertWithBlankStringFindByString(ElectronicMail.class);
-		Integer allCount = inject(ElectronicMailDao.class).countAll().intValue();
-		assertFindByString(ElectronicMail.class,"@",allCount);
-		assertFindByString(ElectronicMail.class,"kycdev@gmail.com",1);
-		assertFindByString(ElectronicMail.class,"mymail",1);
+		assertWithBlankStringFindByString(ElectronicMailAddress.class);
+		Integer allCount = inject(ElectronicMailAddressDao.class).countAll().intValue();
+		assertFindByString(ElectronicMailAddress.class,"@",allCount);
+		assertFindByString(ElectronicMailAddress.class,"kycdev@gmail.com",1);
+		assertFindByString(ElectronicMailAddress.class,"mymail",1);
 	}
 	
 	@Test

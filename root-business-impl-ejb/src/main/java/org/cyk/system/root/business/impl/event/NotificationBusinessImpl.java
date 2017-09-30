@@ -23,7 +23,7 @@ import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.event.EventPartyDao;
@@ -77,8 +77,8 @@ public class NotificationBusinessImpl extends AbstractBusinessServiceImpl implem
     	Set<String> theReceiverIds = new HashSet<>();
     	
     	if(RemoteEndPoint.MAIL_SERVER.equals(notification.getRemoteEndPoint())){
-    		for(ElectronicMail electronicMail : contactDao.readByCollectionsByClass(contactCollections,ElectronicMail.class))
-    			theReceiverIds.add(electronicMail.getAddress());
+    		for(ElectronicMailAddress electronicMailAddress : contactDao.readByCollectionsByClass(contactCollections,ElectronicMailAddress.class))
+    			theReceiverIds.add(electronicMailAddress.getAddress());
     	}
     	
     	notify(notification, theReceiverIds.toArray(new String[]{}), sendOptions);

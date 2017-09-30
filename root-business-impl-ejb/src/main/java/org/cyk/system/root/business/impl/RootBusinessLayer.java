@@ -51,7 +51,7 @@ import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
 import org.cyk.system.root.model.geography.Country;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
@@ -228,7 +228,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         		,PersonRelationshipTypeRole.class,PersonRelationship.class,UniformResourceLocator.class,TimeDivisionType.class,UserInterfaceCommand.class
         		,UserInterfaceMenuNode.class,UserInterfaceMenuItem.class,UserAccount.class);
         
-        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE},ElectronicMail.class, UniformResourceLocatorParameter.class
+        AbstractIdentifiableBusinessServiceImpl.addAutoSetPropertyValueClass(new String[]{GlobalIdentifier.FIELD_CODE},ElectronicMailAddress.class, UniformResourceLocatorParameter.class
         		,UserInterfaceMenu.class,Credentials.class);
         
         rootBusinessTestHelper.setReportBusiness(reportBusiness);
@@ -372,7 +372,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         dataSet.addClass(Country.class);
         dataSet.addClass(PhoneNumberType.class);
         dataSet.addClass(LocationType.class);
-        dataSet.addClass(ElectronicMail.class);
+        dataSet.addClass(ElectronicMailAddress.class);
     }
     
     private void language(DataSet dataSet){

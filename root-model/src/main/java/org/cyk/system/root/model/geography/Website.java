@@ -3,6 +3,7 @@ package org.cyk.system.root.model.geography;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
@@ -20,7 +21,7 @@ public class Website extends Contact implements Serializable {
 
 	private static final long serialVersionUID = 923076998880521464L;
 
-	@OneToOne @NotNull private UniformResourceLocator uniformResourceLocator;
+	@OneToOne @JoinColumn(name=COLUMN_UNIFORM_RESOURCE_LOCATOR) @NotNull private UniformResourceLocator uniformResourceLocator;
 	
 	public Website(UniformResourceLocator uniformResourceLocator) {
 		this.uniformResourceLocator = uniformResourceLocator;
@@ -28,4 +29,5 @@ public class Website extends Contact implements Serializable {
 	
 	public static final String FIELD_UNIFORM_RESOURCE_LOCATOR = "uniformResourceLocator";
 	
+	public static final String COLUMN_UNIFORM_RESOURCE_LOCATOR = "uniformresourcelocator";
 }

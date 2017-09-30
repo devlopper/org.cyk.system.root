@@ -31,7 +31,7 @@ import org.cyk.system.root.business.api.message.SmtpPropertiesBusiness;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
@@ -224,16 +224,16 @@ public class MailBusinessImpl extends AbstractMessageSendingBusiness<InternetAdd
     }
     
     @Override
-    public void send(org.cyk.utility.common.message.Message message,Collection<ElectronicMail> electronicMails,SmtpProperties smtpProperties) {
+    public void send(org.cyk.utility.common.message.Message message,Collection<ElectronicMailAddress> electronicMails,SmtpProperties smtpProperties) {
     	MailSender sender = new MailSender();
-    	message.getReceiverIdentifiers().addAll(commonUtils.getPropertyValue(electronicMails, String.class, ElectronicMail.FIELD_ADDRESS));
+    	message.getReceiverIdentifiers().addAll(commonUtils.getPropertyValue(electronicMails, String.class, ElectronicMailAddress.FIELD_ADDRESS));
     	sender.setInput(message)
     		.setProperties(inject(SmtpPropertiesBusiness.class).convertToProperties(smtpProperties))
     		.execute();
     }
     
     @Override
-    public void send(org.cyk.utility.common.message.Message message,Collection<ElectronicMail> electronicMails) {
+    public void send(org.cyk.utility.common.message.Message message,Collection<ElectronicMailAddress> electronicMails) {
     	send(message,electronicMails, inject(SmtpPropertiesDao.class).readDefaulted());
     }
     

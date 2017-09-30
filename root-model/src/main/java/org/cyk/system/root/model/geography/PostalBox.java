@@ -21,8 +21,7 @@ public class PostalBox extends Contact implements Serializable {
 
 	private static final long serialVersionUID = 923076998880521464L;
 	
-	@NotNull @Column(nullable=false)
-	private String value;
+	@NotNull @Column(unique=true,nullable=false) private String value;
 
 
 	@Override

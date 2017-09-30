@@ -27,9 +27,9 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 		return this;
 	}
 	
-	public ContactCollection addElectronicMails(Collection<ElectronicMail> electronicMails) {
-		for(ElectronicMail electronicMail : electronicMails)
-			add(electronicMail);
+	public ContactCollection addElectronicMailAddresses(Collection<ElectronicMailAddress> electronicMailAddresses) {
+		for(ElectronicMailAddress electronicMailAddress : electronicMailAddresses)
+			add(electronicMailAddress);
 		return this;
 	}
 	
@@ -50,7 +50,7 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 
 		private static final long serialVersionUID = 6796076474234170332L;
 		
-		private ElectronicMail.SearchCriteria electronicMail = new ElectronicMail.SearchCriteria();
+		private ElectronicMailAddress.SearchCriteria electronicMailAddress = new ElectronicMailAddress.SearchCriteria();
 		
 		public SearchCriteria(){ 
 			this(null);
@@ -63,13 +63,13 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 		@Override
 		public void set(StringSearchCriteria stringSearchCriteria) {
 			super.set(stringSearchCriteria);
-			electronicMail.set(stringSearchCriteria);
+			electronicMailAddress.set(stringSearchCriteria);
 		}
 		
 		@Override
 		public void set(String value) {
 			super.set(value);
-			electronicMail.set(value);
+			electronicMailAddress.set(value);
 		}
 		
 	}

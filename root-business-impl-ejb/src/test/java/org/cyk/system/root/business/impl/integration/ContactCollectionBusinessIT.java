@@ -3,12 +3,12 @@ package org.cyk.system.root.business.impl.integration;
 import java.util.Arrays;
 
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
-import org.cyk.system.root.business.api.geography.ElectronicMailBusiness;
+import org.cyk.system.root.business.api.geography.ElectronicMailAddressBusiness;
 import org.cyk.system.root.business.api.geography.PhoneNumberBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.ContactCollection;
-import org.cyk.system.root.model.geography.ElectronicMail;
+import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.utility.common.Constant;
@@ -22,9 +22,9 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     public void emailBadFormat(){
     	TestCase testCase = instanciateTestCase();
     	ContactCollection contactCollection = new ContactCollection();
-    	contactCollection.add(new ElectronicMail(contactCollection, "a..@m.com"));
+    	contactCollection.add(new ElectronicMailAddress(contactCollection, "a..@m.com"));
     	contactCollection.setItemsSynchonizationEnabled(Boolean.TRUE);
-    	testCase.create(contactCollection,"adresse : a..@m.com n'est pas une adresse de courrier électronique bien formée");    	
+    	testCase.create(contactCollection,"Adresse : a..@m.com n'est pas une adresse de courrier électronique bien formée");    	
     }
     
     @Test
@@ -52,7 +52,7 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	contactCollection.addPhoneNumbers(Arrays.asList(phoneNumber));
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE);
     	testCase.update(contactCollection,null,"1 Type : ne peut pas être nul"+Constant.LINE_DELIMITER+"2 Pays : ne peut pas être nul"
-    			+Constant.LINE_DELIMITER+"3 Numero : ne peut pas être nul");
+    			+Constant.LINE_DELIMITER+"3 Numéro : ne peut pas être nul");
     	
     	testCase.clean();
     }
@@ -70,44 +70,44 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, (String)null);
-    	contactCollection.removeItemAt(ElectronicMail.class, 0);
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, (String)null);
+    	contactCollection.removeItemAt(ElectronicMailAddress.class, 0);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "m1@mail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "m1@mail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m1@mail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("m12@mail.com");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("m12@mail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m12@mail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("another@gmail.com");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("another@gmail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another@gmail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.removeItemAt(ElectronicMail.class, 0);
+    	contactCollection.removeItemAt(ElectronicMailAddress.class, 0);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "another@gmail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "another@gmail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another@gmail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("another1@yo.net");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("another1@yo.net");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another1@yo.net"});
     	
@@ -179,60 +179,60 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	ContactCollection contactCollection = inject(ContactCollectionBusiness.class).instanciateOne();
     	contactCollection.setCode(code001);
     	contactCollection.setItemsSynchonizationEnabled(Boolean.TRUE);
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "m1@mail.com");
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "m2@mail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "m1@mail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "m2@mail.com");
     	testCase.create(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m1@mail.com","m2@mail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, (String)null);
-    	contactCollection.removeItemAt(ElectronicMail.class, 2);
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, (String)null);
+    	contactCollection.removeItemAt(ElectronicMailAddress.class, 2);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m1@mail.com","m2@mail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "m3@mail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "m3@mail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m1@mail.com","m2@mail.com","m3@mail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,1).setAddress("m12@mail.com");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,1).setAddress("m12@mail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m1@mail.com","m12@mail.com","m3@mail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("another@gmail.com");
-    	contactCollection.getItemAt(ElectronicMail.class,2).setAddress("another1@gmail.com");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("another@gmail.com");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,2).setAddress("another1@gmail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another@gmail.com","m12@mail.com","another1@gmail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.removeItemAt(ElectronicMail.class, 1);
+    	contactCollection.removeItemAt(ElectronicMailAddress.class, 1);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another@gmail.com","another1@gmail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "m12@gmail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "m12@gmail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another@gmail.com","another1@gmail.com","m12@gmail.com"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ContactCollectionBusiness.class).remove(contactCollection, ElectronicMail.class);
+    	inject(ContactCollectionBusiness.class).remove(contactCollection, ElectronicMailAddress.class);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "c@gmail.com");
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "a@gmail.com");
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "b@gmail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "c@gmail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "a@gmail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "b@gmail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"c@gmail.com","a@gmail.com","b@gmail.com"});
     	
@@ -318,14 +318,14 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, (String)null);
-    	contactCollection.removeItemAt(ElectronicMail.class, 0);
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, (String)null);
+    	contactCollection.removeItemAt(ElectronicMailAddress.class, 0);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "m1@mail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "m1@mail.com");
     	inject(PhoneNumberBusiness.class).instanciateOne(contactCollection, "11223344");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m1@mail.com"});
@@ -333,35 +333,35 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("m12@mail.com");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("m12@mail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m12@mail.com"});
     	testCase.assertContactCollectionPhoneNumbers(code001, new String[]{"11223344"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("another@gmail.com");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("another@gmail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another@gmail.com"});
     	testCase.assertContactCollectionPhoneNumbers(code001, new String[]{"11223344"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.removeItemAt(ElectronicMail.class, 0);
+    	contactCollection.removeItemAt(ElectronicMailAddress.class, 0);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{});
     	testCase.assertContactCollectionPhoneNumbers(code001, new String[]{"11223344"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "another@gmail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "another@gmail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another@gmail.com"});
     	testCase.assertContactCollectionPhoneNumbers(code001, new String[]{"11223344"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("another1@yo.net");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("another1@yo.net");
     	contactCollection.removeItemAt(PhoneNumber.class, 0);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another1@yo.net"});
@@ -383,51 +383,51 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, (String)null);
-    	contactCollection.removeItemAt(ElectronicMail.class, 0);
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, (String)null);
+    	contactCollection.removeItemAt(ElectronicMailAddress.class, 0);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "m1@mail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "m1@mail.com");
     	inject(PhoneNumberBusiness.class).instanciateOne(contactCollection, "11223344");
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "m12@mail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "m12@mail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m1@mail.com","m12@mail.com"});
     	testCase.assertContactCollectionPhoneNumbers(code001, new String[]{"11223344"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("m12a@mail.com");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("m12a@mail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m12a@mail.com","m12@mail.com"});
     	testCase.assertContactCollectionPhoneNumbers(code001, new String[]{"11223344"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("another@gmail.com");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("another@gmail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another@gmail.com","m12@mail.com"});
     	testCase.assertContactCollectionPhoneNumbers(code001, new String[]{"11223344"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.removeItemAt(ElectronicMail.class, 0);
+    	contactCollection.removeItemAt(ElectronicMailAddress.class, 0);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m12@mail.com"});
     	testCase.assertContactCollectionPhoneNumbers(code001, new String[]{"11223344"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	inject(ElectronicMailBusiness.class).instanciateOne(contactCollection, "another@gmail.com");
+    	inject(ElectronicMailAddressBusiness.class).instanciateOne(contactCollection, "another@gmail.com");
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"m12@mail.com","another@gmail.com"});
     	testCase.assertContactCollectionPhoneNumbers(code001, new String[]{"11223344"});
     	//update
     	contactCollection = testCase.read(ContactCollection.class, code001);
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE).setElements(inject(ContactDao.class).readByCollection(contactCollection));
-    	contactCollection.getItemAt(ElectronicMail.class,0).setAddress("another1@yo.net");
+    	contactCollection.getItemAt(ElectronicMailAddress.class,0).setAddress("another1@yo.net");
     	contactCollection.removeItemAt(PhoneNumber.class, 0);
     	testCase.update(contactCollection);
     	testCase.assertContactCollectionElectronicMails(code001, new String[]{"another1@yo.net","another@gmail.com"});
