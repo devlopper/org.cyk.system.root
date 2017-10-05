@@ -9,10 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -26,21 +22,23 @@ import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.cdi.BeanAdapter;
-import org.cyk.utility.common.validation.Client;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS)
 public class UniformResourceLocator extends AbstractEnumeration implements Serializable {
 
 	private static final long serialVersionUID = -4633680454658548588L;
 
-	@Input @InputText @Column(nullable=false/*,unique=true*/) @NotNull(groups=Client.class) private String address;
-	//private Boolean parametersRequired = Boolean.TRUE;
+	@Input @InputText @Column(nullable=false) @NotNull private String address;
 	
 	@Transient private IdentifiableRuntimeCollection<UniformResourceLocatorParameter> parameters = new IdentifiableRuntimeCollection<>();
 
 	public UniformResourceLocator() {
 		super();
-		getParameters().setSynchonizationEnabled(Boolean.TRUE);
+		getParameters().setElementObjectClass(UniformResourceLocatorParameter.class);
 	}
 
 	public UniformResourceLocator(String address) {

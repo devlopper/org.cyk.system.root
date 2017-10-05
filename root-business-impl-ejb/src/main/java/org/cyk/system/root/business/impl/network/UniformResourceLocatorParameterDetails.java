@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl.message;
+package org.cyk.system.root.business.impl.network;
 
 import java.io.Serializable;
 

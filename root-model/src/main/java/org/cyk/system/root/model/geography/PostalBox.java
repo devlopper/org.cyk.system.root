@@ -21,13 +21,13 @@ public class PostalBox extends Contact implements Serializable {
 
 	private static final long serialVersionUID = 923076998880521464L;
 	
-	@NotNull @Column(unique=true,nullable=false) private String value;
+	@NotNull @Column(unique=true,nullable=false) private String address;
 
 
 	@Override
 	public String toString() {
-		return value;
+		return address;
 	}
 	
-	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_ADDRESS = "address";
 }

@@ -166,6 +166,16 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		return null;
 	}
 	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void prepare(COLLECTION collection,Crud crud){
+		prepare(collection, crud, new String[]{AbstractCollection.FIELD_ITEMS});
+	}
+	
+	@Override
+	protected String getFindByMasterMethodName(Object master){
+		return "findByCollection";
+	}
+	
 	/**/
 	
 	public static class BuilderOneDimensionArray<T extends AbstractCollection<?>> extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<T> implements Serializable {

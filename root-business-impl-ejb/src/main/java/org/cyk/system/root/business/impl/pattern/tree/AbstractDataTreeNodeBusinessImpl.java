@@ -117,6 +117,11 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public NODE findParent(String code){
+		return findParent(dao.read(code));
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public NODE findParent(NODE child){
 		return dao.readParent(child);
 	}

@@ -32,6 +32,7 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	TestCase testCase = instanciateTestCase();
     	ContactCollection contactCollection = inject(ContactCollectionBusiness.class).instanciateOne();
     	testCase.create(contactCollection);
+    	System.out.println(contactCollection.getGlobalIdentifier().getIdentifier());
     	testCase.clean();
     }
     

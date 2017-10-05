@@ -21,6 +21,7 @@ import org.cyk.system.root.model.time.Instant;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueSet;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.helper.StringHelper;
 
 public class RootFormattingConfigurationsRegistrator extends AbstractFormattingConfigurationsRegistrator implements Serializable {
 
@@ -166,8 +167,10 @@ public class RootFormattingConfigurationsRegistrator extends AbstractFormattingC
 				if(StringUtils.isBlank(phoneNumber.getNumber()))
 					return null;
 				StringBuilder stringBuilder = new StringBuilder();
-				if(phoneNumber.getCountry()!=null)
-					stringBuilder.append(Constant.CHARACTER_PLUS+phoneNumber.getCountry().getPhoneNumberCode().toString()+Constant.CHARACTER_SPACE);
+				if(phoneNumber.getCountry()!=null){
+					if(phoneNumber.getCountry().getPhoneNumberCode()!=null)
+						stringBuilder.append(Constant.CHARACTER_PLUS+phoneNumber.getCountry().getPhoneNumberCode().toString()+Constant.CHARACTER_SPACE);	
+				}
 				stringBuilder.append(phoneNumber.getNumber());
 				return stringBuilder.toString();
 			}

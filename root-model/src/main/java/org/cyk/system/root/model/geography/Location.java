@@ -2,6 +2,7 @@ package org.cyk.system.root.model.geography;
 
 import java.io.Serializable;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,11 +25,19 @@ public class Location extends Contact implements Serializable{
 	
 	@ManyToOne @JoinColumn(name=COLUMN_LOCALITY) private Locality locality;
 
+	@Embedded private GlobalPosition globalPosition;
+	
 	public Location() {}
 	
 	public Location(ContactCollection collection,Locality locality) {
 		super(collection, null);
 		this.locality = locality;
+	}
+	
+	public GlobalPosition getGlobalPosition(){
+		if(globalPosition==null)
+			globalPosition = new GlobalPosition();
+		return globalPosition;
 	}
 	
 	@Override

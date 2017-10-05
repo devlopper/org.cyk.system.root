@@ -99,6 +99,8 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 	File findReportFile(IDENTIFIABLE identifiable,ReportTemplate reportTemplate,Boolean createIfNull);
 	File findReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean createIfNull);
 	
+	void prepare(IDENTIFIABLE identifiable,Crud crud,String[] childrenFieldNames);
+	
 	@Getter @Setter @AllArgsConstructor
 	public static class CreateReportFileArguments<IDENTIFIABLE extends AbstractIdentifiable> implements Serializable{
 		private static final long serialVersionUID = 1L;

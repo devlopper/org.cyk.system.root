@@ -22,6 +22,7 @@ public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
     
     @Override
     protected void businesses() {
+    	assertEquals(inject(LocalityBusiness.class).find(RootConstant.Code.Locality.AFRICA), inject(LocalityBusiness.class).findParent(RootConstant.Code.Country.COTE_DIVOIRE));
     	assertEquals("number of direct children of africa",Boolean.TRUE, inject(LocalityBusiness.class).findDirectChildrenByParent(inject(LocalityDao.class).read(RootConstant.Code.Locality.AFRICA)).size()>0);
     }
     

@@ -14,6 +14,7 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
 import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
+import org.cyk.utility.common.helper.StringHelper;
 
 public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, CountryDao> implements CountryBusiness,Serializable {
 
@@ -44,7 +45,10 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 	protected void beforeCreate(Country country) {
 		Locality locality = country.getLocality();
 		if(locality==null){
-			locality = new Locality(country.getContinent(), inject(LocalityTypeDao.class).read(RootConstant.Code.LocalityType.COUNTRY), country.getCode(), country.getName());
+			if(StringHelper.getInstance().isNotBlank(country.getCode()))
+				locality = inject(LocalityDao.class).read(country.getCode());
+			if(locality==null)
+				locality = new Locality(country.getContinent(), inject(LocalityTypeDao.class).read(RootConstant.Code.LocalityType.COUNTRY), country.getCode(), country.getName());
 			country.setLocality(locality);
 		}
 		super.beforeCreate(country);
@@ -69,7 +73,20 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 			country.setName(country.getLocality().getName());
 		else
 			country.getLocality().setName(country.getName());
+		Country oldCountry = dao.read(country.getIdentifier());
+		oldCountry.setContinent((Locality) inject(LocalityBusiness.class).findParent(country.getLocality()));
+		if((oldCountry.getContinent()==null && country.getContinent()!=null) || (oldCountry.getContinent()!=null && country.getContinent()==null)
+				|| !oldCountry.getContinent().getIdentifier().equals(country.getContinent().getIdentifier()) ){
+			country.getLocality().setAutomaticallyMoveToNewParent(Boolean.TRUE);
+			country.getLocality().setNewParent(country.getContinent());
+		}
 		inject(LocalityBusiness.class).update(country.getLocality());
+	}
+	
+	@Override
+	protected void afterDelete(Country country) {
+		super.afterDelete(country);
+		inject(LocalityBusiness.class).delete(country.getLocality());
 	}
 	
 	/**/

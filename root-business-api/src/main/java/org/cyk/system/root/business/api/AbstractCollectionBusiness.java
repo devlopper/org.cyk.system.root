@@ -17,4 +17,6 @@ public interface AbstractCollectionBusiness<COLLECTION extends AbstractCollectio
 	
 	@Deprecated
 	void removeNullItems(COLLECTION collection);
+	
+	void prepare(COLLECTION collection,Crud crud);
 }

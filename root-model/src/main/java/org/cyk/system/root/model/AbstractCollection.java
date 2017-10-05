@@ -9,6 +9,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.helper.ClassHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,10 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	@Transient protected Collection<ITEM> collectionToDelete;
 
+	{
+		getItems().setElementObjectClass(ClassHelper.getInstance().getParameterAt(getClass(), 0, Object.class));
+	}
+	
 	public AbstractCollection(String code, String name, String abbreviation,String description) {
 		super(code, name, abbreviation, description);
 	}
@@ -48,6 +53,13 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	public ITEM addItem(String name){
 		ITEM item = addItem(null,name);
 		return item;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> AbstractCollection<ITEM> add(Class<T> itemClass,Collection<T> items) {
+		for(T item : items)
+			add((ITEM) item);
+		return this;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -101,4 +113,5 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	private static final String LOG_MESSAGE = "%s(C=%s SEP=%s)";
 	
+	public static final String FIELD_ITEMS = "items";
 }

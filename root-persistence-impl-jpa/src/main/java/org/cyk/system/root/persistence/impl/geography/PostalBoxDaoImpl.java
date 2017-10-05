@@ -13,17 +13,17 @@ public class PostalBoxDaoImpl extends AbstractContactDaoImpl<PostalBox> implemen
     @Override
     protected void namedQueriesInitialisation() {
         super.namedQueriesInitialisation();
-        registerNamedQuery(readByValue, _select().where(PostalBox.FIELD_VALUE));
+        registerNamedQuery(readByValue, _select().where(PostalBox.FIELD_ADDRESS));
     }
     
 	@Override
 	public Collection<PostalBox> readByValue(String address) {
-		return castCollection(namedQuery(readByValue).parameter(PostalBox.FIELD_VALUE, address).resultMany(),PostalBox.class);
+		return castCollection(namedQuery(readByValue).parameter(PostalBox.FIELD_ADDRESS, address).resultMany(),PostalBox.class);
 	}
 	
 	@Override
 	public Long countByValue(String address) {
-		return countNamedQuery(countByValue).parameter(PostalBox.FIELD_VALUE, address).resultOne();
+		return countNamedQuery(countByValue).parameter(PostalBox.FIELD_ADDRESS, address).resultOne();
 	}
 	
    

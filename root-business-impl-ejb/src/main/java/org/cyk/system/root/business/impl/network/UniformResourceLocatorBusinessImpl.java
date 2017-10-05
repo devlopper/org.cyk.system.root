@@ -125,6 +125,18 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 	}
 	
 	@Override
+	protected void afterCrud(UniformResourceLocator uniformResourceLocator, Crud crud) {
+		super.afterCrud(uniformResourceLocator, crud);
+		if(Crud.isCreateOrUpdate(crud)){
+			if(uniformResourceLocator.getParameters().isSynchonizationEnabled()){
+				for(UniformResourceLocatorParameter parameter : uniformResourceLocator.getParameters().getElements()){
+					parameter.setUniformResourceLocator(uniformResourceLocator);
+				}
+			}
+		}
+	}
+	
+	@Override
 	protected void afterCreate(UniformResourceLocator uniformResourceLocator) {
 		super.afterCreate(uniformResourceLocator);
 		if(uniformResourceLocator.getParameters().isSynchonizationEnabled())

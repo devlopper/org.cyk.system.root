@@ -71,6 +71,10 @@ import org.cyk.utility.common.converter.Converter;
 import org.cyk.utility.common.converter.ManyConverter;
 import org.cyk.utility.common.converter.OneConverter;
 import org.cyk.utility.common.formatter.DateFormatter;
+import org.cyk.utility.common.helper.ArrayHelper;
+import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.CollectionHelper.Instance;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
@@ -846,7 +850,29 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}
 		return fileIdentifiableGlobalIdentifiers.isEmpty() ? null : fileIdentifiableGlobalIdentifiers.iterator().next().getFile();
 	}
-
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void prepare(IDENTIFIABLE identifiable,Crud crud,String[] childrenFieldNames){
+		if(ArrayHelper.getInstance().isNotEmpty(childrenFieldNames))
+			for(String childrenFieldName : childrenFieldNames){
+				CollectionHelper.Instance<?> collection = (Instance<?>) FieldHelper.getInstance().read(identifiable, childrenFieldName);
+				collection.setSynchonizationEnabled(Boolean.TRUE);
+				if(Crud.CREATE.equals(crud)){
+					
+				}else{
+					@SuppressWarnings("unchecked")
+					Object business = inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)collection.getElementObjectClass());
+					Collection<?> children = MethodHelper.getInstance().call(business, Collection.class, getFindByMasterMethodName(identifiable)
+							,MethodHelper.Method.Parameter.buildArray(clazz,identifiable));//inject(ContactBusiness.class).findByCollection(identifiable)
+					collection.setMany(children);	
+				}
+			}
+	}
+	
+	protected String getFindByMasterMethodName(Object master){
+		return "findBy"+clazz.getSimpleName();
+	}
+	
 	@Override
 	public File findReportFile(IDENTIFIABLE identifiable,String reportTemplateCode,Boolean createIfNull) {
 		return findReportFile(identifiable, inject(ReportTemplateDao.class).read(reportTemplateCode), createIfNull);

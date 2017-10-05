@@ -2,6 +2,7 @@ package org.cyk.system.root.model.geography;
 
 import java.io.Serializable;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 
 import lombok.Getter;
@@ -22,6 +23,8 @@ public class Locality extends AbstractDataTree<LocalityType> implements Serializ
 	
 	private String residentName;
 	
+	@Embedded private GlobalPosition globalPosition;
+	
 	public Locality(Locality parent, LocalityType type, String code,String name) {
 		super(parent, type, code);
 		setName(name);
@@ -29,5 +32,11 @@ public class Locality extends AbstractDataTree<LocalityType> implements Serializ
 	
 	public Locality(Locality parent, LocalityType type, String code) {
 		super(parent,type,code);
+	}
+	
+	public GlobalPosition getGlobalPosition(){
+		if(globalPosition==null)
+			globalPosition = new GlobalPosition();
+		return globalPosition;
 	}
 }

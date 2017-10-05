@@ -21,27 +21,32 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 
 	private static final long serialVersionUID = 8675998527199168142L;
 	
+	
+	
 	public ContactCollection addPhoneNumbers(Collection<PhoneNumber> phoneNumbers) {
-		for(PhoneNumber phoneNumber : phoneNumbers)
-			add(phoneNumber);
+		add(PhoneNumber.class, phoneNumbers);
 		return this;
 	}
 	
 	public ContactCollection addElectronicMailAddresses(Collection<ElectronicMailAddress> electronicMailAddresses) {
-		for(ElectronicMailAddress electronicMailAddress : electronicMailAddresses)
-			add(electronicMailAddress);
+		add(ElectronicMailAddress.class, electronicMailAddresses);
 		return this;
 	}
 	
-	/*	
-	@Override
-	public String toString() {
-	    StringBuilder s = new StringBuilder(super.toString()+ContentType.DEFAULT.getNewLineMarker());
-	    s.append("Phone Numbers : "+StringUtils.join(phoneNumbers,",")+ContentType.DEFAULT.getNewLineMarker());
-	    s.append("Locations : "+StringUtils.join(locations,","));
-	    return s.toString();
+	public ContactCollection addLocations(Collection<Location> locations) {
+		add(Location.class, locations);
+		return this;
 	}
-	*/
+	
+	public ContactCollection addPostalBoxs(Collection<PostalBox> postalBoxs) {
+		add(PostalBox.class, postalBoxs);
+		return this;
+	}
+	
+	public ContactCollection addWebsites(Collection<Website> websites) {
+		add(Website.class, websites);
+		return this;
+	}
 
 	/**/
 	

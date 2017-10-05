@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl.security;
+package org.cyk.system.root.business.impl.network;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public class UniformResourceLocatorDetails extends AbstractEnumerationDetails<Un
 	public UniformResourceLocatorDetails(UniformResourceLocator uniformResourceLocator) {
 		super(uniformResourceLocator);
 		address = uniformResourceLocator.getAddress();
-		parameters = StringUtils.join(uniformResourceLocator.getParameters(),Constant.CHARACTER_COLON);
+		parameters = StringUtils.join(uniformResourceLocator.getParameters().getElements(),Constant.CHARACTER_COLON);
 	}
 	
 	public static final String FIELD_ADDRESS = "address";
