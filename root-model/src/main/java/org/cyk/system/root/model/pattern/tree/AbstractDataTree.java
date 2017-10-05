@@ -2,6 +2,7 @@ package org.cyk.system.root.model.pattern.tree;
 
 import java.io.Serializable;
 
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ public abstract class AbstractDataTree<TYPE extends AbstractDataTreeType> extend
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	
-	@ManyToOne @NotNull protected TYPE type;
+	@ManyToOne @JoinColumn(name=COLUMN_TYPE) @NotNull protected TYPE type;
 
 	public AbstractDataTree(AbstractDataTree<TYPE> parent,String code) {
 		super(parent,code);
@@ -44,4 +45,6 @@ public abstract class AbstractDataTree<TYPE extends AbstractDataTreeType> extend
 	/**/
 	
 	public static final String FIELD_TYPE = "type";
+	
+	public static final String COLUMN_TYPE = "type_";
 }

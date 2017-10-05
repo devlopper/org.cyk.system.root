@@ -21,8 +21,6 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 
 	private static final long serialVersionUID = 8675998527199168142L;
 	
-	
-	
 	public ContactCollection addPhoneNumbers(Collection<PhoneNumber> phoneNumbers) {
 		add(PhoneNumber.class, phoneNumbers);
 		return this;

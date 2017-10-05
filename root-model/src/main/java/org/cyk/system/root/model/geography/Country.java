@@ -26,7 +26,7 @@ public class Country extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 8675998527199168142L;
 	
-	@OneToOne @JoinColumn @NotNull private Locality locality;
+	@OneToOne @JoinColumn(name=COLUMN_LOCALITY) @NotNull private Locality locality;
 	
 	@Column private Integer phoneNumberCode;
 	@Column private String phoneNumberFormat;
@@ -54,4 +54,5 @@ public class Country extends AbstractIdentifiable implements Serializable{
 	public static final String FIELD_PHONE_NUMBER_CODE = "phoneNumberCode";
 	public static final String FIELD_PHONE_NUMBER_FORMAT = "phoneNumberFormat";
 	
+	public static final String COLUMN_LOCALITY = "locality";
 }

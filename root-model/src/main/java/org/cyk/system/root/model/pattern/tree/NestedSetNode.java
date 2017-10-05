@@ -27,10 +27,10 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	public static final Integer FIRST_LEFT_INDEX = 0;
 	public static final Integer FIRST_RIGHT_INDEX = 1;
 	
-	@ManyToOne @JoinColumn(name="theset") @NotNull(groups=System.class)
+	@ManyToOne @JoinColumn(name=COLUMN_SET) @NotNull(groups=System.class)
 	private NestedSet set;
 	
-	@JoinColumn(name="parent") @ManyToOne
+	@JoinColumn(name=COLUMN_PARENT) @ManyToOne
 	private NestedSetNode parent;
 	
 	@Column(nullable=false) @NotNull(groups=System.class)
@@ -78,6 +78,9 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	public static final String FIELD_LEFT_INDEX = "leftIndex";
 	public static final String FIELD_RIGHT_INDEX = "rightIndex";
 	public static final String FIELD_DETACHED_IDENTIFIER = "detachedIdentifier";
+	
+	public static final String COLUMN_SET = "set_";
+	public static final String COLUMN_PARENT = "parent_";
 	
 	private static final String LOG_MESSAGE_FORMAT = /*NestedSetNode.class.getSimpleName()+*/"%s(I=%s,(%s,%s)P=%s)";
 	//private static final String TO_STRING_FORMAT = "(I=%s,L=%s,R=%s,P=%s,DI=%s,S=%s)";

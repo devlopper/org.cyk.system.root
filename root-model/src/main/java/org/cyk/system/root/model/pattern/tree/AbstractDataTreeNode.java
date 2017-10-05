@@ -2,6 +2,7 @@ package org.cyk.system.root.model.pattern.tree;
 
 import java.io.Serializable;
 
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -18,7 +19,7 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	
-	@ManyToOne @NotNull protected NestedSetNode node;
+	@ManyToOne @JoinColumn(name=COLUMN_NODE) @NotNull protected NestedSetNode node;
 	
 	@Transient protected Boolean automaticallyMoveToNewParent;
 	@Transient protected AbstractDataTreeNode newParent;
@@ -39,5 +40,7 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 	}
 	
 	public static final String FIELD_NODE = "node";
+	
+	public static final String COLUMN_NODE = "node";
 	
 }

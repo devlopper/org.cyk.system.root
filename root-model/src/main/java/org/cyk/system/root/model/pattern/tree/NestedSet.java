@@ -3,6 +3,7 @@ package org.cyk.system.root.model.pattern.tree;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import lombok.Getter;
@@ -19,9 +20,11 @@ public class NestedSet extends AbstractIdentifiable implements Serializable  {
 
 	private static final long serialVersionUID = 9135086950442356103L;
 
-	@ManyToOne//(cascade=CascadeType.PERSIST)
-	private NestedSetNode root;
+	@ManyToOne @JoinColumn(name=COLUMN_ROOT) private NestedSetNode root;
 	
 	public NestedSet() {}
 
+	public static final String FIELD_ROOT = "root";
+	
+	public static final String COLUMN_ROOT = "root";
 }

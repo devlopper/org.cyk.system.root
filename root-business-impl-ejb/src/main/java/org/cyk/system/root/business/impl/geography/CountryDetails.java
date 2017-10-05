@@ -15,12 +15,21 @@ public class CountryDetails extends AbstractOutputDetails<Country> implements Se
 
 	private static final long serialVersionUID = 4444472169870625893L;
 
-	@Input @InputText private String phoneNumberCode;
+	@Input @InputText private String phoneNumberCode,phoneNumberFormat;
 	
 	public CountryDetails(Country country) {
 		super(country);
-		phoneNumberCode = formatNumber(country.getPhoneNumberCode());
+	}
+	
+	@Override
+	public void setMaster(Country country) {
+		super.setMaster(country);
+		if(country!=null){
+			phoneNumberCode = formatNumber(country.getPhoneNumberCode());
+			phoneNumberFormat = country.getPhoneNumberFormat();
+		}
 	}
 
 	public static final String FIELD_PHONE_NUMBER_CODE = "phoneNumberCode";
+	public static final String FIELD_PHONE_NUMBER_FORMAT = "phoneNumberFormat";
 }

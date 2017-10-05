@@ -3,6 +3,7 @@ package org.cyk.system.root.model.geography;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.cyk.system.root.model.AbstractModelElement;
@@ -23,11 +24,9 @@ public class GlobalPosition extends AbstractModelElement implements Serializable
 
 	private static final long serialVersionUID = 1L;
 
-	private BigDecimal longitude;
-	
-	private BigDecimal latitude;
-	
-	private BigDecimal altitude;
+	@Column(name=COLUMN_LONGITUDE,precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal longitude;
+	@Column(name=COLUMN_LATITUDE,precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal latitude;
+	@Column(name=COLUMN_ALTITUDE,precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal altitude;
 
 	public static final String FIELD_LONGITUDE = "longitude";
 	public static final String FIELD_LATITUDE = "latitude";

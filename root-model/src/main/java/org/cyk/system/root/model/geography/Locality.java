@@ -39,4 +39,6 @@ public class Locality extends AbstractDataTree<LocalityType> implements Serializ
 			globalPosition = new GlobalPosition();
 		return globalPosition;
 	}
+	
+	public static final String FIELD_RESIDENT_NAME = "residentName";
 }
