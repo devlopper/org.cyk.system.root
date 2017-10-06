@@ -6,10 +6,14 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeRoleBusiness;
+import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeRoleDao;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class PersonRelationshipTypeRoleBusinessImpl extends AbstractTypedBusinessService<PersonRelationshipTypeRole,PersonRelationshipTypeRoleDao> implements PersonRelationshipTypeRoleBusiness {
  
@@ -49,6 +53,16 @@ public class PersonRelationshipTypeRoleBusinessImpl extends AbstractTypedBusines
 			super(PersonRelationshipTypeRole.class);
 			addFieldCodeName();
 			addParameterArrayElementString(PersonRelationshipTypeRole.FIELD_PERSON_RELATIONSHIP_TYPE,PersonRelationshipTypeRole.FIELD_ROLE);
+		}
+		
+	}
+	
+	@Getter @Setter
+	public static class Details extends AbstractOutputDetails<PersonRelationshipTypeRole> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+		
+		public Details(PersonRelationshipTypeRole personRelationshipTypeRole) {
+			super(personRelationshipTypeRole);
 		}
 		
 	}
