@@ -7,6 +7,8 @@ import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeBusiness;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeDao;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
 public abstract class AbstractDataTreeBusinessImpl<ENUMERATION extends AbstractDataTree<TYPE>,DAO extends AbstractDataTreeDao<ENUMERATION,TYPE>,TYPE extends AbstractDataTreeType>  
     extends AbstractDataTreeNodeBusinessImpl<ENUMERATION, DAO> implements AbstractDataTreeBusiness<ENUMERATION,TYPE> {
@@ -56,5 +58,33 @@ public abstract class AbstractDataTreeBusinessImpl<ENUMERATION extends AbstractD
 			addParameterArrayElementStringIndexInstance(15,AbstractDataTree.FIELD_TYPE);
 		}		        		
 	}		
-	
+
+	public static class Details<NODE extends AbstractDataTree<TYPE>,TYPE extends AbstractDataTreeType> extends AbstractDataTreeNodeBusinessImpl.Details<NODE> implements Serializable {
+
+		private static final long serialVersionUID = 7515356383413863619L;
+
+		@Input @InputText protected String type;
+		
+		public Details(NODE node) {
+			super(node);
+			setMaster(node);
+			
+		}
+		
+		@Override
+		public void setMaster(NODE master) {
+			super.setMaster(master);
+			if(master!=null){
+				type = formatUsingBusiness(master.getType());
+			}
+		}
+		
+		/**/
+		
+		public static final String FIELD_TYPE = "type";
+		
+		/**/
+		
+		
+	}
 }

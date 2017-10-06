@@ -9,8 +9,12 @@ import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.party.person.Allergy;
 import org.cyk.system.root.persistence.api.AbstractEnumerationDao;
 import org.cyk.utility.common.ObjectFieldValues;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends AbstractEnumeration,DAO extends AbstractEnumerationDao<ENUMERATION>> 
     extends AbstractTypedBusinessService<ENUMERATION, DAO> implements AbstractEnumerationBusiness<ENUMERATION> {
@@ -56,6 +60,16 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 	protected Integer getInstanciateOneEnumerationStartIndex(String[] values){
     	return 0;
     }
+	
+	@Getter @Setter
+	public static class Details<T extends AbstractEnumeration> extends AbstractOutputDetails<T> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+		
+		public Details(T identifiable) {
+			super(identifiable);
+		}
+		
+	}
 	
 	public static class BuilderOneDimensionArray<T extends AbstractEnumeration> extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<T> implements Serializable {
 		private static final long serialVersionUID = 1L;

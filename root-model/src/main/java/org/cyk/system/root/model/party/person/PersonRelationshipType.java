@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @Entity @FieldOverride(name=AbstractDataTree.FIELD_TYPE,type=PersonRelationshipTypeGroup.class)
-@ModelBean(crudStrategy=CrudStrategy.ENUMERATION,genderType=GenderType.MALE)
+@ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class PersonRelationshipType extends AbstractDataTree<PersonRelationshipTypeGroup> implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;

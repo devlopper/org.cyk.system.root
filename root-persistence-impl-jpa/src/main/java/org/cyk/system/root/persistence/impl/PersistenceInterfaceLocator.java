@@ -42,8 +42,8 @@ public class PersistenceInterfaceLocator extends ClassLocator implements Seriali
 				return "persistence.api";
 			}
 			@Override
-			protected String getModuleSuffix() {
-				return "Dao";
+			protected String[] getModuleSuffixes() {
+				return new String[]{"Dao"};
 			}
 			
 		});

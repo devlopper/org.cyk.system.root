@@ -13,12 +13,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeNodeBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
+import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.StringHelper;
 
@@ -307,6 +310,35 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 			return t;
 		}
 		
+		
+	}
+
+	public static class Details<NODE extends AbstractDataTreeNode> extends AbstractEnumerationBusinessImpl.Details<NODE> implements Serializable {
+
+		private static final long serialVersionUID = 7515356383413863619L;
+
+		@Input @InputText protected String parent;
+		
+		public Details(NODE node) {
+			super(node);
+		}
+		
+		@Override
+		public void setMaster(NODE master) {
+			super.setMaster(master);
+			
+			if(master!=null){
+				@SuppressWarnings("unchecked")
+				NODE parent = (NODE) inject(BusinessInterfaceLocator.class).injectTyped(clazz).findParent(master);
+				this.parent = parent == null ? null : formatUsingBusiness(parent);
+			}
+		}
+		
+		/**/
+		
+		public static final String FIELD_PARENT = "parent";
+		
+		/**/
 		
 	}
 

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.geography.CountryBusiness;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
+import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.Country;
@@ -14,7 +15,12 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
 import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.helper.StringHelper;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, CountryDao> implements CountryBusiness,Serializable {
 
@@ -101,4 +107,27 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 		
 	}
 	
+	@Getter @Setter
+	public static class Details extends AbstractOutputDetails<Country> implements Serializable {
+
+		private static final long serialVersionUID = 4444472169870625893L;
+
+		@Input @InputText private String phoneNumberCode,phoneNumberFormat;
+		
+		public Details(Country country) {
+			super(country);
+		}
+		
+		@Override
+		public void setMaster(Country country) {
+			super.setMaster(country);
+			if(country!=null){
+				phoneNumberCode = formatNumber(country.getPhoneNumberCode());
+				phoneNumberFormat = country.getPhoneNumberFormat();
+			}
+		}
+
+		public static final String FIELD_PHONE_NUMBER_CODE = "phoneNumberCode";
+		public static final String FIELD_PHONE_NUMBER_FORMAT = "phoneNumberFormat";
+	}
 }

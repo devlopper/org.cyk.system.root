@@ -18,7 +18,12 @@ import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.generator.RandomDataProvider;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class ElectronicMailAddressBusinessImpl extends AbstractContactBusinessImpl<ElectronicMailAddress, ElectronicMailAddressDao> implements ElectronicMailAddressBusiness,Serializable {
 
@@ -136,5 +141,29 @@ public class ElectronicMailAddressBusinessImpl extends AbstractContactBusinessIm
 		}
 		
 	}
+	
+	@Getter @Setter
+	public static class Details extends AbstractContactBusinessImpl.Details<ElectronicMailAddress> implements Serializable {
+
+		private static final long serialVersionUID = 4444472169870625893L;
+
+		@Input @InputText protected String address;
+		
+		public Details(ElectronicMailAddress electronicMailAddress) {
+			super(electronicMailAddress);
+		}
+		
+		@Override
+		public void setMaster(ElectronicMailAddress electronicMailAddress) {
+			super.setMaster(electronicMailAddress);
+			if(electronicMailAddress!=null){
+				address = electronicMailAddress.getAddress();
+			}
+		}
+		
+		public static final String FIELD_ADDRESS = "address";
+
+	}
+
 		
 }

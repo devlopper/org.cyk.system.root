@@ -1,5 +1,7 @@
 package org.cyk.system.root.business.impl.userinterface;
 
+import java.io.Serializable;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -12,6 +14,9 @@ import org.cyk.system.root.model.userinterface.UserInterfaceCommand;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuNode;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuNodeType;
 import org.cyk.system.root.persistence.api.userinterface.UserInterfaceMenuNodeDao;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class UserInterfaceMenuNodeBusinessImpl extends AbstractDataTreeBusinessImpl<UserInterfaceMenuNode,UserInterfaceMenuNodeDao,UserInterfaceMenuNodeType> implements UserInterfaceMenuNodeBusiness {
  
@@ -46,5 +51,15 @@ public class UserInterfaceMenuNodeBusinessImpl extends AbstractDataTreeBusinessI
 		if(Boolean.TRUE.equals(userInterfaceMenuNode.getAutomaticallyCreateCommand()))
 			createIfNotIdentified(userInterfaceMenuNode.getCommand());
 	}
- 
+
+	@Getter @Setter
+	public class Details extends AbstractDataTreeBusinessImpl.Details<UserInterfaceMenuNode,UserInterfaceMenuNodeType> implements Serializable {
+
+		private static final long serialVersionUID = -4747519269632371426L;
+
+		public Details(UserInterfaceMenuNode userInterfaceMenuNode) {
+			super(userInterfaceMenuNode);
+		}
+		
+	}
 }

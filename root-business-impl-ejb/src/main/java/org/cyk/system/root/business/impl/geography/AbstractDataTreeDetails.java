@@ -7,6 +7,7 @@ import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
+@Deprecated
 public abstract class AbstractDataTreeDetails<NODE extends AbstractDataTree<TYPE>,TYPE extends AbstractDataTreeType> extends AbstractDataTreeNodeDetails<NODE> implements Serializable {
 
 	private static final long serialVersionUID = 7515356383413863619L;

@@ -7,6 +7,7 @@ import java.util.Collection;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.AbstractCollectionBusiness;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.business.api.Crud;
@@ -16,8 +17,13 @@ import org.cyk.system.root.persistence.api.AbstractCollectionDao;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractCollectionBusinessImpl<COLLECTION extends AbstractCollection<ITEM>,ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionDao<COLLECTION, ITEM>,ITEM_DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,ITEM_BUSINESS extends AbstractCollectionItemBusiness<ITEM,COLLECTION>> extends AbstractEnumerationBusinessImpl<COLLECTION, DAO> implements AbstractCollectionBusiness<COLLECTION,ITEM>,Serializable {
 
@@ -185,4 +191,26 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 			super(outputClass);
 		}	
 	}
+	
+	@Getter @Setter
+	public static class Details<T extends AbstractCollection<?>> extends AbstractEnumerationBusinessImpl.Details<T> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+		
+		@Input @InputText private String items;
+		
+		public Details(T identifiable) {
+			super(identifiable);
+			if(identifiable==null){
+				
+			}else{
+				items = StringUtils.join(identifiable.getItems().getElements(),Constant.CHARACTER_COMA);
+			}
+			
+		}
+		
+		/**/
+		public static final String FIELD_ITEMS = "items";
+		
+	}
+	
 }

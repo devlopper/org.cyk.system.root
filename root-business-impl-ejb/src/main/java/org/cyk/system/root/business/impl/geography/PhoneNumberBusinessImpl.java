@@ -15,7 +15,12 @@ import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.persistence.api.geography.CountryDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.helper.RandomHelper;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class PhoneNumberBusinessImpl extends AbstractContactBusinessImpl<PhoneNumber, PhoneNumberDao> implements PhoneNumberBusiness,Serializable {
 
@@ -68,5 +73,36 @@ public class PhoneNumberBusinessImpl extends AbstractContactBusinessImpl<PhoneNu
 		return list;
 	}
 
-	
+	@Getter @Setter
+	public static class Details extends AbstractContactBusinessImpl.Details<PhoneNumber> implements Serializable {
+
+		private static final long serialVersionUID = 4444472169870625893L;
+
+		@Input @InputText private FieldValue country,type,locationType;
+		@Input @InputText private String number;
+		
+		public Details(PhoneNumber phoneNumber) {
+			super(phoneNumber);
+		}
+
+		@Override
+		public void setMaster(PhoneNumber phoneNumber) {
+			super.setMaster(phoneNumber);
+			if(phoneNumber!=null){
+				if(phoneNumber.getCountry()!=null)
+					country = new FieldValue(phoneNumber.getCountry());
+				if(phoneNumber.getType()!=null)
+					type = new FieldValue(phoneNumber.getType());
+				number = phoneNumber.getNumber();
+				if(phoneNumber.getLocationType()!=null)
+					locationType = new FieldValue(phoneNumber.getLocationType());
+			}
+		}
+		
+		public static final String FIELD_COUNTRY = "country";
+		public static final String FIELD_TYPE = "type";
+		public static final String FIELD_NUMBER = "number";
+		public static final String FIELD_LOCATION_TYPE = "locationType";
+	}
+
 }

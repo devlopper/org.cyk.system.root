@@ -5,12 +5,15 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 
 import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.utility.common.annotation.ModelBean;
+import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor @Entity
+@Getter @Setter @NoArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 /**
  * A prefix or suffix added to someone's name in certain contexts
  * @author Christian Yao Komenan

@@ -40,8 +40,8 @@ public class ModelClassLocator extends ClassLocator implements Serializable {
 				return "model";
 			}
 			@Override
-			protected String getModuleSuffix() {
-				return "";
+			protected String[] getModuleSuffixes() {
+				return new String[]{""};
 			}
 			
 		});

@@ -8,7 +8,7 @@ import lombok.Setter;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 
-@Getter @Setter
+@Getter @Setter @Deprecated
 public abstract class AbstractEnumerationDetails<ENUMERATION extends AbstractIdentifiable> extends AbstractOutputDetails<ENUMERATION> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	

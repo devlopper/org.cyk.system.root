@@ -4,10 +4,18 @@ import java.io.Serializable;
 
 import javax.inject.Singleton;
 
+import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeBusinessImpl;
+import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeNodeBusinessImpl;
+import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeTypeBusinessImpl;
+import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractModelElement;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 import org.cyk.utility.common.ClassLocator;
 import org.cyk.utility.common.annotation.Deployment;
 import org.cyk.utility.common.annotation.Deployment.InitialisationType;
+import org.cyk.utility.common.helper.ClassHelper;
 
 @Singleton @Deployment(initialisationType=InitialisationType.EAGER)
 public class DetailsClassLocator extends ClassLocator implements Serializable {
@@ -36,17 +44,32 @@ public class DetailsClassLocator extends ClassLocator implements Serializable {
 			protected String getBaseClassPackageName() {
 				return "model";
 			}
+			
 			@Override
 			protected String getModulePrefix() {
 				return "business.impl";
 			}
+			
 			@Override
-			protected String getModuleSuffix() {
-				return "Details";
+			protected String[] getModuleSuffixes() {
+				return new String[]{"Details","BusinessImpl$Details"};
 			}
 			
 		});
 		getClassLocatorListeners().add(listener);
+	}
+		
+	@Override
+	protected Class<?> getDefault(Class<?> aClass) {
+		if(ClassHelper.getInstance().isInstanceOf(AbstractEnumeration.class, aClass))
+			return AbstractEnumerationBusinessImpl.Details.class;
+		if(ClassHelper.getInstance().isInstanceOf(AbstractDataTreeNode.class, aClass))
+			return AbstractDataTreeNodeBusinessImpl.Details.class;
+		if(ClassHelper.getInstance().isInstanceOf(AbstractDataTreeType.class, aClass))
+			return AbstractDataTreeTypeBusinessImpl.Details.class;
+		if(ClassHelper.getInstance().isInstanceOf(AbstractDataTree.class, aClass))
+			return AbstractDataTreeBusinessImpl.Details.class;
+		return super.getDefault(aClass);
 	}
 	
 	public static DetailsClassLocator getInstance() {

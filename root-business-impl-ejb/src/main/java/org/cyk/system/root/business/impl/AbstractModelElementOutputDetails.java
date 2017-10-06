@@ -35,8 +35,20 @@ public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends Ab
 	
 	public AbstractModelElementOutputDetails(MODEL_ELEMENT master) {
 		super();
-		clazz = getClassParameter();
+		//clazz = getClassParameter();
 		setMaster(master);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Class<MODEL_ELEMENT> getClazz(){
+		if(clazz==null){
+			clazz = getClassParameter();
+			if(clazz==null){
+				if(master!=null)
+					clazz = (Class<MODEL_ELEMENT>) master.getClass();
+			}
+		}
+		return clazz;
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.ENUMERATION,genderType=GenderType.MALE)
+@Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 public class PersonRelationshipTypeGroup extends AbstractDataTreeType implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
