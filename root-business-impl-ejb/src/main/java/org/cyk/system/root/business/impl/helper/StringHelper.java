@@ -6,10 +6,6 @@ public class StringHelper implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static void initialize(){
-		
-		
-		
-	}
+	public static void initialize(){}
 	
 }

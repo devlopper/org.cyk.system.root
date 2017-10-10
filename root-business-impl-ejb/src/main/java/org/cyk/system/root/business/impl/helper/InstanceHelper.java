@@ -7,6 +7,7 @@ import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -14,6 +15,7 @@ import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 public class InstanceHelper implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -23,7 +25,7 @@ public class InstanceHelper implements Serializable {
 		@Override
     	public Object getIdentifier(Object instance) {
     		if(instance instanceof AbstractIdentifiable)
-    			return ((AbstractIdentifiable)instance).getCode();
+    			return ((AbstractIdentifiable)instance).getIdentifier();
     		else if(instance instanceof GlobalIdentifier)
     			return ((GlobalIdentifier)instance).getIdentifier();
     		return super.getIdentifier(instance);
@@ -147,6 +149,15 @@ public class InstanceHelper implements Serializable {
 		
 		@Override
 		protected String __execute__() {
+			if( getInput() instanceof AbstractEnumeration )
+				return StringHelper.getInstance().isBlank(((AbstractEnumeration)getInput()).getName()) ? ((AbstractEnumeration)getInput()).getCode() 
+						: ((AbstractEnumeration)getInput()).getName();
+				if( getInput() instanceof AbstractIdentifiable ){
+					if( StringHelper.getInstance().isBlank(((AbstractIdentifiable)getInput()).getName()) )
+						return ((AbstractIdentifiable)getInput()).getName(); 
+					if( StringHelper.getInstance().isBlank(((AbstractIdentifiable)getInput()).getCode()) )
+						return ((AbstractIdentifiable)getInput()).getCode(); 
+				}
 			if( getInput() instanceof AbstractModelElement )
 				return ((AbstractModelElement)getInput()).getUiString();
 			return super.__execute__();
