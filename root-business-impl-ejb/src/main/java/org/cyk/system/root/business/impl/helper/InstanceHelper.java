@@ -153,9 +153,9 @@ public class InstanceHelper implements Serializable {
 				return StringHelper.getInstance().isBlank(((AbstractEnumeration)getInput()).getName()) ? ((AbstractEnumeration)getInput()).getCode() 
 						: ((AbstractEnumeration)getInput()).getName();
 				if( getInput() instanceof AbstractIdentifiable ){
-					if( StringHelper.getInstance().isBlank(((AbstractIdentifiable)getInput()).getName()) )
+					if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)getInput()).getName()) )
 						return ((AbstractIdentifiable)getInput()).getName(); 
-					if( StringHelper.getInstance().isBlank(((AbstractIdentifiable)getInput()).getCode()) )
+					if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)getInput()).getCode()) )
 						return ((AbstractIdentifiable)getInput()).getCode(); 
 				}
 			if( getInput() instanceof AbstractModelElement )
