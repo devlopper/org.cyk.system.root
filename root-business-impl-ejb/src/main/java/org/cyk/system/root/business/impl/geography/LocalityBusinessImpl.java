@@ -36,7 +36,7 @@ public class LocalityBusinessImpl extends AbstractDataTreeBusinessImpl<Locality,
 	}
 	
 	@Getter @Setter
-	public class Details extends AbstractDataTreeBusinessImpl.Details<Locality,LocalityType> implements Serializable {
+	public static class Details extends AbstractDataTreeBusinessImpl.Details<Locality,LocalityType> implements Serializable {
 
 		private static final long serialVersionUID = -4747519269632371426L;
 

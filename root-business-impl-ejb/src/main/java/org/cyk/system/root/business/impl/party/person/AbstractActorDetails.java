@@ -6,7 +6,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 
-public abstract class AbstractActorDetails<ACTOR extends AbstractIdentifiable> extends AbstractPersonDetails<ACTOR> implements Serializable {
+public abstract class AbstractActorDetails<ACTOR extends AbstractIdentifiable> extends PersonBusinessImpl.AbstractPersonDetails<ACTOR> implements Serializable {
 
 	private static final long serialVersionUID = 1165482775425753790L;
 

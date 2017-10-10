@@ -51,6 +51,7 @@ public class Country extends AbstractIdentifiable implements Serializable{
 	
 
 	public static final String FIELD_LOCALITY = "locality";
+	public static final String FIELD_CONTINENT = "continent";
 	public static final String FIELD_PHONE_NUMBER_CODE = "phoneNumberCode";
 	public static final String FIELD_PHONE_NUMBER_FORMAT = "phoneNumberFormat";
 	

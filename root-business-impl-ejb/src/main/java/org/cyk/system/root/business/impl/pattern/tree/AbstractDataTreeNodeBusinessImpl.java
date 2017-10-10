@@ -326,10 +326,9 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		@Override
 		public void setMaster(NODE master) {
 			super.setMaster(master);
-			
 			if(master!=null){
 				@SuppressWarnings("unchecked")
-				NODE parent = (NODE) inject(BusinessInterfaceLocator.class).injectTyped(clazz).findParent(master);
+				NODE parent = (NODE) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractDataTreeNode>)master.getClass()).findParent(master);
 				this.parent = parent == null ? null : formatUsingBusiness(parent);
 			}
 		}

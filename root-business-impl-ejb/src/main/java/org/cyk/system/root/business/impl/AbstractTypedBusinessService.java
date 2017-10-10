@@ -31,6 +31,7 @@ import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
+import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.IdentifiableRuntimeCollection;
 import org.cyk.system.root.model.RootConstant;
@@ -74,6 +75,10 @@ import org.cyk.utility.common.formatter.DateFormatter;
 import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.CollectionHelper.Instance;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
@@ -920,4 +925,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	/**/
 	
+	@Getter @Setter
+	public static class Details<T extends AbstractIdentifiable> extends AbstractOutputDetails<T> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+		
+		public Details(T identifiable) {
+			super(identifiable);
+		}
+		
+	}
 }

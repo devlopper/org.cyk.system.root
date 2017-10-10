@@ -8,6 +8,7 @@ import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeBusinessIm
 import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeNodeBusinessImpl;
 import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeTypeBusinessImpl;
 import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTree;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
@@ -61,14 +62,16 @@ public class DetailsClassLocator extends ClassLocator implements Serializable {
 		
 	@Override
 	protected Class<?> getDefault(Class<?> aClass) {
-		if(ClassHelper.getInstance().isInstanceOf(AbstractEnumeration.class, aClass))
-			return AbstractEnumerationBusinessImpl.Details.class;
-		if(ClassHelper.getInstance().isInstanceOf(AbstractDataTreeNode.class, aClass))
-			return AbstractDataTreeNodeBusinessImpl.Details.class;
-		if(ClassHelper.getInstance().isInstanceOf(AbstractDataTreeType.class, aClass))
-			return AbstractDataTreeTypeBusinessImpl.Details.class;
 		if(ClassHelper.getInstance().isInstanceOf(AbstractDataTree.class, aClass))
 			return AbstractDataTreeBusinessImpl.Details.class;
+		if(ClassHelper.getInstance().isInstanceOf(AbstractDataTreeType.class, aClass))
+			return AbstractDataTreeTypeBusinessImpl.Details.class;
+		if(ClassHelper.getInstance().isInstanceOf(AbstractDataTreeNode.class, aClass))
+			return AbstractDataTreeNodeBusinessImpl.Details.class;
+		if(ClassHelper.getInstance().isInstanceOf(AbstractEnumeration.class, aClass))
+			return AbstractEnumerationBusinessImpl.Details.class;
+		if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
+			return AbstractTypedBusinessService.Details.class;
 		return super.getDefault(aClass);
 	}
 	

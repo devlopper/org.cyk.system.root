@@ -57,6 +57,7 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 				locality = new Locality(country.getContinent(), inject(LocalityTypeDao.class).read(RootConstant.Code.LocalityType.COUNTRY), country.getCode(), country.getName());
 			country.setLocality(locality);
 		}
+		locality.setNewParent(country.getContinent());
 		super.beforeCreate(country);
 		createIfNotIdentified(locality);
 	}
@@ -103,6 +104,7 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 		public BuilderOneDimensionArray() {
 			super(Country.class);
 			addFieldCodeName();
+			addParameterArrayElementString(Country.FIELD_CONTINENT,Country.FIELD_PHONE_NUMBER_CODE,Country.FIELD_PHONE_NUMBER_FORMAT);
 		}
 		
 	}
