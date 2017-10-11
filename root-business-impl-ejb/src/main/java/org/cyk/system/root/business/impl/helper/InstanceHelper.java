@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
+import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
@@ -149,17 +150,21 @@ public class InstanceHelper implements Serializable {
 		
 		@Override
 		protected String __execute__() {
-			if( getInput() instanceof AbstractEnumeration )
-				return StringHelper.getInstance().isBlank(((AbstractEnumeration)getInput()).getName()) ? ((AbstractEnumeration)getInput()).getCode() 
-						: ((AbstractEnumeration)getInput()).getName();
-				if( getInput() instanceof AbstractIdentifiable ){
-					if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)getInput()).getName()) )
-						return ((AbstractIdentifiable)getInput()).getName(); 
-					if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)getInput()).getCode()) )
-						return ((AbstractIdentifiable)getInput()).getCode(); 
+			Object object = getInput();
+			if(object instanceof AbstractOutputDetails<?>)
+				if(((AbstractOutputDetails<?>)object).getMaster()!=null)
+					object = ((AbstractOutputDetails<?>)object).getMaster();
+			if( object instanceof AbstractEnumeration )
+				return StringHelper.getInstance().isBlank(((AbstractEnumeration)object).getName()) ? ((AbstractEnumeration)object).getCode() 
+						: ((AbstractEnumeration)object).getName();
+				if( object instanceof AbstractIdentifiable ){
+					if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)object).getName()) )
+						return ((AbstractIdentifiable)object).getName(); 
+					if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)object).getCode()) )
+						return ((AbstractIdentifiable)object).getCode(); 
 				}
-			if( getInput() instanceof AbstractModelElement )
-				return ((AbstractModelElement)getInput()).getUiString();
+			if( object instanceof AbstractModelElement )
+				return ((AbstractModelElement)object).getUiString();
 			return super.__execute__();
 		}
 		
