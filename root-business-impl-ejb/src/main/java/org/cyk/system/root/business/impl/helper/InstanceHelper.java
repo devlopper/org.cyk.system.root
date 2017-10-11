@@ -26,7 +26,7 @@ public class InstanceHelper implements Serializable {
 		@Override
     	public Object getIdentifier(Object instance) {
     		if(instance instanceof AbstractIdentifiable)
-    			return ((AbstractIdentifiable)instance).getIdentifier();
+    			return ((AbstractIdentifiable)instance).getCode();
     		else if(instance instanceof GlobalIdentifier)
     			return ((GlobalIdentifier)instance).getIdentifier();
     		return super.getIdentifier(instance);

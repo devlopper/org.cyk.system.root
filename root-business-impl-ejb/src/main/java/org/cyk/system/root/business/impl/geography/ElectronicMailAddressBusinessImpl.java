@@ -50,7 +50,8 @@ public class ElectronicMailAddressBusinessImpl extends AbstractContactBusinessIm
 	public ElectronicMailAddress instanciateOne(ContactCollection collection, String address) {
 		ElectronicMailAddress electronicMailAddress = new ElectronicMailAddress();
 		electronicMailAddress.setAddress(address);
-		collection.add(electronicMailAddress);
+		if(collection!=null)
+			collection.add(electronicMailAddress);
 		return electronicMailAddress;
 	}
 

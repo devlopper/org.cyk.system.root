@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.cyk.system.root.business.api.ActorBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
-import org.cyk.system.root.business.impl.RootDataProducerHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Actor;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
@@ -19,7 +18,6 @@ import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
-import org.cyk.utility.common.file.ExcelSheetReader;
 import org.junit.Test;
 
 public class FindByStringIT extends AbstractBusinessIT {
@@ -28,16 +26,6 @@ public class FindByStringIT extends AbstractBusinessIT {
 
     @Override
     protected void populate() {
-    	RootDataProducerHelper.Listener.COLLECTION.add(new RootDataProducerHelper.Listener.Adapter.Default(){
-    		private static final long serialVersionUID = 1L;
-
-			@Override
-    		public ExcelSheetReader processExcelSheetReader(ExcelSheetReader excelSheetReader) {
-    			if(excelSheetReader.getName().equals("Country"))
-    				excelSheetReader.setRowCount(2);
-    			return super.processExcelSheetReader(excelSheetReader);
-    		}
-    	});
     	super.populate();
     	Actor actor = inject(ActorBusiness.class).instanciateOneRandomly("c001");
     	actor.getPerson().setName("konan").setLastnames("marius").setElectronicMail("mymail@yahoo.fr"); 

@@ -13,7 +13,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
@@ -62,6 +61,7 @@ import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomFile;
 import org.cyk.utility.common.generator.RandomDataProvider.RandomPerson;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.RandomHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -70,8 +70,6 @@ import lombok.Setter;
 public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao> implements PersonBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
-	
-	//@Inject private RepeatedEventBusiness repeatedEventBusiness;
 	 
 	@Inject private JobInformationsDao jobInformationsDao;
 	@Inject private MedicalInformationsDao medicalInformationsDao;
@@ -157,7 +155,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		
 		super.beforeCreate(person);
 		if(StringUtils.isEmpty(person.getCode()))
-			person.setCode(RandomStringUtils.randomAlphanumeric(5));
+			person.setCode(RandomHelper.getInstance().getAlphanumeric(5));
 		
 		//exceptionUtils().exception(StringUtils.isBlank(person.getCode()), "person.code.required");
 	}
