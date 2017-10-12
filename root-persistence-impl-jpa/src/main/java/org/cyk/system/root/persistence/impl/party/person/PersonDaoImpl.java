@@ -6,14 +6,13 @@ import java.util.Collection;
 import org.cyk.system.root.model.event.Event;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.Person.SearchCriteria;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.impl.QueryStringBuilder;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
 import org.cyk.system.root.persistence.impl.party.AbstractPartyDaoImpl;
 
-public class PersonDaoImpl extends AbstractPartyDaoImpl<Person,SearchCriteria> implements PersonDao,Serializable {
+public class PersonDaoImpl extends AbstractPartyDaoImpl<Person> implements PersonDao,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	

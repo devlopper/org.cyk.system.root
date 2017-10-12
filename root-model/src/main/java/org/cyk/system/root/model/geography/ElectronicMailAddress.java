@@ -11,6 +11,8 @@ import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.CriteriaHelper;
+import org.cyk.utility.common.helper.StringHelper;
 import org.hibernate.validator.constraints.Email;
 
 import lombok.AllArgsConstructor;
@@ -74,5 +76,17 @@ public class ElectronicMailAddress extends Contact implements Serializable {
 			address.setValue(value);
 		}
 
+	}
+	
+	@Getter @Setter
+	public static class Filter extends Contact.Filter<ElectronicMailAddress> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+
+		protected CriteriaHelper.Criteria.String address;
+		
+		public Filter() {
+			address = instanciateCriteria(CriteriaHelper.Criteria.String.class).setLocation(StringHelper.Location.INSIDE);
+		}
+		
 	}
 }

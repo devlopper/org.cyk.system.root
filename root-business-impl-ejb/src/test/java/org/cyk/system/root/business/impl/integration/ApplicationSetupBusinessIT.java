@@ -1,5 +1,8 @@
 package org.cyk.system.root.business.impl.integration;
 
+import java.util.Map;
+import java.util.Set;
+
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -7,6 +10,7 @@ import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
+import org.cyk.system.root.persistence.impl.AbstractPersistenceService;
 
 public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
 
@@ -18,6 +22,13 @@ public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
     	GlobalIdentifier.EXCLUDED.add(NestedSetNode.class);
     	GlobalIdentifier.EXCLUDED.add(Value.class);
     	super.populate();
+    	System.out.println("Queries registered");
+    	Integer count = 0;
+    	for(Map.Entry<Class<?>, Set<String>> entry : AbstractPersistenceService.NAMED_QUERIES_MAP.getMap().entrySet()){
+    		System.out.println(entry.getKey()+" : "+entry.getValue().size());
+    		count += entry.getValue().size();
+    	}
+    	System.out.println("Total : "+count);
     }
     
     @Override

@@ -22,6 +22,11 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.CriteriaHelper;
+import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.FilterHelper;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
 
 import lombok.Getter;
 
@@ -115,6 +120,30 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 	public QueryWrapper<T> parameterLike(String name,StringSearchCriteria value){
 		parameterLike(name, value.getLikeValue());
 		parameter(QueryStringBuilder.getLengthParameterName(name), value.getPreparedValue().length());
+		return this;
+	}
+	
+	public QueryWrapper<T> parameterLike(String name,CriteriaHelper.Criteria.String value){
+		parameter(StructuredQueryLanguageHelper.Where.Like.Adapter.getParameterNameString(name), value.getPreparedValue());
+		parameter(StructuredQueryLanguageHelper.Where.Like.Adapter.getParameterNameLike(name), value.getLikeValue());
+		return this;
+	}
+	
+	public QueryWrapper<T> parameterLike(FilterHelper.Filter<?> filter,Collection<String> fieldNames){
+		if(CollectionHelper.getInstance().isNotEmpty(fieldNames)){
+			for(String fieldName : fieldNames){
+				parameterLike(fieldName, (CriteriaHelper.Criteria.String)FieldHelper.getInstance().read(filter, fieldName));
+			}	
+		}
+		return this;
+	}
+	
+	public QueryWrapper<T> parameterLike(FilterHelper.Filter<?> filter){
+		if(filter!=null){
+			Collection<java.lang.reflect.Field> fields = FieldHelper.getInstance().getByTypes(filter.getClass(), CriteriaHelper.Criteria.String.class);
+			if(CollectionHelper.getInstance().isNotEmpty(fields))
+				parameterLike(filter, FieldHelper.getInstance().getNames(fields));	
+		}
 		return this;
 	}
 	

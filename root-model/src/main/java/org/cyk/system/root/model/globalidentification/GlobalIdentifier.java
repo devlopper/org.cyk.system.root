@@ -31,7 +31,10 @@ import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria.LocationType;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
+import org.cyk.utility.common.helper.CriteriaHelper;
+import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.NumberHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -253,6 +256,31 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	/**/
 	
 	public static final Collection<Class<?>> EXCLUDED = new ArrayList<>();
+	
+	/**/
+	
+	@Getter @Setter
+	public static class Filter extends FilterHelper.Filter<GlobalIdentifier> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+
+		protected CriteriaHelper.Criteria.String code,name;
+		protected CriteriaHelper.Criteria.Number.Long orderNumber;
+		
+		public Filter(){
+			code = instanciateCriteria(CriteriaHelper.Criteria.String.class).setLocation(StringHelper.Location.INSIDE);
+			name=instanciateCriteria(CriteriaHelper.Criteria.String.class).setLocation(StringHelper.Location.INSIDE);
+			//orderNumber = instanciateCriteria(CriteriaHelper.Criteria.Number.Long.class);
+		}
+				
+		public Filter(Filter criterias) {
+			super(criterias);
+		}
+
+		@Override
+		public String toString() {
+			return "code = "+code+" , name = "+name+" , orderNumber = "+orderNumber;
+		}
+	}
 	
 	/**/
 	

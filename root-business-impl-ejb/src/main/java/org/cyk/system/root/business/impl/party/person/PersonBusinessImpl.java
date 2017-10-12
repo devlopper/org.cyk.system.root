@@ -66,7 +66,7 @@ import org.cyk.utility.common.helper.RandomHelper;
 import lombok.Getter;
 import lombok.Setter;
 
-@Stateless
+//@Stateless
 public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao> implements PersonBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -339,7 +339,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	protected Class<? extends AbstractFieldValueSearchCriteriaSet> getSearchCriteriaClass() {
 		return Person.SearchCriteria.class;
 	}
-	
+		
 	/**/
 
 	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Person>{

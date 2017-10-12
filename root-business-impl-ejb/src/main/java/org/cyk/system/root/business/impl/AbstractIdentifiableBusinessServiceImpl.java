@@ -23,6 +23,7 @@ import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
+import org.cyk.system.root.business.impl.globalidentification.GlobalIdentifierBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -47,10 +48,12 @@ import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBusinessServiceImpl implements IdentifiableBusinessService<IDENTIFIABLE, Long>, Serializable {
@@ -266,7 +269,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue())){
     		return findAll(searchCriteria.getReadConfig());
     	}
-    	prepareFindByCriteria(searchCriteria);
+    	listenBeforeSearchByCriteria(searchCriteria);
     	return getPersistenceService().readBySearchCriteria(searchCriteria);
 		//return null;
 	}
@@ -275,7 +278,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	public <SEARCH_CRITERIA extends AbstractFieldValueSearchCriteriaSet> Long countBySearchCriteria(SEARCH_CRITERIA searchCriteria) {
 		if(StringUtils.isBlank(((AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet)searchCriteria).getName().getValue()))
     		return countAll();
-    	prepareFindByCriteria(searchCriteria);
+    	listenBeforeSearchByCriteria(searchCriteria);
     	return getPersistenceService().countBySearchCriteria(searchCriteria);
 	}
 
@@ -421,7 +424,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return identifiables;
 	}
 	
-	protected void prepareFindByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
+	protected void listenBeforeSearchByCriteria(AbstractFieldValueSearchCriteriaSet searchCriteria){
 		getPersistenceService().getDataReadConfig().set(searchCriteria.getReadConfig());
 	}
 	/*
@@ -486,7 +489,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@Override
 	public Collection<IDENTIFIABLE> findByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
 		Collection<IDENTIFIABLE> results;
-		prepareFindByCriteria(globalIdentifierSearchCriteria);
+		listenBeforeSearchByCriteria(globalIdentifierSearchCriteria);
 		getPersistenceService().getDataReadConfig().set(globalIdentifierSearchCriteria.getReadConfig());
 		results = getPersistenceService().readByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);	
 		logTrace("Find {} by global identifier search criteria {}. Found {}", clazz.getSimpleName(),globalIdentifierSearchCriteria,results.size());
@@ -496,7 +499,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	@Override
 	public Long countByGlobalIdentifierSearchCriteria(SearchCriteria globalIdentifierSearchCriteria) {
 		Long count;
-		prepareFindByCriteria(globalIdentifierSearchCriteria);
+		listenBeforeSearchByCriteria(globalIdentifierSearchCriteria);
 		count = getPersistenceService().countByGlobalIdentifierSearchCriteria(globalIdentifierSearchCriteria);	
 		logTrace("Count {} by global identifier search criteria {}. Found {}", clazz.getSimpleName(),globalIdentifierSearchCriteria,count);
 		return count;
@@ -793,6 +796,28 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	protected void setRandomValues(IDENTIFIABLE identifiable,String...fieldNames){
 		
+	}
+	
+	/* Filtering */
+	
+	@Override
+	public Collection<IDENTIFIABLE> findByFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {
+		if(filter.isNull())
+    		return findAll(dataReadConfiguration);
+		listenBeforeFilter(filter,dataReadConfiguration);
+    	return getPersistenceService().readByFilter(filter,dataReadConfiguration);
+	}
+
+	@Override
+	public Long countByFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {
+		if(filter.isNull())
+    		return countAll();
+		listenBeforeFilter(filter,dataReadConfiguration);
+    	return getPersistenceService().countByFilter(filter,dataReadConfiguration);
+	}
+	
+	protected void listenBeforeFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration){
+		getPersistenceService().getDataReadConfig().set(dataReadConfiguration);
 	}
 	
 	/**/
@@ -1175,4 +1200,6 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			identifiable.getGlobalIdentifier().setIdentifier(InstanceHelper.getInstance().generateFieldValue(identifiable.getGlobalIdentifier(), GlobalIdentifier.FIELD_IDENTIFIER, String.class));
 		}
 	}
+
+	
 }

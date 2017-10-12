@@ -36,6 +36,7 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
@@ -435,6 +436,30 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 				entry.getValue().onPostRemove(this);
 			}
 		}
+	}
+	
+	/**/
+	
+	@Getter @Setter
+	public static class Filter<T extends AbstractIdentifiable> extends FilterHelper.Filter<T> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+
+		protected GlobalIdentifier.Filter globalIdentifier = new GlobalIdentifier.Filter();
+		
+		public Filter() {
+			addCriterias(globalIdentifier);
+		}
+		
+		public Filter(Filter<T> criterias) {
+			super(criterias);
+		}
+		
+		@Override
+		public FilterHelper.Filter<T> set(String string) {
+			globalIdentifier.set(string);
+			return super.set(string);
+		}
+
 	}
 	
 	/**/

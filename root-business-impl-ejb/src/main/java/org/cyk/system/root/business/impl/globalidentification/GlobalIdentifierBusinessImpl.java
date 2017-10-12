@@ -190,4 +190,5 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
     		return globalIdentifier;
     	}
 	}
+
 }

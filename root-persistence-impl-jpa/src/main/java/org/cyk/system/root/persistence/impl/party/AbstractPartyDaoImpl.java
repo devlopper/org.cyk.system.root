@@ -6,11 +6,10 @@ import javax.persistence.NoResultException;
 
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.Party.PartySearchCriteria;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 
-public abstract class AbstractPartyDaoImpl<PARTY extends Party,SEARCH_CRITERIA extends PartySearchCriteria> extends AbstractTypedDao<PARTY> implements AbstractPartyDao<PARTY>,Serializable {
+public abstract class AbstractPartyDaoImpl<PARTY extends Party> extends AbstractTypedDao<PARTY> implements AbstractPartyDao<PARTY>,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	

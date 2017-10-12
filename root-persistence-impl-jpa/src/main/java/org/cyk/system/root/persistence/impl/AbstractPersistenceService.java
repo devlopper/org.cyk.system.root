@@ -42,8 +42,11 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.MapHelper;
 
 import lombok.Getter;
 
@@ -54,7 +57,9 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	//private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPersistenceService.class);
 	
 	public final static Set<Class<?>> NAMED_QUERIES_INITIALIZED = new HashSet<>();
-	public final static Set<String> NAMED_QUERIES = new HashSet<>();
+	@SuppressWarnings("unchecked")
+	public final static MapHelper.Map<Class<?>,Set<String>> NAMED_QUERIES_MAP = (org.cyk.utility.common.helper.MapHelper.Map<Class<?>, Set<String>>) new MapHelper.Map<>(ClassHelper.getInstance().getByName(Class.class)
+			,ClassHelper.getInstance().getByName(Set.class));
 	private final static String SELECT_IDENTIFIER_FORMAT = "SELECT record.identifier FROM %s record";
 	//private final static String SELECT_BYIDENTIFIER_FORMAT = "SELECT record FROM %s record WHERE record.identifier IN :identifiers";
 	
@@ -300,7 +305,12 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		Query query = aResultClass == null ? entityManager.createQuery(queryString) : entityManager.createQuery(queryString, aResultClass);
 		//logInfo("Register Named Query {} , {}", name,query);
 		entityManager.getEntityManagerFactory().addNamedQuery(name, query);	
+		NAMED_QUERIES_MAP.add(clazz, query);
+		/*
+		Set<String> set = NAMED_QUERIES_MAP.get(clazz);
+		if(set==null)
 		NAMED_QUERIES.add(name);
+		*/
 	}
 	
 	protected void registerNamedQuery(String name,String query,Boolean isSelectQuery){
@@ -441,6 +451,19 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		return null;
 	}
 	
+	@Override
+	public Collection<IDENTIFIABLE> readByFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {
+		throwNotYetImplemented();
+		return null;
+	}
+	
+	@Override
+	public Long countByFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {
+		throwNotYetImplemented();
+		return null;
+	}
+	
+	protected void listenBeforeFilter(QueryWrapper<?> queryWrapper,FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {}
 	/**/
 	
 	protected void applyPeriodSearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractPeriodSearchCriteria searchCriteria){
