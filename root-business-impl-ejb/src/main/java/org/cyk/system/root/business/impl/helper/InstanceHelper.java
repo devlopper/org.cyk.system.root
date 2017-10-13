@@ -16,6 +16,8 @@ import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.FilterHelper;
+import org.cyk.utility.common.helper.FilterHelper.Filter;
 import org.cyk.utility.common.helper.StringHelper;
 
 public class InstanceHelper implements Serializable {
@@ -63,6 +65,22 @@ public class InstanceHelper implements Serializable {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).countAll();
 			return super.count(aClass, dataReadConfiguration);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> Collection<T> get(Class<T> aClass,FilterHelper.Filter<T> filter, DataReadConfiguration dataReadConfiguration) {
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
+				return (Collection<T>) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).findByFilter((Filter<AbstractIdentifiable>) filter,dataReadConfiguration);
+			return super.get(aClass,filter, dataReadConfiguration);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> Long count(Class<T> aClass,FilterHelper.Filter<T> filter, DataReadConfiguration dataReadConfiguration) {
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
+				return inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).countByFilter((Filter<AbstractIdentifiable>) filter, dataReadConfiguration);
+			return super.count(aClass,filter, dataReadConfiguration);
 		}
     }
 	
