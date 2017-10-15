@@ -75,7 +75,6 @@ import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.CollectionHelper.Instance;
 import org.cyk.utility.common.helper.FieldHelper;
-import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;

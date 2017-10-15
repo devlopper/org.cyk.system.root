@@ -6,15 +6,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.helper.FilterHelper;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter @Setter @MappedSuperclass @ModelBean(crudStrategy=CrudStrategy.BUSINESS)
 public abstract class AbstractActor extends AbstractIdentifiable implements Serializable {
@@ -22,7 +23,12 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 	private static final long serialVersionUID = 2742833783679362737L;
 
 	@ManyToOne @NotNull protected Person person;
-		
+	
+	@Override
+	public AbstractActor setCode(String code) {
+		return (AbstractActor) super.setCode(code);
+	}
+	
 	@Override
 	public String toString() {
 		return getUiString();
@@ -73,6 +79,24 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 		public static class Default extends AbstractSearchCriteria<AbstractActor> {
 			private static final long serialVersionUID = 1L;
 			
+		}
+		
+	}
+	
+	@Getter @Setter
+	public static class Filter<ACTOR extends AbstractActor> extends AbstractIdentifiable.Filter<ACTOR> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+
+		protected Person.Filter person = new Person.Filter();
+		
+		public Filter() {
+			addCriterias(person);
+		}
+		
+		@Override
+		public FilterHelper.Filter<ACTOR> set(String string) {
+			person.set(string);
+			return super.set(string);
 		}
 		
 	}

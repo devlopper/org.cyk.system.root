@@ -12,10 +12,6 @@ import java.util.Set;
 
 import javax.persistence.NoResultException;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.FilterClassLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -35,7 +31,10 @@ import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.FilterHelper.Filter;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
-import org.jboss.arquillian.container.impl.FilteredURLClassLoader;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractPersistenceService<IDENTIFIABLE> implements TypedDao<IDENTIFIABLE>,Serializable {
 
@@ -183,15 +182,20 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	
 	protected StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage getReadByFilterQueryBuilder(){
 		StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage jpql = (JavaPersistenceQueryLanguage) new StructuredQueryLanguageHelper.Builder
-				.Adapter.Default.JavaPersistenceQueryLanguage(clazz.getSimpleName()).where().lk("t.globalIdentifier.code").or().lk("t.globalIdentifier.name").getParent();
+				.Adapter.Default.JavaPersistenceQueryLanguage(clazz.getSimpleName()).where().notIn("t.globalIdentifier.code").and().lp()
+				.lk("t.globalIdentifier.code").or().lk("t.globalIdentifier.name").getParent();
 		@SuppressWarnings("unchecked")
 		Class<FilterHelper.Filter<IDENTIFIABLE>> filterClass = (Class<Filter<IDENTIFIABLE>>) FilterClassLocator.getInstance().locate(clazz);
 		Collection<String> fieldNames = FieldHelper.getInstance().getNamesByTypes(filterClass, CriteriaHelper.Criteria.String.class);
 		if(CollectionHelper.getInstance().isNotEmpty(fieldNames))
 			for(String fieldName : fieldNames)
 				jpql.getWhere().or().lk("t."+fieldName);
+		processReadByFilterQueryBuilderWhereConditions(jpql);
+		jpql.getWhere().rp();
 		return jpql;
 	}
+	
+	protected void processReadByFilterQueryBuilderWhereConditions(StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage jpql){}
 	
 	@Override
 	public Collection<IDENTIFIABLE> readWhereExistencePeriodCross(Date from, Date to) {
@@ -300,8 +304,12 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		GlobalIdentifier.Filter globalIdentifier = ((AbstractIdentifiable.Filter<IDENTIFIABLE>) filter).getGlobalIdentifier();
 		queryWrapper.parameterLike(globalIdentifier);
 		if(globalIdentifier!=null){
+			if(globalIdentifier.getCode().getExcluded().isEmpty())
+				globalIdentifier.getCode().getExcluded().add("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");//TODO think better
 			if(!globalIdentifier.getCode().getExcluded().isEmpty())
-				queryWrapper.parameter("excludedCodes", globalIdentifier.getCode().getExcluded());
+				queryWrapper.parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIn(GlobalIdentifier.FIELD_CODE)
+						, globalIdentifier.getCode().getExcluded());
+			
 		}
 		queryWrapper.parameterLike(filter);
 		getDataReadConfig().set(dataReadConfiguration);

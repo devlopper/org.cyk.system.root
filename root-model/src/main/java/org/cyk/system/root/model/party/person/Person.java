@@ -18,6 +18,8 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.CriteriaHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -67,8 +69,8 @@ public class Person extends Party implements Serializable{
 	}
 	
 	@Override
-	public Person setElectronicMail(String address) {
-		return (Person) super.setElectronicMail(address);
+	public Person addElectronicMail(String address) {
+		return (Person) super.addElectronicMail(address);
 	}
 
 	@Override
@@ -120,6 +122,18 @@ public class Person extends Party implements Serializable{
 		public void set(String value) {
 			super.set(value);
 			lastnames.setValue(value);
+		}
+		
+	}
+	
+	@Getter @Setter
+	public static class Filter extends Party.Filter<Person> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+
+		protected CriteriaHelper.Criteria.String lastnames;
+		
+		public Filter() {
+			lastnames = instanciateCriteria(CriteriaHelper.Criteria.String.class).setLocation(StringHelper.Location.INSIDE);
 		}
 		
 	}

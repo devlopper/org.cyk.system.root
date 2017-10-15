@@ -33,20 +33,20 @@ public class Fonctionnality_Filter_IT extends AbstractBusinessIT {
     @Override
     protected void populate() {
     	super.populate();
-    	Actor actor = inject(ActorBusiness.class).instanciateOneRandomly("c001");
-    	actor.getPerson().setName("konan").setLastnames("marius").setElectronicMail("mymail@yahoo.fr"); 
+    	Actor actor = inject(ActorBusiness.class).instanciateOne();
+    	actor.setCode("c001").getPerson().setCode("c001").setName("konan").setLastnames("marius").addElectronicMail("mymail@yahoo.fr"); 
     	actor.setName("konan");
     	actor.getPerson().getContactCollection().getItems().setSynchonizationEnabled(Boolean.TRUE);
     	create(actor);
     	
-    	actor = inject(ActorBusiness.class).instanciateOneRandomly("c002");
-    	actor.getPerson().setName("zanga").setLastnames("alice").setElectronicMail("konan@mail.com");
+    	actor = inject(ActorBusiness.class).instanciateOne();
+    	actor.setCode("c002").getPerson().setCode("c002").setName("zanga").setLastnames("alice").addElectronicMail("konan@mail.com");
     	actor.setName("zanga");
     	actor.getPerson().getContactCollection().getItems().setSynchonizationEnabled(Boolean.TRUE);
     	create(actor);
     	
-    	actor = inject(ActorBusiness.class).instanciateOneRandomly("c003a");
-    	actor.getPerson().setName("doudou").setLastnames("cherif");
+    	actor = inject(ActorBusiness.class).instanciateOne();
+    	actor.setCode("c003a").getPerson().setCode("c003a").setName("doudou").setLastnames("cherif");
     	actor.setName("doudou");
     	create(actor);
     	
@@ -92,12 +92,14 @@ public class Fonctionnality_Filter_IT extends AbstractBusinessIT {
 		assertFilter(ElectronicMailAddress.class,"mymail",1);
 	}
 	
-	//@Test
+	@Test
 	public void findPerson(){
 		assertEquals(4l, inject(PersonDao.class).countAll());
 		assertWithBlankStringFindByString(Person.class);
 		
 		assertFilter(Person.class,"WXWX",0);
+		
+		assertFilter(Person.class,"ko",2);
 		
 		assertFilter(Person.class,"ko",Arrays.asList("c002"),1);
 		assertFilter(Person.class,"a",4);
@@ -131,7 +133,7 @@ public class Fonctionnality_Filter_IT extends AbstractBusinessIT {
 	private <T extends AbstractIdentifiable> void assertFilter(Class<T> aClass,String string,Collection<String> excludedCodes,DataReadConfiguration configuration,Integer expectedReturnCount,Integer expectedDatabaseCount){
 		Collection<T> excludedIdentifiables = excludedCodes == null ? null : inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(excludedCodes);
 		@SuppressWarnings("unchecked")
-		FilterHelper.Filter<T> filter = (Filter<T>) ClassHelper.getInstance().instanciateOne(FilterClassLocator.getInstance().locate(aClass));
+		FilterHelper.Filter<T> filter = (Filter<T>) ClassHelper.getInstance().instanciateOne(aClass.equals(Actor.class) ? Actor.Filter.class : FilterClassLocator.getInstance().locate(aClass));
 		filter.set(string).setExcluded(excludedIdentifiables);
 		
 		TypedDao<T> persistence = inject(PersistenceInterfaceLocator.class).injectTyped(aClass);

@@ -36,6 +36,7 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
@@ -458,6 +459,20 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		public FilterHelper.Filter<T> set(String string) {
 			globalIdentifier.set(string);
 			return super.set(string);
+		}
+		
+		@Override
+		public FilterHelper.Filter<T> setExcluded(Collection<T> excluded) {
+			FilterHelper.Filter<T> filter =  super.setExcluded(excluded);
+			if(CollectionHelper.getInstance().isEmpty(excluded))
+				globalIdentifier.setExcluded(null);
+			else
+				for(AbstractIdentifiable identifiable : excluded){
+					if(identifiable.getGlobalIdentifier()!=null)
+						//globalIdentifier.addExcluded(identifiable.getGlobalIdentifier());
+						this.globalIdentifier.getCode().addExcluded(identifiable.getCode());
+				}
+			return filter;
 		}
 
 	}

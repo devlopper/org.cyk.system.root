@@ -20,7 +20,7 @@ import org.cyk.system.root.persistence.api.geography.ContactDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
-import org.cyk.utility.common.generator.RandomDataProvider;
+import org.cyk.utility.common.helper.RandomHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +43,7 @@ public class ElectronicMailAddressBusinessImpl extends AbstractContactBusinessIm
 	
 	@Override
 	public Contact instanciateOneRandomly() {
-		return instanciateOne((ContactCollection)null,RandomDataProvider.getInstance().randomWord(RandomDataProvider.WORD_EMAIL, 5, 10));
+		return instanciateOne((ContactCollection)null,RandomHelper.getInstance().getElectronicMailAddress());
 	}
 
 	@Override

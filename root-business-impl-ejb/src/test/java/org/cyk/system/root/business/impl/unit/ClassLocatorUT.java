@@ -17,6 +17,7 @@ import org.cyk.system.root.business.impl.geography.ContactCollectionBusinessImpl
 import org.cyk.system.root.business.impl.geography.LocalityBusinessImpl;
 import org.cyk.system.root.business.impl.geography.LocalityTypeBusinessImpl;
 import org.cyk.system.root.business.impl.party.person.AllergyBusinessImpl;
+import org.cyk.system.root.business.impl.party.person.JobFunctionBusinessImpl;
 import org.cyk.system.root.business.impl.party.person.MedicationBusinessImpl;
 import org.cyk.system.root.business.impl.party.person.PersonRelationshipBusinessImpl;
 import org.cyk.system.root.business.impl.party.person.PersonRelationshipTypeBusinessImpl;
@@ -26,11 +27,13 @@ import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.party.person.Allergy;
+import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.Medication;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
 import org.cyk.utility.common.ClassLocator;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -73,6 +76,11 @@ public class ClassLocatorUT extends AbstractUnitTest {
 		assertClass(detailsClassLocator,PersonRelationship.class,PersonRelationshipBusinessImpl.Details.class);
 		assertClass(detailsClassLocator,PersonRelationshipTypeGroup.class,PersonRelationshipTypeGroupBusinessImpl.Details.class);
 		assertClass(detailsClassLocator,PersonRelationshipType.class,PersonRelationshipTypeBusinessImpl.Details.class);
+		assertClass(detailsClassLocator,JobFunction.class,JobFunctionBusinessImpl.Details.class);
+		
+		@SuppressWarnings("unchecked")
+		Class<JobFunctionBusinessImpl.Details<JobFunction>> detailsClass = (Class<JobFunctionBusinessImpl.Details<JobFunction>>) detailsClassLocator.locate(JobFunction.class);
+		assertNotNull(ClassHelper.getInstance().instanciate(detailsClass, new Object[]{JobFunction.class,new JobFunction()}));
 	}
 	
 	@Test

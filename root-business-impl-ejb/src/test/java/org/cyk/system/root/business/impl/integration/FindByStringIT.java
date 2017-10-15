@@ -28,17 +28,17 @@ public class FindByStringIT extends AbstractBusinessIT {
     protected void populate() {
     	super.populate();
     	Actor actor = inject(ActorBusiness.class).instanciateOneRandomly("c001");
-    	actor.getPerson().setName("konan").setLastnames("marius").setElectronicMail("mymail@yahoo.fr"); 
+    	actor.getPerson().setName("konan").setLastnames("marius").addElectronicMail("mymail@yahoo.fr"); 
     	actor.setName("konan");
     	create(actor);
     	
     	actor = inject(ActorBusiness.class).instanciateOneRandomly("c002");
-    	actor.getPerson().setName("zanga").setLastnames("alice").setElectronicMail("konan@mail.com");
+    	actor.getPerson().setName("zanga").setLastnames("alice").addElectronicMail("konan@mail.com");
     	actor.setName("zanga");
     	create(actor);
     	
     	actor = inject(ActorBusiness.class).instanciateOneRandomly("c003a");
-    	actor.getPerson().setName("doudou").setLastnames("cherif").setElectronicMail(null);
+    	actor.getPerson().setName("doudou").setLastnames("cherif").addElectronicMail(null);
     	actor.setName("doudou");
     	create(actor);
     	

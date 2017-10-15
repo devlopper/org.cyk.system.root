@@ -8,6 +8,11 @@ import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.persistence.api.party.AbstractPartyDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
+import org.cyk.system.root.persistence.impl.QueryWrapper;
+import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.FilterHelper.Filter;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 public abstract class AbstractPartyDaoImpl<PARTY extends Party> extends AbstractTypedDao<PARTY> implements AbstractPartyDao<PARTY>,Serializable {
 
@@ -28,7 +33,18 @@ public abstract class AbstractPartyDaoImpl<PARTY extends Party> extends Abstract
 		return namedQuery(readByEmail).parameter(ElectronicMailAddress.FIELD_ADDRESS, email).ignoreThrowable(NoResultException.class).resultOne();
 	}
 	
+	@Override
+	protected void processReadByFilterQueryBuilderWhereConditions(JavaPersistenceQueryLanguage jpql) {
+		super.processReadByFilterQueryBuilderWhereConditions(jpql);
+		jpql.getWhere().or().exists(new StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage(ElectronicMailAddress.class, "email")
+				.where().lk("email."+ElectronicMailAddress.FIELD_ADDRESS).and().addTokens("email.collection = t.contactCollection").getParent());	
+	}
 	
+	@Override
+	protected void listenBeforeFilter(QueryWrapper<?> queryWrapper, Filter<PARTY> filter,DataReadConfiguration dataReadConfiguration) {
+		super.listenBeforeFilter(queryWrapper, filter, dataReadConfiguration);
+		queryWrapper.parameterLike(ElectronicMailAddress.FIELD_ADDRESS,((Party.Filter<PARTY>)filter).getContactCollection().getElectronicMailAddress().getAddress());
+	}
 	
 }
  

@@ -943,7 +943,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		/**/
 		
 		public Person createOnePerson(String code,String firstname,String lastnames,String email){
-			Person person = inject(PersonBusiness.class).instanciateOne().setCode(code).setName(firstname).setLastnames(lastnames).setElectronicMail(email);
+			Person person = inject(PersonBusiness.class).instanciateOne().setCode(code).setName(firstname).setLastnames(lastnames).addElectronicMail(email);
 			create(person);
 			if(StringUtils.isNotBlank(email))
 				assertElectronicMail(code, email);

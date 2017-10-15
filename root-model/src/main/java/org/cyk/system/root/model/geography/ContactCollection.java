@@ -11,6 +11,7 @@ import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.FilterHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -73,6 +74,24 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 		public void set(String value) {
 			super.set(value);
 			electronicMailAddress.set(value);
+		}
+		
+	}
+	
+	@Getter @Setter
+	public static class Filter extends AbstractCollection.Filter<ContactCollection> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+
+		protected ElectronicMailAddress.Filter electronicMailAddress = new ElectronicMailAddress.Filter();
+		
+		public Filter() {
+			addCriterias(electronicMailAddress);
+		}
+		
+		@Override
+		public FilterHelper.Filter<ContactCollection> set(String string) {
+			electronicMailAddress.set(string);
+			return super.set(string);
 		}
 		
 	}

@@ -13,6 +13,7 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.utility.common.helper.FilterHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,7 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 		return this;
 	}
 	
-	public Party setElectronicMail(String address){
+	public Party addElectronicMail(String address){
 		if(contactCollection==null)
 			contactCollection = new ContactCollection();
 		contactCollection.add(new ElectronicMailAddress(address));
@@ -84,6 +85,24 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 			contactCollection.set(value);
 		}
 
+	}
+	
+	@Getter @Setter
+	public static class Filter<PARTY extends Party> extends AbstractIdentifiable.Filter<PARTY> implements Serializable {
+		private static final long serialVersionUID = -1498269103849317057L;
+
+		protected ContactCollection.Filter contactCollection = new ContactCollection.Filter();
+		
+		public Filter() {
+			addCriterias(contactCollection);
+		}
+		
+		@Override
+		public FilterHelper.Filter<PARTY> set(String string) {
+			contactCollection.set(string);
+			return super.set(string);
+		}
+		
 	}
 
 	
