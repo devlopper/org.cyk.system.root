@@ -8,6 +8,7 @@ import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
 import org.cyk.system.root.persistence.impl.QueryStringBuilder;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 public class ElectronicMailAddressDaoImpl extends AbstractContactDaoImpl<ElectronicMailAddress> implements ElectronicMailAddressDao,Serializable {
 
@@ -43,6 +44,11 @@ public class ElectronicMailAddressDaoImpl extends AbstractContactDaoImpl<Electro
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
 		queryWrapper.parameterLike(ElectronicMailAddress.FIELD_ADDRESS, ((ElectronicMailAddress.SearchCriteria)searchCriteria).getAddress());
+	}
+	
+	public static JavaPersistenceQueryLanguage createFilter(JavaPersistenceQueryLanguage jpql,String contactCollectionMasterFieldName){
+		return (JavaPersistenceQueryLanguage) jpql.createBuilder(ElectronicMailAddress.class, ElectronicMailAddress.TABLE_NAME,
+				contactCollectionMasterFieldName,ElectronicMailAddress.FIELD_COLLECTION).where().lk(ElectronicMailAddress.FIELD_ADDRESS).getParent();	
 	}
 
  

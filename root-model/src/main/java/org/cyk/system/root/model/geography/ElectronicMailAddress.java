@@ -46,6 +46,7 @@ public class ElectronicMailAddress extends Contact implements Serializable {
 	
 	public static final String FIELD_ADDRESS = "address";
 	
+	public static final String TABLE_NAME = "electronicmailaddress";
 	/**/
 	
 	@Getter @Setter

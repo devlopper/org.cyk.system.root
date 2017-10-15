@@ -19,9 +19,8 @@ public class ScheduleItemDaoImpl extends AbstractCollectionItemDaoImpl<ScheduleI
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();		
-		registerNamedQuery(readWhereFromBetween, new StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage("ScheduleItem")
-				.setFieldName("instantInterval").where().lp().bw("from.date").or().bw("to.date").rp().or().lp().lte("from.date","fromDate").and().gte("to.date","toDate")
-				.rp().getParent().execute());
+		registerNamedQuery(readWhereFromBetween, StructuredQueryLanguageHelper.getInstance().getBuilder(clazz).setFieldName("instantInterval")
+				.where().lp().bw("from.date").or().bw("to.date").rp().or().lp().lte("from.date","fromDate").and().gte("to.date","toDate").rp().getParent().execute());
 	}
 	
 	@Override

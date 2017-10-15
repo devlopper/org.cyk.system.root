@@ -169,9 +169,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		// record.globalIdentifier.code NOT IN :exceludedCodes OR
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereExistencePeriodCross())) {
-			registerNamedQuery(readWhereExistencePeriodCross, new StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage(clazz.getSimpleName())
-					.setFieldName("globalIdentifier.existencePeriod").where().lp().bw("fromDate").or().bw("toDate").rp().or().lp().lte("fromDate","fromFromDate").and().gte("toDate","toToDate")
-					.rp().getParent().execute());	
+			registerNamedQuery(readWhereExistencePeriodCross, StructuredQueryLanguageHelper.getInstance().getBuilder(clazz).setFieldName("globalIdentifier.existencePeriod")
+					.where().lp().bw("fromDate").or().bw("toDate").rp().or().lp().lte("fromDate","fromFromDate").and().gte("toDate","toToDate").rp().getParent().execute());	
 		}
 		
 	}
@@ -182,14 +181,15 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	
 	protected StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage getReadByFilterQueryBuilder(){
 		StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage jpql = (JavaPersistenceQueryLanguage) new StructuredQueryLanguageHelper.Builder
-				.Adapter.Default.JavaPersistenceQueryLanguage(clazz.getSimpleName()).where().notIn("t.globalIdentifier.code").and().lp()
-				.lk("t.globalIdentifier.code").or().lk("t.globalIdentifier.name").getParent();
+				.Adapter.Default.JavaPersistenceQueryLanguage(clazz.getSimpleName()).setFieldName(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER).where()
+				.notIn(GlobalIdentifier.FIELD_CODE).and().lp().lk(GlobalIdentifier.FIELD_CODE).or().lk(GlobalIdentifier.FIELD_NAME).getParent();
 		@SuppressWarnings("unchecked")
 		Class<FilterHelper.Filter<IDENTIFIABLE>> filterClass = (Class<Filter<IDENTIFIABLE>>) FilterClassLocator.getInstance().locate(clazz);
 		Collection<String> fieldNames = FieldHelper.getInstance().getNamesByTypes(filterClass, CriteriaHelper.Criteria.String.class);
+		jpql.setFieldName(null);
 		if(CollectionHelper.getInstance().isNotEmpty(fieldNames))
 			for(String fieldName : fieldNames)
-				jpql.getWhere().or().lk("t."+fieldName);
+				jpql.getWhere().or().lk(fieldName);
 		processReadByFilterQueryBuilderWhereConditions(jpql);
 		jpql.getWhere().rp();
 		return jpql;

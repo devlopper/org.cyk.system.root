@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.NoResultException;
 
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
+import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
@@ -12,9 +13,9 @@ import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.system.root.persistence.impl.QueryStringBuilder;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
+import org.cyk.system.root.persistence.impl.geography.ElectronicMailAddressDaoImpl;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.FilterHelper.Filter;
-import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends AbstractTypedDao<ACTOR> implements AbstractActorDao<ACTOR,SEARCH_CRITERIA>,Serializable {
@@ -73,9 +74,9 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	@Override
 	protected void processReadByFilterQueryBuilderWhereConditions(JavaPersistenceQueryLanguage jpql) {
 		super.processReadByFilterQueryBuilderWhereConditions(jpql);
-		jpql.getWhere().or().lk("t.person."+Person.FIELD_LASTNAMES).or().exists(new StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage(ElectronicMailAddress.class, "email")
-				.where().lk("email."+ElectronicMailAddress.FIELD_ADDRESS).and().addTokens("email.collection = t.person.contactCollection").getParent())
-			;	
+		jpql.setFieldName(AbstractActor.FIELD_PERSON);
+		jpql.getWhere().or().lk(Person.FIELD_LASTNAMES).or().exists(ElectronicMailAddressDaoImpl.createFilter(jpql, Party.FIELD_CONTACT_COLLECTION));
+		jpql.setFieldName(null);
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.impl.QueryStringBuilder;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
 import org.cyk.system.root.persistence.impl.party.AbstractPartyDaoImpl;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 public class PersonDaoImpl extends AbstractPartyDaoImpl<Person> implements PersonDao,Serializable {
 
@@ -42,6 +43,10 @@ public class PersonDaoImpl extends AbstractPartyDaoImpl<Person> implements Perso
 		super.applySearchCriteriaParameters(queryWrapper, searchCriteria);
 		queryWrapper.parameterLike(Person.FIELD_LASTNAMES, ((Person.SearchCriteria)searchCriteria).getLastnames());
 		queryWrapper.parameterLike(ElectronicMailAddress.FIELD_ADDRESS, ((Person.SearchCriteria)searchCriteria).getContactCollection().getElectronicMailAddress().getAddress());
+	}
+	
+	public static JavaPersistenceQueryLanguage createFilter(JavaPersistenceQueryLanguage jpql){
+		return (JavaPersistenceQueryLanguage) jpql.getWhere().lk(Person.FIELD_LASTNAMES).getParent();	
 	}
 	
 }
