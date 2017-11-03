@@ -283,7 +283,7 @@ public interface TypedBusiness<IDENTIFIABLE extends AbstractIdentifiable> extend
 					}
 					/**/
 					
-					public static class Default extends Adapter implements Serializable {
+					public static class Default extends Listener.Adapter implements Serializable {
 						private static final long serialVersionUID = 1L;
 						
 						@Override

@@ -21,7 +21,7 @@ import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
-import org.cyk.utility.common.cdi.BeanAdapter;
+import org.cyk.utility.common.cdi.BeanListener;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -194,7 +194,7 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 			String getAddress(CommonBusinessAction commonBusinessAction,Object object);
 			Collection<UniformResourceLocatorParameter> getParameters(CommonBusinessAction commonBusinessAction,Object object);
 			
-			public static class Adapter extends BeanAdapter implements Listener,Serializable{
+			public static class Adapter extends BeanListener.Adapter implements Listener,Serializable{
 				private static final long serialVersionUID = -1259531075221759261L;
 				
 				@Override
@@ -209,7 +209,7 @@ public class UniformResourceLocator extends AbstractEnumeration implements Seria
 				
 				/**/
 				
-				public static class Default extends Adapter implements Serializable{
+				public static class Default extends Listener.Adapter implements Serializable{
 					private static final long serialVersionUID = -5558988592648009882L;
 					
 					

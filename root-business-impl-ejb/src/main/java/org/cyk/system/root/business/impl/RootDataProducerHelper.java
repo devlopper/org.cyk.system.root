@@ -636,7 +636,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 			
 			/**/
 			
-			public static class Default extends Adapter implements Serializable{
+			public static class Default extends Listener.Adapter implements Serializable{
 				private static final long serialVersionUID = 581887995233346336L;
 		
 			}

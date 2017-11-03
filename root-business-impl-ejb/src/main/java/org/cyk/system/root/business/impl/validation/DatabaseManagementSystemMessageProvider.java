@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.utility.common.cdi.AbstractBean;
-import org.cyk.utility.common.cdi.BeanAdapter;
+import org.cyk.utility.common.cdi.BeanListener;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public interface DatabaseManagementSystemMessageProvider {
 
@@ -22,7 +22,7 @@ public interface DatabaseManagementSystemMessageProvider {
 	
 	/**/
 	
-	public static class Adapter extends BeanAdapter implements DatabaseManagementSystemMessageProvider,Serializable {
+	public static class Adapter extends BeanListener.Adapter implements DatabaseManagementSystemMessageProvider,Serializable {
 
 		public static DatabaseManagementSystemMessageProvider DEFAULT = new MySql();
 		
@@ -35,7 +35,7 @@ public interface DatabaseManagementSystemMessageProvider {
 		
 		/**/
 		
-		public static class MySql extends Adapter implements Serializable {
+		public static class MySql extends DatabaseManagementSystemMessageProvider.Adapter implements Serializable {
 
 			private static final long serialVersionUID = -7138990113181697236L;
 			

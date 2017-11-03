@@ -9,7 +9,7 @@ import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.utility.common.ThreadPoolExecutor;
-import org.cyk.utility.common.cdi.BeanAdapter;
+import org.cyk.utility.common.cdi.BeanListener;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -52,7 +52,7 @@ public interface MessageSendingBusiness<ADDRESS> extends BusinessService {
     	void handleThrowable(Notification notification,Throwable throwable);
     	void sent(Notification notification);
     	
-    	public static class Adapter extends BeanAdapter implements SendListener,Serializable {
+    	public static class Adapter extends BeanListener.Adapter implements SendListener,Serializable {
 			private static final long serialVersionUID = 1L;
     		
 			@Override
@@ -62,7 +62,7 @@ public interface MessageSendingBusiness<ADDRESS> extends BusinessService {
 			public void sent(Notification notification) {}
 			/**/
 			
-			public static class Default extends Adapter implements Serializable {
+			public static class Default extends SendListener.Adapter implements Serializable {
 				private static final long serialVersionUID = 1L;
 				
 			}
@@ -90,7 +90,7 @@ public interface MessageSendingBusiness<ADDRESS> extends BusinessService {
     	
 		Collection<ADDRESS> getReceiverAddresses(Notification notification);
 		
-    	public static class Adapter<ADDRESS> extends BeanAdapter implements Listener<ADDRESS>,Serializable {
+    	public static class Adapter<ADDRESS> extends BeanListener.Adapter implements Listener<ADDRESS>,Serializable {
 			private static final long serialVersionUID = 1L;
     		
 			@Override
@@ -100,7 +100,7 @@ public interface MessageSendingBusiness<ADDRESS> extends BusinessService {
 			
 			/**/
 			
-			public static class Default<ADDRESS> extends Adapter<ADDRESS> implements Serializable {
+			public static class Default<ADDRESS> extends Listener.Adapter<ADDRESS> implements Serializable {
 				private static final long serialVersionUID = 1L;
 				
 			}

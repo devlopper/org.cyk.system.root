@@ -39,7 +39,7 @@ public interface NotificationBusiness extends BusinessService {
 			
 			/**/
 			
-			public static class Default extends Adapter implements Serializable {
+			public static class Default extends Listener.Adapter implements Serializable {
 				private static final long serialVersionUID = 1L;
 				
 				

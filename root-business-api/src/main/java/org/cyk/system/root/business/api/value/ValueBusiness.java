@@ -17,6 +17,7 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonReport;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.utility.common.cdi.BeanAdapter;
+import org.cyk.utility.common.cdi.BeanListener;
 import org.cyk.utility.common.generator.AbstractGeneratable;
 
 import lombok.Getter;
@@ -202,7 +203,7 @@ public interface ValueBusiness extends TypedBusiness<Value> {
 			
 			/**/
 			
-			public static class Adapter extends BeanAdapter implements Listener,Serializable {
+			public static class Adapter extends BeanListener.Adapter implements Listener,Serializable {
 				private static final long serialVersionUID = 1L;
 				
 				@Override
@@ -210,7 +211,7 @@ public interface ValueBusiness extends TypedBusiness<Value> {
 				
 				/**/
 				
-				public static class Default extends Adapter implements Serializable {
+				public static class Default extends Listener.Adapter implements Serializable {
 					private static final long serialVersionUID = 1L;
 					
 					/**/

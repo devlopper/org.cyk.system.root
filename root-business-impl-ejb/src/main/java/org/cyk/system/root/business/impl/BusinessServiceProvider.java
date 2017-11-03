@@ -174,7 +174,7 @@ public class BusinessServiceProvider extends AbstractBean implements Serializabl
 
 			/**/
 			
-			public static class Default<T extends AbstractIdentifiable> extends Adapter<T> implements Serializable {
+			public static class Default<T extends AbstractIdentifiable> extends Identifiable.Adapter<T> implements Serializable {
 				private static final long serialVersionUID = -7111137502842639297L;
 				
 				public Default(Class<T> clazz) {

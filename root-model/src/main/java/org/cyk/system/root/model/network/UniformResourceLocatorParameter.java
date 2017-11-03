@@ -8,15 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.AbstractBuilder;
+import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.cdi.BeanListener;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.utility.common.AbstractBuilder;
-import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.cdi.BeanAdapter;
 
 @Getter @Setter @NoArgsConstructor @Entity
 public class UniformResourceLocatorParameter extends AbstractIdentifiable implements Serializable {
@@ -135,7 +135,7 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 			@Deprecated String getIdentifiableParameter();
 			@Deprecated String getClassParameter();
 			
-			public static class Adapter extends BeanAdapter implements Listener,Serializable{
+			public static class Adapter extends BeanListener.Adapter implements Listener,Serializable{
 				private static final long serialVersionUID = -1259531075221759261L;
 				
 				@Override
@@ -155,7 +155,7 @@ public class UniformResourceLocatorParameter extends AbstractIdentifiable implem
 				
 				/**/
 				
-				public static class Default extends Adapter implements Serializable{
+				public static class Default extends Listener.Adapter implements Serializable{
 					private static final long serialVersionUID = -5558988592648009882L;
 					
 					@Override

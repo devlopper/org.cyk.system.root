@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.ListenerUtils;
-import org.cyk.utility.common.cdi.BeanAdapter;
+import org.cyk.utility.common.cdi.BeanListener;
 
 public interface PersistDataListener {
 
@@ -20,7 +20,7 @@ public interface PersistDataListener {
 	
 	/**/
 	
-	public static class Adapter extends BeanAdapter implements PersistDataListener,Serializable{
+	public static class Adapter extends BeanListener.Adapter implements PersistDataListener,Serializable{
 
 		private static final long serialVersionUID = 9097732902832939276L;
 
@@ -72,7 +72,7 @@ public interface PersistDataListener {
 		
 		/**/
 		
-		public static class Default extends Adapter implements Serializable {
+		public static class Default extends PersistDataListener.Adapter implements Serializable {
 
 			private static final long serialVersionUID = -7147026540295720232L;
 

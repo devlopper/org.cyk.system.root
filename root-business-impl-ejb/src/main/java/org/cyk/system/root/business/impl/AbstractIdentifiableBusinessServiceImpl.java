@@ -40,7 +40,7 @@ import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.accessor.InstanceFieldSetter;
 import org.cyk.utility.common.builder.InstanceCopyBuilder;
-import org.cyk.utility.common.cdi.BeanAdapter;
+import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
@@ -870,7 +870,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		/**/
 		
 		@Getter @Setter
-		public static class Adapter<IDENTIFIABLE extends AbstractIdentifiable> extends BeanAdapter implements Listener<IDENTIFIABLE>,Serializable{
+		public static class Adapter<IDENTIFIABLE extends AbstractIdentifiable> extends AbstractBean implements Listener<IDENTIFIABLE>,Serializable{
 			private static final long serialVersionUID = 8213436661982661753L;
 			
 			private Collection<Class<? extends AbstractIdentifiable>> cascadeToClasses;
@@ -1111,7 +1111,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			
 			/**/
 			
-			public static class Default<IDENTIFIABLE extends AbstractIdentifiable> extends Adapter<IDENTIFIABLE> implements Serializable{
+			public static class Default<IDENTIFIABLE extends AbstractIdentifiable> extends Listener.Adapter<IDENTIFIABLE> implements Serializable{
 
 				private static final long serialVersionUID = 1L;
 

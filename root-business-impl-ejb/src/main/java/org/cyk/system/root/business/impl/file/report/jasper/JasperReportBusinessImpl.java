@@ -266,7 +266,7 @@ public class JasperReportBusinessImpl extends AbstractReportBusinessImpl impleme
 			
 			/**/
 			
-			public static class Default extends Adapter implements Serializable{
+			public static class Default extends Listener.Adapter implements Serializable{
 				private static final long serialVersionUID = 2884910167320359611L;
 				
 			}
