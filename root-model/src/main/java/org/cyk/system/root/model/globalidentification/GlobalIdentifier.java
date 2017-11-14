@@ -31,7 +31,16 @@ import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.search.StringSearchCriteria.LocationType;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
+import org.cyk.utility.common.annotation.user.interfaces.Input;
+import org.cyk.utility.common.annotation.user.interfaces.InputBooleanButton;
+import org.cyk.utility.common.annotation.user.interfaces.InputEditor;
+import org.cyk.utility.common.annotation.user.interfaces.InputFile;
+import org.cyk.utility.common.annotation.user.interfaces.InputNumber;
+import org.cyk.utility.common.annotation.user.interfaces.InputText;
+import org.cyk.utility.common.annotation.user.interfaces.InputTextarea;
+import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.CriteriaHelper;
+import org.cyk.utility.common.helper.FileHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.StringHelper;
@@ -280,6 +289,44 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		public String toString() {
 			return "code = "+code+" , name = "+name+" , orderNumber = "+orderNumber;
 		}
+	}
+	
+	/**/
+	
+	public static class Inputs extends AbstractBean implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
+		@Input @InputText private String code;
+		@Input @InputText private String name;
+		@Input @InputText private String abbreviation;
+		@Input @InputNumber private BigDecimal weight;
+		@Input @InputNumber private Long orderNumber;
+		@Input @InputEditor private String otherDetails;
+		@Input @InputFile private FileHelper.File image;
+		@Input @InputBooleanButton private Boolean defaulted;
+		@Input @InputBooleanButton private Boolean derived;
+		@Input @InputBooleanButton private Boolean usable;
+		@Input @InputTextarea private String description;
+		@Input @InputText private String externalIdentifier;
+		@Input @InputBooleanButton private Boolean required;
+		
+		public static final String FIELD_CODE = "code";
+		public static final String FIELD_NAME = "name";
+		public static final String FIELD_ABBREVIATION = "abbreviation";
+		public static final String FIELD_WEIGHT = "weight";
+		public static final String FIELD_EXISTENCE_PERIOD = "existencePeriod";
+		public static final String FIELD_BIRTH_LOCATION = "birthLocation";
+		public static final String FIELD_DEATH_LOCATION = "deathLocation";
+		public static final String FIELD_ORDER_NUMBER = "orderNumber";
+		public static final String FIELD_OTHER_DETAILS = "otherDetails";
+		public static final String FIELD_IMAGE = "image";
+		public static final String FIELD_DEFAULTED = "defaulted";
+		public static final String FIELD_SUPPORTING_DOCUMENT = "supportingDocument";
+		public static final String FIELD_DERIVED = "derived";
+		public static final String FIELD_USABLE = "usable";
+		public static final String FIELD_DESCRIPTION = "description";
+		public static final String FIELD_EXTERNAL_IDENTIFIER = "externalIdentifier";
+		public static final String FIELD_REQUIRED = "required";
 	}
 	
 	/**/

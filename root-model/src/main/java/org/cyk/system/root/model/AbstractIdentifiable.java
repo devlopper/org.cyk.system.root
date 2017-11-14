@@ -36,6 +36,7 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
@@ -487,6 +488,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/**/
 	
-	
+	public static class Inputs extends AbstractBean implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
+	}
  
 }
