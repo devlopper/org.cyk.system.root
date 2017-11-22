@@ -38,8 +38,8 @@ public class BusinessInterfaceLocator extends ClassLocator implements Serializab
 				return "model";
 			}
 			@Override
-			protected String getModulePrefix() {
-				return "business.api";
+			protected String[] getModulePrefixes() {
+				return new String[]{"business.api"};
 			}
 			@Override
 			protected String[] getModuleSuffixes() {

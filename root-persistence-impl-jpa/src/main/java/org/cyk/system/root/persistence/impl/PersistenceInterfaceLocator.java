@@ -38,8 +38,8 @@ public class PersistenceInterfaceLocator extends ClassLocator implements Seriali
 				return "model";
 			}
 			@Override
-			protected String getModulePrefix() {
-				return "persistence.api";
+			protected String[] getModulePrefixes() {
+				return new String[]{"persistence.api"};
 			}
 			@Override
 			protected String[] getModuleSuffixes() {

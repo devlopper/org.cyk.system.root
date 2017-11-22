@@ -40,8 +40,8 @@ public class FilterClassLocator extends ClassLocator implements Serializable {
 			}
 			
 			@Override
-			protected String getModulePrefix() {
-				return "model";
+			protected String[] getModulePrefixes() {
+				return new String[]{"model"};
 			}
 			
 			@Override

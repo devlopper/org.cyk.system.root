@@ -47,8 +47,8 @@ public class DetailsClassLocator extends ClassLocator implements Serializable {
 			}
 			
 			@Override
-			protected String getModulePrefix() {
-				return "business.impl";
+			protected String[] getModulePrefixes() {
+				return new String[]{"business.impl"};
 			}
 			
 			@Override

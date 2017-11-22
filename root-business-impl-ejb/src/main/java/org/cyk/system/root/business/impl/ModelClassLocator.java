@@ -36,8 +36,8 @@ public class ModelClassLocator extends ClassLocator implements Serializable {
 				return "business.impl";
 			}
 			@Override
-			protected String getModulePrefix() {
-				return "model";
+			protected String[] getModulePrefixes() {
+				return new String[]{"model"};
 			}
 			@Override
 			protected String[] getModuleSuffixes() {
