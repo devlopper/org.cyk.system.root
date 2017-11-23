@@ -112,6 +112,7 @@ import org.cyk.utility.common.generator.AbstractGeneratable;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.ClassHelper.Instanciation.Get;
 import org.cyk.utility.common.helper.EventHelper;
+import org.cyk.utility.common.helper.FileHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.InstanceHelper.Lookup.Source;
 import org.cyk.utility.common.helper.ListenerHelper;
@@ -162,6 +163,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         InstanceHelper.Lookup.Source.Adapter.Default.RESULT_METHOD_CLASS = (Class<ListenerHelper.Executor.ResultMethod<Object, Source<?, ?>>>) ClassHelper.getInstance().getByName(org.cyk.system.root.business.impl.helper.InstanceHelper.Lookup.class);
         InstanceHelper.Pool.Listener.Adapter.Default.CLASSES.add(org.cyk.system.root.business.impl.helper.InstanceHelper.Pool.class);
         ClassHelper.getInstance().map(InstanceHelper.Listener.class, org.cyk.system.root.business.impl.helper.InstanceHelper.Listener.class);
+        
+        FileHelper.Listener.Adapter.Default.FILE_CLASS = File.class;
         
         InstanceHelper.getInstance().setFieldValueGenerator(GlobalIdentifier.class, GlobalIdentifier.FIELD_IDENTIFIER, new InstanceHelper.Listener.FieldValueGenerator
     		.Adapter.Default<String>(String.class){
