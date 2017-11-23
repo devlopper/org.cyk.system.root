@@ -17,6 +17,7 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
+import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.FilterHelper.Filter;
 import org.cyk.utility.common.helper.StringHelper;
 
@@ -25,7 +26,8 @@ public class InstanceHelper implements Serializable {
 
 	public static class Listener extends org.cyk.utility.common.helper.InstanceHelper.Listener.Adapter.Default{
     	private static final long serialVersionUID = 1L;
-		@Override
+		
+    	@Override
     	public Object getIdentifier(Object instance) {
     		if(instance instanceof AbstractIdentifiable)
     			return ((AbstractIdentifiable)instance).getCode();
@@ -82,7 +84,15 @@ public class InstanceHelper implements Serializable {
 				return inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).countByFilter((Filter<AbstractIdentifiable>) filter, dataReadConfiguration);
 			return super.count(aClass,filter, dataReadConfiguration);
 		}
-    }
+    
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> T getByIdentifier(Class<T> aClass, Object identifier) {
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
+				return (T) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find(NumberHelper.getInstance().get(Long.class, identifier));
+			return super.getByIdentifier(aClass, identifier);
+		}
+	}
 	
 	public static class BuilderOneDimensionArray<T extends AbstractIdentifiable> extends org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray.Adapter.Default<T> implements Serializable{
     	private static final long serialVersionUID = 1L;

@@ -161,7 +161,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         InstanceHelper.Lookup.Source.Adapter.Default.RESULT_METHOD_CLASS = (Class<ListenerHelper.Executor.ResultMethod<Object, Source<?, ?>>>) ClassHelper.getInstance().getByName(org.cyk.system.root.business.impl.helper.InstanceHelper.Lookup.class);
         InstanceHelper.Pool.Listener.Adapter.Default.CLASSES.add(org.cyk.system.root.business.impl.helper.InstanceHelper.Pool.class);
-        InstanceHelper.Listener.COLLECTION.add(new org.cyk.system.root.business.impl.helper.InstanceHelper.Listener());
+        ClassHelper.getInstance().map(InstanceHelper.Listener.class, org.cyk.system.root.business.impl.helper.InstanceHelper.Listener.class);
         
         InstanceHelper.getInstance().setFieldValueGenerator(GlobalIdentifier.class, GlobalIdentifier.FIELD_IDENTIFIER, new InstanceHelper.Listener.FieldValueGenerator
     		.Adapter.Default<String>(String.class){
