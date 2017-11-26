@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractCollection;
@@ -13,6 +14,8 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
+import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.Constant.Action;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
@@ -91,6 +94,21 @@ public class InstanceHelper implements Serializable {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return (T) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find(NumberHelper.getInstance().get(Long.class, identifier));
 			return super.getByIdentifier(aClass, identifier);
+		}
+		
+		@Override
+		public Object act(Action action, Object instance) {
+			if(instance instanceof AbstractIdentifiable){
+				AbstractIdentifiable identifiable = (AbstractIdentifiable) instance;
+				if(Constant.Action.CREATE.equals(action))
+					return inject(GenericBusiness.class).create(identifiable);
+				if(Constant.Action.UPDATE.equals(action))
+					return inject(GenericBusiness.class).update(identifiable);
+				if(Constant.Action.DELETE.equals(action))
+					return inject(GenericBusiness.class).delete(identifiable);
+			}
+			
+			return super.act(action, instance);
 		}
 	}
 	
