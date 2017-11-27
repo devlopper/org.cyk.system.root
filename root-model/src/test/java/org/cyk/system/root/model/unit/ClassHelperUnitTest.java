@@ -9,10 +9,10 @@ import javax.persistence.Entity;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
@@ -34,18 +34,17 @@ public class ClassHelperUnitTest extends AbstractUnitTest {
 	@Test
 	public void getReflections(){
 		Reflections reflections = new Reflections(new ConfigurationBuilder()
-	    	.filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("org.cyk.system.root.model.party.person")))
-	        .setUrls(ClasspathHelper.forPackage("org.cyk.system.root.model.party.person"))
+	    	.filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("org.cyk.system.")))
+	        .setUrls(ClasspathHelper.forPackage("org.cyk.system."))
 	        .setScanners(new TypeAnnotationsScanner()));
-		
-		for(Package package_ : Person.class.getPackage().getPackages())
-			System.out.println(package_);
-		
-		System.out.println("********************************************************************");
 		
 	    //Set<Class<? extends AbstractIdentifiable>> modules = reflections.getSubTypesOf(AbstractIdentifiable.class);
 		Set<Class<?>> modules = reflections.getTypesAnnotatedWith(Entity.class);
-	    for(Class<?> clazz : modules)
+		
+		assertEquals(modules.size(), ClassHelper.getInstance().getByAnnotation("org.cyk.system.", Entity.class).size());
+		
+	    System.out.println("ClassHelperUnitTest.getReflections() : "+modules.size());
+		for(Class<?> clazz : ClassHelper.getInstance().filterByPackageName(modules, "org.cyk.system.root.model.party.person", StringHelper.Location.START))
 	    	System.out.println(clazz);
 	}
 	
