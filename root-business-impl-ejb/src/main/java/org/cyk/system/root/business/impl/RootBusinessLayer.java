@@ -118,6 +118,7 @@ import org.cyk.utility.common.helper.InstanceHelper.Lookup.Source;
 import org.cyk.utility.common.helper.ListenerHelper;
 import org.cyk.utility.common.helper.ListenerHelper.Executor.ResultMethod;
 import org.cyk.utility.common.helper.MapHelper;
+import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
@@ -181,7 +182,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         				stringBuilder.append(globalIdentifier.getCode()+Constant.CHARACTER_UNDESCORE);
         			}
     			}
-    			stringBuilder.append(System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE+RandomStringUtils.randomAlphanumeric(10));
+    			stringBuilder.append(System.currentTimeMillis()+Constant.CHARACTER_UNDESCORE+RandomHelper.getInstance().getAlphanumeric(10));
     			return stringBuilder.toString();
 			}				
         });
