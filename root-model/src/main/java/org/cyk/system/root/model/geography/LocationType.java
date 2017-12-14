@@ -22,5 +22,4 @@ public class LocationType extends AbstractEnumeration implements Serializable {
 		super(code, libelle,null, null);
 	}
 	
-	
 }

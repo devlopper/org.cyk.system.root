@@ -26,6 +26,7 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
+import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.party.person.Allergy;
 import org.cyk.system.root.model.party.person.JobFunction;
 import org.cyk.system.root.model.party.person.Medication;
@@ -34,6 +35,7 @@ import org.cyk.system.root.model.party.person.PersonRelationshipType;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
 import org.cyk.utility.common.ClassLocator;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.test.unit.AbstractUnitTest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -41,6 +43,10 @@ import org.mockito.InjectMocks;
 public class ClassLocatorUT extends AbstractUnitTest {
 
 	private static final long serialVersionUID = 3681555921786058917L;
+	
+	{
+		ClassHelper.getInstance().map(FilterHelper.Filter.ClassLocator.class, org.cyk.system.root.business.impl.helper.FilterHelper.ClassLocator.class);
+	}
 	
 	@InjectMocks private BusinessInterfaceLocator businessInterfaceLocator;
 	@InjectMocks private DetailsClassLocator detailsClassLocator;
@@ -65,7 +71,7 @@ public class ClassLocatorUT extends AbstractUnitTest {
 		assertClass(businessInterfaceLocator,PersonRelationshipTypeGroup.class,PersonRelationshipTypeGroupBusiness.class);
 		assertClass(businessInterfaceLocator,PersonRelationshipType.class,PersonRelationshipTypeBusiness.class);
 	}
-	
+
 	@Test
 	public void assertDetails(){
 		assertClass(detailsClassLocator,Locality.class,LocalityBusinessImpl.Details.class);
@@ -94,6 +100,8 @@ public class ClassLocatorUT extends AbstractUnitTest {
 		assertClass(filterClassLocator,PersonRelationshipTypeGroup.class,PersonRelationshipTypeGroup.Filter.class);
 		assertClass(filterClassLocator,PersonRelationshipType.class,PersonRelationshipType.Filter.class);
 		assertClass(filterClassLocator,ElectronicMailAddress.class,ElectronicMailAddress.Filter.class);
+		 
+		assertEquals(LocationType.Filter.class,FilterHelper.Filter.getClassLocator().locate(LocationType.class));
 	}
 	
 	private void assertClass(ClassLocator locator,Class<?> aClass,Class<?> expectedDetails){

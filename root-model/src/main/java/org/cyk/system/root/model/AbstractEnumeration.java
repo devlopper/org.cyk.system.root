@@ -58,4 +58,10 @@ public abstract class AbstractEnumeration  extends AbstractIdentifiable  impleme
 
     /**/
 	
+    public static class Filter<T extends AbstractEnumeration> extends AbstractIdentifiable.Filter<T> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	
+		
+		
+    }
 }
