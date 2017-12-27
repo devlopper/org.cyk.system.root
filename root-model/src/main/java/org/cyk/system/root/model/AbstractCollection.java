@@ -113,5 +113,8 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	private static final String LOG_MESSAGE = "%s(C=%s SEP=%s)";
 	
+	public static final String FIELD_ITEM_CODE_SEPARATOR = "itemCodeSeparator"; 
+	public static final String FIELD_ITEM_AGGREGATION_APPLIED = "itemAggregationApplied";
 	public static final String FIELD_ITEMS = "items";
+	
 }

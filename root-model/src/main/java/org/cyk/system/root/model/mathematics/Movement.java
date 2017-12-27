@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
@@ -29,6 +30,9 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 
 	@ManyToOne @JoinColumn(name=COLUMN_ACTION) private MovementAction action;	
 	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
+	
+	@Transient private BigDecimal previousCumul;
+	private BigDecimal cumul;
 	
 	/**
 	 * The person to whom value goes or from whom value comes
@@ -54,6 +58,8 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON = "senderOrReceiverPerson";
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON_AS_STRING = "senderOrReceiverPersonAsString";
+	public static final String FIELD_CUMUL = "cumul";
+	public static final String FIELD_PREVIOUS_CUMUL = "previousCumul";
 	
 	public static final String COLUMN_ACTION = FIELD_ACTION;
 	public static final String COLUMN_VALUE = FIELD_VALUE;

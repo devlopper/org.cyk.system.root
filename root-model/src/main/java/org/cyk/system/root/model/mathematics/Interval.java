@@ -63,12 +63,16 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	}
 	
 	public IntervalExtremity getLow(){
+		if(low == null)
+			low = new IntervalExtremity();
 		if(low!=null)
 			low.setIsLow(Boolean.TRUE);
 		return low;
 	}
 	
 	public IntervalExtremity getHigh(){
+		if(high == null)
+			high = new IntervalExtremity();
 		if(high!=null)
 			high.setIsLow(Boolean.FALSE);
 		return high;

@@ -304,6 +304,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		//listener.assertEquals(message, expected, actual);	
 	}
 	
+	protected static void assertNull(String message,Object object){
+		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
+			listener.assertNull(message, object);
+	}
+	
 	protected static void assertEquals(String message,Object expected,Object actual){
 		for(TestEnvironmentListener listener : TestEnvironmentListener.COLLECTION)
 			listener.assertEquals(message, expected, actual);
@@ -590,21 +595,41 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     	assertBigDecimalEquals("Value",new BigDecimal(expectedValue), movementCollection.getValue());
     }
 	
-	public void assertMovement(String code,String expectedValue,String expectedCollectionValue,Boolean increment,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
-    	assertMovement(inject(MovementDao.class).read(code), expectedValue,expectedCollectionValue, increment, expectedSupportingDocumentProvider, expectedSupportingDocumentIdentifier);
+	public void assertMovement(String code,String expectedValue,String expectedCumul,String expectedCollectionValue,Boolean increment,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
+    	assertMovement(inject(MovementDao.class).read(code), expectedValue,expectedCumul,expectedCollectionValue, increment, expectedSupportingDocumentProvider, expectedSupportingDocumentIdentifier);
     }
 	
-	public void assertMovement(String code,String expectedValue,String expectedCollectionValue){
-		assertMovement(code, expectedValue, expectedCollectionValue, null, null, null);
+	public void assertMovement(String code,String expectedValue,String expectedCumul,String expectedCollectionValue){
+		assertMovement(code, expectedValue,expectedCumul, expectedCollectionValue, null, null, null);
 	}
 	
-	public void assertMovement(Movement movement,String expectedValue,String expectedCollectionValue,Boolean expectedIncrement,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
-    	assertBigDecimalEquals("Value",new BigDecimal(expectedValue), movement.getValue());
-    	assertEquals("Action",expectedIncrement == null ? null : (Boolean.TRUE.equals(expectedIncrement) ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction()), movement.getAction());
+	public void assertMovement(Movement movement,String expectedValue,String expectedCumul,String expectedCollectionValue,Boolean expectedIncrement,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
+    	assertBigDecimalEquals("Movement value not equal",new BigDecimal(expectedValue), movement.getValue());
+    	assertBigDecimalEquals("Movement cumul not equal",new BigDecimal(expectedCumul), movement.getCumul());
+    	assertEquals("Movement action not equal",expectedIncrement == null ? null : (Boolean.TRUE.equals(expectedIncrement) ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction()), movement.getAction());
     	//assertEquals("Supporting Document Provider",expectedSupportingDocumentProvider, movement.getSupportingDocumentProvider());
     	//assertEquals("Supporting Document Identifier",expectedSupportingDocumentIdentifier, movement.getSupportingDocumentIdentifier());
     	assertMovementCollection(movement.getCollection().getCode(), expectedCollectionValue);
     }
+	
+	 public void assertComputedChanges(Movement movement,String previousCumul,String cumul){
+	    	if(movement.getCollection()==null || movement.getCollection().getValue()==null){
+	    		assertNull("expected movement previous cumul is not null",previousCumul); 
+	    		assertNull("actual movement previous cumul is not null",movement.getPreviousCumul());
+	    		
+	    		assertNull("expected movement cumul is not null",cumul);
+	    		assertNull("actual movement cumul is not null",movement.getCumul());
+	    	}else{
+	    		assertBigDecimalEquals("movement previous cumul is not equal",new BigDecimal(previousCumul), movement.getPreviousCumul());
+	    		
+	    		if(movement.getAction() == null || movement.getValue() == null){
+	    			assertNull("expected movement cumul is not null",cumul);
+	        		assertNull("actual movement cumul is not null",movement.getCumul());
+	    		}else{
+	    			assertBigDecimalEquals("movement cumul is not equal",new BigDecimal(cumul), movement.getCumul());
+	    		}
+	    	}
+	    }
 	
 	private void assertFiniteStateMachine(FiniteStateMachine machine,String expectedStateCode){
 		if(expectedStateCode!=null)

@@ -796,6 +796,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		
 	}
 	
+	@Override
+	public void computeChanges(IDENTIFIABLE identifiable){}
+	
 	/* Filtering */
 	
 	@Override

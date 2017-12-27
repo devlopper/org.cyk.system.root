@@ -11,4 +11,5 @@ public interface MovementBusiness extends AbstractCollectionItemBusiness<Movemen
 	Movement instanciateOne(MovementCollection movementCollection,MovementAction movementAction, String value);
 	Movement instanciateOne(String code,String collectionCode, String value,String actionCode);
 	Movement instanciateOne(String code,String collectionCode, String value);
+	
 }

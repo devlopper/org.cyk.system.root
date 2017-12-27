@@ -24,8 +24,9 @@ import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
-import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.NumberHelper;
 
 public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Movement, MovementDao,MovementCollection> implements MovementBusiness,Serializable {
 
@@ -54,7 +55,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	public Movement instanciateOne(String collectionCode, String value,String supportingDocumentCode,String supportingDocumentPhysicalCreator,String supportingDocumentContentWriter, String actionCode) {
 		MovementCollection movementCollection = inject(MovementCollectionDao.class).read(collectionCode);
 		Movement movement = instanciateOne(movementCollection);
-		movement.setValue(commonUtils.getBigDecimal(value));
+		movement.setValue(NumberHelper.getInstance().get(BigDecimal.class, value));
 		/*if(StringUtils.isNotBlank(supportingDocumentCode)){
 			File supportingDocument = inject(FileBusiness.class).instanciateOne();
 			supportingDocument.setCode(supportingDocumentCode);
@@ -91,16 +92,18 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		updateCollection(movement,Crud.CREATE);
 		if(movement.getBirthDate()==null)
 			movement.setBirthDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
+		
+		movement.setCumul(movement.getCollection().getValue());
 	}
 		
 	private void updateCollection(Movement movement,Crud crud){
 		if(movement.getCollection()==null)
 			return;
-		LogMessage.Builder logMessageBuilder = new LogMessage.Builder();
+		LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
 		BigDecimal oldValue= commonUtils.getValueIfNotNullElseDefault(movement.getCollection().getValue(),BigDecimal.ZERO),newValue=null;
-		logMessageBuilder.setAction(crud.name());
-		logMessageBuilder.setSubject("movement");
-		logMessageBuilder.addParameters("collection.code",movement.getCollection().getCode(),"collection.value",oldValue,
+		logMessageBuilder.addManyParameters(crud.name(),"movement");
+		
+		logMessageBuilder.addNamedParameters("collection.code",movement.getCollection().getCode(),"collection.value",oldValue,
 				"movement.value",movement.getValue(),"action",movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName());
 		if(Crud.isCreateOrUpdate(crud)){
 			if(Crud.CREATE.equals(crud)){
@@ -109,7 +112,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				Movement oldMovement = dao.read(movement.getIdentifier());
 				BigDecimal difference = movement.getValue().subtract(oldMovement.getValue());
 				newValue = oldValue.add(difference);
-				logMessageBuilder.addParameters("movement.oldValue",oldMovement.getValue(),"difference",difference);
+				logMessageBuilder.addNamedParameters("movement.oldValue",oldMovement.getValue(),"difference",difference);
 			}
 			exceptionUtils().comparisonBetween(newValue,movement.getCollection().getInterval(), movement.getCollection().getName());
 			movement.getCollection().setValue(newValue);
@@ -121,7 +124,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			return;
 		if(newValue!=null)
 			movementCollectionDao.update(movement.getCollection());
-		logMessageBuilder.addParameters("collection.newValue",newValue);
+		logMessageBuilder.addNamedParameters("collection.newValue",newValue);
 		logTrace(logMessageBuilder);
 	}
 	
@@ -129,6 +132,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	protected void beforeUpdate(Movement movement) {
 		super.beforeUpdate(movement);
 		updateCollection(movement,Crud.UPDATE);
+		movement.setCumul(movement.getCollection().getValue());//TODO we need to update all the successors
 	}
 	
 	@Override
@@ -145,7 +149,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Movement instanciateOne(MovementCollection movementCollection,MovementAction movementAction,String value) {
 		Movement movement = instanciateOne(movementCollection);
-		movement.setValue(commonUtils.getBigDecimal(value));
+		movement.setValue(NumberHelper.getInstance().get(BigDecimal.class, value));
 		movement.setAction(movementAction);
 		//movement.setAction(bigDecimal==null || bigDecimal.signum() == 0 ? null : bigDecimal.signum() == 1 ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction());
 		return movement;
@@ -155,7 +159,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	public Movement instanciateOne(String code,String collectionCode, String value,String actionCode) {
 		Movement movement = instanciateOne(code,code);
 		movement.setCollection(read(MovementCollection.class, collectionCode));
-		movement.setValue(commonUtils.getBigDecimal(value));
+		movement.setValue(NumberHelper.getInstance().get(BigDecimal.class, value));
 		movement.setAction(StringUtils.isBlank(actionCode) ? null : read(MovementAction.class, actionCode));
 		return movement;
 	}
@@ -164,7 +168,25 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	public Movement instanciateOne(String code,String collectionCode, String value) {
 		return instanciateOne(code, collectionCode, value, null);
 	}
+	
+	@Override
+	public void computeChanges(Movement movement) {
+		super.computeChanges(movement);
+		if(movement.getCollection()==null)
+			movement.setPreviousCumul(null);
+		else
+			movement.setPreviousCumul(movement.getCollection().getValue());
 		
+		if(movement.getPreviousCumul()==null || movement.getAction()==null || movement.getValue()==null)
+			movement.setCumul(null);
+		else{
+			BigDecimal value =  movement.getValue();
+			if(movement.getAction().equals(movement.getCollection().getDecrementAction()))
+				value = value.negate(); 
+			movement.setCumul(movement.getPreviousCumul().add(value));
+		}
+	}
+	
 	/**/
 	
 	public static interface Listener extends org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl.Listener<Movement>{
