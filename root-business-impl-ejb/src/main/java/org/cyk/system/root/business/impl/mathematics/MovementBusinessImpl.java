@@ -25,6 +25,8 @@ import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 
@@ -69,42 +71,81 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	protected void beforeCreate(Movement movement) {
-		super.beforeCreate(movement);
-		
-		//exceptionUtils().exception(BigDecimal.ZERO.equals(movement.getValue()), "exception.value.mustnotbezero");
-				/*if(movement.getCollection().getDocumentIdentifierCountInterval()!=null){
-					exceptionUtils().comparisonBetween(new BigDecimal(dao.countByGlobalIdentifierSupportingDocumentCode(movement.getSupportingDocument().getCode()))
-							, movement.getCollection().getDocumentIdentifierCountInterval(), movement.getCollection().getDocumentIdentifierCountInterval().getName());
-				}*/
-				//exceptionUtils().exception(movement.getSupportingDocumentIdentifier()!=null && !dao.readBySupportingDocumentIdentifier(movement.getSupportingDocumentIdentifier()).isEmpty(), "exception.supportingDocumentIdentifierAlreadyUsed");
-		
-		MovementAction action = movement.getAction();	
-		if(action!=null){
-			exceptionUtils().comparisonBetween(movement.getValue(), action.getInterval(), action.getName());
-			exceptionUtils().exception(movement.getCollection().getIncrementAction().equals(action) && movement.getValue().signum()==-1, "exception.value.mustbepositive");
-			exceptionUtils().exception(movement.getCollection().getDecrementAction().equals(action) && movement.getValue().signum()==1, "exception.value.mustbenegative");
-			//exceptionUtils().comparison(action.getInterval().getLow().getValue()!=null && action.getInterval().getLow().getValue().compareTo(movement.getValue().abs())>0
-			//		, action.getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
-			exceptionUtils().comparison( !inject(IntervalBusiness.class).contains(action.getInterval(), movement.getValue(), 2)
-					, action.getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
-		}
-		updateCollection(movement,Crud.CREATE);
-		if(movement.getBirthDate()==null)
-			movement.setBirthDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
-		
-		movement.setCumul(movement.getCollection().getValue());
+	protected void setAutoSettedProperties(Movement movement, Crud crud) {
+		super.setAutoSettedProperties(movement, crud);
+		computeChanges(movement);
 	}
+	
+	@Override
+	protected void beforeCrud(Movement movement, Crud crud) {
+		super.beforeCrud(movement, crud);
+		if(Crud.isCreateOrUpdate(crud)){
+			MovementAction action = movement.getAction();	
+			if(action!=null){
+				exceptionUtils().comparisonBetween(movement.getValue(), action.getInterval(), action.getName());
+				exceptionUtils().comparison( !inject(IntervalBusiness.class).contains(action.getInterval(), movement.getValue(), 2)
+						, action.getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
+			}
+			
+			if(movement.getBirthDate()==null)
+				movement.setBirthDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
+			
+			updateCollection(movement,crud);
+			
+			if(Crud.CREATE.equals(crud)){
+				
+			}else{
+				updateCumulWhereExistencePeriodFromDateIsGreaterThan(movement,crud);
+			}
+		}else {
+			if(Crud.DELETE.equals(crud)){
+				updateCollection(movement,crud);
+				updateCumulWhereExistencePeriodFromDateIsGreaterThan(movement,crud);
+			}
+		}
+	}
+	
+	@Override
+	protected void afterCrud(Movement movement, Crud crud) {
+		super.afterCrud(movement, crud);
+		if(Crud.CREATE.equals(crud)){
+			updateCumulWhereExistencePeriodFromDateIsGreaterThan(movement,crud);
+		}
 		
+	}
+	
+	private void updateCumulWhereExistencePeriodFromDateIsGreaterThan(Movement movement,Crud crud){
+		Collection<Movement> movements = dao.readWhereExistencePeriodFromDateIsGreaterThan(movement);
+		if(CollectionHelper.getInstance().isNotEmpty(movements)){
+			LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
+			logMessageBuilder.addManyParameters("update successors");
+			
+			BigDecimal increment = null;
+			if(Crud.CREATE.equals(crud))
+				increment = movement.getValue();
+			else if(Crud.UPDATE.equals(crud))
+				increment = movement.getValue().subtract(dao.read(movement.getIdentifier()).getValue());
+			else if(Crud.DELETE.equals(crud))
+				increment = movement.getValue().negate();
+			logMessageBuilder.addNamedParameters("#",movements.size(),"cum inc",increment);
+			
+			for(Movement index : movements){
+				index.setCumul(index.getCumul().add(increment));
+				dao.update(index);
+			}
+			logTrace(logMessageBuilder);	
+		}
+	}
+			
 	private void updateCollection(Movement movement,Crud crud){
+		LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
 		if(movement.getCollection()==null)
 			return;
-		LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
-		BigDecimal oldValue= commonUtils.getValueIfNotNullElseDefault(movement.getCollection().getValue(),BigDecimal.ZERO),newValue=null;
-		logMessageBuilder.addManyParameters(crud.name(),"movement");
+		BigDecimal oldValue= InstanceHelper.getInstance().getIfNotNullElseDefault(movement.getCollection().getValue(),BigDecimal.ZERO),newValue=null;
+		logMessageBuilder.addManyParameters("update col");
 		
-		logMessageBuilder.addNamedParameters("collection.code",movement.getCollection().getCode(),"collection.value",oldValue,
-				"movement.value",movement.getValue(),"action",movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName());
+		logMessageBuilder.addNamedParameters("cod",movement.getCollection().getCode(),"val",oldValue,
+				"mov val",movement.getValue(),"mov act",movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName());
 		if(Crud.isCreateOrUpdate(crud)){
 			if(Crud.CREATE.equals(crud)){
 				newValue = oldValue.add(movement.getValue());
@@ -112,7 +153,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				Movement oldMovement = dao.read(movement.getIdentifier());
 				BigDecimal difference = movement.getValue().subtract(oldMovement.getValue());
 				newValue = oldValue.add(difference);
-				logMessageBuilder.addNamedParameters("movement.oldValue",oldMovement.getValue(),"difference",difference);
+				logMessageBuilder.addNamedParameters("mov old val",oldMovement.getValue(),"diff",difference);
 			}
 			exceptionUtils().comparisonBetween(newValue,movement.getCollection().getInterval(), movement.getCollection().getName());
 			movement.getCollection().setValue(newValue);
@@ -124,23 +165,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			return;
 		if(newValue!=null)
 			movementCollectionDao.update(movement.getCollection());
-		logMessageBuilder.addNamedParameters("collection.newValue",newValue);
+		logMessageBuilder.addNamedParameters("col new val",newValue);
 		logTrace(logMessageBuilder);
 	}
-	
-	@Override
-	protected void beforeUpdate(Movement movement) {
-		super.beforeUpdate(movement);
-		updateCollection(movement,Crud.UPDATE);
-		movement.setCumul(movement.getCollection().getValue());//TODO we need to update all the successors
-	}
-	
-	@Override
-	protected void beforeDelete(Movement movement) {
-		super.beforeDelete(movement);
-		updateCollection(movement,Crud.DELETE);
-	}
-		
+			
 	@Override
 	protected void deleteFileIdentifiableGlobalIdentifier(Movement identifiable) {
 		
@@ -156,11 +184,11 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	public Movement instanciateOne(String code,String collectionCode, String value,String actionCode) {
+	public Movement instanciateOne(String code,String collectionCode, String value,Boolean increment) {
 		Movement movement = instanciateOne(code,code);
 		movement.setCollection(read(MovementCollection.class, collectionCode));
 		movement.setValue(NumberHelper.getInstance().get(BigDecimal.class, value));
-		movement.setAction(StringUtils.isBlank(actionCode) ? null : read(MovementAction.class, actionCode));
+		movement.setAction(increment == null ? null : increment ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction());
 		return movement;
 	}
 	
@@ -170,21 +198,38 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	public void computeChanges(Movement movement) {
-		super.computeChanges(movement);
+	public void computeChanges(Movement movement,LoggingHelper.Message.Builder logMessageBuilder) {		
+		super.computeChanges(movement,logMessageBuilder);
+		logMessageBuilder.addNamedParameters("col",movement.getCollection(),"act",movement.getAction(),"prev cum",movement.getPreviousCumul(),"val abs"
+				,movement.getValueAbsolute(),"use abs",movement.getValueSettableFromAbsolute(),"cum",movement.getCumul());
+		//previous cumul
 		if(movement.getCollection()==null)
 			movement.setPreviousCumul(null);
-		else
-			movement.setPreviousCumul(movement.getCollection().getValue());
-		
-		if(movement.getPreviousCumul()==null || movement.getAction()==null || movement.getValue()==null)
+		else{
+			//previous cumul  = sum of previous value
+			if(movement.getBirthDate() == null)
+				movement.setPreviousCumul(movement.getCollection().getValue());
+			else 
+				movement.setPreviousCumul(dao.sumValueWhereExistencePeriodFromDateIsLessThan(movement));
+		}
+		//value
+		if(Boolean.TRUE.equals(movement.getValueSettableFromAbsolute())){
+			if(movement.getValueAbsolute()==null || movement.getAction()==null){
+				movement.setValue(null);
+			}else{
+				if(movement.getAction().equals(movement.getCollection().getIncrementAction()))
+					movement.setValue(movement.getValueAbsolute());
+				else
+					movement.setValue(movement.getValueAbsolute().negate());
+			}
+		}
+		//cumul
+		if(movement.getPreviousCumul()==null || movement.getValue()==null)
 			movement.setCumul(null);
 		else{
-			BigDecimal value =  movement.getValue();
-			if(movement.getAction().equals(movement.getCollection().getDecrementAction()))
-				value = value.negate(); 
-			movement.setCumul(movement.getPreviousCumul().add(value));
+			movement.setCumul(movement.getPreviousCumul().add(movement.getValue()));
 		}
+		logMessageBuilder.addNamedParameters("prev cum",movement.getPreviousCumul(),"val",movement.getValue(),"cum",movement.getCumul());
 	}
 	
 	/**/

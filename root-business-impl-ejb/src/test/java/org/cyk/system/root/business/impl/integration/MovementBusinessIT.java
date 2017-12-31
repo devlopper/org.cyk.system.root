@@ -10,6 +10,7 @@ import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.helper.RandomHelper;
+import org.cyk.utility.common.helper.TimeHelper;
 import org.junit.Test;
 
 public class MovementBusinessIT extends AbstractBusinessIT {
@@ -58,38 +59,259 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     }
     
     @Test
+    public void useValueAbsolute(){
+    	TestCase testCase = instanciateTestCase();
+    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5), "IN", "OUT");
+    	movementCollection.getInterval().getLow().setValue(null);
+    	testCase.create(movementCollection);
+    	
+    	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), null,Boolean.TRUE);
+    	movement.setValueAbsolute(new BigDecimal("15"));
+    	movement.setValueSettableFromAbsolute(Boolean.TRUE);
+    	testCase.create(movement);
+    	String code001 = movement.getCode();
+    	testCase.read(Movement.class, code001);
+    	rootBusinessTestHelper.assertMovement(code001, "15","15", "15",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), null,Boolean.TRUE);
+    	movement.setValueAbsolute(new BigDecimal("10"));
+    	movement.setValueSettableFromAbsolute(Boolean.TRUE);
+    	movement = testCase.create(movement);
+    	String code002 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code002, "10","25", "25",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), null,Boolean.FALSE);
+    	movement.setValueAbsolute(new BigDecimal("7"));
+    	movement.setValueSettableFromAbsolute(Boolean.TRUE);
+    	movement = testCase.create(movement);
+    	String code003 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code003, "-7","18", "18",Boolean.FALSE);
+    	
+    	//testCase.clean();
+    }
+    
+    @Test
+    public void useNullAction(){
+    	TestCase testCase = instanciateTestCase();
+    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5), "IN", "OUT");
+    	movementCollection.getInterval().getLow().setValue(null);
+    	testCase.create(movementCollection);
+    	
+    	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",null);
+    	testCase.create(movement);
+    	String code001 = movement.getCode();
+    	testCase.read(Movement.class, code001);
+    	rootBusinessTestHelper.assertMovement(code001, "15","15", "15",null);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "10",null);
+    	movement = testCase.create(movement);
+    	String code002 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code002, "10","25", "25",null);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "-7",null);
+    	movement = testCase.create(movement);
+    	String code003 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code003, "-7","18", "18",null);
+    	
+    	//testCase.clean();
+    }
+    
+    @Test
+    public void addSequenceAscending(){
+    	TestCase testCase = instanciateTestCase();
+    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5), "IN", "OUT");
+    	movementCollection.getInterval().getLow().setValue(null);
+    	testCase.create(movementCollection);
+    	
+    	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",Boolean.TRUE);
+    	testCase.create(movement);
+    	String code001 = movement.getCode();
+    	testCase.read(Movement.class, code001);
+    	rootBusinessTestHelper.assertMovement(code001, "15","15", "15",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "10",Boolean.TRUE);
+    	movement = testCase.create(movement);
+    	String code002 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code002, "10","25", "25",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "7",Boolean.TRUE);
+    	movement = testCase.create(movement);
+    	String code003 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code003, "7","32", "32",Boolean.TRUE);
+    	
+    	//testCase.clean();
+    }
+    
+    @Test
+    public void addSequenceDescending(){
+    	TestCase testCase = instanciateTestCase();
+    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5), "IN", "OUT");
+    	movementCollection.getInterval().getLow().setValue(null);
+    	testCase.create(movementCollection);
+    	
+    	Movement movement;
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",Boolean.TRUE);
+    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 30));
+    	testCase.create(movement);
+    	String code001 = movement.getCode();
+    	testCase.read(Movement.class, code001);
+    	rootBusinessTestHelper.assertMovement(code001, "15","15", "15",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "10",Boolean.TRUE);
+    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 29));
+    	movement = testCase.create(movement);
+    	String code002 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code002, "10","10", "25",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "15","25", "25",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "7",Boolean.TRUE);
+    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 28));
+    	movement = testCase.create(movement);
+    	String code003 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code003, "7","7", "32",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","17", "32",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "15","32", "32",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "-7",Boolean.FALSE);
+    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 27));
+    	movement = testCase.create(movement);
+    	String code004 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code004, "-7","-7", "25",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","0", "25",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","10", "25",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "15","25", "25",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "20",Boolean.TRUE);
+    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 26));
+    	movement = testCase.create(movement);
+    	String code005 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code005, "20","20", "45",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code004, "-7","13", "45",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","20", "45",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","30", "45",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "15","45", "45",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "8",Boolean.TRUE);
+    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 24));
+    	movement = testCase.create(movement);
+    	String code007 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code007, "8","8", "53",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code005, "20","28", "53",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code004, "-7","21", "53",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","28", "53",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","38", "53",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "15","53", "53",Boolean.TRUE);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "-3",Boolean.FALSE);
+    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 25));
+    	movement = testCase.create(movement);
+    	String code006 = movement.getCode();
+    	rootBusinessTestHelper.assertMovement(code007, "8","8", "50",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code006, "-3","5", "50",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code005, "20","25", "50",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code004, "-7","18", "50",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","25", "50",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","35", "50",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "15","50", "50",Boolean.TRUE);
+    	
+    	movement = testCase.read(Movement.class, code001);
+    	movement.setValue(new BigDecimal("16"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code007, "8","8", "51",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code006, "-3","5", "51",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code005, "20","25", "51",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code004, "-7","18", "51",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","25", "51",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","35", "51",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "16","51", "51",Boolean.TRUE);
+    	
+    	movement = testCase.read(Movement.class, code007);
+    	movement.setValue(new BigDecimal("17"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code007, "17","17", "60",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code006, "-3","14", "60",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code005, "20","34", "60",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code004, "-7","27", "60",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","34", "60",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","44", "60",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "16","60", "60",Boolean.TRUE);
+    	
+    	movement = testCase.read(Movement.class, code004);
+    	movement.setValue(new BigDecimal("-13"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code007, "17","17", "54",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code006, "-3","14", "54",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code005, "20","34", "54",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code004, "-13","21", "54",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","28", "54",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","38", "54",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "16","54", "54",Boolean.TRUE);
+    	
+    	movement = testCase.read(Movement.class, code007);
+    	testCase.delete(movement);
+    	rootBusinessTestHelper.assertMovement(code006, "-3","-3", "37",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code005, "20","17", "37",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code004, "-13","4", "37",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","11", "37",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","21", "37",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code001, "16","37", "37",Boolean.TRUE);
+    	
+    	movement = testCase.read(Movement.class, code001);
+    	testCase.delete(movement);
+    	rootBusinessTestHelper.assertMovement(code006, "-3","-3", "21",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code005, "20","17", "21",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code004, "-13","4", "21",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","11", "21",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","21", "21",Boolean.TRUE);
+    	
+    	movement = testCase.read(Movement.class, code004);
+    	testCase.delete(movement);
+    	rootBusinessTestHelper.assertMovement(code006, "-3","-3", "34",Boolean.FALSE);
+    	rootBusinessTestHelper.assertMovement(code005, "20","17", "34",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code003, "7","24", "34",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code002, "10","34", "34",Boolean.TRUE);
+    	
+    	//testCase.clean();
+    }
+    
+    @Test
     public void findPrevious(){
     	TestCase testCase = instanciateTestCase();
-    	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "15",null);
+    	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "15",Boolean.TRUE);
     	movement.setBirthDate(date(2000, 5, 2));
     	movement = testCase.create(movement);
     	String code001 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code001, "15","15", "15");
+    	rootBusinessTestHelper.assertMovement(code001, "15","15", "15",Boolean.TRUE);
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class,code001);
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 0);
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",null);
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
+    	movement.setBirthDate(date(2000, 5, 3));
+    	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,movement, 1);
+    	
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
     	movement.setBirthDate(date(2000, 5, 1));
     	movement = testCase.create(movement);
     	String code002 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code002, "10","25","25");
+    	rootBusinessTestHelper.assertMovement(code002, "10","10","25",Boolean.TRUE);
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class, code002 , code001);
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 1);
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",null);
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
     	movement.setBirthDate(date(2000, 5, 3));
     	movement = testCase.create(movement);
     	String code003 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code003, "10","35", "35");
+    	rootBusinessTestHelper.assertMovement(code003, "10","35", "35",Boolean.TRUE);
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class, code002 ,code001, code003);
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 1);
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code003, 2);
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUnlimitedIdentifier, "10",null);
+    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUnlimitedIdentifier, "10",Boolean.TRUE);
     	movement.setBirthDate(date(2000, 4, 1));
     	movement = testCase.create(movement);
     	String code001A = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code001A, "10","10", "10");
+    	rootBusinessTestHelper.assertMovement(code001A, "10","10", "10",Boolean.TRUE);
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class, code001A);
     	
     	testCase.assertOrderBasedOnExistencePeriodFromDate(Movement.class, code002 ,code001, code003);
@@ -102,107 +324,124 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     @Test
     public void doMovementsAndUpdates(){
     	TestCase testCase = instanciateTestCase();
-    	Movement movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "15",null));
+    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5), "IN", "OUT");
+    	movementCollection.getInterval().getLow().setValue(null);
+    	testCase.create(movementCollection);
+    	
+    	Movement movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",Boolean.TRUE));
     	String code001 = movement.getCode();
     	testCase.read(Movement.class, code001);
-    	rootBusinessTestHelper.assertMovement(code001, "15","15", "15");
+    	rootBusinessTestHelper.assertMovement(code001, "15","15", "15",Boolean.TRUE);
     	
-    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",null));
+    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "10",Boolean.TRUE));
     	String code002 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code002, "10","25", "25");
+    	rootBusinessTestHelper.assertMovement(code002, "10","25", "25",Boolean.TRUE);
     	
     	movement = inject(MovementDao.class).read(code002);
     	movement.setValue(new BigDecimal("6"));
     	testCase.update(movement);
-    	rootBusinessTestHelper.assertMovement(code002, "6","21", "21");
+    	rootBusinessTestHelper.assertMovement(code002, "6","21", "21",Boolean.TRUE);
     	
-    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "1",null));
+  
+    	movement = inject(MovementDao.class).read(code001);
+    	movement.setValue(new BigDecimal("10"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code001, "10","10", "16",Boolean.TRUE);
+    	
+    	movement = inject(MovementDao.class).read(code001);
+    	movement.setValue(new BigDecimal("15"));
+    	testCase.update(movement);
+    	rootBusinessTestHelper.assertMovement(code001, "15","15", "21",Boolean.TRUE);
+    	
+    	
+    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "1",Boolean.TRUE));
     	String code003 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code003, "1","22", "22");
+    	rootBusinessTestHelper.assertMovement(code003, "1","22", "22",Boolean.TRUE);
     	
     	movement = inject(MovementDao.class).read(code003);
     	movement.setValue(new BigDecimal("10"));
     	testCase.update(movement);
-    	rootBusinessTestHelper.assertMovement(code003, "10","31", "31");
+    	rootBusinessTestHelper.assertMovement(code003, "10","31", "31",Boolean.TRUE);
     	
     	movement = inject(MovementDao.class).read(code003);
     	movement.setValue(new BigDecimal("15"));
     	testCase.update(movement);
-    	rootBusinessTestHelper.assertMovement(code003, "15","36", "36");
+    	rootBusinessTestHelper.assertMovement(code003, "15","36", "36",Boolean.TRUE);
     	
-    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "4",null));
+    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "4",Boolean.TRUE));
     	String code004 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code004, "4","40", "40");
+    	rootBusinessTestHelper.assertMovement(code004, "4","40", "40",Boolean.TRUE);
     	
     	movement = inject(MovementDao.class).read(code004);
     	movement.setValue(new BigDecimal("-36"));
     	testCase.update(movement);
-    	rootBusinessTestHelper.assertMovement(code004, "-36","0", "0");
+    	rootBusinessTestHelper.assertMovement(code004, "-36","0", "0",Boolean.TRUE);
     	
     	movement = inject(MovementDao.class).read(code004);
     	movement.setValue(new BigDecimal("1"));
     	testCase.update(movement);
-    	rootBusinessTestHelper.assertMovement(code004, "1", "37","37");
+    	rootBusinessTestHelper.assertMovement(code004, "1", "37","37",Boolean.TRUE);
     	
     	movement = inject(MovementDao.class).read(code004);
     	testCase.delete(movement);
-    	rootBusinessTestHelper.assertMovementCollection(movementUpdatesUnlimitedIdentifier, "36");
+    	rootBusinessTestHelper.assertMovementCollection(movementCollection.getCode(), "36");
     	
-    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "-6",null));
+    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "-6",Boolean.TRUE));
     	String code005 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code005, "-6","30", "30");
+    	rootBusinessTestHelper.assertMovement(code005, "-6","30", "30",Boolean.TRUE);
     	
-    	testCase.clean();
+    	//testCase.clean();
     }
     
-   @Test
-   public void computeChanges(){
-	   MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementLimitedIdentifier_Low_100_8_High_2_10_Total_0_150);
-    	Movement movement = new Movement();
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, null, null);
-    	
-    	movement.setCollection(movementCollection);
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, "7", null);
-    	
-    	movement.setCollection(null);
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, null, null);
-    	
-    	movement.setCollection(movementCollection);
-    	movement.setAction(movementCollection.getIncrementAction());
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, "7", null);
-    	
-    	movement.setValue(new BigDecimal("5"));
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, "7", "12");
-    	
-    	movement.setValue(null);
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, "7", null);
-    	
-    	movement.setValue(new BigDecimal("5"));
-    	movement.setAction(null);
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, "7", null);
-    	
-    	movement.setCollection(null);
-    	movement.setAction(movementCollection.getIncrementAction());
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, null, null);
-    	
-    	movement.setCollection(movementCollection);
-    	movement.setValue(new BigDecimal("10"));
-    	movement.setAction(movementCollection.getIncrementAction());
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, "7", "17");
-    	
-    	movement.setAction(movementCollection.getDecrementAction());
-    	inject(MovementBusiness.class).computeChanges(movement);
-    	rootBusinessTestHelper.assertComputedChanges(movement, "7", "-3");
-   }
+	@Test
+	public void computeChanges() {
+		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementLimitedIdentifier_Low_100_8_High_2_10_Total_0_150);
+		Movement movement = new Movement();
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, null, null);
+
+		movement.setCollection(movementCollection);
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, "7", null);
+
+		movement.setCollection(null);
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, null, null);
+
+		movement.setCollection(movementCollection);
+		movement.setAction(movementCollection.getIncrementAction());
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, "7", null);
+
+		movement.setValue(new BigDecimal("5"));
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, "7", "12");
+
+		movement.setValue(null);
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, "7", null);
+
+		movement.setValue(new BigDecimal("5"));
+		movement.setAction(null);
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, "7", "12");
+
+		movement.setCollection(null);
+		movement.setAction(movementCollection.getIncrementAction());
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, null, null);
+
+		movement.setCollection(movementCollection);
+		movement.setValue(new BigDecimal("10"));
+		movement.setAction(movementCollection.getIncrementAction());
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, "7", "17");
+
+		movement.setValue(new BigDecimal("-10"));
+		movement.setAction(movementCollection.getDecrementAction());
+		inject(MovementBusiness.class).computeChanges(movement);
+		rootBusinessTestHelper.assertComputedChanges(movement, "7", "-3");
+	}
     
     //@Test
     public void doMovementsOnly(){

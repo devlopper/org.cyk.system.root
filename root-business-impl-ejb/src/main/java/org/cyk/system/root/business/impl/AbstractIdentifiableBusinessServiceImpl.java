@@ -49,6 +49,7 @@ import org.cyk.utility.common.file.ExcelSheetReader;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 
 import lombok.Getter;
@@ -797,7 +798,16 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	@Override
-	public void computeChanges(IDENTIFIABLE identifiable){}
+	public void computeChanges(IDENTIFIABLE identifiable){
+		LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
+		logMessageBuilder.addManyParameters("changes computed");
+		computeChanges(identifiable, logMessageBuilder);
+		logTrace(logMessageBuilder);
+	}
+	
+	protected void computeChanges(IDENTIFIABLE identifiable,LoggingHelper.Message.Builder logMessageBuilder){
+		
+	}
 	
 	/* Filtering */
 	

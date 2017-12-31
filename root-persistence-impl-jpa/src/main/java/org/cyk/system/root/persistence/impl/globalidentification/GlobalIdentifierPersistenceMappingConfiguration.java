@@ -1,6 +1,7 @@
 package org.cyk.system.root.persistence.impl.globalidentification;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,14 +9,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.Temporal;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.MethodHelper;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter
 public class GlobalIdentifierPersistenceMappingConfiguration implements Serializable {
@@ -38,14 +44,23 @@ public class GlobalIdentifierPersistenceMappingConfiguration implements Serializ
 		return this;
 	}
 	
+	public Property instanciateProperty(String name){
+		Property property = new Property();
+		property.setName(name);
+		addProperties(property);
+		return property;
+	}
+	
 	public Property getPropertyByName(String name,Boolean createIfNull){
-		for(Property property : properties)
-			if(property.getName().equals(name))
-				return property;
+		if(CollectionHelper.getInstance().isNotEmpty(properties))
+			for(Property property : properties)
+				if(property.getName().equals(name))
+					return property;
 		Property property = null;
 		if(Boolean.TRUE.equals(createIfNull)){
 			property = new Property();
-			properties.add(property);
+			property.setName(name);
+			addProperties(property);
 		}
 		return property;
 	}
@@ -72,19 +87,11 @@ public class GlobalIdentifierPersistenceMappingConfiguration implements Serializ
 		MAP.put(aClass, configuration);
 	}
 	
-	public static void setColumn(Class<?> aClass,String fieldName,Column column){
-		get(aClass, Boolean.TRUE).getPropertyByName(fieldName, Boolean.TRUE).setColumn(column);
-	}
-	
-	public static Column getColumn(Class<?> aClass,String fieldName){
-		return get(aClass, Boolean.TRUE).getPropertyByName(fieldName, Boolean.TRUE).getColumn();
-	}
-	
 	public static GlobalIdentifierPersistenceMappingConfiguration get(Class<?> aClass,Boolean createIfNull){
 		GlobalIdentifierPersistenceMappingConfiguration configuration = MAP.get(aClass);
 		if(Boolean.TRUE.equals(createIfNull) && configuration == null){
 			configuration = new GlobalIdentifierPersistenceMappingConfiguration();
-			MAP.put(aClass, configuration);
+			register(aClass, configuration);
 		}
 		return configuration;
 	}
@@ -95,13 +102,36 @@ public class GlobalIdentifierPersistenceMappingConfiguration implements Serializ
 	}
 	
 	/**/
-	@Getter @Setter @EqualsAndHashCode(of="name") @NoArgsConstructor
+	
+	public static <T extends Annotation> void setProperty(Class<T> annotationClass,Class<?> aClass,String fieldName,T annotation){
+		Property property = get(aClass, Boolean.TRUE).getPropertyByName(fieldName, Boolean.TRUE);
+		MethodHelper.getInstance().callSet(property, annotationClass.getSimpleName().toLowerCase(), annotationClass, annotation);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends Annotation> T getProperty(Class<T> annotationClass,Class<?> aClass,String fieldName){
+		Property property = get(aClass, Boolean.TRUE).getPropertyByName(fieldName, Boolean.TRUE);
+		return (T) FieldHelper.getInstance().read(property, annotationClass.getSimpleName().toLowerCase());
+	}
+	
+	public static void setColumn(Class<?> aClass,String fieldName,Column column){
+		get(aClass, Boolean.TRUE).getPropertyByName(fieldName, Boolean.TRUE).setColumn(column);
+	}
+	
+	public static Column getColumn(Class<?> aClass,String fieldName){
+		return get(aClass, Boolean.TRUE).getPropertyByName(fieldName, Boolean.TRUE).getColumn();
+	}
+	
+	/**/
+	
+	@Getter @Setter @Accessors(chain=true) @EqualsAndHashCode(of="name") @NoArgsConstructor
 	public static class Property implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 		
 		private String name;
 		private Column column;
+		private Temporal temporal;
 		
 		public Property(String name, Column column) {
 			super();

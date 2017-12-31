@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.persistence.NoResultException;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.FilterClassLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -29,6 +30,7 @@ import org.cyk.utility.common.helper.CriteriaHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.FilterHelper.Filter;
+import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
@@ -473,16 +475,26 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		return null;
 	}
 	
+	@Override
+	protected <T> void processQueryWrapper(Class<T> aClass, QueryWrapper<T> queryWrapper, String queryName,Object[] arguments) {
+		super.processQueryWrapper(aClass, queryWrapper, queryName, arguments);
+		if( ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,countWhereExistencePeriodFromDateIsLessThan
+				,readWhereExistencePeriodFromDateIsGreaterThan,countWhereExistencePeriodFromDateIsGreaterThan}, queryName) ){
+			@SuppressWarnings("unchecked")
+			IDENTIFIABLE identifiable = (IDENTIFIABLE) arguments[0];
+			queryWrapper.parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate())
+			.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, InstanceHelper.getInstance().getIfNotNullElseDefault(identifiable.getIdentifier(),-1l));
+		}
+	}
+	
 	protected QueryWrapper<IDENTIFIABLE> getReadWhereExistencePeriodFromDateIsLessThanQueryWrapper(IDENTIFIABLE identifiable) {
-		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(readWhereExistencePeriodFromDateIsLessThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate())
-				.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, identifiable.getIdentifier());
+		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(readWhereExistencePeriodFromDateIsLessThan);
 		processQueryWrapper(clazz, queryWrapper, readWhereExistencePeriodFromDateIsLessThan,new Object[]{identifiable});
 		return queryWrapper;
 	}
 	
 	protected QueryWrapper<Long> getCountWhereExistencePeriodFromDateIsLessThanQueryWrapper(IDENTIFIABLE identifiable) {
-		QueryWrapper<Long> queryWrapper = countNamedQuery(countWhereExistencePeriodFromDateIsLessThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate())
-				.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, identifiable.getIdentifier());
+		QueryWrapper<Long> queryWrapper = countNamedQuery(countWhereExistencePeriodFromDateIsLessThan);
 		processQueryWrapper(Long.class, queryWrapper, countWhereExistencePeriodFromDateIsLessThan,new Object[]{identifiable});
 		return queryWrapper;
 	}
@@ -506,15 +518,13 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	}
 	
 	protected QueryWrapper<IDENTIFIABLE> getReadWhereExistencePeriodFromDateIsGreaterThanQueryWrapper(IDENTIFIABLE identifiable) {
-		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(readWhereExistencePeriodFromDateIsGreaterThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate())
-				.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, identifiable.getIdentifier());
+		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(readWhereExistencePeriodFromDateIsGreaterThan);
 		processQueryWrapper(clazz, queryWrapper, readWhereExistencePeriodFromDateIsGreaterThan,new Object[]{identifiable});
 		return queryWrapper;
 	}
 	
 	protected QueryWrapper<Long> getCountWhereExistencePeriodFromDateIsGreaterThanQueryWrapper(IDENTIFIABLE identifiable) {
-		QueryWrapper<Long> queryWrapper = countNamedQuery(countWhereExistencePeriodFromDateIsGreaterThan).parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate())
-				.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, identifiable.getIdentifier());
+		QueryWrapper<Long> queryWrapper = countNamedQuery(countWhereExistencePeriodFromDateIsGreaterThan);
 		processQueryWrapper(Long.class, queryWrapper, countWhereExistencePeriodFromDateIsGreaterThan,new Object[]{identifiable});
 		return queryWrapper;
 	}

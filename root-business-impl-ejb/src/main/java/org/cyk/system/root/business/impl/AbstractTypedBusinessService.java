@@ -173,7 +173,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}
 	}
 	
-	protected void setAutoSettedProperties(IDENTIFIABLE identifiable){
+	protected void setAutoSettedProperties(IDENTIFIABLE identifiable, Crud crud){
 		String property;
 		if(isAutoSetPropertyValueClass(property = GlobalIdentifier.FIELD_CODE, identifiable.getClass()))
 			setProperty(identifiable,property);
@@ -264,7 +264,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	protected void afterCrud(IDENTIFIABLE identifiable,Crud crud){}
 	
 	protected void beforeCreate(IDENTIFIABLE identifiable){
-		setAutoSettedProperties(identifiable);
+		setAutoSettedProperties(identifiable, Crud.CREATE);
 	    inject(ValidationPolicy.class).validateCreate(identifiable);
 	    createIfNotIdentified(identifiable.getSupportingDocument());
 	    beforeCreate(getListeners(), identifiable);
@@ -388,7 +388,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void beforeUpdate(IDENTIFIABLE identifiable){
-		setAutoSettedProperties(identifiable);
+		setAutoSettedProperties(identifiable, Crud.UPDATE);
 		inject(ValidationPolicy.class).validateUpdate(identifiable);
 		beforeUpdate(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.UPDATE);

@@ -7,6 +7,7 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.value.ValueBusiness;
 import org.cyk.system.root.business.api.value.ValueBusiness.Derive;
 import org.cyk.system.root.business.api.value.ValueCollectionItemBusiness;
@@ -27,8 +28,8 @@ public class ValueCollectionItemBusinessImpl extends AbstractCollectionItemBusin
 	}
 		
 	@Override
-	protected void setAutoSettedProperties(ValueCollectionItem valueCollectionItem) {
-		super.setAutoSettedProperties(valueCollectionItem);
+	protected void setAutoSettedProperties(ValueCollectionItem valueCollectionItem, Crud crud) {
+		super.setAutoSettedProperties(valueCollectionItem, crud);
 		if(StringUtils.isBlank(valueCollectionItem.getName()))
 			if(valueCollectionItem.getValue()!=null)
 				valueCollectionItem.setName(valueCollectionItem.getValue().getName());

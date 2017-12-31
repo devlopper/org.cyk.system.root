@@ -9,7 +9,7 @@ public interface MovementBusiness extends AbstractCollectionItemBusiness<Movemen
 
 	Movement instanciateOne(String collectionCode, String value,String supportingDocumentCode,String supportingDocumentPhysicalCreator,String supportingDocumentContentWriter,String actionCode);
 	Movement instanciateOne(MovementCollection movementCollection,MovementAction movementAction, String value);
-	Movement instanciateOne(String code,String collectionCode, String value,String actionCode);
+	Movement instanciateOne(String code,String collectionCode, String value,Boolean increment);
 	Movement instanciateOne(String code,String collectionCode, String value);
 	
 }

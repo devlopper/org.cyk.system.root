@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.AbstractCollectionBusiness;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.RootConstant;
@@ -33,8 +34,8 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	}
 	
 	@Override
-	protected void setAutoSettedProperties(ITEM item) {
-		super.setAutoSettedProperties(item);
+	protected void setAutoSettedProperties(ITEM item, Crud crud) {
+		super.setAutoSettedProperties(item, crud);
 		item.setCode(StringUtils.defaultIfBlank(item.getCode(), /*RandomStringUtils.randomAlphanumeric(5)*/ RootConstant.Code.generateFromString(item.getName())));
 		if(item.getCollection()!=null && StringUtils.isNotBlank(item.getCollection().getCode()) && StringUtils.isNotBlank(item.getCollection().getItemCodeSeparator()) 
 				&& !StringUtils.contains(item.getCode(), item.getCollection().getItemCodeSeparator()))

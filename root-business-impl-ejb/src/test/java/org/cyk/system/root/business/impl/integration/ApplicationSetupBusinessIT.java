@@ -6,11 +6,15 @@ import java.util.Set;
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
 import org.cyk.system.root.persistence.impl.AbstractPersistenceService;
+import org.cyk.system.root.persistence.impl.globalidentification.GlobalIdentifierPersistenceMappingConfiguration;
+import org.cyk.utility.common.helper.FieldHelper;
 
 public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
 
@@ -37,6 +41,10 @@ public class ApplicationSetupBusinessIT extends AbstractBusinessIT {
     	assertEquals("number of direct children of africa",Boolean.TRUE, inject(LocalityBusiness.class).findDirectChildrenByParent(inject(LocalityDao.class).read(RootConstant.Code.Locality.AFRICA)).size()>0);
     	assertEquals("number of direct children of europe",Boolean.TRUE, inject(LocalityBusiness.class).findDirectChildrenByParent(inject(LocalityDao.class).read(RootConstant.Code.Locality.EUROPE)).size()>0);
     	assertEquals("number of direct children of america",Boolean.TRUE, inject(LocalityBusiness.class).findDirectChildrenByParent(inject(LocalityDao.class).read(RootConstant.Code.Locality.AMERICA)).size()>0);
+    
+    	assertEquals(javax.persistence.TemporalType.TIMESTAMP, GlobalIdentifierPersistenceMappingConfiguration
+    			.getProperty(javax.persistence.Temporal.class, Movement.class, FieldHelper.getInstance().buildPath(Movement.FIELD_GLOBAL_IDENTIFIER
+    					,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE)).value());
     }
     
     

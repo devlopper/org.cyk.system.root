@@ -1,6 +1,8 @@
 package org.cyk.system.root.persistence.impl.mathematics;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Collection;
 
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -12,7 +14,19 @@ import org.cyk.system.root.persistence.impl.QueryWrapper;
 public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,MovementCollection> implements MovementDao,Serializable {
 
 	private static final long serialVersionUID = 6306356272165070761L;
-		
+	
+	//private String sumValueWhereExistencePeriodFromDateIsLessThan;
+	
+	@Override
+	protected void namedQueriesInitialisation() {
+		super.namedQueriesInitialisation();
+		/*
+		String dateFieldName = commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE);
+		registerNamedQuery(sumValueWhereExistencePeriodFromDateIsLessThan, _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.LT)
+				.and(AbstractIdentifiable.FIELD_IDENTIFIER, ArithmeticOperator.NEQ));
+		*/
+	}
+	
 	@Override
 	protected void processQueryStringBuilder(QueryStringBuilder queryStringBuilder, String queryName) {
 		super.processQueryStringBuilder(queryStringBuilder, queryName);
@@ -29,5 +43,15 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 			queryWrapper.parameter(Movement.FIELD_COLLECTION, movement.getCollection());
 		}
 	}
+
+	@Override
+	public BigDecimal sumValueWhereExistencePeriodFromDateIsLessThan(Movement movement) {
+		Collection<Movement> movements = readWhereExistencePeriodFromDateIsLessThan(movement);
+		BigDecimal sum = BigDecimal.ZERO;
+		for(Movement m : movements)
+			sum = sum.add(m.getValue());
+		return sum;
+	}
+	
 }
  

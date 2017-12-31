@@ -592,15 +592,19 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     }
 	
 	public void assertMovementCollection(MovementCollection movementCollection,String expectedValue){
-    	assertBigDecimalEquals("Value",new BigDecimal(expectedValue), movementCollection.getValue());
+    	assertBigDecimalEquals("Collection value",new BigDecimal(expectedValue), movementCollection.getValue());
     }
 	
 	public void assertMovement(String code,String expectedValue,String expectedCumul,String expectedCollectionValue,Boolean increment,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
     	assertMovement(inject(MovementDao.class).read(code), expectedValue,expectedCumul,expectedCollectionValue, increment, expectedSupportingDocumentProvider, expectedSupportingDocumentIdentifier);
     }
 	
+	public void assertMovement(String code,String expectedValue,String expectedCumul,String expectedCollectionValue,Boolean increment){
+		assertMovement(code, expectedValue,expectedCumul, expectedCollectionValue, increment, null, null);
+	}
+	
 	public void assertMovement(String code,String expectedValue,String expectedCumul,String expectedCollectionValue){
-		assertMovement(code, expectedValue,expectedCumul, expectedCollectionValue, null, null, null);
+		assertMovement(code, expectedValue,expectedCumul, expectedCollectionValue, null);
 	}
 	
 	public void assertMovement(Movement movement,String expectedValue,String expectedCumul,String expectedCollectionValue,Boolean expectedIncrement,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
@@ -622,7 +626,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	    	}else{
 	    		assertBigDecimalEquals("movement previous cumul is not equal",new BigDecimal(previousCumul), movement.getPreviousCumul());
 	    		
-	    		if(movement.getAction() == null || movement.getValue() == null){
+	    		if(movement.getValue() == null){
 	    			assertNull("expected movement cumul is not null",cumul);
 	        		assertNull("actual movement cumul is not null",movement.getCumul());
 	    		}else{
@@ -1077,9 +1081,13 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		public <T extends AbstractIdentifiable> void assertWhereExistencePeriodFromDateIsLessThanCount(final Class<T> aClass,final String code,Integer count){
 			T identifiable = getBusiness(aClass).find(code);
+			assertWhereExistencePeriodFromDateIsLessThanCount(aClass, identifiable, count);
+		}
+		
+		public <T extends AbstractIdentifiable> void assertWhereExistencePeriodFromDateIsLessThanCount(Class<T> aClass,T identifiable,Integer count){
 			Collection<T> collection = getBusiness(aClass).findWhereExistencePeriodFromDateIsLessThan(identifiable);
 			Long dbCount = getBusiness(aClass).countWhereExistencePeriodFromDateIsLessThan(identifiable);
-			System.out.println(toString(identifiable, EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN)+" , Childrens - collection size = "+collection.size()+" , count from db = "+dbCount);
+			//System.out.println(toString(identifiable, EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN)+" , Childrens - collection size = "+collection.size()+" , count from db = "+dbCount);
 			assertEquals("collection and count", dbCount.intValue(),collection.size());
 			assertEquals("Collection size", count, collection.size());
 			assertEquals("count", count, dbCount.intValue());

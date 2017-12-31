@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.annotation.FieldOverride;
+import org.cyk.utility.common.annotation.FieldOverrides;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -23,7 +24,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS) @Accessors(chain=true)
-@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MovementCollection.class)
+@FieldOverrides(value={
+		@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MovementCollection.class)
+		//,@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MovementCollection.class)
+})
 public class Movement extends AbstractCollectionItem<MovementCollection> implements Serializable {
 	
 	private static final long serialVersionUID = -4946585596435850782L;
@@ -31,8 +35,11 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	@ManyToOne @JoinColumn(name=COLUMN_ACTION) private MovementAction action;	
 	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
 	
+	@Transient private BigDecimal valueAbsolute;
+	@Transient private Boolean valueSettableFromAbsolute;
+	
 	@Transient private BigDecimal previousCumul;
-	private BigDecimal cumul;
+	private @Column(name=COLUMN_CUMUL,precision=20,scale=FLOAT_SCALE) BigDecimal cumul;
 	
 	/**
 	 * The person to whom value goes or from whom value comes
@@ -41,21 +48,18 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	private String senderOrReceiverPersonAsString;
 	
-	
-	
 	/**/
 	
-	/*@Override
-	public String getLogMessage() {
-		return String.format(LOG_FORMAT,action==null ? Constant.EMPTY_STRING:action.getLogMessage(),value,collection.getLogMessage());
-	}*/
-	
-	public static final String LOG_FORMAT = Movement.class.getSimpleName()+"(DATE=%s %s VALUE=%s %s)";
+	@Override
+	public String toString() {
+		return super.toString()+"/"+value;
+	}
 	
 	/**/
 	
 	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_VALUE_ABSOLUTE = "valueAbsolute";
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON = "senderOrReceiverPerson";
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON_AS_STRING = "senderOrReceiverPersonAsString";
 	public static final String FIELD_CUMUL = "cumul";
@@ -63,6 +67,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	public static final String COLUMN_ACTION = FIELD_ACTION;
 	public static final String COLUMN_VALUE = FIELD_VALUE;
+	public static final String COLUMN_CUMUL = FIELD_CUMUL;
 	public static final String COLUMN_SENDER_OR_RECEIVER_PERSON = FIELD_SENDER_OR_RECEIVER_PERSON;
 		
 }
