@@ -489,5 +489,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		private static final long serialVersionUID = 1L;
 		
 	}
+	
+	static {
+		org.cyk.utility.common.helper.FilterHelper.Filter.ClassLocator.map(org.cyk.system.FilterHelper.ClassLocator.class);
+	}
  
 }

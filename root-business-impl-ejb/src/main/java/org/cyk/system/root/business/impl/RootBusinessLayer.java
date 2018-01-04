@@ -113,7 +113,6 @@ import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.ClassHelper.Instanciation.Get;
 import org.cyk.utility.common.helper.EventHelper;
 import org.cyk.utility.common.helper.FileHelper;
-import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.InstanceHelper.Lookup.Source;
 import org.cyk.utility.common.helper.ListenerHelper;
@@ -167,7 +166,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         ClassHelper.getInstance().map(InstanceHelper.Listener.class, org.cyk.system.root.business.impl.helper.InstanceHelper.Listener.class);
         
         ClassHelper.getInstance().map(ClassHelper.Listener.class, org.cyk.system.root.business.impl.helper.ClassHelper.Listener.class);
-        ClassHelper.getInstance().map(FilterHelper.Filter.ClassLocator.class, org.cyk.system.root.business.impl.helper.FilterHelper.ClassLocator.class);
+        
         
         FileHelper.Listener.Adapter.Default.FILE_CLASS = File.class;
         

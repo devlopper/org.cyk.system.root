@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl.helper;
+package org.cyk.system;
 
 import java.io.Serializable;
 
@@ -10,13 +10,12 @@ import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ClassHelper;
 
-@Deprecated
 public class FilterHelper extends AbstractBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static class ClassLocator extends org.cyk.utility.common.helper.FilterHelper.Filter.ClassLocator implements Serializable {
 		private static final long serialVersionUID = 1L;
-		
+			
 		@Override
 		protected Class<?> getDefault(Class<?> aClass) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractDataTree.class, aClass))

@@ -69,5 +69,11 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public static final String COLUMN_VALUE = FIELD_VALUE;
 	public static final String COLUMN_CUMUL = FIELD_CUMUL;
 	public static final String COLUMN_SENDER_OR_RECEIVER_PERSON = FIELD_SENDER_OR_RECEIVER_PERSON;
-		
+	
+	/**/
+	
+	public static class Filter extends AbstractCollectionItem.Filter<Movement> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	
+    }
 }

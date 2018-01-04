@@ -43,10 +43,15 @@ import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.CriteriaHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MapHelper;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
+import org.cyk.utility.common.helper.FilterHelper.Filter;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 import lombok.Getter;
 
@@ -463,6 +468,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		return null;
 	}
 	
+	@Deprecated
 	protected void listenBeforeFilter(QueryWrapper<?> queryWrapper,FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {}
 	/**/
 	
@@ -475,8 +481,28 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria){}
 	
+	@Deprecated
 	protected void processQueryStringBuilder(QueryStringBuilder queryStringBuilder,String queryName){
 		
+	}
+	
+	protected JavaPersistenceQueryLanguage instanciateJpqlBuilder(String name){
+		JavaPersistenceQueryLanguage builder = (JavaPersistenceQueryLanguage) new StructuredQueryLanguageHelper.Builder.Adapter.Default
+			.JavaPersistenceQueryLanguage(clazz.getSimpleName());
+		listenInstanciateJpqlBuilder(name,builder);
+		return builder;
+	}
+	
+	protected void listenInstanciateJpqlBuilder(String name,JavaPersistenceQueryLanguage builder){
+		
+	}
+	
+	protected String getJpqlString(String name){
+		String jpql = null;
+		JavaPersistenceQueryLanguage builder = instanciateJpqlBuilder(name);
+		if(builder != null)
+			jpql = builder.execute();
+		return jpql;
 	}
 	
 	protected <T> void processQueryWrapper(Class<T> aClass,QueryWrapper<T> queryWrapper,String queryName,Object[] arguments){

@@ -14,7 +14,6 @@ import javax.persistence.NoResultException;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.FilterClassLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
@@ -123,13 +122,14 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		}
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereExistencePeriodFromDateIsLessThan())){
-			
+			/*
 			String dateFieldName = commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE);
 			QueryStringBuilder queryStringBuilder = _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.LT)
 					.and(AbstractIdentifiable.FIELD_IDENTIFIER, ArithmeticOperator.NEQ);
 			processQueryStringBuilder(queryStringBuilder, readWhereExistencePeriodFromDateIsLessThan);
 			queryStringBuilder.orderBy(dateFieldName, Boolean.FALSE);
-			registerNamedQuery(readWhereExistencePeriodFromDateIsLessThan, queryStringBuilder);
+			*/
+			registerNamedQuery(readWhereExistencePeriodFromDateIsLessThan, getJpqlString(readWhereExistencePeriodFromDateIsLessThan));
 		}
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereExistencePeriodFromDateIsGreaterThan())){
@@ -139,7 +139,8 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 					.and(AbstractIdentifiable.FIELD_IDENTIFIER, ArithmeticOperator.NEQ);
 			processQueryStringBuilder(queryStringBuilder, readWhereExistencePeriodFromDateIsGreaterThan);
 			queryStringBuilder.orderBy(dateFieldName, Boolean.FALSE);
-			registerNamedQuery(readWhereExistencePeriodFromDateIsGreaterThan, queryStringBuilder);
+			
+			registerNamedQuery(readWhereExistencePeriodFromDateIsGreaterThan, getJpqlString(readWhereExistencePeriodFromDateIsGreaterThan));
 		}
 		
 		String readByGlobalIdentifierSearchCriteriaQuery = null;
@@ -155,7 +156,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			registerNamedQuery(readByGlobalIdentifierSearchCriteria, readByGlobalIdentifierSearchCriteriaQuery = "SELECT record FROM "+clazz.getSimpleName()
 				+" record WHERE "+predicates);
 			
-			registerNamedQuery(readByFilter, getReadByFilterQueryString());
+			registerNamedQuery(readByFilter, getJpqlString(readByFilter) /*getReadByFilterQueryString()*/);
 			
 			readByGlobalIdentifierSearchCriteriaCodeExcludedQueryWherePart = predicates;
 			registerNamedQuery(readByGlobalIdentifierSearchCriteriaCodeExcluded, readByGlobalIdentifierSearchCriteriaCodeExcludedQuery = "SELECT record FROM "+clazz.getSimpleName()+" record WHERE "
@@ -177,16 +178,61 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		
 	}
 	
+	@Override
+	protected void listenInstanciateJpqlBuilder(String name,JavaPersistenceQueryLanguage builder) {
+		super.listenInstanciateJpqlBuilder(name,builder);
+		if(readByFilter.equals(name)){
+			builder.setFieldName(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER).where().notIn(GlobalIdentifier.FIELD_CODE).and().lp().lk(GlobalIdentifier.FIELD_CODE)
+				.or().lk(GlobalIdentifier.FIELD_NAME).getParent();
+			@SuppressWarnings("unchecked")
+			Class<FilterHelper.Filter<IDENTIFIABLE>> filterClass = (Class<Filter<IDENTIFIABLE>>) FilterHelper.Filter.ClassLocator.getInstance().locate(clazz);
+			Collection<String> fieldNames = FieldHelper.getInstance().getNamesByTypes(filterClass, CriteriaHelper.Criteria.String.class);
+			builder.setFieldName(null);
+			if(CollectionHelper.getInstance().isNotEmpty(fieldNames))
+				for(String fieldName : fieldNames)
+					builder.getWhere().or().lk(fieldName);
+			processReadByFilterQueryBuilderWhereConditions(builder);
+			builder.getWhere().rp();
+		}else if(readWhereExistencePeriodFromDateIsLessThan.equals(name)){
+			builder.setFieldName(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD)).where()
+				.lt(Period.FIELD_FROM_DATE, Period.FIELD_FROM_DATE).and().getParent().setFieldName(null).where()
+				.neq(AbstractIdentifiable.FIELD_IDENTIFIER, AbstractIdentifiable.FIELD_IDENTIFIER);
+			
+		}else if(readWhereExistencePeriodFromDateIsGreaterThan.equals(name)){
+			builder.setFieldName(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD)).where()
+			.gt(Period.FIELD_FROM_DATE, Period.FIELD_FROM_DATE).and().getParent().setFieldName(null).where()
+			.neq(AbstractIdentifiable.FIELD_IDENTIFIER, AbstractIdentifiable.FIELD_IDENTIFIER);
+		}
+	}
+	/*
+	@Override
+	protected String getJpqlString(String name) {
+		if(readWhereExistencePeriodFromDateIsLessThan.equals(name)){
+			String dateFieldName = commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE);
+			QueryStringBuilder queryStringBuilder = _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.LT)
+					.and(AbstractIdentifiable.FIELD_IDENTIFIER, ArithmeticOperator.NEQ);
+			queryStringBuilder.orderBy(dateFieldName, Boolean.FALSE);
+			return queryStringBuilder.getValue();
+		}else if(readWhereExistencePeriodFromDateIsGreaterThan.equals(name)){
+			String dateFieldName = commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE);
+			QueryStringBuilder queryStringBuilder = _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.GT)
+					.and(AbstractIdentifiable.FIELD_IDENTIFIER, ArithmeticOperator.NEQ);
+			queryStringBuilder.orderBy(dateFieldName, Boolean.FALSE);
+		}
+		return super.getJpqlString(name);
+	}
+	*/
+	/*
 	protected String getReadByFilterQueryString(){
 		return getReadByFilterQueryBuilder().execute();
 	}
-	
+	/*
 	protected StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage getReadByFilterQueryBuilder(){
 		StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage jpql = (JavaPersistenceQueryLanguage) new StructuredQueryLanguageHelper.Builder
 				.Adapter.Default.JavaPersistenceQueryLanguage(clazz.getSimpleName()).setFieldName(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER).where()
 				.notIn(GlobalIdentifier.FIELD_CODE).and().lp().lk(GlobalIdentifier.FIELD_CODE).or().lk(GlobalIdentifier.FIELD_NAME).getParent();
 		@SuppressWarnings("unchecked")
-		Class<FilterHelper.Filter<IDENTIFIABLE>> filterClass = (Class<Filter<IDENTIFIABLE>>) FilterClassLocator.getInstance().locate(clazz);
+		Class<FilterHelper.Filter<IDENTIFIABLE>> filterClass = (Class<Filter<IDENTIFIABLE>>) FilterHelper.Filter.ClassLocator.getInstance().locate(clazz);
 		Collection<String> fieldNames = FieldHelper.getInstance().getNamesByTypes(filterClass, CriteriaHelper.Criteria.String.class);
 		jpql.setFieldName(null);
 		if(CollectionHelper.getInstance().isNotEmpty(fieldNames))
@@ -196,7 +242,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		jpql.getWhere().rp();
 		return jpql;
 	}
-	
+	*/
 	protected void processReadByFilterQueryBuilderWhereConditions(StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage jpql){}
 	
 	@Override
@@ -283,24 +329,25 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		return (Long) queryWrapper.resultOne();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<IDENTIFIABLE> readByFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {
-		QueryWrapper<?> queryWrapper = namedQuery(//globalIdentifierSearchCriteria.getCode().getExcluded().isEmpty() ? 
+		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(//globalIdentifierSearchCriteria.getCode().getExcluded().isEmpty() ? 
 				/*readByGlobalIdentifierSearchCriteria : readByGlobalIdentifierSearchCriteriaCodeExcluded*/readByFilter);
-		listenBeforeFilter(queryWrapper, filter,dataReadConfiguration);
+		//listenBeforeFilter(queryWrapper, filter,dataReadConfiguration);
+		processQueryWrapper(clazz, queryWrapper, readByFilter, new Object[]{filter,dataReadConfiguration});
 		return (Collection<IDENTIFIABLE>) queryWrapper.resultMany();
 	}
 
 	@Override
 	public Long countByFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {
-		QueryWrapper<?> queryWrapper = countNamedQuery(//globalIdentifierSearchCriteria.getCode().getExcluded().isEmpty() ? 
+		QueryWrapper<Long> queryWrapper = countNamedQuery(//globalIdentifierSearchCriteria.getCode().getExcluded().isEmpty() ? 
 				/*countByGlobalIdentifierSearchCriteria : countByGlobalIdentifierByCodeSearchCriteria*/countByFilter);
-		listenBeforeFilter(queryWrapper, filter,dataReadConfiguration);
+		//listenBeforeFilter(queryWrapper, filter,dataReadConfiguration);
+		processQueryWrapper(Long.class, queryWrapper, countByFilter, new Object[]{filter,dataReadConfiguration});
 		return (Long) queryWrapper.resultOne();
 	}
 	
-	@Override
+	@Override @Deprecated
 	protected void listenBeforeFilter(QueryWrapper<?> queryWrapper,FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {
 		super.listenBeforeFilter(queryWrapper,filter, dataReadConfiguration);
 		GlobalIdentifier.Filter globalIdentifier = ((AbstractIdentifiable.Filter<IDENTIFIABLE>) filter).getGlobalIdentifier();
@@ -484,6 +531,21 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			IDENTIFIABLE identifiable = (IDENTIFIABLE) arguments[0];
 			queryWrapper.parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate())
 			.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, InstanceHelper.getInstance().getIfNotNullElseDefault(identifiable.getIdentifier(),-1l));
+		}else if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
+			FilterHelper.Filter<?> filter = (FilterHelper.Filter<?>) arguments[0];
+			DataReadConfiguration dataReadConfiguration = (DataReadConfiguration) arguments[1];
+			GlobalIdentifier.Filter globalIdentifier = ((AbstractIdentifiable.Filter<IDENTIFIABLE>) filter).getGlobalIdentifier();
+			queryWrapper.parameterLike(globalIdentifier);
+			if(globalIdentifier!=null){
+				if(globalIdentifier.getCode().getExcluded().isEmpty())
+					globalIdentifier.getCode().getExcluded().add("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");//TODO think better
+				if(!globalIdentifier.getCode().getExcluded().isEmpty())
+					queryWrapper.parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIn(GlobalIdentifier.FIELD_CODE)
+							, globalIdentifier.getCode().getExcluded());
+				
+			}
+			queryWrapper.parameterLike(filter);
+			getDataReadConfig().set(dataReadConfiguration);
 		}
 	}
 	

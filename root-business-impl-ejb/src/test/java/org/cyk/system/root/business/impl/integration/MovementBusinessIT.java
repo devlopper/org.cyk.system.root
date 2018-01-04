@@ -9,6 +9,7 @@ import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.junit.Test;
@@ -391,6 +392,87 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	rootBusinessTestHelper.assertMovement(code005, "-6","30", "30",Boolean.TRUE);
     	
     	//testCase.clean();
+    }
+    
+    @Test
+    public void filter(){
+    	TestCase testCase = instanciateTestCase();
+    	MovementCollection movementCollection01 = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5), "IN", "OUT");
+    	movementCollection01.getInterval().getLow().setValue(null);
+    	testCase.create(movementCollection01);
+    	
+    	MovementCollection movementCollection02 = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5), "IN", "OUT");
+    	movementCollection02.getInterval().getLow().setValue(null);
+    	testCase.create(movementCollection02);
+    	
+    	MovementCollection movementCollection03 = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5), "IN", "OUT");
+    	movementCollection03.getInterval().getLow().setValue(null);
+    	testCase.create(movementCollection03);
+    	
+    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection03.getCode(), "15",Boolean.TRUE)
+    			.setCode("MyCode001"));
+    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection03.getCode(), "15",Boolean.TRUE)
+    			.setCode("MyCode002"));
+    	
+    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection01.getCode(), "15",Boolean.TRUE)
+    			.setCode("MyCode001"));
+    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection01.getCode(), "15",Boolean.TRUE)
+    			.setCode("MyCodeABC"));
+    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection01.getCode(), "15",Boolean.TRUE)
+    			.setCode("MyCodeAB001"));
+    	
+    	Movement.Filter filter = new Movement.Filter();
+    	assertEquals(5, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	
+    	filter(new Object[][]{
+    		{"MyCode001",2},{"MyCode002",1},{"MyCode00",3},{"MyCode",5},{"001",3}
+    	});
+    	
+    	
+    	filter = new Movement.Filter();
+    	filter.addMaster(movementCollection03);
+    	filter.set("MyCode001");
+    	assertEquals(1, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	filter.set("MyCode002");
+    	assertEquals(1, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	filter.set("MyCode00");
+    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	
+    	filter = new Movement.Filter();
+    	filter.set("MyCode001");
+    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	
+    	filter = new Movement.Filter();
+    	filter.set("001");
+    	assertEquals(3, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	
+    	/*filter = new Movement.Filter();
+    	filter.set("AB");
+    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	
+    	filter = new Movement.Filter();
+    	filter.set("AB");
+    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	*/
+    	filter = new Movement.Filter();
+    	filter.addMaster(movementCollection01);
+    	assertEquals(3, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	
+    	filter = new Movement.Filter();
+    	filter.addMaster(movementCollection02);
+    	assertEquals(0, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	
+    	filter = new Movement.Filter();
+    	filter.addMaster(movementCollection03);
+    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    }
+    
+    private void filter(Object[][] values){
+    	for(Object[] index : values){
+    		Movement.Filter filter = new Movement.Filter();
+        	filter.set((String)index[0]);
+        	assertEquals((Integer)index[1], inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	}
     }
     
 	@Test

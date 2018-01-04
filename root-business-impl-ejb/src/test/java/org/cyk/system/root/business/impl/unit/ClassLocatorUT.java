@@ -27,6 +27,7 @@ import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
+import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.party.person.Allergy;
 import org.cyk.system.root.model.party.person.JobFunction;
@@ -46,7 +47,7 @@ public class ClassLocatorUT extends AbstractUnitTest {
 	private static final long serialVersionUID = 3681555921786058917L;
 	
 	{
-		ClassHelper.getInstance().map(FilterHelper.Filter.ClassLocator.class, org.cyk.system.root.business.impl.helper.FilterHelper.ClassLocator.class);
+		ClassHelper.getInstance().map(FilterHelper.Filter.ClassLocator.class, org.cyk.system.FilterHelper.ClassLocator.class);
 	}
 	
 	@InjectMocks private BusinessInterfaceLocator businessInterfaceLocator;
@@ -102,8 +103,9 @@ public class ClassLocatorUT extends AbstractUnitTest {
 		assertClass(filterClassLocator,PersonRelationshipType.class,PersonRelationshipType.Filter.class);
 		assertClass(filterClassLocator,ElectronicMailAddress.class,ElectronicMailAddress.Filter.class);
 		 
-		assertEquals(LocationType.Filter.class,FilterHelper.Filter.getClassLocator().locate(LocationType.class));
-		assertEquals(MovementCollection.Filter.class,FilterHelper.Filter.getClassLocator().locate(MovementCollection.class));
+		assertEquals(LocationType.Filter.class,FilterHelper.Filter.ClassLocator.getInstance().locate(LocationType.class));
+		assertEquals(MovementCollection.Filter.class,FilterHelper.Filter.ClassLocator.getInstance().locate(MovementCollection.class));
+		assertEquals(Movement.Filter.class,FilterHelper.Filter.ClassLocator.getInstance().locate(Movement.class));
 	}
 	
 	private void assertClass(ClassLocator locator,Class<?> aClass,Class<?> expectedDetails){

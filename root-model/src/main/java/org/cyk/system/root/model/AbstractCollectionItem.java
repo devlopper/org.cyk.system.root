@@ -6,13 +6,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudInheritanceStrategy;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter @MappedSuperclass @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.INTERNAL,crudInheritanceStrategy=CrudInheritanceStrategy.ALL)
 public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumeration implements Serializable {
@@ -33,4 +34,15 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 	public static final String FIELD_COLLECTION = "collection";
 	
 	public static final String COLUMN_COLLECTION = "collection";
+	
+	/**/
+	
+	@Getter @Setter @Accessors(chain=true)
+	public static class Filter<T extends AbstractCollectionItem<?>> extends AbstractEnumeration.Filter<T> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	
+		public Filter() {
+			
+		}
+    }
 }

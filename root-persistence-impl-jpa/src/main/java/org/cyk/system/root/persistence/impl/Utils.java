@@ -8,15 +8,21 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.utility.common.helper.MethodHelper;
 
 
 public class Utils {
 	 
 	public static Collection<Long> ids(Collection<? extends AbstractIdentifiable> identifiables){
-		Collection<Long> ids = new HashSet<>();
-		for(AbstractIdentifiable identifiable : identifiables)
-			ids.add(identifiable.getIdentifier());
-		return ids;
+		//Collection<Long> ids = new HashSet<>();
+		//for(AbstractIdentifiable identifiable : identifiables)
+		//	ids.add(identifiable.getIdentifier());
+		//return ids;
+		
+		Collection<Long> identifiers = MethodHelper.getInstance().callGet(identifiables, Long.class, AbstractIdentifiable.FIELD_IDENTIFIER);
+		if(identifiers == null)
+			identifiers = new ArrayList<Long>();
+		return identifiers;
 	}
 	
 	public static Collection<String> getCodes(Collection<? extends AbstractIdentifiable> identifiables){

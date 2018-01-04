@@ -110,6 +110,16 @@ public class InstanceHelper implements Serializable {
 			
 			return super.act(action, instance);
 		}
+	
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> T computeChanges(T instance) {
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, instance.getClass())){
+				inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)instance.getClass()).computeChanges((AbstractIdentifiable) instance);
+				return instance;
+			}
+			return super.computeChanges(instance);
+		}
 	}
 	
 	public static class BuilderOneDimensionArray<T extends AbstractIdentifiable> extends org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray.Adapter.Default<T> implements Serializable{
