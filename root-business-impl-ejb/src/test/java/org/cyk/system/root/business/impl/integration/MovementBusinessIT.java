@@ -1,6 +1,8 @@
 package org.cyk.system.root.business.impl.integration;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
@@ -409,69 +411,73 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	movementCollection03.getInterval().getLow().setValue(null);
     	testCase.create(movementCollection03);
     	
-    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection03.getCode(), "15",Boolean.TRUE)
-    			.setCode("MyCode001"));
-    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection03.getCode(), "15",Boolean.TRUE)
-    			.setCode("MyCode002"));
-    	
     	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection01.getCode(), "15",Boolean.TRUE)
     			.setCode("MyCode001"));
-    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection01.getCode(), "15",Boolean.TRUE)
+    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection01.getCode(), "-15",Boolean.FALSE)
     			.setCode("MyCodeABC"));
     	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection01.getCode(), "15",Boolean.TRUE)
     			.setCode("MyCodeAB001"));
+    	
+    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection03.getCode(), "-15",Boolean.FALSE)
+    			.setCode("MyCode001"));
+    	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection03.getCode(), "15",Boolean.TRUE)
+    			.setCode("MyCode002"));
     	
     	Movement.Filter filter = new Movement.Filter();
     	assertEquals(5, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
     	
     	filter(new Object[][]{
-    		{"MyCode001",2},{"MyCode002",1},{"MyCode00",3},{"MyCode",5},{"001",3}
+    		{null,"MyCode001",2},{null,"MyCode002",1},{null,"MyCode00",3},{null,"MyCode",5},{null,"001",3}
     	});
     	
+    	filter(new Object[][]{
+    		{Arrays.asList(movementCollection03),"MyCode001",1},{Arrays.asList(movementCollection03),"MyCode002",1},{Arrays.asList(movementCollection03),"MyCode00",2}
+    	});
     	
-    	filter = new Movement.Filter();
-    	filter.addMaster(movementCollection03);
-    	filter.set("MyCode001");
-    	assertEquals(1, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
-    	filter.set("MyCode002");
-    	assertEquals(1, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
-    	filter.set("MyCode00");
-    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	filter(new Object[][]{
+    		{Arrays.asList(movementCollection01),null,3},{Arrays.asList(movementCollection02),null,0},{Arrays.asList(movementCollection03),null,2}
+    	});
     	
-    	filter = new Movement.Filter();
-    	filter.set("MyCode001");
-    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	filter(new Object[][]{
+    		{Arrays.asList(movementCollection01,movementCollection02),null,3},{Arrays.asList(movementCollection01,movementCollection03),null,5}
+    		,{Arrays.asList(movementCollection02,movementCollection03),null,2}
+    	});
     	
-    	filter = new Movement.Filter();
-    	filter.set("001");
-    	assertEquals(3, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	filter(new Object[][]{
+    		{Arrays.asList(movementCollection01,movementCollection02,movementCollection03),null,5}
+    	});
     	
-    	/*filter = new Movement.Filter();
-    	filter.set("AB");
-    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	filter(new Object[][]{
+    		{Arrays.asList(movementCollection01.getIncrementAction()),null,2},{Arrays.asList(movementCollection01.getDecrementAction()),null,1}
+    		,{Arrays.asList(movementCollection01.getIncrementAction(),movementCollection01.getDecrementAction()),null,3}
+    	});
     	
-    	filter = new Movement.Filter();
-    	filter.set("AB");
-    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
-    	*/
-    	filter = new Movement.Filter();
-    	filter.addMaster(movementCollection01);
-    	assertEquals(3, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	filter(new Object[][]{
+    		{Arrays.asList(movementCollection02.getIncrementAction()),null,0},{Arrays.asList(movementCollection02.getDecrementAction()),null,0}
+    		,{Arrays.asList(movementCollection02.getIncrementAction(),movementCollection02.getDecrementAction()),null,0}
+    	});
     	
-    	filter = new Movement.Filter();
-    	filter.addMaster(movementCollection02);
-    	assertEquals(0, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	filter(new Object[][]{
+    		{Arrays.asList(movementCollection03.getIncrementAction()),null,1},{Arrays.asList(movementCollection03.getDecrementAction()),null,1}
+    		,{Arrays.asList(movementCollection03.getIncrementAction(),movementCollection03.getDecrementAction()),null,2}
+    	});
     	
-    	filter = new Movement.Filter();
-    	filter.addMaster(movementCollection03);
-    	assertEquals(2, inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    	filter(new Object[][]{
+    		{Arrays.asList(movementCollection01,movementCollection01.getIncrementAction()),null,2}
+    		,{Arrays.asList(movementCollection02,movementCollection02.getIncrementAction()),null,0}
+    		,{Arrays.asList(movementCollection03,movementCollection03.getIncrementAction()),null,1}
+    		,{Arrays.asList(movementCollection01.getIncrementAction(),movementCollection02.getIncrementAction(),movementCollection03.getIncrementAction()),null,3}
+    		,{Arrays.asList(movementCollection01.getDecrementAction(),movementCollection02.getDecrementAction(),movementCollection03.getDecrementAction()),null,2}
+    	});
     }
     
-    private void filter(Object[][] values){
+    @SuppressWarnings("unchecked")
+	private void filter(Object[][] values){
     	for(Object[] index : values){
     		Movement.Filter filter = new Movement.Filter();
-        	filter.set((String)index[0]);
-        	assertEquals((Integer)index[1], inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
+    		filter.addMasters((Collection<Object>)index[0]);
+    		filter.set((String)index[1]);
+        	assertEquals((Integer)index[2], inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
     	}
     }
     

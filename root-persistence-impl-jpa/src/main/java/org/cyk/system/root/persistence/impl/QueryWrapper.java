@@ -26,6 +26,7 @@ import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.CriteriaHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
+import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
 
 import lombok.Getter;
@@ -75,6 +76,35 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 	
 	public QueryWrapper<T> parameter(String name,AbstractFieldValueSearchCriteria<?> fieldValueSearchCriteria){
 		return parameter(name, fieldValueSearchCriteria.getPreparedValue());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <V> QueryWrapper<T> parameterIn(Class<V> valueClass,Collection<V> values,String...names){
+		String name = FieldHelper.getInstance().buildPath(names);
+		Boolean valuesIsEmpty = CollectionHelper.getInstance().isEmpty(values);
+		if(valuesIsEmpty){
+			/*
+			 * Empty collection are not working so needed to use faked non empty collection
+			 */
+			if(Long.class.equals(valueClass))
+				values = (Collection<V>) PARAMETER_VALUE_COLLECTION_EMPTY_LONG;
+			else if(String.class.equals(valueClass))
+				values = (Collection<V>) PARAMETER_VALUE_COLLECTION_EMPTY_STRING;
+		}
+		parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIn(name), values);
+		parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIsEmpty(name), valuesIsEmpty);
+		parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIsEmptyMeansAll(name), valuesIsEmpty);
+		return this;
+	}
+	
+	public QueryWrapper<T> parameterInIdentifiers(Collection<? extends AbstractIdentifiable> identifiables,String...names){
+		parameterIn(Long.class, Utils.ids(identifiables),names);
+		return this;
+	}
+	
+	public QueryWrapper<T> parameterInStrings(Collection<String> strings,String...names){
+		parameterIn(String.class, strings,names);
+		return this;
 	}
 	
 	public QueryWrapper<T> parameterIdentifiers(String name,Collection<? extends AbstractIdentifiable> identifiables){
@@ -258,4 +288,7 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 	/**/
 	
 	public static final String HINT_FETCH_GRAPH =  "javax.persistence.fetchgraph";
+	
+	private static final Collection<Long> PARAMETER_VALUE_COLLECTION_EMPTY_LONG = Arrays.asList(Long.MIN_VALUE);
+	private static final Collection<String> PARAMETER_VALUE_COLLECTION_EMPTY_STRING = Arrays.asList(RandomHelper.getInstance().getAlphanumeric(10)+System.currentTimeMillis()+"");
 }
