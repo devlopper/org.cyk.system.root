@@ -19,6 +19,11 @@ public class ClassHelper extends AbstractBean implements Serializable {
     	}
     	
     	@Override
+    	public String getNameFieldName(Class<?> aClass) {
+    		return "globalIdentifier.name";
+    	}
+    	
+    	@Override
     	public Boolean isHierarchy(Class<?> aClass) {
     		return org.cyk.utility.common.helper.ClassHelper.getInstance().isInstanceOf(AbstractDataTreeNode.class, aClass);
     	}
