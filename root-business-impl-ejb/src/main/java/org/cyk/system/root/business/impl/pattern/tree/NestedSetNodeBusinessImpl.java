@@ -6,19 +6,23 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.utility.common.LogMessage;
 
+@Stateless
 public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<NestedSetNode, NestedSetNodeDao> implements NestedSetNodeBusiness,Serializable {
 
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -144,6 +148,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			n.computeLogMessage();
 			n.setParent(null);
 			dao.delete(n);
+			inject(GlobalIdentifierBusiness.class).delete(n.getGlobalIdentifier());
 			logTrace("{} deleted", n.getLastComputedLogMessage());
 		}
 		

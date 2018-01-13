@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.cyk.utility.common.annotation.FieldOverride;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -20,6 +21,7 @@ import lombok.Setter;
 
 @Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {PhoneNumber.FIELD_COUNTRY,PhoneNumber.FIELD_NUMBER})}) 
+@FieldOverride(name="collection",type=ContactCollection.class)
 public class PhoneNumber extends Contact implements Serializable{
 
 	private static final long serialVersionUID = 1L;

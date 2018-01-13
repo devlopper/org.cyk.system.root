@@ -13,11 +13,6 @@ import org.junit.Test;
 public class LocalityBusinessIT extends AbstractBusinessIT {
 	   
 	private static final long serialVersionUID = 8691254326402622637L;
-	
-    @Override
-    protected void businesses() {
-    	
-    }
     
     @Test
     public void moveCoteDIvoireAndMoveItBackUsingMove(){
@@ -65,7 +60,6 @@ public class LocalityBusinessIT extends AbstractBusinessIT {
     	assertNumberOfChildren(localityCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
     	inject(LocalityBusiness.class).move(localityCode, oldParentCode);//move it back
     	assertNumberOfChildren(localityCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
-    	
     }
     
     private void updateAndMoveAndUpdateAndMoveItBack(String localityCode,String parentCode,Long expectedNumberOfChildren,Long expectedNumberOfDirectChildren){

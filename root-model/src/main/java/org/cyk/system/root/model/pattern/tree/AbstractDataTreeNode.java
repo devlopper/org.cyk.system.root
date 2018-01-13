@@ -35,7 +35,7 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 	
 	public AbstractDataTreeNode setParentNode(AbstractDataTreeNode parent){
 		this.node=parent==null?null:new NestedSetNode(parent.getNode().getSet(), parent.getNode());
-		setParent(parent);
+		setNewParent(parent);
 		return this;
 	}
 	

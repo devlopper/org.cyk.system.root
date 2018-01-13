@@ -72,6 +72,10 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@Transient protected Boolean cascadeOperationToChildren = Boolean.FALSE;
 	@Transient protected Boolean checkIfExistOnDelete = Boolean.FALSE;
 	
+	/**
+	 * Used in user interface to reference one and only one parent
+	 */
+	@Transient private AbstractIdentifiable __parent__;
 	@Transient private Collection<AbstractIdentifiable> parents;
 	@Transient private Collection<AbstractIdentifiable> children;
 	
@@ -226,7 +230,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return parents;
 	}
 	
-	public AbstractIdentifiable getParent(){
+	public AbstractIdentifiable getOneParent(){
 		return (AbstractIdentifiable) (parents == null || parents.isEmpty() ? null : ((List<AbstractIdentifiable>)parents).get(((List<AbstractIdentifiable>)parents).size()-1));
 	}
 	
@@ -237,7 +241,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	 */
 	public void setParent(AbstractIdentifiable parent){
 		getParents().clear();
-		getParents().add(parent);
+		if(parent!=null)
+			getParents().add(parent);
+		this.__parent__ = parent;
 	}
 	
 	public Collection<AbstractIdentifiable> getChildren(){
@@ -479,6 +485,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	public static final String FIELD_IDENTIFIER = "identifier";
 	public static final String FIELD_GLOBAL_IDENTIFIER = "globalIdentifier";
+	public static final String FIELD_PARENT = "parent";
 	
 	public static final String COLUMN_IDENTIFIER = "identifier";
 	public static final String COLUMN_GLOBAL_IDENTIFIER = "globalidentifier";

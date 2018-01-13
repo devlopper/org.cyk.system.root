@@ -11,7 +11,11 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.persistence.api.geography.ContactDao;
+import org.cyk.system.root.persistence.api.geography.CountryDao;
+import org.cyk.system.root.persistence.api.geography.LocationTypeDao;
+import org.cyk.system.root.persistence.api.geography.PhoneNumberTypeDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.helper.RandomHelper;
 import org.junit.Test;
 
 public class ContactCollectionBusinessIT extends AbstractBusinessIT {
@@ -54,6 +58,15 @@ public class ContactCollectionBusinessIT extends AbstractBusinessIT {
     	contactCollection.getItems().setSynchonizationEnabled(Boolean.TRUE);
     	testCase.update(contactCollection,null,"1 Type : ne peut pas être nul"+Constant.LINE_DELIMITER+"2 Pays : ne peut pas être nul"
     			+Constant.LINE_DELIMITER+"3 Numéro : ne peut pas être nul");
+    	
+    	phoneNumber = new PhoneNumber();
+    	phoneNumber.setType(inject(PhoneNumberTypeDao.class).read(RootConstant.Code.PhoneNumberType.LAND));
+    	phoneNumber.setCountry(inject(CountryDao.class).read(RootConstant.Code.Country.COTE_DIVOIRE));
+    	phoneNumber.setLocationType(inject(LocationTypeDao.class).read(RootConstant.Code.LocationType.HOME));
+    	phoneNumber.setNumber(String.valueOf(RandomHelper.getInstance().getNumeric(8)));
+    	phoneNumber.setCollection(contactCollection);
+    	testCase.create(phoneNumber);
+    	assertNull(phoneNumber.getCode());
     	
     	testCase.clean();
     }

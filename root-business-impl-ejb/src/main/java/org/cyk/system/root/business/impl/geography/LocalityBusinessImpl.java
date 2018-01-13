@@ -10,9 +10,9 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;
 import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs;
+import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs.Layout;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
-import org.cyk.utility.common.annotation.user.interfaces.IncludeInputs.Layout;
 
 import lombok.Getter;
 import lombok.Setter;

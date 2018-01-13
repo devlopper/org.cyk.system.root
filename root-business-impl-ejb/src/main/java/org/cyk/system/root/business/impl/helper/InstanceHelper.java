@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractCollection;
@@ -13,6 +14,7 @@ import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.Constant.Action;
@@ -30,6 +32,30 @@ public class InstanceHelper implements Serializable {
 	public static class Listener extends org.cyk.utility.common.helper.InstanceHelper.Listener.Adapter.Default{
     	private static final long serialVersionUID = 1L;
 		
+    	@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+    	public <T> Collection<T> getHierarchyRoots(Class<T> aClass) {
+    		if(ClassHelper.getInstance().isInstanceOf(AbstractDataTreeNode.class, aClass))
+				return (Collection<T>) ((AbstractDataTreeNodeBusiness)inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractDataTreeNode>)aClass)).findHierarchies();
+    		return super.getHierarchyRoots(aClass);
+    	}
+    	
+    	@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+    	public <T> Collection<T> getHierarchyChildren(Object parent) {
+    		if(parent instanceof AbstractDataTreeNode)
+				return (Collection<T>) ((AbstractDataTreeNodeBusiness)inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractDataTreeNode>)parent.getClass())).findByParent((AbstractEnumeration) parent);
+    		return super.getHierarchyChildren(parent);
+    	}
+    	
+    	@SuppressWarnings({ "rawtypes", "unchecked" })
+		@Override
+    	public Long getHierarchyNumberOfChildren(Object parent) {
+    		if(parent instanceof AbstractDataTreeNode)
+				return ((AbstractDataTreeNodeBusiness)inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractDataTreeNode>)parent.getClass())).countDirectChildrenByParent((AbstractEnumeration) parent);
+    		return super.getHierarchyNumberOfChildren(parent);
+    	}
+    	
     	@Override
     	public Object getIdentifier(Object instance) {
     		if(instance instanceof AbstractIdentifiable)

@@ -8,15 +8,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import org.cyk.utility.common.validation.System;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter @Setter
 @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
@@ -66,10 +65,10 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 		return getLogMessage();// super.toString()+String.format(TO_STRING_FORMAT, identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier(),detachedIdentifier,set.getIdentifier());
 	}
 	
-	@Override
+	/*@Override
 	public String getLogMessage() {
 		return String.format(LOG_MESSAGE_FORMAT, globalIdentifier==null ? Constant.EMPTY_STRING:globalIdentifier.getName(),identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier(),detachedIdentifier,set.getIdentifier());
-	}
+	}*/
 	
 	/**/
 	
@@ -82,6 +81,6 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	public static final String COLUMN_SET = "set_";
 	public static final String COLUMN_PARENT = "parent_";
 	
-	private static final String LOG_MESSAGE_FORMAT = /*NestedSetNode.class.getSimpleName()+*/"%s(I=%s,(%s,%s)P=%s)";
+	//private static final String LOG_MESSAGE_FORMAT = /*NestedSetNode.class.getSimpleName()+*/"%s(I=%s,(%s,%s)P=%s)";
 	//private static final String TO_STRING_FORMAT = "(I=%s,L=%s,R=%s,P=%s,DI=%s,S=%s)";
 }

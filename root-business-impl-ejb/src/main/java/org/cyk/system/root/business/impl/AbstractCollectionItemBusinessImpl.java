@@ -15,6 +15,7 @@ import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,COLLECTION extends AbstractCollection<ITEM>> extends AbstractEnumerationBusinessImpl<ITEM, DAO> implements AbstractCollectionItemBusiness<ITEM,COLLECTION>,Serializable {
 
@@ -37,9 +38,12 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	protected void setAutoSettedProperties(ITEM item, Crud crud) {
 		super.setAutoSettedProperties(item, crud);
 		item.setCode(StringUtils.defaultIfBlank(item.getCode(), /*RandomStringUtils.randomAlphanumeric(5)*/ RootConstant.Code.generateFromString(item.getName())));
-		if(item.getCollection()!=null && StringUtils.isNotBlank(item.getCollection().getCode()) && StringUtils.isNotBlank(item.getCollection().getItemCodeSeparator()) 
+		if(StringHelper.getInstance().isBlank(item.getCode()))
+			item.setCode(null);
+		if(item.getCode()!=null)
+			if(item.getCollection()!=null && StringUtils.isNotBlank(item.getCollection().getCode()) && StringUtils.isNotBlank(item.getCollection().getItemCodeSeparator()) 
 				&& !StringUtils.contains(item.getCode(), item.getCollection().getItemCodeSeparator()))
-			item.setCode(RootConstant.Code.generate(item));
+				item.setCode(RootConstant.Code.generate(item));
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
