@@ -272,6 +272,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    inject(GenericBusiness.class).createIfNotIdentified(findRelatedInstances(identifiable));
 	}
 	
+	protected void __create__(final IDENTIFIABLE identifiable){
+		dao.create(identifiable);
+	}
+	
 	@Override
 	public IDENTIFIABLE create(final IDENTIFIABLE identifiable) {
 		if(identifiable==null){
@@ -296,7 +300,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				@Override
 				public Object __execute__() {
 					beforeCreate(identifiable);
-			        dao.create(identifiable);
+					__create__(identifiable);
 			        afterCreate(identifiable);	
 					return null;
 				}

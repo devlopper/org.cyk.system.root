@@ -239,7 +239,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	 * Clear existing parents and add this parent to the list
 	 * @param parent
 	 */
-	public void setParent(AbstractIdentifiable parent){
+	public void setOneParent(AbstractIdentifiable parent){
 		getParents().clear();
 		if(parent!=null)
 			getParents().add(parent);

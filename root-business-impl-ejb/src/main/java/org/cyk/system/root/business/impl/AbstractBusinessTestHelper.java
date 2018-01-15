@@ -82,6 +82,8 @@ import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.model.party.person.Sex;
+import org.cyk.system.root.model.pattern.tree.NestedSet;
+import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
@@ -94,6 +96,7 @@ import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachin
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeRoleDao;
+import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.ClassRepository.ClassField;
 import org.cyk.utility.common.Constant;
@@ -160,7 +163,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     		}.execute();
     	}else{
     		read = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code);
-    		assertThat("Read", read!=null);
+    		assertThat("Read code "+code+" is null", read!=null);
     	}
 		return read;
 	}
@@ -881,6 +884,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public void clean(){
 			if(Boolean.TRUE.equals(cleaned))
 				return;
+			System.out.println(StringUtils.repeat("#", 5)+" CLEAN "+StringUtils.repeat("#", 5));
 			if(identifiables!=null){
 				Collections.reverse(identifiables);
 				for(AbstractIdentifiable identifiable : identifiables)
@@ -1166,6 +1170,22 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			assertThat("relation ship does not exist", personRelationship!=null);
 			assertEquals("opposite role code is not correct", expectedPerson2Code, person1Code.equals(personRelationship.getExtremity1().getRole().getCode()) 
 					? personRelationship.getExtremity2().getRole().getCode() : personRelationship.getExtremity1().getRole().getCode());
+			return this;
+		}
+		
+		public TestCase assertNestedSet(String setCode,String expectedRootCode){
+			assertEquals("root is not equal", StringUtils.isBlank(expectedRootCode) ? null : read(NestedSetNode.class, expectedRootCode), read(NestedSet.class, setCode).getRoot());
+			return this;
+		}
+		
+		public TestCase assertNestedSetNode(String nodeCode,String expectedSetCode,String expectedParentCode,Integer expectedLeftIndex,Integer expectedRightIndex,Long expectedDirectChildrenCount,Long expectedChildrenCount){
+			NestedSetNode node = read(NestedSetNode.class, nodeCode);
+			assertEquals("set is not equal", StringUtils.isBlank(expectedSetCode) ? null : read(NestedSet.class, expectedSetCode), node.getSet());
+			assertEquals("parent is not equal", StringUtils.isBlank(expectedParentCode) ? null : read(NestedSetNode.class, expectedParentCode), node.getParent());
+			assertEquals("left index is not equal", expectedLeftIndex, node.getLeftIndex());
+			assertEquals("right index is not equal", expectedRightIndex, node.getRightIndex());
+			assertEquals("direct children count is not equal", expectedDirectChildrenCount, inject(NestedSetNodeDao.class).countDirectChildrenByParent(node));
+			assertEquals("children count is not equal", expectedChildrenCount, inject(NestedSetNodeDao.class).countByParent(node));
 			return this;
 		}
 		

@@ -19,7 +19,7 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 
 	private static final long serialVersionUID = 4388503557071277363L;
 	
-	@ManyToOne @JoinColumn(name=COLUMN_NODE) @NotNull protected NestedSetNode node;
+	@ManyToOne @JoinColumn(name=COLUMN_NODE) /*@NotNull*/ protected NestedSetNode node;
 	
 	@Transient protected Boolean automaticallyMoveToNewParent;
 	@Transient protected AbstractDataTreeNode newParent;

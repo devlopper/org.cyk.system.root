@@ -10,11 +10,13 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeNodeBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
@@ -93,6 +95,9 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		for(NODE e : list){
 			e.setNode(null);
 			dao.delete(e);
+			GlobalIdentifier gid = e.getGlobalIdentifier();
+			e.setGlobalIdentifier(null);
+			inject(GlobalIdentifierBusiness.class).delete(gid);
 			logTrace("\t\tElement {} deleted", e);
 		}
 		nestedSetNodeBusiness.delete(rootNode);

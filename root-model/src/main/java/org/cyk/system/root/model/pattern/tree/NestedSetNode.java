@@ -16,6 +16,7 @@ import org.cyk.utility.common.validation.System;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter
 @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
@@ -26,9 +27,11 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	public static final Integer FIRST_LEFT_INDEX = 0;
 	public static final Integer FIRST_RIGHT_INDEX = 1;
 	
+	@Accessors(chain=true)
 	@ManyToOne @JoinColumn(name=COLUMN_SET) @NotNull(groups=System.class)
 	private NestedSet set;
 	
+	@Accessors(chain=true)
 	@JoinColumn(name=COLUMN_PARENT) @ManyToOne
 	private NestedSetNode parent;
 	
@@ -37,6 +40,10 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	
 	@Column(nullable=false) @NotNull(groups=System.class)
 	private Integer rightIndex;
+	
+	private Integer numberOfChildren;
+	
+	private Integer numberOfDirectChildren;
 	
 	private String detachedIdentifier;
 	
@@ -61,9 +68,15 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	}
 	
 	@Override
+	public NestedSetNode setCode(String code) {
+		return (NestedSetNode) super.setCode(code);
+	}
+	
+	/*
+	@Override
 	public String toString() {
 		return getLogMessage();// super.toString()+String.format(TO_STRING_FORMAT, identifier,leftIndex,rightIndex,parent==null?Constant.EMPTY_STRING:parent.getIdentifier(),detachedIdentifier,set.getIdentifier());
-	}
+	}*/
 	
 	/*@Override
 	public String getLogMessage() {
