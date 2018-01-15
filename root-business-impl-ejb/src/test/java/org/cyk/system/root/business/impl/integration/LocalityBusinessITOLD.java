@@ -80,7 +80,7 @@ public class LocalityBusinessITOLD extends AbstractBusinessIT {
     	assertNumberOfChildren(localityCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
     	Locality locality = inject(LocalityDao.class).read(localityCode);
     	locality.setAutomaticallyMoveToNewParent(Boolean.TRUE);
-    	locality.setNewParent(parentCode == null ? null : inject(LocalityDao.class).read(parentCode));
+    	locality.set__parent__(parentCode == null ? null : inject(LocalityDao.class).read(parentCode));
     	inject(LocalityBusiness.class).update(locality);
     	assertNumberOfChildren(localityCode, expectedNumberOfChildren,expectedNumberOfDirectChildren);
     }

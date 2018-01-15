@@ -44,6 +44,7 @@ import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /*lombok*/
 
@@ -75,7 +76,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	/**
 	 * Used in user interface to reference one and only one parent
 	 */
-	@Transient private AbstractIdentifiable __parent__;
+	@Transient @Accessors(chain=true) private AbstractIdentifiable __parent__;
 	@Transient private Collection<AbstractIdentifiable> parents;
 	@Transient private Collection<AbstractIdentifiable> children;
 	

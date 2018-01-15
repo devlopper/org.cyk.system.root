@@ -57,7 +57,7 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 				locality = new Locality(country.getContinent(), inject(LocalityTypeDao.class).read(RootConstant.Code.LocalityType.COUNTRY), country.getCode(), country.getName());
 			country.setLocality(locality);
 		}
-		locality.setNewParent(country.getContinent());
+		locality.set__parent__(country.getContinent());
 		super.beforeCreate(country);
 		createIfNotIdentified(locality);
 	}
@@ -85,7 +85,7 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 		if((oldCountry.getContinent()==null && country.getContinent()!=null) || (oldCountry.getContinent()!=null && country.getContinent()==null)
 				|| !oldCountry.getContinent().getIdentifier().equals(country.getContinent().getIdentifier()) ){
 			country.getLocality().setAutomaticallyMoveToNewParent(Boolean.TRUE);
-			country.getLocality().setNewParent(country.getContinent());
+			country.getLocality().set__parent__(country.getContinent());
 		}
 		inject(LocalityBusiness.class).update(country.getLocality());
 	}

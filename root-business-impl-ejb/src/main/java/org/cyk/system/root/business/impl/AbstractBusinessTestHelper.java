@@ -32,11 +32,15 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.Entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.text.WordUtils;
 import org.cyk.system.OrgCykSystemPackage;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -114,10 +118,6 @@ import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.exolab.castor.types.DateTime;
 import org.hamcrest.Matcher;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -691,7 +691,6 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		assertThat("Interval "+interval+" contains "+value
 				,inject(IntervalBusiness.class).contains(interval, commonUtils.getBigDecimal(value), scale==null ? 0: new Integer(scale)));
 	}
-	
 	
 	private String getThrowableMessage(String movementCollectionCode,Boolean increment,Integer actionId){
 		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);

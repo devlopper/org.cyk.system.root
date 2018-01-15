@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.AbstractIdentifiable;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 	@ManyToOne @JoinColumn(name=COLUMN_NODE) @NotNull protected NestedSetNode node;
 	
 	@Transient protected Boolean automaticallyMoveToNewParent;
-	@Transient protected AbstractDataTreeNode newParent;
+	//@Transient protected AbstractDataTreeNode newParent;
 	
 	public AbstractDataTreeNode(AbstractDataTreeNode parent,String code,String label) {
 		super(code,label,null,null);
@@ -35,8 +36,13 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 	
 	public AbstractDataTreeNode setParentNode(AbstractDataTreeNode parent){
 		this.node=parent==null?null:new NestedSetNode(parent.getNode().getSet(), parent.getNode());
-		setNewParent(parent);
+		set__parent__(parent);
 		return this;
+	}
+	
+	@Override
+	public AbstractDataTreeNode get__parent__() {
+		return (AbstractDataTreeNode) super.get__parent__();
 	}
 	
 	public static final String FIELD_NODE = "node";

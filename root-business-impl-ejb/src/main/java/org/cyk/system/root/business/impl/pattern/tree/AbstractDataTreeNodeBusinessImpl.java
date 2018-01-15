@@ -41,11 +41,12 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 	@Override
 	protected void beforeCreate(NODE enumeration) {
 		if(enumeration.getNode()==null){
-			if(enumeration.getNewParent()==null){
+			if(enumeration.get__parent__()==null){
 				enumeration.setNode(new NestedSetNode(new NestedSet(), null));
+				enumeration.getNode().getSet().setCode(enumeration.getCode());
 				enumeration.getNode().getSet().setName(enumeration.getName());
 			}else{
-				enumeration.setParentNode(enumeration.getNewParent());
+				enumeration.setParentNode(enumeration.get__parent__());
 				//enumeration.setNode(new NestedSetNode(new NestedSet(), enumeration.getNewParent().getNode()));
 			}
 			//enumeration.setNode(new NestedSetNode(new NestedSet(), enumeration.getNewParent()==null ? null : enumeration.getNewParent().getNode()));
@@ -79,8 +80,8 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		super.afterUpdate(node);
 		if(Boolean.TRUE.equals(node.getAutomaticallyMoveToNewParent())){
 			NODE parent = dao.readParent(node);
-			if(parent==null && node.getNewParent()!=null || node.getNewParent()==null && parent!=null || !parent.equals(node.getNewParent()))
-				move(node.getCode(), node.getNewParent().getCode());
+			if(parent==null && node.get__parent__()!=null || node.get__parent__()==null && parent!=null || !parent.equals(node.get__parent__()))
+				move(node.getCode(), node.get__parent__().getCode());
 		}
 	}
 	
@@ -334,7 +335,7 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 			T t = super.__execute__();
 			if(getInput().length>10 && !StringHelper.getInstance().isBlank( (java.lang.String)getInput()[10] )){
 				//t.setParentNode(org.cyk.utility.common.helper.InstanceHelper.Pool.getInstance().get(getOutputClass(), getInput()[10]));
-				t.setNewParent(org.cyk.utility.common.helper.InstanceHelper.Pool.getInstance().get(getOutputClass(), getInput()[10]));
+				t.set__parent__(org.cyk.utility.common.helper.InstanceHelper.Pool.getInstance().get(getOutputClass(), getInput()[10]));
 				//System.out.println(getInput()[0]+" : parent = "+t.getNewParent().getCode());
 			}
 			return t;

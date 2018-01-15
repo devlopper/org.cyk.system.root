@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 import org.cyk.utility.common.annotation.FieldOverride;
 
@@ -25,4 +26,8 @@ public class LocalityType extends AbstractDataTreeType implements Serializable  
 		return (LocalityType) super.setCode(code);
 	}
 
+	@Override
+	public LocalityType set__parent__(AbstractIdentifiable __parent__) {
+		return (LocalityType) super.set__parent__(__parent__);
+	}
 }
