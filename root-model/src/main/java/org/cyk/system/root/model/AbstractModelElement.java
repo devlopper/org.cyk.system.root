@@ -3,8 +3,11 @@ package org.cyk.system.root.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.Transient;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.CommonUtils;
+import org.cyk.utility.common.helper.LoggingHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +16,7 @@ import lombok.Setter;
 
 /*mapping - jpa*/
 
+@Getter @Setter
 public abstract class AbstractModelElement implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -26,7 +30,14 @@ public abstract class AbstractModelElement implements Serializable{
 	public static final int PERCENT_SCALE = 4;
 	public static final BigDecimal LOWEST_NON_ZERO_POSITIVE_VALUE = new BigDecimal("0."+StringUtils.repeat('0', 10)+"1");
 	
-	@Getter @Setter protected String lastComputedLogMessage;
+	@Transient protected LoggingHelper.Message.Builder loggingMessageBuilder;
+	protected String lastComputedLogMessage;
+	
+	public LoggingHelper.Message.Builder getLoggingMessageBuilder(Boolean createIfNull){
+		if(loggingMessageBuilder == null && Boolean.TRUE.equals(createIfNull))
+			loggingMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
+		return loggingMessageBuilder;
+	}
 	
 	public abstract String getUiString();
  

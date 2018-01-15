@@ -19,7 +19,7 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	 
 	private String readByParent,countByParent,readByDetachedIdentifier,countByDetachedIdentifier;
 	private String readBySet,countBySet,readWhereDetachedIdentifierIsNullBySet,countWhereDetachedIdentifierIsNullBySet;
-	private String readBySetByLeftOrRightGreaterThanOrEqualTo;
+	private String readBySetByLeftOrRightGreaterThanOrEqualTo,readWhereParentIsNullBySet,countWhereParentIsNullBySet;
 	private String executeIncrementLeftIndex,executeIncrementRightIndex,readDirectChildrenByParent,countDirectChildrenByParent;
 	
 	@Override
@@ -27,7 +27,8 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 		super.namedQueriesInitialisation();
 		 registerNamedQuery(readByParent, _select().where(NestedSetNode.FIELD_SET, PARAMETER_NESTED_SET).and(NestedSetNode.FIELD_LEFT_INDEX,GT).and(NestedSetNode.FIELD_LEFT_INDEX,NestedSetNode.FIELD_RIGHT_INDEX,LT).orderBy(NestedSetNode.FIELD_LEFT_INDEX, Boolean.TRUE));
 		 registerNamedQuery(readByDetachedIdentifier, _select().where(NestedSetNode.FIELD_DETACHED_IDENTIFIER).orderBy(NestedSetNode.FIELD_LEFT_INDEX, Boolean.TRUE));
-		 registerNamedQuery(readBySet,_select().where(NestedSetNode.FIELD_SET, PARAMETER_NESTED_SET)); 
+		 registerNamedQuery(readBySet,_select().where(NestedSetNode.FIELD_SET, PARAMETER_NESTED_SET));
+		 registerNamedQuery(readWhereParentIsNullBySet,_select().where(NestedSetNode.FIELD_SET, PARAMETER_NESTED_SET).append(" AND r.parent IS NULL"));
 		 registerNamedQuery(readWhereDetachedIdentifierIsNullBySet,_select().where(NestedSetNode.FIELD_SET, PARAMETER_NESTED_SET).append(" AND r.detachedIdentifier IS NULL"));
 		 registerNamedQuery(readBySetByLeftOrRightGreaterThanOrEqualTo,_select().where(NestedSetNode.FIELD_SET, PARAMETER_NESTED_SET)
 				 .append(String.format(" AND (r.%1$s >= :%2$s OR r.%3$s >= :%2$s)",NestedSetNode.FIELD_LEFT_INDEX, PARAMETER_INDEX,NestedSetNode.FIELD_RIGHT_INDEX))
@@ -73,6 +74,16 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	@Override
 	public Long countBySet(NestedSet set) {
 		return countNamedQuery(countBySet).parameter(PARAMETER_NESTED_SET, set).resultOne();
+	}
+	
+	@Override
+	public Collection<NestedSetNode> readWhereParentIsNullBySet(NestedSet set) {
+		return namedQuery(readWhereParentIsNullBySet).parameter(PARAMETER_NESTED_SET, set).resultMany();
+	}
+
+	@Override
+	public Long countWhereParentIsNullBySet(NestedSet set) {
+		return countNamedQuery(countWhereParentIsNullBySet).parameter(PARAMETER_NESTED_SET, set).resultOne();
 	}
 	
 	@Override
@@ -125,8 +136,6 @@ public class NestedSetNodeDaoImpl extends AbstractTypedDao<NestedSetNode> implem
 	}
 	
 	private static final String PARAMETER_NESTED_SET = "nestedSet";
-	private static final String PARAMETER_INCREMENT = "increment";
-
-	
+	private static final String PARAMETER_INCREMENT = "increment";	
 
 }

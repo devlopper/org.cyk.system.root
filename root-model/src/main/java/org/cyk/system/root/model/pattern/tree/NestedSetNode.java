@@ -41,8 +41,10 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	@Column(nullable=false) @NotNull(groups=System.class)
 	private Integer rightIndex;
 	
+	@Column(name=COLUMN_NUMBER_OF_CHILDREN)
 	private Integer numberOfChildren;
 	
+	@Column(name=COLUMN_NUMBER_OF_DIRECT_CHILDREN)
 	private Integer numberOfDirectChildren;
 	
 	private String detachedIdentifier;
@@ -94,6 +96,9 @@ public class NestedSetNode extends AbstractIdentifiable implements Serializable 
 	public static final String COLUMN_SET = "set_";
 	public static final String COLUMN_PARENT = "parent_";
 	
-	//private static final String LOG_MESSAGE_FORMAT = /*NestedSetNode.class.getSimpleName()+*/"%s(I=%s,(%s,%s)P=%s)";
-	//private static final String TO_STRING_FORMAT = "(I=%s,L=%s,R=%s,P=%s,DI=%s,S=%s)";
+	public static final String FIELD_NUMBER_OF_CHILDREN = "numberOfChildren";
+	public static final String FIELD_NUMBER_OF_DIRECT_CHILDREN = "numberOfDirectChildren";
+	
+	public static final String COLUMN_NUMBER_OF_CHILDREN = "numberOfChildren";
+	public static final String COLUMN_NUMBER_OF_DIRECT_CHILDREN = "numberOfDirectChildren";
 }

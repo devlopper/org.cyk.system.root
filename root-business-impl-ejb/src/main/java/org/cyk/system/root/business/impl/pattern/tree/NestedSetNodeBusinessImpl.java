@@ -11,19 +11,20 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.pattern.tree.NestedSetBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
-import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.NumberHelper;
+import org.cyk.utility.common.helper.RandomHelper;
 
 @Stateless
 public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<NestedSetNode, NestedSetNodeDao> implements NestedSetNodeBusiness,Serializable {
@@ -77,33 +78,23 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 	@Override
 	protected void beforeCreate(NestedSetNode node) {
 		super.beforeCreate(node);
-		Long numberOfChildrenOfparent = node.getParent() == null ? 0l : dao.countByParent(node.getParent());
-		Long numberOfDirectChildrenOfparent = numberOfChildrenOfparent == 0 ? 0l : dao.countDirectChildrenByParent(node.getParent());
-		LoggingHelper.Message.Builder loggingMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
-		//LogMessage.Builder logMessageBuilder = new LogMessage.Builder("CREATE", node);
-		//logMessageBuilder.addParameters("parent",node.getParent());
-		loggingMessageBuilder.addManyParameters("CREATE NODE");
-		loggingMessageBuilder.addNamedParameters("parent",node.getParent());
+		LoggingHelper.Message.Builder loggingMessageBuilder = node.getLoggingMessageBuilder(Boolean.TRUE);
+		
+		if(node.getParent()!=null)
+			loggingMessageBuilder.addNamedParameters("parent",node.getParent().getCode());
 		
 		NestedSet set = node.getSet();
 		if(set == null && node.getParent()!=null)
 			set = node.getParent().getSet();
-		loggingMessageBuilder.addNamedParameters("set",set);
 		createIfNotIdentified(set);
-		/*
-		if(set.getIdentifier()==null){//set not yet created
-			inject(NestedSetDao.class).create(set);
-			//logMessageBuilder.addParameters("Set",node.getSet());
-			//logTrace("Set {} auto created",node.getSet().getName());
-			loggingMessageBuilder.addNamedParameters("set",node.getSet());
-		}
-		*/
+		
+		loggingMessageBuilder.addNamedParameters("set",set.getCode());
+		
 		if(set.getRoot()==null){//first node of the set
 			node.setParent(null);
 			set.setRoot(node);
 			node.setLeftIndex(NestedSetNode.FIRST_LEFT_INDEX);
 			node.setRightIndex(NestedSetNode.FIRST_RIGHT_INDEX);
-			//inject(NestedSetDao.class).update(set);
 		}else{
 			node.setSet(set);
 			NestedSetNode parent = node.getParent();
@@ -124,53 +115,56 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 					nestedSetNodesWhereIndexesToBeRecomputed.add(index);
 			}
 			//logTrace("On create : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
+			loggingMessageBuilder.addNamedParameters("#node_indexes_to_recompute",nestedSetNodesWhereIndexesToBeRecomputed.size());
 			dao.executeIncrementLeftIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.TRUE, parentRightIndex), 2l);
 			dao.executeIncrementRightIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.FALSE, parentRightIndex), 2l);
 		}
-		
+		loggingMessageBuilder.addNamedParameters("left",node.getLeftIndex(),"right",node.getRightIndex());
 		node.setDetachedIdentifier(null);
 	}
 	
 	@Override
 	protected void __create__(NestedSetNode node) {
-		Integer numberOfElement = NumberHelper.getInstance().get(Integer.class, node.getSet().getNumberOfElement(), 0);
 		if(node.getIdentifier()==null){
 			dao.create(node);
-			node.getSet().setNumberOfElement(NumberHelper.getInstance().add(node.getSet().getNumberOfElement(), 1l).intValue());
-			if(node.getSet().getRoot()==null){//first node of the set
-				//loggingMessageBuilder.addNamedParameters("first",true);
-			}else{
-				//loggingMessageBuilder.addNamedParameters("created",true);
-			}
+			node.getSet().setNumberOfChildren(NumberHelper.getInstance().add(node.getSet().getNumberOfChildren(), 1l).intValue());
 		}else{
 			dao.update(node);
-			//loggingMessageBuilder.addNamedParameters("updated",true);
 		}
-		System.out.println("NestedSetNodeBusinessImpl.__create__() "+numberOfElement+" ::: "+(numberOfElement+5));
-		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfElement")
-				.setDomainNameIdentifier("nestedset").setNumber1(numberOfElement).setNumber2(numberOfElement+5), BusinessException.class);
 		
-		/*
-		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenOfparent")
-				.setDomainNameIdentifier("nestedsetnode").setNumber1(numberOfChildrenOfparent).setNumber2(numberOfChildrenOfparent+2), BusinessException.class);
-		
-		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfDirectChildrenOfparent")
-				.setDomainNameIdentifier("nestedsetnode").setNumber1(numberOfDirectChildrenOfparent).setNumber2(numberOfChildrenOfparent+1), BusinessException.class);
-		*/
-		inject(NestedSetDao.class).update(node.getSet());
-		/*
-		loggingMessageBuilder.addNamedParameters("root",set.getRoot(),"left",node.getLeftIndex(),"right",node.getRightIndex());
-		logTrace(loggingMessageBuilder);
-		*/
+		inject(NestedSetBusiness.class).update(node.getSet());
 	}
-
+	
 	@Override
-	public NestedSetNode delete(NestedSetNode node) {
+	protected void afterCreate(NestedSetNode node) {
+		super.afterCreate(node);
+		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenSet")
+				.setDomainNameIdentifier("nestedset").setNumber1(node.getSet().getNumberOfChildren()).setNumber2(inject(NestedSetNodeDao.class).countBySet(node.getSet()))
+				.setEqual(Boolean.FALSE), BusinessException.class);
+		
+		if(node.getParent() != null) {
+			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenNode")
+					.setDomainNameIdentifier("nestedsetnode").setNumber1(node.getParent().getNumberOfChildren()).setNumber2(inject(NestedSetNodeDao.class)
+							.countByParent(node.getParent())), BusinessException.class);
+			
+			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfDirectChildrenNode")
+					.setDomainNameIdentifier("nestedsetnode").setNumber1(node.getParent().getNumberOfDirectChildren()).setNumber2(inject(NestedSetNodeDao.class)
+							.countDirectChildrenByParent(node.getParent())), BusinessException.class);
+		}						
+	}
+	
+	@Override
+	protected void beforeDelete(NestedSetNode node) {
+		super.beforeDelete(node);
+		LoggingHelper.Message.Builder loggingMessageBuilder = node.getLoggingMessageBuilder(Boolean.TRUE);
+		node.setChildren(new ArrayList<AbstractIdentifiable>());
 		List<NestedSetNode> tree = new ArrayList<>(dao.readByParent(node));
+		node.getChildren().addAll(tree);
 		Collections.reverse(tree);
 		tree.add(node);
-		logTrace(SUB_TREE_ACTION_LOG_FORMAT,"Deleting",node, tree.size(),tree);
-		computeIndexesOnDelete(node.getRightIndex(), tree.size(), dao.readBySetByLeftOrRightGreaterThanOrEqualTo(node.getSet(), node.getRightIndex()+1));
+		Collection<NestedSetNode> nodes = dao.readBySetByLeftOrRightGreaterThanOrEqualTo(node.getSet(), node.getRightIndex()+1);
+		loggingMessageBuilder.addNamedParameters("#node_indexes_to_recompute",nodes.size());
+		computeIndexesOnDelete(node.getRightIndex(), tree.size(), nodes);
 		if(node.getParent()==null){
 			node.getSet().setRoot(null);
 			inject(NestedSetDao.class).update(node.getSet());	
@@ -178,45 +172,46 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		
 		//delete tree
 		for(NestedSetNode n : tree){
+			if(n.getCode().equals(node.getCode()))
+				continue;
 			n.computeLogMessage();
 			n.setParent(null);
 			dao.delete(n);
 			inject(GlobalIdentifierBusiness.class).delete(n.getGlobalIdentifier());
-			logTrace("{} deleted", n.getLastComputedLogMessage());
 		}
+	}
+
+	@Override
+	protected void afterDelete(NestedSetNode node) {
+		super.afterDelete(node);
+		node.getSet().setNumberOfChildren(NumberHelper.getInstance().add(node.getSet().getNumberOfChildren(), -1l).intValue());
 		
+		inject(NestedSetBusiness.class).update(node.getSet());
+		
+		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenSet")
+				.setDomainNameIdentifier("nestedset").setNumber1(node.getSet().getNumberOfChildren()).setNumber2(inject(NestedSetNodeDao.class).countBySet(node.getSet()))
+				.setEqual(Boolean.FALSE), BusinessException.class);
 		//if(dao.countBySet(node.getSet()) == 0)
 		//	inject(NestedSetBusiness.class).delete(node.getSet());
-		
-		//dao.delete(tree);
-		
-		return node;
 	}
-	
-	private void computeIndexesOnDelete(Integer subTreeRootNodeRightIndex,Integer subTreeNodesCount,Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputed) {
-		logTrace("On delete : recomputing indexes of nodes. size = {} , elements = {}", nestedSetNodesWhereIndexesToBeRecomputed.size(),nestedSetNodesWhereIndexesToBeRecomputed);
 		
+	private void computeIndexesOnDelete(Integer subTreeRootNodeRightIndex,Integer subTreeNodesCount,Collection<NestedSetNode> nestedSetNodesWhereIndexesToBeRecomputed) {
 		int step = subTreeNodesCount*2;
 		for(NestedSetNode n : nestedSetNodesWhereIndexesToBeRecomputed){
 			updateBoundaries(n,-step, n.getLeftIndex()>subTreeRootNodeRightIndex?null:false);//both bounds or right only
-			//dao.update(n); //TODO I think it is not necessary! to be confirmed
-			logTrace("Node indexes {} recomputed",n);
-		}
-		
-		//dao.incrementLeftIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.TRUE, subTreeRootNodeRightIndex), -step*1l);
-		//dao.executeIncrementRightIndex(getWhereBoundariesGreaterThanOrEqualTo(nestedSetNodesWhereIndexesToBeRecomputed, Boolean.FALSE, subTreeRootNodeRightIndex), -step*1l);
+		}		
 	}
 	
 	@Override
 	public NestedSetNode detach(NestedSetNode node) {
-		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("DETACH", node);
+		//LogMessage.Builder logMessageBuilder = new LogMessage.Builder("DETACH", node);
 		exceptionUtils().exception(node.getLeftIndex()<=0 && node.getRightIndex()<=0, "exception.nestedsetnode.alreadydetached");
 		List<NestedSetNode> tree = new ArrayList<>(dao.readByParent(node));
 		tree.add(0, node);
-		logMessageBuilder.addParameters("tree",tree,"size",tree.size());
+		//logMessageBuilder.addParameters("tree",tree,"size",tree.size());
 		//logTrace(SUB_TREE_ACTION_LOG_FORMAT,"Detaching", node,tree.size(),tree);
 		computeIndexesOnDelete(node.getRightIndex(), tree.size(), dao.readBySetByLeftOrRightGreaterThanOrEqualTo(node.getSet(), node.getRightIndex()+1));
-		String detachedIdentifier = System.currentTimeMillis()+RandomStringUtils.randomAlphanumeric(12);
+		String detachedIdentifier = System.currentTimeMillis()+RandomHelper.getInstance().getAlphanumeric(12);
 		for(NestedSetNode n : tree){
 			n.computeLogMessage();
 			//n.setParent(null); this link should not be lost : it might help finding the subtree
@@ -228,16 +223,16 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			//logTrace("{} detached -> {}", n.getLastComputedLogMessage(),n.getLogMessage());
 			//logMessageBuilder.addParameters("Detach",n);
 		}
-		logTrace(logMessageBuilder);
+		//logTrace(logMessageBuilder);
 		return node;
 	}
 
 	@Override
 	public NestedSetNode attach(NestedSetNode node, NestedSetNode parent) {
-		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("ATTACH", node);
+		//LogMessage.Builder logMessageBuilder = new LogMessage.Builder("ATTACH", node);
 		exceptionUtils().exception(node.getLeftIndex()>=0 && node.getRightIndex()>=0, "exception.nestedsetnode.alreadyattached");
 		List<NestedSetNode> treeNodes = new ArrayList<>(dao.readByDetachedIdentifier(node.getDetachedIdentifier()));
-		logMessageBuilder.addParameters("nodes",treeNodes);
+		//logMessageBuilder.addParameters("nodes",treeNodes);
 		//logTrace(SUB_TREE_ACTION_LOG_FORMAT,"Attaching", node,treeNodes.size(),treeNodes);
 		treeNodes.get(0).setParent(parent);//Attaching to the new parent
 		for(NestedSetNode treeNode : treeNodes){
@@ -247,7 +242,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			//System.out.println("Children of "+node+" : "+dao.readByParent(node));
 			//System.out.println("Children of "+node+" : "+dao.readAll());
 		}
-		logTrace(logMessageBuilder);
+		//logTrace(logMessageBuilder);
 		return node;
 	}
 	
@@ -275,9 +270,6 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 			commonUtils.increment(Integer.class, node, NestedSetNode.FIELD_RIGHT_INDEX, step);
 	}
 	
-	
 	/**/
-	
-	private static final String SUB_TREE_ACTION_LOG_FORMAT = "{} sub tree ({}). size = {}. Elements = {}";
 		
 }

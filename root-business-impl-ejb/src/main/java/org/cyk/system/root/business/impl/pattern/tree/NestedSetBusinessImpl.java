@@ -18,5 +18,9 @@ public class NestedSetBusinessImpl extends AbstractTypedBusinessService<NestedSe
 		super(dao); 
 	}
 	
-	
+	@Override
+	protected void afterUpdate(NestedSet set) {
+		super.afterUpdate(set);
+		set.getLoggingMessageBuilder(Boolean.TRUE).addNamedParameters("#children",set.getNumberOfChildren());
+	}
 }

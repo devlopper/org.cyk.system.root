@@ -7,11 +7,11 @@ import java.util.List;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeNodeBusiness;
+import org.cyk.system.root.business.api.pattern.tree.NestedSetBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
@@ -22,9 +22,11 @@ import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
+import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
 public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractDataTreeNode,DAO extends AbstractDataTreeNodeDao<NODE>>  
@@ -32,8 +34,6 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 
 	private static final long serialVersionUID = 8279530282390587764L;
 
-	@Inject private NestedSetNodeBusiness nestedSetNodeBusiness;
-	
 	public AbstractDataTreeNodeBusinessImpl(DAO dao) {
         super(dao);
     }
@@ -84,24 +84,49 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		}
 	}
 	
-	@Override
+	protected void beforeDelete(NODE dataTreeNode){
+		super.beforeDelete(dataTreeNode);
+		LoggingHelper.Message.Builder loggingMessageBuilder = dataTreeNode.getLoggingMessageBuilder(Boolean.TRUE);
+		Collection<NODE> children = dao.readByParent(dataTreeNode);
+		loggingMessageBuilder.addNamedParameters("#children",children.size());
+		for(NODE index : children){
+			//index.setNode(null);
+			GlobalIdentifier gid = index.getGlobalIdentifier();
+			index.setGlobalIdentifier(null);
+			dao.delete(index);
+			inject(GlobalIdentifierBusiness.class).delete(gid);
+		}
+	}
+	
+	/*@Override
 	public NODE delete(NODE enumeration) {
-		logTrace("Deleting {} on node {}. Children are the followings :", enumeration,enumeration.getNode());
+		//logTrace("Deleting {} on node {}. Children are the followings :", enumeration,enumeration.getNode());
 		NestedSetNode rootNode = enumeration.getNode();
 		Collection<NODE> list = dao.readByParent(enumeration);
-		for(NODE element : list)
-			logTrace("\tChild {} on node {}", element,element.getNode());
+		//for(NODE element : list)
+		//	logTrace("\tChild {} on node {}", element,element.getNode());
 		list.add(enumeration);
 		for(NODE e : list){
 			e.setNode(null);
-			dao.delete(e);
 			GlobalIdentifier gid = e.getGlobalIdentifier();
 			e.setGlobalIdentifier(null);
+			dao.delete(e);
 			inject(GlobalIdentifierBusiness.class).delete(gid);
-			logTrace("\t\tElement {} deleted", e);
+			//logTrace("\t\tElement {} deleted", e);
 		}
-		nestedSetNodeBusiness.delete(rootNode);
+		inject(NestedSetNodeBusiness.class).delete(rootNode);
+		if(inject(NestedSetNodeDao.class).countBySet(rootNode.getSet()) == 0){
+			inject(NestedSetBusiness.class).delete(rootNode.getSet());
+		}
 		return enumeration;
+	}*/
+	
+	protected void afterDelete(NODE dataTreeNode){
+		super.afterDelete(dataTreeNode);
+		inject(NestedSetNodeBusiness.class).delete(dataTreeNode.getNode());
+		if(inject(NestedSetNodeDao.class).countBySet(dataTreeNode.getNode().getSet()) == 0){
+			inject(NestedSetBusiness.class).delete(dataTreeNode.getNode().getSet());
+		}
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
@@ -166,8 +191,8 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 		Long numberOfChildrenByCountBefore = dao.countByParent(enumeration);
 		Long numberOfChildrenOfParentByCountBefore = dao.countByParent(parent);
 		NestedSetNode node = enumeration.getNode();
-		node = nestedSetNodeBusiness.detach(node);
-		nestedSetNodeBusiness.attach(node,parent.getNode());
+		node = inject(NestedSetNodeBusiness.class).detach(node);
+		inject(NestedSetNodeBusiness.class).attach(node,parent.getNode());
 		
 		Long numberOfChildrenByCountAfter = dao.countByParent(dao.read(enumeration.getIdentifier()));
 		Long numberOfChildrenOfParentByCountAfter = dao.countByParent(dao.read(parent.getIdentifier()));
@@ -246,7 +271,7 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
                 buildHierarchy((NODE) child, children);
     }
     
-	@Override
+	@Override @Deprecated
 	protected NODE __instanciateOne__(String[] values, InstanciateOneListener<NODE> listener) {
 		NODE node = super.__instanciateOne__(values, listener);
 		Integer index = 10;

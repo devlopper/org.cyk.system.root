@@ -299,9 +299,11 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				
 				@Override
 				public Object __execute__() {
+					identifiable.setLoggingMessageBuilder(null);
 					beforeCreate(identifiable);
 					__create__(identifiable);
 			        afterCreate(identifiable);	
+			        logTrace(identifiable.getLoggingMessageBuilder());
 					return null;
 				}
 				
@@ -418,6 +420,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				
 				@Override
 				public Object __execute__() {
+					identifiable.setLoggingMessageBuilder(null);
 					beforeUpdate(identifiable);
 					//IDENTIFIABLE newObject = dao.update(identifiable);
 					dao.update(identifiable);
@@ -425,7 +428,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
 				    afterUpdate(identifiable);
 					//return newObject; We might lost some informations by returning the new managed object. better to keep the old one
-					return identifiable;
+				    logTrace(identifiable.getLoggingMessageBuilder());
+				    return identifiable;
 				}
 				
 			}.execute();
@@ -495,6 +499,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		afterDelete(getListeners(), identifiable);
 		afterCrud(identifiable, Crud.DELETE);
 	}
+	
+	protected void __delete__(final IDENTIFIABLE identifiable){
+		dao.delete(identifiable);
+	}
 
 	@Override
 	public IDENTIFIABLE delete(final IDENTIFIABLE identifiable) {
@@ -515,14 +523,16 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				
 				@Override
 				public Object __execute__() {
+					identifiable.setLoggingMessageBuilder(null);
 					if(Boolean.TRUE.equals(identifiable.getCheckIfExistOnDelete()) ? getPersistenceService().read(identifiable.getIdentifier())!=null : Boolean.TRUE){
 						beforeDelete(identifiable);
 						if(identifiable.getGlobalIdentifier()!=null){
 							inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
 							identifiable.setGlobalIdentifier(null);
 						}		
-						dao.delete(identifiable);
-						afterDelete(identifiable);		
+						__delete__(identifiable);
+						afterDelete(identifiable);	
+						logTrace(identifiable.getLoggingMessageBuilder());
 					}
 					return null;
 				}

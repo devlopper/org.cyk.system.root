@@ -185,6 +185,11 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public String getUiString() {
 		return toString();
 	}
+	
+	@Override
+	public String toString() {
+		return identifier;
+	}
 
 	/*@Override
 	public String toString() {

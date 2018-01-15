@@ -1173,8 +1173,10 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return this;
 		}
 		
-		public TestCase assertNestedSet(String setCode,String expectedRootCode){
-			assertEquals("root is not equal", StringUtils.isBlank(expectedRootCode) ? null : read(NestedSetNode.class, expectedRootCode), read(NestedSet.class, setCode).getRoot());
+		public TestCase assertNestedSet(String setCode,String expectedRootCode,Long expectedChildrenCount){
+			NestedSet set = read(NestedSet.class, setCode);
+			assertEquals("root is not equal", StringUtils.isBlank(expectedRootCode) ? null : read(NestedSetNode.class, expectedRootCode), set.getRoot());
+			assertEquals("children count is not equal", expectedChildrenCount, inject(NestedSetNodeDao.class).countBySet(set));
 			return this;
 		}
 		

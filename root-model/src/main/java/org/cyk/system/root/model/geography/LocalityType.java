@@ -19,5 +19,10 @@ public class LocalityType extends AbstractDataTreeType implements Serializable  
 	public LocalityType(LocalityType parent, String code,String label) {
 		super(parent, code,label);
 	}
+	
+	@Override
+	public LocalityType setCode(String code) {
+		return (LocalityType) super.setCode(code);
+	}
 
 }

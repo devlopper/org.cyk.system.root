@@ -25,6 +25,9 @@ public interface NestedSetNodeDao extends TypedDao<NestedSetNode> , Serializable
 	Collection<NestedSetNode> readBySet(NestedSet set);
 	Long countBySet(NestedSet set);
 	
+	Collection<NestedSetNode> readWhereParentIsNullBySet(NestedSet set);
+	Long countWhereParentIsNullBySet(NestedSet set);
+	
 	Collection<NestedSetNode> readWhereDetachedIdentifierIsNullBySet(NestedSet set);
 	Long countWhereDetachedIdentifierIsNullBySet(NestedSet set);
 	

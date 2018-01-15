@@ -23,8 +23,8 @@ public class NestedSet extends AbstractIdentifiable implements Serializable  {
 
 	@ManyToOne @JoinColumn(name=COLUMN_ROOT) private NestedSetNode root;
 	
-	@Column(name=COLUMN_NUMBER_OF_ELEMENT)
-	private Integer numberOfElement; 
+	@Column(name=COLUMN_NUMBER_OF_CHILDREN)
+	private Integer numberOfChildren;
 	
 	@Override
 	public NestedSet setCode(String code) {
@@ -32,8 +32,9 @@ public class NestedSet extends AbstractIdentifiable implements Serializable  {
 	}
 
 	public static final String FIELD_ROOT = "root";
-	public static final String FIELD_NUMBER_OF_ELEMENT = "numberOfElement";
+	public static final String FIELD_NUMBER_OF_CHILDREN = "numberOfChildren";
 	
 	public static final String COLUMN_ROOT = "root";
-	public static final String COLUMN_NUMBER_OF_ELEMENT = "numberOfElement";
+	public static final String COLUMN_NUMBER_OF_CHILDREN = "numberOfChildren";
+	
 }
