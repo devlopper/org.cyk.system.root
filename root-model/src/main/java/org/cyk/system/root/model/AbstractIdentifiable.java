@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map.Entry;
 
 import javax.persistence.Column;
@@ -231,20 +230,17 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return parents;
 	}
 	
-	public AbstractIdentifiable getOneParent(){
-		return (AbstractIdentifiable) (parents == null || parents.isEmpty() ? null : ((List<AbstractIdentifiable>)parents).get(((List<AbstractIdentifiable>)parents).size()-1));
-	}
-	
 	/**
 	 * Set the parent.
 	 * Clear existing parents and add this parent to the list
 	 * @param parent
 	 */
-	public void setOneParent(AbstractIdentifiable parent){
+	public AbstractIdentifiable set__parent__(AbstractIdentifiable parent){
 		getParents().clear();
 		if(parent!=null)
 			getParents().add(parent);
 		this.__parent__ = parent;
+		return this;
 	}
 	
 	public Collection<AbstractIdentifiable> getChildren(){
@@ -486,7 +482,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	public static final String FIELD_IDENTIFIER = "identifier";
 	public static final String FIELD_GLOBAL_IDENTIFIER = "globalIdentifier";
-	public static final String FIELD_PARENT = "parent";
+	public static final String FIELD_PARENT = "__parent__";
 	
 	public static final String COLUMN_IDENTIFIER = "identifier";
 	public static final String COLUMN_GLOBAL_IDENTIFIER = "globalidentifier";

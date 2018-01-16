@@ -30,23 +30,23 @@ public class LocalityBusinessIT extends AbstractBusinessIT {
     @Test
     public void crudLocalityTypes(){
     	TestCase testCase = instanciateTestCase();
-    	String continentCode = RandomHelper.getInstance().getAlphanumeric(5);
+    	String continentCode = RandomHelper.getInstance().getAlphanumeric(5)+"CONTINENT";
     	LocalityType continent = new LocalityType().setCode(continentCode);
     	testCase.create(continent);
     	
-    	String countryCode = RandomHelper.getInstance().getAlphanumeric(5);
+    	String countryCode = RandomHelper.getInstance().getAlphanumeric(5)+"COUNTRY";
     	LocalityType country = new LocalityType().setCode(countryCode).set__parent__(continent);
     	testCase.create(country);
     	
-    	String regionCode = RandomHelper.getInstance().getAlphanumeric(5);
+    	String regionCode = RandomHelper.getInstance().getAlphanumeric(5)+"REG";
     	LocalityType region = new LocalityType().setCode(regionCode).set__parent__(country);
     	testCase.create(region);
     	
-    	String cityCode = RandomHelper.getInstance().getAlphanumeric(5);
+    	String cityCode = RandomHelper.getInstance().getAlphanumeric(5)+"CITY";
     	LocalityType city = new LocalityType().setCode(cityCode).set__parent__(region);
     	testCase.create(city);
     	
-    	String houseCode = RandomHelper.getInstance().getAlphanumeric(5);
+    	String houseCode = RandomHelper.getInstance().getAlphanumeric(5)+"HOUSE";
     	LocalityType house = new LocalityType().setCode(houseCode).set__parent__(city);
     	testCase.create(house);
     	
@@ -56,6 +56,18 @@ public class LocalityBusinessIT extends AbstractBusinessIT {
     	testCase.assertNestedSetNode(regionCode, continentCode, countryCode, 2, 7, 1l, 2l);
     	testCase.assertNestedSetNode(cityCode, continentCode, regionCode, 3, 6, 1l, 1l);
     	testCase.assertNestedSetNode(houseCode, continentCode, cityCode, 4, 5, 0l, 0l);
+    	
+    	testCase.assertParents(LocalityType.class, continentCode);
+    	testCase.assertParents(LocalityType.class, countryCode, continentCode);
+    	testCase.assertParents(LocalityType.class, regionCode, countryCode,continentCode);
+    	testCase.assertParents(LocalityType.class, cityCode, regionCode, countryCode,continentCode);
+    	testCase.assertParents(LocalityType.class, houseCode, cityCode, regionCode, countryCode,continentCode);
+    	
+    	testCase.assertParents(LocalityType.class, continentCode,1);
+    	testCase.assertParents(LocalityType.class, countryCode,1, continentCode);
+    	testCase.assertParents(LocalityType.class, regionCode,1, countryCode);
+    	testCase.assertParents(LocalityType.class, cityCode,1, regionCode);
+    	testCase.assertParents(LocalityType.class, houseCode,1, cityCode);
     	
     	testCase.clean();
     }

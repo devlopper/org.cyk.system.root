@@ -364,12 +364,27 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return null;
 	}
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void setParents(IDENTIFIABLE identifiable,Integer levelLimitIndex) {
+		identifiable.getParents().clear();
+		if(levelLimitIndex == null)
+			identifiable.getParents().addAll(findParentRecursively(identifiable));	
+		else {
+			identifiable.set__parent__(findParent(identifiable));
+		}
+		
+	}
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public void setParents(Collection<IDENTIFIABLE> identifiables,Integer levelLimitIndex) {
+		for(IDENTIFIABLE index : identifiables)
+			setParents(index,levelLimitIndex);
+	}
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public void setParents(IDENTIFIABLE identifiable) {
-
+		setParents(identifiable, null);
 	}
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public void setParents(Collection<IDENTIFIABLE> identifiables) {
-		
+		setParents(identifiables, null);
 	}
 	/**
 	 * Utilities methods

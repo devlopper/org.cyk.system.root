@@ -155,6 +155,10 @@ public interface IdentifiableBusinessService <IDENTIFIABLE extends Identifiable<
                     
                     AbstractIdentifiable findParent(IDENTIFIABLE identifiable);
                     Collection<AbstractIdentifiable> findParentRecursively(IDENTIFIABLE identifiable);
+                    
+                    void setParents(IDENTIFIABLE identifiable,Integer levelLimitIndex);
+                    void setParents(Collection<IDENTIFIABLE> identifiables,Integer levelLimitIndex);
+                    
                     void setParents(IDENTIFIABLE identifiable);
                     void setParents(Collection<IDENTIFIABLE> identifiables);
                     

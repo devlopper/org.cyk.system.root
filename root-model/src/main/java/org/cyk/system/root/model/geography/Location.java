@@ -63,7 +63,9 @@ public class Location extends Contact implements Serializable{
 	
 	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_LOCALITY = "locality";
+	public static final String FIELD_GLOBAL_POSITION = "globalPosition";
 	
 	public static final String COLUMN_TYPE = "type_";
 	public static final String COLUMN_LOCALITY = "locality";
+	
 }

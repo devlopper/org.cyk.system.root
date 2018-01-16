@@ -1,6 +1,8 @@
 package org.cyk.system.root.business.impl.geography;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
@@ -17,6 +19,8 @@ import org.cyk.system.root.persistence.api.geography.LocalityDao;
 import org.cyk.system.root.persistence.api.geography.LocalityTypeDao;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
+import org.cyk.utility.common.helper.ArrayHelper;
+import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
@@ -94,6 +98,23 @@ public class CountryBusinessImpl extends AbstractTypedBusinessService<Country, C
 	protected void afterDelete(Country country) {
 		super.afterDelete(country);
 		inject(LocalityBusiness.class).delete(country.getLocality());
+	}
+	
+	@Override
+	public void setContinent(Collection<Country> countries) {
+		new CollectionHelper.Iterator.Adapter.Default<Country>(countries){
+			private static final long serialVersionUID = 1L;
+
+			protected void __executeForEach__(Country country) {
+				country.setContinent(inject(LocalityDao.class).readParent(country.getLocality()));//TODO do better by using a function that get parent by type
+			}
+		}.execute();
+	}
+	
+	@Override
+	public void setContinent(Country... countries) {
+		if(ArrayHelper.getInstance().isNotEmpty(countries))
+			setContinent(Arrays.asList(countries));
 	}
 	
 	/**/

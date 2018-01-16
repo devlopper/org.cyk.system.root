@@ -3,6 +3,7 @@ package org.cyk.system.root.business.impl.pattern.tree;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.TransactionAttribute;
@@ -139,17 +140,24 @@ public abstract class AbstractDataTreeNodeBusinessImpl<NODE extends AbstractData
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public void setParents(NODE node) {
-		for(AbstractIdentifiable identifiable : findParentRecursively(node))
-			node.getParents().add(identifiable);
+	public void setParents(NODE node,Integer levelLimitIndex) {
+		super.setParents(node, levelLimitIndex);
+		Collections.reverse((List<?>) node.getParents());
+		/*if(node.getParents() == null)
+			node.setParents(new ArrayList<AbstractIdentifiable>());
+		else
+			node.getParents().clear();
+		Collection<AbstractIdentifiable> parents;
+		if(levelLimitIndex == null)
+			parents = findParentRecursively(node);
+		else {
+			parents = new ArrayList<>();
+			parents.add(findParent(node));
+		}
+		for(AbstractIdentifiable identifiable : parents)
+			node.getParents().add(identifiable);*/
 	} 
-
-	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
-	public void setParents(Collection<NODE> nodes) {
-		for(NODE node : nodes)
-			setParents(node);
-	}
-
+	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public NODE findParent(String code){
 		return findParent(dao.read(code));

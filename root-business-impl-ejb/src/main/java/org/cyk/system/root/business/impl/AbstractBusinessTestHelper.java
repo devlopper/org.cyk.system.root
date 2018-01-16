@@ -46,6 +46,7 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
+import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
@@ -69,6 +70,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
+import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -1188,6 +1190,21 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			assertEquals("direct children count is not equal", expectedDirectChildrenCount, inject(NestedSetNodeDao.class).countDirectChildrenByParent(node));
 			assertEquals("children count is not equal", expectedChildrenCount, inject(NestedSetNodeDao.class).countByParent(node));
 			return this;
+		}
+		
+		public <T extends AbstractIdentifiable> TestCase assertParents(Class<T> aClass,String code,Integer levelLimitIndex,String...parentsCodes){
+			T identifiable = read(aClass, code);
+	    	inject(BusinessInterfaceLocator.class).injectTyped(aClass).setParents(identifiable,levelLimitIndex);
+	    	List<AbstractIdentifiable> parents = new ArrayList<>();
+	    	if(ArrayHelper.getInstance().isNotEmpty(parentsCodes))
+	    		for(String index : parentsCodes)
+	    			parents.add(read(aClass, index));
+	    	assertList(parents, (List<AbstractIdentifiable>)identifiable.getParents());
+	    	return this;
+		}
+		
+		public <T extends AbstractIdentifiable> TestCase assertParents(Class<T> aClass,String code,String...parentsCodes){
+			return assertParents(aClass, code, null, parentsCodes);
 		}
 		
 		/**/

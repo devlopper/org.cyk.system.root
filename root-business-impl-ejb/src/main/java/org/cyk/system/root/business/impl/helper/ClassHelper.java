@@ -31,11 +31,11 @@ public class ClassHelper extends AbstractBean implements Serializable {
     	public Boolean isHierarchy(Class<?> aClass) {
     		return org.cyk.utility.common.helper.ClassHelper.getInstance().isInstanceOf(AbstractDataTreeNode.class, aClass);
     	}
-    	/*
+    	
     	@Override
     	public String getHierarchyFieldName(Class<?> aClass) {
-    		return FieldHelper.getInstance().buildPath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_PARENT);
-    	}*/
+    		return AbstractDataTreeNode.FIELD_PARENT;
+    	}
     	
     	@SuppressWarnings("unchecked")
 		@Override

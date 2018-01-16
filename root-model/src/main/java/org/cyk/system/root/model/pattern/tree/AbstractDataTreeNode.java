@@ -9,7 +9,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractEnumeration;
-import org.cyk.system.root.model.AbstractIdentifiable;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,6 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 	@ManyToOne @JoinColumn(name=COLUMN_NODE) @NotNull protected NestedSetNode node;
 	
 	@Transient protected Boolean automaticallyMoveToNewParent;
-	//@Transient protected AbstractDataTreeNode newParent;
 	
 	public AbstractDataTreeNode(AbstractDataTreeNode parent,String code,String label) {
 		super(code,label,null,null);
