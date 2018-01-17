@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<!--MarkerFilter marker="Sex_CREATED" onMatch="ACCEPT" onMismatch="DENY" /-->	
+			<!--MarkerFilter marker="Sex_create_BEFORE" onMatch="ACCEPT" onMismatch="DENY" /!-->		
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		
+	</Appenders>
+	<Loggers>
+		<Logger name="org.cyk.utility.common.helper.ClassHelper" level="trace">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<!--Logger name="org.cyk.utility.common.helper.ValidationHelper$Validate$Adapter$Default" level="trace">
+			<AppenderRef ref="Console" />
+		</Logger-->
+		<!--Logger name="org.cyk.system.root.persistence.impl.geography.ElectronicMailDaoImpl"
+			level="trace">
+			<AppenderRef ref="Console" />
+		</Logger-->
+		<!--Logger name="org.cyk.system.root.business.impl.RealDataSet" level="trace">
+			<AppenderRef ref="Console" />
+		</Logger-->
+		<!--Logger name="org.cyk.system.root.business.impl.RealDataSet" level="trace">
+			<AppenderRef ref="InstallConsole" />
+		</Logger-->
+		<!--Logger name="org.cyk.system.root.business.impl.globalidentification.GlobalIdentifierBusinessImpl" level="trace">
+			<AppenderRef ref="Console" />
+		</Logger-->
+		<!--Logger name="org.cyk.system.root.business.impl.geography.LocalityTypeBusinessImpl" level="trace">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="org.cyk.system.root.business.impl.pattern.tree.NestedSetNodeBusinessImpl" level="trace">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="org.cyk.system.root.business.impl.pattern.tree.NestedSetBusinessImpl" level="trace">
+			<AppenderRef ref="Console" />
+		</Logger-->
+		<Root level="trace">
+			<!--AppenderRef ref="Console"/ -->
+		</Root>
+	</Loggers>
+</Configuration>

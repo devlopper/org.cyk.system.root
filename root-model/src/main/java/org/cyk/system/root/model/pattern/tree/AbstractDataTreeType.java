@@ -22,4 +22,10 @@ public abstract class AbstractDataTreeType extends AbstractDataTreeNode implemen
 		this(parent,code,code);
 	}
 	
+	public static class Filter<T extends AbstractDataTreeType> extends AbstractDataTreeNode.Filter<T> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	
+		
+		
+    }
 }

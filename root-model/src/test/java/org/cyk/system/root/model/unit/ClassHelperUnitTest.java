@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.persistence.Entity;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.geography.Locality;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.StringHelper;
@@ -19,8 +21,22 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 public class ClassHelperUnitTest extends AbstractUnitTest {
-
 	private static final long serialVersionUID = 8008545189557409317L;
+	
+	static {
+		ClassHelper.IDENTIFIABLE_BASE_CLASSES.add(GlobalIdentifier.class);
+		ClassHelper.IDENTIFIABLE_BASE_CLASSES.add(AbstractIdentifiable.class);
+	}
+	
+	@Test
+	public void getLocalityByIdentifier(){
+		assertEquals(Locality.class, ClassHelper.getInstance().getClassByIdentifier("locality"));
+	}
+	
+	@Test
+	public void getGlobalIdentifierByIdentifier(){
+		assertEquals(GlobalIdentifier.class, ClassHelper.getInstance().getClassByIdentifier(GlobalIdentifier.class.getSimpleName().toLowerCase()));
+	}
 	
 	//@Test
 	public void getClasses(){

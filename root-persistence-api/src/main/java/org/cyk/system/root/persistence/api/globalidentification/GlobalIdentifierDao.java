@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.FilterHelper.Filter;
 
 public interface GlobalIdentifierDao {
 
@@ -18,4 +20,9 @@ public interface GlobalIdentifierDao {
 	GlobalIdentifier delete(GlobalIdentifier globalIdentifier);
 	Collection<GlobalIdentifier> readAll();
 	Long countAll();
+	
+	DataReadConfiguration getDataReadConfig();
+	
+	Collection<GlobalIdentifier> readByFilter(Filter<GlobalIdentifier> filter, DataReadConfiguration dataReadConfiguration);
+	Long countByFilter(Filter<GlobalIdentifier> filter, DataReadConfiguration dataReadConfiguration);
 }

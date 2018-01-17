@@ -39,6 +39,7 @@ import org.cyk.utility.common.annotation.user.interfaces.InputNumber;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.annotation.user.interfaces.InputTextarea;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CriteriaHelper;
 import org.cyk.utility.common.helper.FileHelper;
 import org.cyk.utility.common.helper.FilterHelper;
@@ -51,9 +52,13 @@ import lombok.Setter;
 
 @Getter @Setter @Entity @EqualsAndHashCode(callSuper=false,of="identifier")
 public class GlobalIdentifier extends AbstractModelElement implements Identifiable<String>, Serializable {
-
 	private static final long serialVersionUID = -8743545996393946779L;
 
+	static {
+		ClassHelper.IDENTIFIABLE_BASE_CLASSES.add(GlobalIdentifier.class);
+		ClassHelper.IDENTIFIABLE_BASE_CLASSES.add(AbstractIdentifiable.class);
+	}
+	
 	/**
 	 * System informations
 	 */
@@ -202,6 +207,8 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String LOG_FORMAT = "GID(%s,%s,%s,%s)";
 	
 	public static final String FIELD_IDENTIFIER = "identifier";
+	public static final String FIELD_CREATION_DATE = "creationDate";
+	public static final String FIELD_CREATED_BY = "createdBy";
 	public static final String FIELD_CODE = "code";
 	public static final String FIELD_NAME = "name";
 	public static final String FIELD_ABBREVIATION = "abbreviation";
@@ -215,10 +222,18 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_DEFAULTED = "defaulted";
 	public static final String FIELD_SUPPORTING_DOCUMENT = "supportingDocument";
 	public static final String FIELD_DERIVED = "derived";
+	public static final String FIELD_ACTIVATED = "activated";
+	public static final String FIELD_CLOSED = "closed";
 	public static final String FIELD_USABLE = "usable";
 	public static final String FIELD_DESCRIPTION = "description";
 	public static final String FIELD_EXTERNAL_IDENTIFIER = "externalIdentifier";
 	public static final String FIELD_REQUIRED = "required";
+	public static final String FIELD_RUD = "rud";
+	public static final String FIELD_MALE = "male";
+	public static final String FIELD_INITIALIZED = "initialized";
+	public static final String FIELD_CONSTANT = "constant";
+	public static final String FIELD_OWNER = "owner";
+	public static final String FIELD_CASCADE_STYLE_SHEET = "cascadeStyleSheet";
 	
 	public static final String COLUMN_CREATED_BY = "createdby";
 	public static final String COLUMN_OWNER = "owner";

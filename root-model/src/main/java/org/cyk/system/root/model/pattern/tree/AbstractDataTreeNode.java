@@ -47,4 +47,17 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 	
 	public static final String COLUMN_NODE = "node";
 	
+	/**/
+	
+	public static class Filter<T extends AbstractDataTreeNode> extends AbstractEnumeration.Filter<T> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	
+		@Override
+		public org.cyk.utility.common.helper.FilterHelper.Filter<T> addMaster(Object master) {
+			if(master instanceof AbstractDataTreeNode)
+				master = ((AbstractDataTreeNode)master).getNode();
+			return super.addMaster(master);
+		}
+		
+    }
 }

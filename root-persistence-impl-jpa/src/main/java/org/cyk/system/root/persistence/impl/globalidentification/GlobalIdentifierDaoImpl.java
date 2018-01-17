@@ -11,10 +11,16 @@ import javax.persistence.TypedQuery;
 
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
+import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.FilterHelper.Filter;
+
+import lombok.Getter;
 
 public class GlobalIdentifierDaoImpl implements GlobalIdentifierDao {
 
 	@PersistenceContext private EntityManager entityManager;
+	@Getter private DataReadConfiguration dataReadConfig = new DataReadConfiguration();
+	//private String readByFilter;
 	
 	@Override
 	public GlobalIdentifier read(String identifier,Map<String,Object> hints) {
@@ -43,6 +49,16 @@ public class GlobalIdentifierDaoImpl implements GlobalIdentifierDao {
 	@Override
 	public GlobalIdentifier readByCode(String code) {
 		return readByCode(code,null);
+	}
+	
+	@Override
+	public Collection<GlobalIdentifier> readByFilter(Filter<GlobalIdentifier> filter,DataReadConfiguration dataReadConfiguration) {
+		return null;
+	}
+	
+	@Override
+	public Long countByFilter(Filter<GlobalIdentifier> filter, DataReadConfiguration dataReadConfiguration) {
+		return null;
 	}
 	
 	@Override

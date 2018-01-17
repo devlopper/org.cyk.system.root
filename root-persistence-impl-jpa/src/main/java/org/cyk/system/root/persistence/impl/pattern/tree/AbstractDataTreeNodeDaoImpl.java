@@ -6,12 +6,19 @@ import static org.cyk.utility.common.computation.ArithmeticOperator.LT;
 import java.io.Serializable;
 import java.util.Collection;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.AbstractDataTreeNodeDao;
 import org.cyk.system.root.persistence.impl.AbstractEnumerationDaoImpl;
 import org.cyk.system.root.persistence.impl.QueryStringBuilder;
+import org.cyk.system.root.persistence.impl.QueryWrapper;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.FilterHelper;
+import org.cyk.utility.common.helper.FilterHelper.Filter;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDataTreeNode> extends AbstractEnumerationDaoImpl<ENUMERATION> 
 	implements AbstractDataTreeNodeDao<ENUMERATION>,Serializable {
@@ -40,6 +47,26 @@ public abstract class AbstractDataTreeNodeDaoImpl<ENUMERATION extends AbstractDa
 				 //.orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_ORDER_NUMBER), Boolean.TRUE)
 				 .orderBy(commonUtils.attributePath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_LEFT_INDEX), Boolean.TRUE)
 				 );
+	}
+	
+	@Override
+	protected void listenInstanciateJpqlBuilder(String name, JavaPersistenceQueryLanguage builder) {
+		super.listenInstanciateJpqlBuilder(name, builder);
+		if(readByFilter.equals(name)){
+			builder.setFieldName(FieldHelper.getInstance().buildPath(AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_PARENT))
+				.where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected <T> void processQueryWrapper(Class<T> aClass,QueryWrapper<T> queryWrapper, String queryName,Object[] arguments) {
+		super.processQueryWrapper(aClass, queryWrapper, queryName,arguments);
+		if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
+			FilterHelper.Filter<T> filter = (Filter<T>) arguments[0];
+			//System.out.println("AbstractDataTreeNodeDaoImpl.processQueryWrapper() : "+filter.filterMasters(clazz));
+			queryWrapper.parameterInIdentifiers(filter.filterMasters(NestedSetNode.class),AbstractDataTreeNode.FIELD_NODE,NestedSetNode.FIELD_PARENT,GlobalIdentifier.FIELD_IDENTIFIER); 
+		}
 	}
 	
 	@Override

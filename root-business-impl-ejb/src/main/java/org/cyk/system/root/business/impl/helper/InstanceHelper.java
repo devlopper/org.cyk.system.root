@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.pattern.tree.AbstractDataTreeNodeBusiness;
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
@@ -70,6 +71,8 @@ public class InstanceHelper implements Serializable {
 		public <T> Collection<T> get(Class<T> aClass) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return (Collection<T>) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).findAll();
+			if(GlobalIdentifier.class.equals(aClass))
+				return (Collection<T>) inject(GlobalIdentifierBusiness.class).findAll();
 			return super.get(aClass);
 		}
 		
@@ -78,7 +81,7 @@ public class InstanceHelper implements Serializable {
 		public <T> Collection<T> get(Class<T> aClass, Object master) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractCollectionItem.class, aClass))
 				if(master instanceof AbstractIdentifiable)
-					return ((AbstractCollectionItemBusiness)inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass)).findByCollection((AbstractCollection<?>)master);
+					return ((AbstractCollectionItemBusiness)inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass)).findByCollection((AbstractCollection<?>)master);			
 			return super.get(aClass, master);
 		}
 		
@@ -87,6 +90,8 @@ public class InstanceHelper implements Serializable {
 		public <T> Collection<T> get(Class<T> aClass, DataReadConfiguration dataReadConfiguration) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return (Collection<T>) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).findAll(dataReadConfiguration);
+			if(GlobalIdentifier.class.equals(aClass))
+				return (Collection<T>) inject(GlobalIdentifierBusiness.class).findAll(dataReadConfiguration);
 			return super.get(aClass, dataReadConfiguration);
 		}
 		
@@ -95,6 +100,8 @@ public class InstanceHelper implements Serializable {
 		public <T> Long count(Class<T> aClass, DataReadConfiguration dataReadConfiguration) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).countAll();
+			if(GlobalIdentifier.class.equals(aClass))
+				inject(GlobalIdentifierBusiness.class).countAll();
 			return super.count(aClass, dataReadConfiguration);
 		}
 		
@@ -103,6 +110,8 @@ public class InstanceHelper implements Serializable {
 		public <T> Collection<T> get(Class<T> aClass,FilterHelper.Filter<T> filter, DataReadConfiguration dataReadConfiguration) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return (Collection<T>) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).findByFilter((Filter<AbstractIdentifiable>) filter,dataReadConfiguration);
+			if(GlobalIdentifier.class.equals(aClass))
+				inject(GlobalIdentifierBusiness.class).findByFilter((Filter<GlobalIdentifier>) filter,dataReadConfiguration);
 			return super.get(aClass,filter, dataReadConfiguration);
 		}
 		
@@ -111,6 +120,8 @@ public class InstanceHelper implements Serializable {
 		public <T> Long count(Class<T> aClass,FilterHelper.Filter<T> filter, DataReadConfiguration dataReadConfiguration) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).countByFilter((Filter<AbstractIdentifiable>) filter, dataReadConfiguration);
+			if(GlobalIdentifier.class.equals(aClass))
+				inject(GlobalIdentifierBusiness.class).countByFilter((Filter<GlobalIdentifier>) filter,dataReadConfiguration);
 			return super.count(aClass,filter, dataReadConfiguration);
 		}
     
@@ -119,6 +130,8 @@ public class InstanceHelper implements Serializable {
 		public <T> T getByIdentifier(Class<T> aClass, Object identifier) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return (T) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find(NumberHelper.getInstance().get(Long.class, identifier));
+			if(GlobalIdentifier.class.equals(aClass))
+				return (T) inject(GlobalIdentifierBusiness.class).find(identifier.toString());
 			return super.getByIdentifier(aClass, identifier);
 		}
 		
@@ -132,6 +145,14 @@ public class InstanceHelper implements Serializable {
 					return inject(GenericBusiness.class).update(identifiable);
 				if(Constant.Action.DELETE.equals(action))
 					return inject(GenericBusiness.class).delete(identifiable);
+			}else if(instance instanceof GlobalIdentifier){
+				GlobalIdentifier globalIdentifier = (GlobalIdentifier) instance;
+				if(Constant.Action.CREATE.equals(action))
+					return inject(GlobalIdentifierBusiness.class).create(globalIdentifier);
+				if(Constant.Action.UPDATE.equals(action))
+					return inject(GlobalIdentifierBusiness.class).update(globalIdentifier);
+				if(Constant.Action.DELETE.equals(action))
+					return inject(GlobalIdentifierBusiness.class).delete(globalIdentifier);
 			}
 			
 			return super.act(action, instance);

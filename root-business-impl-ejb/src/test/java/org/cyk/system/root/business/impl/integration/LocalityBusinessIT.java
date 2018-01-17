@@ -1,7 +1,9 @@
 package org.cyk.system.root.business.impl.integration;
 
+import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.geography.LocalityType;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.junit.Test;
 
@@ -30,23 +32,23 @@ public class LocalityBusinessIT extends AbstractBusinessIT {
     @Test
     public void crudLocalityTypes(){
     	TestCase testCase = instanciateTestCase();
-    	String continentCode = RandomHelper.getInstance().getAlphanumeric(5)+"CONTINENT";
+    	String continentCode = RandomHelper.getInstance().getNumeric(5)+"CONTINENT";
     	LocalityType continent = new LocalityType().setCode(continentCode);
     	testCase.create(continent);
     	
-    	String countryCode = RandomHelper.getInstance().getAlphanumeric(5)+"COUNTRY";
+    	String countryCode = RandomHelper.getInstance().getNumeric(5)+"COUNTRY";
     	LocalityType country = new LocalityType().setCode(countryCode).set__parent__(continent);
     	testCase.create(country);
     	
-    	String regionCode = RandomHelper.getInstance().getAlphanumeric(5)+"REG";
+    	String regionCode = RandomHelper.getInstance().getNumeric(5)+"REG";
     	LocalityType region = new LocalityType().setCode(regionCode).set__parent__(country);
     	testCase.create(region);
     	
-    	String cityCode = RandomHelper.getInstance().getAlphanumeric(5)+"CITY";
+    	String cityCode = RandomHelper.getInstance().getNumeric(5)+"CITY";
     	LocalityType city = new LocalityType().setCode(cityCode).set__parent__(region);
     	testCase.create(city);
     	
-    	String houseCode = RandomHelper.getInstance().getAlphanumeric(5)+"HOUSE";
+    	String houseCode = RandomHelper.getInstance().getNumeric(5)+"HOUSE";
     	LocalityType house = new LocalityType().setCode(houseCode).set__parent__(city);
     	testCase.create(house);
     	
@@ -68,6 +70,19 @@ public class LocalityBusinessIT extends AbstractBusinessIT {
     	testCase.assertParents(LocalityType.class, regionCode,1, countryCode);
     	testCase.assertParents(LocalityType.class, cityCode,1, regionCode);
     	testCase.assertParents(LocalityType.class, houseCode,1, cityCode);
+    	
+    	LocalityType.Filter<LocalityType> filter = new LocalityType.Filter<LocalityType>();
+    	DataReadConfiguration dataReadConfiguration = new DataReadConfiguration();
+    	
+    	assertEquals(5l, inject(LocalityTypeBusiness.class).countByFilter(filter, dataReadConfiguration));
+    	
+    	filter = new LocalityType.Filter<LocalityType>();
+    	filter.set("Y");
+    	assertEquals(2l, inject(LocalityTypeBusiness.class).countByFilter(filter, dataReadConfiguration));
+    	
+    	filter = new LocalityType.Filter<LocalityType>();
+    	filter.addMaster(testCase.read(LocalityType.class, continentCode));
+    	assertEquals(1l, inject(LocalityTypeBusiness.class).countByFilter(filter, dataReadConfiguration));
     	
     	testCase.clean();
     }

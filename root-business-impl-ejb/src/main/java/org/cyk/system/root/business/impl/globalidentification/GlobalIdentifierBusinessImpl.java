@@ -24,10 +24,12 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.FilterHelper.Filter;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NEVER)
 public class GlobalIdentifierBusinessImpl extends AbstractBean implements GlobalIdentifierBusiness,Serializable {
@@ -38,6 +40,11 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 			,GlobalIdentifier.FIELD_DEATH_LOCATION};
 	
 	@Inject private GlobalIdentifierDao globalIdentifierDao;
+	
+	@Override
+	public GlobalIdentifier find(String identifier) {
+		return globalIdentifierDao.read(identifier);
+	}
 	
 	@Override
 	public Boolean isCreatable(Class<? extends AbstractIdentifiable> aClass) {
@@ -111,6 +118,34 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 	@Override
 	public Collection<GlobalIdentifier> findAll() {
 		return globalIdentifierDao.readAll();
+	}
+	
+	@Override
+	public Long countAll() {
+		return globalIdentifierDao.countAll();
+	}
+	
+	@Override
+	public Collection<GlobalIdentifier> findAll(DataReadConfiguration dataReadConfiguration) {
+		if(dataReadConfiguration==null)
+			globalIdentifierDao.getDataReadConfig().clear();
+		else
+			globalIdentifierDao.getDataReadConfig().set(dataReadConfiguration);
+		return globalIdentifierDao.readAll();
+	}
+	
+	@Override
+	public Collection<GlobalIdentifier> findByFilter(Filter<GlobalIdentifier> filter,DataReadConfiguration dataReadConfiguration) {
+		if(filter.isNull())
+    		return findAll(dataReadConfiguration);
+		return globalIdentifierDao.readByFilter(filter,dataReadConfiguration);
+	}
+	
+	@Override
+	public Long countByFilter(Filter<GlobalIdentifier> filter, DataReadConfiguration dataReadConfiguration) {
+		if(filter.isNull())
+    		return countAll();
+		return globalIdentifierDao.countByFilter(filter,dataReadConfiguration);
 	}
 	
 	@Override
