@@ -85,6 +85,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	private String abbreviation;
 	private String abbreviationI18nId;
 	
+	@Column(length=1024 * 1)
 	private String description;
 	private String descriptionI18nId;
 
@@ -94,6 +95,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	/**
 	 * To capture non structured data
 	 */
+	@Column(length=1024 * 8)
 	private String otherDetails;
 	
 	@Embedded private Rud rud = new Rud();
