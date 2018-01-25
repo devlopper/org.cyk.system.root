@@ -155,7 +155,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				newValue = oldValue.add(difference);
 				logMessageBuilder.addNamedParameters("mov old val",oldMovement.getValue(),"diff",difference);
 			}
-			exceptionUtils().comparisonBetween(newValue,movement.getCollection().getInterval(), movement.getCollection().getName());
+			exceptionUtils().comparisonBetween(newValue,movement.getCollection().getType().getInterval(), movement.getCollection().getName());
 			movement.getCollection().setValue(newValue);
 		}else if(Crud.DELETE.equals(crud)) {
 			newValue = oldValue.subtract(movement.getValue());
@@ -188,7 +188,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		Movement movement = instanciateOne(code,code);
 		movement.setCollection(read(MovementCollection.class, collectionCode));
 		movement.setValue(NumberHelper.getInstance().get(BigDecimal.class, value));
-		movement.setAction(increment == null ? null : increment ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction());
+		movement.setAction(increment == null ? null : increment ? movement.getCollection().getType().getIncrementAction() : movement.getCollection().getType().getDecrementAction());
 		return movement;
 	}
 	
@@ -217,7 +217,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			if(movement.getValueAbsolute()==null || movement.getAction()==null){
 				movement.setValue(null);
 			}else{
-				if(movement.getAction().equals(movement.getCollection().getIncrementAction()))
+				if(movement.getAction().equals(movement.getCollection().getType().getIncrementAction()))
 					movement.setValue(movement.getValueAbsolute());
 				else
 					movement.setValue(movement.getValueAbsolute().negate());

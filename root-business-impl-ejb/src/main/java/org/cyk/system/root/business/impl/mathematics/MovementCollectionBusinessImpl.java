@@ -7,19 +7,16 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
-import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.MovementCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
-import org.cyk.utility.common.Constant;
 
 public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao,MovementBusiness> implements MovementCollectionBusiness,Serializable {
 
@@ -31,14 +28,13 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	}
 	
 	@Override
-	public MovementCollection instanciateOne(String code,String intervalCode,String incrementActionCode,String decrementActionCode) {
-		MovementCollection movementCollection = super.instanciateOne(code);
-		movementCollection.setInterval(read(Interval.class, intervalCode));
-		movementCollection.setIncrementAction(read(MovementAction.class, incrementActionCode));
-		movementCollection.setDecrementAction(read(MovementAction.class, decrementActionCode));
+	public MovementCollection instanciateOne() {
+		MovementCollection movementCollection = super.instanciateOne();
+		movementCollection.setType(inject(MovementCollectionTypeDao.class).readDefaulted());
 		return movementCollection;
 	}
 	
+	/*
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MovementCollection instanciateOne(String code,String incrementActionName,String decrementActionName) {
 		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, inject(IntervalBusiness.class)
@@ -52,7 +48,9 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 		movementCollection.getDecrementAction().getInterval().getLow().setExcluded(Boolean.TRUE);
 		return movementCollection;
 	}
+	*/
 	
+	/*
 	@Override
 	public MovementCollection create(MovementCollection movementCollection) {
 		createIfNotIdentified(movementCollection.getInterval());
@@ -60,15 +58,16 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 		createIfNotIdentified(movementCollection.getDecrementAction());
 		return super.create(movementCollection);
 	}
+	*/
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public BigDecimal computeValue(MovementCollection movementCollection, MovementAction movementAction,BigDecimal increment) {
 		return inject(MovementActionBusiness.class).computeValue(movementAction, movementCollection.getValue(), increment);
 	}
-	
+	/*
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MovementCollection instanciateOneRandomly(String code) {
 		return instanciateOne(code, RootConstant.Code.MovementAction.INCREMENT,RootConstant.Code.MovementAction.DECREMENT);
-	}
+	}*/
 
 }

@@ -340,6 +340,13 @@ public interface RootConstant {
 			public static String DECREMENT = "DECREMENT";
 		}
 		
+		public static class MovementCollectionType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String DEFAULT = "DEFAULT";
+			
+		}
+		
 		public static class LanguageEntry implements Serializable {
 			private static final long serialVersionUID = 1L;
 			

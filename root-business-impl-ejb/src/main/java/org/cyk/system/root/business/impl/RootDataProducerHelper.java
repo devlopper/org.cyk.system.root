@@ -15,6 +15,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -84,10 +88,6 @@ import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper.Workbook.Sheet.Builder;
 import org.cyk.utility.common.helper.TimeHelper;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -281,19 +281,24 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 		return collection;
 	}
 	
+	@Deprecated
 	public MovementCollection createMovementCollection(String code,String incrementActionName,String decrementActionName){
-		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, createInterval(null, code+"int", code+"int", "0", null));
+		/*MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, createInterval(null, code+"int", code+"int", "0", null));
 		movementCollection.setIncrementAction(createMovementAction(getCode(incrementActionName), incrementActionName));
 		movementCollection.setDecrementAction(createMovementAction(getCode(decrementActionName), decrementActionName));
 		return movementCollection;
+		*/
+		return null;
 	}
 	
+	@Deprecated
 	public MovementAction createMovementAction(String code, String name){
 		MovementAction movementAction = new MovementAction(code, name);
 		movementAction.setInterval(createInterval(null, code+"int", code+"int", "0", null));
 		return movementAction;
 	}
 	
+	@Deprecated
 	public FiniteStateMachine createFiniteStateMachine(String machineCode,String[] alphabetCodes,String[] stateCodes,String initialStateCode,String[] finalStateCodes,String[][] transitions){
 		FiniteStateMachine machine = createEnumeration(FiniteStateMachine.class, machineCode);
 		

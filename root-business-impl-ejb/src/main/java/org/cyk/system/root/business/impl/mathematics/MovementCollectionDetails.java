@@ -15,10 +15,10 @@ public class MovementCollectionDetails extends AbstractCollectionDetails.Extends
 	public MovementCollectionDetails(MovementCollection movementCollection) {
 		super(movementCollection);
 		value = formatNumber(movementCollection.getValue());
-		interval = formatUsingBusiness(movementCollection.getInterval());
-		incrementAction = formatUsingBusiness(movementCollection.getIncrementAction());
-		decrementAction = formatUsingBusiness(movementCollection.getDecrementAction());
-		supportDocumentIdentifier = formatResponse(movementCollection.getSupportDocumentIdentifier());
+		interval = formatUsingBusiness(movementCollection.getType().getInterval());
+		incrementAction = formatUsingBusiness(movementCollection.getType().getIncrementAction());
+		decrementAction = formatUsingBusiness(movementCollection.getType().getDecrementAction());
+		supportDocumentIdentifier = formatResponse(movementCollection.getType().getSupportDocumentIdentifier());
 	}
 	
 	public static final String FIELD_VALUE = "value";

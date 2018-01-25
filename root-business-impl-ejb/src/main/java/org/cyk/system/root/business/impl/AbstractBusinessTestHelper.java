@@ -479,7 +479,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	public void set(MovementCollection movementCollection,String code,String name,String value,String low,String high,String incrementActionName,String decrementActionName){
-		movementCollection.setCode(code);
+		/*movementCollection.setCode(code);
 		movementCollection.setName(name);
 		movementCollection.setValue(value ==null ? null : new BigDecimal(value));
 		movementCollection.setInterval(new Interval());
@@ -490,7 +490,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		movementCollection.setDecrementAction(new MovementAction());
 		set(movementCollection.getDecrementAction(), code+"dec",decrementActionName, "0", null);
-		
+		*/
 	}
 	
 	public void set(MovementAction movementAction,String code,String name,String low,String high){
@@ -517,8 +517,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	public Movement createMovement(String movementCollectionCode,String value,String expectedValue,String expectedThrowableMessage){
 		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);
-    	final Movement movement = inject(MovementBusiness.class).instanciateOne(movementCollection
-    			,StringUtils.startsWith(value, Constant.CHARACTER_MINUS.toString()) ? movementCollection.getDecrementAction():movementCollection.getIncrementAction(), value);
+    	final Movement movement = null;//inject(MovementBusiness.class).instanciateOne(movementCollection
+    			//,StringUtils.startsWith(value, Constant.CHARACTER_MINUS.toString()) ? movementCollection.getDecrementAction():movementCollection.getIncrementAction(), value);
     	if(expectedThrowableMessage!=null){
     		new Try(expectedThrowableMessage){ 
     			private static final long serialVersionUID = -8176804174113453706L;
@@ -615,7 +615,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	public void assertMovement(Movement movement,String expectedValue,String expectedCumul,String expectedCollectionValue,Boolean expectedIncrement,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
     	assertBigDecimalEquals("Movement value not equal",new BigDecimal(expectedValue), movement.getValue());
     	assertBigDecimalEquals("Movement cumul not equal",new BigDecimal(expectedCumul), movement.getCumul());
-    	assertEquals("Movement action not equal",expectedIncrement == null ? null : (Boolean.TRUE.equals(expectedIncrement) ? movement.getCollection().getIncrementAction() : movement.getCollection().getDecrementAction()), movement.getAction());
+    	assertEquals("Movement action not equal",expectedIncrement == null ? null : (Boolean.TRUE.equals(expectedIncrement) ? movement.getCollection().getType().getIncrementAction() : movement.getCollection().getType().getDecrementAction()), movement.getAction());
     	//assertEquals("Supporting Document Provider",expectedSupportingDocumentProvider, movement.getSupportingDocumentProvider());
     	//assertEquals("Supporting Document Identifier",expectedSupportingDocumentIdentifier, movement.getSupportingDocumentIdentifier());
     	assertMovementCollection(movement.getCollection().getCode(), expectedCollectionValue);
@@ -651,7 +651,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	private void valueMustNotBeOffThanActionIntervalExtremity(String movementCollectionCode,Boolean incrementAction,Boolean lowExtemity){
 		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);
-		MovementAction action = Boolean.TRUE.equals(incrementAction) ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction();
+		MovementAction action = Boolean.TRUE.equals(incrementAction) ? movementCollection.getType().getIncrementAction() : movementCollection.getType().getDecrementAction();
 		BigDecimal value = Boolean.TRUE.equals(lowExtemity) ? action.getInterval().getLow().getValue() : action.getInterval().getHigh().getValue();
 		if(BigDecimal.ZERO.equals(value))
 			value = Boolean.TRUE.equals(lowExtemity) ? value.subtract(new BigDecimal("0.1")) : value.add(new BigDecimal("0.1"));
@@ -676,8 +676,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	private void collectionValueMustNotBeOffThanIntervalExtremity(String movementCollectionCode,Boolean incrementAction){
 		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode);
 		BigDecimal value = Boolean.TRUE.equals(incrementAction) 
-				? inject(IntervalBusiness.class).findLowestGreatestValue(movementCollection.getInterval()).add(BigDecimal.ONE) 
-				: inject(IntervalBusiness.class).findGreatestLowestValue(movementCollection.getInterval()).subtract(BigDecimal.ONE);
+				? inject(IntervalBusiness.class).findLowestGreatestValue(movementCollection.getType().getInterval()).add(BigDecimal.ONE) 
+				: inject(IntervalBusiness.class).findGreatestLowestValue(movementCollection.getType().getInterval()).subtract(BigDecimal.ONE);
 		if(value==null)
 			return;
 		createMovement(movementCollectionCode,value.toString(), null,getThrowableMessage(movementCollectionCode, isIncrementAction(value.toString()),3));
@@ -696,7 +696,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	private String getThrowableMessage(String movementCollectionCode,Boolean increment,Integer actionId){
 		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);
-		MovementAction action = Boolean.TRUE.equals(increment) ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction();
+		MovementAction action = Boolean.TRUE.equals(increment) ? movementCollection.getType().getIncrementAction() : movementCollection.getType().getDecrementAction();
 		String message = Constant.EMPTY_STRING,movementCollectionName=WordUtils.capitalizeFully(movementCollection.getName()),actionName = WordUtils.capitalizeFully(action.getName());
 		if(actionId==0)
 			message = String.format("%s doit être supérieur à %s",actionName,action.getInterval().getLow().getValue());
@@ -709,8 +709,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		if(actionId==3)
 			message = String.format("%s doit être entre %s et %s",movementCollectionName 
-				,inject(NumberBusiness.class).format(movementCollection.getInterval().getLow().getValue())
-				,inject(NumberBusiness.class).format(movementCollection.getInterval().getHigh().getValue()));
+				,inject(NumberBusiness.class).format(movementCollection.getType().getInterval().getLow().getValue())
+				,inject(NumberBusiness.class).format(movementCollection.getType().getInterval().getHigh().getValue()));
 		
 		return message;
 	}

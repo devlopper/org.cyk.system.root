@@ -19,6 +19,7 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.mathematics.MovementAction;
+import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.network.Computer;
 import org.cyk.system.root.model.network.Service;
@@ -144,6 +145,7 @@ public class RealDataSet extends DataSet implements Serializable {
     	addClass(Interval.class);
     	addClass(MetricCollectionType.class);
     	addClass(MovementAction.class);
+    	addClass(MovementCollectionType.class);
     }
     
     private void values(){ 
