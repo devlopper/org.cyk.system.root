@@ -35,6 +35,7 @@ import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.Properties;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FilterHelper;
@@ -80,6 +81,33 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@Transient private Collection<AbstractIdentifiable> children;
 	
 	@Transient private IdentifiableRuntimeCollection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers;
+	
+	@Transient protected Properties joinedIdentifiableRuntimeCollectionMap;
+	
+	@SuppressWarnings("unchecked")
+	public <T> IdentifiableRuntimeCollection<T> getJoinedIdentifiableRuntimeCollection(Class<T> aClass){
+		if(joinedIdentifiableRuntimeCollectionMap == null)
+			return null;
+		return (IdentifiableRuntimeCollection<T>) joinedIdentifiableRuntimeCollectionMap.get(aClass);
+	}
+	
+	public <T> T getJoinedIdentifiableOne(Class<T> aClass){
+		IdentifiableRuntimeCollection<T> collection = getJoinedIdentifiableRuntimeCollection(aClass);
+		return collection == null ? null : CollectionHelper.getInstance().getFirst(collection.getElements());
+	}
+	
+	public <T> Collection<T> getJoinedIdentifiableMany(Class<T> aClass){
+		IdentifiableRuntimeCollection<T> collection = getJoinedIdentifiableRuntimeCollection(aClass);
+		return collection == null ? null : collection.getElements();
+	}
+	
+	public <T> void setJoinedIdentifiables(Class<T> aClass,Collection<T> identifiables){
+		if(CollectionHelper.getInstance().isNotEmpty(identifiables)){
+			IdentifiableRuntimeCollection<T> collection = new IdentifiableRuntimeCollection<T>();
+			collection.addMany(identifiables);
+			joinedIdentifiableRuntimeCollectionMap.set(aClass, collection);
+		}
+	}
 	
 	public IdentifiableRuntimeCollection<MetricCollectionIdentifiableGlobalIdentifier> getMetricCollectionIdentifiableGlobalIdentifiers(){
 		if(metricCollectionIdentifiableGlobalIdentifiers == null)
