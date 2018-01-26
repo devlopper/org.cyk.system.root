@@ -17,6 +17,7 @@ import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
+import org.cyk.utility.common.ObjectFieldValues;
 
 public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao,MovementBusiness> implements MovementCollectionBusiness,Serializable {
 
@@ -28,12 +29,13 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	}
 	
 	@Override
-	public MovementCollection instanciateOne() {
-		MovementCollection movementCollection = super.instanciateOne();
+	protected MovementCollection __instanciateOne__(ObjectFieldValues objectFieldValues) {
+		MovementCollection movementCollection = super.__instanciateOne__(objectFieldValues);
 		movementCollection.setType(inject(MovementCollectionTypeDao.class).readDefaulted());
+		movementCollection.setValue(BigDecimal.ZERO);
 		return movementCollection;
 	}
-	
+
 	/*
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MovementCollection instanciateOne(String code,String incrementActionName,String decrementActionName) {

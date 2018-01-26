@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -12,6 +13,7 @@ import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdenti
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
 import org.cyk.system.root.persistence.impl.Utils;
+import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 public abstract class AbstractJoinGlobalIdentifierDaoImpl<IDENTIFIABLE extends AbstractIdentifiable,SEARCH_CRITERIA extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria> extends AbstractTypedDao<IDENTIFIABLE> implements JoinGlobalIdentifierDao<IDENTIFIABLE,SEARCH_CRITERIA>,Serializable {
 
@@ -24,6 +26,23 @@ public abstract class AbstractJoinGlobalIdentifierDaoImpl<IDENTIFIABLE extends A
 		super.namedQueriesInitialisation();
 		registerNamedQuery(readByIdentifiableGlobalIdentifiers, "SELECT r FROM "+clazz.getSimpleName()+" r WHERE r.identifiableGlobalIdentifier.identifier IN :"+PARAMETER_GLOBAL_IDENTIFIERS);
 		registerNamedQuery(readByCriteria, getReadByCriteriaQueryString()+getReadByCriteriaOrderByString());
+	}
+	
+	@Override
+	protected void listenInstanciateJpqlBuilder(String name, JavaPersistenceQueryLanguage builder) {
+		super.listenInstanciateJpqlBuilder(name, builder);
+		if(readByFilter.equals(name)){
+			builder.setFieldName(AbstractJoinGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
+		}
+	}
+			
+	@Override
+	protected <T> void processQueryWrapper(Class<T> aClass,QueryWrapper<T> queryWrapper, String queryName,Object[] arguments) {
+		super.processQueryWrapper(aClass, queryWrapper, queryName,arguments);
+		if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
+			AbstractJoinGlobalIdentifier.Filter<?> filter = (AbstractJoinGlobalIdentifier.Filter<?>) arguments[0];
+			queryWrapper.parameterInGlobalIdentifiers( filter.getMastersGlobalIdentifiers(),AbstractJoinGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_IDENTIFIER);  
+		}
 	}
 	
 	protected String getReadByCriteriaQueryString(){

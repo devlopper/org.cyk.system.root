@@ -21,6 +21,7 @@ import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionTypeDao;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.helper.FieldHelper;
  
 public class MovementCollectionTypeBusinessImpl extends AbstractDataTreeTypeBusinessImpl<MovementCollectionType,MovementCollectionTypeDao> implements MovementCollectionTypeBusiness {
@@ -33,8 +34,8 @@ public class MovementCollectionTypeBusinessImpl extends AbstractDataTreeTypeBusi
     } 
 	
 	@Override
-	public MovementCollectionType instanciateOne() {
-		MovementCollectionType movementCollectionType =  super.instanciateOne();
+	protected MovementCollectionType __instanciateOne__(ObjectFieldValues objectFieldValues) {
+		MovementCollectionType movementCollectionType = super.__instanciateOne__(objectFieldValues);
 		movementCollectionType.setInterval(inject(IntervalDao.class).read(RootConstant.Code.Interval.MOVEMENT_COLLECTION_VALUE));
 		movementCollectionType.setIncrementAction(inject(MovementActionDao.class).read(RootConstant.Code.MovementAction.INCREMENT));
 		movementCollectionType.setDecrementAction(inject(MovementActionDao.class).read(RootConstant.Code.MovementAction.DECREMENT));
@@ -72,6 +73,7 @@ public class MovementCollectionTypeBusinessImpl extends AbstractDataTreeTypeBusi
 
 		public BuilderOneDimensionArray() {
 			super(MovementCollectionType.class);
+			addParameterArrayElementString(2, MovementCollectionType.FIELD_INTERVAL);
 			addParameterArrayElementString(3, MovementCollectionType.FIELD_INCREMENT_ACTION);
 			addParameterArrayElementString(4, MovementCollectionType.FIELD_DECREMENT_ACTION);
 			addParameterArrayElementString(5, MovementCollectionType.FIELD_SUPPORT_DOCUMENT_IDENTIFIER);

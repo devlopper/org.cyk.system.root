@@ -12,7 +12,6 @@ import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionType;
-import org.cyk.system.root.persistence.api.mathematics.MovementCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.RandomHelper;
@@ -76,11 +75,22 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     }
     
     @Test
+    public void crudOneMovementCollectionType(){
+    	TestCase testCase = instanciateTestCase();
+    	MovementCollectionType movementCollectionType = inject(MovementCollectionTypeBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
+    	assertNotNull(movementCollectionType.getInterval());
+    	assertNotNull(movementCollectionType.getIncrementAction());
+    	assertNotNull(movementCollectionType.getDecrementAction());
+    	testCase.create(movementCollectionType);
+    	testCase.clean();
+    }
+    
+    @Test
     public void crudOneMovementCollection(){
-    	System.out.println("MovementBusinessIT.crudOneMovementCollection() : "+inject(MovementCollectionTypeDao.class).readAll().iterator().next().getDefaulted());
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
     	assertNotNull(movementCollection.getType());
+    	assertNotNull(movementCollection.getType().getInterval());
     	movementCollection.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection);
     	testCase.clean();
@@ -90,7 +100,6 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void useValueAbsolute(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
-    	movementCollection.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection);
     	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), null,Boolean.TRUE);
@@ -122,7 +131,6 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void useNullAction(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
-    	movementCollection.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection);
     	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",null);
@@ -148,7 +156,6 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void addSequenceAscending(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
-    	movementCollection.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection);
     	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",Boolean.TRUE);
@@ -174,7 +181,6 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void addSequenceDescending(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
-    	movementCollection.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection);
     	
     	Movement movement;
@@ -353,7 +359,6 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void doMovementsAndUpdates(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
-    	movementCollection.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection);
     	
     	Movement movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",Boolean.TRUE));
@@ -401,11 +406,13 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	rootBusinessTestHelper.assertMovement(code004, "4","40", "40",Boolean.TRUE);
     	
     	movement = inject(MovementDao.class).read(code004);
+    	movement.setAction(movement.getCollection().getType().getDecrementAction());
     	movement.setValue(new BigDecimal("-36"));
     	testCase.update(movement);
-    	rootBusinessTestHelper.assertMovement(code004, "-36","0", "0",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code004, "-36","0", "0",Boolean.FALSE);
     	
     	movement = inject(MovementDao.class).read(code004);
+    	movement.setAction(movement.getCollection().getType().getIncrementAction());
     	movement.setValue(new BigDecimal("1"));
     	testCase.update(movement);
     	rootBusinessTestHelper.assertMovement(code004, "1", "37","37",Boolean.TRUE);
@@ -414,9 +421,9 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.delete(movement);
     	rootBusinessTestHelper.assertMovementCollection(movementCollection.getCode(), "36");
     	
-    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "-6",Boolean.TRUE));
+    	movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "-6",Boolean.FALSE));
     	String code005 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code005, "-6","30", "30",Boolean.TRUE);
+    	rootBusinessTestHelper.assertMovement(code005, "-6","30", "30",Boolean.FALSE);
     	
     	//testCase.clean();
     }
@@ -425,15 +432,12 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void filter(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection01 = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
-    	movementCollection01.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection01);
     	
     	MovementCollection movementCollection02 = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
-    	movementCollection02.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection02);
     	
     	MovementCollection movementCollection03 = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
-    	movementCollection03.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection03);
     	
     	testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection01.getCode(), "15",Boolean.TRUE)
@@ -473,18 +477,18 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	});
     	
     	filter(new Object[][]{
-    		{Arrays.asList(movementCollection01.getType().getIncrementAction()),null,2},{Arrays.asList(movementCollection01.getType().getDecrementAction()),null,1}
-    		,{Arrays.asList(movementCollection01.getType().getIncrementAction(),movementCollection01.getType().getDecrementAction()),null,3}
+    		{Arrays.asList(movementCollection01.getType().getIncrementAction()),null,3},{Arrays.asList(movementCollection01.getType().getDecrementAction()),null,2}
+    		,{Arrays.asList(movementCollection01.getType().getIncrementAction(),movementCollection01.getType().getDecrementAction()),null,5}
     	});
     	
     	filter(new Object[][]{
-    		{Arrays.asList(movementCollection02.getType().getIncrementAction()),null,0},{Arrays.asList(movementCollection02.getType().getDecrementAction()),null,0}
-    		,{Arrays.asList(movementCollection02.getType().getIncrementAction(),movementCollection02.getType().getDecrementAction()),null,0}
+    		{Arrays.asList(movementCollection02.getType().getIncrementAction()),null,3},{Arrays.asList(movementCollection02.getType().getDecrementAction()),null,2}
+    		,{Arrays.asList(movementCollection02.getType().getIncrementAction(),movementCollection02.getType().getDecrementAction()),null,5}
     	});
     	
     	filter(new Object[][]{
-    		{Arrays.asList(movementCollection03.getType().getIncrementAction()),null,1},{Arrays.asList(movementCollection03.getType().getDecrementAction()),null,1}
-    		,{Arrays.asList(movementCollection03.getType().getIncrementAction(),movementCollection03.getType().getDecrementAction()),null,2}
+    		{Arrays.asList(movementCollection03.getType().getIncrementAction()),null,3},{Arrays.asList(movementCollection03.getType().getDecrementAction()),null,2}
+    		,{Arrays.asList(movementCollection03.getType().getIncrementAction(),movementCollection03.getType().getDecrementAction()),null,5}
     	});
     	
     	filter(new Object[][]{

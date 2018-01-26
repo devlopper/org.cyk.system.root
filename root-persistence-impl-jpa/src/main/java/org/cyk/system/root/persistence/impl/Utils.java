@@ -33,10 +33,16 @@ public class Utils {
 	}
 
 	public static Collection<String> getGlobalIdentfierValues(Collection<GlobalIdentifier> globalIdentifiers){
-		Collection<String> ids = new HashSet<>();
+		/*Collection<String> ids = new HashSet<>();
 		for(GlobalIdentifier globalIdentifier : globalIdentifiers)
 			ids.add(globalIdentifier.getIdentifier());
 		return ids;
+		*/
+		
+		Collection<String> identifiers = MethodHelper.getInstance().callGet(globalIdentifiers, String.class, GlobalIdentifier.FIELD_IDENTIFIER);
+		if(identifiers == null)
+			identifiers = new ArrayList<String>();
+		return identifiers;
 	}
 	
 	public static Collection<GlobalIdentifier> getGlobalIdentfiers(Collection<? extends AbstractIdentifiable> identifiables){

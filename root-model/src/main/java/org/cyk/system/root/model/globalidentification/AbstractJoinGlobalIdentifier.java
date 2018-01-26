@@ -15,10 +15,12 @@ import javax.validation.constraints.NotNull;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.utility.common.helper.MethodHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * A join between an identifiable and a global identifier
@@ -33,8 +35,7 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	private static final Map<Class<? extends AbstractJoinGlobalIdentifier> , Collection<Class<? extends AbstractIdentifiable>>> USER_DEFINED_JOINABLE_CLASSES
 		= new HashMap<>();
 	
-	@ManyToOne @NotNull
-	protected GlobalIdentifier identifiableGlobalIdentifier;
+	@ManyToOne @NotNull @Accessors(chain=true) protected GlobalIdentifier identifiableGlobalIdentifier;
 	
 	public AbstractJoinGlobalIdentifier(AbstractIdentifiable identifiable){
 		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
@@ -103,6 +104,57 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	protected static Boolean isUserDefinedObject(Class<?> moduleClass,Object object){
 		return object!=null && Boolean.TRUE.equals(isUserDefinedClass(moduleClass,object.getClass()));
 	}
+	
+	/**/
+	
+	@Getter @Setter
+	public static class Filter<T extends AbstractJoinGlobalIdentifier> extends AbstractIdentifiable.Filter<T> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	/*
+		protected Collection<GlobalIdentifier> globalIdentifiers;
+		
+		@Override
+		public org.cyk.utility.common.helper.FilterHelper.Filter<T> addMaster(Object master) {
+			super.addMaster(master);
+			addMasterGlobalIdentifierByIdentifiable((AbstractIdentifiable) master);
+			return this;
+		}
+		
+		public Filter<T> addMasterGlobalIdentifiers(Collection<GlobalIdentifier> masterGlobalIdentifiers){
+			if(CollectionHelper.getInstance().isNotEmpty(masterGlobalIdentifiers)){
+				if(this.globalIdentifiers==null)
+					this.globalIdentifiers = new ArrayList<>();
+				for(GlobalIdentifier index : masterGlobalIdentifiers)
+					if(index!=null)
+						this.globalIdentifiers.add(index);	
+			}
+			return this;
+		}
+		
+		public Filter<T> addMasterGlobalIdentifier(GlobalIdentifier masterGlobalIdentifier){
+			if(masterGlobalIdentifier!=null)
+				addMasterGlobalIdentifiers(Arrays.asList(masterGlobalIdentifier));
+			return this;
+		}
+		
+		public Filter<T> addMasterGlobalIdentifiersByIdentifiables(Collection<Object> identifiables){
+			return addMasterGlobalIdentifiers(MethodHelper.getInstance().callGet(identifiables, GlobalIdentifier.class, AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER));
+		}
+		
+		public Filter<T> addMasterGlobalIdentifierByIdentifiable(AbstractIdentifiable identifiable){
+			if(identifiable != null){
+				Collection<Object> collection = new ArrayList<>();
+				collection.add(identifiable);
+				return addMasterGlobalIdentifiersByIdentifiables(collection);
+			}
+			return this;
+		}
+		*/
+		
+		public Collection<GlobalIdentifier> getMastersGlobalIdentifiers(){
+			return MethodHelper.getInstance().callGet(masters, GlobalIdentifier.class, AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER);
+		}
+    }
 	
 	/**/
 	

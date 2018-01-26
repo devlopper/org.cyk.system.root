@@ -20,9 +20,12 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollectionType;
+import org.cyk.system.root.model.mathematics.MovementCollectionTypeMode;
+import org.cyk.system.root.model.mathematics.MovementMode;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.network.Computer;
 import org.cyk.system.root.model.network.Service;
+import org.cyk.system.root.model.party.PartyBusinessRole;
 import org.cyk.system.root.model.party.person.Allergy;
 import org.cyk.system.root.model.party.person.BloodGroup;
 import org.cyk.system.root.model.party.person.JobFunction;
@@ -111,6 +114,7 @@ public class RealDataSet extends DataSet implements Serializable {
     	addClass(BloodGroup.class);
     	addClass(Allergy.class);
     	addClass(Medication.class);
+    	addClass(PartyBusinessRole.class);
     	addClass(PersonRelationshipTypeGroup.class);
     	addClass(PersonRelationshipType.class);
     	addClass(PersonRelationshipTypeRoleName.class);
@@ -145,7 +149,9 @@ public class RealDataSet extends DataSet implements Serializable {
     	addClass(Interval.class);
     	addClass(MetricCollectionType.class);
     	addClass(MovementAction.class);
+    	addClass(MovementMode.class);
     	addClass(MovementCollectionType.class);
+    	addClass(MovementCollectionTypeMode.class);
     }
     
     private void values(){ 

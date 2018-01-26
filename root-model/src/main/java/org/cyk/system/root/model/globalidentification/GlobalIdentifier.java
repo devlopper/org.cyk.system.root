@@ -149,6 +149,9 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	@OneToOne @JoinColumn(name=COLUMN_BIRTH_LOCATION) private Location birthLocation;
 	@OneToOne @JoinColumn(name=COLUMN_DEATH_LOCATION) private Location deathLocation;
 	
+	/**
+	 * The one in charge of
+	 */
 	@ManyToOne @JoinColumn(name=COLUMN_OWNER) private Party owner;
 	
 	@Embedded private CascadeStyleSheet cascadeStyleSheet;

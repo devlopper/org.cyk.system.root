@@ -53,14 +53,7 @@ public class MovementActionBusinessImpl extends AbstractEnumerationBusinessImpl<
 	public BigDecimal computeValue(MovementAction movementAction,BigDecimal value,BigDecimal increment) {
 		return computeValue(movementAction == null ? null : movementAction.getCode(), value, increment);
 	}
-	
-	@Override
-	protected MovementAction __instanciateOne__(String[] values,InstanciateOneListener<MovementAction> listener) {
-		super.__instanciateOne__(values, listener);
-		set(listener.getSetListener().setIndex(10), MovementAction.FIELD_INTERVAL);
-		return listener.getInstance();
-	}
-	
+
 	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<MovementAction> implements Serializable {
 		private static final long serialVersionUID = 1L;
 

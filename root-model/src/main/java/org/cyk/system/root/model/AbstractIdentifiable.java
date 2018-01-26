@@ -31,6 +31,7 @@ import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier.Processing;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.party.PartyIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.AbstractMethod;
@@ -81,6 +82,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@Transient private Collection<AbstractIdentifiable> children;
 	
 	@Transient private IdentifiableRuntimeCollection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers;
+	@Transient private IdentifiableRuntimeCollection<PartyIdentifiableGlobalIdentifier> partyIdentifiableGlobalIdentifiers;
 	
 	@Transient protected Properties joinedIdentifiableRuntimeCollectionMap;
 	
@@ -101,7 +103,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return collection == null ? null : collection.getElements();
 	}
 	
-	public <T> void setJoinedIdentifiables(Class<T> aClass,Collection<T> identifiables){
+	public <T> void __setJoinedIdentifiables__(Class<T> aClass,Collection<T> identifiables){
 		if(CollectionHelper.getInstance().isNotEmpty(identifiables)){
 			IdentifiableRuntimeCollection<T> collection = new IdentifiableRuntimeCollection<T>();
 			collection.addMany(identifiables);

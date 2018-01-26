@@ -20,13 +20,9 @@ public class MovementCollectionType extends AbstractDataTreeType implements Seri
 	private static final long serialVersionUID = -6838401709866343401L;
 
 	@ManyToOne @JoinColumn(name=COLUMN_INTERVAL) @Accessors(chain=true) private Interval interval;
-	
 	@ManyToOne @JoinColumn(name=COLUMN_INCREMENT_ACTION) @Accessors(chain=true) private MovementAction incrementAction;
-	
 	@ManyToOne @JoinColumn(name=COLUMN_DECREMENT_ACTION) @Accessors(chain=true) private MovementAction decrementAction;
-	
-	private @Accessors(chain=true) Boolean supportDocumentIdentifier = Boolean.FALSE;
-	
+	private @Accessors(chain=true) Boolean supportDocumentIdentifier;
 	@ManyToOne @JoinColumn(name=COLUMN_DOCUMENT_IDENTIFIER_COUNT_INTERVAL) @Accessors(chain=true) private Interval documentIdentifierCountInterval;
 	
 	//TODO to be model using a class which can be called MovementCollectionAlert or something like that. really i do not know so to think about

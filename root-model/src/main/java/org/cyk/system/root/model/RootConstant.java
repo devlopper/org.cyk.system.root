@@ -340,10 +340,23 @@ public interface RootConstant {
 			public static String DECREMENT = "DECREMENT";
 		}
 		
+		public static class MovementMode implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String CASH = "CASH";
+			public static String CHEQUE = "CHEQUE";
+			public static String BANK_TRANSFER = "BANKTRANSFER";
+			public static String MOBILE_PAYMENT = "MOBILEPAYMENT";
+			public static String GIFT_CARD = "GIFTCARD";
+			
+		}
+		
 		public static class MovementCollectionType implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
 			public static String DEFAULT = "DEFAULT";
+			public static String CASH_REGISTER = "CASHREGISTER";
+			public static String STOCK_REGISTER = "STOCKREGISTER";
 			
 		}
 		
@@ -392,7 +405,15 @@ public interface RootConstant {
 			public static final String SECONDARY="SECONDARY";
 			public static final String MAIN="MAIN";
 			
-
+		}
+		
+		public static class PartyBusinessRole implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static final String MANAGER="MANAGER";
+			public static final String SIGNER="SIGNER";
+			public static final String IN_CHARGE="INCHARGE";
+			
 		}
 		
 		/**/

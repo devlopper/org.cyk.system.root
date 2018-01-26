@@ -102,6 +102,11 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 		return this;
 	}
 	
+	public QueryWrapper<T> parameterInGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers,String...names){
+		parameterIn(String.class, Utils.getGlobalIdentfierValues(globalIdentifiers),names);
+		return this;
+	}
+	
 	public QueryWrapper<T> parameterInStrings(Collection<String> strings,String...names){
 		parameterIn(String.class, strings,names);
 		return this;

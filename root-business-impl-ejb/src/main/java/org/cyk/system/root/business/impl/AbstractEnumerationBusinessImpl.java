@@ -9,7 +9,6 @@ import org.cyk.system.root.business.api.AbstractEnumerationBusiness;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
-import org.cyk.system.root.model.party.person.Allergy;
 import org.cyk.system.root.persistence.api.AbstractEnumerationDao;
 import org.cyk.utility.common.ObjectFieldValues;
 
@@ -25,13 +24,18 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
         super(dao);
     }
 	
+	protected ENUMERATION __instanciateOne__(ObjectFieldValues objectFieldValues){
+		//return ClassHelper.getInstance().instanciateOne(clazz);
+		return commonUtils.instanciateOne(clazz, objectFieldValues);
+	}
+	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public ENUMERATION instanciateOne(String code,String name) {
 		ObjectFieldValues objectFieldValues = new ObjectFieldValues(clazz);
 		objectFieldValues.setBaseName(AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER);
 		objectFieldValues.set(GlobalIdentifier.FIELD_CODE, code);
 		objectFieldValues.set(GlobalIdentifier.FIELD_NAME, name);
-		return commonUtils.instanciateOne(clazz, objectFieldValues);
+		return __instanciateOne__(objectFieldValues);
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
