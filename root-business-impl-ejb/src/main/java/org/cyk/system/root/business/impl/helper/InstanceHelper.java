@@ -26,6 +26,7 @@ import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.FilterHelper.Filter;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.ClassHelper.Listener.IdentifierType;
 
 public class InstanceHelper implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -55,6 +56,18 @@ public class InstanceHelper implements Serializable {
     		if(parent instanceof AbstractDataTreeNode)
 				return ((AbstractDataTreeNodeBusiness)inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractDataTreeNode>)parent.getClass())).countDirectChildrenByParent((AbstractEnumeration) parent);
     		return super.getHierarchyNumberOfChildren(parent);
+    	}
+    	
+    	@Override
+    	public Object getIdentifier(Object instance, ClassHelper.Listener.IdentifierType identifierType) {
+    		if(instance instanceof AbstractIdentifiable){
+    			if(ClassHelper.Listener.IdentifierType.SYSTEM.equals(identifierType))
+    				return ((AbstractIdentifiable)instance).getIdentifier();
+    			else if(ClassHelper.Listener.IdentifierType.BUSINESS.equals(identifierType))
+    				return ((AbstractIdentifiable)instance).getCode();
+    		}else if(instance instanceof GlobalIdentifier)
+    			return ((GlobalIdentifier)instance).getIdentifier();
+    		return super.getIdentifier(instance, identifierType);
     	}
     	
     	@Override
@@ -127,12 +140,15 @@ public class InstanceHelper implements Serializable {
     
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T> T getByIdentifier(Class<T> aClass, Object identifier) {
+		public <T> T getByIdentifier(Class<T> aClass, Object identifier,ClassHelper.Listener.IdentifierType identifierType) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
-				return (T) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find(NumberHelper.getInstance().get(Long.class, identifier));
+				if(ClassHelper.Listener.IdentifierType.SYSTEM.equals(identifierType))
+					return (T) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find(NumberHelper.getInstance().get(Long.class, identifier));
+				else if(ClassHelper.Listener.IdentifierType.BUSINESS.equals(identifierType))
+					return (T) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find((String) identifier);
 			if(GlobalIdentifier.class.equals(aClass))
 				return (T) inject(GlobalIdentifierBusiness.class).find(identifier.toString());
-			return super.getByIdentifier(aClass, identifier);
+			return super.getByIdentifier(aClass, identifier,identifierType);
 		}
 		
 		@Override

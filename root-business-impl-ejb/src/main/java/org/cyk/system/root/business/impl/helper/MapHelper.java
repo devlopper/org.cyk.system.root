@@ -18,12 +18,12 @@ public class MapHelper implements Serializable {
 		
 		private static final long serialVersionUID = 1L;
 
-		@Override
+		/*@Override
 		public Object getAs(EntryComponent entryComponent, Object object) {
 			if(object instanceof AbstractIdentifiable)
 				return ((AbstractIdentifiable)object).getIdentifier();
 			return super.getAs(entryComponent, object);
-		}
+		}*/
 		
 		@Override
 		public String getSeparatorOfValue() {

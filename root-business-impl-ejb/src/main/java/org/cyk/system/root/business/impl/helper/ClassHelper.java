@@ -18,15 +18,25 @@ public class ClassHelper extends AbstractBean implements Serializable {
     	private static final long serialVersionUID = 1L;
 		
     	@Override
-    	public Boolean isIdentified(Class<?> aClass) {
-    		return super.isIdentified(aClass) || GlobalIdentifier.class.equals(aClass);
+    	public String getIdentifierFieldName(Class<?> aClass, org.cyk.utility.common.helper.ClassHelper.Listener.IdentifierType type) {
+    		if(type == null)
+    			type = org.cyk.utility.common.helper.ClassHelper.Listener.IdentifierType.DEFAULT;
+    		switch(type){
+    		case BUSINESS:
+    			if(GlobalIdentifier.class.equals(aClass))
+        			return GlobalIdentifier.FIELD_IDENTIFIER;
+        		return FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE);
+    		case SYSTEM:
+    			if(GlobalIdentifier.class.equals(aClass))
+        			return GlobalIdentifier.FIELD_IDENTIFIER;
+        		return AbstractIdentifiable.FIELD_IDENTIFIER;
+    		}
+    		return super.getIdentifierFieldName(aClass, type);
     	}
     	
     	@Override
-    	public String getIdentifierFieldName(Class<?> aClass) {
-    		if(GlobalIdentifier.class.equals(aClass))
-    			return GlobalIdentifier.FIELD_IDENTIFIER;
-    		return FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE);
+    	public Boolean isIdentified(Class<?> aClass) {
+    		return super.isIdentified(aClass) || GlobalIdentifier.class.equals(aClass);
     	}
     	
     	@Override
