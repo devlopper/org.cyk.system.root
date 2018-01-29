@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import lombok.Getter;
@@ -20,8 +21,10 @@ public class StringGenerator extends AbstractIdentifiable implements Serializabl
 
 	@Embedded private StringValueGeneratorConfiguration configuration = new StringValueGeneratorConfiguration();
 
-	@OneToOne private Script script;
+	@OneToOne @JoinColumn(name=COLUMN_SCRIPT) private Script script;
 	
 	public static final String FIELD_CONFIGURATION = "configuration";
 	public static final String FIELD_SCRIPT = "script";
+	
+	public static final String COLUMN_SCRIPT = FIELD_SCRIPT;
 }

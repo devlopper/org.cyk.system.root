@@ -23,10 +23,9 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
-import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.FilterHelper.Filter;
+import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.StringHelper;
-import org.cyk.utility.common.helper.ClassHelper.Listener.IdentifierType;
 
 public class InstanceHelper implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
@@ -35,7 +36,7 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	private static final Map<Class<? extends AbstractJoinGlobalIdentifier> , Collection<Class<? extends AbstractIdentifiable>>> USER_DEFINED_JOINABLE_CLASSES
 		= new HashMap<>();
 	
-	@ManyToOne @NotNull @Accessors(chain=true) protected GlobalIdentifier identifiableGlobalIdentifier;
+	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_GLOBAL_IDENTIFIER) @NotNull @Accessors(chain=true) protected GlobalIdentifier identifiableGlobalIdentifier;
 	
 	public AbstractJoinGlobalIdentifier(AbstractIdentifiable identifiable){
 		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
@@ -159,4 +160,6 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	/**/
 	
 	public static final String FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER = "identifiableGlobalIdentifier";
+	
+	public static final String COLUMN_IDENTIFIABLE_GLOBAL_IDENTIFIER = FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER;
 }
