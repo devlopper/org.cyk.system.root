@@ -64,16 +64,6 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	create(movementCollection);
     }
     
-    @Override
-    protected void businesses() {
-    	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "100000");
-    	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "200000");
-    	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "100000", "300000");
-    	//rootBusinessTestHelper.createMovement(movementUnlimitedIdentifier, "-80000", "220000");
-    	
-    	
-    }
-    
     @Test
     public void crudOneMovementCollectionType(){
     	TestCase testCase = instanciateTestCase();
@@ -93,6 +83,27 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	assertNotNull(movementCollection.getType().getInterval());
     	movementCollection.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection);
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementCollectionAndMovements(){
+    	TestCase testCase = instanciateTestCase();
+    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
+    	Movement movement = inject(MovementBusiness.class).instanciateOne(movementCollection);
+    	movement.setCode(RandomHelper.getInstance().getAlphabetic(3));
+    	movement.setValue(new BigDecimal("15"));
+    	movement.setAction(movementCollection.getType().getIncrementAction());
+    	movementCollection.getItems().setSynchonizationEnabled(Boolean.TRUE);
+    	testCase.create(movementCollection);
+    	assertEquals(1, inject(MovementDao.class).readByCollection(movementCollection).size());
+    	
+    	movementCollection = testCase.read(MovementCollection.class, movementCollection.getCode());
+    	movementCollection.getItems().addMany(inject(MovementDao.class).readByCollection(movementCollection));
+    	movementCollection.getItems().setSynchonizationEnabled(Boolean.TRUE);
+    	testCase.update(movementCollection);
+    	assertEquals(1, inject(MovementDao.class).readByCollection(movementCollection).size());
+    	
     	testCase.clean();
     }
     

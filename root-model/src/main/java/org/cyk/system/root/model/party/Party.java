@@ -21,7 +21,6 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity @NoArgsConstructor @Inheritance(strategy=InheritanceType.JOINED)
-//@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS) FIXME there is an issue : entity listener method are not called
 public class Party extends AbstractIdentifiable  implements Serializable{
 
 	private static final long serialVersionUID = 1L;

@@ -20,7 +20,7 @@ public abstract class AbstractActorReport<MODEL> extends AbstractIdentifiableRep
 		if(source==null){
 			
 		}else{
-			person.setSource(((AbstractActor)source).getPerson());
+			//person.setSource(((AbstractActor)source).getPerson());
 		}
 	}
 	

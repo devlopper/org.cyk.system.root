@@ -23,7 +23,7 @@ public abstract class AbstractActorDetails<ACTOR extends AbstractIdentifiable> e
 	
 	@Override
 	protected Person getPerson() {
-		return getActor().getPerson();
+		return null;//getActor().getPerson();
 	}
 	
 	protected abstract AbstractActor getActor();

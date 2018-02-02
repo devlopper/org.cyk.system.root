@@ -27,7 +27,7 @@ public class FindByStringIT extends AbstractBusinessIT {
     @Override
     protected void populate() {
     	super.populate();
-    	Actor actor = inject(ActorBusiness.class).instanciateOneRandomly("c001");
+    	/*Actor actor = inject(ActorBusiness.class).instanciateOneRandomly("c001");
     	actor.getPerson().setName("konan").setLastnames("marius").addElectronicMail("mymail@yahoo.fr"); 
     	actor.setName("konan");
     	create(actor);
@@ -41,7 +41,7 @@ public class FindByStringIT extends AbstractBusinessIT {
     	actor.getPerson().setName("doudou").setLastnames("cherif").addElectronicMail(null);
     	actor.setName("doudou");
     	create(actor);
-    	
+    	*/
     	create(new JobFunction(null, null));
     	create(new JobFunction("mycode", null));
     	create(new JobFunction(null, "mylibeller"));

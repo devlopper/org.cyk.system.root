@@ -424,10 +424,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					beforeUpdate(identifiable);
 					//IDENTIFIABLE newObject = dao.update(identifiable);
 					dao.update(identifiable);
-				    if(identifiable.getGlobalIdentifier()!=null)
+					if(identifiable.getGlobalIdentifier()!=null)
 				    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
 				    afterUpdate(identifiable);
-					//return newObject; We might lost some informations by returning the new managed object. better to keep the old one
+				   //return newObject; We might lost some informations by returning the new managed object. better to keep the old one
 				    logTrace(identifiable.getLoggingMessageBuilder());
 				    return identifiable;
 				}
@@ -443,7 +443,6 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			//return newObject; We might lost some informations by returning the new managed object. better to keep the old one
 		    */
 		}
-		
 		return identifiable;
 	}
 	
@@ -722,7 +721,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	 * @param userIdentifiables
 	 * @return
 	 */
-	protected <T extends AbstractIdentifiable> Collection<T> delete(Class<T> aClass/*,TypedDao<T> dao*/,Collection<T> databaseIdentifiables,Collection<T> userIdentifiables) {
+	protected <T extends AbstractIdentifiable> Collection<T> delete(Class<T> aClass,Collection<T> databaseIdentifiables,Collection<T> userIdentifiables) {
+		LoggingHelper.Message.Builder loggingMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
+		loggingMessageBuilder.addManyParameters("delete");
+		loggingMessageBuilder.addNamedParameters("#db",CollectionHelper.getInstance().getSize(databaseIdentifiables),"#user",CollectionHelper.getInstance().getSize(userIdentifiables));
 		Set<T> deleted = new HashSet<>();
 		for(T database : databaseIdentifiables){
 			Boolean found = Boolean.FALSE;
@@ -735,12 +737,9 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			if(Boolean.FALSE.equals(found))
 				deleted.add(database);
 		}
-		
+		loggingMessageBuilder.addNamedParameters("#found",deleted.size());
 		inject(BusinessInterfaceLocator.class).injectTyped(aClass).delete(deleted);
-		/*
-		for(T identifiable : deleted)
-			dao.delete(identifiable);
-		*/
+		logTrace(loggingMessageBuilder);
 		return deleted;
 	}
 	

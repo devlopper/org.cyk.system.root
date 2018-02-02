@@ -49,7 +49,7 @@ public class NotificationBuilderAdapter extends Notification.Builder.Listener.Ad
 					if(identifiable instanceof Person)
 						persons.add((Person)identifiable);
 				}else if(identifiable instanceof AbstractActor)
-					persons.add( ((AbstractActor)identifiable).getPerson());
+					persons.add( (Person) ((AbstractActor)identifiable).getPerson());
 				
 		if(personRelationshipTypeRoleCodes!=null){
 			Collection<PersonRelationshipTypeRole> personRelationshipTypeRoles = inject(PersonRelationshipTypeRoleDao.class).readByGlobalIdentifierCodes(personRelationshipTypeRoleCodes);

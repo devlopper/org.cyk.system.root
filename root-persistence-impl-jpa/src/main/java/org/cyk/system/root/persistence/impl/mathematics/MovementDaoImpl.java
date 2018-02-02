@@ -36,10 +36,10 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 	protected void listenInstanciateJpqlBuilder(String name, JavaPersistenceQueryLanguage builder) {
 		super.listenInstanciateJpqlBuilder(name, builder);
 		if(readByFilter.equals(name)){
-			builder.setFieldName(Movement.FIELD_COLLECTION).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
+			//builder.setFieldName(Movement.FIELD_COLLECTION).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
 			builder.setFieldName(Movement.FIELD_ACTION).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
 		}else if(readWhereExistencePeriodFromDateIsLessThan.equals(name) || countWhereExistencePeriodFromDateIsLessThan.equals(name)){
-			builder.where().and().eq(Movement.FIELD_COLLECTION);
+			//builder.where().and().eq(Movement.FIELD_COLLECTION);
 		}
 	}
 			
@@ -50,11 +50,11 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 		super.processQueryWrapper(aClass, queryWrapper, queryName,arguments);
 		if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
 			FilterHelper.Filter<T> filter = (Filter<T>) arguments[0];
-			queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementCollection.class),Movement.FIELD_COLLECTION,GlobalIdentifier.FIELD_IDENTIFIER);
+			//queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementCollection.class),Movement.FIELD_COLLECTION,GlobalIdentifier.FIELD_IDENTIFIER);
 			queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementAction.class),Movement.FIELD_ACTION,GlobalIdentifier.FIELD_IDENTIFIER); 
 		}else if(readWhereExistencePeriodFromDateIsLessThan.equals(queryName) || countWhereExistencePeriodFromDateIsLessThan.equals(queryName)){
-			Movement movement = (Movement) arguments[0];
-			queryWrapper.parameter(Movement.FIELD_COLLECTION, movement.getCollection());
+			//Movement movement = (Movement) arguments[0];
+			//queryWrapper.parameter(Movement.FIELD_COLLECTION, movement.getCollection());
 		} 
 	}
 

@@ -23,8 +23,10 @@ import lombok.Setter;
  *
  */
 public class PartyBusinessRole extends AbstractDataTreeType implements Serializable {
-	
 	private static final long serialVersionUID = -4946585596435850782L;
+	
+	private Integer minimumNumberOfOccurrence;
+	private Integer maximumNumberOfOccurrence;
 	
 	@Override
 	public PartyBusinessRole setCode(String code) {

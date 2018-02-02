@@ -8,12 +8,12 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.party.person.AbstractActorBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.party.person.PersonExtendedInformations;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
@@ -45,7 +45,8 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 		ACTOR actor = super.instanciateOne();
 		actor.setCode(code);
 		actor.setName(commonUtils.getValueAt(names, 0));
-		actor.getPerson().setLastnames(commonUtils.getValueAt(names, 1));
+		if(actor.getPerson() instanceof Person)
+			((Person)actor.getPerson()).setLastnames(commonUtils.getValueAt(names, 1));
 		return actor;
 	}
 
@@ -86,7 +87,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 			if(anActor.getPerson().getImage()==null)
 				anActor.getPerson().setImage(anActor.getImage());
 			anActor.getPerson().getGlobalIdentifierCreateIfNull().setCreatedBy(anActor.getGlobalIdentifierCreateIfNull().getCreatedBy());
-			inject(PersonBusiness.class).create(anActor.getPerson());
+			createIfNotIdentified(anActor.getPerson());
 		}else{
 			if(StringUtils.isEmpty(anActor.getCode()))
 				anActor.setCode(anActor.getPerson().getCode());
@@ -109,14 +110,14 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 	protected void beforeUpdate(ACTOR anActor) {
 		super.beforeUpdate(anActor);
 		anActor.getPerson().setName(anActor.getName());//TODO i think it is better to align those names because there are same concept . is it ?
-		inject(PersonBusiness.class).update(anActor.getPerson());
+		inject(GenericBusiness.class).update(anActor.getPerson());
 	}
 	 
 	@Override
 	protected void beforeDelete(ACTOR actor) {
 		actor.getImage().setCheckIfExistOnDelete(Boolean.TRUE);
 		super.beforeDelete(actor);
-		inject(PersonBusiness.class).delete(actor.getPerson());
+		inject(GenericBusiness.class).delete(actor.getPerson());
 		actor.setPerson(null);
 	}
 	
@@ -144,7 +145,7 @@ public abstract class AbstractActorBusinessImpl<ACTOR extends AbstractActor,DAO 
 				@Override
 				public void afterInstanciateOne(UserAccount userAccount,ACTOR actor) {
 					super.afterInstanciateOne(userAccount, actor);
-					actor.getPerson().setExtendedInformations(new PersonExtendedInformations(actor.getPerson()));
+					//actor.getPerson().setExtendedInformations(new PersonExtendedInformations(actor.getPerson()));
 				}
 				
 					

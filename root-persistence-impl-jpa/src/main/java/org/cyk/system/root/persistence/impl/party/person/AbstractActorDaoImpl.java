@@ -4,19 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.NoResultException;
 
-import org.cyk.system.root.model.geography.ElectronicMailAddress;
-import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.persistence.api.party.person.AbstractActorDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
-import org.cyk.system.root.persistence.impl.QueryStringBuilder;
-import org.cyk.system.root.persistence.impl.QueryWrapper;
-import org.cyk.system.root.persistence.impl.geography.ElectronicMailAddressDaoImpl;
-import org.cyk.utility.common.computation.DataReadConfiguration;
-import org.cyk.utility.common.helper.FilterHelper.Filter;
-import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CRITERIA extends AbstractActor.AbstractSearchCriteria<ACTOR>> extends AbstractTypedDao<ACTOR> implements AbstractActorDao<ACTOR,SEARCH_CRITERIA>,Serializable {
 
@@ -24,17 +15,17 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	
 	private static final String READ_BY_CRITERIA_FORMAT = "SELECT actor FROM %s actor WHERE "
     		+ "    ( LOCATE(LOWER(:name),LOWER(actor.person.globalIdentifier.name))                  > 0 )"
-    		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.person.lastnames))              > 0 )"
+    		//+ " OR ( LOCATE(LOWER(:name),LOWER(actor.person.lastnames))              > 0 )"
     		+ " OR ( LOCATE(LOWER(:name),LOWER(actor.globalIdentifier.code))            > 0 )"
     		;
 	
 	private static final String READ_BY_CRITERIA_ORDERED_FORMAT = READ_BY_CRITERIA_FORMAT+" "+ORDER_BY_FORMAT;
-	
+	/*
 	static String r = 
 			"(EXISTS(SELECT email FROM ElectronicMailAddress email WHERE ("+QueryStringBuilder.getLikeString("email."+ElectronicMailAddress.FIELD_ADDRESS)+")"
 					+ " AND email.collection = record.person.contactCollection"
 					+ "))";
-	
+	*/
 	private String readByPerson,readByCriteriaNameAscendingOrder,readByCriteriaNameDescendingOrder;;
 	
 	@Override
@@ -44,15 +35,15 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 		
 		//registerNamedQuery(readByCriteria,String.format(READ_BY_CRITERIA_FORMAT,entityName()));
         
-        registerNamedQuery(readByCriteriaNameAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT,entityName(), "actor.person.globalIdentifier.name ASC") );
-        registerNamedQuery(readByCriteriaNameDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT,entityName(), "actor.person.globalIdentifier.name DESC") );
+        //registerNamedQuery(readByCriteriaNameAscendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT,entityName(), "actor.person.globalIdentifier.name ASC") );
+        //registerNamedQuery(readByCriteriaNameDescendingOrder,String.format(READ_BY_CRITERIA_ORDERED_FORMAT,entityName(), "actor.person.globalIdentifier.name DESC") );
 	}
 	
 	@Override
 	public ACTOR readByPerson(Person person) {
 		return namedQuery(readByPerson).parameter(AbstractActor.FIELD_PERSON, person).ignoreThrowable(NoResultException.class).resultOne();
 	}
-	
+	/*
 	@Override
 	protected String getReadByCriteriaQuery(String query) {
 		return or(super.getReadByCriteriaQuery(query),QueryStringBuilder.getLikeString("record.person.lastnames"),r);
@@ -61,8 +52,8 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	@Override
 	protected String getReadByCriteriaQueryCodeExcludedWherePart(String where) {
 		return or(super.getReadByCriteriaQueryCodeExcludedWherePart(where),QueryStringBuilder.getLikeString("record.person.lastnames"),r);
-	}
-	
+	}*/
+	/*
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void applySearchCriteriaParameters(QueryWrapper<?> queryWrapper,AbstractFieldValueSearchCriteriaSet searchCriteria) {
@@ -74,7 +65,7 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 	@Override
 	protected void processReadByFilterQueryBuilderWhereConditions(JavaPersistenceQueryLanguage jpql) {
 		super.processReadByFilterQueryBuilderWhereConditions(jpql);
-		jpql.setFieldName(AbstractActor.FIELD_PERSON);
+		jpql.setFieldName(AbstractActor.FIELD_PARTY);
 		jpql.getWhere().or().lk(Person.FIELD_LASTNAMES).or().exists(ElectronicMailAddressDaoImpl.createFilter(jpql, Party.FIELD_CONTACT_COLLECTION));
 		jpql.setFieldName(null);
 	}
@@ -85,7 +76,7 @@ public abstract class AbstractActorDaoImpl<ACTOR extends AbstractActor,SEARCH_CR
 		queryWrapper.parameterLike(Person.FIELD_LASTNAMES,((AbstractActor.Filter<ACTOR>)filter).getPerson().getLastnames());
 		queryWrapper.parameterLike(ElectronicMailAddress.FIELD_ADDRESS,((AbstractActor.Filter<ACTOR>)filter).getPerson().getContactCollection().getElectronicMailAddress().getAddress());
 	}
-	
+	*/
 	/**/
 	
 	/**/

@@ -287,7 +287,7 @@ public abstract class AbstractRootReportProducer extends AbstractRootBusinessBea
 	}
 	
 	protected void set(AbstractActor actor,AbstractActorReport<?> report){
-		set(actor==null?null:actor.getPerson(), report.getPerson());
+		//set(actor==null?null:actor.getPerson(), report.getPerson());
 		setGlobalIdentifier(actor, report);
 	}
 	

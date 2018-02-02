@@ -7,6 +7,7 @@ import java.util.Collection;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.AbstractCollectionBusiness;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
@@ -94,10 +95,20 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		}else{
 			if(collection.getItems().getElements()!=null)
 				collection.getItems().getElements().remove(item);
-			collection.addToDelete(item);
 		}
 		//logTrace(logMessageBuilder);
 		return item;
+	}
+	
+	@Override
+	protected void beforeCrud(COLLECTION collection,Crud crud) {
+		super.beforeCrud(collection,crud);
+		if(collection.getItems().isSynchonizationEnabled()){
+			if(ArrayUtils.contains(new Crud[]{Crud.CREATE, Crud.UPDATE,Crud.DELETE},crud)){
+				computeChanges(collection);
+			}	
+		}
+		
 	}
 	
 	@Override

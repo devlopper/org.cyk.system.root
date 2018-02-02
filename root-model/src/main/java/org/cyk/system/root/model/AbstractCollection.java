@@ -2,7 +2,6 @@ package org.cyk.system.root.model;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.MappedSuperclass;
@@ -31,8 +30,6 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	@Transient protected IdentifiableRuntimeCollection<ITEM> items = new IdentifiableRuntimeCollection<>();
 	
-	@Transient protected Collection<ITEM> collectionToDelete;
-
 	{
 		getItems().setElementObjectClass(ClassHelper.getInstance().getParameterAt(getClass(), 0, Object.class));
 	}
@@ -98,20 +95,6 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		if(items!=null)
 			items.removeOneAt(aClass, index);
 	}
-	
-	public ITEM addToDelete(ITEM item){
-		if(collectionToDelete==null)
-			collectionToDelete = new ArrayList<>();
-		collectionToDelete.add(item);
-		return item;
-	}
-	
-	@Override
-	public String getLogMessage() {
-		return String.format(LOG_MESSAGE, getClass().getSimpleName(),getCode(),itemCodeSeparator);
-	}
-	
-	private static final String LOG_MESSAGE = "%s(C=%s SEP=%s)";
 	
 	public static final String FIELD_ITEM_CODE_SEPARATOR = "itemCodeSeparator"; 
 	public static final String FIELD_ITEM_AGGREGATION_APPLIED = "itemAggregationApplied";

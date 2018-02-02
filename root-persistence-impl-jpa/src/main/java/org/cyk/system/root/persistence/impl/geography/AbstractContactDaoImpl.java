@@ -12,6 +12,11 @@ public abstract class AbstractContactDaoImpl<CONTACT extends Contact> extends Ab
 	private static final long serialVersionUID = 6306356272165070761L;
 
 	protected String readByValue,countByValue;
+
+	@Override
+	protected Class<?> __getCollectionClass__() {
+		return ContactCollection.class;
+	}
 	
 }
  

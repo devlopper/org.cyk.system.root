@@ -263,6 +263,7 @@ public class InstanceHelper implements Serializable {
 		}
 	}
 	
+	@Deprecated
 	public static class Label extends org.cyk.utility.common.helper.InstanceHelper.Stringifier.Label.Adapter.Default implements Serializable {
 		private static final long serialVersionUID = 1L;
 		
@@ -272,15 +273,19 @@ public class InstanceHelper implements Serializable {
 			if(object instanceof AbstractOutputDetails<?>)
 				if(((AbstractOutputDetails<?>)object).getMaster()!=null)
 					object = ((AbstractOutputDetails<?>)object).getMaster();
+			/*
 			if( object instanceof AbstractEnumeration )
 				return StringHelper.getInstance().isBlank(((AbstractEnumeration)object).getName()) ? ((AbstractEnumeration)object).getCode() 
 						: ((AbstractEnumeration)object).getName();
-				if( object instanceof AbstractIdentifiable ){
-					if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)object).getName()) )
-						return ((AbstractIdentifiable)object).getName(); 
-					if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)object).getCode()) )
-						return ((AbstractIdentifiable)object).getCode(); 
-				}
+				*/
+			if( object instanceof AbstractIdentifiable ){
+				if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)object).getName()) )
+					return ((AbstractIdentifiable)object).getName(); 
+				if( StringHelper.getInstance().isNotBlank(((AbstractIdentifiable)object).getCode()) )
+					return ((AbstractIdentifiable)object).getCode(); 
+				if(((AbstractIdentifiable)object).getGlobalIdentifier()!=null)
+					return ((AbstractIdentifiable)object).getGlobalIdentifier().getIdentifier();
+			}
 			if( object instanceof AbstractModelElement )
 				return ((AbstractModelElement)object).getUiString();
 			return super.__execute__();

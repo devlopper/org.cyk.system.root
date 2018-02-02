@@ -2,6 +2,7 @@ package org.cyk.system.root.model.party.person;
 
 import java.io.Serializable;
 
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
@@ -9,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.helper.FilterHelper;
@@ -22,27 +22,18 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 
 	private static final long serialVersionUID = 2742833783679362737L;
 
-	@ManyToOne @NotNull protected Person person;
+	@ManyToOne @JoinColumn(name=COLUMN_PERSON) @NotNull protected Person person;
 	
 	@Override
 	public AbstractActor setCode(String code) {
 		return (AbstractActor) super.setCode(code);
 	}
 	
-	@Override
-	public String toString() {
-		return getUiString();
-	}
-	
-	@Override
-	public String getUiString() {
-		return globalIdentifier.getCode()+Constant.CHARACTER_SPACE+person.getNames();
-	}
-	
 	/**/
 	
 	public static final String FIELD_PERSON = "person";
-	public static final String FIELD_REGISTRATION = "registration";
+	
+	public static final String COLUMN_PERSON = FIELD_PERSON;
 	
 	/**/
 	

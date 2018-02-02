@@ -33,7 +33,7 @@ public class Fonctionnality_Filter_IT extends AbstractBusinessIT {
     @Override
     protected void populate() {
     	super.populate();
-    	Actor actor = inject(ActorBusiness.class).instanciateOne();
+    	/*Actor actor = inject(ActorBusiness.class).instanciateOne();
     	actor.setCode("c001").getPerson().setCode("c001").setName("konan").setLastnames("marius").addElectronicMail("mymail@yahoo.fr"); 
     	actor.setName("konan");
     	actor.getPerson().getContactCollection().getItems().setSynchonizationEnabled(Boolean.TRUE);
@@ -49,7 +49,7 @@ public class Fonctionnality_Filter_IT extends AbstractBusinessIT {
     	actor.setCode("c003a").getPerson().setCode("c003a").setName("doudou").setLastnames("cherif");
     	actor.setName("doudou");
     	create(actor);
-    	
+    	*/
     	create(new JobFunction(null, null));
     	create(new JobFunction("mycode", null));
     	create(new JobFunction(null, "mylibeller"));

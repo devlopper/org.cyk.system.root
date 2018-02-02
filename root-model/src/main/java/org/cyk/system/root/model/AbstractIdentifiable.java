@@ -416,9 +416,13 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PostLoad
 	private void onPostLoad() {
+		__listenPostLoad__();
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected void __listenPostLoad__(){
 		for(Entry<Class<? extends AbstractIdentifiable>, IdentifiableLifeCyleEventListener.AbstractIdentifiable> entry : IdentifiableLifeCyleEventListener.AbstractIdentifiable.MAP.entrySet()){
 			if(entry.getKey().equals(getClass())){
 				entry.getValue().onPostLoad(this);

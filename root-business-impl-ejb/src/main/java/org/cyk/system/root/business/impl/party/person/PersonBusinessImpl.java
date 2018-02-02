@@ -89,7 +89,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 	public Collection<Person> get(Collection<? extends AbstractActor> actors) {
 		Collection<Person> persons = new ArrayList<>();
 		for(AbstractActor actor : actors)
-			persons.add(actor.getPerson());
+			persons.add((Person) actor.getPerson());
 		return persons;
 	}
 	
