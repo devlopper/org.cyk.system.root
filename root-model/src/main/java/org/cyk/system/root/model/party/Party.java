@@ -21,6 +21,11 @@ import lombok.Setter;
 
 @Getter @Setter
 @Entity @NoArgsConstructor @Inheritance(strategy=InheritanceType.JOINED)
+/**
+ * A moral or physical person
+ * @author Christian
+ *
+ */
 public class Party extends AbstractIdentifiable  implements Serializable{
 
 	private static final long serialVersionUID = 1L;
