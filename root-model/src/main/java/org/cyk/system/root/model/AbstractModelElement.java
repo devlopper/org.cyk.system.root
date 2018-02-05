@@ -8,6 +8,7 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,7 +40,9 @@ public abstract class AbstractModelElement implements Serializable{
 		return loggingMessageBuilder;
 	}
 	
-	public abstract String getUiString();
+	public String getUiString(){
+		return null;
+	}
  
 	public String getLogMessage(){
 		return CommonUtils.getInstance().getFieldsValues(this, AbstractModelElement.class);
@@ -53,6 +56,11 @@ public abstract class AbstractModelElement implements Serializable{
 	
 	public static String generateColumnName(String fieldName){
 		return fieldName;
+	}
+	
+	@Override
+	public String toString() {
+		return StringHelper.getInstance().convert(this);
 	}
 	
 }

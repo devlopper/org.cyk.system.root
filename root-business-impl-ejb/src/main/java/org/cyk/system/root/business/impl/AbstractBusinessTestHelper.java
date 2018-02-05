@@ -276,35 +276,15 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		for(Entry<ClassField, Object> entry : expectedValues.getValuesMap().entrySet()){
 			String message = entry.getKey().toString();
 			String expectedValue = (String)entry.getValue();
-			Object actualValue = commonUtils.readProperty(object, entry.getKey().getName());
-			if(String.class.equals(entry.getKey().getField().getType()))
+			Object actualValue = FieldHelper.getInstance().read(object, entry.getKey().getName());
+			if(actualValue == null || expectedValue == null)
+				assertEquals(message, expectedValue, actualValue);
+			else if (String.class.equals(entry.getKey().getField().getType()))
 				assertEquals(message, expectedValue, (String)actualValue);	
 			else if(BigDecimal.class.equals(entry.getKey().getField().getType()))
 				assertBigDecimalEquals(message, expectedValue, (BigDecimal)actualValue);	
 			else
 				assertEquals(entry.getKey().getField().getType()+" not yet handled", Boolean.TRUE, Boolean.FALSE);
-			/*
-			if(!object.getClass().equals(entry.getKey().getClazz()))
-				continue;
-			String message = entry.getKey().toString();
-			Field field = FieldUtils.getField(object.getClass(), entry.getKey().getName(), Boolean.TRUE);
-			if(field==null){
-				
-			}else{
-				message = field.getDeclaringClass().getSimpleName()+"."+field.getName();
-				try {
-					Object value = FieldUtils.readField(field, object, Boolean.TRUE);
-					logTrace("Assert "+field.getType().getSimpleName()+" equals between {} and {}", entry.getValue(),value);
-					//System.out.println("Assert "+field.getType().getSimpleName()+" equals between "+entry.getValue()+" and "+value+"");
-					if(BigDecimal.class.equals(field.getType()))
-						assertBigDecimalEquals(message, entry.getValue(), (BigDecimal)value);	
-					else
-						assertEquals(field.getType()+" not yet handled", Boolean.TRUE, Boolean.FALSE);
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
-			}
-			*/
 		}
 		//listener.assertEquals(message, expected, actual);	
 	}
