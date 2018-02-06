@@ -7,6 +7,9 @@ import java.util.Collection;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.AbstractCollectionBusiness;
@@ -21,10 +24,9 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
-
-import lombok.Getter;
-import lombok.Setter;
 
 public abstract class AbstractCollectionBusinessImpl<COLLECTION extends AbstractCollection<ITEM>,ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionDao<COLLECTION, ITEM>,ITEM_DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,ITEM_BUSINESS extends AbstractCollectionItemBusiness<ITEM,COLLECTION>> extends AbstractEnumerationBusinessImpl<COLLECTION, DAO> implements AbstractCollectionBusiness<COLLECTION,ITEM>,Serializable {
 
@@ -193,8 +195,27 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		return "findByCollection";
 	}
 	
+	
+	
 	/**/
 	
+	@Override
+	protected void computeChanges(COLLECTION identifiable,LoggingHelper.Message.Builder logMessageBuilder) {
+		super.computeChanges(identifiable, logMessageBuilder);
+		logMessageBuilder.addNamedParameters("#items",CollectionHelper.getInstance().getSize(identifiable.getItems().getElements())
+				,"items synchronized",identifiable.getItems().isSynchonizationEnabled());
+		if(Boolean.TRUE.equals(identifiable.getItems().isSynchonizationEnabled())){
+			new CollectionHelper.Iterator.Adapter.Default<ITEM>(identifiable.getItems().getElements()){
+				private static final long serialVersionUID = 1L;
+				protected void __executeForEach__(ITEM item) {
+					getItemBusiness().computeChanges(item);
+				}
+			}.execute();	
+		}
+	}
+
+
+
 	public static class BuilderOneDimensionArray<T extends AbstractCollection<?>> extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<T> implements Serializable {
 		private static final long serialVersionUID = 1L;
 
