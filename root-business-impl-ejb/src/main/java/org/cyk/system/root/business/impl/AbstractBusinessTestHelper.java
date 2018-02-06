@@ -38,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.text.WordUtils;
 import org.cyk.system.OrgCykSystemPackage;
+import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -52,6 +53,8 @@ import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBu
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
+import org.cyk.system.root.model.AbstractCollection;
+import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.FileRepresentationType;
@@ -83,6 +86,7 @@ import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
+import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
@@ -1185,6 +1189,12 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		public <T extends AbstractIdentifiable> TestCase assertParents(Class<T> aClass,String code,String...parentsCodes){
 			return assertParents(aClass, code, null, parentsCodes);
+		}
+		
+		@SuppressWarnings("unchecked")
+		public <T extends AbstractCollection<I>,I extends AbstractCollectionItem<T>> void assertCollection(Class<T> aClass,Class<I> itemClass,String collectionCode,Long expectedNumberOfItem){
+			T collection = read(aClass, collectionCode);
+			assertEquals("number of item is not equal", expectedNumberOfItem, ((AbstractCollectionItemDao<I, T>)getPersistence(itemClass)).countByCollection(collection));
 		}
 		
 		/**/

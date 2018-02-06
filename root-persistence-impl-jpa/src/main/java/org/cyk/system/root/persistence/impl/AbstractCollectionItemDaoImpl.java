@@ -20,7 +20,7 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 
 	@SuppressWarnings("rawtypes")
 	protected Class<AbstractCollection> collectionClass;
-	private String /*readByCollectionAscending,readByCollectionDescending,*/readByCollectionsAscending,readByCollectionsDescending;
+	private String readByCollections,countByCollections,readByCollectionsAscending,readByCollectionsDescending;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -39,6 +39,7 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 		super.namedQueriesInitialisation();
 		//registerNamedQuery(readByCollectionAscending, _select().where(AbstractCollectionItem.FIELD_COLLECTION).orderBy(getReadByCollectionOrderByFieldName(), Boolean.TRUE));
 		//registerNamedQuery(readByCollectionDescending, _select().where(AbstractCollectionItem.FIELD_COLLECTION).orderBy(getReadByCollectionOrderByFieldName(), Boolean.FALSE));
+		registerNamedQuery(readByCollections, _select().whereIdentifierIn(AbstractCollectionItem.FIELD_COLLECTION));
 		registerNamedQuery(readByCollectionsAscending, _select().whereIdentifierIn(AbstractCollectionItem.FIELD_COLLECTION).orderBy(getReadByCollectionOrderByFieldName(), Boolean.TRUE));
 		registerNamedQuery(readByCollectionsDescending, _select().whereIdentifierIn(AbstractCollectionItem.FIELD_COLLECTION).orderBy(getReadByCollectionOrderByFieldName(), Boolean.FALSE));
 	}
@@ -54,6 +55,11 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 	}
 	
 	@Override
+	public Long countByCollections(Collection<COLLECTION> collections) {
+		return countNamedQuery(countByCollections).parameterIdentifiers(collections).resultOne();
+	}
+	
+	@Override
 	public Collection<ITEM> readByCollections(Collection<COLLECTION> collections) {
 		return readByCollections(collections, Boolean.TRUE);
 	}
@@ -66,6 +72,11 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 	@Override
 	public Collection<ITEM> readByCollection(COLLECTION collection) {
 		return readByCollections(Arrays.asList(collection));
+	}
+	
+	@Override
+	public Long countByCollection(COLLECTION collection) {
+		return countByCollections(Arrays.asList(collection));
 	}
 	
 	protected String getReadByCollectionOrderByFieldName(){

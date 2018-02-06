@@ -71,7 +71,17 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	/* Transients */
 	
 	@Transient protected Boolean cascadeOperationToMaster = Boolean.FALSE;
+	/**
+	 * null means no restriction
+	 */
+	@Transient protected Collection<String> cascadeOperationToMasterFieldNames;
+	
 	@Transient protected Boolean cascadeOperationToChildren = Boolean.FALSE;
+	/**
+	 * null means no restriction
+	 */
+	@Transient protected Collection<String> cascadeOperationToChildrenFieldNames;
+	
 	@Transient protected Boolean checkIfExistOnDelete = Boolean.FALSE;
 	
 	/**

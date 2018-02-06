@@ -52,6 +52,11 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
+	public Long countByCollection(COLLECTION collection) {
+		return dao.countByCollection(collection);
+	}
+	
+	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public Collection<ITEM> findByCollection(COLLECTION collection, Boolean ascending) {
 		return dao.readByCollection(collection, ascending);
 	}

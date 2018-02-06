@@ -23,6 +23,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.helper.ConditionHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
@@ -77,6 +78,12 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             AbstractIdentifiable identifiable = (AbstractIdentifiable) anIdentifiable;
             //TODO better to look for all field with system in groups
             exceptionUtils().exception(identifiable.getIdentifier()!=null,"exception.value.set.system",new Object[]{"identifier"});
+            
+            for(FieldHelper.Field index : FieldHelper.Field.get(anIdentifiable.getClass())){
+        		if(!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null){
+        			exceptionUtils().exception("code is required");
+        		}
+        	}
         }
     }
     
@@ -90,6 +97,12 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     		for(Property property : configuration.getUniqueProperties())
     			checkUniqueConstraints(identifiable, property.getName());
     	}
+    	
+    	for(FieldHelper.Field index : FieldHelper.Field.get(anIdentifiable.getClass())){
+    		if(Boolean.TRUE.equals(index.getConstraints().getIsUnique()))
+    			checkUniqueConstraints(identifiable, index.getName());
+    	}
+    	
     	TypedDao<AbstractIdentifiable> business = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable);
     	if(anIdentifiable.getIdentifier()==null){
     		if(business==null)
