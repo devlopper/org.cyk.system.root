@@ -14,6 +14,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.FormatterBusiness;
@@ -78,9 +81,7 @@ import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
-
-import lombok.Getter;
-import lombok.Setter;
+import org.cyk.utility.common.helper.StringHelper;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -173,7 +174,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}
 	}
 	
-	protected void setAutoSettedProperties(IDENTIFIABLE identifiable, Crud crud){
+	protected void setAutoSettedProperties(final IDENTIFIABLE identifiable, Crud crud){
 		String property;
 		if(isAutoSetPropertyValueClass(property = GlobalIdentifier.FIELD_CODE, identifiable.getClass()))
 			setProperty(identifiable,property);
@@ -181,6 +182,40 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			setProperty(identifiable,property);
 		if(isAutoSetPropertyValueClass(property = commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE), identifiable.getClass()))
 			setProperty(identifiable,property);
+		
+		computeChanges(identifiable);
+		
+		if(Crud.CREATE.equals(crud)){
+			if(Boolean.TRUE.equals(identifiable.getCascadeOperationToMaster())){
+				new CollectionHelper.Iterator.Adapter.Default<String>(identifiable.getCascadeOperationToMasterFieldNames()){
+					private static final long serialVersionUID = 1L;
+					@Override
+					protected void __executeForEach__(String fieldName) {
+						java.lang.reflect.Field masterField = FieldHelper.getInstance().get(identifiable.getClass(), fieldName);
+						AbstractIdentifiable master = (AbstractIdentifiable) FieldHelper.getInstance().read(identifiable, masterField);
+						createIfNotIdentified(master);
+						/*java.lang.reflect.Field masterClassField = FieldHelper.getInstance().get(identifiable.getClass(), masterField.getName()+"Class");
+						@SuppressWarnings("unchecked")
+						Class<? extends AbstractIdentifiable> masterClass = (Class<? extends AbstractIdentifiable>) (masterClassField == null 
+							? FieldHelper.getInstance().getType(identifiable.getClass(), fieldName)
+							: FieldHelper.getInstance().read(identifiable, masterClassField));
+						if(master==null && masterClass!=null){	
+							if(StringHelper.getInstance().isNotBlank(identifiable.getCode()))
+								master = inject(PersistenceInterfaceLocator.class).injectTyped(masterClass).read(identifiable.getCode());
+							if(master == null){
+								master = inject(BusinessInterfaceLocator.class).injectTyped(masterClass).instanciateOne();
+								org.cyk.system.root.business.impl.helper.FieldHelper.getInstance().copy(identifiable,master,Boolean.FALSE);
+								createIfNotIdentified(master);
+							}
+							FieldHelper.getInstance().set(identifiable, master, masterField);						
+						}*/
+					}
+				}.execute();
+			}else{
+				
+			}	
+		}
+		
 	}
 	
 	protected <ITEM extends AbstractIdentifiable> void synchronise(Class<ITEM> itemClass,IDENTIFIABLE master,IdentifiableRuntimeCollection<ITEM> collection){

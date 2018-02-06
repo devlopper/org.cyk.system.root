@@ -46,11 +46,13 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
+import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -820,8 +822,33 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		logTrace(logMessageBuilder);
 	}
 	
-	protected void computeChanges(IDENTIFIABLE identifiable,LoggingHelper.Message.Builder logMessageBuilder){
-		
+	protected void computeChanges(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder logMessageBuilder){
+		if(Boolean.TRUE.equals(identifiable.getCascadeOperationToMaster())){
+			new CollectionHelper.Iterator.Adapter.Default<String>(identifiable.getCascadeOperationToMasterFieldNames()){
+				private static final long serialVersionUID = 1L;
+				@Override
+				protected void __executeForEach__(String fieldName) {
+					java.lang.reflect.Field masterField = FieldHelper.getInstance().get(identifiable.getClass(), fieldName);
+					AbstractIdentifiable master = (AbstractIdentifiable) FieldHelper.getInstance().read(identifiable, masterField);
+					if(master==null){
+						java.lang.reflect.Field masterClassField = FieldHelper.getInstance().get(identifiable.getClass(), masterField.getName()+"Class");
+						@SuppressWarnings("unchecked")
+						Class<? extends AbstractIdentifiable> masterClass = (Class<? extends AbstractIdentifiable>) (masterClassField == null 
+							? FieldHelper.getInstance().getType(identifiable.getClass(), fieldName)
+							: FieldHelper.getInstance().read(identifiable, masterClassField));
+						if(masterClass!=null){
+							if(StringHelper.getInstance().isNotBlank(identifiable.getCode()))
+								master = inject(PersistenceInterfaceLocator.class).injectTyped(masterClass).read(identifiable.getCode());
+							if(master == null){
+								master = inject(BusinessInterfaceLocator.class).injectTyped(masterClass).instanciateOne();
+								org.cyk.system.root.business.impl.helper.FieldHelper.getInstance().copy(identifiable,master,Boolean.FALSE);
+							}
+							FieldHelper.getInstance().set(identifiable, master, masterField);	
+						}
+					}
+				}
+			}.execute();
+		}
 	}
 	
 	/* Filtering */

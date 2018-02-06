@@ -19,8 +19,12 @@ public class FieldHelper implements Serializable {
 	
 	/**/
 	
+	public void copy(AbstractIdentifiable source,AbstractIdentifiable destination,Boolean overwrite){
+		org.cyk.utility.common.helper.FieldHelper.getInstance().copy(source, destination, COPYABLE_FIELD_NAMES,overwrite);
+	}
+	
 	public void copy(AbstractIdentifiable source,AbstractIdentifiable destination){
-		org.cyk.utility.common.helper.FieldHelper.getInstance().copy(source, destination, COPYABLE_FIELD_NAMES);
+		copy(source, destination, Boolean.TRUE);
 	}
 	
 	/**/

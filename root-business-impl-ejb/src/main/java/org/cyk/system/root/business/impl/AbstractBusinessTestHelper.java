@@ -1018,6 +1018,18 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 				}
 		}
 		
+		public void assertFieldValueEquals(Class<? extends AbstractIdentifiable> aClass,String code,Object...objects){
+			assertFieldValueEquals(read(aClass, code), objects);
+		}
+		
+		public void assertFieldValueEquals(Object instance,Object...objects){
+			if(ArrayHelper.getInstance().isNotEmpty(objects)){
+				for(Integer index = 0 ; index < objects.length - 2; index = index + 2){
+					assertEquals("not equal", objects[index+1], FieldHelper.getInstance().read(instance, (String)objects[index]));
+				}
+			}
+		}
+		
 		public void assertPersonRelationship(String person1Code,String role1Code,String role2Code,String[] expectedPersonCodes){
 			__assertPersonRelationship__(person1Code, role1Code, role2Code, expectedPersonCodes,Boolean.TRUE);
 			if(expectedPersonCodes!=null)

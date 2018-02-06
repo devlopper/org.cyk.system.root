@@ -52,7 +52,6 @@ import lombok.experimental.Accessors;
 /*mapping - jpa*/
 @MappedSuperclass @Getter @Setter
 public abstract class AbstractIdentifiable extends AbstractModelElement implements Identifiable<Long>, Serializable{
-
 	private static final long serialVersionUID = 1L;
 	
 	public static AbstractMethod<Boolean,AbstractIdentifiable> GLOBAL_IDENTIFIER_BUILDABLE;
