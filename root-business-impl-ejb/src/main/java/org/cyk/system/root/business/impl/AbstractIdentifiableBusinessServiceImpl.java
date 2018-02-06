@@ -841,10 +841,14 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 								master = inject(PersistenceInterfaceLocator.class).injectTyped(masterClass).read(identifiable.getCode());
 							if(master == null){
 								master = inject(BusinessInterfaceLocator.class).injectTyped(masterClass).instanciateOne();
-								org.cyk.system.root.business.impl.helper.FieldHelper.getInstance().copy(identifiable,master,Boolean.FALSE);
+								//org.cyk.system.root.business.impl.helper.FieldHelper.getInstance().copy(identifiable,master,Boolean.FALSE);
 							}
 							FieldHelper.getInstance().set(identifiable, master, masterField);	
 						}
+					}
+					
+					if(master != null){
+						org.cyk.system.root.business.impl.helper.FieldHelper.getInstance().copy(identifiable,master,Boolean.FALSE);
 					}
 				}
 			}.execute();

@@ -357,7 +357,7 @@ public interface RootConstant {
 			public static String DEFAULT = "DEFAULT";
 			public static String CASH_REGISTER = "CASHREGISTER";
 			public static String STOCK_REGISTER = "STOCKREGISTER";
-			
+			public static String SALE_BALANCE = "SALEBALANCE";
 		}
 		
 		public static class LanguageEntry implements Serializable {
