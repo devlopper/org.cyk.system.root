@@ -32,10 +32,6 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.persistence.Entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -46,11 +42,9 @@ import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.report.ReportBusiness;
-import org.cyk.system.root.business.api.geography.LocalityTypeBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionBusiness;
-import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineAlphabetBusiness;
@@ -70,7 +64,6 @@ import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFileConfiguration;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
-import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -120,6 +113,11 @@ import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
 import org.exolab.castor.types.DateTime;
 import org.hamcrest.Matcher;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter
 public abstract class AbstractBusinessTestHelper extends AbstractBean implements Serializable {
@@ -272,7 +270,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	/**/
 	
-	protected void doAssertions(Object object,ObjectFieldValues expectedValues){
+	public void doAssertions(Object object,ObjectFieldValues expectedValues){
 		for(Entry<ClassField, Object> entry : expectedValues.getValuesMap().entrySet()){
 			String message = entry.getKey().toString();
 			String expectedValue = (String)entry.getValue();
@@ -736,17 +734,17 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	/**/
 	
-	@Getter @Setter @Accessors(chain=true)
-	public static class TestCase extends AbstractBean implements Serializable {
+	@Getter @Setter @Accessors(chain=true) @NoArgsConstructor
+	public static class TestCase extends org.cyk.utility.common.test.TestHelper.TestCase implements Serializable {
 
 		private static final long serialVersionUID = -6026836126124339547L;
 
-		private String name;
-		private AbstractBusinessTestHelper helper;
-		private List<AbstractIdentifiable> identifiables;
-		private Boolean cleaned = Boolean.FALSE;
-		private Set<Class<?>> classes=new LinkedHashSet<>();
-		private Map<Class<?>,Long> countAllMap = new HashMap<>();
+		protected String name;
+		protected AbstractBusinessTestHelper helper;
+		protected List<AbstractIdentifiable> identifiables;
+		protected Boolean cleaned = Boolean.FALSE;
+		protected Set<Class<?>> classes=new LinkedHashSet<>();
+		protected Map<Class<?>,Long> countAllMap = new HashMap<>();
 		
 		public TestCase(AbstractBusinessTestHelper helper) {
 			super();
@@ -1224,8 +1222,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 
 	public TestCase instanciateTestCase(AbstractBusinessTestHelper helper){
-		TestCase testCase = new TestCase(helper);
-		
+		TestCase testCase = (TestCase) ClassHelper.getInstance().instanciateOne(org.cyk.utility.common.test.TestHelper.TestCase.class);
+		testCase.setHelper(helper);
 		return testCase;
 	}
 	
