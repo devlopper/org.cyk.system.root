@@ -32,7 +32,6 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	protected MovementCollection __instanciateOne__(ObjectFieldValues objectFieldValues) {
 		MovementCollection movementCollection = super.__instanciateOne__(objectFieldValues);
 		movementCollection.setType(inject(MovementCollectionTypeDao.class).readDefaulted());
-		movementCollection.setValue(BigDecimal.ZERO);
 		return movementCollection;
 	}
 

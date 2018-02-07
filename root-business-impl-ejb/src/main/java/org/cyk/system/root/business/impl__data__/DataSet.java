@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl;
+package org.cyk.system.root.business.impl__data__;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
+import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.globalidentification.GlobalIdentifierBusinessImpl;
 import org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -41,8 +42,11 @@ import lombok.experimental.Accessors;
 
 @Getter @Setter @Accessors(chain=true)
 public class DataSet extends AbstractBean implements Serializable {
-	
 	private static final long serialVersionUID = 2282674526022995453L;
+	
+	static {
+		ClassHelper.getInstance().map(Listener.class, Listener.Adapter.Default.class, Boolean.FALSE);
+	}
 	
 	private static final String INSTANCE_BUILDER_FROM_ARRAY_CLASS_NAME = "BuilderOneDimensionArray";
 	
@@ -205,23 +209,26 @@ public class DataSet extends AbstractBean implements Serializable {
 	
 	@SuppressWarnings("unchecked")
 	public <T> DataSet addClass(Class<T> aClass,org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray<?> instanceBuilder){
-		excelSheetClasses.add(aClass);
-		if(instanceBuilder==null){
-			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass)){
-				String instanceBuilderClassName = inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).getClass().getName()+Constant.CHARACTER_DOLLAR+INSTANCE_BUILDER_FROM_ARRAY_CLASS_NAME;
-				Class<?> instanceBuilderClass = ClassHelper.getInstance().getByName(instanceBuilderClassName,Boolean.TRUE);	
-				if(instanceBuilderClass==null)
-					System.out.println("No instance builder set for "+aClass+" : "+instanceBuilderClassName);
-				else
-					instanceBuilder = (BuilderOneDimensionArray<?>) ClassHelper.getInstance().instanciateOne(instanceBuilderClass);	
-			}else{
-				instanceBuilder = new GlobalIdentifierBusinessImpl.BuilderOneDimensionArray();
+		Listener listener = ClassHelper.getInstance().instanciateOne(Listener.class);
+		if(Boolean.TRUE.equals(InstanceHelper.getInstance().getIfNotNullElseDefault(listener.isAddable(aClass),Boolean.TRUE))){
+			excelSheetClasses.add(aClass);
+			if(instanceBuilder==null){
+				if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass)){
+					String instanceBuilderClassName = inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).getClass().getName()+Constant.CHARACTER_DOLLAR+INSTANCE_BUILDER_FROM_ARRAY_CLASS_NAME;
+					Class<?> instanceBuilderClass = ClassHelper.getInstance().getByName(instanceBuilderClassName,Boolean.TRUE);	
+					if(instanceBuilderClass==null)
+						System.out.println("No instance builder set for "+aClass+" : "+instanceBuilderClassName);
+					else
+						instanceBuilder = (BuilderOneDimensionArray<?>) ClassHelper.getInstance().instanciateOne(instanceBuilderClass);	
+				}else{
+					instanceBuilder = new GlobalIdentifierBusinessImpl.BuilderOneDimensionArray();
+				}
+					
 			}
-				
+			
+			if(instanceBuilder!=null)
+				instanceBuilderMap.put(aClass, instanceBuilder);	
 		}
-		
-		if(instanceBuilder!=null)
-			instanceBuilderMap.put(aClass, instanceBuilder);
 		return this;
 	}
 	
@@ -269,5 +276,62 @@ public class DataSet extends AbstractBean implements Serializable {
 	
 	public <T extends AbstractIdentifiable> DataSet create(Class<T> aClass){
 		return create(aClass, null);
+	}
+	
+	/**/
+	
+	public interface Listener {
+		
+		Collection<Package> getPackages();
+		Collection<Package> getExcludedPackages();
+		Collection<Class<?>> getClasses();
+		Collection<Class<?>> getExcludedClasses();
+		Boolean isAddable(Class<?> aClass);
+		
+		public static class Adapter extends AbstractBean implements DataSet.Listener {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public Boolean isAddable(Class<?> aClass) {
+				//Collection<Package> packages = getPackages();
+				//Collection<Package> excludedPackages = getExcludedPackages();
+				Collection<Class<?>> classes = getClasses();
+				Collection<Class<?>> excludedClasses = getExcludedClasses();
+				Boolean excluded = excludedClasses == null ? null : CollectionHelper.getInstance().contains(excludedClasses, aClass);
+				Boolean included = classes == null ? null : CollectionHelper.getInstance().contains(classes, aClass);
+				if(excluded == null)
+					return included==null || included;
+				return excluded ? Boolean.TRUE : (included==null || included);
+			}
+			
+			@Override
+			public Collection<Class<?>> getClasses() {
+				return null;
+			}
+			
+			@Override
+			public Collection<Class<?>> getExcludedClasses() {
+				return null;
+			}
+			
+			@Override
+			public Collection<Package> getPackages() {
+				return null;
+			}
+			
+			@Override
+			public Collection<Package> getExcludedPackages() {
+				return null;
+			}
+			
+			/**/
+			
+			public static class Default extends DataSet.Listener.Adapter implements Serializable {
+				private static final long serialVersionUID = 1L;
+				
+							
+			}
+		}
+		
 	}
 }

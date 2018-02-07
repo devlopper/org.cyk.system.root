@@ -1,27 +1,38 @@
 package org.cyk.system.root.business.impl.integration;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
+import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionTypeBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl__data__.DataSet;
+import org.cyk.system.root.business.impl__data__.RealDataSet;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MovementCollectionType;
+import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.junit.Test;
 
 public class MovementBusinessIT extends AbstractBusinessIT {
-
     private static final long serialVersionUID = -6691092648665798471L;
 
+    static {
+    	ClassHelper.getInstance().map(DataSet.Listener.class, Data.class);
+    }
+    
     private String movementUnlimitedIdentifier="MU",movementLimitedIdentifier="ML",movementOnlyUnlimitedIdentifier="MOL"
     		,movementUpdatesUnlimitedIdentifier="MUPL",movementLimitedIdentifier_Low_100_8_High_2_10_Total_0_150="ML10082100150";
     
@@ -111,6 +122,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void useValueAbsolute(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
+    	movementCollection.setValue(new BigDecimal("0"));
     	testCase.create(movementCollection);
     	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), null,Boolean.TRUE);
@@ -142,6 +154,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void useNullAction(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
+    	movementCollection.setValue(new BigDecimal("0"));
     	testCase.create(movementCollection);
     	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",null);
@@ -167,6 +180,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void addSequenceAscending(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
+    	movementCollection.setValue(new BigDecimal("0"));
     	testCase.create(movementCollection);
     	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",Boolean.TRUE);
@@ -370,6 +384,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void doMovementsAndUpdates(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
+    	movementCollection.setValue(new BigDecimal("0"));
     	testCase.create(movementCollection);
     	
     	Movement movement = testCase.create(inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollection.getCode(), "15",Boolean.TRUE));
@@ -511,6 +526,28 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	});
     }
     
+    @Test
+    public void crudOneMovementCollectionIdentifiableGlobalIdentifier(){
+    	TestCase testCase = instanciateTestCase();
+    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(5));
+    	movementCollection.setValue(new BigDecimal("0"));
+    	testCase.create(movementCollection);
+    	
+    	Sex sex = new Sex();
+    	String sexCode = RandomHelper.getInstance().getAlphabetic(5);
+    	sex.setCode(sexCode);
+    	testCase.create(sex);
+    	
+    	MovementCollectionIdentifiableGlobalIdentifier movementCollectionIdentifiableGlobalIdentifier 
+    		= inject(MovementCollectionIdentifiableGlobalIdentifierBusiness.class).instanciateOne();
+    	
+    	movementCollectionIdentifiableGlobalIdentifier.setMovementCollection(movementCollection);
+    	movementCollectionIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(sex.getGlobalIdentifier());
+    	testCase.create(movementCollectionIdentifiableGlobalIdentifier);
+    	
+    	testCase.clean();
+    }
+    
     @SuppressWarnings("unchecked")
 	private void filter(Object[][] values){
     	for(Object[] index : values){
@@ -618,5 +655,17 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     
     /**/
     
-   
+    public static class Data extends DataSet.Listener.Adapter.Default implements Serializable {
+		private static final long serialVersionUID = 1L;
+    	
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+		public Collection getClasses() {
+			Collection<Class<?>> classes = new ArrayList<>();
+			classes.addAll(RealDataSet.CLASSES_SECURITY);
+			classes.addAll(RealDataSet.CLASSES_MATHEMATIQUES);
+			return classes;
+		}
+		
+    }
 }

@@ -1,7 +1,11 @@
-package org.cyk.system.root.business.impl;
+package org.cyk.system.root.business.impl__data__;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
+import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.FileRepresentationType;
@@ -54,7 +58,6 @@ import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueProperties;
 
 public class RealDataSet extends DataSet implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	public RealDataSet() {
@@ -172,5 +175,24 @@ public class RealDataSet extends DataSet implements Serializable {
     	addClass(UserInterfaceMenuNodeType.class);
     	addClass(UserInterfaceMenuType.class);
     }
-
+    
+    /**/
+    
+    public static final Collection<Class<?>> CLASSES_PARTIES = new ArrayList<>();
+    public static final Collection<Class<?>> CLASSES_VALUES = new ArrayList<>();
+    public static final Collection<Class<?>> CLASSES_MATHEMATIQUES = new ArrayList<>();
+    public static final Collection<Class<?>> CLASSES_MESSAGE = new ArrayList<>();
+    public static final Collection<Class<?>> CLASSES_NETWORK = new ArrayList<>();
+    public static final Collection<Class<?>> CLASSES_SECURITY = new ArrayList<>();
+    
+    static {
+    	CLASSES_VALUES.addAll(Arrays.asList(MeasureType.class,Measure.class,NullString.class,ValueProperties.class,Value.class));
+    	CLASSES_MATHEMATIQUES.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class
+    			,MovementMode.class,MovementCollectionType.class,MovementCollectionTypeMode.class));
+    	CLASSES_MESSAGE.addAll(Arrays.asList(SmtpProperties.class));
+    	CLASSES_NETWORK.addAll(Arrays.asList(Computer.class,Service.class));
+    	CLASSES_SECURITY.addAll(Arrays.asList(Role.class,Software.class,Credentials.class,BusinessServiceCollection.class));
+    	//CLASSES_PARTIES.addAll(Arrays.asList(Sex.class,MaritalStatus.class));
+    }
 }
+

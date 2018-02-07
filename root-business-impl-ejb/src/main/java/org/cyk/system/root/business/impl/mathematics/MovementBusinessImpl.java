@@ -130,7 +130,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			logMessageBuilder.addNamedParameters("#",movements.size(),"cum inc",increment);
 			
 			for(Movement index : movements){
-				index.setCumul(index.getCumul().add(increment));
+				NumberHelper.getInstance().add(BigDecimal.class, index, Movement.FIELD_CUMUL, increment);
 				dao.update(index);
 			}
 			logTrace(logMessageBuilder);	

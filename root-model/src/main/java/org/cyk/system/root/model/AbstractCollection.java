@@ -26,7 +26,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	/**
 	 * True if aggregated attributes values must be an aggregation of item value specific attribute
 	 */
-	private Boolean itemAggregationApplied;
+	private Boolean itemAggregationApplied = Boolean.TRUE;
 	
 	@Transient protected IdentifiableRuntimeCollection<ITEM> items = new IdentifiableRuntimeCollection<>();
 	
@@ -36,10 +36,6 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	public AbstractCollection(String code, String name, String abbreviation,String description) {
 		super(code, name, abbreviation, description);
-	}
-	
-	public Boolean isItemAggregationApplied(){
-		return itemAggregationApplied == null || Boolean.TRUE.equals(itemAggregationApplied);
 	}
 	
 	public AbstractCollection<ITEM> setItemsSynchonizationEnabled(Boolean synchonizationEnabled){
