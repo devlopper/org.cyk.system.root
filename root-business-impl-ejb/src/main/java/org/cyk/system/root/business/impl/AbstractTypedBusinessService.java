@@ -32,6 +32,7 @@ import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -50,6 +51,8 @@ import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
@@ -66,6 +69,7 @@ import org.cyk.system.root.persistence.api.mathematics.MetricCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
@@ -81,7 +85,6 @@ import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
-import org.cyk.utility.common.helper.StringHelper;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -497,6 +500,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		deleteFileIdentifiableGlobalIdentifier(identifiable);
 		deleteMetricValueIdentifiableGlobalIdentifier(identifiable);
 		deleteMetricCollectionIdentifiableGlobalIdentifier(identifiable);
+		deleteMovementCollectionIdentifiableGlobalIdentifier(identifiable);
 		beforeDelete(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.DELETE);
 		inject(GenericBusiness.class).deleteIfIdentified(findRelatedInstances(identifiable,Boolean.TRUE,null));
@@ -526,6 +530,15 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}else{
 			Collection<MetricValueIdentifiableGlobalIdentifier> metricValueIdentifiableGlobalIdentifiers = inject(MetricValueIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
 			inject(MetricValueIdentifiableGlobalIdentifierBusiness.class).delete(metricValueIdentifiableGlobalIdentifiers);	
+		}
+	}
+	
+	protected void deleteMovementCollectionIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
+		if(identifiable instanceof MovementCollectionIdentifiableGlobalIdentifier || identifiable instanceof MovementCollection/* || identifiable instanceof File || identifiable instanceof Location*/){
+			
+		}else{
+			Collection<MovementCollectionIdentifiableGlobalIdentifier> movementCollectionIdentifiableGlobalIdentifiers = inject(MovementCollectionIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
+			inject(MovementCollectionIdentifiableGlobalIdentifierBusiness.class).delete(movementCollectionIdentifiableGlobalIdentifiers);	
 		}
 	}
 	
