@@ -38,7 +38,6 @@ public class Utils {
 			ids.add(globalIdentifier.getIdentifier());
 		return ids;
 		*/
-		
 		Collection<String> identifiers = MethodHelper.getInstance().callGet(globalIdentifiers, String.class, GlobalIdentifier.FIELD_IDENTIFIER);
 		if(identifiers == null)
 			identifiers = new ArrayList<String>();

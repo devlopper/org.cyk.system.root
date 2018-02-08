@@ -20,6 +20,14 @@ import org.cyk.system.root.business.impl.globalidentification.GlobalIdentifierBu
 import org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.system.root.model.mathematics.IntervalCollection;
+import org.cyk.system.root.model.mathematics.MetricCollectionType;
+import org.cyk.system.root.model.mathematics.Movement;
+import org.cyk.system.root.model.mathematics.MovementAction;
+import org.cyk.system.root.model.mathematics.MovementCollectionType;
+import org.cyk.system.root.model.mathematics.MovementCollectionTypeMode;
+import org.cyk.system.root.model.mathematics.MovementMode;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
@@ -288,48 +296,72 @@ public class DataSet extends AbstractBean implements Serializable {
 		Collection<Class<?>> getExcludedClasses();
 		Boolean isAddable(Class<?> aClass);
 		
+		Collection<Class<?>> getRelatedClasses(Class<?> aClass);
+		void processRelatedClasses(Class<?> aClass,Collection<Class<?>> classes);
+		
+		@Getter
 		public static class Adapter extends AbstractBean implements DataSet.Listener {
 			private static final long serialVersionUID = 1L;
 			
+			protected Collection<Package> packages,excludedPackages;
+			protected Collection<Class<?>> classes,excludedClasses;
+			
 			@Override
 			public Boolean isAddable(Class<?> aClass) {
-				//Collection<Package> packages = getPackages();
-				//Collection<Package> excludedPackages = getExcludedPackages();
-				Collection<Class<?>> classes = getClasses();
-				Collection<Class<?>> excludedClasses = getExcludedClasses();
-				Boolean excluded = excludedClasses == null ? null : CollectionHelper.getInstance().contains(excludedClasses, aClass);
-				Boolean included = classes == null ? null : CollectionHelper.getInstance().contains(classes, aClass);
-				if(excluded == null)
-					return included==null || included;
-				return excluded ? Boolean.TRUE : (included==null || included);
-			}
-			
-			@Override
-			public Collection<Class<?>> getClasses() {
 				return null;
 			}
 			
 			@Override
-			public Collection<Class<?>> getExcludedClasses() {
+			public Collection<Class<?>> getRelatedClasses(Class<?> aClass) {
 				return null;
 			}
 			
 			@Override
-			public Collection<Package> getPackages() {
-				return null;
-			}
-			
-			@Override
-			public Collection<Package> getExcludedPackages() {
-				return null;
-			}
+			public void processRelatedClasses(Class<?> aClass,Collection<Class<?>> classes) {}
 			
 			/**/
 			
 			public static class Default extends DataSet.Listener.Adapter implements Serializable {
 				private static final long serialVersionUID = 1L;
 				
-							
+				public Default() {
+					classes = getClasses();
+					if(classes!=null){
+						classes = new ArrayList<>(classes);
+						Collection<Class<?>> related = new ArrayList<>();
+						for(Class<?> index : classes){
+							Collection<Class<?>> r = getRelatedClasses(index);
+							if(r == null)
+								r = new ArrayList<>();
+							if(r!=null){
+								processRelatedClasses(index,r);
+								related.addAll(r);
+							}
+						}
+						classes.addAll(related);
+					}
+					packages = getPackages();
+					excludedPackages = getExcludedPackages();
+					excludedClasses = getExcludedClasses();
+				}
+				
+				@Override
+				public void processRelatedClasses(Class<?> aClass,Collection<Class<?>> classes) {
+					super.processRelatedClasses(aClass,classes);
+					if(Movement.class.equals(aClass)){
+						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class
+					    	,MovementMode.class,MovementCollectionType.class,MovementCollectionTypeMode.class));
+					}
+				}
+				
+				@Override
+				public Boolean isAddable(Class<?> aClass) {	
+					Boolean excluded = excludedClasses == null ? null : CollectionHelper.getInstance().contains(excludedClasses, aClass);
+					Boolean included = classes == null ? null : CollectionHelper.getInstance().contains(classes, aClass);
+					if(excluded == null)
+						return included==null || included;
+					return excluded ? Boolean.TRUE : (included==null || included);
+				}			
 			}
 		}
 		

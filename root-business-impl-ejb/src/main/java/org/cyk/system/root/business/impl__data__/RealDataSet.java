@@ -178,6 +178,10 @@ public class RealDataSet extends DataSet implements Serializable {
     
     /**/
     
+    
+    
+    /**/
+    
     public static final Collection<Class<?>> CLASSES_PARTIES = new ArrayList<>();
     public static final Collection<Class<?>> CLASSES_VALUES = new ArrayList<>();
     public static final Collection<Class<?>> CLASSES_MATHEMATIQUES = new ArrayList<>();

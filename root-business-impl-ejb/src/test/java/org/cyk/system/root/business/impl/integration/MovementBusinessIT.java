@@ -2,7 +2,6 @@ package org.cyk.system.root.business.impl.integration;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -12,7 +11,6 @@ import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiab
 import org.cyk.system.root.business.api.mathematics.MovementCollectionTypeBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.business.impl__data__.DataSet;
-import org.cyk.system.root.business.impl__data__.RealDataSet;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -655,15 +653,14 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     
     /**/
     
-    public static class Data extends DataSet.Listener.Adapter.Default implements Serializable {
+    @SuppressWarnings("unchecked")
+	public static class Data extends DataSet.Listener.Adapter.Default implements Serializable {
 		private static final long serialVersionUID = 1L;
     	
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@SuppressWarnings({ "rawtypes" })
 		@Override
 		public Collection getClasses() {
-			Collection<Class<?>> classes = new ArrayList<>();
-			classes.addAll(RealDataSet.CLASSES_MATHEMATIQUES);
-			return classes;
+			return Arrays.asList(Movement.class);
 		}
 		
     }
