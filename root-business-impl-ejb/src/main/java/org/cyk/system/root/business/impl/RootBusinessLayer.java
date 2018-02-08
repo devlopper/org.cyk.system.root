@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
@@ -36,72 +35,32 @@ import org.cyk.system.root.business.impl__data__.RealDataSet;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Clazz;
 import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
-import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.FileRepresentationType;
-import org.cyk.system.root.model.file.Script;
-import org.cyk.system.root.model.file.ScriptEvaluationEngine;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.generator.StringValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
-import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
-import org.cyk.system.root.model.geography.Locality;
-import org.cyk.system.root.model.geography.LocalityType;
-import org.cyk.system.root.model.geography.LocationType;
-import org.cyk.system.root.model.geography.PhoneNumberType;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
-import org.cyk.system.root.model.information.IdentifiableCollectionType;
-import org.cyk.system.root.model.language.Language;
-import org.cyk.system.root.model.mathematics.Interval;
-import org.cyk.system.root.model.mathematics.IntervalCollection;
-import org.cyk.system.root.model.mathematics.MetricCollectionType;
-import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.message.SmtpProperties;
-import org.cyk.system.root.model.network.Computer;
-import org.cyk.system.root.model.network.Service;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.person.Allergy;
-import org.cyk.system.root.model.party.person.BloodGroup;
-import org.cyk.system.root.model.party.person.JobFunction;
-import org.cyk.system.root.model.party.person.JobTitle;
-import org.cyk.system.root.model.party.person.MaritalStatus;
-import org.cyk.system.root.model.party.person.Medication;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
-import org.cyk.system.root.model.party.person.PersonRelationshipType;
-import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
-import org.cyk.system.root.model.party.person.PersonRelationshipTypeRoleName;
-import org.cyk.system.root.model.party.person.PersonTitle;
-import org.cyk.system.root.model.party.person.Sex;
-import org.cyk.system.root.model.security.BusinessServiceCollection;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
-import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.model.security.UserAccount;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.userinterface.UserInterfaceCommand;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenu;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuItem;
-import org.cyk.system.root.model.userinterface.UserInterfaceMenuLocation;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuNode;
-import org.cyk.system.root.model.userinterface.UserInterfaceMenuNodeType;
-import org.cyk.system.root.model.userinterface.UserInterfaceMenuRenderType;
-import org.cyk.system.root.model.userinterface.UserInterfaceMenuType;
-import org.cyk.system.root.model.value.Measure;
-import org.cyk.system.root.model.value.MeasureType;
-import org.cyk.system.root.model.value.NullString;
-import org.cyk.system.root.model.value.Value;
-import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.event.NotificationTemplateDao;
 import org.cyk.system.root.persistence.api.message.SmtpPropertiesDao;
@@ -119,10 +78,10 @@ import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.InstanceHelper.Lookup.Source;
 import org.cyk.utility.common.helper.ListenerHelper;
 import org.cyk.utility.common.helper.ListenerHelper.Executor.ResultMethod;
-import org.cyk.utility.common.test.TestHelper;
 import org.cyk.utility.common.helper.MapHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.test.TestHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -343,127 +302,12 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     @Override
     protected void persistStructureData() {
     	super.persistStructureData();
-    
-    	/*DataSet dataSet = new DataSet(getClass());
-    	
-    	file(dataSet);
-    	values(dataSet);
-    	geography(dataSet);
-        event(dataSet);
-        time(dataSet);
-        language(dataSet);
-        party(dataSet);
-        security(dataSet);
-        
-        network(dataSet);
-        
-        message(dataSet);
-        mathematics(dataSet);
-        information(dataSet);
-        
-        userInterface(dataSet);
-        
-        dataSet.instanciate();
-    	dataSet.save();
-    	*/
     	if(DATA_SET_CLASS==null)
     		;
     	else{
     		DataSet dataSet = ClassHelper.getInstance().instanciateOne(DATA_SET_CLASS);
         	dataSet.instanciate().save();	
     	}
-    	
-    }
-    
-    private void geography(DataSet dataSet){
-    	dataSet.addClass(LocalityType.class);
-    	dataSet.addClass(Locality.class);
-        dataSet.addClass(Country.class);
-        dataSet.addClass(PhoneNumberType.class);
-        dataSet.addClass(LocationType.class);
-        dataSet.addClass(ElectronicMailAddress.class);
-    }
-    
-    private void language(DataSet dataSet){
-    	dataSet.addClass(Language.class);
-    }
-    
-    private void event(DataSet dataSet){ 
-    	dataSet.addClass(NotificationTemplate.class);
-    	dataSet.addClass(EventMissedReason.class);
-    }
-    
-    private void file(DataSet dataSet){ 
-    	dataSet.addClass(FileRepresentationType.class);
-    	dataSet.addClass(ScriptEvaluationEngine.class);
-    	dataSet.addClass(Script.class);
-    }
-    
-    private void time(DataSet dataSet){ 
-    	dataSet.addClass(TimeDivisionType.class);
-    }
-    
-    private void party(DataSet dataSet){
-    	dataSet.addClass(Sex.class);
-    	dataSet.addClass(MaritalStatus.class);
-    	dataSet.addClass(JobFunction.class);
-    	dataSet.addClass(JobTitle.class);
-    	dataSet.addClass(PersonTitle.class);
-    	dataSet.addClass(BloodGroup.class);
-    	dataSet.addClass(Allergy.class);
-    	dataSet.addClass(Medication.class);
-    	dataSet.addClass(PersonRelationshipTypeGroup.class);
-    	dataSet.addClass(PersonRelationshipType.class);
-    	dataSet.addClass(PersonRelationshipTypeRoleName.class);
-    	dataSet.addClass(PersonRelationshipTypeRole.class);
-    	
-    }
-    
-    private void security(DataSet dataSet){ 
-    	createRole(RootConstant.Code.Role.ADMINISTRATOR, "Administrator");
-    	createRole(RootConstant.Code.Role.MANAGER, "Manager");
-        createRole(RootConstant.Code.Role.SETTING_MANAGER, "Setting Manager");
-        createRole(RootConstant.Code.Role.SECURITY_MANAGER, "Security Manager");
-        createRole(RootConstant.Code.Role.USER, "User",SHIRO_PRIVATE_FOLDER);
-        
-        dataSet.addClass(Software.class);
-        dataSet.addClass(Credentials.class);
-        dataSet.addClass(BusinessServiceCollection.class);
-    }
-    
-    private void network(DataSet dataSet){ 
-    	dataSet.addClass(Computer.class);
-        dataSet.addClass(Service.class);
-    }
-    
-    private void message(DataSet dataSet){ 
-    	dataSet.addClass(SmtpProperties.class);
-    }
-    
-    private void mathematics(DataSet dataSet){ 
-    	dataSet.addClass(IntervalCollection.class);
-    	dataSet.addClass(Interval.class);
-    	dataSet.addClass(MetricCollectionType.class);
-    	dataSet.addClass(MovementAction.class);
-    }
-    
-    private void values(DataSet dataSet){ 
-    	dataSet.addClass(MeasureType.class);
-    	dataSet.addClass(Measure.class);
-    	dataSet.addClass(NullString.class);
-    	dataSet.addClass(ValueProperties.class);
-    	dataSet.addClass(Value.class);
-    }
-    
-    private void information(DataSet dataSet){ 
-    	dataSet.addClass(IdentifiableCollectionType.class);
-    }
-    
-    private void userInterface(DataSet dataSet){ 
-    	dataSet.addClass(UserInterfaceMenuRenderType.class);
-    	dataSet.addClass(UserInterfaceMenuLocation.class);
-    	dataSet.addClass(UserInterfaceMenuNodeType.class);
-    	dataSet.addClass(UserInterfaceMenuType.class);
     }
     
     @Override
@@ -531,7 +375,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 					generatedCode = value;
 			}
 			if(generatedCode==null)
-				generatedCode = RandomStringUtils.randomAlphabetic(6);
+				generatedCode = RandomHelper.getInstance().getAlphabetic(6);
 			else{
 				do{
 					TypedBusiness<AbstractIdentifiable> business =  null;

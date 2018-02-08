@@ -44,14 +44,18 @@ import org.cyk.system.root.persistence.api.PersistenceManager;
 import org.cyk.system.root.persistence.api.party.ApplicationDao;
 import org.cyk.system.root.persistence.api.security.RoleDao;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
 
 @Stateless @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Application, ApplicationDao> implements ApplicationBusiness,Serializable {
-
 	private static final long serialVersionUID = -3799482462496328200L;
+	
+	static {
+		ClassHelper.getInstance().map(Listener.class, Listener.Adapter.Default.class, Boolean.FALSE);
+	}
 	
 	private static Application INSTANCE;
 	private static ApplicationPropertiesProvider PROPERTIES_PROVIDER;
@@ -87,13 +91,14 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 				
 				public Object __execute__() {
 					installation.getApplication().setCode("APP");
+					Listener listener = ClassHelper.getInstance().instanciateOne(Listener.class);
 					try {
-						for(Listener listener : Listener.COLLECTION)
-							listener.installationStarted(installation);
-						
+						listener.installationStarted(installation);
 						installData(installation);
-						installAccounts(installation);
-						installLicense(installation);
+						if(Boolean.TRUE.equals(installation.getIsCreateAccounts()))
+							installAccounts(installation);
+						if(Boolean.TRUE.equals(installation.getIsCreateLicence()))
+							installLicense(installation);
 						
 						if(installation.getSmtpProperties()!=null){
 							smtpPropertiesBusiness.create(installation.getSmtpProperties());
@@ -104,8 +109,7 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 						for(AbstractIdentifiable identifiable : installation.getIdentifiables())
 							RootBusinessLayer.getInstance().getGenericBusiness().create(identifiable);
 						
-						for(Listener listener : Listener.COLLECTION)
-							listener.installationEnded(installation);
+						listener.installationEnded(installation);
 					} catch (Exception e) {
 						e.printStackTrace();
 						//logThrowable(e);
@@ -303,8 +307,6 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 	/**/
 	
 	public static interface Listener{
-		
-		Collection<Listener> COLLECTION = new ArrayList<>();
 		
 		void installationStarted(Installation installation);
 		void installationEnded(Installation installation);

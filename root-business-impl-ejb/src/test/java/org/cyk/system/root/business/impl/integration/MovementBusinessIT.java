@@ -662,7 +662,6 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		@Override
 		public Collection getClasses() {
 			Collection<Class<?>> classes = new ArrayList<>();
-			classes.addAll(RealDataSet.CLASSES_SECURITY);
 			classes.addAll(RealDataSet.CLASSES_MATHEMATIQUES);
 			return classes;
 		}

@@ -35,6 +35,9 @@ public class Installation extends AbstractModelElement implements Serializable {
 	
 	private Map<String, Set<String>> urlRolesMap = new HashMap<>();
 	
+	private Boolean isCreateAccounts = Boolean.TRUE;
+	private Boolean isCreateLicence = Boolean.TRUE;
+	
 	@Override
 	public String getUiString() {
 		return application.getUiString();

@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl.integration;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 
@@ -15,13 +16,16 @@ import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessTestHelper;
+import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.persistence.impl.GenericDaoImpl;
 import org.cyk.system.root.persistence.impl.PersistenceIntegrationTestHelper;
 import org.cyk.utility.common.ObjectFieldValues;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
@@ -56,6 +60,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     			assertThat(code+" exists", inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find(code)!=null);
     		}
     	});
+		ClassHelper.getInstance().map(ApplicationBusinessImpl.Listener.class, ApplicationBusinessAdapter.class,Boolean.FALSE);
 	}
 	
 	@Deployment
@@ -173,5 +178,18 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     @Override protected void read() {}
     @Override protected void update() {}
     @Override protected void delete() {}
+ 
+    /**/
     
+    public static class ApplicationBusinessAdapter extends ApplicationBusinessImpl.Listener.Adapter.Default implements Serializable {
+		private static final long serialVersionUID = 1L;
+    	
+		@Override
+		public void installationStarted(Installation installation) {
+			super.installationStarted(installation);
+			installation.setIsCreateAccounts(Boolean.FALSE);
+			installation.setIsCreateLicence(Boolean.FALSE);
+		}
+		
+    }
 }

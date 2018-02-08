@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl.integration;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -20,49 +21,20 @@ import org.cyk.system.root.model.security.Installation;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.RoleUniformResourceLocator;
 import org.cyk.system.root.model.security.UserAccountSearchCriteria;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Archive;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.junit.Assert;
 
 public class SecurityBusinessIT extends AbstractBusinessIT {
-
 	private static final long serialVersionUID = 8691254326402622637L;
 	
-	@Inject private UserAccountBusiness userAccountBusiness;
-	
-	@Deployment 
-	public static Archive<?> createDeployment() {
-	    return createRootDeployment();
+	static {
+		ClassHelper.getInstance().map(ApplicationBusinessImpl.Listener.class, ApplicationBusinessAdapter.class);
 	}
-		 	
-    @Override
-    protected void create() {}
-
-    @Override
-    protected void read() {}
-    
-    @Override
-    protected void update() {}
-    
-    @Override
-    protected void delete() {}
-		
-    @Override
-    protected void finds() {
-        
-    }
-
+	
+	@Inject private UserAccountBusiness userAccountBusiness;
+			 	
     @Override
     protected void businesses() {
-    	ApplicationBusinessImpl.Listener.COLLECTION.add(new ApplicationBusinessImpl.Listener.Adapter.Default(){
-			private static final long serialVersionUID = 6148913289155659043L;
-			@Override
-    		public void installationStarted(Installation installation) {
-    			installation.getApplication().setUniformResourceLocatorFiltered(Boolean.TRUE);
-    			installation.getApplication().setWebContext("context");
-    			super.installationStarted(installation);
-    		}
-    	});
     	installApplication();
     	
     	//userAccountBusiness.create(new UserAccount(RootBusinessLayer.getInstance().getPersonBusiness().findOneRandomly()
@@ -124,7 +96,20 @@ public class SecurityBusinessIT extends AbstractBusinessIT {
     			, inject(RoleUniformResourceLocatorBusiness.class).isAccessible(_url,Arrays.asList(roles)).equals(byRole));
     }
     
+    /**/
     
+    public static class ApplicationBusinessAdapter extends AbstractBusinessIT.ApplicationBusinessAdapter implements Serializable {
+		private static final long serialVersionUID = 1L;
+    	
+		@Override
+		public void installationStarted(Installation installation) {
+			super.installationStarted(installation);
+			installation.getApplication().setUniformResourceLocatorFiltered(Boolean.TRUE);
+			installation.getApplication().setWebContext("context");
+			installation.setIsCreateAccounts(Boolean.TRUE);
+		}
+		
+    }
 
 
 }
