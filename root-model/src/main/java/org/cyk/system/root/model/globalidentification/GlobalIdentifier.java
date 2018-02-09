@@ -161,6 +161,15 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 */
 	@Column private String externalIdentifier;
 	
+	/**
+	 * instance which creation has created this instance
+	 */
+	private @JoinColumn(name=COLUMN_SOURCE) GlobalIdentifier source;
+	/**
+	 * instance created by the creation of this instance
+	 */
+	private @JoinColumn(name=COLUMN_DESTINATION) GlobalIdentifier destination;
+	
 	public GlobalIdentifier() {}
 	
 	public GlobalIdentifier(AbstractIdentifiable identifiable) {
@@ -239,6 +248,8 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_CONSTANT = "constant";
 	public static final String FIELD_OWNER = "owner";
 	public static final String FIELD_CASCADE_STYLE_SHEET = "cascadeStyleSheet";
+	public static final String FIELD_SOURCE = "source";
+	public static final String FIELD_DESTINATION = "destination";
 	
 	public static final String COLUMN_CREATED_BY = "createdby";
 	public static final String COLUMN_OWNER = "owner";
@@ -246,6 +257,8 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String COLUMN_SUPPORTING_DOCUMENT = "supportingdocument";
 	public static final String COLUMN_BIRTH_LOCATION = "birthlocation";
 	public static final String COLUMN_DEATH_LOCATION = "deathlocation";
+	public static final String COLUMN_SOURCE = FIELD_SOURCE;
+	public static final String COLUMN_DESTINATION = FIELD_DESTINATION;
 	
 	/**/
 	

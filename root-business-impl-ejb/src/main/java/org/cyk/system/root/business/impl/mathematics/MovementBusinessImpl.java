@@ -20,12 +20,14 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.NumberHelper;
@@ -70,11 +72,11 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		return movement;
 	}
 	
-	@Override
+	/*@Override
 	protected void setAutoSettedProperties(Movement movement, Crud crud) {
 		super.setAutoSettedProperties(movement, crud);
 		computeChanges(movement);
-	}
+	}*/
 	
 	@Override
 	protected void beforeCrud(Movement movement, Crud crud) {
@@ -110,6 +112,26 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		super.afterCrud(movement, crud);
 		if(Crud.CREATE.equals(crud)){
 			updateCumulWhereExistencePeriodFromDateIsGreaterThan(movement,crud);
+			if(movement.getDestinationMovement()==null){
+				if(movement.getDestinationMovementCollection()!=null){
+					movement.setDestinationMovement(inject(MovementBusiness.class).instanciateOne(movement.getDestinationMovementCollection()));
+					if(movement.getCollection()!=null && movement.getAction()!=null){
+						movement.getDestinationMovement().setValueSettableFromAbsolute(movement.getValueSettableFromAbsolute());
+						movement.getDestinationMovement().setValueAbsolute(movement.getValueAbsolute());
+						movement.getDestinationMovement().setValue(NumberHelper.getInstance().negate(movement.getValue()));
+						if(movement.getAction().equals(movement.getCollection().getType().getIncrementAction())){
+							movement.getDestinationMovement().setAction(movement.getCollection().getType().getDecrementAction());
+						}else{
+							movement.getDestinationMovement().setAction(movement.getCollection().getType().getIncrementAction());
+						}
+					}
+					create(movement.getDestinationMovement());
+					movement.getGlobalIdentifier().setDestination(movement.getDestinationMovement().getGlobalIdentifier());
+					//movement.getDestinationMovement().getGlobalIdentifier().setSource(movement.getGlobalIdentifier());
+					inject(GlobalIdentifierDao.class).update(movement.getGlobalIdentifier());
+					//inject(GlobalIdentifierDao.class).update(movement.getDestinationMovement().getGlobalIdentifier());
+				}
+			}
 		}
 		
 	}

@@ -24,7 +24,7 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	
 	private static final long serialVersionUID = -4946585596435850782L;
 	
-	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE) private BigDecimal value;
+	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE) @Accessors(chain=true) private BigDecimal value;
  
 	@ManyToOne @JoinColumn(name=COLUMN_TYPE) @Accessors(chain=true) private MovementCollectionType type;
 	

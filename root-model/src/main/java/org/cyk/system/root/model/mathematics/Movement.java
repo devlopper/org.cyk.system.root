@@ -49,6 +49,9 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	private String senderOrReceiverPersonAsString;
 	
+	@Transient private MovementCollection destinationMovementCollection;
+	@Transient private Movement destinationMovement;
+	
 	/**/
 	
 	@Override
@@ -66,6 +69,8 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON_AS_STRING = "senderOrReceiverPersonAsString";
 	public static final String FIELD_CUMUL = "cumul";
 	public static final String FIELD_PREVIOUS_CUMUL = "previousCumul";
+	public static final String FIELD_DESTINATION_MOVEMENT_COLLECTION = "destinationMovementCollection";
+	public static final String FIELD_DESTINATION_MOVEMENT = "destinationMovement";
 	
 	public static final String COLUMN_MODE = FIELD_MODE;
 	public static final String COLUMN_ACTION = FIELD_ACTION;
