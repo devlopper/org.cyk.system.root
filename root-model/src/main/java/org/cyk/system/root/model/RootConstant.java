@@ -253,7 +253,7 @@ public interface RootConstant {
 			public static String ATTENDANCE = "ATTENDANCE";
 			public static String BEHAVIOUR = "BEHAVIOUR";
 			public static String COMMUNICATION = "COMMUNICATION";
-			
+			public static String IDENTIFIABLE_COLLECTION_MOVEMENT = "IDENTIFIABLECOLLECTIONMOVEMENT";
 		}
 		
 		public static class MeasureType implements Serializable {
@@ -303,8 +303,9 @@ public interface RootConstant {
 		public static class IdentifiableCollectionType implements Serializable {
 			private static final long serialVersionUID = 1L;
 		
-			public static String CONTACT_COLLECTION = "CONTACTCOLLECTION";
-			public static String PERSON = "PERSON";
+			public static final String CONTACT_COLLECTION = "CONTACTCOLLECTION";
+			public static final String PERSON = "PERSON";
+			public static final String MOVEMENT = "MOVEMENT";
 			
 		}
 		

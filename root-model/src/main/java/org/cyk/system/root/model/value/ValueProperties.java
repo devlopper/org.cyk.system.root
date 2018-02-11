@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -24,8 +25,8 @@ import lombok.Setter;
 public class ValueProperties extends AbstractIdentifiable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne private Measure measure;
-	@ManyToOne private IntervalCollection intervalCollection;
+	@ManyToOne @JoinColumn(name=COLUMN_MEASURE) private Measure measure;
+	@ManyToOne @JoinColumn(name=COLUMN_INTERVAL_COLLECTION) private IntervalCollection intervalCollection;
 	@Enumerated(EnumType.ORDINAL) @Column(name="thetype") private ValueType type = ValueType.DEFAULT;
 	@Enumerated(EnumType.ORDINAL) @Column(name="theset") private ValueSet set = ValueSet.DEFAULT;
 	
@@ -33,11 +34,11 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	 * it is not the same concept as derived in global identifier
 	 * Means if the value is derived
 	 */
-	private Boolean derived;//TODO  ???
-	@ManyToOne private Script derivationScript;
+	private Boolean derived;
+	@ManyToOne @JoinColumn(name=COLUMN_DERIVATION_SCRIPT) private Script derivationScript;
 	
 	private Boolean nullable;
-	@ManyToOne private NullString nullString;
+	@ManyToOne @JoinColumn(name=COLUMN_NULL_STRING) private NullString nullString;
 	
 	public ValueProperties setIntervalCollection(IntervalCollection intervalCollection){
 		this.intervalCollection = intervalCollection;
@@ -98,4 +99,8 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	public static final String FIELD_DERIVED = "derived";
 	public static final String FIELD_DERIVATION_SCRIPT = "derivationScript";
 	
+	public static final String COLUMN_INTERVAL_COLLECTION = FIELD_INTERVAL_COLLECTION;
+	public static final String COLUMN_MEASURE = FIELD_MEASURE;
+	public static final String COLUMN_NULL_STRING = FIELD_NULL_STRING;
+	public static final String COLUMN_DERIVATION_SCRIPT = FIELD_DERIVATION_SCRIPT;
 }

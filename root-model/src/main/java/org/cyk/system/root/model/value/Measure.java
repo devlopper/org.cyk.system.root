@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -26,7 +27,7 @@ public class Measure extends AbstractEnumeration implements Serializable{
 	
 	private static final long serialVersionUID = 374208919427476791L;
 	
-	@ManyToOne @NotNull private MeasureType type;
+	@ManyToOne @JoinColumn(name=COLUMN_TYPE) @NotNull private MeasureType type;
 	@Column(nullable=false) @NotNull private BigDecimal value;
 	
 	public Measure() {}
@@ -39,6 +40,8 @@ public class Measure extends AbstractEnumeration implements Serializable{
 	
 	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_VALUE = "value";
+	
+	public static final String COLUMN_TYPE = FIELD_TYPE;
 	
 }
 

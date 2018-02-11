@@ -1,0 +1,15 @@
+package org.cyk.system.root.persistence.impl.information;
+
+import java.io.Serializable;
+
+import org.cyk.system.root.model.information.IdentifiableCollectionItemIdentifiableGlobalIdentifier;
+import org.cyk.system.root.persistence.api.information.IdentifiableCollectionItemIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.impl.globalidentification.AbstractJoinGlobalIdentifierDaoImpl;
+
+public class IdentifiableCollectionItemIdentifiableGlobalIdentifierDaoImpl extends AbstractJoinGlobalIdentifierDaoImpl<IdentifiableCollectionItemIdentifiableGlobalIdentifier,IdentifiableCollectionItemIdentifiableGlobalIdentifier.SearchCriteria> implements IdentifiableCollectionItemIdentifiableGlobalIdentifierDao,Serializable {
+
+	private static final long serialVersionUID = 6306356272165070761L;
+	
+
+}
+ 

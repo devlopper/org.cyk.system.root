@@ -1,16 +1,9 @@
 package org.cyk.system.root.persistence.api.information;
 
-import java.util.Collection;
-
 import org.cyk.system.root.model.information.IdentifiableCollection;
 import org.cyk.system.root.model.information.IdentifiableCollectionItem;
-import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdentifierDao;
+import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 
-public interface IdentifiableCollectionItemDao extends JoinGlobalIdentifierDao<IdentifiableCollectionItem,IdentifiableCollectionItem.SearchCriteria> {
+public interface IdentifiableCollectionItemDao extends AbstractCollectionItemDao<IdentifiableCollectionItem,IdentifiableCollection> {
 
-	Collection<IdentifiableCollectionItem> readByCollections(Collection<IdentifiableCollection> collections);
-	Collection<IdentifiableCollectionItem> readByCollection(IdentifiableCollection collection);
-	
-	Long countByCollections(Collection<IdentifiableCollection> collections);
-	Long countByCollection(IdentifiableCollection collection);
 }

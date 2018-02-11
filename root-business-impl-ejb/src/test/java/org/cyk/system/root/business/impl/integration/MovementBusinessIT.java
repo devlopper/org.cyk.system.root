@@ -5,12 +5,16 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.cyk.system.root.business.api.information.IdentifiableCollectionBusiness;
+import org.cyk.system.root.business.api.information.IdentifiableCollectionItemBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionTypeBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.business.impl__data__.DataSet;
+import org.cyk.system.root.model.information.IdentifiableCollection;
+import org.cyk.system.root.model.information.IdentifiableCollectionItem;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -608,7 +612,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 	}
     
 	@Test
-    public void crudOneMovementWithDestination(){
+    public void crudMovementsWithDestination(){
     	TestCase testCase = instanciateTestCase();
     	String invoiceMovementCollectionCode = RandomHelper.getInstance().getAlphabetic(5);
     	testCase.create(inject(MovementCollectionBusiness.class).instanciateOne(invoiceMovementCollectionCode).setValue(new BigDecimal("100")));
@@ -620,24 +624,69 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.create(movement);
     	String code001 = movement.getCode();
     	testCase.read(Movement.class, code001);
-    	rootBusinessTestHelper.assertMovement(code001, "-15","85", "85",Boolean.FALSE);
+    	testCase.assertMovement(code001, "-15","85", "85",Boolean.FALSE);
     	
-    	rootBusinessTestHelper.assertMovementCollection(cashRegisterMovementCollectionCode, "15");
+    	testCase.assertMovementCollection(cashRegisterMovementCollectionCode, "15");
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),invoiceMovementCollectionCode, "-10",Boolean.FALSE);
     	movement.setDestinationMovementCollection(inject(MovementCollectionDao.class).read(cashRegisterMovementCollectionCode));
     	movement = testCase.create(movement);
     	String code002 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code002, "-10","75", "75",Boolean.FALSE);
+    	testCase.assertMovement(code002, "-10","75", "75",Boolean.FALSE);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),invoiceMovementCollectionCode, "-7",Boolean.FALSE);
     	movement.setDestinationMovementCollection(inject(MovementCollectionDao.class).read(cashRegisterMovementCollectionCode));
     	movement = testCase.create(movement);
     	String code003 = movement.getCode();
-    	rootBusinessTestHelper.assertMovement(code003, "-7","68", "68",Boolean.FALSE);
+    	testCase.assertMovement(code003, "-7","68", "68",Boolean.FALSE);
     	
     	testCase.clean();
     }
+	
+	@Test
+    public void crudMovementsWithDestinationAndIdentifiableCollection(){
+		TestCase testCase = instanciateTestCase();
+    	String invoiceMovementCollectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	MovementCollection invoiceMovementCollection = testCase.create(inject(MovementCollectionBusiness.class).instanciateOne(invoiceMovementCollectionCode).setValue(new BigDecimal("100")));
+    	String cashRegisterMovementCollectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(inject(MovementCollectionBusiness.class).instanciateOne(cashRegisterMovementCollectionCode).setValue(new BigDecimal("0")));
+    	
+    	IdentifiableCollection identifiableCollection = inject(IdentifiableCollectionBusiness.class).instanciateOne();
+    	identifiableCollection.getItems().setSynchonizationEnabled(Boolean.TRUE);
+    	
+    	String code001 = RandomHelper.getInstance().getAlphabetic(5);
+    	Movement movement = inject(MovementBusiness.class).instanciateOne(code001,invoiceMovementCollectionCode, "-15",Boolean.FALSE);
+    	movement.setCollection(invoiceMovementCollection);//Trick to make computation work , TODO upgrade computation code
+    	movement.setDestinationMovementCollection(inject(MovementCollectionDao.class).read(cashRegisterMovementCollectionCode));
+    	inject(IdentifiableCollectionItemBusiness.class).instanciateOne(identifiableCollection).addIdentifiables(movement);
+    	
+    	String code002 = RandomHelper.getInstance().getAlphabetic(5);
+    	movement = inject(MovementBusiness.class).instanciateOne(code002,invoiceMovementCollectionCode, "-10",Boolean.FALSE);
+    	movement.setCollection(invoiceMovementCollection);
+    	movement.setDestinationMovementCollection(inject(MovementCollectionDao.class).read(cashRegisterMovementCollectionCode));
+    	inject(IdentifiableCollectionItemBusiness.class).instanciateOne(identifiableCollection).addIdentifiables(movement);
+    	
+    	String code003 = RandomHelper.getInstance().getAlphabetic(5);
+    	movement = inject(MovementBusiness.class).instanciateOne(code003,invoiceMovementCollectionCode, "-7",Boolean.FALSE);
+    	movement.setCollection(invoiceMovementCollection);
+    	movement.setDestinationMovementCollection(inject(MovementCollectionDao.class).read(cashRegisterMovementCollectionCode));
+    	inject(IdentifiableCollectionItemBusiness.class).instanciateOne(identifiableCollection).addIdentifiables(movement);
+    	
+    	testCase.create(identifiableCollection);
+    	
+    	code001 = invoiceMovementCollectionCode+"_"+code001;
+    	code002 = invoiceMovementCollectionCode+"_"+code002;
+    	code003 = invoiceMovementCollectionCode+"_"+code003;
+    	
+    	testCase.assertMovement(code001, "-15","85", "68",Boolean.FALSE);
+    	testCase.assertMovement(code002, "-10","75", "68",Boolean.FALSE);
+    	testCase.assertMovement(code003, "-7","68", "68",Boolean.FALSE);
+    	
+    	
+    
+    	
+    	//testCase.clean();
+	}
 	
     //@Test
     public void doMovementsOnly(){

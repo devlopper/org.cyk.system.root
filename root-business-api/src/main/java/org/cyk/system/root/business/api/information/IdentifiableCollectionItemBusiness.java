@@ -1,8 +1,9 @@
 package org.cyk.system.root.business.api.information;
 
-import org.cyk.system.root.business.api.globalidentification.JoinGlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
+import org.cyk.system.root.model.information.IdentifiableCollection;
 import org.cyk.system.root.model.information.IdentifiableCollectionItem;
 
-public interface IdentifiableCollectionItemBusiness extends JoinGlobalIdentifierBusiness<IdentifiableCollectionItem,IdentifiableCollectionItem.SearchCriteria> {
+public interface IdentifiableCollectionItemBusiness extends AbstractCollectionItemBusiness<IdentifiableCollectionItem,IdentifiableCollection> {
 	
 }

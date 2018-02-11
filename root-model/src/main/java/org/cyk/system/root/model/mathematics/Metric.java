@@ -3,6 +3,7 @@ package org.cyk.system.root.model.mathematics;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
@@ -24,10 +25,9 @@ import lombok.Setter;
 @Getter @Setter /*@NoArgsConstructor @AllArgsConstructor*/ @Entity @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS)
 @FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MetricCollection.class)
 public class Metric extends AbstractCollectionItem<MetricCollection> implements Serializable {
-	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne private ValueProperties valueProperties;
+	@ManyToOne @JoinColumn(name=COLUMN_VALUE_PROPERTIES) private ValueProperties valueProperties;
 	
 	public ValueProperties getValueProperties(){
 		return valueProperties == null ? collection.getValueProperties() : valueProperties;
@@ -44,4 +44,6 @@ public class Metric extends AbstractCollectionItem<MetricCollection> implements 
 	}
 	
 	public static final String FIELD_VALUE_PROPERTIES = "valueProperties";
+	
+	public static final String COLUMN_VALUE_PROPERTIES = "valueProperties";
 }

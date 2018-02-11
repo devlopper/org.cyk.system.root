@@ -3,8 +3,10 @@ package org.cyk.system.root.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.persistence.Column;
@@ -38,6 +40,7 @@ import org.cyk.utility.common.AbstractMethod;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.Properties;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
@@ -93,7 +96,28 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@Transient private IdentifiableRuntimeCollection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers;
 	@Transient private IdentifiableRuntimeCollection<PartyIdentifiableGlobalIdentifier> partyIdentifiableGlobalIdentifiers;
 	
+	@Transient private IdentifiableRuntimeCollection<AbstractIdentifiable> identifiables;
+	
 	@Transient protected Properties joinedIdentifiableRuntimeCollectionMap;
+	
+	public AbstractIdentifiable addIdentifiables(Collection<AbstractIdentifiable> identifiables){
+		if(CollectionHelper.getInstance().isNotEmpty(identifiables)){
+			if(this.identifiables == null)
+				this.identifiables = new IdentifiableRuntimeCollection<>();
+			this.identifiables.addMany(identifiables);
+		}
+		return this;
+	}
+	
+	public AbstractIdentifiable addIdentifiables(AbstractIdentifiable...identifiables){
+		if(ArrayHelper.getInstance().isNotEmpty(identifiables))
+			addIdentifiables(Arrays.asList(identifiables));
+		return this;
+	}
+	
+	public Collection<AbstractIdentifiable> getIdentifiablesElements(){
+		return this.identifiables == null ? null : this.identifiables.getElements();
+	}
 	
 	@SuppressWarnings("unchecked")
 	public <T> IdentifiableRuntimeCollection<T> getJoinedIdentifiableRuntimeCollection(Class<T> aClass){
@@ -112,11 +136,37 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return collection == null ? null : collection.getElements();
 	}
 	
+	public Collection<AbstractIdentifiable> getJoinedIdentifiables(){
+		Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+		if(joinedIdentifiableRuntimeCollectionMap!=null && joinedIdentifiableRuntimeCollectionMap.__getMap__()!=null)
+			for(Map.Entry<?, ?> entry : joinedIdentifiableRuntimeCollectionMap.__getMap__().entrySet()){
+				@SuppressWarnings("unchecked")
+				IdentifiableRuntimeCollection<AbstractIdentifiable> identifiableRuntimeCollection = (IdentifiableRuntimeCollection<AbstractIdentifiable>) entry.getValue();
+				identifiables.addAll(identifiableRuntimeCollection.getElements());
+			}
+		return identifiables;
+	}
+	
 	public <T> void __setJoinedIdentifiables__(Class<T> aClass,Collection<T> identifiables){
 		if(CollectionHelper.getInstance().isNotEmpty(identifiables)){
 			IdentifiableRuntimeCollection<T> collection = new IdentifiableRuntimeCollection<T>();
 			collection.addMany(identifiables);
+			if(joinedIdentifiableRuntimeCollectionMap == null)
+				joinedIdentifiableRuntimeCollectionMap = new Properties();
 			joinedIdentifiableRuntimeCollectionMap.set(aClass, collection);
+		}
+	}
+	
+	public <T> void __setJoinedIdentifiables__(Class<T> aClass,@SuppressWarnings("unchecked") T...identifiables){
+		if(ArrayHelper.getInstance().isNotEmpty(identifiables)){
+			__setJoinedIdentifiables__(aClass, Arrays.asList(identifiables));
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> void __setJoinedIdentifiable__(T identifiable){
+		if(identifiable!=null){
+			__setJoinedIdentifiables__((Class<T>)identifiable.getClass(), Arrays.asList(identifiable));
 		}
 	}
 	
