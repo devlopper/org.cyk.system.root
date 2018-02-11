@@ -72,12 +72,6 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		return movement;
 	}
 	
-	/*@Override
-	protected void setAutoSettedProperties(Movement movement, Crud crud) {
-		super.setAutoSettedProperties(movement, crud);
-		computeChanges(movement);
-	}*/
-	
 	@Override
 	protected void beforeCrud(Movement movement, Crud crud) {
 		super.beforeCrud(movement, crud);
@@ -163,7 +157,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
 		if(movement.getCollection()==null)
 			return;
-		BigDecimal oldValue= InstanceHelper.getInstance().getIfNotNullElseDefault(movement.getCollection().getValue(),BigDecimal.ZERO),newValue=null;
+		MovementCollection movementCollectionDatabase = movement.getCollection().getIdentifier() == null ? null : inject(MovementCollectionDao.class).read(movement.getCollection().getIdentifier());
+		BigDecimal oldValue = InstanceHelper.getInstance().getIfNotNullElseDefault(movementCollectionDatabase == null 
+				? movement.getCollection().getValue() 
+				: movementCollectionDatabase.getValue(),BigDecimal.ZERO),newValue=null;
 		logMessageBuilder.addManyParameters("update col");
 		
 		logMessageBuilder.addNamedParameters("cod",movement.getCollection().getCode(),"val",oldValue,
@@ -191,10 +188,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		logTrace(logMessageBuilder);
 	}
 			
-	@Override
-	protected void deleteFileIdentifiableGlobalIdentifier(Movement identifiable) {
-		
-	}
+	
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Movement instanciateOne(MovementCollection movementCollection,MovementAction movementAction,String value) {
