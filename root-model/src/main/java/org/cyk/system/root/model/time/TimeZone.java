@@ -12,12 +12,6 @@ import org.cyk.system.root.model.AbstractEnumeration;
 
 @Getter @Setter @NoArgsConstructor @Entity
 public class TimeZone extends AbstractEnumeration implements Serializable {
-	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	public TimeZone(String code, String libelle) {
-		super(code, libelle,null, null);
-	}
-	
-	
 }

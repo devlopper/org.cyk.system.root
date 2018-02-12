@@ -15,12 +15,6 @@ import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE)
 public class FileRepresentationType extends AbstractEnumeration implements Serializable {
-	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	public FileRepresentationType(String code, String libelle, String description) {
-		super(code, libelle,null, description);
-	}
-	
-	
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -32,11 +33,13 @@ public class DataTreeIdentifiableGlobalIdentifier extends AbstractJoinGlobalIden
 
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private DataTree dataTree;
+	@ManyToOne @JoinColumn(name=COLUMN_DATA_TREE) @NotNull private DataTree dataTree;
 	
 	/**/
 	
 	public static final String FIELD_DATA_TREE = "dataTree";
+	
+	public static final String COLUMN_DATA_TREE = FIELD_DATA_TREE;
 	
 	@Getter @Setter
 	public static class SearchCriteria extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria implements Serializable {

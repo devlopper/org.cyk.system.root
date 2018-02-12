@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -32,11 +33,13 @@ public class TagIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifie
 
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private Tag tag;
+	@ManyToOne @JoinColumn(name=COLUMN_TAG) @NotNull private Tag tag;
 	
 	/**/
 	
 	public static final String FIELD_TAG = "tag";
+	
+	public static final String COLUMN_TAG = FIELD_TAG;
 	
 	@Getter @Setter
 	public static class SearchCriteria extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria implements Serializable {

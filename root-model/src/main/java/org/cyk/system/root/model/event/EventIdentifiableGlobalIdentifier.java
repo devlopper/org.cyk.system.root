@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -34,7 +35,7 @@ public class EventIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentif
 
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private Event event;
+	@ManyToOne @JoinColumn(name=COLUMN_EVENT) @NotNull private Event event;
 	
 	/**/
 	
@@ -46,6 +47,8 @@ public class EventIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentif
 	/**/
 	
 	public static final String FIELD_EVENT = "event";
+	
+	public static final String COLUMN_EVENT = FIELD_EVENT;
 	
 	@Getter @Setter
 	public static class SearchCriteria extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria implements Serializable {

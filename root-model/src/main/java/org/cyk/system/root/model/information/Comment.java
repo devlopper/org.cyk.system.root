@@ -16,18 +16,15 @@ import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 public class Comment extends AbstractJoinGlobalIdentifier implements Serializable {
 
 	private static final long serialVersionUID = 8167875049554197503L;
 
-	@Column(nullable=false,length=1024 * 1) @NotNull private String message;
+	@Column(nullable=false,length=1024 * 1) @NotNull @Accessors(chain=true) private String message;
 
-	public Comment(){}
-	public Comment(String message){
-		this.message = message;
-	}
 	/**/
 	
 	@Getter @Setter
@@ -58,6 +55,5 @@ public class Comment extends AbstractJoinGlobalIdentifier implements Serializabl
 	
 	/**/
 	
-	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_MESSAGE = "message";
 }

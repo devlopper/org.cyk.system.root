@@ -43,6 +43,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FilterHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
@@ -99,6 +100,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@Transient private IdentifiableRuntimeCollection<AbstractIdentifiable> identifiables;
 	
 	@Transient protected Properties joinedIdentifiableRuntimeCollectionMap;
+	
+	@SuppressWarnings("rawtypes")
+	@Transient protected InstanceHelper.ActionListener actionListener;
 	
 	public AbstractIdentifiable addIdentifiables(Collection<AbstractIdentifiable> identifiables){
 		if(CollectionHelper.getInstance().isNotEmpty(identifiables)){

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -32,7 +33,7 @@ public class MovementCollectionIdentifiableGlobalIdentifier extends AbstractJoin
 
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private MovementCollection movementCollection;
+	@ManyToOne @JoinColumn(name=COLUMN_MOVEMENT_COLLECTION) @NotNull private MovementCollection movementCollection;
 	
 	/**/
 	
@@ -51,6 +52,8 @@ public class MovementCollectionIdentifiableGlobalIdentifier extends AbstractJoin
 	/**/
 	
 	public static final String FIELD_MOVEMENT_COLLECTION = "movementCollection";
+	
+	public static final String COLUMN_MOVEMENT_COLLECTION = FIELD_MOVEMENT_COLLECTION;
 	
 	/**/
 	

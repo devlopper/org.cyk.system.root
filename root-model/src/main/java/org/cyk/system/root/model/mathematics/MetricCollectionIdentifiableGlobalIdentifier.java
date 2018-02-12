@@ -36,9 +36,9 @@ public class MetricCollectionIdentifiableGlobalIdentifier extends AbstractJoinGl
 
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private MetricCollection metricCollection;
+	@ManyToOne @JoinColumn(name=COLUMN_METRIC_COLLECTION) @NotNull private MetricCollection metricCollection;
 	
-	@ManyToOne @JoinColumn(name="thevalue") private Value value;
+	@ManyToOne @JoinColumn(name=COLUMN_VALUE) private Value value;
 	
 	/**/
 	
@@ -58,6 +58,10 @@ public class MetricCollectionIdentifiableGlobalIdentifier extends AbstractJoinGl
 	/**/
 	
 	public static final String FIELD_METRIC_COLLECTION = "metricCollection";
+	public static final String FIELD_VALUE = "value";
+	
+	public static final String COLUMN_METRIC_COLLECTION = FIELD_METRIC_COLLECTION;
+	public static final String COLUMN_VALUE = FIELD_VALUE;
 	
 	/**/
 	

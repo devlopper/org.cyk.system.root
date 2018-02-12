@@ -340,6 +340,11 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					identifiable.setLoggingMessageBuilder(null);
 					beforeCreate(identifiable);
 					__create__(identifiable);
+					if(identifiable.getActionListener()!=null){
+						System.out
+								.println("AbstractTypedBusinessService.create(...).new Default() {...}.__execute__() : "+identifiable);
+						identifiable.getActionListener().act(identifiable, Constant.Action.CREATE);
+					}
 			        afterCreate(identifiable);	
 			        logTrace(identifiable.getLoggingMessageBuilder());
 					return null;
@@ -464,6 +469,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					dao.update(identifiable);
 					if(identifiable.getGlobalIdentifier()!=null)
 				    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
+					if(identifiable.getActionListener()!=null)
+						identifiable.getActionListener().act(identifiable, Constant.Action.UPDATE);
 				    afterUpdate(identifiable);
 				   //return newObject; We might lost some informations by returning the new managed object. better to keep the old one
 				    logTrace(identifiable.getLoggingMessageBuilder());
@@ -549,6 +556,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	protected void __delete__(final IDENTIFIABLE identifiable){
 		dao.delete(identifiable);
+		if(identifiable.getActionListener()!=null)
+			identifiable.getActionListener().act(identifiable, Constant.Action.DELETE);
 	}
 
 	@Override

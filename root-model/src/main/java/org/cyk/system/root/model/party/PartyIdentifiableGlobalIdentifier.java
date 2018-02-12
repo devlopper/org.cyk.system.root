@@ -28,7 +28,6 @@ import lombok.experimental.Accessors;
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {PartyIdentifiableGlobalIdentifier.FIELD_PARTY
 		,PartyIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER,PartyIdentifiableGlobalIdentifier.FIELD_ROLE})})
 public class PartyIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
-
 	private static final long serialVersionUID = -165832578043422718L;
 	 
 	@ManyToOne @JoinColumn(name=COLUMN_PARTY) @NotNull @Accessors(chain=true) private Party party;

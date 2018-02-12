@@ -24,19 +24,10 @@ import lombok.Setter;
  */
 @Entity @Getter @Setter @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS)
 public class Measure extends AbstractEnumeration implements Serializable{
-	
 	private static final long serialVersionUID = 374208919427476791L;
 	
 	@ManyToOne @JoinColumn(name=COLUMN_TYPE) @NotNull private MeasureType type;
 	@Column(nullable=false) @NotNull private BigDecimal value;
-	
-	public Measure() {}
-
-	public Measure(String code,String name, MeasureType type,BigDecimal value) {
-		super(code,name, null,null);
-		this.type = type;
-		this.value = value;
-	}
 	
 	public static final String FIELD_TYPE = "type";
 	public static final String FIELD_VALUE = "value";

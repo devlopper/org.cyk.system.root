@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -34,7 +35,7 @@ public class MetricValueIdentifiableGlobalIdentifier extends AbstractJoinGlobalI
 
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private MetricValue metricValue;
+	@ManyToOne @JoinColumn(name=COLUMN_METRIC_VALUE) @NotNull private MetricValue metricValue;
 	
 	/**/
 	
@@ -49,6 +50,8 @@ public class MetricValueIdentifiableGlobalIdentifier extends AbstractJoinGlobalI
 	}
 	
 	public static final String FIELD_METRIC_VALUE = "metricValue";
+	
+	public static final String COLUMN_METRIC_VALUE = FIELD_METRIC_VALUE;
 	
 	/**/
 	

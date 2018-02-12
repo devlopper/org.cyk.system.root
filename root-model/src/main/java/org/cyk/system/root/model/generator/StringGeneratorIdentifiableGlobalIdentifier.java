@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -26,13 +27,12 @@ import lombok.Setter;
  *
  */
 @Getter @Setter @Entity  @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {StringGeneratorIdentifiableGlobalIdentifier.FIELD_MOVEMENT_COLLECTION
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {StringGeneratorIdentifiableGlobalIdentifier.FIELD_STRING_GENERATOR
 		})})
 public class StringGeneratorIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
-
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private StringGenerator stringGenerator;
+	@ManyToOne @JoinColumn(name=COLUMN_STRING_GENERATOR) @NotNull private StringGenerator stringGenerator;
 	
 	/**/
 	
@@ -50,7 +50,9 @@ public class StringGeneratorIdentifiableGlobalIdentifier extends AbstractJoinGlo
 	
 	/**/
 	
-	public static final String FIELD_MOVEMENT_COLLECTION = "stringGenerator";
+	public static final String FIELD_STRING_GENERATOR = "stringGenerator";
+	
+	public static final String COLUMN_STRING_GENERATOR = FIELD_STRING_GENERATOR;
 	
 	/**/
 	

@@ -6,6 +6,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -51,7 +52,7 @@ public class File extends AbstractIdentifiable implements Serializable{
 	 */
 	private String mime;
 	
-	@ManyToOne private FileRepresentationType representationType;
+	@ManyToOne @JoinColumn(name=COLUMN_REPRESENTATION_TYPE) private FileRepresentationType representationType;
 	
 	/** Others GED informations **/
 	
@@ -79,4 +80,5 @@ public class File extends AbstractIdentifiable implements Serializable{
 	public static final String FIELD_SENDER = "sender";
 	public static final String FIELD_CONTENT_WRITER = "contentWriter";
 	
+	public static final String COLUMN_REPRESENTATION_TYPE = FIELD_REPRESENTATION_TYPE;
 }

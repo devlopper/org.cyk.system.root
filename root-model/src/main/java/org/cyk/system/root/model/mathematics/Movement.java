@@ -17,6 +17,7 @@ import lombok.experimental.Accessors;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.utility.common.annotation.FieldOverride;
 import org.cyk.utility.common.annotation.FieldOverrides;
 import org.cyk.utility.common.annotation.ModelBean;
@@ -28,10 +29,10 @@ import org.cyk.utility.common.annotation.ModelBean.GenderType;
 		@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MovementCollection.class)
 		//,@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MovementCollection.class)
 })
-public class Movement extends AbstractCollectionItem<MovementCollection> implements Serializable {
-	
+public class Movement extends AbstractCollectionItem<MovementCollection> implements Serializable {	
 	private static final long serialVersionUID = -4946585596435850782L;
 
+	@Transient private IdentifiablePeriod identifiablePeriod;
 	@ManyToOne @JoinColumn(name=COLUMN_ACTION) private MovementAction action;	
 	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
 	@ManyToOne @JoinColumn(name=COLUMN_MODE) private MovementMode mode;
@@ -45,9 +46,9 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	/**
 	 * The person to whom value goes or from whom value comes
 	 */
-	@ManyToOne @JoinColumn(name=COLUMN_SENDER_OR_RECEIVER_PERSON) private Person senderOrReceiverPerson;
+	@Transient private Person senderOrReceiverPerson;
 	
-	private String senderOrReceiverPersonAsString;
+	//private String senderOrReceiverPersonAsString;
 	
 	@Transient private MovementCollection destinationMovementCollection;
 	@Transient private Movement destinationMovement;
@@ -61,12 +62,13 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	/**/
 	
+	public static final String FIELD_IDENTIFIABLE_PERIOD = "identifiablePeriod";
 	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_MODE = "mode";
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_VALUE_ABSOLUTE = "valueAbsolute";
 	public static final String FIELD_SENDER_OR_RECEIVER_PERSON = "senderOrReceiverPerson";
-	public static final String FIELD_SENDER_OR_RECEIVER_PERSON_AS_STRING = "senderOrReceiverPersonAsString";
+	//public static final String FIELD_SENDER_OR_RECEIVER_PERSON_AS_STRING = "senderOrReceiverPersonAsString";
 	public static final String FIELD_CUMUL = "cumul";
 	public static final String FIELD_PREVIOUS_CUMUL = "previousCumul";
 	public static final String FIELD_DESTINATION_MOVEMENT_COLLECTION = "destinationMovementCollection";
@@ -76,7 +78,6 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public static final String COLUMN_ACTION = FIELD_ACTION;
 	public static final String COLUMN_VALUE = FIELD_VALUE;
 	public static final String COLUMN_CUMUL = FIELD_CUMUL;
-	public static final String COLUMN_SENDER_OR_RECEIVER_PERSON = FIELD_SENDER_OR_RECEIVER_PERSON;
 	
 	/**/
 	

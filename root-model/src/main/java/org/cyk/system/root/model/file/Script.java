@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -30,9 +31,9 @@ public class Script extends AbstractIdentifiable implements Serializable{
 
 	private static final long serialVersionUID = 129506142716551683L;
 	
-	@OneToOne @NotNull private File file;
+	@OneToOne @JoinColumn(name=COLUMN_FILE) @NotNull private File file;
 	
-	@ManyToOne @NotNull private ScriptEvaluationEngine evaluationEngine;
+	@ManyToOne @JoinColumn(name=COLUMN_EVALUATION_ENGINE) @NotNull private ScriptEvaluationEngine evaluationEngine;
 	
 	@Transient private IdentifiableRuntimeCollection<ScriptVariable> variables;
 
@@ -59,4 +60,7 @@ public class Script extends AbstractIdentifiable implements Serializable{
 	
 	public static final String FIELD_FILE = "file";
 	public static final String FIELD_EVALUATION_ENGINE = "evaluationEngine";
+	
+	public static final String COLUMN_FILE = FIELD_FILE;
+	public static final String COLUMN_EVALUATION_ENGINE = FIELD_EVALUATION_ENGINE;
 }

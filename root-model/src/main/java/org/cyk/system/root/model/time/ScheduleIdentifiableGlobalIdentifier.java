@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -32,7 +33,7 @@ public class ScheduleIdentifiableGlobalIdentifier extends AbstractJoinGlobalIden
 
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private Schedule schedule;
+	@ManyToOne @JoinColumn(name=COLUMN_SCHEDULE) @NotNull private Schedule schedule;
 	
 	/**/
 	
@@ -42,6 +43,8 @@ public class ScheduleIdentifiableGlobalIdentifier extends AbstractJoinGlobalIden
 	}
 	
 	public static final String FIELD_SCHEDULE = "schedule";
+	
+	public static final String COLUMN_SCHEDULE = FIELD_SCHEDULE;
 	
 	/**/
 	

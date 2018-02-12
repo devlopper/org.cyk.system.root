@@ -1,11 +1,10 @@
-package org.cyk.system.root.model.value;
+package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -23,29 +22,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * A join between a value collection and an identifiable
+ * A join between a period and an identifiable
  * @author Christian Yao Komenan
  *
  */
 @Getter @Setter @Entity  @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {ValueCollectionIdentifiableGlobalIdentifier.FIELD_VALUE_COLLECTION
-		,ValueCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
-public class ValueCollectionIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {IdentifiablePeriodIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_PERIOD
+		,IdentifiablePeriodIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
+public class IdentifiablePeriodIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private ValueCollection valueCollection;
+	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD) @NotNull private IdentifiablePeriod identifiablePeriod;
 	
 	/**/
 	
-	public ValueCollectionIdentifiableGlobalIdentifier(ValueCollection valueCollection,AbstractIdentifiable identifiable){
-		super(identifiable);
-		this.valueCollection = valueCollection;
+	public IdentifiablePeriodIdentifiableGlobalIdentifier(IdentifiablePeriod identifiablePeriod,AbstractIdentifiable identifiable){
+		this.identifiablePeriod = identifiablePeriod;
+		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
 	}
 	
-	public static final String FIELD_VALUE_COLLECTION = "valueCollection";
+	public static final String FIELD_IDENTIFIABLE_PERIOD = "identifiablePeriod";
 	
-	public static final String COLUMN_VALUE_COLLECTION = FIELD_VALUE_COLLECTION;
+	public static final String COLUMN_IDENTIFIABLE_PERIOD = FIELD_IDENTIFIABLE_PERIOD;
 	
 	/**/
 	
@@ -54,49 +53,32 @@ public class ValueCollectionIdentifiableGlobalIdentifier extends AbstractJoinGlo
 
 		private static final long serialVersionUID = 6796076474234170332L;
 		
-		private Collection<ValueCollection> valueCollections = new ArrayList<>();
-		
 		@Override
 		public SearchCriteria addGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers){
 			return (SearchCriteria) super.addGlobalIdentifiers(globalIdentifiers);
 		}
-		
 		@Override
 		public SearchCriteria addGlobalIdentifier(GlobalIdentifier globalIdentifier){
 			return (SearchCriteria) super.addGlobalIdentifier(globalIdentifier);
 		}
-		
 		@Override
 		public SearchCriteria addIdentifiablesGlobalIdentifiers(Collection<? extends AbstractIdentifiable> identifiables) {
 			return (SearchCriteria) super.addIdentifiablesGlobalIdentifiers(identifiables);
 		}
-		
 		@Override
 		public SearchCriteria addIdentifiableGlobalIdentifier(AbstractIdentifiable identifiable) {
 			return (SearchCriteria) super.addIdentifiableGlobalIdentifier(identifiable);
 		}
-
-		public SearchCriteria addValueCollections(Collection<ValueCollection> valueCollections){
-			this.valueCollections.addAll(valueCollections);
-			return this;
-		}
-		public SearchCriteria addValueCollection(ValueCollection valueCollection){
-			return addValueCollections(Arrays.asList(valueCollection));
-		}
-		
-		
 	}
 	
 	public static void define(Class<? extends AbstractIdentifiable> aClass){
-		define(ValueCollectionIdentifiableGlobalIdentifier.class, aClass);
+		define(IdentifiablePeriodIdentifiableGlobalIdentifier.class, aClass);
 	}
-	
 	public static Boolean isUserDefinedClass(Class<?> aClass){
-		return isUserDefinedClass(ValueCollectionIdentifiableGlobalIdentifier.class,aClass);
+		return isUserDefinedClass(IdentifiablePeriodIdentifiableGlobalIdentifier.class,aClass);
 	}
-	
 	public static Boolean isUserDefinedObject(Object object){
-		return isUserDefinedObject(ValueCollectionIdentifiableGlobalIdentifier.class,object);
+		return isUserDefinedObject(IdentifiablePeriodIdentifiableGlobalIdentifier.class,object);
 	}
 	
 }

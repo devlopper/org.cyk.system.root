@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -34,7 +35,7 @@ public class FileIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifi
 
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private File file;
+	@ManyToOne @JoinColumn(name=COLUMN_FILE) @NotNull private File file;
 	
 	/**/
 	
@@ -44,6 +45,8 @@ public class FileIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifi
 	}
 	
 	public static final String FIELD_FILE = "file";
+	
+	public static final String COLUMN_FILE = FIELD_FILE;
 	
 	/**/
 	

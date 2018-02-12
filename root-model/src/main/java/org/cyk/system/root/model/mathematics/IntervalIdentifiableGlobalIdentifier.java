@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -31,7 +32,7 @@ import lombok.Setter;
 public class IntervalIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private Interval interval;
+	@ManyToOne @JoinColumn(name=COLUMN_INTERVAL_COLLECTION) @NotNull private Interval interval;
 	
 	/**/
 	
@@ -50,6 +51,8 @@ public class IntervalIdentifiableGlobalIdentifier extends AbstractJoinGlobalIden
 	/**/
 	
 	public static final String FIELD_INTERVAL_COLLECTION = "interval";
+	
+	public static final String COLUMN_INTERVAL_COLLECTION = FIELD_INTERVAL_COLLECTION;
 	
 	/**/
 	

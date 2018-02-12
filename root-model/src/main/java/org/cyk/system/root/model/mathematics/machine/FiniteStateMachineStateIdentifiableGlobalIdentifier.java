@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -33,14 +34,15 @@ import lombok.Setter;
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {FiniteStateMachineStateIdentifiableGlobalIdentifier.FIELD_FINITE_STATE_MACHINE_STATE
 		,FiniteStateMachineStateIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
 public class FiniteStateMachineStateIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
-
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private FiniteStateMachineState finiteStateMachineState;
+	@ManyToOne @JoinColumn(name=COLUMN_FINITE_STATE_MACHINE_STATE) @NotNull private FiniteStateMachineState finiteStateMachineState;
 	
 	/**/
 	
 	public static final String FIELD_FINITE_STATE_MACHINE_STATE = "finiteStateMachineState";
+	
+	public static final String COLUMN_FINITE_STATE_MACHINE_STATE = FIELD_FINITE_STATE_MACHINE_STATE;
 	
 	@Getter @Setter
 	public static class SearchCriteria extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria implements Serializable {

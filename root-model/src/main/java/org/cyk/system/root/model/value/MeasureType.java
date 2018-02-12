@@ -18,9 +18,7 @@ import lombok.Setter;
  */
 @Entity @Getter @Setter @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.ENUMERATION)
 public class MeasureType extends AbstractEnumeration implements Serializable{
-	
 	private static final long serialVersionUID = 374208919427476791L;
-	
 	
 }
 

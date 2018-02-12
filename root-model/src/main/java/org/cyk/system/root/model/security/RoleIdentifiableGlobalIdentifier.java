@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -29,14 +30,15 @@ import lombok.Setter;
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {RoleIdentifiableGlobalIdentifier.FIELD_ROLE
 		,RoleIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
 public class RoleIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
-
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @NotNull private Role role;
+	@ManyToOne @JoinColumn(name=COLUMN_ROLE) @NotNull private Role role;
 	
 	@Embedded private Rud rud = new Rud();
 	
 	public static final String FIELD_ROLE = "role";
+	
+	public static final String COLUMN_ROLE = FIELD_ROLE;
 	
 	/**/
 	

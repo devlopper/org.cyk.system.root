@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -20,14 +21,15 @@ import lombok.Setter;
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {FiniteStateMachineTransitionIdentifiableGlobalIdentifier.FIELD_TRANSITION
 		,FiniteStateMachineTransitionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
 public class FiniteStateMachineTransitionIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
-
 	private static final long serialVersionUID = 2576023570217657424L;
 
-	@ManyToOne @NotNull private FiniteStateMachineTransition transition;
+	@ManyToOne @JoinColumn(name=COLUMN_TRANSITION) @NotNull private FiniteStateMachineTransition transition;
 	
 	/**/
 	
 	public static final String FIELD_TRANSITION = "transition";
+	
+	public static final String COLUMN_TRANSITION = FIELD_TRANSITION;
 	
 	/**/
 	
