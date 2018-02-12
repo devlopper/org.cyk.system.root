@@ -11,12 +11,14 @@ import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ObjectFieldValues;
 
 public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao,MovementBusiness> implements MovementCollectionBusiness,Serializable {
@@ -32,6 +34,16 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	protected MovementCollection __instanciateOne__(ObjectFieldValues objectFieldValues) {
 		MovementCollection movementCollection = super.__instanciateOne__(objectFieldValues);
 		movementCollection.setType(inject(MovementCollectionTypeDao.class).readDefaulted());
+		return movementCollection;
+	}
+	
+	@Override
+	public MovementCollection instanciateOne(String typeCode,BigDecimal value,AbstractIdentifiable join){
+		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne();
+		movementCollection.setType(inject(MovementCollectionTypeDao.class).read(typeCode));
+		movementCollection.setValue(value);
+		movementCollection.setCode(join.getCode()+Constant.CHARACTER_VERTICAL_BAR+movementCollection.getType().getCode());
+		movementCollection.setName(join.getName()+Constant.CHARACTER_VERTICAL_BAR+movementCollection.getType().getCode());
 		return movementCollection;
 	}
 

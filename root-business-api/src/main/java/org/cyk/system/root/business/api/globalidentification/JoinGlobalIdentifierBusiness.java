@@ -9,6 +9,8 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 
 public interface JoinGlobalIdentifierBusiness<IDENTIFIABLE extends AbstractIdentifiable,SEARCH_CRITERIA extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria> extends TypedBusiness<IDENTIFIABLE> {
 
+	IDENTIFIABLE create(AbstractIdentifiable join,AbstractIdentifiable identifiableJoined);
+	
 	Collection<IDENTIFIABLE> findByIdentifiableGlobalIdentifiers(Collection<GlobalIdentifier> globalIdentifiers);
 	Collection<IDENTIFIABLE> findByIdentifiableGlobalIdentifier(GlobalIdentifier globalIdentifier);
 	Collection<IDENTIFIABLE> findByIdentifiableGlobalIdentifier(AbstractIdentifiable identifiable);

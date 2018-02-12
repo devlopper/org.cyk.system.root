@@ -18,5 +18,4 @@ public class MovementCollectionIdentifiableGlobalIdentifierBusinessImpl extends 
 		super(dao); 
 	}
 	
-	
 }
