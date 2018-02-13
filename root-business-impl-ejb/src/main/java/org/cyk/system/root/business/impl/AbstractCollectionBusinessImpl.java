@@ -7,10 +7,6 @@ import java.util.Collection;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.AbstractCollectionBusiness;
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
@@ -27,6 +23,9 @@ import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractCollectionBusinessImpl<COLLECTION extends AbstractCollection<ITEM>,ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionDao<COLLECTION, ITEM>,ITEM_DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,ITEM_BUSINESS extends AbstractCollectionItemBusiness<ITEM,COLLECTION>> extends AbstractEnumerationBusinessImpl<COLLECTION, DAO> implements AbstractCollectionBusiness<COLLECTION,ITEM>,Serializable {
 
@@ -105,11 +104,11 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	@Override
 	protected void beforeCrud(COLLECTION collection,Crud crud) {
 		super.beforeCrud(collection,crud);
-		if(collection.getItems().isSynchonizationEnabled()){
+		/*if(collection.getItems().isSynchonizationEnabled()){
 			if(ArrayUtils.contains(new Crud[]{Crud.CREATE, Crud.UPDATE,Crud.DELETE},crud)){
 				computeChanges(collection);
 			}	
-		}
+		}*/
 		
 	}
 	
@@ -139,7 +138,12 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	@Override
 	protected void beforeDelete(COLLECTION collection) {
 		super.beforeDelete(collection);
-		getItemBusiness().delete(getItemDao().readByCollection(collection));
+		Collection<ITEM> identifiables = new ArrayList<>();
+		if(CollectionHelper.getInstance().isEmpty(collection.getItemsDeletable()))
+			identifiables.addAll(getItemDao().readByCollection(collection));
+		else	
+			identifiables.addAll(collection.getItemsDeletable().getElements());		
+		getItemBusiness().delete(identifiables);
 	}
 
 	@SuppressWarnings("unchecked")

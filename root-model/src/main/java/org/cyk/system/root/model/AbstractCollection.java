@@ -29,6 +29,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	private Boolean itemAggregationApplied = Boolean.TRUE;
 	
 	@Transient protected IdentifiableRuntimeCollection<ITEM> items = new IdentifiableRuntimeCollection<>();
+	@Transient protected IdentifiableRuntimeCollection<ITEM> itemsDeletable = new IdentifiableRuntimeCollection<>();
 	
 	{
 		getItems().setElementObjectClass(ClassHelper.getInstance().getParameterAt(getClass(), 0, Object.class));

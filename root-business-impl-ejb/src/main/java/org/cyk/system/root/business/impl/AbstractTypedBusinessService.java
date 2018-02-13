@@ -178,15 +178,17 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void setAutoSettedProperties(final IDENTIFIABLE identifiable, Crud crud){
-		String property;
-		if(isAutoSetPropertyValueClass(property = GlobalIdentifier.FIELD_CODE, identifiable.getClass()))
-			setProperty(identifiable,property);
-		if(isAutoSetPropertyValueClass(property = GlobalIdentifier.FIELD_NAME, identifiable.getClass()))
-			setProperty(identifiable,property);
-		if(isAutoSetPropertyValueClass(property = commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE), identifiable.getClass()))
-			setProperty(identifiable,property);
-		
-		computeChanges(identifiable);
+		if(Crud.isCreateOrUpdate(crud)){
+			String property;
+			if(isAutoSetPropertyValueClass(property = GlobalIdentifier.FIELD_CODE, identifiable.getClass()))
+				setProperty(identifiable,property);
+			if(isAutoSetPropertyValueClass(property = GlobalIdentifier.FIELD_NAME, identifiable.getClass()))
+				setProperty(identifiable,property);
+			if(isAutoSetPropertyValueClass(property = commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE), identifiable.getClass()))
+				setProperty(identifiable,property);
+			
+			computeChanges(identifiable);	
+		}
 		
 		if(Crud.CREATE.equals(crud)){
 			if(Boolean.TRUE.equals(identifiable.getCascadeOperationToMaster())){
@@ -197,21 +199,6 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 						java.lang.reflect.Field masterField = FieldHelper.getInstance().get(identifiable.getClass(), fieldName);
 						AbstractIdentifiable master = (AbstractIdentifiable) FieldHelper.getInstance().read(identifiable, masterField);
 						createIfNotIdentified(master);
-						/*java.lang.reflect.Field masterClassField = FieldHelper.getInstance().get(identifiable.getClass(), masterField.getName()+"Class");
-						@SuppressWarnings("unchecked")
-						Class<? extends AbstractIdentifiable> masterClass = (Class<? extends AbstractIdentifiable>) (masterClassField == null 
-							? FieldHelper.getInstance().getType(identifiable.getClass(), fieldName)
-							: FieldHelper.getInstance().read(identifiable, masterClassField));
-						if(master==null && masterClass!=null){	
-							if(StringHelper.getInstance().isNotBlank(identifiable.getCode()))
-								master = inject(PersistenceInterfaceLocator.class).injectTyped(masterClass).read(identifiable.getCode());
-							if(master == null){
-								master = inject(BusinessInterfaceLocator.class).injectTyped(masterClass).instanciateOne();
-								org.cyk.system.root.business.impl.helper.FieldHelper.getInstance().copy(identifiable,master,Boolean.FALSE);
-								createIfNotIdentified(master);
-							}
-							FieldHelper.getInstance().set(identifiable, master, masterField);						
-						}*/
 					}
 				}.execute();
 			}else{
@@ -339,12 +326,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				public Object __execute__() {
 					identifiable.setLoggingMessageBuilder(null);
 					beforeCreate(identifiable);
+					if(identifiable.getActionListener()!=null)
+						identifiable.getActionListener().actBefore(identifiable, Constant.Action.CREATE);
 					__create__(identifiable);
-					if(identifiable.getActionListener()!=null){
-						System.out
-								.println("AbstractTypedBusinessService.create(...).new Default() {...}.__execute__() : "+identifiable);
-						identifiable.getActionListener().act(identifiable, Constant.Action.CREATE);
-					}
+					if(identifiable.getActionListener()!=null)
+						identifiable.getActionListener().actAfter(identifiable, Constant.Action.CREATE);
+					
 			        afterCreate(identifiable);	
 			        logTrace(identifiable.getLoggingMessageBuilder());
 					return null;
@@ -466,11 +453,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					identifiable.setLoggingMessageBuilder(null);
 					beforeUpdate(identifiable);
 					//IDENTIFIABLE newObject = dao.update(identifiable);
+					if(identifiable.getActionListener()!=null)
+						identifiable.getActionListener().actBefore(identifiable, Constant.Action.UPDATE);
 					dao.update(identifiable);
 					if(identifiable.getGlobalIdentifier()!=null)
 				    	inject(GlobalIdentifierBusiness.class).update(identifiable.getGlobalIdentifier());
 					if(identifiable.getActionListener()!=null)
-						identifiable.getActionListener().act(identifiable, Constant.Action.UPDATE);
+						identifiable.getActionListener().actAfter(identifiable, Constant.Action.UPDATE);
 				    afterUpdate(identifiable);
 				   //return newObject; We might lost some informations by returning the new managed object. better to keep the old one
 				    logTrace(identifiable.getLoggingMessageBuilder());
@@ -503,6 +492,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void beforeDelete(IDENTIFIABLE identifiable){
+		//setAutoSettedProperties(identifiable, Crud.DELETE);
 		inject(ValidationPolicy.class).validateDelete(identifiable);
 		deleteFileIdentifiableGlobalIdentifier(identifiable);
 		deleteMetricValueIdentifiableGlobalIdentifier(identifiable);
@@ -556,8 +546,6 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	
 	protected void __delete__(final IDENTIFIABLE identifiable){
 		dao.delete(identifiable);
-		if(identifiable.getActionListener()!=null)
-			identifiable.getActionListener().act(identifiable, Constant.Action.DELETE);
 	}
 
 	@Override
@@ -582,11 +570,15 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					identifiable.setLoggingMessageBuilder(null);
 					if(Boolean.TRUE.equals(identifiable.getCheckIfExistOnDelete()) ? getPersistenceService().read(identifiable.getIdentifier())!=null : Boolean.TRUE){
 						beforeDelete(identifiable);
+						if(identifiable.getActionListener()!=null)
+							identifiable.getActionListener().actBefore(identifiable, Constant.Action.DELETE);
 						if(identifiable.getGlobalIdentifier()!=null){
 							inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
 							identifiable.setGlobalIdentifier(null);
 						}		
 						__delete__(identifiable);
+						if(identifiable.getActionListener()!=null)
+							identifiable.getActionListener().actAfter(identifiable, Constant.Action.DELETE);
 						afterDelete(identifiable);	
 						logTrace(identifiable.getLoggingMessageBuilder());
 					}
