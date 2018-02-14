@@ -24,6 +24,10 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -46,10 +50,6 @@ import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 /*lombok*/
 
@@ -580,6 +580,10 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public static final String FIELD_IDENTIFIER = "identifier";
 	public static final String FIELD_GLOBAL_IDENTIFIER = "globalIdentifier";
 	public static final String FIELD_PARENT = "__parent__";
+	
+	//TODO very strange , those followings instructions make strange errors appearing on integration test
+	//public static final String __FIELD_GLOBAL_IDENTIFIER_CODE__ = FieldHelper.getInstance().buildPath(FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE);
+	//public static final String __FIELD_GLOBAL_IDENTIFIER_NAME__ = FieldHelper.getInstance().buildPath(FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME);
 	
 	public static final String COLUMN_IDENTIFIER = "identifier";
 	public static final String COLUMN_GLOBAL_IDENTIFIER = "globalidentifier";

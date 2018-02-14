@@ -1,11 +1,13 @@
 package org.cyk.system.root.business.impl.helper;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.utility.common.helper.ArrayHelper;
 
 public class FieldHelper implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -19,8 +21,8 @@ public class FieldHelper implements Serializable {
 	
 	/**/
 	
-	public void copy(AbstractIdentifiable source,AbstractIdentifiable destination,Boolean overwrite){
-		org.cyk.utility.common.helper.FieldHelper.getInstance().copy(source, destination, COPYABLE_FIELD_NAMES,overwrite);
+	public void copy(AbstractIdentifiable source,AbstractIdentifiable destination,Boolean overwrite,String...fieldNames){
+		org.cyk.utility.common.helper.FieldHelper.getInstance().copy(source, destination, ArrayHelper.getInstance().isEmpty(fieldNames) ? COPYABLE_FIELD_NAMES : Arrays.asList(fieldNames),overwrite);
 	}
 	
 	public void copy(AbstractIdentifiable source,AbstractIdentifiable destination){
