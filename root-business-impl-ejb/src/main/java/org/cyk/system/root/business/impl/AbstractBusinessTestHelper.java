@@ -961,6 +961,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return this;
 		}
 		
+		public TestCase assertNull(Class<? extends AbstractIdentifiable> aClass,String code){
+			AbstractBusinessTestHelper.assertNull(aClass+" with code "+code+" is not null", inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code));
+			return this;
+		}
+		
 		/**/
 		
 		public Person createOnePerson(String code,String firstname,String lastnames,String email){
@@ -1245,17 +1250,17 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		 public void assertComputedChanges(Movement movement,String previousCumul,String cumul){
 	    	if(movement.getCollection()==null || movement.getCollection().getValue()==null){
-	    		assertNull("expected movement previous cumul is not null",previousCumul); 
-	    		assertNull("actual movement previous cumul is not null",movement.getPreviousCumul());
+	    		AbstractBusinessTestHelper.assertNull("expected movement previous cumul is not null",previousCumul); 
+	    		AbstractBusinessTestHelper.assertNull("actual movement previous cumul is not null",movement.getPreviousCumul());
 	    		
-	    		assertNull("expected movement cumul is not null",cumul);
-	    		assertNull("actual movement cumul is not null",movement.getCumul());
+	    		AbstractBusinessTestHelper.assertNull("expected movement cumul is not null",cumul);
+	    		AbstractBusinessTestHelper.assertNull("actual movement cumul is not null",movement.getCumul());
 	    	}else{
 	    		assertBigDecimalEquals("movement previous cumul is not equal",new BigDecimal(previousCumul), movement.getPreviousCumul());
 	    		
 	    		if(movement.getValue() == null){
-	    			assertNull("expected movement cumul is not null",cumul);
-	        		assertNull("actual movement cumul is not null",movement.getCumul());
+	    			AbstractBusinessTestHelper.assertNull("expected movement cumul is not null",cumul);
+	    			AbstractBusinessTestHelper.assertNull("actual movement cumul is not null",movement.getCumul());
 	    		}else{
 	    			assertBigDecimalEquals("movement cumul is not equal",new BigDecimal(cumul), movement.getCumul());
 	    		}

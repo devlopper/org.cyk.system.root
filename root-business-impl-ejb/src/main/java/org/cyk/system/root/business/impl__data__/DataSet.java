@@ -12,6 +12,10 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
@@ -43,10 +47,6 @@ import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.TimeHelper;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 @Getter @Setter @Accessors(chain=true)
 public class DataSet extends AbstractBean implements Serializable {
@@ -284,6 +284,12 @@ public class DataSet extends AbstractBean implements Serializable {
 	
 	public <T extends AbstractIdentifiable> DataSet create(Class<T> aClass){
 		return create(aClass, null);
+	}
+	
+	/**/
+	
+	public <T extends AbstractIdentifiable> T getInstance(Class<T> aClass,String code){
+		return InstanceHelper.Pool.getInstance().get(aClass, code);
 	}
 	
 	/**/
