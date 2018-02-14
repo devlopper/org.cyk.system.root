@@ -140,16 +140,16 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		super.afterCreate(node);
 		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenSet")
 				.setDomainNameIdentifier("nestedset").setNumber1(node.getSet().getNumberOfChildren()).setNumber2(inject(NestedSetNodeDao.class).countBySet(node.getSet()))
-				.setEqual(Boolean.FALSE), BusinessException.class);
+				.setEqual(Boolean.FALSE));
 		
 		if(node.getParent() != null) {
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenNode")
 					.setDomainNameIdentifier("nestedsetnode").setNumber1(node.getParent().getNumberOfChildren()).setNumber2(inject(NestedSetNodeDao.class)
-							.countByParent(node.getParent())), BusinessException.class);
+							.countByParent(node.getParent())));
 			
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfDirectChildrenNode")
 					.setDomainNameIdentifier("nestedsetnode").setNumber1(node.getParent().getNumberOfDirectChildren()).setNumber2(inject(NestedSetNodeDao.class)
-							.countDirectChildrenByParent(node.getParent())), BusinessException.class);
+							.countDirectChildrenByParent(node.getParent())));
 		}						
 	}
 	

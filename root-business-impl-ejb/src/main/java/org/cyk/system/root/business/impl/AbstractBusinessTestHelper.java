@@ -112,6 +112,8 @@ import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.MethodHelper;
+import org.cyk.utility.common.helper.NumberHelper;
+import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
@@ -312,7 +314,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 	
 	protected static void assertBigDecimalEquals(String message,String expected,BigDecimal actual){
-		assertBigDecimalEquals(message,new BigDecimal(expected),actual);
+		assertBigDecimalEquals(message,NumberHelper.getInstance().get(BigDecimal.class, expected, null),actual);
 	}
 	
 	protected static void assertThat(String reason,Boolean assertion){

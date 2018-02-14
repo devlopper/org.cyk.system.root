@@ -11,6 +11,9 @@ import org.cyk.system.root.model.mathematics.MovementCollection;
 public interface MovementCollectionBusiness extends AbstractCollectionBusiness<MovementCollection,Movement> {
 
 	MovementCollection instanciateOne(String typeCode,BigDecimal value,AbstractIdentifiable join);
+	
+	@Deprecated
 	BigDecimal computeValue(MovementCollection movementCollection,MovementAction movementAction,BigDecimal increment);
+	
 	
 }

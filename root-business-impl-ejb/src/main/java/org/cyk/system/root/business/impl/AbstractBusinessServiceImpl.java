@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.Entity;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.SetListener;
@@ -21,6 +22,7 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 
@@ -128,6 +130,10 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 			destination.setCode(source.getName());
 		if(StringUtils.isBlank(destination.getAbbreviation()))
 			destination.setCode(source.getAbbreviation());
+	}
+	
+	protected static <T extends java.lang.Throwable> void throw__(ConditionHelper.Condition.Builder builder){
+		throw__(builder, BusinessException.class);
 	}
 	
 	/**/
