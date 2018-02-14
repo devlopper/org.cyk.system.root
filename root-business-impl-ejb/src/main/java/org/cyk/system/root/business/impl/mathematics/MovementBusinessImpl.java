@@ -16,6 +16,7 @@ import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
@@ -24,6 +25,7 @@ import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifier
 import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
+import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.helper.CollectionHelper;
@@ -246,6 +248,40 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			movement.setCumul(movement.getPreviousCumul().add(movement.getValue()));
 		}
 		logMessageBuilder.addNamedParameters("prev cum",movement.getPreviousCumul(),"val",movement.getValue(),"cum",movement.getCumul());
+	}
+	
+	@Override
+	public Movement instanciateOne(MovementCollection movementCollection,String typeCode,Crud crud,AbstractIdentifiable identifiable,String valueFieldName){
+		//BigDecimal systemValue,BigDecimal userValue
+		
+		Movement movement = inject(MovementBusiness.class).instanciateOne(movementCollection);
+		if(movementCollection.getType().getCode().equals(typeCode)){
+			movement.setValueAbsolute((BigDecimal) FieldHelper.getInstance().read(identifiable, valueFieldName));
+		}
+		movement.setValueSettableFromAbsolute(Boolean.TRUE);
+		if(Crud.DELETE.equals(crud)){
+			movement.setAction(movementCollection.getType().getIncrementAction());
+		}else{
+			AbstractIdentifiable identifiableDB = Crud.CREATE.equals(crud) ? null : inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass()).read(identifiable.getIdentifier());
+			movement.setValueAbsolute( (BigDecimal)NumberHelper.getInstance().subtract(movement.getValueAbsolute()
+					,identifiableDB == null ? null : (Number)FieldHelper.getInstance().read(identifiableDB, valueFieldName)));
+			if(movement.getValueAbsolute().signum() == 1)
+				movement.setAction(movementCollection.getType().getDecrementAction());
+			else if(movement.getValueAbsolute().signum() == -1)
+				movement.setAction(movementCollection.getType().getIncrementAction());
+		}
+		if(movement.getAction() != null){
+			movement.setValueAbsolute(movement.getValueAbsolute().abs());
+		}
+		return movement;
+	}
+	
+	@Override
+	public Movement createIfActionIsNotNull(Movement movement) {
+		if(movement.getAction() != null){
+			create(movement);
+		}
+		return movement;
 	}
 	
 	/**/
