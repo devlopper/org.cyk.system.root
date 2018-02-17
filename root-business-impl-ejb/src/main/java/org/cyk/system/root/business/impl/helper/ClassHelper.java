@@ -2,10 +2,12 @@ package org.cyk.system.root.business.impl.helper;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.cdi.AbstractBean;
@@ -62,6 +64,13 @@ public class ClassHelper extends AbstractBean implements Serializable {
     		if(org.cyk.utility.common.helper.ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
     			return CrudStrategy.ENUMERATION.equals(inject(ApplicationBusiness.class).findBusinessEntityInfos((Class<? extends AbstractIdentifiable>) aClass).getCrudStrategy());
     		return super.isEnumerated(aClass);
+    	}
+    	
+    	@Override
+    	public Boolean isNamedInBusiness(Class<?> aClass) {
+    		if(ArrayUtils.contains(new Class<?>[]{Movement.class}, aClass))
+    			return Boolean.FALSE;
+    		return super.isNamedInBusiness(aClass);
     	}
     }
 	

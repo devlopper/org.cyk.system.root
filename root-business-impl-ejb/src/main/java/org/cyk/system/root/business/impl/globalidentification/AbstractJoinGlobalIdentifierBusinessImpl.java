@@ -33,7 +33,6 @@ public abstract class AbstractJoinGlobalIdentifierBusinessImpl<IDENTIFIABLE exte
 		//	joinIdentifiableClass = getJoinIdentifiableClass();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public IDENTIFIABLE create(AbstractIdentifiable join, AbstractIdentifiable identifiableJoined) {
 		IDENTIFIABLE identifiable = instanciateOne();

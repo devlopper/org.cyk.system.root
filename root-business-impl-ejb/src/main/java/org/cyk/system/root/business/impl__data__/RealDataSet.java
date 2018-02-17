@@ -23,6 +23,7 @@ import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.mathematics.MovementAction;
+import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.model.mathematics.MovementCollectionTypeMode;
 import org.cyk.system.root.model.mathematics.MovementMode;
@@ -155,6 +156,7 @@ public class RealDataSet extends DataSet implements Serializable {
     	addClass(MovementMode.class);
     	addClass(MovementCollectionType.class);
     	addClass(MovementCollectionTypeMode.class);
+    	addClass(MovementCollection.class);
     }
     
     private void values(){ 

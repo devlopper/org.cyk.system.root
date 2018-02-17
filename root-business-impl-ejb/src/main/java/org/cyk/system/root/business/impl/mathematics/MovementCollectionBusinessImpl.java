@@ -23,7 +23,6 @@ import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.ObjectFieldValues;
 
 public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao,MovementBusiness> implements MovementCollectionBusiness,Serializable {
-
 	private static final long serialVersionUID = -3799482462496328200L;
 	
 	@Inject
@@ -50,41 +49,20 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	public Collection<MovementCollection> findByTypeByJoin(MovementCollectionType type, AbstractIdentifiable join) {
 		return dao.readByTypeByJoin(type, join);
 	}
-
-	/*
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public MovementCollection instanciateOne(String code,String incrementActionName,String decrementActionName) {
-		MovementCollection movementCollection = new MovementCollection(code, BigDecimal.ZERO, inject(IntervalBusiness.class)
-				.instanciateOne(code, "0"));
-		movementCollection.setIncrementAction(inject(MovementActionBusiness.class)
-				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+RootConstant.Code.generateFromString(incrementActionName), incrementActionName));
-		movementCollection.setDecrementAction(inject(MovementActionBusiness.class)
-				.instanciateOne(code+Constant.CHARACTER_UNDESCORE+RootConstant.Code.generateFromString(decrementActionName), decrementActionName));
-		movementCollection.getDecrementAction().getInterval().getHigh().setValue(new BigDecimal("-0.001"));
-		movementCollection.getDecrementAction().getInterval().getLow().setValue(null);
-		movementCollection.getDecrementAction().getInterval().getLow().setExcluded(Boolean.TRUE);
-		return movementCollection;
-	}
-	*/
-	
-	/*
-	@Override
-	public MovementCollection create(MovementCollection movementCollection) {
-		createIfNotIdentified(movementCollection.getInterval());
-		createIfNotIdentified(movementCollection.getIncrementAction());
-		createIfNotIdentified(movementCollection.getDecrementAction());
-		return super.create(movementCollection);
-	}
-	*/
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public BigDecimal computeValue(MovementCollection movementCollection, MovementAction movementAction,BigDecimal increment) {
 		return inject(MovementActionBusiness.class).computeValue(movementAction, movementCollection.getValue(), increment);
 	}
-	/*
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public MovementCollection instanciateOneRandomly(String code) {
-		return instanciateOne(code, RootConstant.Code.MovementAction.INCREMENT,RootConstant.Code.MovementAction.DECREMENT);
-	}*/
+	
+	public static class BuilderOneDimensionArray extends AbstractCollectionBusinessImpl.BuilderOneDimensionArray<MovementCollection> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(MovementCollection.class);
+			addParameterArrayElementString(MovementCollection.FIELD_VALUE,MovementCollection.FIELD_TYPE);
+		}
+		
+	}
 
 }
