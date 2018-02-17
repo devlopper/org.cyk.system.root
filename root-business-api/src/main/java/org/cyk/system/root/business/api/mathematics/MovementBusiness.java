@@ -13,7 +13,10 @@ public interface MovementBusiness extends AbstractCollectionItemBusiness<Movemen
 	Movement instanciateOne(MovementCollection movementCollection,MovementAction movementAction, String value);
 	Movement instanciateOne(String code,String collectionCode, String value,Boolean increment);
 	Movement instanciateOne(String code,String collectionCode, String value);
-	Movement instanciateOne(MovementCollection movementCollection,String typeCode, Crud crud, AbstractIdentifiable identifiable,String valueFieldName);
+	Movement instanciateOne(MovementCollection movementCollection,String typeCode, Crud crud, AbstractIdentifiable identifiable,String valueFieldName
+			,Boolean isPositiveDecrement,String destinationMovementCollectionCode);
 	
 	Movement createIfActionIsNotNull(Movement movement);
+	void create(AbstractIdentifiable identifiableJoin, String typeCode, Crud crud,AbstractIdentifiable valueIdentifiable, String valueFieldName,Boolean isPositiveDecrement
+			,String destinationMovementCollectionCode);
 }

@@ -105,9 +105,11 @@ import org.cyk.utility.common.ClassRepository.ClassField;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.AbstractBean;
+import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.helper.ArrayHelper;
+import org.cyk.utility.common.helper.BooleanHelper;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
@@ -966,6 +968,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return this;
 		}
 		
+		public TestCase assertNotNull(Class<? extends AbstractIdentifiable> aClass,String code){
+			AbstractBusinessTestHelper.assertThat(aClass+" with code "+code+" is null", inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code)!=null);
+			return this;
+		}
+		
 		/**/
 		
 		public Person createOnePerson(String code,String firstname,String lastnames,String email){
@@ -1213,40 +1220,73 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return assertParents(aClass, code, null, parentsCodes);
 		}
 		
+		public <T extends AbstractCollection<I>,I extends AbstractCollectionItem<T>> void assertCollection(Class<T> aClass,Class<I> itemClass,String collectionCode,String expectedNumberOfItem){
+			assertCollection(aClass, itemClass, read(aClass, collectionCode), expectedNumberOfItem);
+		}
+		
 		@SuppressWarnings("unchecked")
-		public <T extends AbstractCollection<I>,I extends AbstractCollectionItem<T>> void assertCollection(Class<T> aClass,Class<I> itemClass,String collectionCode,Long expectedNumberOfItem){
-			T collection = read(aClass, collectionCode);
-			assertEquals("number of item is not equal", expectedNumberOfItem, ((AbstractCollectionItemDao<I, T>)getPersistence(itemClass)).countByCollection(collection));
+		public <T extends AbstractCollection<I>,I extends AbstractCollectionItem<T>> void assertCollection(Class<T> aClass,Class<I> itemClass,T collection,String expectedNumberOfItem){
+			assertEquals("number of "+itemClass.getSimpleName()+" is not equal", NumberHelper.getInstance().get(Long.class, expectedNumberOfItem), ((AbstractCollectionItemDao<I, T>)getPersistence(itemClass)).countByCollection(collection));
 		}
 		
-		public void assertMovementCollection(String code,String expectedValue){
-	    	assertMovementCollection(inject(MovementCollectionDao.class).read(code), expectedValue);
+		public void assertMovementCollection(String code,String expectedValue,String expectedNumberOfMovement){
+	    	assertMovementCollection(inject(MovementCollectionDao.class).read(code), expectedValue,expectedNumberOfMovement);
 	    }
 		
-		public void assertMovementCollection(MovementCollection movementCollection,String expectedValue){
-	    	assertBigDecimalEquals("Collection value",new BigDecimal(expectedValue), movementCollection.getValue());
+		public void assertMovementCollection(MovementCollection movementCollection,String expectedValue,String expectedNumberOfMovement){
+	    	assertBigDecimalEquals("Collection value",NumberHelper.getInstance().get(BigDecimal.class, expectedValue, null), movementCollection.getValue());
+	    	assertCollection(MovementCollection.class, Movement.class, movementCollection, expectedNumberOfMovement);
 	    }
 		
-		public void assertMovement(String code,String expectedValue,String expectedCumul,String expectedCollectionValue,Boolean increment,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
-	    	assertMovement(read(Movement.class, code), expectedValue,expectedCumul,expectedCollectionValue, increment, expectedSupportingDocumentProvider, expectedSupportingDocumentIdentifier);
+		public void assertMovement(String code,String expectedValue,String expectedCumul,Boolean increment,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
+	    	assertMovement(read(Movement.class, code), expectedValue,expectedCumul, increment, expectedSupportingDocumentProvider, expectedSupportingDocumentIdentifier);
 	    }
 		
-		public void assertMovement(String code,String expectedValue,String expectedCumul,String expectedCollectionValue,Boolean increment){
-			assertMovement(code, expectedValue,expectedCumul, expectedCollectionValue, increment, null, null);
+		public void assertMovement(String code,String expectedValue,String expectedCumul,Boolean increment){
+			assertMovement(code, expectedValue,expectedCumul, increment, null, null);
 		}
 		
-		public void assertMovement(String code,String expectedValue,String expectedCumul,String expectedCollectionValue){
-			assertMovement(code, expectedValue,expectedCumul, expectedCollectionValue, null);
+		public void assertMovement(String code,String expectedValue,String expectedCumul){
+			assertMovement(code, expectedValue,expectedCumul, null);
 		}
 		
-		public void assertMovement(Movement movement,String expectedValue,String expectedCumul,String expectedCollectionValue,Boolean expectedIncrement,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
+		public void assertMovement(Movement movement,String expectedValue,String expectedCumul,Boolean expectedIncrement,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
 	    	assertBigDecimalEquals("Movement value not equal",new BigDecimal(expectedValue), movement.getValue());
 	    	assertBigDecimalEquals("Movement cumul not equal",new BigDecimal(expectedCumul), movement.getCumul());
 	    	assertEquals("Movement action not equal",expectedIncrement == null ? null : (Boolean.TRUE.equals(expectedIncrement) ? movement.getCollection().getType().getIncrementAction() : movement.getCollection().getType().getDecrementAction()), movement.getAction());
 	    	//assertEquals("Supporting Document Provider",expectedSupportingDocumentProvider, movement.getSupportingDocumentProvider());
 	    	//assertEquals("Supporting Document Identifier",expectedSupportingDocumentIdentifier, movement.getSupportingDocumentIdentifier());
-	    	assertMovementCollection(movement.getCollection().getCode(), expectedCollectionValue);
 	    }
+		
+		public void assertMovements(MovementCollection movementCollection,Collection<String[]> movementsArray){
+			Movement.Filter filter = new Movement.Filter();
+			filter.addMaster(movementCollection);
+			final Collection<Movement> movements = inject(MovementDao.class).readByFilter(filter, new DataReadConfiguration(0l, null));
+			new CollectionHelper.Iterator.Adapter.Default<String[]>(movementsArray){
+				private static final long serialVersionUID = 1L;
+
+				protected void __executeForEach__(String[] array) {
+					if(ArrayHelper.getInstance().isNotEmpty(array)){
+						Integer index = NumberHelper.getInstance().getInteger(array[0], 0);
+						Movement movement = CollectionHelper.getInstance().getElementAt(movements, index);
+						assertMovement(movement, array[1], array[2], Boolean.parseBoolean(array[3]), null, null);	
+					}
+				}
+			}.execute();
+		}
+		
+		public void assertMovements(String collectionCode,Collection<String[]> movementsArray){
+			assertMovements(read(MovementCollection.class, collectionCode), movementsArray);
+		}
+		
+		public void assertMovements(MovementCollection movementCollection,String[]...movementsArrays){
+			if(ArrayHelper.getInstance().isNotEmpty(movementsArrays))
+				assertMovements(movementCollection, Arrays.asList(movementsArrays));
+		}
+		
+		public void assertMovements(String movementCollectionCode,String[]...movementsArrays){
+			assertMovements(read(MovementCollection.class, movementCollectionCode), movementsArrays);
+		}
 		
 		 public void assertComputedChanges(Movement movement,String previousCumul,String cumul){
 	    	if(movement.getCollection()==null || movement.getCollection().getValue()==null){
@@ -1287,6 +1327,25 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		protected <T extends AbstractIdentifiable> TypedDao<T> getPersistence(Class<T> aClass) {
 			return inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
 		} 
+		
+		public TestCase deleteAll(Collection<Class<?>> classes){
+			new CollectionHelper.Iterator.Adapter.Default<Class<?>>((Collection<Class<?>>) classes){
+				private static final long serialVersionUID = 1L;
+				@SuppressWarnings("unchecked")
+				protected void __executeForEach__(java.lang.Class<?> aClass) {
+					Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
+					identifiables.addAll(getPersistence((Class<AbstractIdentifiable>)aClass).readAll());
+					inject(GenericBusiness.class).delete(identifiables);
+				}
+			}.execute();
+			return this;
+		}
+		
+		public TestCase deleteAll(Class<?>...classes){
+			if(ArrayHelper.getInstance().isNotEmpty(classes))
+				deleteAll(Arrays.asList(classes));
+			return this;
+		}
 		
 		/**/
 		

@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.globalidentification.JoinGlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
@@ -32,6 +33,7 @@ public abstract class AbstractJoinGlobalIdentifierBusinessImpl<IDENTIFIABLE exte
 		//	joinIdentifiableClass = getJoinIdentifiableClass();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public IDENTIFIABLE create(AbstractIdentifiable join, AbstractIdentifiable identifiableJoined) {
 		IDENTIFIABLE identifiable = instanciateOne();
@@ -39,6 +41,7 @@ public abstract class AbstractJoinGlobalIdentifierBusinessImpl<IDENTIFIABLE exte
 		if(inject(BusinessInterfaceLocator.class).injectTyped(getJoinIdentifiableClass()).isNotIdentified(join)){
 			identifiable.setCascadeOperationToMaster(Boolean.TRUE);
 			identifiable.setCascadeOperationToMasterFieldNames(Arrays.asList(joinFieldName));
+			identifiable.setOnDeleteCascadeToJoin(Boolean.TRUE);
 		}
 		FieldHelper.getInstance().set(identifiable, join, joinFieldName);
 		identifiable.setIdentifiableGlobalIdentifier(identifiableJoined.getGlobalIdentifier());
@@ -57,7 +60,11 @@ public abstract class AbstractJoinGlobalIdentifierBusinessImpl<IDENTIFIABLE exte
 	@Override
 	protected void afterDelete(IDENTIFIABLE identifiable) {
 		super.afterDelete(identifiable);
-		identifiable.setIdentifiableGlobalIdentifier(null);	
+		identifiable.setIdentifiableGlobalIdentifier(null);
+		if(Boolean.TRUE.equals(identifiable.getOnDeleteCascadeToJoin())){
+			Object join = FieldHelper.getInstance().read(identifiable, ClassHelper.getInstance().getVariableName(getJoinIdentifiableClass()));
+			inject(GenericBusiness.class).delete((AbstractIdentifiable)join);
+		}
 		setJoinNull(identifiable);
 	}
 	

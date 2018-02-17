@@ -82,6 +82,7 @@ import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.CollectionHelper.Instance;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
@@ -186,6 +187,18 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				setProperty(identifiable,property);
 			if(isAutoSetPropertyValueClass(property = commonUtils.attributePath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD, Period.FIELD_FROM_DATE), identifiable.getClass()))
 				setProperty(identifiable,property);
+			
+			FieldHelper fieldHelper = FieldHelper.getInstance();
+			for(String index : new String[]{GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME,fieldHelper.buildPath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE)}){
+				String fieldName = fieldHelper.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,index);
+				Object value = fieldHelper.read(identifiable, fieldName);
+				if(value == null){
+					value = InstanceHelper.getInstance().generateFieldValue(identifiable, fieldName, fieldHelper.getType(clazz, fieldName),Boolean.FALSE);
+					if(value!=null)
+						fieldHelper.set(identifiable,value, fieldName);
+				}
+			}
+			
 			
 			computeChanges(identifiable);	
 		}

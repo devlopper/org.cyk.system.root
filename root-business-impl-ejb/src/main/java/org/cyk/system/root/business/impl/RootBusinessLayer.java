@@ -45,6 +45,7 @@ import org.cyk.system.root.model.generator.ValueGenerator;
 import org.cyk.system.root.model.generator.ValueGenerator.GenerateMethod;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
@@ -73,6 +74,7 @@ import org.cyk.utility.common.generator.AbstractGeneratable;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.ClassHelper.Instanciation.Get;
 import org.cyk.utility.common.helper.EventHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FileHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.InstanceHelper.Lookup.Source;
@@ -280,6 +282,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			public Locale getLocale() {
 				return inject(LanguageBusiness.class).findCurrentLocale();
 			}*/
+		});
+		
+		InstanceHelper.getInstance().setFieldValueGenerator(Movement.class, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE), new InstanceHelper.Listener.FieldValueGenerator.Adapter.Default<String>(String.class){
+			private static final long serialVersionUID = 1L;
+			@Override
+			protected String __execute__(Object instance, String fieldName,Class<String> outputClass) {
+				return "MOV"+System.currentTimeMillis()+RandomHelper.getInstance().getAlphabetic(4);
+			}
 		});
 		
 		//Configuration.get(SmtpProperties.class).setReadDefaulted(Boolean.TRUE);

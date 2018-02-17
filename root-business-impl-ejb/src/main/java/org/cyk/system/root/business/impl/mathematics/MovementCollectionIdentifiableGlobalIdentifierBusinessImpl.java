@@ -17,5 +17,5 @@ public class MovementCollectionIdentifiableGlobalIdentifierBusinessImpl extends 
 	public MovementCollectionIdentifiableGlobalIdentifierBusinessImpl(MovementCollectionIdentifiableGlobalIdentifierDao dao) {
 		super(dao); 
 	}
-	
+
 }

@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.mathematics;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -15,10 +16,10 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ObjectFieldValues;
 
 public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao,MovementBusiness> implements MovementCollectionBusiness,Serializable {
@@ -42,9 +43,12 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne();
 		movementCollection.setType(inject(MovementCollectionTypeDao.class).read(typeCode));
 		movementCollection.setValue(value);
-		movementCollection.setCode(join.getCode()+Constant.CHARACTER_VERTICAL_BAR+movementCollection.getType().getCode());
-		movementCollection.setName(join.getName()+Constant.CHARACTER_VERTICAL_BAR+movementCollection.getType().getCode());
 		return movementCollection;
+	}
+	
+	@Override
+	public Collection<MovementCollection> findByTypeByJoin(MovementCollectionType type, AbstractIdentifiable join) {
+		return dao.readByTypeByJoin(type, join);
 	}
 
 	/*

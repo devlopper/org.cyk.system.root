@@ -57,7 +57,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	@Override
 	public String toString() {
-		return super.toString()+"/"+value;
+		return super.toString()+"/"+value+":"+getBirthDate();
 	}
 	
 	/**/

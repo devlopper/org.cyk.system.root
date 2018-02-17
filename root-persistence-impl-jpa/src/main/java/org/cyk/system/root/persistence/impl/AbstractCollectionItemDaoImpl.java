@@ -88,12 +88,11 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 		super.listenInstanciateJpqlBuilder(name, builder);
 		if(readByFilter.equals(name)){
 			builder.setFieldName(AbstractCollectionItem.FIELD_COLLECTION).where().and().in(AbstractIdentifiable.FIELD_IDENTIFIER);
-		}else if(readWhereExistencePeriodFromDateIsLessThan.equals(name) || countWhereExistencePeriodFromDateIsLessThan.equals(name)){
+		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsGreaterThan}, name)){
 			builder.where().and().eq(AbstractCollectionItem.FIELD_COLLECTION);
 		}
 	}
-			
-	
+		
 	@SuppressWarnings("unchecked")
 	@Override
 	protected <T> void processQueryWrapper(Class<T> aClass,QueryWrapper<T> queryWrapper, String queryName,Object[] arguments) {
@@ -101,7 +100,7 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 		if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
 			FilterHelper.Filter<T> filter = (Filter<T>) arguments[0];
 			queryWrapper.parameterInIdentifiers(filter.filterMasters(collectionClass),AbstractCollectionItem.FIELD_COLLECTION,AbstractIdentifiable.FIELD_IDENTIFIER); 
-		}else if(readWhereExistencePeriodFromDateIsLessThan.equals(queryName) || countWhereExistencePeriodFromDateIsLessThan.equals(queryName)){
+		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,countWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsGreaterThan,countWhereExistencePeriodFromDateIsGreaterThan}, queryName)){
 			AbstractCollectionItem<?> item = (AbstractCollectionItem<?>) arguments[0];
 			queryWrapper.parameter(AbstractCollectionItem.FIELD_COLLECTION, item.getCollection());
 		} 

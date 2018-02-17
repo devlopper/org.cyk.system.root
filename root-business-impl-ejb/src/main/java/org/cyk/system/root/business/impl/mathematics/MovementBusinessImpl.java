@@ -21,9 +21,10 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
-import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
+import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
@@ -33,6 +34,7 @@ import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.NumberHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Movement, MovementDao,MovementCollection> implements MovementBusiness,Serializable {
 
@@ -116,20 +118,19 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 						movement.getDestinationMovement().setValueAbsolute(movement.getValueAbsolute());
 						movement.getDestinationMovement().setValue(NumberHelper.getInstance().negate(movement.getValue()));
 						if(movement.getAction().equals(movement.getCollection().getType().getIncrementAction())){
-							movement.getDestinationMovement().setAction(movement.getCollection().getType().getDecrementAction());
+							movement.getDestinationMovement().setAction(movement.getDestinationMovementCollection().getType().getDecrementAction());
 						}else{
-							movement.getDestinationMovement().setAction(movement.getCollection().getType().getIncrementAction());
+							movement.getDestinationMovement().setAction(movement.getDestinationMovementCollection().getType().getIncrementAction());
 						}
 					}
 					create(movement.getDestinationMovement());
-					movement.getGlobalIdentifier().setDestination(movement.getDestinationMovement().getGlobalIdentifier());
+					//movement.getGlobalIdentifier().setDestination(movement.getDestinationMovement().getGlobalIdentifier());
 					//movement.getDestinationMovement().getGlobalIdentifier().setSource(movement.getGlobalIdentifier());
-					inject(GlobalIdentifierDao.class).update(movement.getGlobalIdentifier());
+					//inject(GlobalIdentifierDao.class).update(movement.getGlobalIdentifier());
 					//inject(GlobalIdentifierDao.class).update(movement.getDestinationMovement().getGlobalIdentifier());
 				}
 			}
 		}
-		
 	}
 	
 	private void updateCumulWhereExistencePeriodFromDateIsGreaterThan(Movement movement,Crud crud){
@@ -251,7 +252,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	public Movement instanciateOne(MovementCollection movementCollection,String typeCode,Crud crud,AbstractIdentifiable identifiable,String valueFieldName){
+	public Movement instanciateOne(MovementCollection movementCollection,String typeCode,Crud crud,AbstractIdentifiable identifiable,String valueFieldName,Boolean isPositiveDecrement,String destinationMovementCollectionCode){
 		//BigDecimal systemValue,BigDecimal userValue
 		
 		Movement movement = inject(MovementBusiness.class).instanciateOne(movementCollection);
@@ -265,13 +266,15 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			AbstractIdentifiable identifiableDB = Crud.CREATE.equals(crud) ? null : inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass()).read(identifiable.getIdentifier());
 			movement.setValueAbsolute( (BigDecimal)NumberHelper.getInstance().subtract(movement.getValueAbsolute()
 					,identifiableDB == null ? null : (Number)FieldHelper.getInstance().read(identifiableDB, valueFieldName)));
-			if(movement.getValueAbsolute().signum() == 1)
+			if(movement.getValueAbsolute().signum() == (isPositiveDecrement ? 1 : -1))
 				movement.setAction(movementCollection.getType().getDecrementAction());
-			else if(movement.getValueAbsolute().signum() == -1)
+			else if(movement.getValueAbsolute().signum() == (isPositiveDecrement ? -1 : 1))
 				movement.setAction(movementCollection.getType().getIncrementAction());
 		}
 		if(movement.getAction() != null){
 			movement.setValueAbsolute(movement.getValueAbsolute().abs());
+			if(StringHelper.getInstance().isNotBlank(destinationMovementCollectionCode))
+				movement.setDestinationMovementCollection(read(MovementCollection.class, destinationMovementCollectionCode));
 		}
 		return movement;
 	}
@@ -282,6 +285,18 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			create(movement);
 		}
 		return movement;
+	}
+	
+	@Override
+	public void create(AbstractIdentifiable identifiableJoin,String typeCode,Crud crud,AbstractIdentifiable valueIdentifiable,String valueFieldName
+			,Boolean isPositiveDecrement,String destinationMovementCollectionCode){
+		Collection<MovementCollectionIdentifiableGlobalIdentifier> movementCollectionIdentifiableGlobalIdentifiers = inject(MovementCollectionIdentifiableGlobalIdentifierDao.class)
+				.readByIdentifiableGlobalIdentifier(identifiableJoin);
+		for(MovementCollectionIdentifiableGlobalIdentifier index : movementCollectionIdentifiableGlobalIdentifiers){
+			Movement movement = inject(MovementBusiness.class).instanciateOne(index.getMovementCollection(), typeCode
+					, crud, valueIdentifiable,valueFieldName,isPositiveDecrement,destinationMovementCollectionCode);
+			createIfActionIsNotNull(movement);
+		}
 	}
 	
 	/**/
