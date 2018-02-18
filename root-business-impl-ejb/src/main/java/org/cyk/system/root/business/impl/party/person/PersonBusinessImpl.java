@@ -65,9 +65,7 @@ import org.cyk.utility.common.helper.RandomHelper;
 import lombok.Getter;
 import lombok.Setter;
 
-//@Stateless
 public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, PersonDao> implements PersonBusiness,Serializable {
-
 	private static final long serialVersionUID = -3799482462496328200L;
 	 
 	@Inject private JobInformationsDao jobInformationsDao;

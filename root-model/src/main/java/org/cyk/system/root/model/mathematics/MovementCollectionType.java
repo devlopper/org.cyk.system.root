@@ -15,7 +15,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
 import org.cyk.utility.common.annotation.FieldOverride;
 
-@Getter @Setter @NoArgsConstructor @Entity @FieldOverride(name=AbstractDataTreeType.FIELD_PARENT,type=MovementCollectionType.class)
+@Getter @Setter @NoArgsConstructor @Entity @FieldOverride(name=AbstractDataTreeType.FIELD___PARENT__,type=MovementCollectionType.class)
 public class MovementCollectionType extends AbstractDataTreeType implements Serializable  {
 	private static final long serialVersionUID = -6838401709866343401L;
 

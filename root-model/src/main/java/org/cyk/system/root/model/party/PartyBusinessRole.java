@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
-@FieldOverride(name=PartyBusinessRole.FIELD_PARENT,type=PartyBusinessRole.class)
+@FieldOverride(name=PartyBusinessRole.FIELD___PARENT__,type=PartyBusinessRole.class)
 /**
  * It is a role that can be taken by a person in a business activity
  * @author Christian

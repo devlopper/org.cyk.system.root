@@ -579,7 +579,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	public static final String FIELD_IDENTIFIER = "identifier";
 	public static final String FIELD_GLOBAL_IDENTIFIER = "globalIdentifier";
-	public static final String FIELD_PARENT = "__parent__";
+	public static final String FIELD___PARENT__ = "__parent__";
 	
 	//TODO very strange , those followings instructions make strange errors appearing on integration test
 	//public static final String __FIELD_GLOBAL_IDENTIFIER_CODE__ = FieldHelper.getInstance().buildPath(FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE);

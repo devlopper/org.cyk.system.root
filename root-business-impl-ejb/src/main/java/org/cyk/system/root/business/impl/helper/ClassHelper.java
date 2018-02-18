@@ -55,7 +55,7 @@ public class ClassHelper extends AbstractBean implements Serializable {
     	
     	@Override
     	public String getHierarchyFieldName(Class<?> aClass) {
-    		return AbstractDataTreeNode.FIELD_PARENT;
+    		return AbstractDataTreeNode.FIELD___PARENT__;
     	}
     	
     	@SuppressWarnings("unchecked")

@@ -22,7 +22,7 @@ import lombok.Setter;
 @ModelBean(crudStrategy=CrudStrategy.ENUMERATION,genderType=GenderType.FEMALE)
 @FieldOverrides(value={
 		@FieldOverride(name=AbstractDataTree.FIELD_TYPE,type=LocalityType.class)
-		,@FieldOverride(name=AbstractDataTreeType.FIELD_PARENT,type=Locality.class)
+		,@FieldOverride(name=AbstractDataTreeType.FIELD___PARENT__,type=Locality.class)
 })
 public class Locality extends AbstractDataTree<LocalityType> implements Serializable  {
 

@@ -10,24 +10,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import org.cyk.system.root.model.AbstractCollectionItem;
-import org.cyk.system.root.model.party.person.Person;
+import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.FieldOverride;
 import org.cyk.utility.common.annotation.FieldOverrides;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS) @Accessors(chain=true)
 @FieldOverrides(value={
 		@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MovementCollection.class)
-		//,@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=MovementCollection.class)
 })
 public class Movement extends AbstractCollectionItem<MovementCollection> implements Serializable {	
 	private static final long serialVersionUID = -4946585596435850782L;
@@ -44,20 +44,20 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	private @Column(name=COLUMN_CUMUL,precision=20,scale=FLOAT_SCALE) BigDecimal cumul;
 	
 	/**
-	 * The person to whom value goes or from whom value comes
+	 * The party to whom value goes or from whom value comes
 	 */
-	@Transient private Person senderOrReceiverPerson;
-	
-	//private String senderOrReceiverPersonAsString;
+	@Transient private Party senderOrReceiverParty;
 	
 	@Transient private MovementCollection destinationMovementCollection;
 	@Transient private Movement destinationMovement;
+	
+	@ManyToOne @JoinColumn(name=COLUMN_PARENT) private Movement parent;
 	
 	/**/
 	
 	@Override
 	public String toString() {
-		return super.toString()+"/"+value+":"+getBirthDate();
+		return (parent == null ? Constant.EMPTY_STRING : "parent=["+parent.toString()+"]")+super.toString()+"/"+value+":"+getBirthDate();
 	}
 	
 	/**/
@@ -67,17 +67,18 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public static final String FIELD_MODE = "mode";
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_VALUE_ABSOLUTE = "valueAbsolute";
-	public static final String FIELD_SENDER_OR_RECEIVER_PERSON = "senderOrReceiverPerson";
-	//public static final String FIELD_SENDER_OR_RECEIVER_PERSON_AS_STRING = "senderOrReceiverPersonAsString";
+	public static final String FIELD_SENDER_OR_RECEIVER_PARTY = "senderOrReceiverParty";
 	public static final String FIELD_CUMUL = "cumul";
 	public static final String FIELD_PREVIOUS_CUMUL = "previousCumul";
 	public static final String FIELD_DESTINATION_MOVEMENT_COLLECTION = "destinationMovementCollection";
 	public static final String FIELD_DESTINATION_MOVEMENT = "destinationMovement";
+	public static final String FIELD_PARENT = "parent";
 	
 	public static final String COLUMN_MODE = FIELD_MODE;
 	public static final String COLUMN_ACTION = FIELD_ACTION;
 	public static final String COLUMN_VALUE = FIELD_VALUE;
 	public static final String COLUMN_CUMUL = FIELD_CUMUL;
+	public static final String COLUMN_PARENT = FIELD_PARENT;
 	
 	/**/
 	

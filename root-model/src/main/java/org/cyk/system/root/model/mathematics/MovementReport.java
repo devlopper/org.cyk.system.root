@@ -22,7 +22,7 @@ public class MovementReport extends AbstractIdentifiableReport<MovementReport> i
 	public void setSource(Object source) {
 		super.setSource(source);
 		_setValue(((Movement)source).getValue());
-		senderOrReceiverPerson.setSource(((Movement)source).getSenderOrReceiverPerson());
+		//senderOrReceiverPerson.setSource(((Movement)source).getSenderOrReceiverPerson());
 	}
 	
 	private void  _setValue(Number number){
