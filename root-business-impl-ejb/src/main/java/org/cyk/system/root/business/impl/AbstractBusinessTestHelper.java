@@ -762,6 +762,10 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			this.helper = helper;
 		}
 		
+		public <T> T instanciateOne(Class<T> aClass){
+			return ClassHelper.getInstance().instanciateOne(aClass);
+		}
+		
 		public void add(AbstractIdentifiable identifiable){
 			if(identifiables==null)
 				identifiables = new ArrayList<>();
@@ -968,8 +972,20 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return this;
 		}
 		
-		public TestCase assertNotNull(Class<? extends AbstractIdentifiable> aClass,String code){
-			AbstractBusinessTestHelper.assertThat(aClass+" with code "+code+" is null", inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code)!=null);
+		public TestCase assertNotNull(final Class<? extends AbstractIdentifiable> aClass,Collection<String> codes){
+			new CollectionHelper.Iterator.Adapter.Default<String>(codes){
+				private static final long serialVersionUID = 1L;
+
+				protected void __executeForEach__(String code) {
+					AbstractBusinessTestHelper.assertThat(aClass+" with code "+code+" is null", inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code)!=null);
+				}
+			}.execute();
+			return this;
+		}
+		
+		public TestCase assertNotNull(final Class<? extends AbstractIdentifiable> aClass,String...codes){
+			if(ArrayHelper.getInstance().isNotEmpty(codes))
+				assertNotNull(aClass, Arrays.asList(codes));
 			return this;
 		}
 		

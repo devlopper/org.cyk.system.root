@@ -584,7 +584,8 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 	private void filter(Object[][] values){
     	for(Object[] index : values){
     		Movement.Filter filter = new Movement.Filter();
-    		filter.addMasters((Collection<Object>)index[0]);
+    		if(index[0]!=null)
+    			filter.addMasters((Collection<Object>)index[0]);
     		filter.set((String)index[1]);
         	assertEquals((Integer)index[2], inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
     	}
@@ -672,6 +673,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertMovementCollection(cashRegisterMovementCollectionCode, "32","3");
     	
     	testCase.clean();
+    	
     }
 	
 	@Test
@@ -709,27 +711,42 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	code002 = invoiceMovementCollectionCode+"_"+code002;
     	code003 = invoiceMovementCollectionCode+"_"+code003;
     	
-    	testCase.assertMovement(code001, "-15","85",Boolean.FALSE);
+    	testCase.assertMovement(code001, "-15","-15",Boolean.FALSE);
     	testCase.assertMovementCollection(invoiceMovementCollectionCode, "68","3");
-    	testCase.assertMovement(code002, "-10","75",Boolean.FALSE);
+    	testCase.assertMovement(code002, "-10","-25",Boolean.FALSE);
     	testCase.assertMovementCollection(invoiceMovementCollectionCode, "68","3");
-    	testCase.assertMovement(code003, "-7","68",Boolean.FALSE);
+    	testCase.assertMovement(code003, "-7","-32",Boolean.FALSE);
     	testCase.assertMovementCollection(invoiceMovementCollectionCode, "68","3");
     	
     	testCase.clean();
 	}
 	
-    //@Test
-    public void doMovementsOnly(){
-    	/*rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "1", "1");
-    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "1", "2");
-    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "1", "3");
-    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "10", "13");
-    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "13", "26");
-    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "-20", "6");
-    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "100", "106");
-    	rootBusinessTestHelper.createMovement(movementOnlyUnlimitedIdentifier, "-200", "-94");
-    	*/
+	@Test
+    public void createOneMovementAndOneChildren(){
+		TestCase testCase = instanciateTestCase();
+		String parentCode = RandomHelper.getInstance().getAlphabetic(5);
+		Movement parent = testCase.instanciateOne(Movement.class).setCode(parentCode).setValue(new BigDecimal("100"));
+		String childCode = RandomHelper.getInstance().getAlphabetic(5);
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(childCode).setValue(new BigDecimal("100")).setParent(parent));
+		testCase.create(parent);
+		testCase.assertNotNull(Movement.class, parentCode,childCode);
+		testCase.clean();
+    }
+	
+	@Test
+    public void createOneMovementAndManyChildren(){
+		TestCase testCase = instanciateTestCase();
+		String parentCode = RandomHelper.getInstance().getAlphabetic(5);
+		Movement parent = testCase.instanciateOne(Movement.class).setCode(parentCode).setValue(new BigDecimal("100"));
+		String child1Code = RandomHelper.getInstance().getAlphabetic(5);
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child1Code).setValue(new BigDecimal("35")).setParent(parent));
+		String child2Code = RandomHelper.getInstance().getAlphabetic(5);
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child2Code).setValue(new BigDecimal("25")).setParent(parent));
+		String child3Code = RandomHelper.getInstance().getAlphabetic(5);
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child3Code).setValue(new BigDecimal("40")).setParent(parent));
+		testCase.create(parent);
+		testCase.assertNotNull(Movement.class, parentCode,child1Code,child2Code,child3Code);
+		testCase.clean();
     }
     
     /* Exceptions */

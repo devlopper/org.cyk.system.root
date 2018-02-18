@@ -91,6 +91,7 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 			else if(String.class.equals(valueClass))
 				values = (Collection<V>) PARAMETER_VALUE_COLLECTION_EMPTY_STRING;
 		}
+		//System.out.println("QueryWrapper.parameterIn() NAME="+name+" : VALUES="+values+" : ISEMPTY="+valuesIsEmpty);
 		parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIn(name), values);
 		parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIsEmpty(name), valuesIsEmpty);
 		parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIsEmptyMeansAll(name), valuesIsEmpty);

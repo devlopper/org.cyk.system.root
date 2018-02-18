@@ -56,6 +56,11 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	/**/
 	
 	@Override
+	public Movement setCode(String code) {
+		return (Movement) super.setCode(code);
+	}
+	
+	@Override
 	public String toString() {
 		return (parent == null ? Constant.EMPTY_STRING : "parent=["+parent.toString()+"]")+super.toString()+"/"+value+":"+getBirthDate();
 	}

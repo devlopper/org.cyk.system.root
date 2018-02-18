@@ -402,6 +402,8 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			}
 			inject(MetricValueBusiness.class).create(metricValues);
 		}
+		if(identifiable.getIdentifiables()!=null && CollectionHelper.getInstance().isNotEmpty(identifiable.getIdentifiables().getElements()))
+			inject(GenericBusiness.class).create(identifiable.getIdentifiables().getElements());
 		afterCreate(getListeners(), identifiable);
 		afterCrud(identifiable, Crud.CREATE);
 	}

@@ -30,9 +30,11 @@ import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
@@ -131,6 +133,25 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				}
 			}
 		}
+		
+		if(!Crud.DELETE.equals(crud)){
+			Collection<Movement> children = dao.readByParent(movement);
+			if(CollectionHelper.getInstance().isNotEmpty(children)){
+				BigDecimal sum = NumberHelper.getInstance().get(BigDecimal.class
+						,NumberHelper.getInstance().sum(MethodHelper.getInstance().callGet(children, BigDecimal.class, Movement.FIELD_VALUE)),BigDecimal.ZERO);
+				
+				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movparentvalue")
+						.setDomainNameIdentifier("movement").setNumber1(movement.getValue())
+						.setNumber2(sum).setEqual(Boolean.FALSE));	
+			}
+			
+		}
+	}
+	
+	@Override
+	protected void beforeDelete(Movement movement) {
+		super.beforeDelete(movement);
+		delete(dao.readByParent(movement));
 	}
 	
 	private void updateCumulWhereExistencePeriodFromDateIsGreaterThan(Movement movement,Crud crud){
@@ -191,8 +212,6 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		logTrace(logMessageBuilder);
 	}
 			
-	
-	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Movement instanciateOne(MovementCollection movementCollection,MovementAction movementAction,String value) {
 		Movement movement = instanciateOne(movementCollection);
