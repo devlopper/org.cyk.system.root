@@ -238,7 +238,12 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	public void computeChanges(Movement movement,LoggingHelper.Message.Builder logMessageBuilder) {		
 		super.computeChanges(movement,logMessageBuilder);
-		logMessageBuilder.addNamedParameters("col",movement.getCollection(),"act",movement.getAction(),"prev cum",movement.getPreviousCumul(),"val abs"
+		MovementAction action = movement.getAction();
+		if(action == null){
+			if(movement.getParent()!=null)
+				action = movement.getParent().getAction();
+		}
+		logMessageBuilder.addNamedParameters("col",movement.getCollection(),"act",action,"prev cum",movement.getPreviousCumul(),"val abs"
 				,movement.getValueAbsolute(),"use abs",movement.getValueSettableFromAbsolute(),"cum",movement.getCumul());
 		//previous cumul
 		if(movement.getCollection()==null)
@@ -252,10 +257,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		}
 		//value
 		if(Boolean.TRUE.equals(movement.getValueSettableFromAbsolute())){
-			if(movement.getValueAbsolute()==null || movement.getAction()==null){
+			if(movement.getValueAbsolute()==null || action==null){
 				movement.setValue(null);
 			}else{
-				if(movement.getAction().equals(movement.getCollection().getType().getIncrementAction()))
+				if(action.equals(movement.getCollection().getType().getIncrementAction()))
 					movement.setValue(movement.getValueAbsolute());
 				else
 					movement.setValue(movement.getValueAbsolute().negate());
