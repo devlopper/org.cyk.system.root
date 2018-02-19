@@ -21,7 +21,6 @@ import lombok.experimental.Accessors;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 public class MovementCollection extends AbstractCollection<Movement> implements Serializable {
-	
 	private static final long serialVersionUID = -4946585596435850782L;
 	
 	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE) @Accessors(chain=true) private BigDecimal value;

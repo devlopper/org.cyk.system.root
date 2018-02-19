@@ -76,9 +76,10 @@ public class MovementCollectionTypeBusinessImpl extends AbstractDataTreeTypeBusi
 			addParameterArrayElementString(2, MovementCollectionType.FIELD_INTERVAL);
 			addParameterArrayElementString(3, MovementCollectionType.FIELD_INCREMENT_ACTION);
 			addParameterArrayElementString(4, MovementCollectionType.FIELD_DECREMENT_ACTION);
-			addParameterArrayElementString(5, MovementCollectionType.FIELD_SUPPORT_DOCUMENT_IDENTIFIER);
-			addParameterArrayElementString(6, MovementCollectionType.FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL);
-			addParameterArrayElementString(7, FieldHelper.getInstance().buildPath(MovementCollectionType.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_DEFAULTED));
+			addParameterArrayElementString(5, MovementCollectionType.FIELD_MOVEMENT_PARENTABLE);
+			addParameterArrayElementString(6, MovementCollectionType.FIELD_SUPPORT_DOCUMENT_IDENTIFIER);
+			addParameterArrayElementString(7, MovementCollectionType.FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL);
+			addParameterArrayElementString(8, FieldHelper.getInstance().buildPath(MovementCollectionType.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_DEFAULTED));
 		}
 		
 	}

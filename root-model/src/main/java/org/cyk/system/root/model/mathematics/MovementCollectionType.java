@@ -22,6 +22,7 @@ public class MovementCollectionType extends AbstractDataTreeType implements Seri
 	@ManyToOne @JoinColumn(name=COLUMN_INTERVAL) @Accessors(chain=true) private Interval interval;
 	@ManyToOne @JoinColumn(name=COLUMN_INCREMENT_ACTION) @Accessors(chain=true) private MovementAction incrementAction;
 	@ManyToOne @JoinColumn(name=COLUMN_DECREMENT_ACTION) @Accessors(chain=true) private MovementAction decrementAction;
+	private @Accessors(chain=true) Boolean movementParentable;
 	private @Accessors(chain=true) Boolean supportDocumentIdentifier;
 	@ManyToOne @JoinColumn(name=COLUMN_DOCUMENT_IDENTIFIER_COUNT_INTERVAL) @Accessors(chain=true) private Interval documentIdentifierCountInterval;
 	
@@ -46,6 +47,7 @@ public class MovementCollectionType extends AbstractDataTreeType implements Seri
 	public static final String FIELD_INTERVAL = "interval";
 	public static final String FIELD_INCREMENT_ACTION = "incrementAction";
 	public static final String FIELD_DECREMENT_ACTION = "decrementAction";
+	public static final String FIELD_MOVEMENT_PARENTABLE = "movementParentable";
 	public static final String FIELD_SUPPORT_DOCUMENT_IDENTIFIER = "supportDocumentIdentifier";
 	public static final String FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL = "documentIdentifierCountInterval";
 	
