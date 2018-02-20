@@ -361,6 +361,13 @@ public interface RootConstant {
 			public static String SALE_BALANCE = "SALEBALANCE";
 		}
 		
+		public static class MovementCollection implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String CASH_REGISTER = "CASHREGISTER";
+			
+		}
+		
 		public static class LanguageEntry implements Serializable {
 			private static final long serialVersionUID = 1L;
 			

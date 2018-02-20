@@ -13,6 +13,7 @@ import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiab
 import org.cyk.system.root.business.api.mathematics.MovementCollectionTypeBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.business.impl__data__.DataSet;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.information.IdentifiableCollection;
 import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.model.mathematics.Movement;
@@ -22,6 +23,7 @@ import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.RandomHelper;
@@ -724,12 +726,23 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 	@Test
     public void createOneMovementAndOneChildren(){
 		TestCase testCase = instanciateTestCase();
-		String parentCode = RandomHelper.getInstance().getAlphabetic(5);
-		Movement parent = testCase.instanciateOne(Movement.class).setCode(parentCode).setValue(new BigDecimal("100"));
-		String childCode = RandomHelper.getInstance().getAlphabetic(5);
-		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(childCode).setValue(new BigDecimal("100")).setParent(parent));
-		testCase.create(parent);
-		testCase.assertNotNull(Movement.class, parentCode,childCode);
+		MovementCollection saleMovementCollection = testCase.create(testCase.instanciateOne(MovementCollection.class).setCode(RandomHelper.getInstance().getAlphabetic(2))
+				.setValue(new BigDecimal("1000")));
+		MovementCollection cashRegisterMovementCollection = testCase.read(MovementCollection.class, RootConstant.Code.MovementCollection.CASH_REGISTER);
+		
+		String cashRegisterMovementCode = RandomHelper.getInstance().getAlphabetic(5);
+		Movement cashRegisterMovement = testCase.instanciateOne(Movement.class).setCode(cashRegisterMovementCode).setValue(new BigDecimal("100"));
+		cashRegisterMovement.setCollection(cashRegisterMovementCollection).setAction(cashRegisterMovementCollection.getType().getIncrementAction())
+			.setParentActionIsOppositeOfChildAction(Boolean.TRUE);
+		String saleMovementCode = RandomHelper.getInstance().getAlphabetic(5);
+		cashRegisterMovement.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(saleMovementCode).setCollection(saleMovementCollection).setValueSettableFromAbsolute(Boolean.TRUE)
+				.setValueAbsolute(new BigDecimal("100")).setParent(cashRegisterMovement));
+		testCase.create(cashRegisterMovement);
+		
+		testCase.assertNotNull(Movement.class, RootConstant.Code.generate(cashRegisterMovementCollection,cashRegisterMovementCode)
+				,RootConstant.Code.generate(saleMovementCollection,saleMovementCode));
+		testCase.assertMovement(RootConstant.Code.generate(cashRegisterMovementCollection,cashRegisterMovementCode), "100", "100",Boolean.TRUE);
+		testCase.assertMovement(RootConstant.Code.generate(saleMovementCollection,saleMovementCode), "-100", "900",Boolean.FALSE);
 		testCase.clean();
     }
 	
@@ -738,6 +751,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		TestCase testCase = instanciateTestCase();
 		String parentCode = RandomHelper.getInstance().getAlphabetic(5);
 		Movement parent = testCase.instanciateOne(Movement.class).setCode(parentCode).setValue(new BigDecimal("100"));
+		parent.setCollection(testCase.read(MovementCollection.class, RootConstant.Code.MovementCollection.CASH_REGISTER));
 		String child1Code = RandomHelper.getInstance().getAlphabetic(5);
 		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child1Code).setValue(new BigDecimal("35")).setParent(parent));
 		String child2Code = RandomHelper.getInstance().getAlphabetic(5);
@@ -745,7 +759,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		String child3Code = RandomHelper.getInstance().getAlphabetic(5);
 		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child3Code).setValue(new BigDecimal("40")).setParent(parent));
 		testCase.create(parent);
-		testCase.assertNotNull(Movement.class, parentCode,child1Code,child2Code,child3Code);
+		testCase.assertNotNull(Movement.class, RootConstant.Code.MovementCollection.CASH_REGISTER+Constant.CHARACTER_UNDESCORE+parentCode,child1Code,child2Code,child3Code);
 		testCase.clean();
     }
     

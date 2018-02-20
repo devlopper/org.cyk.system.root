@@ -52,12 +52,18 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	@Transient private Movement destinationMovement;
 	
 	@ManyToOne @JoinColumn(name=COLUMN_PARENT) private Movement parent;
+	private Boolean parentActionIsOppositeOfChildAction;
 	
 	/**/
 	
 	@Override
 	public Movement setCode(String code) {
 		return (Movement) super.setCode(code);
+	}
+	
+	@Override
+	public Movement setCollection(MovementCollection collection) {
+		return (Movement) super.setCollection(collection);
 	}
 	
 	@Override

@@ -29,6 +29,7 @@ import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
+import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.model.mathematics.MovementCollectionTypeMode;
 import org.cyk.system.root.model.mathematics.MovementMode;
@@ -356,7 +357,7 @@ public class DataSet extends AbstractBean implements Serializable {
 					super.processRelatedClasses(aClass,classes);
 					if(Movement.class.equals(aClass)){
 						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class
-					    	,MovementMode.class,MovementCollectionType.class,MovementCollectionTypeMode.class));
+					    	,MovementMode.class,MovementCollectionType.class,MovementCollectionTypeMode.class,MovementCollection.class));
 					}
 				}
 				

@@ -24,7 +24,7 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 	 * an item can be a simple attribute of another model bean. 
 	 * In that case , it might not belongs to a collection. 
 	 */
-	@ManyToOne @JoinColumn(name=COLUMN_COLLECTION) protected COLLECTION collection;
+	@ManyToOne @JoinColumn(name=COLUMN_COLLECTION) @Accessors(chain=true) protected COLLECTION collection;
 	
 	public AbstractCollectionItem(COLLECTION collection,String code,String name) {
 		super(code, name, null, null);

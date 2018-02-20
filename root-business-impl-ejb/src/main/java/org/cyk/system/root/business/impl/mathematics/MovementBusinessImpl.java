@@ -137,8 +137,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		if(!Crud.DELETE.equals(crud)){
 			Collection<Movement> children = dao.readByParent(movement);
 			if(CollectionHelper.getInstance().isNotEmpty(children)){
-				BigDecimal sum = NumberHelper.getInstance().get(BigDecimal.class
-						,NumberHelper.getInstance().sum(MethodHelper.getInstance().callGet(children, BigDecimal.class, Movement.FIELD_VALUE)),BigDecimal.ZERO);
+				BigDecimal sum = NumberHelper.getInstance().negate(NumberHelper.getInstance().get(BigDecimal.class
+						,NumberHelper.getInstance().sum(MethodHelper.getInstance().callGet(children, BigDecimal.class, Movement.FIELD_VALUE)),BigDecimal.ZERO));
 				
 				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movparentvalue")
 						.setDomainNameIdentifier("movement").setNumber1(movement.getValue())
@@ -238,12 +238,21 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	public void computeChanges(Movement movement,LoggingHelper.Message.Builder logMessageBuilder) {		
 		super.computeChanges(movement,logMessageBuilder);
-		MovementAction action = movement.getAction();
-		if(action == null){
-			if(movement.getParent()!=null)
-				action = movement.getParent().getAction();
+		if(movement.getAction() == null){
+			if(movement.getParent()!=null){
+				if(movement.getParent().getCollection().getType().getIncrementAction().equals(movement.getParent().getAction()))
+					if(Boolean.TRUE.equals(movement.getParentActionIsOppositeOfChildAction()))
+						movement.setAction(movement.getCollection().getType().getDecrementAction());
+					else
+						movement.setAction(movement.getCollection().getType().getIncrementAction());
+				else if(movement.getParent().getCollection().getType().getDecrementAction().equals(movement.getParent().getAction()))
+					if(Boolean.TRUE.equals(movement.getParentActionIsOppositeOfChildAction()))
+						movement.setAction(movement.getCollection().getType().getIncrementAction());	
+					else
+						movement.setAction(movement.getCollection().getType().getDecrementAction());
+			}
 		}
-		logMessageBuilder.addNamedParameters("col",movement.getCollection(),"act",action,"prev cum",movement.getPreviousCumul(),"val abs"
+		logMessageBuilder.addNamedParameters("col",movement.getCollection(),"act",movement.getAction(),"prev cum",movement.getPreviousCumul(),"val abs"
 				,movement.getValueAbsolute(),"use abs",movement.getValueSettableFromAbsolute(),"cum",movement.getCumul());
 		//previous cumul
 		if(movement.getCollection()==null)
@@ -257,10 +266,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		}
 		//value
 		if(Boolean.TRUE.equals(movement.getValueSettableFromAbsolute())){
-			if(movement.getValueAbsolute()==null || action==null){
+			if(movement.getValueAbsolute()==null || movement.getAction()==null){
 				movement.setValue(null);
 			}else{
-				if(action.equals(movement.getCollection().getType().getIncrementAction()))
+				if(movement.getAction().equals(movement.getCollection().getType().getIncrementAction()))
 					movement.setValue(movement.getValueAbsolute());
 				else
 					movement.setValue(movement.getValueAbsolute().negate());
