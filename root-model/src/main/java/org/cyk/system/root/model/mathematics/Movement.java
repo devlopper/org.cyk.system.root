@@ -84,6 +84,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public static final String FIELD_DESTINATION_MOVEMENT_COLLECTION = "destinationMovementCollection";
 	public static final String FIELD_DESTINATION_MOVEMENT = "destinationMovement";
 	public static final String FIELD_PARENT = "parent";
+	public static final String FIELD_PARENT_ACTION_IS_OPPOSITE_OF_CHILD_ACTION = "parentActionIsOppositeOfChildAction";
 	
 	public static final String COLUMN_MODE = FIELD_MODE;
 	public static final String COLUMN_ACTION = FIELD_ACTION;
