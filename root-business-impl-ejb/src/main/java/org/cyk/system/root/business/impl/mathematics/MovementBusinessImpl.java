@@ -137,8 +137,11 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		if(!Crud.DELETE.equals(crud)){
 			Collection<Movement> children = dao.readByParent(movement);
 			if(CollectionHelper.getInstance().isNotEmpty(children)){
-				BigDecimal sum = NumberHelper.getInstance().negate(NumberHelper.getInstance().get(BigDecimal.class
-						,NumberHelper.getInstance().sum(MethodHelper.getInstance().callGet(children, BigDecimal.class, Movement.FIELD_VALUE)),BigDecimal.ZERO));
+				BigDecimal sum = NumberHelper.getInstance().get(BigDecimal.class
+						,NumberHelper.getInstance().sum(MethodHelper.getInstance().callGet(children, BigDecimal.class, Movement.FIELD_VALUE)),BigDecimal.ZERO);
+				
+				if(Boolean.TRUE.equals(movement.getParentActionIsOppositeOfChildAction()))
+					sum = NumberHelper.getInstance().negate(sum);
 				
 				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movparentvalue")
 						.setDomainNameIdentifier("movement").setNumber1(movement.getValue())
@@ -240,13 +243,14 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		super.computeChanges(movement,logMessageBuilder);
 		if(movement.getAction() == null){
 			if(movement.getParent()!=null){
+				Boolean parentActionIsOppositeOfChildAction = movement.getParent().getParentActionIsOppositeOfChildAction();
 				if(movement.getParent().getCollection().getType().getIncrementAction().equals(movement.getParent().getAction()))
-					if(Boolean.TRUE.equals(movement.getParentActionIsOppositeOfChildAction()))
+					if(Boolean.TRUE.equals(parentActionIsOppositeOfChildAction))
 						movement.setAction(movement.getCollection().getType().getDecrementAction());
 					else
 						movement.setAction(movement.getCollection().getType().getIncrementAction());
 				else if(movement.getParent().getCollection().getType().getDecrementAction().equals(movement.getParent().getAction()))
-					if(Boolean.TRUE.equals(movement.getParentActionIsOppositeOfChildAction()))
+					if(Boolean.TRUE.equals(parentActionIsOppositeOfChildAction))
 						movement.setAction(movement.getCollection().getType().getIncrementAction());	
 					else
 						movement.setAction(movement.getCollection().getType().getDecrementAction());

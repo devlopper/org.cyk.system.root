@@ -735,8 +735,8 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		cashRegisterMovement.setCollection(cashRegisterMovementCollection).setAction(cashRegisterMovementCollection.getType().getIncrementAction())
 			.setParentActionIsOppositeOfChildAction(Boolean.TRUE);
 		String saleMovementCode = RandomHelper.getInstance().getAlphabetic(5);
-		cashRegisterMovement.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(saleMovementCode).setCollection(saleMovementCollection).setValueSettableFromAbsolute(Boolean.TRUE)
-				.setValueAbsolute(new BigDecimal("100")).setParent(cashRegisterMovement));
+		cashRegisterMovement.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(saleMovementCode).setCollection(saleMovementCollection)
+				.setValueSettableFromAbsolute(Boolean.TRUE).setValueAbsolute(new BigDecimal("100")).setParent(cashRegisterMovement));
 		testCase.create(cashRegisterMovement);
 		
 		testCase.assertNotNull(Movement.class, RootConstant.Code.generate(cashRegisterMovementCollection,cashRegisterMovementCode)
