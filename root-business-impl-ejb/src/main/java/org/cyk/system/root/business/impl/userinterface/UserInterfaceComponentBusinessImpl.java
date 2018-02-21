@@ -10,7 +10,6 @@ import org.cyk.system.root.model.userinterface.UserInterfaceComponent;
 import org.cyk.system.root.persistence.api.userinterface.UserInterfaceComponentDao;
 
 public class UserInterfaceComponentBusinessImpl extends AbstractTypedBusinessService<UserInterfaceComponent, UserInterfaceComponentDao> implements UserInterfaceComponentBusiness,Serializable {
-
 	private static final long serialVersionUID = -3799482462496328200L;
 	
 	@Inject

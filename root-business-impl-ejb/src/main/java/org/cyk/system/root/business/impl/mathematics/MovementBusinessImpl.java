@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
+import org.cyk.system.root.business.api.time.IdentifiablePeriodIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -22,6 +23,7 @@ import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.time.IdentifiablePeriodIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierDao;
@@ -92,6 +94,19 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			if(movement.getBirthDate()==null)
 				movement.setBirthDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
 			
+			if(movement.getCollection()!=null && movement.getCollection().getType().getIdentifiablePeriodType()!=null){
+				exceptionUtils().exception(movement.getIdentifiablePeriod() == null, "identifiable_period_required");
+				
+				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movdate")
+						.setDomainNameIdentifier("movement").setNumber1(movement.getBirthDate().getTime())
+						.setNumber2(movement.getIdentifiablePeriod().getBirthDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.FALSE));
+				
+				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movdate")
+						.setDomainNameIdentifier("movement").setNumber1(movement.getBirthDate().getTime())
+						.setNumber2(movement.getIdentifiablePeriod().getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
+			}
+			
+			
 			updateCollection(movement,crud);
 			
 			if(Crud.CREATE.equals(crud)){
@@ -135,6 +150,16 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		}
 		
 		if(!Crud.DELETE.equals(crud)){
+			if(Crud.CREATE.equals(crud)){
+				if(movement.getIdentifiablePeriod()!=null){
+					IdentifiablePeriodIdentifiableGlobalIdentifier identifiablePeriodIdentifiableGlobalIdentifier = 
+							inject(IdentifiablePeriodIdentifiableGlobalIdentifierBusiness.class).instanciateOne();
+					identifiablePeriodIdentifiableGlobalIdentifier.setIdentifiablePeriod(movement.getIdentifiablePeriod());
+					identifiablePeriodIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(movement.getGlobalIdentifier());
+					inject(IdentifiablePeriodIdentifiableGlobalIdentifierBusiness.class).create(identifiablePeriodIdentifiableGlobalIdentifier);
+				}	
+			}
+			
 			Collection<Movement> children = dao.readByParent(movement);
 			if(CollectionHelper.getInstance().isNotEmpty(children)){
 				BigDecimal sum = NumberHelper.getInstance().get(BigDecimal.class
@@ -263,10 +288,17 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			movement.setPreviousCumul(null);
 		else{
 			//previous cumul  = sum of previous value
-			if(movement.getBirthDate() == null)
+			if(movement.getBirthDate() == null){
 				movement.setPreviousCumul(movement.getCollection().getValue());
-			else 
+			}else 
 				movement.setPreviousCumul(dao.sumValueWhereExistencePeriodFromDateIsLessThan(movement));
+			/*
+			if(Boolean.TRUE.equals(isNotIdentified(movement)) || movement.getBirthDate() == null){
+				movement.setPreviousCumul(movement.getCollection().getValue());
+			}else 
+				movement.setPreviousCumul(dao.sumValueWhereExistencePeriodFromDateIsLessThan(movement));
+			*/
+			//System.out.println("MovementBusinessImpl.computeChanges() : "+movement.getPreviousCumul());
 		}
 		//value
 		if(Boolean.TRUE.equals(movement.getValueSettableFromAbsolute())){

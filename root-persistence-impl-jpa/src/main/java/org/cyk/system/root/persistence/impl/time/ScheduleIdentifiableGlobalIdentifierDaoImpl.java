@@ -7,7 +7,6 @@ import org.cyk.system.root.persistence.api.time.ScheduleIdentifiableGlobalIdenti
 import org.cyk.system.root.persistence.impl.globalidentification.AbstractJoinGlobalIdentifierDaoImpl;
 
 public class ScheduleIdentifiableGlobalIdentifierDaoImpl extends AbstractJoinGlobalIdentifierDaoImpl<ScheduleIdentifiableGlobalIdentifier,ScheduleIdentifiableGlobalIdentifier.SearchCriteria> implements ScheduleIdentifiableGlobalIdentifierDao,Serializable {
-
 	private static final long serialVersionUID = 6306356272165070761L;
 	
 	

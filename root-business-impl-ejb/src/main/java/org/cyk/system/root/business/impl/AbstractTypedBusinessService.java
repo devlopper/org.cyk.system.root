@@ -14,9 +14,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.FormatterBusiness;
@@ -33,6 +30,7 @@ import org.cyk.system.root.business.api.mathematics.MetricCollectionIdentifiable
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.time.IdentifiablePeriodIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -56,6 +54,8 @@ import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGloba
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.system.root.model.time.IdentifiablePeriod;
+import org.cyk.system.root.model.time.IdentifiablePeriodIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.model.value.ValueCollectionIdentifiableGlobalIdentifier;
@@ -70,6 +70,7 @@ import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifia
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.api.time.IdentifiablePeriodIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
@@ -86,6 +87,9 @@ import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends AbstractIdentifiable, TYPED_DAO extends TypedDao<IDENTIFIABLE>> extends AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE> implements
 		TypedBusiness<IDENTIFIABLE>, Serializable {
@@ -513,6 +517,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		deleteMetricValueIdentifiableGlobalIdentifier(identifiable);
 		deleteMetricCollectionIdentifiableGlobalIdentifier(identifiable);
 		deleteMovementCollectionIdentifiableGlobalIdentifier(identifiable);
+		deleteIdentifiablePeriodIdentifiableGlobalIdentifier(identifiable);
 		beforeDelete(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.DELETE);
 		inject(GenericBusiness.class).deleteIfIdentified(findRelatedInstances(identifiable,Boolean.TRUE,null));
@@ -551,6 +556,15 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}else{
 			Collection<MovementCollectionIdentifiableGlobalIdentifier> movementCollectionIdentifiableGlobalIdentifiers = inject(MovementCollectionIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
 			inject(MovementCollectionIdentifiableGlobalIdentifierBusiness.class).delete(movementCollectionIdentifiableGlobalIdentifiers);	
+		}
+	}
+	
+	protected void deleteIdentifiablePeriodIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
+		if(identifiable instanceof IdentifiablePeriodIdentifiableGlobalIdentifier || identifiable instanceof IdentifiablePeriod/* || identifiable instanceof File || identifiable instanceof Location*/){
+			
+		}else{
+			Collection<IdentifiablePeriodIdentifiableGlobalIdentifier> movementCollectionIdentifiableGlobalIdentifiers = inject(IdentifiablePeriodIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
+			inject(IdentifiablePeriodIdentifiableGlobalIdentifierBusiness.class).delete(movementCollectionIdentifiableGlobalIdentifiers);	
 		}
 	}
 	

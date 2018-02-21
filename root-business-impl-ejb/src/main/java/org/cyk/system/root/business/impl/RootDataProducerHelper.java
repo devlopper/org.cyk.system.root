@@ -15,10 +15,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -88,6 +84,10 @@ import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper.Workbook.Sheet.Builder;
 import org.cyk.utility.common.helper.TimeHelper;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Singleton
 public class RootDataProducerHelper extends AbstractBean implements Serializable {
@@ -293,9 +293,9 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	@Deprecated
 	public MovementAction createMovementAction(String code, String name){
-		MovementAction movementAction = new MovementAction(code, name);
-		movementAction.setInterval(createInterval(null, code+"int", code+"int", "0", null));
-		return movementAction;
+		//MovementAction movementAction = null;//new MovementAction(code, name);
+		//movementAction.setInterval(createInterval(null, code+"int", code+"int", "0", null));
+		return null;
 	}
 	
 	@Deprecated

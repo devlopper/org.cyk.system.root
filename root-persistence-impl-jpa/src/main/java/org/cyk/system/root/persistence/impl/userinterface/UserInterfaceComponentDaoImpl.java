@@ -7,12 +7,8 @@ import org.cyk.system.root.persistence.api.userinterface.UserInterfaceComponentD
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 
 public class UserInterfaceComponentDaoImpl extends AbstractTypedDao<UserInterfaceComponent> implements UserInterfaceComponentDao,Serializable {
-
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-
-    
-   
 
 }
  

@@ -10,7 +10,6 @@ import org.cyk.system.root.model.time.ScheduleIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.time.ScheduleIdentifiableGlobalIdentifierDao;
 
 public class ScheduleIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGlobalIdentifierBusinessImpl<ScheduleIdentifiableGlobalIdentifier, ScheduleIdentifiableGlobalIdentifierDao,ScheduleIdentifiableGlobalIdentifier.SearchCriteria> implements ScheduleIdentifiableGlobalIdentifierBusiness,Serializable {
-
 	private static final long serialVersionUID = -3799482462496328200L;
 
 	@Inject

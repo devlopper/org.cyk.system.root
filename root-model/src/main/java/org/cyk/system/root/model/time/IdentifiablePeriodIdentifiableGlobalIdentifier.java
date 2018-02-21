@@ -30,7 +30,6 @@ import lombok.Setter;
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {IdentifiablePeriodIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_PERIOD
 		,IdentifiablePeriodIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
 public class IdentifiablePeriodIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
-
 	private static final long serialVersionUID = -165832578043422718L;
 	
 	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD) @NotNull private IdentifiablePeriod identifiablePeriod;

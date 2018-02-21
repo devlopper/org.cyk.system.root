@@ -25,7 +25,7 @@ public class MovementActionBusinessImpl extends AbstractEnumerationBusinessImpl<
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public MovementAction instanciateOne(String code,String name) {
-		MovementAction movementAction = new MovementAction(code, name);
+		MovementAction movementAction = super.instanciateOne(code, name);
 		movementAction.setInterval(inject(IntervalBusiness.class).instanciateOne(code, "0"));
 		return movementAction;
 	}

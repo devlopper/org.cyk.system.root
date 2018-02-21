@@ -12,10 +12,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
@@ -34,6 +30,12 @@ import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.model.mathematics.MovementCollectionTypeMode;
 import org.cyk.system.root.model.mathematics.MovementMode;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
+import org.cyk.system.root.model.time.IdentifiablePeriod;
+import org.cyk.system.root.model.time.IdentifiablePeriodType;
+import org.cyk.system.root.model.time.TimeDivisionType;
+import org.cyk.system.root.model.value.Measure;
+import org.cyk.system.root.model.value.MeasureType;
+import org.cyk.system.root.model.value.Value;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ArrayHelper;
@@ -48,6 +50,10 @@ import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.TimeHelper;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter @Accessors(chain=true)
 public class DataSet extends AbstractBean implements Serializable {
@@ -358,6 +364,10 @@ public class DataSet extends AbstractBean implements Serializable {
 					if(Movement.class.equals(aClass)){
 						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class
 					    	,MovementMode.class,MovementCollectionType.class,MovementCollectionTypeMode.class,MovementCollection.class));
+					}else if(IdentifiablePeriod.class.equals(aClass)){
+						classes.addAll(Arrays.asList(IdentifiablePeriodType.class,TimeDivisionType.class));
+					}else if(Value.class.equals(aClass)){
+						classes.addAll(Arrays.asList(Measure.class,MeasureType.class));
 					}
 				}
 				

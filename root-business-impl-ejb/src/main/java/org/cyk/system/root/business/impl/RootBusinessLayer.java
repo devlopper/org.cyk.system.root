@@ -57,6 +57,7 @@ import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.userinterface.UserInterfaceCommand;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenu;
@@ -284,14 +285,14 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
 			}*/
 		});
 		
-		InstanceHelper.getInstance().setFieldValueGenerator(Movement.class, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE), new InstanceHelper.Listener.FieldValueGenerator.Adapter.Default<String>(String.class){
-			private static final long serialVersionUID = 1L;
-			@Override
-			protected String __execute__(Object instance, String fieldName,Class<String> outputClass) {
-				return "MOV"+System.currentTimeMillis()+RandomHelper.getInstance().getAlphabetic(4);
-			}
-		});
+		InstanceHelper.getInstance().setFieldValueGenerator(Movement.class, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE)
+				, new InstanceHelper.Listener.FieldValueGenerator.Adapter.Default<String>(String.class));
 		
+		//FIXME some test not working
+		/*
+		InstanceHelper.getInstance().setFieldValueGenerator(Movement.class, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER
+				,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE), new InstanceHelper.Listener.FieldValueGenerator.Adapter.Default<Date>(Date.class));
+		*/
 		//Configuration.get(SmtpProperties.class).setReadDefaulted(Boolean.TRUE);
         
     }
