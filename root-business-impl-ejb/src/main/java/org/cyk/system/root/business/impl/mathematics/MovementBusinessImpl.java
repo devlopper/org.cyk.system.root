@@ -64,6 +64,12 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
+	public Movement instanciateOne() {
+		System.out.println("MovementBusinessImpl.instanciateOne()********************************************************************");
+		return super.instanciateOne();
+	}
+	
+	@Override
 	public Movement instanciateOne(String collectionCode, String value,String supportingDocumentCode,String supportingDocumentPhysicalCreator,String supportingDocumentContentWriter, String actionCode) {
 		MovementCollection movementCollection = inject(MovementCollectionDao.class).read(collectionCode);
 		Movement movement = instanciateOne(movementCollection);

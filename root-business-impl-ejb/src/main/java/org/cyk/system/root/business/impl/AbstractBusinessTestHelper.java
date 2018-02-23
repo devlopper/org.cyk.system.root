@@ -38,7 +38,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.text.WordUtils;
 import org.cyk.system.OrgCykSystemPackage;
-import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -109,13 +108,12 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.helper.ArrayHelper;
-import org.cyk.utility.common.helper.BooleanHelper;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.NumberHelper;
-import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
@@ -762,8 +760,18 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			this.helper = helper;
 		}
 		
-		public <T> T instanciateOne(Class<T> aClass){
-			return ClassHelper.getInstance().instanciateOne(aClass);
+		public <T> T instanciateOneWithCode(Class<T> aClass,String code){
+			T instance = ClassHelper.getInstance().instanciateOne(aClass);
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
+				//((AbstractIdentifiable)instance).setCode(code);
+				FieldHelper.getInstance().set(instance, code, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE));
+			return instance;
+		}
+		
+		public Movement instanciateOneMovement(String code,String collectionCode){
+			Movement movement = instanciateOneWithCode(Movement.class, code);
+			movement.setCollection(InstanceHelper.getInstance().getByIdentifier(MovementCollection.class, collectionCode,ClassHelper.Listener.IdentifierType.BUSINESS));
+			return movement;
 		}
 		
 		public void add(AbstractIdentifiable identifiable){

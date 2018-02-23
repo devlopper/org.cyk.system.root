@@ -81,7 +81,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             
             for(FieldHelper.Field index : FieldHelper.Field.get(anIdentifiable.getClass())){
         		if(!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null){
-        			exceptionUtils().exception("code is required");
+        			exceptionUtils().exception(index.getName()+" is required");
         		}
         	}
         }

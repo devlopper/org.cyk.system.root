@@ -106,13 +106,16 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovement(){
     	TestCase testCase = instanciateTestCase();
+    	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOneWithCode(MovementCollection.class,movementCollectionCode));
+    	
     	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class);
 		identifiablePeriod.setCode("j001");
 		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
 		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59));
 		testCase.create(identifiablePeriod);
 		
-    	Movement movement = inject(MovementBusiness.class).instanciateOne();
+    	Movement movement = testCase.instanciateOneMovement(null,movementCollectionCode);
     	movement.setValue(BigDecimal.ZERO).setIdentifiablePeriod(identifiablePeriod).setBirthDate(date(2000, 1, 1, 0, 5));
     	testCase.create(movement);
     	testCase.clean();
