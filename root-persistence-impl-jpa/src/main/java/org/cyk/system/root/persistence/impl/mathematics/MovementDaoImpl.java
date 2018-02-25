@@ -80,10 +80,10 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 		return sum;
 	}
 	
-	@Override
+	/*@Override
 	public Collection<Movement> readByParent(Movement parent) {
 		return namedQuery(readByParent).parameter(Movement.FIELD_PARENT, parent).resultMany();
-	}
+	}*/
 	
 }
  

@@ -164,7 +164,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				}	
 			}
 			
-			Collection<Movement> children = dao.readByParent(movement);
+			Collection<Movement> children = dao.readByFilter(new Movement.Filter().addMaster(movement), null);//dao.readByParent(movement);
 			if(CollectionHelper.getInstance().isNotEmpty(children)){
 				BigDecimal sum = NumberHelper.getInstance().get(BigDecimal.class
 						,NumberHelper.getInstance().sum(MethodHelper.getInstance().callGet(children, BigDecimal.class, Movement.FIELD_VALUE)),BigDecimal.ZERO);
@@ -183,7 +183,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	protected void beforeDelete(Movement movement) {
 		super.beforeDelete(movement);
-		delete(dao.readByParent(movement));
+		delete(dao.readByFilter(new Movement.Filter().addMaster(movement), null)/*dao.readByParent(movement)*/);
 	}
 	
 	private void updateCumulWhereExistencePeriodFromDateIsGreaterThan(Movement movement,Crud crud){
