@@ -64,12 +64,6 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	public Movement instanciateOne() {
-		System.out.println("MovementBusinessImpl.instanciateOne()********************************************************************");
-		return super.instanciateOne();
-	}
-	
-	@Override
 	public Movement instanciateOne(String collectionCode, String value,String supportingDocumentCode,String supportingDocumentPhysicalCreator,String supportingDocumentContentWriter, String actionCode) {
 		MovementCollection movementCollection = inject(MovementCollectionDao.class).read(collectionCode);
 		Movement movement = instanciateOne(movementCollection);
@@ -95,6 +89,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				exceptionUtils().comparisonBetween(movement.getValue(), action.getInterval(), action.getName());
 				exceptionUtils().comparison( !inject(IntervalBusiness.class).contains(action.getInterval(), movement.getValue(), 2)
 						, action.getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
+			}else{
+				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movvalue")
+						.setDomainNameIdentifier("movement").setNumber1(movement.getValue())
+						.setNumber2(BigDecimal.ZERO).setEqual(Boolean.TRUE));	
 			}
 			
 			if(movement.getBirthDate()==null)

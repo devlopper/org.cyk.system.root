@@ -39,48 +39,6 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	ClassHelper.getInstance().map(DataSet.Listener.class, Data.class);
     }
     
-    private String movementUnlimitedIdentifier="MU",movementLimitedIdentifier="ML",movementOnlyUnlimitedIdentifier="MOL"
-    		,movementUpdatesUnlimitedIdentifier="MUPL",movementLimitedIdentifier_Low_100_8_High_2_10_Total_0_150="ML10082100150";
-    
-    @Override
-    protected void populate() {
-    	super.populate();
-    	MovementCollectionType movementCollectionType = inject(MovementCollectionTypeBusiness.class).instanciateOne(movementUnlimitedIdentifier,null, "IN", "OUT");
-    	movementCollectionType.getInterval().getLow().setValue(null);
-    	create(movementCollectionType);
-    	MovementCollection  movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementUnlimitedIdentifier).setType(movementCollectionType);
-    	create(movementCollection);
-    	
-    	movementCollectionType = inject(MovementCollectionTypeBusiness.class).instanciateOne(movementOnlyUnlimitedIdentifier,null, "IN", "OUT");
-    	movementCollectionType.getInterval().getLow().setValue(null);
-    	create(movementCollectionType);
-    	movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementOnlyUnlimitedIdentifier).setType(movementCollectionType);
-    	create(movementCollection);
-    	
-    	movementCollectionType = inject(MovementCollectionTypeBusiness.class).instanciateOne(movementUpdatesUnlimitedIdentifier,null, "IN", "OUT");
-    	movementCollectionType.getInterval().getLow().setValue(null);
-    	create(movementCollectionType);
-    	movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementUpdatesUnlimitedIdentifier).setType(movementCollectionType).setValue(new BigDecimal("0"));
-    	create(movementCollection);
-    	
-    	movementCollectionType = inject(MovementCollectionTypeBusiness.class).instanciateOne(movementUpdatesUnlimitedIdentifier,null, "IN", "OUT");
-    	movementCollectionType.getInterval().setHigh(new IntervalExtremity(new BigDecimal("100")));
-    	create(movementCollectionType);
-    	movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementLimitedIdentifier).setType(movementCollectionType);
-    	create(movementCollection);
-    	
-    	movementCollectionType = inject(MovementCollectionTypeBusiness.class).instanciateOne(movementUpdatesUnlimitedIdentifier,null, "IN", "OUT");
-    	movementCollectionType.getInterval().setHigh(new IntervalExtremity(new BigDecimal("150")));
-    	movementCollectionType.getDecrementAction().getInterval().getLow().setValue(new BigDecimal("-100"));
-    	movementCollectionType.getDecrementAction().getInterval().getHigh().setValue(new BigDecimal("-8"));
-    	movementCollectionType.getIncrementAction().getInterval().getLow().setValue(new BigDecimal("2"));
-    	movementCollectionType.getIncrementAction().getInterval().getHigh().setValue(new BigDecimal("10"));
-    	create(movementCollectionType);
-    	movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementLimitedIdentifier_Low_100_8_High_2_10_Total_0_150).setType(movementCollectionType);
-    	movementCollection.setValue(new BigDecimal("7"));
-    	create(movementCollection);
-    }
-    
     @Test
     public void crudOneMovementCollectionType(){
     	TestCase testCase = instanciateTestCase();
@@ -104,10 +62,47 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     }
     
     @Test
+    public void instanciateOneMovement(){
+    	TestCase testCase = instanciateTestCase();
+    	String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
+    	testCase.assertNotNull(MovementCollection.class, collectionCode);
+    	
+    	Movement movement = testCase.instanciateOne(Movement.class,"code").setCollectionFromCode(collectionCode);
+    	assertEquals("code", movement.getCode());
+    	assertNotNull(movement.getCollection());
+    	testCase.clean();
+    }
+    
+    @Test
+    public void createFirstMovementWithoutDateAndSecondWithDateAscending(){
+    	TestCase testCase = instanciateTestCase();
+    	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode));
+    	
+    	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class,RandomHelper.getInstance().getAlphabetic(5));
+		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
+		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59));
+		testCase.create(identifiablePeriod);
+		
+    	Movement movement = testCase.instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode)
+    			//.setActionFromIsIncrementation(Boolean.TRUE)
+    			.setIdentifiablePeriod(identifiablePeriod).setBirthDate(date(2000, 1, 1, 0, 5)).setValue(BigDecimal.ONE);
+    	
+    	testCase.create(movement);
+    	testCase.assertCollection(MovementCollection.class, Movement.class, movementCollectionCode, "1");
+    	testCase.assertMovement(movement.getCode(), "1", "1",null);
+    	testCase.assertMovements(movementCollectionCode, new String[]{"0","1","1",null});
+    	
+    	testCase.clean();
+    	testCase.deleteAll(IdentifiablePeriod.class);
+    }
+    
+    @Test
     public void crudOneMovement(){
     	TestCase testCase = instanciateTestCase();
     	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOneWithCode(MovementCollection.class,movementCollectionCode));
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode));
     	
     	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class);
 		identifiablePeriod.setCode("j001");
@@ -116,7 +111,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		testCase.create(identifiablePeriod);
 		
     	Movement movement = testCase.instanciateOneMovement(null,movementCollectionCode);
-    	movement.setValue(BigDecimal.ZERO).setIdentifiablePeriod(identifiablePeriod).setBirthDate(date(2000, 1, 1, 0, 5));
+    	movement.setValue(BigDecimal.ONE).setIdentifiablePeriod(identifiablePeriod).setBirthDate(date(2000, 1, 1, 0, 5));
     	testCase.create(movement);
     	testCase.clean();
     }
@@ -382,6 +377,16 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     @Test
     public void findPrevious(){
     	TestCase testCase = instanciateTestCase();
+    	String movementUpdatesUnlimitedIdentifier = RandomHelper.getInstance().getAlphabetic(5);
+    	MovementCollection movementUpdatesUnlimited = inject(MovementCollectionBusiness.class).instanciateOne(movementUpdatesUnlimitedIdentifier);
+    	movementUpdatesUnlimited.setValue(new BigDecimal("0"));
+    	testCase.create(movementUpdatesUnlimited);
+    	
+    	String movementUnlimitedIdentifier = RandomHelper.getInstance().getAlphabetic(5);
+    	MovementCollection movementUnlimited = inject(MovementCollectionBusiness.class).instanciateOne(movementUnlimitedIdentifier);
+    	movementUnlimited.setValue(new BigDecimal("0"));
+    	testCase.create(movementUnlimited);
+    	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "15",Boolean.TRUE);
     	movement.setBirthDate(date(2000, 5, 2));
     	movement = testCase.create(movement);
@@ -607,7 +612,11 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 	@Test
 	public void computeChanges() {
 		TestCase testCase = instanciateTestCase();
-		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementLimitedIdentifier_Low_100_8_High_2_10_Total_0_150);
+		
+		String movementCollectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(inject(MovementCollectionBusiness.class).instanciateOne(movementCollectionCode).setValue(new BigDecimal("7")));
+    	
+		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);
 		Movement movement = new Movement();
 		inject(MovementBusiness.class).computeChanges(movement);
 		testCase.assertComputedChanges(movement, null, null);
@@ -653,6 +662,8 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		movement.setAction(movementCollection.getType().getDecrementAction());
 		inject(MovementBusiness.class).computeChanges(movement);
 		testCase.assertComputedChanges(movement, "7", "-3");
+		
+		testCase.clean();
 	}
     
 	@Test
@@ -767,6 +778,9 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 	@Test
     public void createOneMovementAndManyChildren(){
 		TestCase testCase = instanciateTestCase();
+		String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
+    	
 		IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class);
 		identifiablePeriod.setCode("j001");
 		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
@@ -778,48 +792,20 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		parent.setIdentifiablePeriod(identifiablePeriod).setBirthDate(date(2000, 1, 1, 0, 5));
 		parent.setCollection(testCase.read(MovementCollection.class, RootConstant.Code.MovementCollection.CASH_REGISTER));
 		String child1Code = RandomHelper.getInstance().getAlphabetic(5);
-		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child1Code).setValue(new BigDecimal("35")).setParent(parent));
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child1Code).setCollectionFromCode(collectionCode).setValue(new BigDecimal("35")).setParent(parent));
 		String child2Code = RandomHelper.getInstance().getAlphabetic(5);
-		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child2Code).setValue(new BigDecimal("25")).setParent(parent));
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child2Code).setCollectionFromCode(collectionCode).setValue(new BigDecimal("25")).setParent(parent));
 		String child3Code = RandomHelper.getInstance().getAlphabetic(5);
-		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child3Code).setValue(new BigDecimal("40")).setParent(parent));
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child3Code).setCollectionFromCode(collectionCode).setValue(new BigDecimal("40")).setParent(parent));
 		testCase.create(parent);
-		testCase.assertNotNull(Movement.class, RootConstant.Code.MovementCollection.CASH_REGISTER+Constant.CHARACTER_UNDESCORE+parentCode,child1Code,child2Code,child3Code);
+		testCase.assertNotNull(Movement.class, RootConstant.Code.MovementCollection.CASH_REGISTER+Constant.CHARACTER_UNDESCORE+parentCode
+				,collectionCode+Constant.CHARACTER_UNDESCORE+child1Code,collectionCode+Constant.CHARACTER_UNDESCORE+child2Code
+				,collectionCode+Constant.CHARACTER_UNDESCORE+child3Code);
 		testCase.clean();
     }
     
     /* Exceptions */
     
-    /*@Test
-    public void incrementValueMustNotBeLessThanIntervalLow(){
-    	rootBusinessTestHelper.incrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
-    }*/
-    
-    //@Test
-    public void incrementValueMustNotBeGreaterThanIntervalHigh(){
-    	rootBusinessTestHelper.incrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
-    }
-    
-    //@Test
-    public void decrementValueMustNotBeLessThanIntervalLow(){
-    	rootBusinessTestHelper.decrementValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
-    }
-    
-    /*
-    @Test
-    public void decrementValueMustNotBeGreaterThanIntervalHigh(){
-    	rootBusinessTestHelper.decrementValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
-    }*/
-    
-    //@Test
-    public void collectionValueMustNotBeLessThanIntervalLow(){
-    	rootBusinessTestHelper.collectionValueMustNotBeLessThanIntervalLow(movementLimitedIdentifier);
-    }
-    
-    //@Test
-    public void collectionValueMustNotBeGreaterThanIntervalHigh(){
-    	rootBusinessTestHelper.collectionValueMustNotBeGreaterThanIntervalHigh(movementLimitedIdentifier);
-    }
     
     /**/
     

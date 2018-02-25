@@ -8,8 +8,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.FilterHelper.Filter;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
@@ -88,6 +91,7 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 		super.listenInstanciateJpqlBuilder(name, builder);
 		if(readByFilter.equals(name)){
 			builder.setFieldName(AbstractCollectionItem.FIELD_COLLECTION).where().and().in(AbstractIdentifiable.FIELD_IDENTIFIER);
+			builder.setFieldName(null).orderBy().asc(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
 		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsGreaterThan}, name)){
 			builder.where().and().eq(AbstractCollectionItem.FIELD_COLLECTION);
 		}

@@ -759,17 +759,17 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			super();
 			this.helper = helper;
 		}
-		
+		/*
 		public <T> T instanciateOneWithCode(Class<T> aClass,String code){
 			T instance = ClassHelper.getInstance().instanciateOne(aClass);
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				//((AbstractIdentifiable)instance).setCode(code);
-				FieldHelper.getInstance().set(instance, code, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE));
+				FieldHelper.getInstance().set(instance, (Object)code, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE));
 			return instance;
 		}
-		
+		*/
 		public Movement instanciateOneMovement(String code,String collectionCode){
-			Movement movement = instanciateOneWithCode(Movement.class, code);
+			Movement movement = instanciateOne(Movement.class, code);
 			movement.setCollection(InstanceHelper.getInstance().getByIdentifier(MovementCollection.class, collectionCode,ClassHelper.Listener.IdentifierType.BUSINESS));
 			return movement;
 		}
@@ -1300,7 +1300,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 					if(ArrayHelper.getInstance().isNotEmpty(array)){
 						Integer index = NumberHelper.getInstance().getInteger(array[0], 0);
 						Movement movement = CollectionHelper.getInstance().getElementAt(movements, index);
-						assertMovement(movement, array[1], array[2], Boolean.parseBoolean(array[3]), null, null);	
+						
+						assertMovement(movement, array[1], array[2], array[3] == null ? null : Boolean.parseBoolean(array[3]), null, null);	
 					}
 				}
 			}.execute();

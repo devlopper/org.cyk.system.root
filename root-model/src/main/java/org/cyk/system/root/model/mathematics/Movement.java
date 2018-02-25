@@ -2,6 +2,7 @@ package org.cyk.system.root.model.mathematics;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -62,8 +63,28 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	}
 	
 	@Override
+	public Movement setBirthDate(Date date) {
+		return (Movement) super.setBirthDate(date);
+	}
+	
+	@Override
 	public Movement setCollection(MovementCollection collection) {
 		return (Movement) super.setCollection(collection);
+	}
+	
+	@Override
+	public Movement setCollectionFromCode(String code) {
+		return (Movement) super.setCollectionFromCode(code);
+	}
+	
+	public Movement setActionFromIncrementation(Boolean isIncrementation){
+		if(isIncrementation == null)
+			this.action = null;
+		else if(isIncrementation)
+			this.action=this.collection.getType().getIncrementAction();
+		else
+			this.action=this.collection.getType().getDecrementAction();
+		return this;
 	}
 	
 	@Override

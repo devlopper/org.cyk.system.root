@@ -2,6 +2,7 @@ package org.cyk.system.root.persistence.impl.mathematics;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -10,6 +11,7 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
+import org.cyk.system.root.model.mathematics.MovementMode;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.impl.AbstractCollectionItemDaoImpl;
@@ -41,9 +43,12 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 		super.listenInstanciateJpqlBuilder(name, builder);
 		if(readByFilter.equals(name)){
 			builder.setFieldName(Movement.FIELD_ACTION).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
-			//builder.setFieldName(Movement.FIELD_MODE).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
-			//builder.setFieldName(Movement.FIELD_PARENT).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
-			builder.orderBy().asc(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
+			builder.setFieldName(Movement.FIELD_MODE).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
+			builder.setFieldName(Movement.FIELD_PARENT).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
+			
+			//builder.where().addTokens("AND ((:actionIdentifierSetIsEmpty = true AND :actionIdentifierSetIsEmptyMeansAll = true) OR t.action.identifier IN :actionIdentifierSet)");
+			
+			
 		}
 	}
 			
@@ -55,8 +60,14 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 		if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
 			FilterHelper.Filter<T> filter = (Filter<T>) arguments[0];
 			queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementAction.class),Movement.FIELD_ACTION,GlobalIdentifier.FIELD_IDENTIFIER);
-			//queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementMode.class),Movement.FIELD_MODE,GlobalIdentifier.FIELD_IDENTIFIER);
-			//queryWrapper.parameterInIdentifiers(filter.filterMasters(Movement.class),Movement.FIELD_PARENT,GlobalIdentifier.FIELD_IDENTIFIER);
+			queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementMode.class),Movement.FIELD_MODE,GlobalIdentifier.FIELD_IDENTIFIER);
+			queryWrapper.parameterInIdentifiers(filter.filterMasters(Movement.class),Movement.FIELD_PARENT,GlobalIdentifier.FIELD_IDENTIFIER);
+			
+			//queryWrapper.parameter("actionIdentifierSetIsEmpty", Boolean.TRUE);
+			//queryWrapper.parameter("actionIdentifierSetIsEmptyMeansAll", Boolean.TRUE);
+			//queryWrapper.parameter("actionIdentifierSet", Arrays.asList(Long.MIN_VALUE));
+			
+			//queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementAction.class),Movement.FIELD_ACTION,GlobalIdentifier.FIELD_IDENTIFIER);
 		}
 	}
 

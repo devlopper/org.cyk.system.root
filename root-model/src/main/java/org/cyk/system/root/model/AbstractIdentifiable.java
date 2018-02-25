@@ -226,8 +226,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getExistencePeriod();
 	}
 	
-	public void setBirthDate(Date date){
+	public AbstractIdentifiable setBirthDate(Date date){
 		getGlobalIdentifierCreateIfNull().getExistencePeriod().setFromDate(date);
+		return this;
 	}
 	public Date getBirthDate(){
 		return globalIdentifier == null ? null : globalIdentifier.getExistencePeriod().getFromDate();

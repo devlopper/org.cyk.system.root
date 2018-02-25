@@ -9,6 +9,8 @@ import javax.persistence.MappedSuperclass;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudInheritanceStrategy;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
+import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,13 @@ public abstract class AbstractCollectionItem<COLLECTION> extends AbstractEnumera
 	public AbstractCollectionItem(COLLECTION collection,String code,String name) {
 		super(code, name, null, null);
 		this.collection = collection;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public AbstractCollectionItem<COLLECTION> setCollectionFromCode(String code){
+		this.collection = (COLLECTION) InstanceHelper.getInstance().getByIdentifier(ClassHelper.getInstance().getParameterAt(getClass(), 0, AbstractCollection.class), code
+				, ClassHelper.Listener.IdentifierType.BUSINESS);
+		return this;
 	}
 	
 	public static final String FIELD_COLLECTION = "collection";
