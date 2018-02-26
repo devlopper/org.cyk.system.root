@@ -30,6 +30,7 @@ import org.cyk.system.root.persistence.api.mathematics.MovementCollectionIdentif
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.ConditionHelper;
@@ -81,6 +82,20 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
+	protected Movement __instanciateOne__(ObjectFieldValues objectFieldValues) {
+		Movement movement =  super.__instanciateOne__(objectFieldValues);
+		movement.setBirthDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
+		System.out.println("MovementBusinessImpl.instanciateOne()");
+		return movement;
+	}
+	
+	@Override
+	protected void setAutoSettedProperties(Movement movement, Crud crud) {
+		super.setAutoSettedProperties(movement, crud);
+		
+	}
+	
+	@Override
 	protected void beforeCrud(Movement movement, Crud crud) {
 		super.beforeCrud(movement, crud);
 		if(Crud.isCreateOrUpdate(crud)){
@@ -94,10 +109,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 						.setDomainNameIdentifier("movement").setNumber1(movement.getValue())
 						.setNumber2(BigDecimal.ZERO).setEqual(Boolean.TRUE));	
 			}
-			
+			/*
 			if(movement.getBirthDate()==null)
 				movement.setBirthDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
-			
+			*/
 			if(movement.getCollection()!=null && movement.getCollection().getType().getIdentifiablePeriodType()!=null){
 				exceptionUtils().exception(movement.getIdentifiablePeriod() == null, "identifiable_period_required");
 				
@@ -208,7 +223,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			logTrace(logMessageBuilder);	
 		}
 	}
-			
+	
+	//TODO should be moved to MovementCollectionBusinessImpl
 	private void updateCollection(Movement movement,Crud crud){
 		LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
 		if(movement.getCollection()==null)
@@ -292,10 +308,12 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			movement.setPreviousCumul(null);
 		else{
 			//previous cumul  = sum of previous value
-			if(movement.getBirthDate() == null){
-				movement.setPreviousCumul(movement.getCollection().getValue());
-			}else 
+			Boolean computePreviousCumul = movement.getBirthDate()!=null;
+			logMessageBuilder.addNamedParameters("compute prev cum",computePreviousCumul);
+			if(computePreviousCumul)
 				movement.setPreviousCumul(dao.sumValueWhereExistencePeriodFromDateIsLessThan(movement));
+			else
+				movement.setPreviousCumul(movement.getCollection().getValue());
 			/*
 			if(Boolean.TRUE.equals(isNotIdentified(movement)) || movement.getBirthDate() == null){
 				movement.setPreviousCumul(movement.getCollection().getValue());

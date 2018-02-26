@@ -69,7 +69,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	@Override
 	public Movement setCollection(MovementCollection collection) {
-		return (Movement) super.setCollection(collection);
+		return (Movement) super.setCollection(collection); 
 	}
 	
 	@Override

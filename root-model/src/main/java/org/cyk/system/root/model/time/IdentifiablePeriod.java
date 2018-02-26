@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -18,6 +19,20 @@ public class IdentifiablePeriod extends AbstractIdentifiable implements Serializ
 
 	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD_TYPE) private IdentifiablePeriodType type;
 
+	/**/
+	
+	@Override
+	public IdentifiablePeriod setBirthDate(Date date) {
+		return (IdentifiablePeriod) super.setBirthDate(date);
+	}
+	
+	@Override
+	public IdentifiablePeriod setDeathDate(Date date) {
+		return (IdentifiablePeriod) super.setDeathDate(date);
+	}
+	
+	/**/
+	
 	public static final String FIELD_IDENTIFIABLE_PERIOD_TYPE = "type";
 	
 	public static final String COLUMN_IDENTIFIABLE_PERIOD_TYPE = FIELD_IDENTIFIABLE_PERIOD_TYPE;

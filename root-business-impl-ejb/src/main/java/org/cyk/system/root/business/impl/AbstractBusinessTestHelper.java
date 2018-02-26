@@ -52,6 +52,7 @@ import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBu
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
+import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractEnumeration;
@@ -85,6 +86,7 @@ import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
+import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
@@ -1292,7 +1294,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public TestCase assertMovements(MovementCollection movementCollection,Collection<String[]> movementsArray){
 			Movement.Filter filter = new Movement.Filter();
 			filter.addMaster(movementCollection);
-			final Collection<Movement> movements = inject(MovementDao.class).readByFilter(filter, new DataReadConfiguration(0l, null));
+			final Collection<Movement> movements = inject(MovementDao.class).readByFilter(filter, null);
+			//System.out.println("AbstractBusinessTestHelper.TestCase.assertMovements()");
+			//for(Movement m :movements)
+			//	System.out.println(m.getBirthDate()+" : "+m.getValue()+" : "+m.getCumul());
+			
 			new CollectionHelper.Iterator.Adapter.Default<String[]>(movementsArray){
 				private static final long serialVersionUID = 1L;
 
@@ -1323,6 +1329,29 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			assertMovements(read(MovementCollection.class, movementCollectionCode), movementsArrays);
 			return this;
 		}
+		
+		public TestCase assertCreateMovements(Date identifiablePeriodBirthDate,Date identifiablePeriodDeathDate,Object[][] arrays){
+	    	String movementCollectionCode = getRandomHelper().getAlphabetic(5);
+	    	create(instanciateOne(MovementCollection.class,movementCollectionCode).setValue(BigDecimal.ZERO));
+	    	
+	    	IdentifiablePeriod identifiablePeriod = instanciateOneWithRandomIdentifier(IdentifiablePeriod.class)
+	    			.setBirthDate(identifiablePeriodBirthDate).setDeathDate(identifiablePeriodDeathDate);
+			create(identifiablePeriod);
+			
+			for(Object[] array : arrays) {
+				Movement movement = instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode)
+		    			.setActionFromIncrementation(array[0] == null ? null : Boolean.parseBoolean((String)array[0]))
+		    			.setIdentifiablePeriod(identifiablePeriod).setValue(NumberHelper.getInstance().get(BigDecimal.class, array[2],null));
+				if(array[1]!=null)
+					movement.setBirthDate((Date)array[1]);
+				create(movement);
+		    	
+		    	assertMovementCollection(movementCollectionCode,(String)array[3], (String)array[4]);
+		    	assertMovements(movementCollectionCode, (String[][])array[5]);
+			}
+			
+			return this;
+	    }
 		
 		 public TestCase assertComputedChanges(Movement movement,String previousCumul,String cumul){
 	    	if(movement.getCollection()==null || movement.getCollection().getValue()==null){

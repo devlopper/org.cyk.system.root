@@ -234,8 +234,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getExistencePeriod().getFromDate();
 	}
 	
-	public void setDeathDate(Date date){
+	public AbstractIdentifiable setDeathDate(Date date){
 		getGlobalIdentifierCreateIfNull().getExistencePeriod().setToDate(date);
+		return this;
 	}
 	public Date getDeathDate(){
 		return globalIdentifier == null ? null : globalIdentifier.getExistencePeriod().getToDate();
