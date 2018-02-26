@@ -2,11 +2,15 @@ package org.cyk.system.root.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.CommonUtils;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
@@ -31,8 +35,36 @@ public abstract class AbstractModelElement implements Serializable{
 	public static final int PERCENT_SCALE = 4;
 	public static final BigDecimal LOWEST_NON_ZERO_POSITIVE_VALUE = new BigDecimal("0."+StringUtils.repeat('0', 10)+"1");
 	
+	protected java.util.Map<String, Boolean> fieldValueComputedByUserMap;
+	
 	@Transient protected LoggingHelper.Message.Builder loggingMessageBuilder;
 	protected String lastComputedLogMessage;
+	
+	public AbstractModelElement setFieldValueComputedByUser(String name,Boolean value){
+		if(StringHelper.getInstance().isNotBlank(name)){
+			if(fieldValueComputedByUserMap == null){
+				fieldValueComputedByUserMap = new HashMap<>();
+			}
+			fieldValueComputedByUserMap.put(name, value);
+		}
+		return this;
+	}
+	
+	public AbstractModelElement setBirthDateComputedByUser(Boolean value){
+		return setFieldValueComputedByUser(FieldHelper.getInstance()
+				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE), value);
+	}
+	
+	public Boolean isFieldValueComputedByUser(String name){
+		if(fieldValueComputedByUserMap == null)
+			return null;
+		return fieldValueComputedByUserMap.get(name);
+	}
+	
+	public Boolean isBirthDateComputedByUser(){
+		return isFieldValueComputedByUser(FieldHelper.getInstance()
+				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
+	}
 	
 	public LoggingHelper.Message.Builder getLoggingMessageBuilder(Boolean createIfNull){
 		if(loggingMessageBuilder == null && Boolean.TRUE.equals(createIfNull))

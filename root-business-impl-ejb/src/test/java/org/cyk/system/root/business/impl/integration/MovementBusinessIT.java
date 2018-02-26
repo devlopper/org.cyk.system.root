@@ -28,7 +28,6 @@ import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.junit.Test;
@@ -72,6 +71,63 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	Movement movement = testCase.instanciateOne(Movement.class,"code").setCollectionFromCode(collectionCode);
     	assertEquals("code", movement.getCode());
     	assertNotNull(movement.getCollection());
+    	testCase.clean();
+    }
+    
+    @Test
+    public void assertComputedMovementBirthDateIsIncrementedWhenSetBySystem(){
+    	TestCase testCase = instanciateTestCase();
+    	Movement movement = testCase.instanciateOne(Movement.class);
+    	assertNull(movement.getBirthDate());
+    	inject(MovementBusiness.class).computeChanges(movement);
+    	Date date1 = movement.getBirthDate();
+    	assertNotNull(date1);    
+    	
+    	TimeHelper.getInstance().pause(1000);
+    	
+    	inject(MovementBusiness.class).computeChanges(movement);
+    	Date date2 = movement.getBirthDate();
+    	assertNotNull(date2);    	
+    	
+    	assertEquals(Boolean.TRUE, date1.compareTo(date2) < 0);
+    	
+    	TimeHelper.getInstance().pause(1000);
+    	
+    	inject(MovementBusiness.class).computeChanges(movement);
+    	date2 = movement.getBirthDate();
+    	assertNotNull(date2);    	
+    	
+    	assertEquals(Boolean.TRUE, date1.compareTo(date2) < 0);
+    	
+    	testCase.clean();
+    }
+    
+    @Test
+    public void assertComputedMovementBirthDateIsNotChangedBySystemWhenSetByUser(){
+    	TestCase testCase = instanciateTestCase();
+    	Movement movement = testCase.instanciateOne(Movement.class);
+    	movement.setBirthDateComputedByUser(Boolean.TRUE);
+    	assertNull(movement.getBirthDate());
+    	inject(MovementBusiness.class).computeChanges(movement);
+    	assertNull(movement.getBirthDate());
+    	
+    	movement.setBirthDate(date(2000, 1, 1));
+    	
+    	Date date1 = movement.getBirthDate();
+    	assertEquals(date(2000, 1, 1), date1);    
+    	
+    	inject(MovementBusiness.class).computeChanges(movement);
+    	Date date2 = movement.getBirthDate();
+    	assertEquals(date(2000, 1, 1), date2);  
+    	
+    	assertEquals(Boolean.TRUE, date1.compareTo(date2) == 0);
+    	
+    	inject(MovementBusiness.class).computeChanges(movement);
+    	date2 = movement.getBirthDate();
+    	assertEquals(date(2000, 1, 1), date2);  
+    	
+    	assertEquals(Boolean.TRUE, date1.compareTo(date2) == 0);
+    	
     	testCase.clean();
     }
     
@@ -171,15 +227,31 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     }
     
     @Test
-    public void createCreateMovementsWithDateFirstNotSpecifiedSecondSpecified(){
+    public void createCreateMovementsWithDateFirstNotSpecifiedAncestorSecondSpecifiedNewest(){
+    	TestCase testCase = instanciateTestCase();    	
+    	testCase.assertCreateMovements(date(2000, 1, 1, 0, 0), date(2000, 1, 1, 23, 59), new Object[][]{
+    		{"true",null,"1","1","1",new String[][] {
+    			{"0","1","1","true"}
+    		}}
+    		,{"true",new Date(System.currentTimeMillis()+1000*60*5),"2","3","2",new String[][] {
+    			{"0","1","1","true"}
+    			,{"1","2","3","true"}
+    		}}
+    	});    	  	
+    	testCase.clean();
+    	testCase.deleteAll(IdentifiablePeriod.class);
+    }
+    
+    @Test
+    public void createCreateMovementsWithDateFirstNotSpecifiedNewestSecondSpecifiedAncestor(){
     	TestCase testCase = instanciateTestCase();    	
     	testCase.assertCreateMovements(date(2000, 1, 1, 0, 0), date(2000, 1, 1, 23, 59), new Object[][]{
     		{"true",null,"1","1","1",new String[][] {
     			{"0","1","1","true"}
     		}}
     		,{"true",date(2000, 1, 1, 0, 6),"2","3","2",new String[][] {
-    			{"0","1","1","true"}
-    			//,{"1","2","3","true"}
+    			{"0","2","2","true"}
+    			,{"1","1","3","true"}
     		}}
     	});    	  	
     	testCase.clean();

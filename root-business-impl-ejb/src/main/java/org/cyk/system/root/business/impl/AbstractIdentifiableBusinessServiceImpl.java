@@ -30,6 +30,7 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCri
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
 import org.cyk.system.root.persistence.api.TypedDao;
@@ -53,6 +54,7 @@ import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MicrosoftExcelHelper;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.TimeHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -823,6 +825,16 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	protected void computeChanges(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder logMessageBuilder){
+		Boolean isBirthDateComputedByUser = identifiable.isFieldValueComputedByUser(FieldHelper.getInstance()
+				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
+		if(isBirthDateComputedByUser!=null){
+			logMessageBuilder.addNamedParameters("birth date computed by user",isBirthDateComputedByUser);
+			if(Boolean.FALSE.equals(isBirthDateComputedByUser)){
+				identifiable.setBirthDate(TimeHelper.getInstance().getUniversalTimeCoordinated());
+			}
+			logMessageBuilder.addNamedParameters("birth date",identifiable.getBirthDate());	
+		}
+		
 		if(Boolean.TRUE.equals(identifiable.getCascadeOperationToMaster())){
 			new CollectionHelper.Iterator.Adapter.Default<String>(identifiable.getCascadeOperationToMasterFieldNames()){
 				private static final long serialVersionUID = 1L;

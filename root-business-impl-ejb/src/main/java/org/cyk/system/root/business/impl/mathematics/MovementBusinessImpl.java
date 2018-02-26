@@ -15,7 +15,6 @@ import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.time.IdentifiablePeriodIdentifiableGlobalIdentifierBusiness;
-import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -84,15 +83,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	protected Movement __instanciateOne__(ObjectFieldValues objectFieldValues) {
 		Movement movement =  super.__instanciateOne__(objectFieldValues);
-		movement.setBirthDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
-		System.out.println("MovementBusinessImpl.instanciateOne()");
+		movement.setBirthDateComputedByUser(Boolean.FALSE);
 		return movement;
-	}
-	
-	@Override
-	protected void setAutoSettedProperties(Movement movement, Crud crud) {
-		super.setAutoSettedProperties(movement, crud);
-		
 	}
 	
 	@Override
@@ -286,6 +278,12 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	public void computeChanges(Movement movement,LoggingHelper.Message.Builder logMessageBuilder) {		
 		super.computeChanges(movement,logMessageBuilder);
+		/*Boolean isBirthDateComputedByUser = InstanceHelper.getInstance().getIfNotNullElseDefault(movement.isFieldValueComputedByUser(FieldHelper.getInstance()
+				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE)),Boolean.FALSE);
+		if(movement.getBirthDate() == null || Boolean.FALSE.equals(isBirthDateComputedByUser)){
+			movement.setBirthDate(TimeHelper.getInstance().getUniversalTimeCoordinated());
+		}
+		*/
 		if(movement.getAction() == null){
 			if(movement.getParent()!=null){
 				Boolean parentActionIsOppositeOfChildAction = movement.getParent().getParentActionIsOppositeOfChildAction();
