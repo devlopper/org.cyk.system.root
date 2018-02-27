@@ -837,7 +837,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	String cashRegisterMovementCollectionCode = RandomHelper.getInstance().getAlphabetic(5);
     	testCase.create(inject(MovementCollectionBusiness.class).instanciateOne(cashRegisterMovementCollectionCode).setValue(new BigDecimal("0")));
     	
-    	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),invoiceMovementCollectionCode, "-15",Boolean.FALSE);
+    	Movement movement = testCase.instanciateOne(Movement.class).__set__(invoiceMovementCollectionCode, Boolean.FALSE, -15, null, null);
     	movement.setDestinationMovementCollection(inject(MovementCollectionDao.class).read(cashRegisterMovementCollectionCode));
     	testCase.create(movement);
     	String code001 = movement.getCode();
@@ -845,14 +845,14 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertMovement(code001, "-15","85",Boolean.FALSE);
     	testCase.assertMovementCollection(cashRegisterMovementCollectionCode, "15","1");
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),invoiceMovementCollectionCode, "-10",Boolean.FALSE);
+    	movement = testCase.instanciateOne(Movement.class).__set__(invoiceMovementCollectionCode, Boolean.FALSE, -10, null, null);
     	movement.setDestinationMovementCollection(inject(MovementCollectionDao.class).read(cashRegisterMovementCollectionCode));
     	movement = testCase.create(movement);
     	String code002 = movement.getCode();
     	testCase.assertMovement(code002, "-10","75",Boolean.FALSE);
     	testCase.assertMovementCollection(cashRegisterMovementCollectionCode, "25","2");
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),invoiceMovementCollectionCode, "-7",Boolean.FALSE);
+    	movement = testCase.instanciateOne(Movement.class).__set__(invoiceMovementCollectionCode, Boolean.FALSE, -7, null, null);
     	movement.setDestinationMovementCollection(inject(MovementCollectionDao.class).read(cashRegisterMovementCollectionCode));
     	movement = testCase.create(movement);
     	String code003 = movement.getCode();
