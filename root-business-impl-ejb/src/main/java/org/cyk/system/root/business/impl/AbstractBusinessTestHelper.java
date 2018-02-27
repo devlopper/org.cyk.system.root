@@ -1342,8 +1342,10 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 				Movement movement = instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode)
 		    			.setActionFromIncrementation(array[0] == null ? null : Boolean.parseBoolean((String)array[0]))
 		    			.setIdentifiablePeriod(identifiablePeriod).setValue(NumberHelper.getInstance().get(BigDecimal.class, array[2],null));
-				if(array[1]!=null)
+				if(array[1]!=null){
+					movement.setBirthDateComputedByUser(Boolean.TRUE);
 					movement.setBirthDate((Date)array[1]);
+				}
 				create(movement);
 		    	
 		    	assertMovementCollection(movementCollectionCode,(String)array[3], (String)array[4]);

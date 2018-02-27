@@ -12,6 +12,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.utility.common.Constant;
@@ -20,6 +21,7 @@ import org.cyk.utility.common.annotation.FieldOverrides;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.NumberHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -85,6 +87,16 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 		else
 			this.action=this.collection.getType().getDecrementAction();
 		return this;
+	}
+	
+	public Movement setValueFromObject(Object value){
+		this.value = NumberHelper.getInstance().get(BigDecimal.class, value, null);
+		return this;
+	}
+	
+	@Override
+	public Movement setBirthDateComputedByUser(Boolean value) {
+		return (Movement) super.setBirthDateComputedByUser(value);
 	}
 	
 	@Override
