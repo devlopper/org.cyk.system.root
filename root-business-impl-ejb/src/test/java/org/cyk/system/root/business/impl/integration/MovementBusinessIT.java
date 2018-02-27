@@ -415,144 +415,124 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	String movementCollectionCode = movementCollection.getCode();
     	testCase.create(movementCollection);
     	
-    	Movement movement;
+    	String code001 = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(Movement.class,code001).__set__(movementCollectionCode,Boolean.TRUE,15,Boolean.TRUE,"30/1/2000"));
+    	testCase.assertMovementCollection(movementCollectionCode, "15", "1").assertMovements(movementCollectionCode
+    			, new String[]{"0","15","15","true"}
+    	);
     	
-    	movement = testCase.instanciateOneWithRandomIdentifier(Movement.class).setCollectionFromCode(movementCollectionCode).setActionFromIncrementation(Boolean.TRUE)
-    			.setValueFromObject(15).setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 1, 30));
-    	testCase.create(movement);
-    	String code001 = movement.getCode();
-    	testCase.read(Movement.class, code001);
-    	testCase.assertMovements(movementCollectionCode, new String[]{"0","15","15","true"});
-    	testCase.assertMovementCollection(movementCollectionCode, "15", "1")
-    		.assertMovement(code001, "15","15",Boolean.TRUE);
-    	/*
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollectionCode, "10",Boolean.TRUE);
-    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 29));
-    	movement = testCase.create(movement);
-    	String code002 = movement.getCode();
-    	//testCase.assertMovements(movementCollection, new String[]{"0","10","10","true"}, new String[]{"1","15","25","true"});
-    	testCase.assertMovementCollection(movementCollectionCode, "25", "2")
-    		.assertMovement(code002, "10","10",Boolean.TRUE)
-    		.assertMovement(code001, "15","25",Boolean.TRUE);
+    	testCase.create(testCase.instanciateOne(Movement.class).__set__(movementCollectionCode,Boolean.TRUE,10,Boolean.TRUE,"29/1/2000"));
+    	testCase.assertMovementCollection(movementCollectionCode, "25", "2").assertMovements(movementCollectionCode
+    			, new String[]{"0","10","10","true"}
+    			, new String[]{"1","15","25","true"}
+    	);
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollectionCode, "7",Boolean.TRUE);
-    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 28));
-    	movement = testCase.create(movement);
-    	String code003 = movement.getCode();
-    	testCase.assertMovementCollection(movementCollectionCode, "32", "3")
-    		.assertMovement(code003, "7","7",Boolean.TRUE)
-    		.assertMovement(code002, "10","17",Boolean.TRUE)
-    		.assertMovement(code001, "15","32",Boolean.TRUE);
+    	testCase.create(testCase.instanciateOne(Movement.class).__set__(movementCollectionCode,Boolean.TRUE,7,Boolean.TRUE,"28/1/2000"));
+    	testCase.assertMovementCollection(movementCollectionCode, "32", "3").assertMovements(movementCollectionCode
+    			, new String[]{"0","7","7","true"}
+    			, new String[]{"1","10","17","true"}
+    			, new String[]{"2","15","32","true"}
+    	);
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollectionCode, "-7",Boolean.FALSE);
-    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 27));
-    	movement = testCase.create(movement);
-    	String code004 = movement.getCode();
-    	testCase.assertMovementCollection(movementCollectionCode, "25", "4")
-    		.assertMovement(code004, "-7","-7",Boolean.FALSE)
-    		.assertMovement(code003, "7","0",Boolean.TRUE)
-    		.assertMovement(code002, "10","10",Boolean.TRUE)
-    		.assertMovement(code001, "15","25",Boolean.TRUE);
+    	String code004 = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(Movement.class,code004).__set__(movementCollectionCode,Boolean.FALSE,-7,Boolean.TRUE,"27/1/2000"));
+    	testCase.assertMovementCollection(movementCollectionCode, "25", "4").assertMovements(movementCollectionCode
+    			, new String[]{"0","-7","-7","false"}
+    			, new String[]{"1","7","0","true"}
+    			, new String[]{"2","10","10","true"}
+    			, new String[]{"3","15","25","true"}
+    	);
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollectionCode, "20",Boolean.TRUE);
-    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 26));
-    	movement = testCase.create(movement);
-    	String code005 = movement.getCode();
-    	testCase.assertMovementCollection(movementCollectionCode, "45", "5")
-    		.assertMovement(code005, "20","20",Boolean.TRUE)
-    		.assertMovement(code004, "-7","13",Boolean.FALSE)
-    		.assertMovement(code003, "7","20",Boolean.TRUE)
-    		.assertMovement(code002, "10","30",Boolean.TRUE)
-    		.assertMovement(code001, "15","45",Boolean.TRUE);
+    	testCase.create(testCase.instanciateOne(Movement.class).__set__(movementCollectionCode,Boolean.TRUE,20,Boolean.TRUE,"26/1/2000"));
+    	testCase.assertMovementCollection(movementCollectionCode, "45", "5").assertMovements(movementCollectionCode
+    			, new String[]{"0","20","20","true"}
+    			, new String[]{"1","-7","13","false"}
+    			, new String[]{"2","7","20","true"}
+    			, new String[]{"3","10","30","true"}
+    			, new String[]{"4","15","45","true"}
+    	);
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollectionCode, "8",Boolean.TRUE);
-    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 24));
-    	movement = testCase.create(movement);
-    	String code007 = movement.getCode();
-    	testCase.assertMovementCollection(movementCollectionCode, "53", "6")
-    		.assertMovement(code007, "8","8",Boolean.TRUE)
-    		.assertMovement(code005, "20","28",Boolean.TRUE)
-    		.assertMovement(code004, "-7","21",Boolean.FALSE)
-    		.assertMovement(code003, "7","28",Boolean.TRUE)
-    		.assertMovement(code002, "10","38",Boolean.TRUE)
-    		.assertMovement(code001, "15","53",Boolean.TRUE);
+    	String code007 = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(Movement.class,code007).__set__(movementCollectionCode,Boolean.TRUE,8,Boolean.TRUE,"24/1/2000"));
+    	testCase.assertMovementCollection(movementCollectionCode, "53", "6").assertMovements(movementCollectionCode
+    			, new String[]{"0","8","8","true"}
+    			, new String[]{"1","20","28","true"}
+    			, new String[]{"2","-7","21","false"}
+    			, new String[]{"3","7","28","true"}
+    			, new String[]{"4","10","38","true"}
+    			, new String[]{"5","15","53","true"}
+    	);
     	
-    	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementCollectionCode, "-3",Boolean.FALSE);
-    	movement.getGlobalIdentifier().getExistencePeriod().setFromDate(TimeHelper.getInstance().getDate(2000, 1, 25));
-    	movement = testCase.create(movement);
-    	String code006 = movement.getCode();
-    	testCase.assertMovementCollection(movementCollectionCode, "50", "7")
-    		.assertMovement(code007, "8","8",Boolean.TRUE)
-    		.assertMovement(code006, "-3","5",Boolean.FALSE)
-    		.assertMovement(code005, "20","25",Boolean.TRUE)
-    		.assertMovement(code004, "-7","18",Boolean.FALSE)
-    		.assertMovement(code003, "7","25",Boolean.TRUE)
-    		.assertMovement(code002, "10","35",Boolean.TRUE)
-    		.assertMovement(code001, "15","50",Boolean.TRUE);
+    	testCase.create(testCase.instanciateOne(Movement.class).__set__(movementCollectionCode,Boolean.FALSE,-3,Boolean.TRUE,"25/1/2000"));
+    	testCase.assertMovementCollection(movementCollectionCode, "50", "7").assertMovements(movementCollectionCode
+    			, new String[]{"0","8","8","true"}
+    			, new String[]{"1","-3","5","false"}
+    			, new String[]{"2","20","25","true"}
+    			, new String[]{"3","-7","18","false"}
+    			, new String[]{"4","7","25","true"}
+    			, new String[]{"5","10","35","true"}
+    			, new String[]{"6","15","50","true"}
+    	);
     	
-    	movement = testCase.read(Movement.class, code001);
-    	movement.setValue(new BigDecimal("16"));
-    	testCase.update(movement);
-    	testCase.assertMovementCollection(movementCollectionCode, "51", "7")
-    		.assertMovement(code007, "8","8",Boolean.TRUE)
-    		.assertMovement(code006, "-3","5",Boolean.FALSE)
-    		.assertMovement(code005, "20","25",Boolean.TRUE)
-    		.assertMovement(code004, "-7","18",Boolean.FALSE)
-    		.assertMovement(code003, "7","25",Boolean.TRUE)
-    		.assertMovement(code002, "10","35",Boolean.TRUE)
-    		.assertMovement(code001, "16","51",Boolean.TRUE);
+    	testCase.update(testCase.read(Movement.class, RootConstant.Code.generate(movementCollection, code001)).setValueFromObject(16));
+    	testCase.assertMovementCollection(movementCollectionCode, "51", "7").assertMovements(movementCollectionCode
+    			, new String[]{"0","8","8","true"}
+    			, new String[]{"1","-3","5","false"}
+    			, new String[]{"2","20","25","true"}
+    			, new String[]{"3","-7","18","false"}
+    			, new String[]{"4","7","25","true"}
+    			, new String[]{"5","10","35","true"}
+    			, new String[]{"6","16","51","true"}
+    	);
     	
-    	movement = testCase.read(Movement.class, code007);
-    	movement.setValue(new BigDecimal("17"));
-    	testCase.update(movement);
-    	testCase.assertMovementCollection(movementCollectionCode, "60", "7")
-    		.assertMovement(code007, "17","17",Boolean.TRUE)
-    		.assertMovement(code006, "-3","14",Boolean.FALSE)
-    		.assertMovement(code005, "20","34",Boolean.TRUE)
-    		.assertMovement(code004, "-7","27",Boolean.FALSE)
-    		.assertMovement(code003, "7","34",Boolean.TRUE)
-    		.assertMovement(code002, "10","44",Boolean.TRUE)
-    		.assertMovement(code001, "16","60",Boolean.TRUE);
+    	testCase.update(testCase.read(Movement.class, RootConstant.Code.generate(movementCollection, code007)).setValueFromObject(17));
+    	testCase.assertMovementCollection(movementCollectionCode, "60", "7").assertMovements(movementCollectionCode
+    			, new String[]{"0","17","17","true"}
+    			, new String[]{"1","-3","14","false"}
+    			, new String[]{"2","20","34","true"}
+    			, new String[]{"3","-7","27","false"}
+    			, new String[]{"4","7","34","true"}
+    			, new String[]{"5","10","44","true"}
+    			, new String[]{"6","16","60","true"}
+    	);
     	
-    	movement = testCase.read(Movement.class, code004);
-    	movement.setValue(new BigDecimal("-13"));
-    	testCase.update(movement);
-    	testCase.assertMovementCollection(movementCollectionCode, "54", "7")
-    		.assertMovement(code007, "17","17",Boolean.TRUE)
-    		.assertMovement(code006, "-3","14",Boolean.FALSE)
-    		.assertMovement(code005, "20","34",Boolean.TRUE)
-    		.assertMovement(code004, "-13","21",Boolean.FALSE)
-    		.assertMovement(code003, "7","28",Boolean.TRUE)
-    		.assertMovement(code002, "10","38",Boolean.TRUE)
-    		.assertMovement(code001, "16","54",Boolean.TRUE);
+    	testCase.update(testCase.read(Movement.class, RootConstant.Code.generate(movementCollection, code004)).setValueFromObject(-13));
+    	testCase.assertMovementCollection(movementCollectionCode, "54", "7").assertMovements(movementCollectionCode
+    			, new String[]{"0","17","17","true"}
+    			, new String[]{"1","-3","14","false"}
+    			, new String[]{"2","20","34","true"}
+    			, new String[]{"3","-13","21","false"}
+    			, new String[]{"4","7","28","true"}
+    			, new String[]{"5","10","38","true"}
+    			, new String[]{"6","16","54","true"}
+    	);
     	
-    	movement = testCase.read(Movement.class, code007);
-    	testCase.delete(movement);
-    	testCase.assertMovementCollection(movementCollectionCode, "37", "6")
-    		.assertMovement(code006, "-3","-3",Boolean.FALSE)
-    		.assertMovement(code005, "20","17",Boolean.TRUE)
-    		.assertMovement(code004, "-13","4",Boolean.FALSE)
-    		.assertMovement(code003, "7","11",Boolean.TRUE)
-    		.assertMovement(code002, "10","21",Boolean.TRUE)
-    		.assertMovement(code001, "16","37",Boolean.TRUE);
+    	testCase.deleteByCode(Movement.class, RootConstant.Code.generate(movementCollection, code007));
+    	testCase.assertMovementCollection(movementCollectionCode, "37", "6").assertMovements(movementCollectionCode
+    			, new String[]{"0","-3","-3","false"}
+    			, new String[]{"1","20","17","true"}
+    			, new String[]{"2","-13","4","false"}
+    			, new String[]{"3","7","11","true"}
+    			, new String[]{"4","10","21","true"}
+    			, new String[]{"5","16","37","true"}
+    	);
     	
-    	movement = testCase.read(Movement.class, code001);
-    	testCase.delete(movement);
-    	testCase.assertMovementCollection(movementCollectionCode, "21", "5")
-    		.assertMovement(code006, "-3","-3",Boolean.FALSE)
-    		.assertMovement(code005, "20","17",Boolean.TRUE)
-    		.assertMovement(code004, "-13","4",Boolean.FALSE)
-    		.assertMovement(code003, "7","11",Boolean.TRUE)
-    		.assertMovement(code002, "10","21",Boolean.TRUE);
+    	testCase.deleteByCode(Movement.class, RootConstant.Code.generate(movementCollection, code001));
+    	testCase.assertMovementCollection(movementCollectionCode, "21", "5").assertMovements(movementCollectionCode
+    			, new String[]{"0","-3","-3","false"}
+    			, new String[]{"1","20","17","true"}
+    			, new String[]{"2","-13","4","false"}
+    			, new String[]{"3","7","11","true"}
+    			, new String[]{"4","10","21","true"}
+    	);
     	
-    	movement = testCase.read(Movement.class, code004);
-    	testCase.delete(movement);
-    	testCase.assertMovementCollection(movementCollectionCode, "34", "4")
-    		.assertMovement(code006, "-3","-3",Boolean.FALSE)
-    		.assertMovement(code005, "20","17",Boolean.TRUE)
-    		.assertMovement(code003, "7","24",Boolean.TRUE)
-    		.assertMovement(code002, "10","34",Boolean.TRUE);
-    	*/
+    	testCase.deleteByCode(Movement.class, RootConstant.Code.generate(movementCollection, code004));
+    	testCase.assertMovementCollection(movementCollectionCode, "34", "4").assertMovements(movementCollectionCode
+    			, new String[]{"0","-3","-3","false"}
+    			, new String[]{"1","20","17","true"}
+    			, new String[]{"2","7","24","true"}
+    			, new String[]{"3","10","34","true"}
+    	);
     	
     	testCase.clean();
     }
@@ -571,7 +551,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.create(movementUnlimited);
     	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "15",Boolean.TRUE);
-    	movement.setBirthDate(date(2000, 5, 2));
+    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 5, 2));
     	movement = testCase.create(movement);
     	String code001 = movement.getCode();
     	testCase.assertMovement(code001, "15","15",Boolean.TRUE);
@@ -579,11 +559,11 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 0);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.setBirthDate(date(2000, 5, 3));
+    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 5, 3));
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,movement, 1);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.setBirthDate(date(2000, 5, 1));
+    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 5, 1));
     	movement = testCase.create(movement);
     	String code002 = movement.getCode();
     	testCase.assertMovement(code002, "10","10",Boolean.TRUE);
@@ -591,7 +571,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 1);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.setBirthDate(date(2000, 5, 3));
+    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 5, 3));
     	movement = testCase.create(movement);
     	String code003 = movement.getCode();
     	testCase.assertMovement(code003, "10","35",Boolean.TRUE);
@@ -600,7 +580,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code003, 2);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.setBirthDate(date(2000, 4, 1));
+    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 4, 1));
     	movement = testCase.create(movement);
     	String code001A = movement.getCode();
     	testCase.assertMovement(code001A, "10","10",Boolean.TRUE);

@@ -12,7 +12,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
-import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.utility.common.Constant;
@@ -69,6 +68,10 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 		return (Movement) super.setBirthDate(date);
 	}
 	
+	public Movement setBirthDateFromString(String date) {
+		return (Movement) super.setBirthDateFromString(date);
+	}
+	
 	@Override
 	public Movement setCollection(MovementCollection collection) {
 		return (Movement) super.setCollection(collection); 
@@ -91,6 +94,15 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	public Movement setValueFromObject(Object value){
 		this.value = NumberHelper.getInstance().get(BigDecimal.class, value, null);
+		return this;
+	}
+	
+	public Movement __set__(String collectionCode,Boolean isIncrementation,Object value,Boolean isBirthDateComputedByUser,String birthDate){
+		setCollectionFromCode(collectionCode);
+		setActionFromIncrementation(isIncrementation);
+		setValueFromObject(value);
+		setBirthDateComputedByUser(isBirthDateComputedByUser);
+		setBirthDateFromString(birthDate);
 		return this;
 	}
 	

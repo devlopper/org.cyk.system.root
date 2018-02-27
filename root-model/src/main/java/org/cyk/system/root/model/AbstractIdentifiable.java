@@ -24,10 +24,6 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -50,6 +46,11 @@ import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.TimeHelper;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /*lombok*/
 
@@ -233,6 +234,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public Date getBirthDate(){
 		return globalIdentifier == null ? null : globalIdentifier.getExistencePeriod().getFromDate();
 	}
+	public AbstractIdentifiable setBirthDateFromString(String date) {
+		return setBirthDate(TimeHelper.getInstance().getDateFromString(date));
+	}
 	
 	public AbstractIdentifiable setDeathDate(Date date){
 		getGlobalIdentifierCreateIfNull().getExistencePeriod().setToDate(date);
@@ -240,6 +244,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	}
 	public Date getDeathDate(){
 		return globalIdentifier == null ? null : globalIdentifier.getExistencePeriod().getToDate();
+	}
+	public AbstractIdentifiable setDeathDateFromString(String date) {
+		return setDeathDate(TimeHelper.getInstance().getDateFromString(date));
 	}
 	
 	public void setBirthLocation(Location location){
