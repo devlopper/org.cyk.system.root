@@ -917,18 +917,17 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59));
 		testCase.create(identifiablePeriod);
 		
-		MovementCollection saleMovementCollection = testCase.create(testCase.instanciateOne(MovementCollection.class).setCode(RandomHelper.getInstance().getAlphabetic(2))
+		String saleMovementCollectionCode = RandomHelper.getInstance().getAlphabetic(2);
+		MovementCollection saleMovementCollection = testCase.create(testCase.instanciateOne(MovementCollection.class,saleMovementCollectionCode)
 				.setValue(new BigDecimal("1000")));
 		MovementCollection cashRegisterMovementCollection = testCase.read(MovementCollection.class, RootConstant.Code.MovementCollection.CASH_REGISTER);
 		
 		String cashRegisterMovementCode = RandomHelper.getInstance().getAlphabetic(5);
-		Movement cashRegisterMovement = testCase.instanciateOne(Movement.class).setCode(cashRegisterMovementCode).setValue(new BigDecimal("100"));
-		cashRegisterMovement.setBirthDate(date(2000, 1, 1, 0, 5));
-		cashRegisterMovement.setCollection(cashRegisterMovementCollection).setAction(cashRegisterMovementCollection.getType().getIncrementAction())
-			.setParentActionIsOppositeOfChildAction(Boolean.TRUE).setIdentifiablePeriod(identifiablePeriod);
+		Movement cashRegisterMovement = testCase.instanciateOne(Movement.class,cashRegisterMovementCode).__set__(RootConstant.Code.MovementCollection.CASH_REGISTER
+				, Boolean.TRUE, 100, Boolean.TRUE, "1/1/2000 0:5").setParentActionIsOppositeOfChildAction(Boolean.TRUE).setIdentifiablePeriod(identifiablePeriod);
 		String saleMovementCode = RandomHelper.getInstance().getAlphabetic(5);
-		cashRegisterMovement.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(saleMovementCode).setCollection(saleMovementCollection)
-				.setValueSettableFromAbsolute(Boolean.TRUE).setValueAbsolute(new BigDecimal("100")).setParent(cashRegisterMovement));
+		cashRegisterMovement.addIdentifiables(testCase.instanciateOne(Movement.class,saleMovementCode).__set__(saleMovementCollectionCode, Boolean.FALSE, -100, null, null)
+				.setParent(cashRegisterMovement));
 		testCase.create(cashRegisterMovement);
 		
 		testCase.assertNotNull(Movement.class, RootConstant.Code.generate(cashRegisterMovementCollection,cashRegisterMovementCode)
@@ -951,15 +950,14 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		testCase.create(identifiablePeriod);
 		
 		String parentCode = RandomHelper.getInstance().getAlphabetic(5);
-		Movement parent = testCase.instanciateOne(Movement.class).setCode(parentCode).setValue(new BigDecimal("100"));
-		parent.setIdentifiablePeriod(identifiablePeriod).setBirthDate(date(2000, 1, 1, 0, 5));
-		parent.setCollection(testCase.read(MovementCollection.class, RootConstant.Code.MovementCollection.CASH_REGISTER));
+		Movement parent = testCase.instanciateOne(Movement.class,parentCode)
+				.__set__(RootConstant.Code.MovementCollection.CASH_REGISTER, Boolean.TRUE, 100, Boolean.TRUE, "1/1/2000 0:5").setIdentifiablePeriod(identifiablePeriod);
 		String child1Code = RandomHelper.getInstance().getAlphabetic(5);
-		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child1Code).setCollectionFromCode(collectionCode).setValue(new BigDecimal("35")).setParent(parent));
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class,child1Code).__set__(collectionCode, Boolean.TRUE, 35).setParent(parent));
 		String child2Code = RandomHelper.getInstance().getAlphabetic(5);
-		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child2Code).setCollectionFromCode(collectionCode).setValue(new BigDecimal("25")).setParent(parent));
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class,child2Code).__set__(collectionCode, Boolean.TRUE, 25).setParent(parent));
 		String child3Code = RandomHelper.getInstance().getAlphabetic(5);
-		parent.addIdentifiables(testCase.instanciateOne(Movement.class).setCode(child3Code).setCollectionFromCode(collectionCode).setValue(new BigDecimal("40")).setParent(parent));
+		parent.addIdentifiables(testCase.instanciateOne(Movement.class,child3Code).__set__(collectionCode, Boolean.TRUE, 40).setParent(parent));
 		testCase.create(parent);
 		testCase.assertNotNull(Movement.class, RootConstant.Code.MovementCollection.CASH_REGISTER+Constant.CHARACTER_UNDESCORE+parentCode
 				,collectionCode+Constant.CHARACTER_UNDESCORE+child1Code,collectionCode+Constant.CHARACTER_UNDESCORE+child2Code

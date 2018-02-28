@@ -106,6 +106,10 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 		return this;
 	}
 	
+	public Movement __set__(String collectionCode,Boolean isIncrementation,Object value){
+		return __set__(collectionCode, isIncrementation, value, null, null);
+	}
+	
 	@Override
 	public Movement setBirthDateComputedByUser(Boolean value) {
 		return (Movement) super.setBirthDateComputedByUser(value);
