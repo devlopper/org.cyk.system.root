@@ -30,6 +30,7 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.TimeHelper;
+import org.cyk.utility.common.test.Runnable;
 import org.junit.Test;
 
 public class MovementBusinessIT extends AbstractBusinessIT {
@@ -71,6 +72,23 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	Movement movement = testCase.instanciateOne(Movement.class,"code").setCollectionFromCode(collectionCode);
     	assertEquals("code", movement.getCode());
     	assertNotNull(movement.getCollection());
+    	testCase.clean();
+    }
+    
+    @Test
+    public void instanciateOneMovementInIdentifiablePeriod(){
+    	final TestCase testCase = instanciateTestCase();
+    	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
+    	testCase.assertNotNull(MovementCollection.class, collectionCode);
+    	
+    	final String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)));
+    	
+    	testCase.computeChanges(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setBirthDateComputedByUser(Boolean.TRUE)
+    			.setBirthDateFromString("1/1/2000 1:0").setIdentifiablePeriodFromCode(identifiablePeriodCode));
+    	
     	testCase.clean();
     }
     
@@ -967,6 +985,47 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     
     /* Exceptions */
     
+	@Test
+    public void throwCollectionIsNull(){
+		final TestCase testCase = instanciateTestCase();
+    	testCase.assertThrowable(new Runnable() {
+			@Override
+			protected void __run__() throws Throwable {
+				testCase.create(testCase.instanciateOne(Movement.class));
+			}
+    		
+    	}, 159, null);
+	}
+	
+	@Test
+    public void throwValueIsNull(){
+		final TestCase testCase = instanciateTestCase();
+    	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
+    	
+		testCase.assertThrowable(new Runnable() {
+			@Override
+			protected void __run__() throws Throwable {
+				testCase.create(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode));
+			}
+    		
+    	}, null, "badval");
+	}
+	
+	@Test
+    public void throwValueIsZero(){
+		final TestCase testCase = instanciateTestCase();
+    	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
+    	
+		testCase.assertThrowable(new Runnable() {
+			@Override
+			protected void __run__() throws Throwable {
+				testCase.create(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setValueFromObject(0));
+			}
+    		
+    	}, null, "badval");
+	}
     
     /**/
     

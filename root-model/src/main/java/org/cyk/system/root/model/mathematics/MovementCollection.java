@@ -12,6 +12,8 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +32,11 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	@Override
 	public MovementCollection setCode(String code) {
 		return (MovementCollection) super.setCode(code);
+	}
+	
+	public MovementCollection setTypeFromCode(String code){
+		this.type = InstanceHelper.getInstance().getByIdentifier(MovementCollectionType.class, code, ClassHelper.Listener.IdentifierType.BUSINESS);
+		return this;
 	}
 	
 	public static final String FIELD_VALUE = "value";

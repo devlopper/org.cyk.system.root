@@ -2,6 +2,7 @@ package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -80,9 +81,14 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             exceptionUtils().exception(identifiable.getIdentifier()!=null,"exception.value.set.system",new Object[]{"identifier"});
             
             for(FieldHelper.Field index : FieldHelper.Field.get(anIdentifiable.getClass())){
-        		if(!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null){
+            	throw__(new ConditionHelper.Condition.Builder.Adapter.Default().setValueNameIdentifier("identifiable_id")
+						.setDomainNameIdentifier("identifiable").setConditionValue(
+								!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null
+								).setConditionIdentifier(159), BusinessException.class);	
+            	
+            	/*if(!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null){
         			exceptionUtils().exception(index.getName()+" is required");
-        		}
+        		}*/
         	}
         }
     }

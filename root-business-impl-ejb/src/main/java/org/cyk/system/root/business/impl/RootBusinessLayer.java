@@ -57,7 +57,6 @@ import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
-import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.userinterface.UserInterfaceCommand;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenu;
@@ -84,7 +83,7 @@ import org.cyk.utility.common.helper.ListenerHelper.Executor.ResultMethod;
 import org.cyk.utility.common.helper.MapHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.StringHelper;
-import org.cyk.utility.common.test.TestHelper;
+import org.cyk.utility.common.test.TestCase;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -131,7 +130,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         ClassHelper.getInstance().map(InstanceHelper.Listener.class, org.cyk.system.root.business.impl.helper.InstanceHelper.Listener.class);
         
         ClassHelper.getInstance().map(ClassHelper.Listener.class, org.cyk.system.root.business.impl.helper.ClassHelper.Listener.class);
-        ClassHelper.getInstance().map(TestHelper.TestCase.class, AbstractBusinessTestHelper.TestCase.class);
+        ClassHelper.getInstance().map(TestCase.class, AbstractBusinessTestHelper.TestCase.class);
         
         FileHelper.Listener.Adapter.Default.FILE_CLASS = File.class;
         

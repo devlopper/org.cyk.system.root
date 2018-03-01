@@ -38,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.text.WordUtils;
 import org.cyk.system.OrgCykSystemPackage;
+import org.cyk.system.root.business.api.BusinessException;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -746,7 +747,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	/**/
 	
 	@Getter @Setter @Accessors(chain=true) @NoArgsConstructor
-	public static class TestCase extends org.cyk.utility.common.test.TestHelper.TestCase implements Serializable {
+	public static class TestCase extends org.cyk.utility.common.test.TestCase implements Serializable {
 
 		private static final long serialVersionUID = -6026836126124339547L;
 
@@ -757,19 +758,15 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		protected Set<Class<?>> classes=new LinkedHashSet<>();
 		protected Map<Class<?>,Long> countAllMap = new HashMap<>();
 		
+		{
+			this.defaultThrowableClass = BusinessException.class;
+		}
+		
 		public TestCase(AbstractBusinessTestHelper helper) {
 			super();
 			this.helper = helper;
 		}
-		/*
-		public <T> T instanciateOneWithCode(Class<T> aClass,String code){
-			T instance = ClassHelper.getInstance().instanciateOne(aClass);
-			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
-				//((AbstractIdentifiable)instance).setCode(code);
-				FieldHelper.getInstance().set(instance, (Object)code, FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE));
-			return instance;
-		}
-		*/
+		
 		public Movement instanciateOneMovement(String code,String collectionCode){
 			Movement movement = instanciateOne(Movement.class, code);
 			movement.setCollection(InstanceHelper.getInstance().getByIdentifier(MovementCollection.class, collectionCode,ClassHelper.Listener.IdentifierType.BUSINESS));
@@ -1429,7 +1426,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}
 
 	public TestCase instanciateTestCase(AbstractBusinessTestHelper helper){
-		TestCase testCase = (TestCase) ClassHelper.getInstance().instanciateOne(org.cyk.utility.common.test.TestHelper.TestCase.class);
+		TestCase testCase = (TestCase) ClassHelper.getInstance().instanciateOne(org.cyk.utility.common.test.TestCase.class);
 		testCase.setHelper(helper);
 		return testCase;
 	}

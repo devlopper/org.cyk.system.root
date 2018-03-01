@@ -68,13 +68,6 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		MovementCollection movementCollection = inject(MovementCollectionDao.class).read(collectionCode);
 		Movement movement = instanciateOne(movementCollection);
 		movement.setValue(NumberHelper.getInstance().get(BigDecimal.class, value));
-		/*if(StringUtils.isNotBlank(supportingDocumentCode)){
-			File supportingDocument = inject(FileBusiness.class).instanciateOne();
-			supportingDocument.setCode(supportingDocumentCode);
-			supportingDocument.setPhysicalCreator(supportingDocumentPhysicalCreator);
-			supportingDocument.setContentWriter(supportingDocumentContentWriter);
-			movement.setSupportingDocument(supportingDocument);
-		}*/
 		if(StringUtils.isNotBlank(actionCode))
 			movement.setAction(inject(MovementActionDao.class).read(actionCode));
 		return movement;
@@ -101,11 +94,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 						.setDomainNameIdentifier("movement").setNumber1(movement.getValue())
 						.setNumber2(BigDecimal.ZERO).setEqual(Boolean.TRUE));	
 			}
-			/*
-			if(movement.getBirthDate()==null)
-				movement.setBirthDate(inject(TimeBusiness.class).findUniversalTimeCoordinated());
-			*/
-			if(movement.getCollection()!=null && movement.getCollection().getType().getIdentifiablePeriodType()!=null){
+			
+			/*if(movement.getCollection()!=null && movement.getCollection().getType().getIdentifiablePeriodType()!=null){
 				exceptionUtils().exception(movement.getIdentifiablePeriod() == null, "identifiable_period_required");
 				
 				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movdate")
@@ -115,8 +105,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movdate")
 						.setDomainNameIdentifier("movement").setNumber1(movement.getBirthDate().getTime())
 						.setNumber2(movement.getIdentifiablePeriod().getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
-			}
-			
+			}*/			
 			
 			updateCollection(movement,crud);
 			
@@ -171,7 +160,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				}	
 			}
 			
-			Collection<Movement> children = dao.readByFilter(new Movement.Filter().addMaster(movement), null);//dao.readByParent(movement);
+			Collection<Movement> children = dao.readByFilter(new Movement.Filter().addMaster(movement), null);
 			if(CollectionHelper.getInstance().isNotEmpty(children)){
 				BigDecimal sum = NumberHelper.getInstance().get(BigDecimal.class
 						,NumberHelper.getInstance().sum(MethodHelper.getInstance().callGet(children, BigDecimal.class, Movement.FIELD_VALUE)),BigDecimal.ZERO);
@@ -190,7 +179,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	protected void beforeDelete(Movement movement) {
 		super.beforeDelete(movement);
-		delete(dao.readByFilter(new Movement.Filter().addMaster(movement), null)/*dao.readByParent(movement)*/);
+		delete(dao.readByFilter(new Movement.Filter().addMaster(movement), null));
 	}
 	
 	private void updateCumulWhereExistencePeriodFromDateIsGreaterThan(Movement movement,Crud crud){
@@ -257,7 +246,6 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		Movement movement = instanciateOne(movementCollection);
 		movement.setValue(NumberHelper.getInstance().get(BigDecimal.class, value));
 		movement.setAction(movementAction);
-		//movement.setAction(bigDecimal==null || bigDecimal.signum() == 0 ? null : bigDecimal.signum() == 1 ? movementCollection.getIncrementAction() : movementCollection.getDecrementAction());
 		return movement;
 	}
 	
@@ -278,12 +266,19 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	public void computeChanges(Movement movement,LoggingHelper.Message.Builder logMessageBuilder) {		
 		super.computeChanges(movement,logMessageBuilder);
-		/*Boolean isBirthDateComputedByUser = InstanceHelper.getInstance().getIfNotNullElseDefault(movement.isFieldValueComputedByUser(FieldHelper.getInstance()
-				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE)),Boolean.FALSE);
-		if(movement.getBirthDate() == null || Boolean.FALSE.equals(isBirthDateComputedByUser)){
-			movement.setBirthDate(TimeHelper.getInstance().getUniversalTimeCoordinated());
+		
+		if(movement.getCollection()!=null && movement.getCollection().getType().getIdentifiablePeriodType()!=null){
+			exceptionUtils().exception(movement.getIdentifiablePeriod() == null, "identifiable_period_required");
+			
+			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movdate")
+					.setDomainNameIdentifier("movement").setNumber1(movement.getBirthDate().getTime())
+					.setNumber2(movement.getIdentifiablePeriod().getBirthDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.FALSE));
+			
+			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movdate")
+					.setDomainNameIdentifier("movement").setNumber1(movement.getBirthDate().getTime())
+					.setNumber2(movement.getIdentifiablePeriod().getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
 		}
-		*/
+		
 		if(movement.getAction() == null){
 			if(movement.getParent()!=null){
 				Boolean parentActionIsOppositeOfChildAction = movement.getParent().getParentActionIsOppositeOfChildAction();

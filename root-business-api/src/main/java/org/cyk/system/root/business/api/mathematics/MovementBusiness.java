@@ -19,4 +19,8 @@ public interface MovementBusiness extends AbstractCollectionItemBusiness<Movemen
 	Movement createIfActionIsNotNull(Movement movement);
 	void create(AbstractIdentifiable identifiableJoin, String typeCode, Crud crud,AbstractIdentifiable valueIdentifiable, String valueFieldName,Boolean isPositiveDecrement
 			,String destinationMovementCollectionCode);
+	
+	/**/
+	
+	String THROWABLE_COLLECTION_IS_NULL = "THROWABLE_COLLECTION_IS_NULL";
 }

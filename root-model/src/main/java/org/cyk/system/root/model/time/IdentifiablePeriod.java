@@ -27,8 +27,18 @@ public class IdentifiablePeriod extends AbstractIdentifiable implements Serializ
 	}
 	
 	@Override
+	public IdentifiablePeriod setBirthDateFromString(String date) {
+		return (IdentifiablePeriod) super.setBirthDateFromString(date);
+	}
+	
+	@Override
 	public IdentifiablePeriod setDeathDate(Date date) {
 		return (IdentifiablePeriod) super.setDeathDate(date);
+	}
+	
+	@Override
+	public IdentifiablePeriod setDeathDateFromString(String date) {
+		return (IdentifiablePeriod) super.setDeathDateFromString(date);
 	}
 	
 	/**/

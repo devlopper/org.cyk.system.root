@@ -20,6 +20,8 @@ import org.cyk.utility.common.annotation.FieldOverrides;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 
 import lombok.Getter;
@@ -94,6 +96,11 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	public Movement setValueFromObject(Object value){
 		this.value = NumberHelper.getInstance().get(BigDecimal.class, value, null);
+		return this;
+	}
+	
+	public Movement setIdentifiablePeriodFromCode(String code){
+		this.identifiablePeriod = InstanceHelper.getInstance().getByIdentifier(IdentifiablePeriod.class, code, ClassHelper.Listener.IdentifierType.BUSINESS);
 		return this;
 	}
 	
