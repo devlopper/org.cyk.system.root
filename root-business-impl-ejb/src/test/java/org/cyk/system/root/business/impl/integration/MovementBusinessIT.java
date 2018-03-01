@@ -13,7 +13,8 @@ import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionTypeBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
-import org.cyk.system.root.business.impl__data__.DataSet;
+import org.cyk.system.root.business.impl.__data__.DataSet;
+import org.cyk.system.root.business.impl.__test__.Runnable;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.information.IdentifiableCollection;
 import org.cyk.system.root.model.mathematics.Movement;
@@ -30,7 +31,6 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.TimeHelper;
-import org.cyk.utility.common.test.Runnable;
 import org.junit.Test;
 
 public class MovementBusinessIT extends AbstractBusinessIT {
@@ -987,44 +987,32 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     
 	@Test
     public void throwCollectionIsNull(){
-		final TestCase testCase = instanciateTestCase();
-    	testCase.assertThrowable(new Runnable() {
-			@Override
-			protected void __run__() throws Throwable {
-				testCase.create(testCase.instanciateOne(Movement.class));
-			}
-    		
-    	}, 159, null);
+		TestCase testCase = instanciateTestCase();
+    	testCase.assertThrowable(new Runnable(testCase) {
+			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class));}
+    	}, MovementBusiness.THROWABLE_IDENTIFIER_COLLECTION_NOT_NULL, null);
+    	testCase.clean();
 	}
 	
 	@Test
     public void throwValueIsNull(){
-		final TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateTestCase();
     	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
-    	
-		testCase.assertThrowable(new Runnable() {
-			@Override
-			protected void __run__() throws Throwable {
-				testCase.create(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode));
-			}
-    		
-    	}, null, "badval");
+		testCase.assertThrowable(new Runnable(testCase) {
+			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setCollectionFromCode(collectionCode));}
+    	}, null, "Valeur : ne peut pas être nul");
 	}
 	
 	@Test
     public void throwValueIsZero(){
-		final TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateTestCase();
     	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
-    	
-		testCase.assertThrowable(new Runnable() {
-			@Override
-			protected void __run__() throws Throwable {
-				testCase.create(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setValueFromObject(0));
-			}
-    		
-    	}, null, "badval");
+		testCase.assertThrowable(new Runnable(testCase) {
+			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setValueFromObject(0));}	
+    	}, null, "La ##movvalue##(0) doit être différente à 0.");
+		testCase.clean();
 	}
     
     /**/

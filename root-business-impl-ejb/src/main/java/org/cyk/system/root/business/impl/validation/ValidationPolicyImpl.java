@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessException;
@@ -14,6 +15,7 @@ import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
@@ -84,7 +86,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             	throw__(new ConditionHelper.Condition.Builder.Adapter.Default().setValueNameIdentifier("identifiable_id")
 						.setDomainNameIdentifier("identifiable").setConditionValue(
 								!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null
-								).setConditionIdentifier(159), BusinessException.class);	
+								).setIdentifier(RootConstant.Code.generate(identifiable.getClass(),index.getName(),NotNull.class)), BusinessException.class);	
             	
             	/*if(!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null){
         			exceptionUtils().exception(index.getName()+" is required");

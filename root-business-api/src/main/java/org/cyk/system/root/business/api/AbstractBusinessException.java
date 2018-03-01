@@ -1,34 +1,23 @@
 package org.cyk.system.root.business.api;
 
 import java.io.Serializable;
-import java.util.LinkedHashSet;
 import java.util.Set;
+
+import org.cyk.utility.common.helper.ThrowableHelper;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import org.apache.commons.lang3.StringUtils;
-
-@Getter
-public abstract class AbstractBusinessException extends RuntimeException implements Serializable {
-
+@Getter @Setter
+public abstract class AbstractBusinessException extends ThrowableHelper.ThrowableMarkerRunTime implements Serializable {
 	private static final long serialVersionUID = 108726134018949961L;
-	
-	//private static final Logger LOGGER = LoggerFactory.getLogger(AbstractBusinessException.class);
-	
-	@Setter protected String identifier;
-	protected Set<String> messages = new LinkedHashSet<>();
-    
-    public AbstractBusinessException(String message) {
-        super(message);
-        messages.add(message);
-        //LOGGER.info(message);
-    }
-    
-    public AbstractBusinessException(Set<String> messages) {
-        super(StringUtils.join(messages,"\r\n"));
-        this.messages.addAll(messages);
-        //LOGGER.info(StringUtils.join(messages,"\r\n"));
-    }
 
+	public AbstractBusinessException(Set<String> messages) {
+		super(messages);
+	}
+
+	public AbstractBusinessException(String message) {
+		super(message);
+	}
+	
 }

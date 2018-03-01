@@ -24,9 +24,9 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Logger name="org.cyk.system.root.business.impl.mathematics.MovementBusinessImpl" level="trace">
+		<!--Logger name="org.cyk.system.root.business.impl.mathematics.MovementBusinessImpl" level="trace">
 			<AppenderRef ref="MovementConsole" />
-		</Logger>
+		</Logger-->
 		<!--Logger name="org.cyk.system.root.business.impl.mathematics.MovementBusinessImpl" level="trace">
 			<AppenderRef ref="MovementConsole" />
 		</Logger-->

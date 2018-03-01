@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl__data__;
+package org.cyk.system.root.business.impl.__data__;
 
 import java.io.Serializable;
 
