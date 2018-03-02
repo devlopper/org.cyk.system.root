@@ -7,13 +7,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.cyk.system.root.model.AbstractEnumeration;
+import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import org.cyk.system.root.model.AbstractEnumeration;
-import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.InstanceHelper;
 
 @Entity
 @Getter @Setter
@@ -21,19 +22,22 @@ public class IdentifiablePeriodType extends AbstractEnumeration implements Seria
 	private static final long serialVersionUID = 374208919427476791L;
 	
 	@ManyToOne @JoinColumn(name=COLUMN_TIME_DIVISION_TYPE) @NotNull private TimeDivisionType timeDivisionType;
+	@ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL) private Interval numberOfNotClosedAtTimeInterval;
 	
-	private @Accessors(chain=true) Boolean isDisjoint = Boolean.TRUE;
 	private @Accessors(chain=true) Boolean isAdjacent = Boolean.TRUE;
+	private @Accessors(chain=true) Boolean isDisjoint = Boolean.TRUE;
 	
 	public IdentifiablePeriodType setTimeDivisionTypeFromCode(String code){
 		this.timeDivisionType = InstanceHelper.getInstance().getByIdentifier(TimeDivisionType.class, code, ClassHelper.Listener.IdentifierType.BUSINESS);
 		return this;
 	}
 	
+	public static final String FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = "numberOfNotClosedAtTimeInterval";
 	public static final String FIELD_TIME_DIVISION_TYPE = "timeDivisionType";
 	public static final String FIELD_IS_DISJOINT = "isDisjoint";
 	public static final String FIELD_IS_ADJACENT = "isAdjacent";
 	
 	public static final String COLUMN_TIME_DIVISION_TYPE = FIELD_TIME_DIVISION_TYPE;
+	public static final String COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL;
 }
 

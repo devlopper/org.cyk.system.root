@@ -43,14 +43,11 @@ import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.CollectionHelper;
-import org.cyk.utility.common.helper.CriteriaHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MapHelper;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper;
-import org.cyk.utility.common.helper.FilterHelper.Filter;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 import lombok.Getter;
@@ -167,6 +164,16 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		return null;
 	}
 
+	@Override
+	public Collection<IDENTIFIABLE> readByClosed(Boolean closed) {
+		return null;
+	}
+	
+	@Override
+	public Long countByClosed(Boolean closed) {
+		return null;
+	}
+	
     @Override
     public IDENTIFIABLE update(IDENTIFIABLE object) {
         return entityManager.merge(object);

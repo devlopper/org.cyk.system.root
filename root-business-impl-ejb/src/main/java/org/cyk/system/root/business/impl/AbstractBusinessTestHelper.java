@@ -38,7 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.text.WordUtils;
 import org.cyk.system.OrgCykSystemPackage;
-import org.cyk.system.root.business.api.BusinessException;
+import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
@@ -756,7 +756,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		protected Map<Class<?>,Long> countAllMap = new HashMap<>();
 		
 		{
-			this.defaultThrowableClass = BusinessException.class;
+			this.defaultThrowableClass = BusinessThrowable.class;
 		}
 		
 		public TestCase(AbstractBusinessTestHelper helper) {

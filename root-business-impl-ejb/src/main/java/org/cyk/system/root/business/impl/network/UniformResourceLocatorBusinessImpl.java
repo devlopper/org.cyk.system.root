@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.BusinessExceptionNoRollBack;
+import org.cyk.system.root.business.api.BusinessThrowableNoRollBack;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorBusiness;
 import org.cyk.system.root.business.api.network.UniformResourceLocatorParameterBusiness;
@@ -220,7 +220,7 @@ public class UniformResourceLocatorBusinessImpl extends AbstractEnumerationBusin
 				return Constant.CHARACTER_SLASH+inject(ApplicationBusiness.class).findCurrentInstance()
 						.getWebContext()+uniformResourceLocator.getAddress();
 		} catch (MalformedURLException e) {
-			throw new BusinessExceptionNoRollBack(e.toString());
+			throw new BusinessThrowableNoRollBack(e.toString());
 		}
 	}
 	

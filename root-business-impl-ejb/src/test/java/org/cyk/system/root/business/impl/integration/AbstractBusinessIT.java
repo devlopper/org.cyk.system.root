@@ -7,7 +7,7 @@ import java.util.Collection;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.cyk.system.root.business.api.AbstractBusinessException;
+import org.cyk.system.root.business.api.AbstractBusinessThrowable;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
@@ -43,7 +43,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 			private static final long serialVersionUID = -2347039842308401189L;
 			@Override
 			protected Throwable getThrowable(Throwable throwable) {
-				return ThrowableHelper.getInstance().getInstanceOf(throwable, AbstractBusinessException.class);
+				return ThrowableHelper.getInstance().getInstanceOf(throwable, AbstractBusinessThrowable.class);
 			}
 			@Override
     		public void assertEquals(String message, Object expected, Object actual) {

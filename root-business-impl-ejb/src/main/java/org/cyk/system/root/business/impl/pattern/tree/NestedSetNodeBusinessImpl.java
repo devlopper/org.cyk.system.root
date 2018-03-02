@@ -11,7 +11,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.BusinessException;
+import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetBusiness;
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
@@ -190,7 +190,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		
 		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenSet")
 				.setDomainNameIdentifier("nestedset").setNumber1(node.getSet().getNumberOfChildren()).setNumber2(inject(NestedSetNodeDao.class).countBySet(node.getSet()))
-				.setEqual(Boolean.FALSE), BusinessException.class);
+				.setEqual(Boolean.FALSE), BusinessThrowable.class);
 		//if(dao.countBySet(node.getSet()) == 0)
 		//	inject(NestedSetBusiness.class).delete(node.getSet());
 	}

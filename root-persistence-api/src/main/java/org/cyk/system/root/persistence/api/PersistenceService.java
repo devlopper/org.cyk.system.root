@@ -65,15 +65,20 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 						Collection<IDENTIFIABLE> readByGlobalIdentifierSearchCriteria(GlobalIdentifier.SearchCriteria globalIdentifierSearchCriteria);
 					    Long countByGlobalIdentifierSearchCriteria(GlobalIdentifier.SearchCriteria globalIdentifierSearchCriteria);
 						
+						Collection<IDENTIFIABLE> readByClosed(Boolean closed);
+						Long countByClosed(Boolean closed);
+					    
+					    /*Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsLessThan(Date date);
+	    				Long countWhereExistencePeriodFromDateIsLessThan(Date date);*/
 					    IDENTIFIABLE readFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
 	    				Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
 	    				Long countWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
-					    
+	    				
+	    				/*Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsGreaterThan(Date date);
+	    				Long countWhereExistencePeriodFromDateIsGreaterThan(Date date);*/
 	    				Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsGreaterThan(IDENTIFIABLE identifiable);
 	    				Long countWhereExistencePeriodFromDateIsGreaterThan(IDENTIFIABLE identifiable);
-	    				
-	    				
-	    				
+	    					    					    				
 						Long oneLong();	
 	
 	/* query */			String getQueryString();

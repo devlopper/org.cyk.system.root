@@ -51,6 +51,13 @@ public class IdentifiablePeriod extends AbstractIdentifiable implements Serializ
 	
 	/**/
 	
+	public static class Filter extends AbstractIdentifiable.Filter<IdentifiablePeriod> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	
+    }
+	
+	/**/
+	
 	public static final String FIELD_IDENTIFIABLE_PERIOD_TYPE = "type";
 	
 	public static final String COLUMN_IDENTIFIABLE_PERIOD_TYPE = FIELD_IDENTIFIABLE_PERIOD_TYPE;

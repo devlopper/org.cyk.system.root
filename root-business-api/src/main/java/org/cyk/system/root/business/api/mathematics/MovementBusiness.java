@@ -1,7 +1,5 @@
 package org.cyk.system.root.business.api.mathematics;
 
-import javax.validation.constraints.NotNull;
-
 import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -25,5 +23,5 @@ public interface MovementBusiness extends AbstractCollectionItemBusiness<Movemen
 	
 	/**/
 	
-	String THROWABLE_IDENTIFIER_COLLECTION_NOT_NULL = RootConstant.Code.generate(Movement.class,Movement.FIELD_COLLECTION,NotNull.class);
+	String THROWABLE_IDENTIFIER_COLLECTION_NOT_NULL = RootConstant.Code.generateFieldNotNull(Movement.class,Movement.FIELD_COLLECTION);
 }

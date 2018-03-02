@@ -38,6 +38,8 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
 				,Period.FIELD_FROM_DATE)).getConstraints().setIsNullable(Boolean.FALSE);
 		FieldHelper.Field.get(IdentifiablePeriod.class, FieldHelper.getInstance().buildPath(IdentifiablePeriod.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD
 				,Period.FIELD_TO_DATE)).getConstraints().setIsNullable(Boolean.FALSE);
+		FieldHelper.Field.get(IdentifiablePeriod.class, FieldHelper.getInstance().buildPath(IdentifiablePeriod.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CLOSED))
+			.getConstraints().setIsNullable(Boolean.FALSE);
 		
 		GlobalIdentifierPersistenceMappingConfiguration configuration = new GlobalIdentifierPersistenceMappingConfiguration();
         Property property = new Property(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE),new Column() {

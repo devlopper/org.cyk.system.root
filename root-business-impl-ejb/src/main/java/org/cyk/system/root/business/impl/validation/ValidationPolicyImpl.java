@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.BusinessException;
+import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
@@ -71,7 +71,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         if(validator==null)
             //DefaultValidator.getInstance().validate(anIdentifiable);
         	//inject(DefaultValidator.class).validate(anIdentifiable);
-        	new ValidationHelper.Validate.Adapter.Default(anIdentifiable).setIsThrowMessages(Boolean.TRUE).setThrowableClass(BusinessException.class).execute();
+        	new ValidationHelper.Validate.Adapter.Default(anIdentifiable).setIsThrowMessages(Boolean.TRUE).setThrowableClass(BusinessThrowable.class).execute();
         else
             validator.validate(anIdentifiable);
     }
@@ -86,7 +86,8 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             	throw__(new ConditionHelper.Condition.Builder.Adapter.Default().setValueNameIdentifier("identifiable_id")
 						.setDomainNameIdentifier("identifiable").setConditionValue(
 								!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null
-								).setIdentifier(RootConstant.Code.generate(identifiable.getClass(),index.getName(),NotNull.class)), BusinessException.class);	
+								).setIdentifier(RootConstant.Code.generateFieldNotNull(identifiable.getClass(),index.getName()))
+						.setMessageIdentifier(index.getName()+".required"), BusinessThrowable.class);	
             	
             	/*if(!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null){
         			exceptionUtils().exception(index.getName()+" is required");
@@ -138,7 +139,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         	throw__(new ConditionHelper.Condition.Builder.Duplicate.Adapter.Default()
         			.setValueNameIdentifier(fieldLabelId).setValueCount(countInDB)
     				.setDomainNameIdentifier(new StringHelper.Builder.ClassIdentifier.Adapter.Default().setInput(identifiable.getClass()))
-    				.setInput(fieldValue),BusinessException.class);
+    				.setInput(fieldValue),BusinessThrowable.class);
         	
         }else{
         	AbstractIdentifiable inDB = genericDao.use(identifiable.getClass()).read(identifiable.getIdentifier());

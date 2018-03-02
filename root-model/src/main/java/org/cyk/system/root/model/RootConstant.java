@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.helper.FieldHelper;
 
 public interface RootConstant {
 
@@ -47,6 +50,10 @@ public interface RootConstant {
 		
 		public static String getRelativeCode(AbstractCollectionItem<?> item){
 			return getRelativeCode((AbstractCollection<?>) item.getCollection(), item.getCode());
+		}
+		
+		public static String generateFieldNotNull(Class<?> aClass,String...fieldNames){
+			return generate(aClass,FieldHelper.getInstance().buildPath(fieldNames),NotNull.class);
 		}
 		
 		/**/

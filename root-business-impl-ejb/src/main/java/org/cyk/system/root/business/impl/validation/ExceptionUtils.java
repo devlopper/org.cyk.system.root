@@ -15,7 +15,7 @@ import javax.persistence.PersistenceException;
 import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.BusinessException;
+import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
@@ -53,17 +53,17 @@ public class ExceptionUtils extends AbstractBean implements Serializable {
     }
     
     public void exception(Set<String> messages){
-        throw new BusinessException(messages);
+        throw new BusinessThrowable(messages);
     }
     
     public void exception(AbstractValidator<?> validator){
-    	throw new BusinessException(validator.getMessages());
+    	throw new BusinessThrowable(validator.getMessages());
     }
     
     public void exception(Boolean condition,String identifier,String messageId,Object[] parameters){
         if(Boolean.TRUE.equals(condition)){
         	String message = new StringHelper.ToStringMapping.Adapter.Default(messageId).setCaseType(CaseType.FU).addParameters(parameters).execute();
-        	BusinessException exception = new BusinessException(message);
+        	BusinessThrowable exception = new BusinessThrowable(message);
             exception.setIdentifier(identifier);
             throw exception;
         }

@@ -42,4 +42,5 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
 
     Collection<IDENTIFIABLE> readWhereExistencePeriodCross(Date from,Date to);
 	Long countWhereExistencePeriodCross(Date from,Date to);
+	
 }

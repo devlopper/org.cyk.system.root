@@ -5,15 +5,14 @@ import java.util.Set;
 import javax.ejb.ApplicationException;
 
 @ApplicationException(rollback=true)
-public class BusinessException extends AbstractBusinessException {
-
+public class BusinessThrowable extends AbstractBusinessThrowable {
 	private static final long serialVersionUID = -2839733742847798770L;
 
-	public BusinessException(String message) {
+	public BusinessThrowable(String message) {
         super(message);
     }
 
-    public BusinessException(Set<String> messages) {
+    public BusinessThrowable(Set<String> messages) {
         super(messages);
     }
 

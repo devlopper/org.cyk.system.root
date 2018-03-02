@@ -27,7 +27,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.BusinessException;
+import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
@@ -268,7 +268,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     		try {
 				return IOUtils.toByteArray(findInputStream(file));
 			} catch (IOException e) {
-				throw new BusinessException(e.getMessage());
+				throw new BusinessThrowable(e.getMessage());
 			}
     	}else
     		return file.getBytes();

@@ -44,7 +44,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	
 	protected String readAll,countAll,readDefaulted,readByClasses,countByClasses,readByNotClasses,countByNotClasses,readAllExclude,countAllExclude
 		,readAllInclude,countAllInclude,readByGlobalIdentifiers,readByGlobalIdentifierValue,countByGlobalIdentifiers,executeDelete,readByGlobalIdentifier
-		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
+		,readByGlobalIdentifierCode,readByGlobalIdentifierCodes,readByClosed,countByClosed,readByGlobalIdentifierSearchCriteria,countByGlobalIdentifierSearchCriteria
 		,readByGlobalIdentifierSearchCriteriaCodeExcluded,countByGlobalIdentifierByCodeSearchCriteria
 		,readByGlobalIdentifierOrderNumber,readDuplicates,countDuplicates,readByCriteria,countByCriteria,readByCriteriaCodeExcluded,countByCriteriaCodeExcluded
 		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode,readByIdentifiers,readFirstWhereExistencePeriodFromDateIsLessThan
@@ -101,6 +101,10 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadDefaulted()))
 			registerNamedQuery(readDefaulted, _select().where(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_DEFAULTED)
 					,GlobalIdentifier.FIELD_DEFAULTED));
+		
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByClosed()))
+			registerNamedQuery(readByClosed, _select().where(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CLOSED)
+					,GlobalIdentifier.FIELD_CLOSED));
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadByGlobalIdentifierOrderNumber()))
 			registerNamedQuery(readByGlobalIdentifierOrderNumber, "SELECT record FROM "+clazz.getSimpleName()+" record WHERE record.globalIdentifier.orderNumber = :orderNumber");
@@ -395,6 +399,16 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	}
 	
 	@Override
+	public Collection<IDENTIFIABLE> readByClosed(Boolean closed) {
+		return namedQuery(readByClosed).parameter(GlobalIdentifier.FIELD_CLOSED, closed).resultMany();
+	}
+	
+	@Override
+	public Long countByClosed(Boolean closed) {
+		return countNamedQuery(countByClosed).parameter(GlobalIdentifier.FIELD_CLOSED, closed).resultOne();
+	}
+	
+	@Override
 	public Collection<IDENTIFIABLE> readByGlobalIdentifierOrderNumber(Long orderNumber) {
 		return namedQuery(readByGlobalIdentifierOrderNumber).parameter(GlobalIdentifier.FIELD_ORDER_NUMBER, orderNumber)
 				.resultMany();
@@ -534,25 +548,10 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		}else if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
 			FilterHelper.Filter<?> filter = (FilterHelper.Filter<?>) arguments[0];
 			DataReadConfiguration dataReadConfiguration = (DataReadConfiguration) arguments[1];
-			GlobalIdentifier.Filter globalIdentifier = ((AbstractIdentifiable.Filter<IDENTIFIABLE>) filter).getGlobalIdentifier();
+			GlobalIdentifier.Filter globalIdentifier = ((AbstractIdentifiable.Filter<?>) filter).getGlobalIdentifier();
 			queryWrapper.parameterLike(globalIdentifier);
 			if(globalIdentifier!=null){
-				//if(globalIdentifier.getCode().getExcluded().isEmpty())
-				//	globalIdentifier.getCode().getExcluded().add("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-				
 				queryWrapper.parameterInStrings(globalIdentifier.getCode().getExcluded(),AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE);
-				/*
-				if(globalIdentifier.getCode().getExcluded().isEmpty())
-					globalIdentifier.getCode().getExcluded().add("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");//TODO think better
-					
-				queryWrapper.parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIn(GlobalIdentifier.FIELD_CODE)
-							, globalIdentifier.getCode().getExcluded());
-					
-				queryWrapper.parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIsEmpty(GlobalIdentifier.FIELD_CODE)
-							, CollectionHelper.getInstance().isEmpty(globalIdentifier.getCode().getExcluded()));
-				
-				*/
-				
 			}
 			queryWrapper.parameterLike(filter);
 			getDataReadConfig().set(dataReadConfiguration);
@@ -634,6 +633,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		
 		private Boolean readAll = Boolean.TRUE;
 		private Boolean readDefaulted = Boolean.TRUE;
+		private Boolean readByClosed = Boolean.TRUE;
 		private Boolean readAllInclude = Boolean.TRUE;
 		private Boolean readAllExclude = Boolean.TRUE;
 		private Boolean readByGlobalIdentifier = Boolean.TRUE;

@@ -26,7 +26,7 @@ public class IdentifiablePeriodTypeBusinessImpl extends AbstractEnumerationBusin
 
 		public BuilderOneDimensionArray() {
 			super(IdentifiablePeriodType.class);
-			addParameterArrayElementStringIndexInstance(2,IdentifiablePeriodType.FIELD_TIME_DIVISION_TYPE);
+			addParameterArrayElementStringIndexInstance(2,IdentifiablePeriodType.FIELD_TIME_DIVISION_TYPE,3,IdentifiablePeriodType.FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL);
 		}
 	}
 	

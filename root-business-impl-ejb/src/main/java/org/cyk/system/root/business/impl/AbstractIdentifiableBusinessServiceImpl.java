@@ -838,7 +838,6 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		}
 		
 		if(identifiable.getBirthDate()!=null && identifiable.getDeathDate()!=null){
-			System.out.println("AbstractIdentifiableBusinessServiceImpl.computeChanges()");
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("existence")
 					.setDomainNameIdentifier(identifiable.getClass().getSimpleName()).setNumber1(identifiable.getBirthDate().getTime())
 					.setNumber2(identifiable.getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));

@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.Entity;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.BusinessException;
+import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.SetListener;
@@ -133,7 +133,7 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 	}
 	
 	protected static <T extends java.lang.Throwable> void throw__(ConditionHelper.Condition.Builder builder){
-		throw__(builder, BusinessException.class);
+		throw__(builder, BusinessThrowable.class);
 	}
 	
 	/**/
