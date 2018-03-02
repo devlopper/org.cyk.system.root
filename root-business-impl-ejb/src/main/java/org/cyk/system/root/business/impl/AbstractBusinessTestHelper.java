@@ -53,7 +53,6 @@ import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineBu
 import org.cyk.system.root.business.api.mathematics.machine.FiniteStateMachineStateBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
-import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractEnumeration;
@@ -107,8 +106,6 @@ import org.cyk.utility.common.ClassRepository.ClassField;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.cdi.AbstractBean;
-import org.cyk.utility.common.computation.DataReadConfiguration;
-import org.cyk.utility.common.file.FileNameNormaliser;
 import org.cyk.utility.common.generator.RandomDataProvider;
 import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.ClassHelper;
@@ -377,7 +374,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     }
 	
 	public void write(org.cyk.system.root.model.file.File file){
-    	write(file, StringUtils.defaultIfBlank(new FileNameNormaliser.Adapter.Default().setInput(file.getName()).execute(), "file")+System.currentTimeMillis());
+    	//write(file, StringUtils.defaultIfBlank(new FileNameNormaliser.Adapter.Default().setInput(file.getName()).execute(), "file")+System.currentTimeMillis());
     }
 	
 	protected void writeStream(ByteArrayOutputStream byteArrayOutputStream,String name,String extension){
@@ -503,7 +500,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	/* Businesses */
 	@Deprecated
 	public Movement createMovement(String movementCollectionCode,String value,String expectedValue,String expectedThrowableMessage){
-		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);
+		/*MovementCollection movementCollection = inject(MovementCollectionBusiness.class).find(movementCollectionCode);
     	final Movement movement = null;//inject(MovementBusiness.class).instanciateOne(movementCollection
     			//,StringUtils.startsWith(value, Constant.CHARACTER_MINUS.toString()) ? movementCollection.getDecrementAction():movementCollection.getIncrementAction(), value);
     	if(expectedThrowableMessage!=null){
@@ -514,8 +511,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
     	}else{
     		create(movement);
     		assertMovementCollection(movement.getCollection(), expectedValue);
-    	}
-    	return movement;
+    	}*/
+    	return null;
     }
 	@Deprecated
 	public Movement createMovement(String movementCollectionCode,String value,String expectedValue){
@@ -1415,8 +1412,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		/**/
 		
 		protected String toString(AbstractIdentifiable identifiable,Integer actionIdentifier){
-			if(actionIdentifier==EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN)
-				return identifiable.getCode()+"("+Constant.DATE_TIME_FORMATTER.format(identifiable.getBirthDate())+")";
+			//if(actionIdentifier==EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN)
+			//	return identifiable.getCode()+"("+Constant.DATE_TIME_FORMATTER.format(identifiable.getBirthDate())+")";
 			return null;
 		}
 		

@@ -14,6 +14,7 @@ import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.person.JobTitle;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
+import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.UserInterfaceCommand;
 import org.cyk.system.root.model.userinterface.UserInterfaceComponent;
@@ -32,6 +33,11 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
 		
 		FieldHelper.Field.get(Movement.class, FieldHelper.getInstance().buildPath(Movement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD
 				,Period.FIELD_FROM_DATE)).getConstraints().setDatePart(Constant.Date.Part.DATE_AND_TIME_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND);
+		
+		FieldHelper.Field.get(IdentifiablePeriod.class, FieldHelper.getInstance().buildPath(IdentifiablePeriod.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD
+				,Period.FIELD_FROM_DATE)).getConstraints().setIsNullable(Boolean.FALSE);
+		FieldHelper.Field.get(IdentifiablePeriod.class, FieldHelper.getInstance().buildPath(IdentifiablePeriod.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD
+				,Period.FIELD_TO_DATE)).getConstraints().setIsNullable(Boolean.FALSE);
 		
 		GlobalIdentifierPersistenceMappingConfiguration configuration = new GlobalIdentifierPersistenceMappingConfiguration();
         Property property = new Property(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE),new Column() {

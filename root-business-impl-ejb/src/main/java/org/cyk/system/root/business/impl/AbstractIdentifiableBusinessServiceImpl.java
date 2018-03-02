@@ -1,6 +1,7 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,6 +49,7 @@ import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
 import org.cyk.utility.common.file.ExcelSheetReader;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
@@ -833,6 +835,13 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				identifiable.setBirthDate(TimeHelper.getInstance().getUniversalTimeCoordinated());
 			}
 			logMessageBuilder.addNamedParameters("birth date",identifiable.getBirthDate());	
+		}
+		
+		if(identifiable.getBirthDate()!=null && identifiable.getDeathDate()!=null){
+			System.out.println("AbstractIdentifiableBusinessServiceImpl.computeChanges()");
+			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("existence")
+					.setDomainNameIdentifier(identifiable.getClass().getSimpleName()).setNumber1(identifiable.getBirthDate().getTime())
+					.setNumber2(identifiable.getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
 		}
 		
 		if(Boolean.TRUE.equals(identifiable.getCascadeOperationToMaster())){
