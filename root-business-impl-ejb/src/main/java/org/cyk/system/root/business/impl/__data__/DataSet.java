@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -79,6 +80,7 @@ public class DataSet extends AbstractBean implements Serializable {
 	protected Map<Class<?>,org.cyk.utility.common.helper.InstanceHelper.Builder.OneDimensionArray<?>> instanceBuilderMap = new LinkedHashMap<>();
 	protected Map<Class<?>,Collection<?>> instanceMap = new LinkedHashMap<>();
 	protected Map<Class<?>,Integer> identifiableCountByTransactionMap = new LinkedHashMap<>();
+	protected Map<Class<?>,String> sheetNameMap = new HashMap<>();
 	
 	public DataSet(Class<?> baseClass) {
 		this.baseClass = baseClass;
@@ -122,7 +124,7 @@ public class DataSet extends AbstractBean implements Serializable {
 				instanceBuilder = new org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray(aClass).addFieldCodeName();
 	    	
 	    	InstanceHelper.Pool.getInstance().load(aClass);
-	    	MicrosoftExcelHelper.Workbook.Sheet.Builder builder = new MicrosoftExcelHelper.Workbook.Sheet.Builder.Adapter.Default(workbookFileInputStream,aClass);
+	    	MicrosoftExcelHelper.Workbook.Sheet.Builder builder = new MicrosoftExcelHelper.Workbook.Sheet.Builder.Adapter.Default(workbookFileInputStream,sheetNameMap.get(aClass),aClass);
 	    	//builder.setCloseWorkbook(count++ == classes.size());
 	    	builder.createMatrix().getMatrix().getRow().setFromIndex(1);
 	    	builder.getMatrix().getRow().setKeyBuilder(keyBuilder);

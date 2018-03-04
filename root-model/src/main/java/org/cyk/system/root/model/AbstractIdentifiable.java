@@ -291,8 +291,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getRequired();
 	}
 	
-	public void setClosed(Boolean closed){
+	public AbstractIdentifiable setClosed(Boolean closed){
 		getGlobalIdentifierCreateIfNull().setClosed(closed);
+		return this;
 	}
 	public Boolean getClosed(){
 		return globalIdentifier == null ? null : globalIdentifier.getClosed();

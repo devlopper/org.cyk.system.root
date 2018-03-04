@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl.time;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 
@@ -31,7 +30,7 @@ public class IdentifiablePeriodBusinessImpl extends AbstractTypedBusinessService
 	@Override
 	protected void beforeCrud(IdentifiablePeriod identifiablePeriod, Crud crud) {
 		super.beforeCrud(identifiablePeriod, crud);
-		if(Crud.isCreateOrUpdate(crud)) {
+		if(Crud.CREATE.equals(crud)) {
 			throw__(new ConditionHelper.Condition.Builder.Adapter.Default().setValueNameIdentifier("identifiablePeriodClosed")
 					.setDomainNameIdentifier("identifiablePeriod").setConditionValue(dao.countByClosed(Boolean.FALSE) > 0)
 					.setMessageIdentifier("allmustbeCLOSED"));		

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
@@ -17,10 +18,10 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @NoArgsConstructor @Entity
-public class IdentifiablePeriod extends AbstractIdentifiable implements Serializable {
+public class IdentifiablePeriod extends AbstractCollectionItem<IdentifiablePeriodCollection> implements Serializable {
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD_TYPE) @Accessors(chain=true) private IdentifiablePeriodType type;
+	@ManyToOne @JoinColumn(name=COLUMN_TYPE) @Accessors(chain=true) private IdentifiablePeriodType type;
 
 	/**/
 	
@@ -49,6 +50,11 @@ public class IdentifiablePeriod extends AbstractIdentifiable implements Serializ
 		return (IdentifiablePeriod) super.setDeathDateFromString(date);
 	}
 	
+	@Override
+	public IdentifiablePeriod setClosed(Boolean closed) {
+		return (IdentifiablePeriod) super.setClosed(closed);
+	}
+	
 	/**/
 	
 	public static class Filter extends AbstractIdentifiable.Filter<IdentifiablePeriod> implements Serializable{
@@ -58,7 +64,7 @@ public class IdentifiablePeriod extends AbstractIdentifiable implements Serializ
 	
 	/**/
 	
-	public static final String FIELD_IDENTIFIABLE_PERIOD_TYPE = "type";
+	public static final String FIELD_TYPE = "type";
 	
-	public static final String COLUMN_IDENTIFIABLE_PERIOD_TYPE = FIELD_IDENTIFIABLE_PERIOD_TYPE;
+	public static final String COLUMN_TYPE = FIELD_TYPE;
 }

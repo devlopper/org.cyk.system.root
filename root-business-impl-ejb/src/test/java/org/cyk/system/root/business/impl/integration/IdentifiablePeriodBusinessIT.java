@@ -13,6 +13,7 @@ import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
 import org.cyk.system.root.model.time.IdentifiablePeriodType;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.utility.common.computation.DataReadConfiguration;
@@ -26,6 +27,15 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
 
     static {
     	ClassHelper.getInstance().map(DataSet.Listener.class, Data.class);
+    }
+    
+    @Test
+    public void crudOneIdentifiablePeriodCollectionType(){
+    	TestCase testCase = instanciateTestCase();
+    	String identifiablePeriodCollectionTypeCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollectionType.class,identifiablePeriodCollectionTypeCode)
+    			.setTimeDivisionTypeFromCode(RootConstant.Code.TimeDivisionType.DAY));
+    	testCase.clean();
     }
     
     @Test
@@ -53,6 +63,10 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     	
     	String identifiablePeriodCode01 = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode01));
+    	
+    	IdentifiablePeriod identifiablePeriod = testCase.read(IdentifiablePeriod.class,identifiablePeriodCode01);
+    	identifiablePeriod.setClosed(Boolean.TRUE);
+    	testCase.update(identifiablePeriod);
     	
     	String identifiablePeriodCode02 = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02));
@@ -97,29 +111,29 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     	
     	String identifiablePeriodCode001 = "01_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode001).setBirthDateFromString("1/1/2000 0:0")
-    			.setDeathDateFromString("1/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode));   	
+    			.setDeathDateFromString("1/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));   	
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001);
     	
     	String identifiablePeriodCode002 = "02_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode002).setBirthDateFromString("2/1/2000 0:0")
-    			.setDeathDateFromString("2/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode));
+    			.setDeathDateFromString("2/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001,identifiablePeriodCode002);
     	
     	String identifiablePeriodCode003 = "03_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode003).setBirthDateFromString("3/1/2000 0:0")
-    			.setDeathDateFromString("3/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode));
+    			.setDeathDateFromString("3/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001,identifiablePeriodCode002
     			,identifiablePeriodCode003);
     	
     	String identifiablePeriodCode004 = "04_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode004).setBirthDateFromString("4/1/2000 0:0")
-    			.setDeathDateFromString("4/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode));
+    			.setDeathDateFromString("4/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001,identifiablePeriodCode002
     			,identifiablePeriodCode003,identifiablePeriodCode004);
     	
     	String identifiablePeriodCode005 = "05_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode005).setBirthDateFromString("5/1/2000 0:0")
-    			.setDeathDateFromString("5/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode));
+    			.setDeathDateFromString("5/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001,identifiablePeriodCode002
     			,identifiablePeriodCode003,identifiablePeriodCode004,identifiablePeriodCode005);
     	
@@ -150,39 +164,6 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     	
     	String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode).setTypeFromCode(identifiablePeriodTypeCode));
-    	
-    	testCase.clean();
-    }
-    
-    @Test
-    public void crudTwoIdentifiablePeriodWithoutTypeCrossing(){
-    	TestCase testCase = instanciateTestCase();
-    	
-    	String identifiablePeriodCode01 = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode01).setBirthDateFromString("1/1/2000 0:0")
-    			.setDeathDateFromString("1/1/2000 23:59"));
-    	
-    	String identifiablePeriodCode02 = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02).setBirthDateFromString("1/1/2000 0:0")
-    			.setDeathDateFromString("1/1/2000 23:59"));
-    	
-    	testCase.clean();
-    }
-    
-    @Test
-    public void crudTwoIdentifiablePeriodWithTypeCrossing(){
-    	TestCase testCase = instanciateTestCase();
-    	String identifiablePeriodTypeCode = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriodType.class,identifiablePeriodTypeCode)
-    			.setTimeDivisionTypeFromCode(RootConstant.Code.TimeDivisionType.DAY));
-    	
-    	String identifiablePeriodCode01 = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode01).setTypeFromCode(identifiablePeriodTypeCode)
-    			.setBirthDateFromString("1/1/2000 0:0").setDeathDateFromString("1/1/2000 23:59"));
-    	
-    	String identifiablePeriodCode02 = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02).setTypeFromCode(identifiablePeriodTypeCode)
-    			.setBirthDateFromString("1/1/2000 0:0").setDeathDateFromString("1/1/2000 23:59"));
     	
     	testCase.clean();
     }
