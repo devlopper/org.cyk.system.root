@@ -42,7 +42,7 @@ public class IdentifiablePeriodCollectionBusinessImpl extends AbstractCollection
 
 		public BuilderOneDimensionArray() {
 			super(IdentifiablePeriodCollection.class);
-	
+			addParameterArrayElementStringIndexInstance(2,IdentifiablePeriodCollection.FIELD_TYPE);
 		}
 		
 	}

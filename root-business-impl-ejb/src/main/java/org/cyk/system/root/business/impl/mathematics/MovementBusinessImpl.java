@@ -76,7 +76,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	protected Movement __instanciateOne__(ObjectFieldValues objectFieldValues) {
 		Movement movement =  super.__instanciateOne__(objectFieldValues);
-		movement.setBirthDateComputedByUser(Boolean.FALSE);
+		movement.__setBirthDateComputedByUser__(Boolean.FALSE);
 		return movement;
 	}
 	

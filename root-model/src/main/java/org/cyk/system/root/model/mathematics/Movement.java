@@ -108,7 +108,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 		setCollectionFromCode(collectionCode);
 		setActionFromIncrementation(isIncrementation);
 		setValueFromObject(value);
-		setBirthDateComputedByUser(isBirthDateComputedByUser);
+		__setBirthDateComputedByUser__(isBirthDateComputedByUser);
 		setBirthDateFromString(birthDate);
 		return this;
 	}
@@ -118,8 +118,8 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	}
 	
 	@Override
-	public Movement setBirthDateComputedByUser(Boolean value) {
-		return (Movement) super.setBirthDateComputedByUser(value);
+	public Movement __setBirthDateComputedByUser__(Boolean value) {
+		return (Movement) super.__setBirthDateComputedByUser__(value);
 	}
 	
 	@Override

@@ -57,6 +57,7 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.FileRepresentationType;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
@@ -816,6 +817,10 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return read(aClass,code,null);
 		}
 		
+		public <T extends AbstractIdentifiable> T readCollectionItem(Class<T> aClass,Class<? extends AbstractCollection<?>> collectionClass,String collectionCode,String code){
+			return read(aClass,RootConstant.Code.generate((AbstractCollection<?>)read(collectionClass,collectionCode), code));
+		}
+		
 		public <T extends AbstractIdentifiable> T update(final T identifiable,Object[][] values,String expectedThrowableMessage){
 			@SuppressWarnings("unchecked")
 			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
@@ -1337,7 +1342,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		    			.setActionFromIncrementation(array[0] == null ? null : Boolean.parseBoolean((String)array[0]))
 		    			.setIdentifiablePeriod(identifiablePeriod).setValue(NumberHelper.getInstance().get(BigDecimal.class, array[2],null));
 				if(array[1]!=null){
-					movement.setBirthDateComputedByUser(Boolean.TRUE);
+					movement.__setBirthDateComputedByUser__(Boolean.TRUE);
 					movement.setBirthDate((Date)array[1]);
 				}
 				create(movement);

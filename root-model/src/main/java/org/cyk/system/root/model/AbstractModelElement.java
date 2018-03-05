@@ -40,7 +40,7 @@ public abstract class AbstractModelElement implements Serializable{
 	@Transient protected LoggingHelper.Message.Builder loggingMessageBuilder;
 	protected String lastComputedLogMessage;
 	
-	public AbstractModelElement setFieldValueComputedByUser(String name,Boolean value){
+	public AbstractModelElement __setFieldValueComputedByUser__(String name,Boolean value){
 		if(StringHelper.getInstance().isNotBlank(name)){
 			if(fieldValueComputedByUserMap == null){
 				fieldValueComputedByUserMap = new HashMap<>();
@@ -50,8 +50,8 @@ public abstract class AbstractModelElement implements Serializable{
 		return this;
 	}
 	
-	public AbstractModelElement setBirthDateComputedByUser(Boolean value){
-		return setFieldValueComputedByUser(FieldHelper.getInstance()
+	public AbstractModelElement __setBirthDateComputedByUser__(Boolean value){
+		return __setFieldValueComputedByUser__(FieldHelper.getInstance()
 				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE), value);
 	}
 	

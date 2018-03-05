@@ -17,7 +17,6 @@ import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
 import org.cyk.system.root.model.time.IdentifiablePeriodType;
 import org.cyk.system.root.model.value.Value;
-import org.cyk.system.root.persistence.api.time.IdentifiablePeriodCollectionTypeDao;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
@@ -54,7 +53,6 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode)
     			.setTypeFromCode(RootConstant.Code.IdentifiablePeriodCollectionType.CASH_REGISTER_WORKING_DAY));
-    	System.out.println("IdentifiablePeriodBusinessIT.crudOneIdentifiablePeriodCollectionWithType() : "+inject(IdentifiablePeriodCollectionTypeDao.class).readAll());
     	IdentifiablePeriodCollection identifiablePeriodCollection = testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode);
     	assertNotNull(identifiablePeriodCollection.getType());
     	assertEquals(RootConstant.Code.IdentifiablePeriodCollectionType.CASH_REGISTER_WORKING_DAY, identifiablePeriodCollection.getType().getCode());
@@ -64,24 +62,28 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     @Test
     public void crudOneIdentifiablePeriod(){
     	TestCase testCase = instanciateTestCase();    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
     	String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode));
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode).setCollectionFromCode(identifiablePeriodCollectionCode));
     	testCase.clean();
     }
     
     @Test
     public void crudTwoIdentifiablePeriod(){
     	TestCase testCase = instanciateTestCase();
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
     	
     	String identifiablePeriodCode01 = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode01));
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode01).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
-    	IdentifiablePeriod identifiablePeriod = testCase.read(IdentifiablePeriod.class,identifiablePeriodCode01);
+    	IdentifiablePeriod identifiablePeriod = testCase.readCollectionItem(IdentifiablePeriod.class,IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode,identifiablePeriodCode01);
     	identifiablePeriod.setClosed(Boolean.TRUE);
     	testCase.update(identifiablePeriod);
     	
     	String identifiablePeriodCode02 = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02));
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
     	testCase.clean();
     }
@@ -90,9 +92,12 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     public void crudOneIdentifiablePeriodWithDateSetByUser(){
     	TestCase testCase = instanciateTestCase();
     	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
     	String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode).setBirthDateFromString("1/1/2000 0:0")
-    			.setDeathDateFromString("1/1/2000 23:59"));
+    			.setDeathDateFromString("1/1/2000 23:59").setCollectionFromCode(identifiablePeriodCollectionCode));
     	
     	testCase.clean();
     }
@@ -100,13 +105,16 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     @Test
     public void crudOneIdentifiablePeriodWithType(){
     	TestCase testCase = instanciateTestCase();
+    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
     	String identifiablePeriodTypeCode = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriodType.class,identifiablePeriodTypeCode)
-    			.setTimeDivisionTypeFromCode(RootConstant.Code.TimeDivisionType.DAY));
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodType.class,identifiablePeriodTypeCode));
     	
     	String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode).setBirthDateFromString("1/1/2000 0:0")
-    			.setDeathDateFromString("1/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode));
+    			.setDeathDateFromString("1/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
     	testCase.clean();
     }
@@ -114,38 +122,46 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     @Test
     public void findPreviousIdentifiablePeriod(){
     	TestCase testCase = instanciateTestCase();
+    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
     	String identifiablePeriodTypeCode = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriodType.class,identifiablePeriodTypeCode)
-    			.setTimeDivisionTypeFromCode(RootConstant.Code.TimeDivisionType.DAY));
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodType.class,identifiablePeriodTypeCode));
     	
     	assertEquals(Boolean.TRUE, CollectionHelper.getInstance().isEmpty(inject(IdentifiablePeriodBusiness.class)
     			.findByFilter(new IdentifiablePeriod.Filter(), new DataReadConfiguration().setMaximumResultCount(1l))));
     	
     	String identifiablePeriodCode001 = "01_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode001).setBirthDateFromString("1/1/2000 0:0")
-    			.setDeathDateFromString("1/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));   	
+    			.setDeathDateFromString("1/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE)
+    			.setCollectionFromCode(identifiablePeriodCollectionCode));   	
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001);
     	
     	String identifiablePeriodCode002 = "02_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode002).setBirthDateFromString("2/1/2000 0:0")
-    			.setDeathDateFromString("2/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));
+    			.setDeathDateFromString("2/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE)
+    			.setCollectionFromCode(identifiablePeriodCollectionCode));
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001,identifiablePeriodCode002);
     	
     	String identifiablePeriodCode003 = "03_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode003).setBirthDateFromString("3/1/2000 0:0")
-    			.setDeathDateFromString("3/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));
+    			.setDeathDateFromString("3/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE)
+    			.setCollectionFromCode(identifiablePeriodCollectionCode));
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001,identifiablePeriodCode002
     			,identifiablePeriodCode003);
     	
     	String identifiablePeriodCode004 = "04_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode004).setBirthDateFromString("4/1/2000 0:0")
-    			.setDeathDateFromString("4/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));
+    			.setDeathDateFromString("4/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE)
+    			.setCollectionFromCode(identifiablePeriodCollectionCode));
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001,identifiablePeriodCode002
     			,identifiablePeriodCode003,identifiablePeriodCode004);
     	
     	String identifiablePeriodCode005 = "05_"+testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode005).setBirthDateFromString("5/1/2000 0:0")
-    			.setDeathDateFromString("5/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE));
+    			.setDeathDateFromString("5/1/2000 23:59").setTypeFromCode(identifiablePeriodTypeCode).setClosed(Boolean.TRUE)
+    			.setCollectionFromCode(identifiablePeriodCollectionCode));
     	testCase.assertOrderBasedOnExistencePeriodFromDate(IdentifiablePeriod.class, identifiablePeriodCode001,identifiablePeriodCode002
     			,identifiablePeriodCode003,identifiablePeriodCode004,identifiablePeriodCode005);
     	
@@ -171,11 +187,14 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     public void crudOneIdentifiablePeriodWithTypeWithDateGeneratedBySystem(){
     	TestCase testCase = instanciateTestCase();
     	String identifiablePeriodTypeCode = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriodType.class,identifiablePeriodTypeCode)
-    			.setTimeDivisionTypeFromCode(RootConstant.Code.TimeDivisionType.DAY));
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodType.class,identifiablePeriodTypeCode));
+    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
     	
     	String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode).setTypeFromCode(identifiablePeriodTypeCode));
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode).setTypeFromCode(identifiablePeriodTypeCode)
+    			.setCollectionFromCode(identifiablePeriodCollectionCode));
     	
     	testCase.clean();
     }

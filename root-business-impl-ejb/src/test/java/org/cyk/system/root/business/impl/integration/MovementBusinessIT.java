@@ -86,7 +86,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
     			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)));
     	
-    	testCase.computeChanges(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setBirthDateComputedByUser(Boolean.TRUE)
+    	testCase.computeChanges(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
     			.setBirthDateFromString("1/1/2000 1:0").setIdentifiablePeriodFromCode(identifiablePeriodCode));
     	
     	testCase.clean();
@@ -124,7 +124,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void assertComputedMovementBirthDateIsNotChangedBySystemWhenSetByUser(){
     	TestCase testCase = instanciateTestCase();
     	Movement movement = testCase.instanciateOne(Movement.class);
-    	movement.setBirthDateComputedByUser(Boolean.TRUE);
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE);
     	assertNull(movement.getBirthDate());
     	inject(MovementBusiness.class).computeChanges(movement);
     	assertNull(movement.getBirthDate());
@@ -569,7 +569,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.create(movementUnlimited);
     	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "15",Boolean.TRUE);
-    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 5, 2));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 5, 2));
     	movement = testCase.create(movement);
     	String code001 = movement.getCode();
     	testCase.assertMovement(code001, "15","15",Boolean.TRUE);
@@ -577,11 +577,11 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 0);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 5, 3));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 5, 3));
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,movement, 1);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 5, 1));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 5, 1));
     	movement = testCase.create(movement);
     	String code002 = movement.getCode();
     	testCase.assertMovement(code002, "10","10",Boolean.TRUE);
@@ -589,7 +589,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 1);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 5, 3));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 5, 3));
     	movement = testCase.create(movement);
     	String code003 = movement.getCode();
     	testCase.assertMovement(code003, "10","35",Boolean.TRUE);
@@ -598,7 +598,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code003, 2);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.setBirthDateComputedByUser(Boolean.TRUE).setBirthDate(date(2000, 4, 1));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 4, 1));
     	movement = testCase.create(movement);
     	String code001A = movement.getCode();
     	testCase.assertMovement(code001A, "10","10",Boolean.TRUE);

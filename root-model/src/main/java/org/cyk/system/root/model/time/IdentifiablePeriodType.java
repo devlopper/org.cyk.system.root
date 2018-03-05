@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -22,7 +21,7 @@ public class IdentifiablePeriodType extends AbstractEnumeration implements Seria
 	
 	//TO BE DELETED
 	
-	@Deprecated @ManyToOne @JoinColumn(name=COLUMN_TIME_DIVISION_TYPE) @NotNull private TimeDivisionType timeDivisionType;
+	@Deprecated @ManyToOne @JoinColumn(name=COLUMN_TIME_DIVISION_TYPE) private TimeDivisionType timeDivisionType;
 	@Deprecated @ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL) private Interval numberOfNotClosedAtTimeInterval;
 	
 	@Deprecated @Accessors(chain=true) private Boolean isAdjacent = Boolean.TRUE;
