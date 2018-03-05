@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.cyk.system.root.business.api.information.IdentifiableCollectionBusiness;
 import org.cyk.system.root.business.api.information.IdentifiableCollectionItemBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
@@ -29,6 +31,7 @@ import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.junit.Test;
@@ -990,7 +993,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		TestCase testCase = instanciateTestCase();
     	testCase.assertThrowable(new Runnable(testCase) {
 			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class));}
-    	}, MovementBusiness.THROWABLE_IDENTIFIER_COLLECTION_NOT_NULL, null);
+    	}, FieldHelper.Field.get(Movement.class,Movement.FIELD_COLLECTION).getIdentifier(NotNull.class), null);
     	testCase.clean();
 	}
 	

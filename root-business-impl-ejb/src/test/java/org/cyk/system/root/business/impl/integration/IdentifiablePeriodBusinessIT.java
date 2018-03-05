@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.cyk.system.root.business.api.mathematics.MovementBusiness;
+import javax.validation.constraints.NotNull;
+
 import org.cyk.system.root.business.api.time.IdentifiablePeriodBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.business.impl.__data__.DataSet;
@@ -20,6 +21,7 @@ import org.cyk.system.root.model.value.Value;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.junit.Test;
 
@@ -201,12 +203,12 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     
     /* Exceptions */
     
-	//@Test
+	@Test
     public void throwCollectionIsNull(){
 		TestCase testCase = instanciateTestCase();
     	testCase.assertThrowable(new Runnable(testCase) {
-			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class));}
-    	}, MovementBusiness.THROWABLE_IDENTIFIER_COLLECTION_NOT_NULL, null);
+			@Override protected void __run__() throws Throwable {create(instanciateOne(IdentifiablePeriod.class));}
+    	}, FieldHelper.Field.get(IdentifiablePeriod.class,IdentifiablePeriod.FIELD_COLLECTION).getIdentifier(NotNull.class), null);
     	testCase.clean();
 	}
 	

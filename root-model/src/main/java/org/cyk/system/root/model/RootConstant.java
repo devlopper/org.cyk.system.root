@@ -14,10 +14,9 @@ import org.cyk.utility.common.helper.FieldHelper;
 public interface RootConstant {
 
 	public static class Code implements Serializable {
+		private static final long serialVersionUID = 1L;
 		
 		public static String SEPARATOR = Constant.EMPTY_STRING;
-		
-		private static final long serialVersionUID = 1L;
 
 		public static String generateFromString(String string){
 			return StringUtils.remove(string, Constant.CHARACTER_SPACE);

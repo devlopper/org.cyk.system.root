@@ -23,5 +23,5 @@ public interface MovementBusiness extends AbstractCollectionItemBusiness<Movemen
 	
 	/**/
 	
-	String THROWABLE_IDENTIFIER_COLLECTION_NOT_NULL = RootConstant.Code.generateFieldNotNull(Movement.class,Movement.FIELD_COLLECTION);
+	//String THROWABLE_IDENTIFIER_COLLECTION_NOT_NULL = RootConstant.Code.generateFieldNotNull(Movement.class,Movement.FIELD_COLLECTION);
 }

@@ -86,7 +86,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             	throw__(new ConditionHelper.Condition.Builder.Adapter.Default().setValueNameIdentifier("identifiable_id")
 						.setDomainNameIdentifier("identifiable").setConditionValue(
 								!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null
-								).setIdentifier(RootConstant.Code.generateFieldNotNull(identifiable.getClass(),index.getName()))
+								).setIdentifier(index.getIdentifier(NotNull.class))
 						.setMessageIdentifier(index.getName()+".required"), BusinessThrowable.class);	
             	
             	/*if(!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null){
