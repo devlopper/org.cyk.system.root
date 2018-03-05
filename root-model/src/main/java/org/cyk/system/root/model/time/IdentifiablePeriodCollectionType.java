@@ -22,11 +22,9 @@ import lombok.experimental.Accessors;
 public class IdentifiablePeriodCollectionType extends AbstractDataTreeType implements Serializable  {
 	private static final long serialVersionUID = -6838401709866343401L;
 
-	@ManyToOne @JoinColumn(name=COLUMN_TIME_DIVISION_TYPE) @NotNull private TimeDivisionType timeDivisionType;
-	@ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL) private Interval numberOfNotClosedAtTimeInterval;
-	
-	@Accessors(chain=true) private Boolean isAdjacent = Boolean.TRUE;
-	@Accessors(chain=true) private Boolean isDisjoint = Boolean.TRUE;
+	@ManyToOne @JoinColumn(name=COLUMN_TIME_DIVISION_TYPE) @NotNull @Accessors(chain=true) private TimeDivisionType timeDivisionType;
+	@ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL) @Accessors(chain=true) private Interval numberOfNotClosedAtTimeInterval;
+	@ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_MILLISECOND_OF_GAP_INTERVAL) @Accessors(chain=true) private Interval numberOfMillisecondOfGapInterval;
 	
 	/**/
 	
@@ -35,11 +33,16 @@ public class IdentifiablePeriodCollectionType extends AbstractDataTreeType imple
 		return this;
 	}
 	
-	public static final String FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = "numberOfNotClosedAtTimeInterval";
+	public IdentifiablePeriodCollectionType setNumberOfNotClosedAtTimeIntervalFromCode(String code){
+		this.numberOfNotClosedAtTimeInterval = InstanceHelper.getInstance().getByIdentifier(Interval.class, code, ClassHelper.Listener.IdentifierType.BUSINESS);
+		return this;
+	}
+	
 	public static final String FIELD_TIME_DIVISION_TYPE = "timeDivisionType";
-	public static final String FIELD_IS_DISJOINT = "isDisjoint";
-	public static final String FIELD_IS_ADJACENT = "isAdjacent";
+	public static final String FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = "numberOfNotClosedAtTimeInterval";
+	public static final String FIELD_NUMBER_OF_MILLISECOND_OF_GAP_INTERVAL = "numberOfMillisecondOfGapInterval";
 	
 	public static final String COLUMN_TIME_DIVISION_TYPE = FIELD_TIME_DIVISION_TYPE;
 	public static final String COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL;
+	public static final String COLUMN_NUMBER_OF_MILLISECOND_OF_GAP_INTERVAL = FIELD_NUMBER_OF_MILLISECOND_OF_GAP_INTERVAL;
 }

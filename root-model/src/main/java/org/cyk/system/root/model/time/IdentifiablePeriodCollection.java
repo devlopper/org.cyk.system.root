@@ -35,6 +35,15 @@ public class IdentifiablePeriodCollection extends AbstractCollection<Identifiabl
 		return this;
 	}
 	
+	/**/
+	
+	public static class Filter extends AbstractCollection.Filter<IdentifiablePeriodCollection> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	
+    }
+	
+	/**/
+	
 	public static final String FIELD_TYPE = "type";
 	
 	public static final String COLUMN_TYPE = COLUMN_NAME_UNKEYWORD+FIELD_TYPE;

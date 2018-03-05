@@ -109,6 +109,7 @@ public class RealDataSet extends DataSet implements Serializable {
     
     private void time(){ 
     	addClass(TimeDivisionType.class);
+    	sheetNameMap.put(IdentifiablePeriodCollectionType.class, "IdentifiablePeriodCollectionTyp");//TODO should be automatic
     	addClass(IdentifiablePeriodCollectionType.class);
     	addClass(IdentifiablePeriodType.class);
     }

@@ -8,9 +8,10 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.time.IdentifiablePeriodBusiness;
-import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriod.Filter;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.persistence.api.time.IdentifiablePeriodDao;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.CollectionHelper;
@@ -19,7 +20,7 @@ import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.joda.time.DateTimeConstants;
 
-public class IdentifiablePeriodBusinessImpl extends AbstractTypedBusinessService<IdentifiablePeriod, IdentifiablePeriodDao> implements IdentifiablePeriodBusiness,Serializable {
+public class IdentifiablePeriodBusinessImpl extends AbstractCollectionItemBusinessImpl<IdentifiablePeriod,IdentifiablePeriodDao,IdentifiablePeriodCollection> implements IdentifiablePeriodBusiness,Serializable {
 	private static final long serialVersionUID = -3799482462496328200L;
 	
 	@Inject

@@ -13,9 +13,11 @@ import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
 import org.cyk.system.root.model.time.IdentifiablePeriodType;
 import org.cyk.system.root.model.value.Value;
+import org.cyk.system.root.persistence.api.time.IdentifiablePeriodCollectionTypeDao;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
@@ -39,21 +41,31 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     }
     
     @Test
-    public void crudOneIdentifiablePeriodType(){
-    	TestCase testCase = instanciateTestCase();
-    	String identifiablePeriodTypeCode = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriodType.class,identifiablePeriodTypeCode)
-    			.setTimeDivisionTypeFromCode(RootConstant.Code.TimeDivisionType.DAY));
+    public void crudOneIdentifiablePeriodCollectionWithoutType(){
+    	TestCase testCase = instanciateTestCase();    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneIdentifiablePeriodCollectionWithType(){
+    	TestCase testCase = instanciateTestCase();    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode)
+    			.setTypeFromCode(RootConstant.Code.IdentifiablePeriodCollectionType.CASH_REGISTER_WORKING_DAY));
+    	System.out.println("IdentifiablePeriodBusinessIT.crudOneIdentifiablePeriodCollectionWithType() : "+inject(IdentifiablePeriodCollectionTypeDao.class).readAll());
+    	IdentifiablePeriodCollection identifiablePeriodCollection = testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode);
+    	assertNotNull(identifiablePeriodCollection.getType());
+    	assertEquals(RootConstant.Code.IdentifiablePeriodCollectionType.CASH_REGISTER_WORKING_DAY, identifiablePeriodCollection.getType().getCode());
     	testCase.clean();
     }
     
     @Test
     public void crudOneIdentifiablePeriod(){
-    	TestCase testCase = instanciateTestCase();
-    	
+    	TestCase testCase = instanciateTestCase();    	
     	String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode));
-    	
     	testCase.clean();
     }
     

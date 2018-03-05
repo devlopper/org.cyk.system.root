@@ -316,6 +316,16 @@ public interface RootConstant {
 			
 		}
 		
+		public static class IdentifiablePeriodCollectionType implements Serializable {
+			private static final long serialVersionUID = 1L;
+		
+			public static final String CASH_REGISTER_WORKING_DAY = "CASHREGISTERWORKINGDAY";
+		
+		}
+		
+		
+
+		
 		public static class Role implements Serializable {
 			private static final long serialVersionUID = 1L;
 		

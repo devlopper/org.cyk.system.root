@@ -6,7 +6,6 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.time.IdentifiablePeriodCollectionTypeBusiness;
 import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeTypeBusinessImpl;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
-import org.cyk.system.root.model.time.IdentifiablePeriodType;
 import org.cyk.system.root.persistence.api.time.IdentifiablePeriodCollectionTypeDao;
 
 import lombok.Getter;
@@ -28,7 +27,7 @@ public class IdentifiablePeriodCollectionTypeBusinessImpl extends AbstractDataTr
 
 		public BuilderOneDimensionArray() {
 			super(IdentifiablePeriodCollectionType.class);
-			addParameterArrayElementStringIndexInstance(2,IdentifiablePeriodType.FIELD_TIME_DIVISION_TYPE,3,IdentifiablePeriodType.FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL);
+			addParameterArrayElementStringIndexInstance(2,IdentifiablePeriodCollectionType.FIELD_TIME_DIVISION_TYPE,3,IdentifiablePeriodCollectionType.FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL);
 		}
 		
 	}

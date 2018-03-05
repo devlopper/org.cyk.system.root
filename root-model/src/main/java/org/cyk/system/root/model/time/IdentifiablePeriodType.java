@@ -16,29 +16,31 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Entity @Getter @Setter
+@Entity @Getter @Setter 
 public class IdentifiablePeriodType extends AbstractEnumeration implements Serializable{
 	private static final long serialVersionUID = 374208919427476791L;
 	
 	//TO BE DELETED
 	
-	@ManyToOne @JoinColumn(name=COLUMN_TIME_DIVISION_TYPE) @NotNull private TimeDivisionType timeDivisionType;
-	@ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL) private Interval numberOfNotClosedAtTimeInterval;
+	@Deprecated @ManyToOne @JoinColumn(name=COLUMN_TIME_DIVISION_TYPE) @NotNull private TimeDivisionType timeDivisionType;
+	@Deprecated @ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL) private Interval numberOfNotClosedAtTimeInterval;
 	
-	@Accessors(chain=true) private Boolean isAdjacent = Boolean.TRUE;
-	@Accessors(chain=true) private Boolean isDisjoint = Boolean.TRUE;
+	@Deprecated @Accessors(chain=true) private Boolean isAdjacent = Boolean.TRUE;
+	@Deprecated @Accessors(chain=true) private Boolean isDisjoint = Boolean.TRUE;
 	
+	@Deprecated
 	public IdentifiablePeriodType setTimeDivisionTypeFromCode(String code){
 		this.timeDivisionType = InstanceHelper.getInstance().getByIdentifier(TimeDivisionType.class, code, ClassHelper.Listener.IdentifierType.BUSINESS);
 		return this;
 	}
 	
-	public static final String FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = "numberOfNotClosedAtTimeInterval";
-	public static final String FIELD_TIME_DIVISION_TYPE = "timeDivisionType";
-	public static final String FIELD_IS_DISJOINT = "isDisjoint";
-	public static final String FIELD_IS_ADJACENT = "isAdjacent";
 	
-	public static final String COLUMN_TIME_DIVISION_TYPE = FIELD_TIME_DIVISION_TYPE;
-	public static final String COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL;
+	@Deprecated public static final String FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = "numberOfNotClosedAtTimeInterval";
+	@Deprecated public static final String FIELD_TIME_DIVISION_TYPE = "timeDivisionType";
+	@Deprecated public static final String FIELD_IS_DISJOINT = "isDisjoint";
+	@Deprecated public static final String FIELD_IS_ADJACENT = "isAdjacent";
+	
+	@Deprecated public static final String COLUMN_TIME_DIVISION_TYPE = FIELD_TIME_DIVISION_TYPE;
+	@Deprecated public static final String COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL;
 }
 
