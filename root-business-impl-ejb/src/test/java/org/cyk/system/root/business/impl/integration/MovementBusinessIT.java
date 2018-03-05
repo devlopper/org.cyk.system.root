@@ -25,6 +25,7 @@ import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGloba
 import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
@@ -85,13 +86,25 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
     	testCase.assertNotNull(MovementCollection.class, collectionCode);
     	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
     	final String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
-    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)));
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
     	testCase.computeChanges(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
     			.setBirthDateFromString("1/1/2000 1:0").setIdentifiablePeriodFromCode(identifiablePeriodCode));
     	
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovement(){
+    	TestCase testCase = instanciateTestCase();
+    	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionCode));
+    	testCase.create(testCase.instanciateOne(Movement.class).setValueFromObject(1).setCollectionFromCode(movementCollectionCode));
     	testCase.clean();
     }
     
@@ -285,7 +298,10 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode));
     	
-    	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class);
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class).setCollectionFromCode(identifiablePeriodCollectionCode);
 		identifiablePeriod.setCode(testCase.getRandomHelper().getAlphabetic(5));
 		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
 		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59));
@@ -304,10 +320,13 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode).setValue(BigDecimal.ZERO));
     	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
     	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class);
 		identifiablePeriod.setCode(testCase.getRandomHelper().getAlphabetic(5));
 		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
-		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59));
+		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode);
 		testCase.create(identifiablePeriod);
 		
     	Movement movement = testCase.instanciateOneMovement(null,movementCollectionCode);
@@ -932,10 +951,13 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 	@Test
     public void createOneMovementAndOneChildren(){
 		TestCase testCase = instanciateTestCase();
+		String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+		
 		IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class);
 		identifiablePeriod.setCode("j001");
 		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
-		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59));
+		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode);
 		testCase.create(identifiablePeriod);
 		
 		String saleMovementCollectionCode = RandomHelper.getInstance().getAlphabetic(2);
@@ -964,10 +986,13 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
     	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
 		IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class);
 		identifiablePeriod.setCode("j001");
 		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
-		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59));
+		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode);
 		testCase.create(identifiablePeriod);
 		
 		String parentCode = RandomHelper.getInstance().getAlphabetic(5);
@@ -991,6 +1016,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 	@Test
     public void throwCollectionIsNull(){
 		TestCase testCase = instanciateTestCase();
+		System.out.println("MovementBusinessIT.throwCollectionIsNull() : "+testCase.getDefaultThrowableClass());
     	testCase.assertThrowable(new Runnable(testCase) {
 			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class));}
     	}, FieldHelper.Field.get(Movement.class,Movement.FIELD_COLLECTION).getIdentifier(NotNull.class), null);

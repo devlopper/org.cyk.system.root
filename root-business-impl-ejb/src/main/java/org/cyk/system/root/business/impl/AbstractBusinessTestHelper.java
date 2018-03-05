@@ -88,6 +88,7 @@ import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
@@ -1333,8 +1334,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	    	String movementCollectionCode = getRandomHelper().getAlphabetic(5);
 	    	create(instanciateOne(MovementCollection.class,movementCollectionCode).setValue(BigDecimal.ZERO));
 	    	
+	    	String identifiablePeriodCollectionCode = getRandomHelper().getAlphabetic(5);
+	    	create(instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+	    	
 	    	IdentifiablePeriod identifiablePeriod = instanciateOneWithRandomIdentifier(IdentifiablePeriod.class)
-	    			.setBirthDate(identifiablePeriodBirthDate).setDeathDate(identifiablePeriodDeathDate);
+	    			.setBirthDate(identifiablePeriodBirthDate).setDeathDate(identifiablePeriodDeathDate).setCollectionFromCode(identifiablePeriodCollectionCode);
 			create(identifiablePeriod);
 			
 			for(Object[] array : arrays) {

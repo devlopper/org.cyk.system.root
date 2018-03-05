@@ -11,8 +11,6 @@ import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__test__.Runnable;
 import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.mathematics.Movement;
-import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
@@ -22,7 +20,6 @@ import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
-import org.cyk.utility.common.helper.RandomHelper;
 import org.junit.Test;
 
 public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
@@ -206,33 +203,12 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
 	@Test
     public void throwCollectionIsNull(){
 		TestCase testCase = instanciateTestCase();
-    	testCase.assertThrowable(new Runnable(testCase) {
+		testCase.assertThrowable(new Runnable(testCase) {
 			@Override protected void __run__() throws Throwable {create(instanciateOne(IdentifiablePeriod.class));}
     	}, FieldHelper.Field.get(IdentifiablePeriod.class,IdentifiablePeriod.FIELD_COLLECTION).getIdentifier(NotNull.class), null);
     	testCase.clean();
 	}
-	
-	//@Test
-    public void throwValueIsNull(){
-		TestCase testCase = instanciateTestCase();
-    	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
-		testCase.assertThrowable(new Runnable(testCase) {
-			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setCollectionFromCode(collectionCode));}
-    	}, null, "Valeur : ne peut pas être nul");
-	}
-	
-	//@Test
-    public void throwValueIsZero(){
-		TestCase testCase = instanciateTestCase();
-    	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
-		testCase.assertThrowable(new Runnable(testCase) {
-			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setValueFromObject(0));}	
-    	}, null, "La ##movvalue##(0) doit être différente à 0.");
-		testCase.clean();
-	}
-    
+
     /**/
     
 	/**/

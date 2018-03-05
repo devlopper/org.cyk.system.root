@@ -45,7 +45,7 @@ public class IdentifiablePeriodBusinessImpl extends AbstractCollectionItemBusine
 			Long countAll = dao.countAll();
 			if(countAll > 0) {
 				//Long numberOfNotClosed = dao.countByClosed(Boolean.FALSE);				
-				if(identifiablePeriod.getCollection().getType()==null) {
+				if(identifiablePeriod.getCollection() == null || identifiablePeriod.getCollection().getType()==null) {
 					
 				}else {
 					
@@ -65,7 +65,7 @@ public class IdentifiablePeriodBusinessImpl extends AbstractCollectionItemBusine
 		
 		if(identifiablePeriod.getDeathDate() == null) {
 			Long duration;
-			if(identifiablePeriod.getCollection().getType() == null)
+			if(identifiablePeriod.getCollection() == null || identifiablePeriod.getCollection().getType() == null)
 				duration = new Long(DateTimeConstants.MILLIS_PER_DAY);
 			else
 				duration = identifiablePeriod.getCollection().getType().getTimeDivisionType().getMeasure().getValue().longValue();

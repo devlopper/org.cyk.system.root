@@ -25,6 +25,11 @@ public class IdentifiablePeriod extends AbstractCollectionItem<IdentifiablePerio
 
 	/**/
 	
+	@Override
+	public IdentifiablePeriod setCollectionFromCode(String code) {
+		return (IdentifiablePeriod) super.setCollectionFromCode(code);
+	}
+	
 	public IdentifiablePeriod setTypeFromCode(String code){
 		this.type = InstanceHelper.getInstance().getByIdentifier(IdentifiablePeriodType.class, code, ClassHelper.Listener.IdentifierType.BUSINESS);
 		return this;
