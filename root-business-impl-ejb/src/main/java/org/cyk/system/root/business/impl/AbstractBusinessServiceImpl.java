@@ -132,10 +132,6 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 			destination.setCode(source.getAbbreviation());
 	}
 	
-	protected static <T extends java.lang.Throwable> void throw__(ConditionHelper.Condition.Builder builder){
-		throw__(builder, BusinessThrowable.class);
-	}
-	
 	/**/
 	
 }

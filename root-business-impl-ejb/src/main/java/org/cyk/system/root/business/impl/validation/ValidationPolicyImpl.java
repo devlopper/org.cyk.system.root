@@ -2,7 +2,6 @@ package org.cyk.system.root.business.impl.validation;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,7 +14,6 @@ import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.language.LanguageBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.Identifiable;
-import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
@@ -26,10 +24,9 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.helper.ConditionHelper;
+import org.cyk.utility.common.helper.ConditionHelper.Condition;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
-import org.cyk.utility.common.helper.StringHelper;
-import org.cyk.utility.common.helper.ThrowableHelper;
 import org.cyk.utility.common.helper.ValidationHelper;
 
 @Singleton
@@ -136,10 +133,8 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         	Long countInDB = inject(GenericDao.class).use(identifiable.getClass()).select(Function.COUNT).where(null,fieldName,"uniqueValue", fieldValue,ArithmeticOperator.EQ).oneLong();
         	loggingMessageBuilder.addNamedParameters("Check for Create. Count existing",countInDB);
         	
-        	throw__(new ConditionHelper.Condition.Builder.Duplicate.Adapter.Default()
-        			.setValueNameIdentifier(fieldLabelId).setValueCount(countInDB)
-    				.setDomainNameIdentifier(new StringHelper.Builder.ClassIdentifier.Adapter.Default().setInput(identifiable.getClass()))
-    				.setInput(fieldValue),BusinessThrowable.class);
+        	throw__(new Condition.Builder.Comparison.Count.Adapter.Default().setFieldObject(identifiable).setFieldName(fieldName).setValue1(countInDB).setValue2(1)
+        			.setGreater(Boolean.TRUE));
         	
         }else{
         	AbstractIdentifiable inDB = genericDao.use(identifiable.getClass()).read(identifiable.getIdentifier());

@@ -839,8 +839,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		
 		if(identifiable.getBirthDate()!=null && identifiable.getDeathDate()!=null){
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("existence")
-					.setDomainNameIdentifier(identifiable.getClass().getSimpleName()).setNumber1(identifiable.getBirthDate().getTime())
-					.setNumber2(identifiable.getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
+					.setDomainNameIdentifier(identifiable.getClass().getSimpleName()).setValue1(identifiable.getBirthDate().getTime())
+					.setValue2(identifiable.getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
 		}
 		
 		if(Boolean.TRUE.equals(identifiable.getCascadeOperationToMaster())){

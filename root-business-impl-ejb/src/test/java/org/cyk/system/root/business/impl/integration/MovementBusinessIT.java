@@ -1016,8 +1016,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 	@Test
     public void throwCollectionIsNull(){
 		TestCase testCase = instanciateTestCase();
-		System.out.println("MovementBusinessIT.throwCollectionIsNull() : "+testCase.getDefaultThrowableClass());
-    	testCase.assertThrowable(new Runnable(testCase) {
+		testCase.assertThrowable(new Runnable(testCase) {
 			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class));}
     	}, FieldHelper.Field.get(Movement.class,Movement.FIELD_COLLECTION).getIdentifier(NotNull.class), null);
     	testCase.clean();
@@ -1040,7 +1039,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
 		testCase.assertThrowable(new Runnable(testCase) {
 			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setValueFromObject(0));}	
-    	}, null, "La ##movvalue##(0) doit être différente à 0.");
+    	}, null, "La valeur(0) de l'attribut <<valeur>> de l'entité <<mouvement>> doit être différente à 0.");
 		testCase.clean();
 	}
     

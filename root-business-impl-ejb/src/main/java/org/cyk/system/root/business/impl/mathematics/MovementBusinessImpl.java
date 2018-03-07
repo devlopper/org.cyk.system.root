@@ -23,6 +23,7 @@ import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.time.IdentifiablePeriodIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierDao;
@@ -90,9 +91,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				exceptionUtils().comparison( !inject(IntervalBusiness.class).contains(action.getInterval(), movement.getValue(), 2)
 						, action.getName(), ArithmeticOperator.GT,action.getInterval().getLow().getValue());
 			}else{
-				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movvalue")
-						.setDomainNameIdentifier("movement").setNumber1(movement.getValue())
-						.setNumber2(BigDecimal.ZERO).setEqual(Boolean.TRUE));	
+				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setFieldObject(movement).setFieldName(Movement.FIELD_VALUE)
+						.setValue2(BigDecimal.ZERO).setEqual(Boolean.TRUE));	
 			}
 			
 			/*if(movement.getCollection()!=null && movement.getCollection().getType().getIdentifiablePeriodType()!=null){
@@ -168,9 +168,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				if(Boolean.TRUE.equals(movement.getParentActionIsOppositeOfChildAction()))
 					sum = NumberHelper.getInstance().negate(sum);
 				
-				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movparentvalue")
-						.setDomainNameIdentifier("movement").setNumber1(movement.getValue())
-						.setNumber2(sum).setEqual(Boolean.FALSE));	
+				throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setFieldObject(movement).setFieldName(Movement.FIELD_VALUE)						
+						.setValue2(sum).setEqual(Boolean.FALSE));	
 			}
 			
 		}
@@ -270,13 +269,13 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		if(movement.getCollection()!=null && movement.getCollection().getType().getIdentifiablePeriodType()!=null){
 			exceptionUtils().exception(movement.getIdentifiablePeriod() == null, "identifiable_period_required");
 			
-			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movdate")
-					.setDomainNameIdentifier("movement").setNumber1(movement.getBirthDate().getTime())
-					.setNumber2(movement.getIdentifiablePeriod().getBirthDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.FALSE));
-			
-			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("movdate")
-					.setDomainNameIdentifier("movement").setNumber1(movement.getBirthDate().getTime())
-					.setNumber2(movement.getIdentifiablePeriod().getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
+			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setFieldObject(movement).setFieldName(FieldHelper.getInstance().buildPath(
+					Movement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE))
+					.setValue2(movement.getIdentifiablePeriod().getBirthDate()).setEqual(Boolean.FALSE).setGreater(Boolean.FALSE)
+					
+					,new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setFieldObject(movement).setFieldName(FieldHelper.getInstance().buildPath(
+							Movement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE))
+							.setValue2(movement.getIdentifiablePeriod().getDeathDate()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
 		}
 		
 		if(movement.getAction() == null){

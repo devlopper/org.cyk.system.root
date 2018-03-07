@@ -15,6 +15,7 @@ import javax.inject.Singleton;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.ClazzBusiness;
 import org.cyk.system.root.business.api.ClazzBusiness.ClazzBusinessListener;
 import org.cyk.system.root.business.api.GenericBusiness;
@@ -83,6 +84,7 @@ import org.cyk.utility.common.helper.ListenerHelper.Executor.ResultMethod;
 import org.cyk.utility.common.helper.MapHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.ThrowableHelper;
 import org.cyk.utility.common.test.TestCase;
 
 import lombok.Getter;
@@ -120,6 +122,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     protected void initialisation() {
     	INSTANCE = this; 
         super.initialisation();
+        ThrowableHelper.getInstance().setDefaultThrowableClass(BusinessThrowable.class);
         org.cyk.utility.common.cdi.annotation.Log.Interceptor.COLLECTION.add(new LogInterceptorAdapter() /*inject(LogInterceptorAdapter.class)*/);
         
         ClassHelper.Instanciation.Get.Adapter.Default.RESULT_METHOD_CLASS = (Class<ResultMethod<Object, Get<?>>>) ClassHelper.getInstance().getByName(org.cyk.system.root.business.impl.helper.ClassHelper.Instanciation.class);

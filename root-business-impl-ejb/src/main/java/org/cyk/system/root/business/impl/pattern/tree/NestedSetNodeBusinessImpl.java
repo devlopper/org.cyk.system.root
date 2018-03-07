@@ -22,6 +22,7 @@ import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetDao;
 import org.cyk.system.root.persistence.api.pattern.tree.NestedSetNodeDao;
 import org.cyk.utility.common.helper.ConditionHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.RandomHelper;
@@ -138,17 +139,17 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 	@Override
 	protected void afterCreate(NestedSetNode node) {
 		super.afterCreate(node);
-		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenSet")
-				.setDomainNameIdentifier("nestedset").setNumber1(node.getSet().getNumberOfChildren()).setNumber2(inject(NestedSetNodeDao.class).countBySet(node.getSet()))
+		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setFieldObject(node).setFieldName(FieldHelper.getInstance()
+				.buildPath(NestedSetNode.FIELD_SET,NestedSet.FIELD_NUMBER_OF_CHILDREN)).setValue2(inject(NestedSetNodeDao.class).countBySet(node.getSet()))
 				.setEqual(Boolean.FALSE));
 		
 		if(node.getParent() != null) {
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenNode")
-					.setDomainNameIdentifier("nestedsetnode").setNumber1(node.getParent().getNumberOfChildren()).setNumber2(inject(NestedSetNodeDao.class)
+					.setDomainNameIdentifier("nestedsetnode").setValue1(node.getParent().getNumberOfChildren()).setValue2(inject(NestedSetNodeDao.class)
 							.countByParent(node.getParent())));
 			
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfDirectChildrenNode")
-					.setDomainNameIdentifier("nestedsetnode").setNumber1(node.getParent().getNumberOfDirectChildren()).setNumber2(inject(NestedSetNodeDao.class)
+					.setDomainNameIdentifier("nestedsetnode").setValue1(node.getParent().getNumberOfDirectChildren()).setValue2(inject(NestedSetNodeDao.class)
 							.countDirectChildrenByParent(node.getParent())));
 		}						
 	}
@@ -189,7 +190,7 @@ public class NestedSetNodeBusinessImpl extends AbstractTypedBusinessService<Nest
 		inject(NestedSetBusiness.class).update(node.getSet());
 		
 		throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("numberOfChildrenSet")
-				.setDomainNameIdentifier("nestedset").setNumber1(node.getSet().getNumberOfChildren()).setNumber2(inject(NestedSetNodeDao.class).countBySet(node.getSet()))
+				.setDomainNameIdentifier("nestedset").setValue1(node.getSet().getNumberOfChildren()).setValue2(inject(NestedSetNodeDao.class).countBySet(node.getSet()))
 				.setEqual(Boolean.FALSE), BusinessThrowable.class);
 		//if(dao.countBySet(node.getSet()) == 0)
 		//	inject(NestedSetBusiness.class).delete(node.getSet());
