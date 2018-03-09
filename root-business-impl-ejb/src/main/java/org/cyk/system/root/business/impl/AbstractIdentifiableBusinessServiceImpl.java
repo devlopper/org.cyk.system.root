@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -425,6 +424,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return identifiable;
 	}
 
+	@Deprecated
 	public InstanceCopyBuilder<IDENTIFIABLE> getInstanceCopyBuilder(){
 		return new InstanceCopyBuilder<IDENTIFIABLE>().addIgnoredFieldAnnotationClasses(javax.persistence.Id.class,javax.persistence.OneToOne.class
 				,javax.persistence.Transient.class,javax.persistence.GeneratedValue.class);
@@ -432,7 +432,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	@Override
 	public IDENTIFIABLE duplicate(IDENTIFIABLE identifiable) {
-		IDENTIFIABLE duplicated = getInstanceCopyBuilder().setSource(identifiable).build();
+		IDENTIFIABLE duplicated = null;//FieldHelper.getInstance().cop getInstanceCopyBuilder().setSource(identifiable).build();
 		return duplicated;
 	}
 	
@@ -745,11 +745,13 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		Listener.Adapter.afterDelete(listeners, identifiable);
 	}
 	
+	@Deprecated
 	protected LogMessage.Builder createLogMessageBuilder(Object action){
 		LogMessage.Builder logMessageBuilder = new LogMessage.Builder(action,clazz);
 		return logMessageBuilder;
 	}
 	
+	@Deprecated
 	protected void addLogMessageBuilderParameters(LogMessage.Builder logMessageBuilder,Object...objects){
 		if(logMessageBuilder!=null)
 			logMessageBuilder.addParameters(objects);

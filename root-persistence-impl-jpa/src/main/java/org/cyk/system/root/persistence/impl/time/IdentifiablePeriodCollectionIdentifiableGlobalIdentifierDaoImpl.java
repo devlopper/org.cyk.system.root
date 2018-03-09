@@ -1,0 +1,14 @@
+package org.cyk.system.root.persistence.impl.time;
+
+import java.io.Serializable;
+
+import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifier;
+import org.cyk.system.root.persistence.api.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.impl.globalidentification.AbstractJoinGlobalIdentifierDaoImpl;
+
+public class IdentifiablePeriodCollectionIdentifiableGlobalIdentifierDaoImpl extends AbstractJoinGlobalIdentifierDaoImpl<IdentifiablePeriodCollectionIdentifiableGlobalIdentifier,IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.SearchCriteria> implements IdentifiablePeriodCollectionIdentifiableGlobalIdentifierDao,Serializable {
+	private static final long serialVersionUID = 6306356272165070761L;
+	
+	
+}
+ 

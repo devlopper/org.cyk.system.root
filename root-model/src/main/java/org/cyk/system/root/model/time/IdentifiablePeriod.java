@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.utility.common.annotation.FieldOverride;
+import org.cyk.utility.common.annotation.FieldOverrides;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 
@@ -18,12 +20,21 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @NoArgsConstructor @Entity
+@FieldOverrides(value={
+		@FieldOverride(name=AbstractCollectionItem.FIELD_COLLECTION,type=IdentifiablePeriodCollection.class)
+})
+@Accessors(chain=true)
 public class IdentifiablePeriod extends AbstractCollectionItem<IdentifiablePeriodCollection> implements Serializable {
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@ManyToOne @JoinColumn(name=COLUMN_TYPE) @Accessors(chain=true) private IdentifiablePeriodType type;
+	@ManyToOne @JoinColumn(name=COLUMN_TYPE)  private IdentifiablePeriodType type;
 
 	/**/
+	
+	@Override
+	public IdentifiablePeriod setCollection(IdentifiablePeriodCollection collection) {
+		return (IdentifiablePeriod) super.setCollection(collection);
+	}
 	
 	@Override
 	public IdentifiablePeriod setCollectionFromCode(String code) {

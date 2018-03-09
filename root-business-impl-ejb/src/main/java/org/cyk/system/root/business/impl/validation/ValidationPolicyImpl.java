@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessThrowable;
@@ -38,6 +37,8 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     
     @Override 
     public void validateCreate(Identifiable<?> anIdentifiable) {
+    	//ValidationHelper.getInstance().validate(anIdentifiable, Constant.Action.CREATE, Boolean.TRUE);
+    	
         anIdentifiable.setIdentifier(null);
         checkValueSetConstraints(anIdentifiable);
         checkUniqueConstraints(anIdentifiable);
@@ -80,15 +81,9 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             exceptionUtils().exception(identifiable.getIdentifier()!=null,"exception.value.set.system",new Object[]{"identifier"});
             
             for(FieldHelper.Field index : FieldHelper.Field.get(anIdentifiable.getClass())){
-            	throw__(new ConditionHelper.Condition.Builder.Adapter.Default().setValueNameIdentifier("identifiable_id")
-						.setDomainNameIdentifier("identifiable").setConditionValue(
-								!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null
-								).setIdentifier(index.getIdentifier(NotNull.class))
-						.setMessageIdentifier(index.getName()+".required"), BusinessThrowable.class);	
+            	if(index.getConstraints().getIsNullable() != null && Boolean.FALSE.equals(index.getConstraints().getIsNullable()))
+            		throw__(ConditionHelper.Condition.getBuilderNull(identifiable,index.getName()));	
             	
-            	/*if(!Boolean.TRUE.equals(index.getConstraints().getIsNullable()) && FieldHelper.getInstance().read(anIdentifiable, index.getName())==null){
-        			exceptionUtils().exception(index.getName()+" is required");
-        		}*/
         	}
         }
     }
@@ -132,9 +127,8 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
         if(identifiable.getIdentifier()==null){
         	Long countInDB = inject(GenericDao.class).use(identifiable.getClass()).select(Function.COUNT).where(null,fieldName,"uniqueValue", fieldValue,ArithmeticOperator.EQ).oneLong();
         	loggingMessageBuilder.addNamedParameters("Check for Create. Count existing",countInDB);
-        	
         	throw__(new Condition.Builder.Comparison.Count.Adapter.Default().setFieldObject(identifiable).setFieldName(fieldName).setValue1(countInDB).setValue2(1)
-        			.setGreater(Boolean.TRUE));
+        			.setGreater(Boolean.TRUE).setEqual(Boolean.TRUE));
         	
         }else{
         	AbstractIdentifiable inDB = genericDao.use(identifiable.getClass()).read(identifiable.getIdentifier());
@@ -142,6 +136,7 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             //TODO more check are required. 1 both null 2 1st null second not null 3 first not null second null
         	if(oldValue!=null && fieldValue!=null && !oldValue.equals(fieldValue))
                 //field value has changed
+        		//System.out.println("ValidationPolicyImpl.checkUniqueConstraints() "+oldValue+" : "+fieldValue);
                 exceptionUtils().exception(genericDao.use(identifiable.getClass()).select(Function.COUNT).where(null,fieldName,"uniqueValue", fieldValue,ArithmeticOperator.EQ).oneLong()>0,
                     "exception.value.duplicate",new Object[]{inject(LanguageBusiness.class).findText(fieldLabelId),fieldValue});
         }

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.validation.constraints.NotNull;
-
 import org.cyk.system.root.business.api.time.IdentifiablePeriodBusiness;
 import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.business.impl.__data__.DataSet;
@@ -16,9 +14,11 @@ import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
 import org.cyk.system.root.model.time.IdentifiablePeriodType;
 import org.cyk.system.root.model.value.Value;
+import org.cyk.system.root.persistence.api.time.IdentifiablePeriodDao;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.junit.Test;
 
@@ -183,6 +183,44 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     }
     
     @Test
+    public void findByFilter(){
+    	TestCase testCase = instanciateTestCase();
+    	String identifiablePeriodCollectionCode01 = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode01));
+    	String identifiablePeriodCollectionCode02 = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode02));
+    	String identifiablePeriodCollectionCode03 = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode03));
+    	
+    	String identifiablePeriodCode01_01 = "01_01_"+testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode01_01).setBirthDateFromString("1/1/2000 0:0")
+    			.setDeathDateFromString("1/1/2000 23:59").setClosed(Boolean.TRUE).setCollectionFromCode(identifiablePeriodCollectionCode01));   	
+    	
+    	String identifiablePeriodCode02_01 = "02_01_"+testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02_01).setBirthDateFromString("1/1/2000 0:0")
+    			.setDeathDateFromString("1/1/2000 23:59").setClosed(Boolean.TRUE).setCollectionFromCode(identifiablePeriodCollectionCode02));  
+    	
+    	String identifiablePeriodCode03_01 = "03_01_"+testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode03_01).setBirthDateFromString("1/1/2000 0:0")
+    			.setDeathDateFromString("1/1/2000 23:59").setClosed(Boolean.TRUE).setCollectionFromCode(identifiablePeriodCollectionCode03)); 
+    	
+    	String identifiablePeriodCode01_02 = "01_02_"+testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode01_02).setBirthDateFromString("1/1/2000 0:0")
+    			.setDeathDateFromString("2/1/2000 23:59").setClosed(Boolean.FALSE).setCollectionFromCode(identifiablePeriodCollectionCode01));   	
+    	
+    	String identifiablePeriodCode02_02 = "02_02_"+testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02_02).setBirthDateFromString("1/1/2000 0:0")
+    			.setDeathDateFromString("2/1/2000 23:59").setClosed(Boolean.FALSE).setCollectionFromCode(identifiablePeriodCollectionCode02)); 
+    	
+    	assertEquals(2l, inject(IdentifiablePeriodDao.class).countByClosed(Boolean.FALSE));
+    	assertEquals(1l, inject(IdentifiablePeriodDao.class).countByCollectionByClosed(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode01),Boolean.FALSE));
+    	assertEquals(1l, inject(IdentifiablePeriodDao.class).countByCollectionByClosed(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode02),Boolean.FALSE));
+    	assertEquals(0l, inject(IdentifiablePeriodDao.class).countByCollectionByClosed(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode03),Boolean.FALSE));
+    	
+    	testCase.clean();
+    }
+    
+    @Test
     public void crudOneIdentifiablePeriodWithTypeWithDateGeneratedBySystem(){
     	TestCase testCase = instanciateTestCase();
     	String identifiablePeriodTypeCode = testCase.getRandomHelper().getAlphabetic(5);
@@ -204,8 +242,10 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     public void throwCollectionIsNull(){
 		TestCase testCase = instanciateTestCase();
 		testCase.assertThrowable(new Runnable(testCase) {
+			private static final long serialVersionUID = 1L;
+
 			@Override protected void __run__() throws Throwable {create(instanciateOne(IdentifiablePeriod.class));}
-    	}, FieldHelper.Field.get(IdentifiablePeriod.class,IdentifiablePeriod.FIELD_COLLECTION).getIdentifier(NotNull.class), null);
+    	}, FieldHelper.Field.get(IdentifiablePeriod.class,IdentifiablePeriod.FIELD_COLLECTION).getIdentifier(ConditionHelper.Condition.Builder.Null.class), null);
     	testCase.clean();
 	}
 

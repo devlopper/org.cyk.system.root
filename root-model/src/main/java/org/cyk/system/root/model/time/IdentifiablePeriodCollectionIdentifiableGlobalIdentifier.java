@@ -27,23 +27,23 @@ import lombok.Setter;
  *
  */
 @Getter @Setter @Entity  @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {IdentifiablePeriodIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_PERIOD
-		,IdentifiablePeriodIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
-public class IdentifiablePeriodIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
+@Table(uniqueConstraints={@UniqueConstraint(columnNames = {IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_PERIOD_COLLECTION
+		,IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
+public class IdentifiablePeriodCollectionIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 	private static final long serialVersionUID = -165832578043422718L;
 	
-	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD) @NotNull private IdentifiablePeriod identifiablePeriod;
+	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD_COLLECTION) @NotNull private IdentifiablePeriodCollection identifiablePeriodCollection;
 	
 	/**/
 	
-	public IdentifiablePeriodIdentifiableGlobalIdentifier(IdentifiablePeriod identifiablePeriod,AbstractIdentifiable identifiable){
-		this.identifiablePeriod = identifiablePeriod;
+	public IdentifiablePeriodCollectionIdentifiableGlobalIdentifier(IdentifiablePeriodCollection identifiablePeriodCollection,AbstractIdentifiable identifiable){
+		this.identifiablePeriodCollection = identifiablePeriodCollection;
 		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
 	}
 	
-	public static final String FIELD_IDENTIFIABLE_PERIOD = "identifiablePeriod";
+	public static final String FIELD_IDENTIFIABLE_PERIOD_COLLECTION = "identifiablePeriodCollection";
 	
-	public static final String COLUMN_IDENTIFIABLE_PERIOD = FIELD_IDENTIFIABLE_PERIOD;
+	public static final String COLUMN_IDENTIFIABLE_PERIOD_COLLECTION = FIELD_IDENTIFIABLE_PERIOD_COLLECTION;
 	
 	/**/
 	
@@ -71,16 +71,16 @@ public class IdentifiablePeriodIdentifiableGlobalIdentifier extends AbstractJoin
 	}
 	
 	public static void define(Class<? extends AbstractIdentifiable> aClass){
-		define(IdentifiablePeriodIdentifiableGlobalIdentifier.class, aClass);
+		define(IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.class, aClass);
 	}
 	public static Boolean isUserDefinedClass(Class<?> aClass){
-		return isUserDefinedClass(IdentifiablePeriodIdentifiableGlobalIdentifier.class,aClass);
+		return isUserDefinedClass(IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.class,aClass);
 	}
 	public static Boolean isUserDefinedObject(Object object){
-		return isUserDefinedObject(IdentifiablePeriodIdentifiableGlobalIdentifier.class,object);
+		return isUserDefinedObject(IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.class,object);
 	}
 	
-	public static class Filter extends AbstractJoinGlobalIdentifier.Filter<IdentifiablePeriodIdentifiableGlobalIdentifier> implements Serializable{
+	public static class Filter extends AbstractJoinGlobalIdentifier.Filter<IdentifiablePeriodCollectionIdentifiableGlobalIdentifier> implements Serializable{
 		private static final long serialVersionUID = 1L;
     	
 		

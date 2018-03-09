@@ -1,0 +1,21 @@
+package org.cyk.system.root.business.impl.time;
+
+import java.io.Serializable;
+
+import javax.inject.Inject;
+
+import org.cyk.system.root.business.api.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.impl.globalidentification.AbstractJoinGlobalIdentifierBusinessImpl;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifier;
+import org.cyk.system.root.persistence.api.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifierDao;
+
+public class IdentifiablePeriodCollectionIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGlobalIdentifierBusinessImpl<IdentifiablePeriodCollectionIdentifiableGlobalIdentifier, IdentifiablePeriodCollectionIdentifiableGlobalIdentifierDao,IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.SearchCriteria> implements IdentifiablePeriodCollectionIdentifiableGlobalIdentifierBusiness,Serializable {
+	private static final long serialVersionUID = -3799482462496328200L;
+
+	@Inject
+	public IdentifiablePeriodCollectionIdentifiableGlobalIdentifierBusinessImpl(IdentifiablePeriodCollectionIdentifiableGlobalIdentifierDao dao) {
+		super(dao); 
+	}
+	
+	
+}

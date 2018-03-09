@@ -29,11 +29,22 @@ public class IdentifiablePeriodBusinessImpl extends AbstractCollectionItemBusine
 	}
 	
 	@Override
+	public IdentifiablePeriod findFirstNotClosedOrInstanciateOneByIdentifiablePeriodCollection(IdentifiablePeriodCollection collection) {
+		Collection<IdentifiablePeriod> identifiablePeriods = inject(IdentifiablePeriodDao.class).readByCollectionByClosed(collection,Boolean.FALSE);
+		IdentifiablePeriod identifiablePeriod = CollectionHelper.getInstance().getFirst(identifiablePeriods);
+		if(identifiablePeriod == null && collection.getType()!=null && Boolean.TRUE.equals(collection.getType().getAutomaticallyCreateIdentifiablePeriodWhenNoneFound())){
+			identifiablePeriod = instanciateOne().setCollection(collection);
+			computeChanges(identifiablePeriod);
+		}
+		return identifiablePeriod;
+	}
+	
+	@Override
 	protected void beforeCrud(IdentifiablePeriod identifiablePeriod, Crud crud) {
 		super.beforeCrud(identifiablePeriod, crud);
 		if(Crud.CREATE.equals(crud)) {
 			throw__(new ConditionHelper.Condition.Builder.Adapter.Default().setValueNameIdentifier("identifiablePeriodClosed")
-					.setDomainNameIdentifier("identifiablePeriod").setConditionValue(dao.countByClosed(Boolean.FALSE) > 0)
+					.setDomainNameIdentifier("identifiablePeriod").setConditionValue(dao.countByCollectionByClosed(identifiablePeriod.getCollection(),Boolean.FALSE) > 0)
 					.setMessageIdentifier("allmustbeCLOSED"));		
 		}
 	}

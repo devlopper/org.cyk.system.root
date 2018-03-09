@@ -1,0 +1,8 @@
+package org.cyk.system.root.business.api.time;
+
+import org.cyk.system.root.business.api.globalidentification.JoinGlobalIdentifierBusiness;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifier;
+
+public interface IdentifiablePeriodCollectionIdentifiableGlobalIdentifierBusiness extends JoinGlobalIdentifierBusiness<IdentifiablePeriodCollectionIdentifiableGlobalIdentifier,IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.SearchCriteria> {
+	
+}

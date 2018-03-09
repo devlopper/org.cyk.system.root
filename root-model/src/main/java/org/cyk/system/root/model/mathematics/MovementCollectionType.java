@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeType;
-import org.cyk.system.root.model.time.IdentifiablePeriodType;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
 import org.cyk.utility.common.annotation.FieldOverride;
 
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class MovementCollectionType extends AbstractDataTreeType implements Seri
 	private @Accessors(chain=true) Boolean movementParentable;
 	private @Accessors(chain=true) Boolean supportDocumentIdentifier;
 	@ManyToOne @JoinColumn(name=COLUMN_DOCUMENT_IDENTIFIER_COUNT_INTERVAL) @Accessors(chain=true) private Interval documentIdentifierCountInterval;
-	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD_TYPE) private IdentifiablePeriodType identifiablePeriodType;
+	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD_COLLECTION_TYPE) private IdentifiablePeriodCollectionType identifiablePeriodCollectionType;
 	
 	//TODO to be model using a class which can be called MovementCollectionAlert or something like that. really i do not know so to think about
 	//@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal minimalQuantityAlert = BigDecimal.ZERO;
@@ -52,12 +52,12 @@ public class MovementCollectionType extends AbstractDataTreeType implements Seri
 	public static final String FIELD_MOVEMENT_PARENTABLE = "movementParentable";
 	public static final String FIELD_SUPPORT_DOCUMENT_IDENTIFIER = "supportDocumentIdentifier";
 	public static final String FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL = "documentIdentifierCountInterval";
-	public static final String FIELD_IDENTIFIABLE_PERIOD_TYPE = "identifiablePeriodType";
+	public static final String FIELD_IDENTIFIABLE_PERIOD_COLLECTION_TYPE = "identifiablePeriodCollectionType";
 	
 	public static final String COLUMN_INTERVAL = COLUMN_NAME_UNKEYWORD+FIELD_INTERVAL;
 	public static final String COLUMN_INCREMENT_ACTION = FIELD_INCREMENT_ACTION;
 	public static final String COLUMN_DECREMENT_ACTION = FIELD_DECREMENT_ACTION;
 	public static final String COLUMN_SUPPORT_DOCUMENT_IDENTIFIER = FIELD_SUPPORT_DOCUMENT_IDENTIFIER;
 	public static final String COLUMN_DOCUMENT_IDENTIFIER_COUNT_INTERVAL = FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL;
-	public static final String COLUMN_IDENTIFIABLE_PERIOD_TYPE = FIELD_IDENTIFIABLE_PERIOD_TYPE;
+	public static final String COLUMN_IDENTIFIABLE_PERIOD_COLLECTION_TYPE = FIELD_IDENTIFIABLE_PERIOD_COLLECTION_TYPE;
 }

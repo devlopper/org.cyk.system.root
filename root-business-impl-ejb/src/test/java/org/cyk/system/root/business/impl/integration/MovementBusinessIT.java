@@ -6,8 +6,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.validation.constraints.NotNull;
-
 import org.cyk.system.root.business.api.information.IdentifiableCollectionBusiness;
 import org.cyk.system.root.business.api.information.IdentifiableCollectionItemBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
@@ -26,12 +24,14 @@ import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.TimeHelper;
@@ -87,14 +87,14 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	testCase.assertNotNull(MovementCollection.class, collectionCode);
     	
     	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
-    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	IdentifiablePeriodCollection identifiablePeriodCollection = testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
     	
     	final String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
     			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
     	testCase.computeChanges(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
-    			.setBirthDateFromString("1/1/2000 1:0").setIdentifiablePeriodFromCode(identifiablePeriodCode));
+    			.setBirthDateFromString("1/1/2000 1:0").setIdentifiablePeriodFromCode(RootConstant.Code.generate(identifiablePeriodCollection, identifiablePeriodCode)));
     	
     	testCase.clean();
     }
@@ -105,6 +105,58 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionCode));
     	testCase.create(testCase.instanciateOne(Movement.class).setValueFromObject(1).setCollectionFromCode(movementCollectionCode));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementWhereIdentifiablePeriodIsSetToNotClosed(){
+    	TestCase testCase = instanciateTestCase();
+    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode)
+    			.setTypeFromCode(RootConstant.Code.IdentifiablePeriodCollectionType.CASH_REGISTER_WORKING_DAY));
+    	
+    	String movementCollectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
+    
+    	testCase.create(new IdentifiablePeriodCollectionIdentifiableGlobalIdentifier(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode)
+    			, testCase.read(MovementCollection.class,movementCollectionCode)));
+    
+    	Movement movement01 = testCase.instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
+    			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(2)).setActionFromIncrementation(Boolean.TRUE).setValueFromObject(1);
+    	testCase.computeChanges(movement01);
+    	assertNotNull(movement01.getIdentifiablePeriod());
+    	testCase.create(movement01);
+    	    	
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudTwoMovementsWhereIdentifiablePeriodIsSetToNotClosed(){
+    	TestCase testCase = instanciateTestCase();
+    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode)
+    			.setTypeFromCode(RootConstant.Code.IdentifiablePeriodCollectionType.CASH_REGISTER_WORKING_DAY));
+    	
+    	String movementCollectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
+    
+    	testCase.create(new IdentifiablePeriodCollectionIdentifiableGlobalIdentifier(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode)
+    			, testCase.read(MovementCollection.class,movementCollectionCode)));
+    
+    	Movement movement01 = testCase.instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
+    			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(2)).setActionFromIncrementation(Boolean.TRUE).setValueFromObject(1);
+    	testCase.computeChanges(movement01);
+    	assertNotNull(movement01.getIdentifiablePeriod());
+    	testCase.create(movement01);
+    	
+    	Movement movement02 = testCase.instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
+    			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(3)).setActionFromIncrementation(Boolean.TRUE).setValueFromObject(2);
+    	testCase.computeChanges(movement02);
+    	assertNotNull(movement02.getIdentifiablePeriod());
+    	testCase.create(movement02);
+    	
     	testCase.clean();
     }
     
@@ -1017,8 +1069,9 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     public void throwCollectionIsNull(){
 		TestCase testCase = instanciateTestCase();
 		testCase.assertThrowable(new Runnable(testCase) {
-			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class));}
-    	}, FieldHelper.Field.get(Movement.class,Movement.FIELD_COLLECTION).getIdentifier(NotNull.class), null);
+			private static final long serialVersionUID = 1L;
+			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setValueFromObject(1));}
+    	}, FieldHelper.Field.get(Movement.class,Movement.FIELD_COLLECTION).getIdentifier(ConditionHelper.Condition.Builder.Null.class), null);
     	testCase.clean();
 	}
 	
@@ -1028,8 +1081,20 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
 		testCase.assertThrowable(new Runnable(testCase) {
+			private static final long serialVersionUID = 1L;
 			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setCollectionFromCode(collectionCode));}
-    	}, null, "Valeur : ne peut pas être nul");
+    	}, null, "La valeur de l'attribut <<valeur>> de l'entité <<mouvement>> doit être non nulle.");
+	}
+	
+	@Test
+    public void throwIdentifiableCollectionIsNull(){
+		TestCase testCase = instanciateTestCase();
+    	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
+		testCase.assertThrowable(new Runnable(testCase) {
+			private static final long serialVersionUID = 1L;
+			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setValueFromObject(1));}
+    	}, null, "La valeur de l'attribut <<période identifiable>> de l'entité <<mouvement>> doit être non nulle.");
 	}
 	
 	@Test
@@ -1038,6 +1103,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	final String collectionCode = RandomHelper.getInstance().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
 		testCase.assertThrowable(new Runnable(testCase) {
+			private static final long serialVersionUID = 1L;
 			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setValueFromObject(0));}	
     	}, null, "La valeur(0) de l'attribut <<valeur>> de l'entité <<mouvement>> doit être différente à 0.");
 		testCase.clean();

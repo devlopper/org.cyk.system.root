@@ -36,6 +36,10 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
 				,Period.FIELD_TO_DATE)).getConstraints().setIsNullable(Boolean.FALSE);
 		FieldHelper.Field.get(IdentifiablePeriod.class, FieldHelper.getInstance().buildPath(IdentifiablePeriod.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CLOSED))
 			.getConstraints().setIsNullable(Boolean.FALSE);
+		FieldHelper.Field.get(IdentifiablePeriod.class, FieldHelper.getInstance().buildPath(IdentifiablePeriod.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD
+				,Period.FIELD_FROM_DATE)).getConstraints().setDatePart(Constant.Date.Part.DATE_AND_TIME_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND);
+		FieldHelper.Field.get(IdentifiablePeriod.class, FieldHelper.getInstance().buildPath(IdentifiablePeriod.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD
+				,Period.FIELD_TO_DATE)).getConstraints().setDatePart(Constant.Date.Part.DATE_AND_TIME_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND);
 		
 		FieldHelper.Field.get(Movement.class, Movement.FIELD_COLLECTION).getConstraints().setIsNullable(Boolean.FALSE);
 		FieldHelper.Field.get(Movement.class, FieldHelper.getInstance().buildPath(Movement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD

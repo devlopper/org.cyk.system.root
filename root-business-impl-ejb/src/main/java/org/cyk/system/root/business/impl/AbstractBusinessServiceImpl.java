@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import javax.persistence.Entity;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.SetListener;
@@ -22,7 +21,6 @@ import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.AbstractBean;
-import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 
@@ -123,6 +121,7 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		listener.setNullValue(null);
 	}
 	
+	@Deprecated
 	protected void setFieldValuesIfBlank(AbstractIdentifiable source,AbstractIdentifiable destination){
 		if(StringUtils.isBlank(destination.getCode()))
 			destination.setCode(source.getCode());

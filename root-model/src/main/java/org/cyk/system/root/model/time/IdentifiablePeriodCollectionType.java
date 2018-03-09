@@ -25,6 +25,8 @@ public class IdentifiablePeriodCollectionType extends AbstractDataTreeType imple
 	@ManyToOne @JoinColumn(name=COLUMN_TIME_DIVISION_TYPE) @NotNull @Accessors(chain=true) private TimeDivisionType timeDivisionType;
 	@ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL) @Accessors(chain=true) private Interval numberOfNotClosedAtTimeInterval;
 	@ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_MILLISECOND_OF_GAP_INTERVAL) @Accessors(chain=true) private Interval numberOfMillisecondOfGapInterval;
+	private Boolean automaticallyCreateIdentifiablePeriodWhenNoneFound;
+	private Boolean automaticallyCloseIdentifiablePeriodWhenDurationOver;
 	
 	/**/
 	
