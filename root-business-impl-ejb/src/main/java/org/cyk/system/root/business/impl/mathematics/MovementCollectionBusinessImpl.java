@@ -8,6 +8,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
@@ -28,6 +29,23 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Inject
 	public MovementCollectionBusinessImpl(MovementCollectionDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected void afterCrud(MovementCollection movementCollection, Crud crud) {
+		super.afterCrud(movementCollection, crud);
+		if(Crud.CREATE.equals(crud)){
+			if(movementCollection.getType()!=null && Boolean.TRUE.equals(movementCollection.getType().getAutomaticallyJoinIdentifiablePeriodCollection())){
+				/*IdentifiablePeriodCollection identifiablePeriodCollection = inject(IdentifiablePeriodCollectionBusiness.class).instanciateOne();
+				FieldHelper.getInstance().copy(movementCollection, identifiablePeriodCollection);
+				identifiablePeriodCollection.setCode(identifiablePeriodCollection.getCode()+"1"+RandomHelper.getInstance().getAlphabetic(5));
+				System.out.println("MovementCollectionBusinessImpl.afterCrud() : "+identifiablePeriodCollection.getCode());
+				inject(IdentifiablePeriodCollectionBusiness.class).create(identifiablePeriodCollection);
+				inject(IdentifiablePeriodCollectionIdentifiableGlobalIdentifierBusiness.class).create(new IdentifiablePeriodCollectionIdentifiableGlobalIdentifier(
+						identifiablePeriodCollection, movementCollection));
+				*/
+			}
+		}
 	}
 	
 	@Override

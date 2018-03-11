@@ -27,6 +27,7 @@ public class MovementCollectionType extends AbstractDataTreeType implements Seri
 	private @Accessors(chain=true) Boolean supportDocumentIdentifier;
 	@ManyToOne @JoinColumn(name=COLUMN_DOCUMENT_IDENTIFIER_COUNT_INTERVAL) @Accessors(chain=true) private Interval documentIdentifierCountInterval;
 	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD_COLLECTION_TYPE) private IdentifiablePeriodCollectionType identifiablePeriodCollectionType;
+	private @Accessors(chain=true) Boolean automaticallyJoinIdentifiablePeriodCollection;
 	
 	//TODO to be model using a class which can be called MovementCollectionAlert or something like that. really i do not know so to think about
 	//@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal minimalQuantityAlert = BigDecimal.ZERO;
@@ -53,6 +54,7 @@ public class MovementCollectionType extends AbstractDataTreeType implements Seri
 	public static final String FIELD_SUPPORT_DOCUMENT_IDENTIFIER = "supportDocumentIdentifier";
 	public static final String FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL = "documentIdentifierCountInterval";
 	public static final String FIELD_IDENTIFIABLE_PERIOD_COLLECTION_TYPE = "identifiablePeriodCollectionType";
+	public static final String FIELD_AUTOMATICALLY_JOIN_IDENTIFIABLE_PERIOD_COLLECTION = "automaticallyJoinIdentifiablePeriodCollection";
 	
 	public static final String COLUMN_INTERVAL = COLUMN_NAME_UNKEYWORD+FIELD_INTERVAL;
 	public static final String COLUMN_INCREMENT_ACTION = FIELD_INCREMENT_ACTION;
