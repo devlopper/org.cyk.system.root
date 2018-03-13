@@ -92,6 +92,7 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 		if(readByFilter.equals(name)){
 			builder.setFieldName(AbstractCollectionItem.FIELD_COLLECTION).where().and().in(AbstractIdentifiable.FIELD_IDENTIFIER);
 			builder.setFieldName(null).orderBy().asc(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
+			builder.where().addTokens(" AND (t.globalIdentifier.closed = NULL ) ");
 		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsGreaterThan}, name)){
 			builder.where().and().eq(AbstractCollectionItem.FIELD_COLLECTION);
 		}

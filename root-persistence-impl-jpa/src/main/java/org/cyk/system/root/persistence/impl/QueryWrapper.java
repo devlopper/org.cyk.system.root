@@ -90,6 +90,8 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 				values = (Collection<V>) PARAMETER_VALUE_COLLECTION_EMPTY_LONG;
 			else if(String.class.equals(valueClass))
 				values = (Collection<V>) PARAMETER_VALUE_COLLECTION_EMPTY_STRING;
+			else if(Boolean.class.equals(valueClass))
+				values = (Collection<V>) PARAMETER_VALUE_COLLECTION_EMPTY_BOOLEAN;
 		}
 		//System.out.println("QueryWrapper.parameterIn() NAME="+name+" : VALUES="+values+" : ISEMPTY="+valuesIsEmpty);
 		parameter(StructuredQueryLanguageHelper.Where.In.Adapter.getParameterNameIn(name), values);
@@ -110,6 +112,11 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 	
 	public QueryWrapper<T> parameterInStrings(Collection<String> strings,String...names){
 		parameterIn(String.class, strings,names);
+		return this;
+	}
+	
+	public QueryWrapper<T> parameterInBooleans(Collection<Boolean> booleans,String...names){
+		parameterIn(Boolean.class, booleans,names);
 		return this;
 	}
 	
@@ -295,6 +302,7 @@ public class QueryWrapper<T> extends AbstractBean implements Serializable {
 	
 	public static final String HINT_FETCH_GRAPH =  "javax.persistence.fetchgraph";
 	
+	private static final Collection<Boolean> PARAMETER_VALUE_COLLECTION_EMPTY_BOOLEAN = Arrays.asList(Boolean.FALSE);
 	private static final Collection<Long> PARAMETER_VALUE_COLLECTION_EMPTY_LONG = Arrays.asList(Long.MIN_VALUE);
 	private static final Collection<String> PARAMETER_VALUE_COLLECTION_EMPTY_STRING = Arrays.asList(RandomHelper.getInstance().getAlphanumeric(10)+System.currentTimeMillis()+"");
 }

@@ -217,6 +217,23 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     	assertEquals(1l, inject(IdentifiablePeriodDao.class).countByCollectionByClosed(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode02),Boolean.FALSE));
     	assertEquals(0l, inject(IdentifiablePeriodDao.class).countByCollectionByClosed(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode03),Boolean.FALSE));
     	
+    	IdentifiablePeriod.Filter filter = new IdentifiablePeriod.Filter();
+    	/*filter.getGlobalIdentifier().getClosed().setValue(Boolean.TRUE);
+    	assertEquals(inject(IdentifiablePeriodDao.class).countAll(), inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	*/
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValue(null);
+    	assertEquals(0l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValue(Boolean.FALSE);
+    	assertEquals(2l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValue(Boolean.TRUE);
+    	assertEquals(3l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
     	testCase.clean();
     }
     

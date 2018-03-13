@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -312,12 +313,12 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 
 		protected CriteriaHelper.Criteria.String code,name;
 		protected CriteriaHelper.Criteria.Number.Long orderNumber;
-		//protected CriteriaHelper.Criteria.Boolean closed;
+		protected CriteriaHelper.Criteria.Boolean closed;
 		
 		public Filter(){
 			code = instanciateCriteria(CriteriaHelper.Criteria.String.class).setLocation(StringHelper.Location.INSIDE);
 			name = instanciateCriteria(CriteriaHelper.Criteria.String.class).setLocation(StringHelper.Location.INSIDE);
-			//closed = instanciateCriteria(CriteriaHelper.Criteria.Boolean.class);
+			closed = instanciateCriteria(CriteriaHelper.Criteria.Boolean.class);
 			//orderNumber = instanciateCriteria(CriteriaHelper.Criteria.Number.Long.class);
 		}
 				
