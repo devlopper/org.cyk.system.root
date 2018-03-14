@@ -105,5 +105,7 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	                	Collection<IDENTIFIABLE> readByFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration);
 	    				Long countByFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration);
 	                    
+	    				Collection<IDENTIFIABLE> readByFilter(FilterHelper.Filter<IDENTIFIABLE> filter);
+	    				Long countByFilter(FilterHelper.Filter<IDENTIFIABLE> filter);
 	                	
 }

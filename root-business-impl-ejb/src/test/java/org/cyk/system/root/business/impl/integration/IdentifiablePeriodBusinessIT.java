@@ -16,6 +16,7 @@ import org.cyk.system.root.model.time.IdentifiablePeriodType;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.time.IdentifiablePeriodDao;
 import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.BooleanHelper;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.ConditionHelper;
@@ -212,27 +213,50 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02_02).setBirthDateFromString("1/1/2000 0:0")
     			.setDeathDateFromString("2/1/2000 23:59").setClosed(Boolean.FALSE).setCollectionFromCode(identifiablePeriodCollectionCode02)); 
     	
-    	assertEquals(2l, inject(IdentifiablePeriodDao.class).countByClosed(Boolean.FALSE));
-    	assertEquals(1l, inject(IdentifiablePeriodDao.class).countByCollectionByClosed(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode01),Boolean.FALSE));
-    	assertEquals(1l, inject(IdentifiablePeriodDao.class).countByCollectionByClosed(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode02),Boolean.FALSE));
-    	assertEquals(0l, inject(IdentifiablePeriodDao.class).countByCollectionByClosed(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode03),Boolean.FALSE));
-    	
-    	IdentifiablePeriod.Filter filter = new IdentifiablePeriod.Filter();
-    	/*filter.getGlobalIdentifier().getClosed().setValue(Boolean.TRUE);
-    	assertEquals(inject(IdentifiablePeriodDao.class).countAll(), inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
-    	*/
+    	IdentifiablePeriod.Filter filter;
     	
     	filter = new IdentifiablePeriod.Filter();
-    	filter.getGlobalIdentifier().getClosed().setValue(null);
+    	filter.getGlobalIdentifier().getClosed().setValues(BooleanHelper.NULL);
     	assertEquals(0l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
     	
     	filter = new IdentifiablePeriod.Filter();
-    	filter.getGlobalIdentifier().getClosed().setValue(Boolean.FALSE);
+    	filter.getGlobalIdentifier().getClosed().setValues(Boolean.FALSE);
     	assertEquals(2l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
     	
     	filter = new IdentifiablePeriod.Filter();
-    	filter.getGlobalIdentifier().getClosed().setValue(Boolean.TRUE);
+    	filter.getGlobalIdentifier().getClosed().setValues(Boolean.TRUE);
     	assertEquals(3l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValues(BooleanHelper.NULL,Boolean.FALSE);
+    	assertEquals(2l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValues(BooleanHelper.NULL,Boolean.TRUE);
+    	assertEquals(3l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValues(Boolean.FALSE,Boolean.TRUE);
+    	assertEquals(5l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValues(BooleanHelper.NULL,Boolean.FALSE,Boolean.TRUE);
+    	assertEquals(5l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValues(Boolean.FALSE);
+    	filter.addMaster(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode01));
+    	assertEquals(1l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValues(Boolean.FALSE);
+    	filter.addMaster(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode02));
+    	assertEquals(1l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
+    	
+    	filter = new IdentifiablePeriod.Filter();
+    	filter.getGlobalIdentifier().getClosed().setValues(Boolean.FALSE);
+    	filter.addMaster(testCase.read(IdentifiablePeriodCollection.class, identifiablePeriodCollectionCode03));
+    	assertEquals(0l, inject(IdentifiablePeriodDao.class).countByFilter(filter, null));
     	
     	testCase.clean();
     }

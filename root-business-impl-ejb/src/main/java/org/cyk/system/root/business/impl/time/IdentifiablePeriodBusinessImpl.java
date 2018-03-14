@@ -30,7 +30,9 @@ public class IdentifiablePeriodBusinessImpl extends AbstractCollectionItemBusine
 	
 	@Override
 	public IdentifiablePeriod findFirstNotClosedOrInstanciateOneByIdentifiablePeriodCollection(IdentifiablePeriodCollection collection) {
-		Collection<IdentifiablePeriod> identifiablePeriods = inject(IdentifiablePeriodDao.class).readByCollectionByClosed(collection,Boolean.FALSE);
+		IdentifiablePeriod.Filter filter = new IdentifiablePeriod.Filter().addMaster(collection);
+		filter.getGlobalIdentifier().getClosed().setValues(Boolean.FALSE);
+		Collection<IdentifiablePeriod> identifiablePeriods = inject(IdentifiablePeriodDao.class).readByFilter(filter);
 		IdentifiablePeriod identifiablePeriod = CollectionHelper.getInstance().getFirst(identifiablePeriods);
 		if(identifiablePeriod == null && collection.getType()!=null && Boolean.TRUE.equals(collection.getType().getAutomaticallyCreateIdentifiablePeriodWhenNoneFound())){
 			identifiablePeriod = instanciateOne().setCollection(collection);
@@ -43,8 +45,12 @@ public class IdentifiablePeriodBusinessImpl extends AbstractCollectionItemBusine
 	protected void beforeCrud(IdentifiablePeriod identifiablePeriod, Crud crud) {
 		super.beforeCrud(identifiablePeriod, crud);
 		if(Crud.CREATE.equals(crud)) {
+			IdentifiablePeriod.Filter filter = new IdentifiablePeriod.Filter();
+	    	filter.getGlobalIdentifier().getClosed().setValues(Boolean.FALSE);
+	    	filter.addMaster(identifiablePeriod.getCollection());
+	    	
 			throw__(new ConditionHelper.Condition.Builder.Adapter.Default().setValueNameIdentifier("identifiablePeriodClosed")
-					.setDomainNameIdentifier("identifiablePeriod").setConditionValue(dao.countByCollectionByClosed(identifiablePeriod.getCollection(),Boolean.FALSE) > 0)
+					.setDomainNameIdentifier("identifiablePeriod").setConditionValue(dao.countByFilter(filter) > 0)
 					.setMessageIdentifier("allmustbeCLOSED"));		
 		}
 	}

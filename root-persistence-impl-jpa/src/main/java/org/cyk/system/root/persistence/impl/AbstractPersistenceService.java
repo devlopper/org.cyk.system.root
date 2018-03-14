@@ -475,6 +475,16 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		return null;
 	}
 	
+	@Override
+	public Collection<IDENTIFIABLE> readByFilter(FilterHelper.Filter<IDENTIFIABLE> filter) {
+		return readByFilter(filter, null);
+	}
+	
+	@Override
+	public Long countByFilter(FilterHelper.Filter<IDENTIFIABLE> filter) {
+		return countByFilter(filter, null);
+	}
+	
 	@Deprecated
 	protected void listenBeforeFilter(QueryWrapper<?> queryWrapper,FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {}
 	/**/

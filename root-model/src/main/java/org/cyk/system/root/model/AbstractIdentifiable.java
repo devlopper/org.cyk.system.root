@@ -571,6 +571,11 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		}
 		
 		@Override
+		public Filter<T> addMaster(Object master) {
+			return (Filter<T>) super.addMaster(master);
+		}
+		
+		@Override
 		public FilterHelper.Filter<T> set(String string) {
 			globalIdentifier.set(string);
 			return super.set(string);

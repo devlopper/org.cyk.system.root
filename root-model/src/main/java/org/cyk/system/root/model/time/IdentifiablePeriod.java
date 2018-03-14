@@ -76,6 +76,11 @@ public class IdentifiablePeriod extends AbstractCollectionItem<IdentifiablePerio
 	public static class Filter extends AbstractIdentifiable.Filter<IdentifiablePeriod> implements Serializable{
 		private static final long serialVersionUID = 1L;
     	
+		@Override
+		public Filter addMaster(Object master) {
+			return (Filter) super.addMaster(master);
+		}
+		
     }
 	
 	/**/

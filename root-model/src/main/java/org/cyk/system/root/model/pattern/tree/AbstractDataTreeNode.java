@@ -53,10 +53,10 @@ public abstract class AbstractDataTreeNode extends AbstractEnumeration implement
 		private static final long serialVersionUID = 1L;
     	
 		@Override
-		public org.cyk.utility.common.helper.FilterHelper.Filter<T> addMaster(Object master) {
+		public Filter<T> addMaster(Object master) {
 			if(master instanceof AbstractDataTreeNode)
 				master = ((AbstractDataTreeNode)master).getNode();
-			return super.addMaster(master);
+			return (Filter<T>) super.addMaster(master);
 		}
 		
     }

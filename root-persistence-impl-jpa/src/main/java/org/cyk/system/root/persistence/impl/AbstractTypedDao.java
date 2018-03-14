@@ -198,7 +198,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 					builder.getWhere().or().lk(fieldName);
 			processReadByFilterQueryBuilderWhereConditions(builder);
 			builder.getWhere().rp();
-			//builder.setFieldName(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER).where().and().addEqual(GlobalIdentifier.FIELD_CLOSED,Boolean.FALSE);
+			builder.setFieldName(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER).where().and().addEqual(GlobalIdentifier.FIELD_CLOSED,Boolean.FALSE,3);
 		}else if(readWhereExistencePeriodFromDateIsLessThan.equals(name)){
 			builder.setFieldName(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD)).where()
 				.lt(Period.FIELD_FROM_DATE, Period.FIELD_FROM_DATE).and().getParent().setFieldName(null).where()
@@ -228,8 +228,9 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			queryWrapper.parameterLike(globalIdentifier);
 			if(globalIdentifier!=null){
 				queryWrapper.parameterInStrings(globalIdentifier.getCode().getExcluded(),AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE);
-				//queryWrapper.parameterInBooleans(globalIdentifier.getClosed().getRequired(),AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CLOSED);
-				//queryWrapper.parameter(StructuredQueryLanguageHelper.Where.Equal.Adapter.Default.getParameterNameEqual(GlobalIdentifier.FIELD_CLOSED), globalIdentifier.getClosed().getValue());
+				for(Integer index = 1 ; index <= 3 ; index++)
+					queryWrapper.parameter(StructuredQueryLanguageHelper.Where.Equal.Adapter.Default.getParameterNameEqual(GlobalIdentifier.FIELD_CLOSED)+index
+							, CollectionHelper.getInstance().getElementAt(globalIdentifier.getClosed().getValues(), index-1));
 			}
 			queryWrapper.parameterLike(filter);
 			getDataReadConfig().set(dataReadConfiguration);
