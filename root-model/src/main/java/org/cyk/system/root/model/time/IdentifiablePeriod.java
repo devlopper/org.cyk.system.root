@@ -81,6 +81,15 @@ public class IdentifiablePeriod extends AbstractCollectionItem<IdentifiablePerio
 			return (Filter) super.addMaster(master);
 		}
 		
+		@Override
+		public Filter setClosed(Boolean... values) {
+			return (Filter) super.setClosed(values);
+		}
+		
+		@Override
+		public Filter addMaster(Class<?> aClass,Object identifier) {
+			return (Filter) super.addMaster(aClass, identifier);
+		}
     }
 	
 	/**/

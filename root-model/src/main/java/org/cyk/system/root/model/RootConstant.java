@@ -441,7 +441,7 @@ public interface RootConstant {
 			public static final String MANAGER="MANAGER";
 			public static final String SIGNER="SIGNER";
 			public static final String IN_CHARGE="INCHARGE";
-			
+			public static final String PROVIDER="PROVIDER";
 		}
 		
 		/**/
