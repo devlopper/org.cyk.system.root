@@ -2,13 +2,16 @@ package org.cyk.system.root.model;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.Collection;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 import org.cyk.utility.common.Constant;
+import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.CollectionHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -72,12 +75,31 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	public AbstractCollection<ITEM> add(Collection<ITEM> items){
+		new CollectionHelper.Iterator.Adapter.Default<ITEM>(items) {
+			private static final long serialVersionUID = 1L;
+
+			@SuppressWarnings("unchecked")
+			protected void __executeForEach__(ITEM item) {
+				((AbstractCollectionItem<AbstractIdentifiable>)item).setCollection(AbstractCollection.this);
+				AbstractCollection.this.items.addOne(item);
+			};
+		}.execute();
+		return this;
+	}
+	
+	public AbstractCollection<ITEM> add(@SuppressWarnings("unchecked") ITEM...items){
+		if(ArrayHelper.getInstance().isNotEmpty(items))
+			add(Arrays.asList(items));
+		return this;
+	}
+	
+	/*@SuppressWarnings("unchecked")
 	public AbstractCollection<ITEM> add(ITEM item){
 		((AbstractCollectionItem<AbstractIdentifiable>)item).setCollection(this);
 		items.addOne(item);
 		return this;
-	}
+	}*/
 	
 	public <CLASS> CLASS getItemAt(Class<CLASS> aClass,Integer index){
 		return items == null ? null : items.getOneAt(aClass, index);
