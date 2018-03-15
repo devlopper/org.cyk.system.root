@@ -74,19 +74,19 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/* Transients */
 	
-	@Transient protected Boolean cascadeOperationToMaster = Boolean.FALSE;
+	@Transient @Accessors(chain=true) protected Boolean cascadeOperationToMaster = Boolean.FALSE;
 	/**
 	 * null means no restriction
 	 */
-	@Transient protected Collection<String> cascadeOperationToMasterFieldNames;
+	@Transient @Accessors(chain=true) protected Collection<String> cascadeOperationToMasterFieldNames;
 	
-	@Transient protected Boolean cascadeOperationToChildren = Boolean.FALSE;
+	@Transient @Accessors(chain=true) protected Boolean cascadeOperationToChildren = Boolean.FALSE;
 	/**
 	 * null means no restriction
 	 */
-	@Transient protected Collection<String> cascadeOperationToChildrenFieldNames;
+	@Transient @Accessors(chain=true) protected Collection<String> cascadeOperationToChildrenFieldNames;
 	
-	@Transient protected Boolean checkIfExistOnDelete = Boolean.FALSE;
+	@Transient @Accessors(chain=true) protected Boolean checkIfExistOnDelete = Boolean.FALSE;
 	
 	/**
 	 * Used in user interface to reference one and only one parent
