@@ -28,7 +28,7 @@ import lombok.experimental.Accessors;
  * @author Christian Yao Komenan
  *
  */
-@Getter @Setter @MappedSuperclass  @NoArgsConstructor 
+@Getter @Setter @MappedSuperclass  @NoArgsConstructor @Accessors(chain=true)
 public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implements Serializable {
 
 	private static final long serialVersionUID = -165832578043422718L;
@@ -36,8 +36,8 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	private static final Map<Class<? extends AbstractJoinGlobalIdentifier> , Collection<Class<? extends AbstractIdentifiable>>> USER_DEFINED_JOINABLE_CLASSES
 		= new HashMap<>();
 	
-	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_GLOBAL_IDENTIFIER) @NotNull @Accessors(chain=true) protected GlobalIdentifier identifiableGlobalIdentifier;
-	@Accessors(chain=true) protected Boolean onDeleteCascadeToJoin;
+	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_GLOBAL_IDENTIFIER) @NotNull protected GlobalIdentifier identifiableGlobalIdentifier;
+	protected Boolean onDeleteCascadeToJoin;
 	
 	public AbstractJoinGlobalIdentifier(AbstractIdentifiable identifiable){
 		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();

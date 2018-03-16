@@ -30,6 +30,7 @@ import org.cyk.system.root.business.api.mathematics.MetricCollectionIdentifiable
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.party.PartyIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.time.IdentifiablePeriodIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.file.report.AbstractRootReportProducer;
@@ -51,6 +52,8 @@ import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.PartyIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet.AbstractIdentifiableSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
@@ -70,6 +73,7 @@ import org.cyk.system.root.persistence.api.mathematics.MetricCollectionIdentifia
 import org.cyk.system.root.persistence.api.mathematics.MetricDao;
 import org.cyk.system.root.persistence.api.mathematics.MetricValueIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierDao;
+import org.cyk.system.root.persistence.api.party.PartyIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.time.IdentifiablePeriodIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.value.ValueCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
@@ -215,14 +219,17 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					protected void __executeForEach__(String fieldName) {
 						java.lang.reflect.Field masterField = FieldHelper.getInstance().get(identifiable.getClass(), fieldName);
 						AbstractIdentifiable master = (AbstractIdentifiable) FieldHelper.getInstance().read(identifiable, masterField);
-						createIfNotIdentified(master);
+						createMaster(identifiable,master);
 					}
 				}.execute();
 			}else{
 				
 			}	
-		}
-		
+		}		
+	}
+	
+	protected void createMaster(IDENTIFIABLE identifiable,AbstractIdentifiable master){
+		createIfNotIdentified(master);
 	}
 	
 	protected <ITEM extends AbstractIdentifiable> void synchronise(Class<ITEM> itemClass,IDENTIFIABLE master,IdentifiableRuntimeCollection<ITEM> collection){
@@ -518,6 +525,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		deleteMetricCollectionIdentifiableGlobalIdentifier(identifiable);
 		deleteMovementCollectionIdentifiableGlobalIdentifier(identifiable);
 		deleteIdentifiablePeriodIdentifiableGlobalIdentifier(identifiable);
+		deletePartyIdentifiableGlobalIdentifier(identifiable);
 		beforeDelete(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.DELETE);
 		inject(GenericBusiness.class).deleteIfIdentified(findRelatedInstances(identifiable,Boolean.TRUE,null));
@@ -565,6 +573,17 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}else{
 			Collection<IdentifiablePeriodIdentifiableGlobalIdentifier> movementCollectionIdentifiableGlobalIdentifiers = inject(IdentifiablePeriodIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
 			inject(IdentifiablePeriodIdentifiableGlobalIdentifierBusiness.class).delete(movementCollectionIdentifiableGlobalIdentifiers);	
+		}
+	}
+	
+	protected void deletePartyIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
+		if(identifiable instanceof PartyIdentifiableGlobalIdentifier /*|| identifiable instanceof Party/* || identifiable instanceof File || identifiable instanceof Location*/){
+			
+		}else{
+			Collection<PartyIdentifiableGlobalIdentifier> partyIdentifiableGlobalIdentifiers = inject(PartyIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
+			if(identifiable instanceof Party)
+				partyIdentifiableGlobalIdentifiers = CollectionHelper.getInstance().add(partyIdentifiableGlobalIdentifiers, Boolean.TRUE, inject(PartyIdentifiableGlobalIdentifierDao.class).readByParty((Party) identifiable));
+			inject(PartyIdentifiableGlobalIdentifierBusiness.class).delete(partyIdentifiableGlobalIdentifiers);	
 		}
 	}
 	

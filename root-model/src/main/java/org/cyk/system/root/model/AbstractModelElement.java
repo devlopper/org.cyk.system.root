@@ -10,7 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.utility.common.CommonUtils;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
@@ -82,6 +84,10 @@ public abstract class AbstractModelElement implements Serializable{
 	
 	public void computeLogMessage(){
 		lastComputedLogMessage = getLogMessage();
+	}
+	
+	protected <T> T getFromCode(Class<T> aClass,String code){
+		return InstanceHelper.getInstance().getByIdentifier(aClass, code, ClassHelper.Listener.IdentifierType.BUSINESS);
 	}
 	
 	/**/

@@ -26,16 +26,21 @@ import lombok.experimental.Accessors;
  */
 @Getter @Setter @Entity  @NoArgsConstructor 
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {PartyIdentifiableGlobalIdentifier.FIELD_PARTY
-		,PartyIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER,PartyIdentifiableGlobalIdentifier.FIELD_ROLE})})
+		,PartyIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER,PartyIdentifiableGlobalIdentifier.FIELD_ROLE})}) @Accessors(chain=true)
 public class PartyIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 	private static final long serialVersionUID = -165832578043422718L;
 	 
-	@ManyToOne @JoinColumn(name=COLUMN_PARTY) @NotNull @Accessors(chain=true) private Party party;
-	@ManyToOne @JoinColumn(name=COLUMN_ROLE) @NotNull @Accessors(chain=true) private PartyBusinessRole role;
+	@ManyToOne @JoinColumn(name=COLUMN_PARTY) @NotNull private Party party;
+	@ManyToOne @JoinColumn(name=COLUMN_ROLE) @NotNull private PartyBusinessRole role;
 	
 	@Override
 	public PartyIdentifiableGlobalIdentifier setIdentifiableGlobalIdentifier(GlobalIdentifier identifiableGlobalIdentifier) {
 		return (PartyIdentifiableGlobalIdentifier) super.setIdentifiableGlobalIdentifier(identifiableGlobalIdentifier);
+	}
+	
+	public PartyIdentifiableGlobalIdentifier setRoleFromCode(String code){
+		role = getFromCode(PartyBusinessRole.class, code);
+		return this;
 	}
 	
 	public static final String FIELD_PARTY = "party";
