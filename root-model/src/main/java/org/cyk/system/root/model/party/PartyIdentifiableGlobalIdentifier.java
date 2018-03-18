@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 
@@ -26,28 +27,38 @@ import lombok.experimental.Accessors;
  */
 @Getter @Setter @Entity  @NoArgsConstructor 
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {PartyIdentifiableGlobalIdentifier.FIELD_PARTY
-		,PartyIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER,PartyIdentifiableGlobalIdentifier.FIELD_ROLE})}) @Accessors(chain=true)
+		,PartyIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER,PartyIdentifiableGlobalIdentifier.FIELD_BUSINESS_ROLE})}) @Accessors(chain=true)
 public class PartyIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 	private static final long serialVersionUID = -165832578043422718L;
 	 
 	@ManyToOne @JoinColumn(name=COLUMN_PARTY) @NotNull private Party party;
-	@ManyToOne @JoinColumn(name=COLUMN_ROLE) @NotNull private PartyBusinessRole role;
+	@ManyToOne @JoinColumn(name=COLUMN_BUSINESS_ROLE) @NotNull private BusinessRole businessRole;
 	
 	@Override
 	public PartyIdentifiableGlobalIdentifier setIdentifiableGlobalIdentifier(GlobalIdentifier identifiableGlobalIdentifier) {
 		return (PartyIdentifiableGlobalIdentifier) super.setIdentifiableGlobalIdentifier(identifiableGlobalIdentifier);
 	}
 	
-	public PartyIdentifiableGlobalIdentifier setRoleFromCode(String code){
-		role = getFromCode(PartyBusinessRole.class, code);
+	@Override
+	public <IDENTIFIABLE extends AbstractIdentifiable> PartyIdentifiableGlobalIdentifier setIdentifiableGlobalIdentifierFromCode(Class<IDENTIFIABLE> aClass, String code) {
+		return (PartyIdentifiableGlobalIdentifier) super.setIdentifiableGlobalIdentifierFromCode(aClass, code);
+	}
+	
+	public PartyIdentifiableGlobalIdentifier setPartyFromCode(String code){
+		party = getFromCode(Party.class, code);
+		return this;
+	}
+	
+	public PartyIdentifiableGlobalIdentifier setBusinessRoleFromCode(String code){
+		businessRole = getFromCode(BusinessRole.class, code);
 		return this;
 	}
 	
 	public static final String FIELD_PARTY = "party";
-	public static final String FIELD_ROLE = "role";
+	public static final String FIELD_BUSINESS_ROLE = "businessRole";
 	
 	public static final String COLUMN_PARTY = FIELD_PARTY;
-	public static final String COLUMN_ROLE = FIELD_ROLE;
+	public static final String COLUMN_BUSINESS_ROLE = FIELD_BUSINESS_ROLE;
 	
 	/**/
 	

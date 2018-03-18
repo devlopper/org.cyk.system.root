@@ -43,6 +43,7 @@ import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CriteriaHelper;
 import org.cyk.utility.common.helper.FileHelper;
 import org.cyk.utility.common.helper.FilterHelper;
+import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
@@ -383,5 +384,11 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		private String identifier;
 		private Party party;
 		private Date date;
+	}
+	
+	/**/
+	
+	public Collection<GlobalIdentifier> get(Collection<AbstractIdentifiable> identifiables){
+		return MethodHelper.getInstance().callGet(identifiables, GlobalIdentifier.class, AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER);
 	}
 }

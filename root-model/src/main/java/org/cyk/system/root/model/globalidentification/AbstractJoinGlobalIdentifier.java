@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
-import org.cyk.utility.common.helper.MethodHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +40,11 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	
 	public AbstractJoinGlobalIdentifier(AbstractIdentifiable identifiable){
 		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
+	}
+	
+	public <IDENTIFIABLE extends AbstractIdentifiable> AbstractJoinGlobalIdentifier setIdentifiableGlobalIdentifierFromCode(Class<IDENTIFIABLE> aClass,String code){
+		identifiableGlobalIdentifier = getFromCode(aClass, code).getGlobalIdentifier();
+		return this;
 	}
 	
 	/**/
@@ -152,10 +156,7 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 			return this;
 		}
 		*/
-		
-		public Collection<GlobalIdentifier> getMastersGlobalIdentifiers(){
-			return MethodHelper.getInstance().callGet(masters, GlobalIdentifier.class, AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER);
-		}
+
     }
 	
 	/**/

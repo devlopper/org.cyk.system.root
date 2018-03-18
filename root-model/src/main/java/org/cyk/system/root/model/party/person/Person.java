@@ -11,6 +11,7 @@ import javax.persistence.NamedSubgraph;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.Country;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.search.StringSearchCriteria;
@@ -60,6 +61,11 @@ public class Person extends Party implements Serializable{
 	@Override
 	public Person setName(String name) {
 		return (Person) super.setName(name);
+	}
+	
+	@Override
+	public Person setContactCollection(ContactCollection contactCollection) {
+		return (Person) super.setContactCollection(contactCollection);
 	}
 	
 	public String getNames(){

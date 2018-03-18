@@ -49,5 +49,12 @@ public abstract class AbstractPartyBusinessImpl<PARTY extends Party,DAO extends 
 	protected void deleteFileIdentifiableGlobalIdentifier(PARTY identifiable) {
 		
 	}
+	
+	@Override
+	protected void deleteMovementCollectionIdentifiableGlobalIdentifier(PARTY identifiable) {
+		
+	}
+	
+	
 
 }

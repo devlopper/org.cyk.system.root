@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -41,6 +42,7 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.Properties;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ArrayHelper;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
@@ -561,6 +563,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		private static final long serialVersionUID = -1498269103849317057L;
 
 		protected GlobalIdentifier.Filter globalIdentifier = new GlobalIdentifier.Filter();
+		protected List<GlobalIdentifier> masterIdentifiableGlobalIdentifiers;
 		
 		public Filter() {
 			addCriterias(globalIdentifier);
@@ -578,6 +581,31 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		@Override
 		public Filter<T> addMaster(Class<?> aClass, Object identifier) {
 			return (Filter<T>) super.addMaster(aClass, identifier);
+		}
+		
+		public Filter<T> addMasterIdentifiableGlobalIdentifiers(Collection<GlobalIdentifier> masterIdentifiableGlobalIdentifiers){
+			if(CollectionHelper.getInstance().isNotEmpty(masterIdentifiableGlobalIdentifiers)){
+				if(this.masterIdentifiableGlobalIdentifiers==null)
+					this.masterIdentifiableGlobalIdentifiers = new ArrayList<>();
+				for(GlobalIdentifier index : masterIdentifiableGlobalIdentifiers)
+					if(index!=null)
+						this.masterIdentifiableGlobalIdentifiers.add(index);	
+			}
+			return this;
+		}
+		
+		public Filter<T> addMasterIdentifiableGlobalIdentifier(GlobalIdentifier...masterIdentifiableGlobalIdentifiers){
+			if(ArrayHelper.getInstance().isNotEmpty(masterIdentifiableGlobalIdentifiers))
+				addMasterIdentifiableGlobalIdentifiers(Arrays.asList(masterIdentifiableGlobalIdentifiers));
+			return this;
+		}
+		
+		public Filter<T> addMasterIdentifiableGlobalIdentifier(Class<? extends AbstractIdentifiable> aClass,Object identifier,ClassHelper.Listener.IdentifierType identifierType){
+			return addMasterIdentifiableGlobalIdentifier(InstanceHelper.getInstance().getByIdentifier(aClass, identifier, identifierType).getGlobalIdentifier());
+		}
+		
+		public Filter<T> addMasterIdentifiableGlobalIdentifier(Class<? extends AbstractIdentifiable> aClass,Object identifier){
+			return addMasterIdentifiableGlobalIdentifier(aClass, identifier, ClassHelper.Listener.IdentifierType.BUSINESS);
 		}
 		
 		public FilterHelper.Filter<T> setClosed(Collection<Boolean> values) {

@@ -435,7 +435,7 @@ public interface RootConstant {
 			
 		}
 		
-		public static class PartyBusinessRole implements Serializable {
+		public static class BusinessRole implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
 			public static final String MANAGER="MANAGER";

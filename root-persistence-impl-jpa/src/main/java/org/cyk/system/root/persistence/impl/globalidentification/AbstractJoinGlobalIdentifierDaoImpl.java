@@ -41,7 +41,7 @@ public abstract class AbstractJoinGlobalIdentifierDaoImpl<IDENTIFIABLE extends A
 		super.processQueryWrapper(aClass, queryWrapper, queryName,arguments);
 		if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
 			AbstractJoinGlobalIdentifier.Filter<?> filter = (AbstractJoinGlobalIdentifier.Filter<?>) arguments[0];
-			queryWrapper.parameterInGlobalIdentifiers( filter.getMastersGlobalIdentifiers(),AbstractJoinGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_IDENTIFIER);  
+			queryWrapper.parameterInGlobalIdentifiers( filter.getMasterIdentifiableGlobalIdentifiers(),AbstractJoinGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_IDENTIFIER);  
 		}
 	}
 	

@@ -30,8 +30,8 @@ import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.model.mathematics.MovementCollectionTypeMode;
 import org.cyk.system.root.model.mathematics.MovementMode;
+import org.cyk.system.root.model.party.BusinessRole;
 import org.cyk.system.root.model.party.Party;
-import org.cyk.system.root.model.party.PartyBusinessRole;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
@@ -104,6 +104,7 @@ public class DataSet extends AbstractBean implements Serializable {
 		Collection<Class<?>> classes = new ArrayList<>();
 		for(Class<?> aClass : excelSheetClasses)
 			classes.add(aClass);
+		
 		InputStream  workbookFileInputStream;
 		//Integer count = 0;
 		for(Class<?> aClass : classes){
@@ -374,7 +375,7 @@ public class DataSet extends AbstractBean implements Serializable {
 					}else if(Value.class.equals(aClass)){
 						classes.addAll(Arrays.asList(Measure.class,MeasureType.class));
 					}else if(Party.class.equals(aClass)){
-						classes.addAll(Arrays.asList(PartyBusinessRole.class));
+						classes.addAll(Arrays.asList(BusinessRole.class));
 					}
 				}
 				

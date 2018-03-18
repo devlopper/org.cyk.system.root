@@ -52,6 +52,9 @@
 		<!--Logger name="org.cyk.system.root.business.impl.__data__.RealDataSet" level="trace">
 			<AppenderRef ref="Console" />
 		</Logger-->
+		<!--Logger name="org.cyk.system.root.business.impl.__data__.DataSet" level="trace">
+			<AppenderRef ref="Console" />
+		</Logger-->
 		<!--Logger name="org.cyk.system.root.business.impl.globalidentification.GlobalIdentifierBusinessImpl" level="trace">
 			<AppenderRef ref="Console" />
 		</Logger-->

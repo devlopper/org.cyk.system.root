@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -18,19 +19,19 @@ import org.cyk.utility.common.helper.FilterHelper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter @Setter
-@Entity @NoArgsConstructor @Inheritance(strategy=InheritanceType.JOINED)
+@Entity @NoArgsConstructor @Inheritance(strategy=InheritanceType.JOINED) @Accessors(chain=true)
 /**
  * A moral or physical person
  * @author Christian
  *
  */
 public class Party extends AbstractIdentifiable  implements Serializable{
-
 	private static final long serialVersionUID = 1L;
 	 
-	@OneToOne protected ContactCollection contactCollection;
+	@OneToOne @JoinColumn(name=COLUMN_CONTACT_COLLECTION) protected ContactCollection contactCollection;
 	
 	public Party(String name) {
 		super();
@@ -60,6 +61,7 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	
 	public static final String FIELD_CONTACT_COLLECTION = "contactCollection";
 
+	public static final String COLUMN_CONTACT_COLLECTION = FIELD_CONTACT_COLLECTION;
 	/**/
 	
 	@Getter @Setter

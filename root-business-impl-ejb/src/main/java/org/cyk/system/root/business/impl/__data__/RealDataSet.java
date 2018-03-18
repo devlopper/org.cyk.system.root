@@ -30,6 +30,7 @@ import org.cyk.system.root.model.mathematics.MovementMode;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.network.Computer;
 import org.cyk.system.root.model.network.Service;
+import org.cyk.system.root.model.party.BusinessRole;
 import org.cyk.system.root.model.party.PartyBusinessRole;
 import org.cyk.system.root.model.party.person.Allergy;
 import org.cyk.system.root.model.party.person.BloodGroup;
@@ -122,6 +123,7 @@ public class RealDataSet extends DataSet implements Serializable {
     	addClass(BloodGroup.class);
     	addClass(Allergy.class);
     	addClass(Medication.class);
+    	addClass(BusinessRole.class);
     	addClass(PartyBusinessRole.class);
     	addClass(PersonRelationshipTypeGroup.class);
     	addClass(PersonRelationshipType.class);
