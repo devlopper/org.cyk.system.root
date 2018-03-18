@@ -215,8 +215,9 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getAbbreviation();
 	}
 	
-	public void setImage(File image){
+	public AbstractIdentifiable setImage(File image){
 		getGlobalIdentifierCreateIfNull().setImage(image);
+		return this;
 	}
 	public File getImage(){
 		return globalIdentifier == null ? null : globalIdentifier.getImage();

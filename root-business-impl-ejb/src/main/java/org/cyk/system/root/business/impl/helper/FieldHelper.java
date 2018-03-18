@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.utility.common.helper.ArrayHelper;
@@ -15,7 +16,8 @@ public class FieldHelper implements Serializable {
 	private static final Collection<String> COPYABLE_FIELD_NAMES = new HashSet<>();
 	static {
 		for(String index : org.cyk.utility.common.helper.FieldHelper.getInstance().getNamesWhereReferencedByStaticField(GlobalIdentifier.class)){
-			COPYABLE_FIELD_NAMES.add(org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,index));	
+			if(!ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_IMAGE,GlobalIdentifier.FIELD_SUPPORTING_DOCUMENT}, index))
+				COPYABLE_FIELD_NAMES.add(org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,index));	
 		}
 	}
 	
