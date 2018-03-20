@@ -11,6 +11,7 @@ import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdenti
 public interface PartyIdentifiableGlobalIdentifierDao extends JoinGlobalIdentifierDao<PartyIdentifiableGlobalIdentifier,PartyIdentifiableGlobalIdentifier.SearchCriteria> {
 
 	PartyIdentifiableGlobalIdentifier readByPartyByIdentifiableGlobalIdentifierByRole(Party party,GlobalIdentifier globalIdentifier,BusinessRole role);
+	Collection<PartyIdentifiableGlobalIdentifier> readByIdentifiableGlobalIdentifierByRole(GlobalIdentifier globalIdentifier,BusinessRole role);
 	
 	Collection<PartyIdentifiableGlobalIdentifier> readByParty(Party party);
 }

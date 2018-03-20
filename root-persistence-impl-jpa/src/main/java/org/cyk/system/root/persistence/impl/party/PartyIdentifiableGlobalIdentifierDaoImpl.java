@@ -27,6 +27,11 @@ public class PartyIdentifiableGlobalIdentifierDaoImpl extends AbstractJoinGlobal
 	}
 	
 	@Override
+	public Collection<PartyIdentifiableGlobalIdentifier> readByIdentifiableGlobalIdentifierByRole(GlobalIdentifier globalIdentifier,BusinessRole role) {
+		return readByFilter(new PartyIdentifiableGlobalIdentifier.Filter().addMaster(role).addMasterIdentifiableGlobalIdentifier(globalIdentifier));
+	}
+	
+	@Override
 	public Collection<PartyIdentifiableGlobalIdentifier> readByParty(Party party) {
 		return readByFilter(new PartyIdentifiableGlobalIdentifier.Filter().addMaster(party));
 	}
