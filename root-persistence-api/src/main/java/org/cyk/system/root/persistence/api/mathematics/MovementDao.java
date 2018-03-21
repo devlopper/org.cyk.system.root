@@ -9,5 +9,6 @@ import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 public interface MovementDao extends AbstractCollectionItemDao<Movement,MovementCollection> {
 
 	BigDecimal sumValueWhereExistencePeriodFromDateIsLessThan(Movement movement);
+	BigDecimal sumValueByCollection(MovementCollection movementCollection);
 
 }

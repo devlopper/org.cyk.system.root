@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.cyk.system.root.business.api.GenericBusiness;
+import org.cyk.system.root.business.api.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.EventMissedReason;
 import org.cyk.system.root.model.event.NotificationTemplate;
 import org.cyk.system.root.model.file.FileRepresentationType;
@@ -48,6 +51,7 @@ import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.Software;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenuLocation;
@@ -184,7 +188,18 @@ public class RealDataSet extends DataSet implements Serializable {
     
     /**/
     
-    
+    @Override
+    public void __save__() {
+    	super.__save__();
+    	IdentifiablePeriodCollectionIdentifiableGlobalIdentifier identifiablePeriodCollectionIdentifiableGlobalIdentifier = 
+    			inject(IdentifiablePeriodCollectionIdentifiableGlobalIdentifierBusiness.class).instanciateOne()
+    			.setIdentifiablePeriodCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY)
+    			.setIdentifiableGlobalIdentifierFromCode(MovementCollection.class, RootConstant.Code.MovementCollection.CASH_REGISTER);
+    	if(identifiablePeriodCollectionIdentifiableGlobalIdentifier.getIdentifiablePeriodCollection()!=null && 
+    			identifiablePeriodCollectionIdentifiableGlobalIdentifier.getIdentifiableGlobalIdentifier()!=null)
+    		inject(GenericBusiness.class).create(identifiablePeriodCollectionIdentifiableGlobalIdentifier);
+    	
+    }
     
     /**/
     

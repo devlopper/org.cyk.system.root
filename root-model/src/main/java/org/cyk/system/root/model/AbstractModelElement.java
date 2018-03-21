@@ -14,6 +14,7 @@ import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
@@ -68,6 +69,11 @@ public abstract class AbstractModelElement implements Serializable{
 				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
 	}
 	
+	public Boolean isDeathDateComputedByUser(){
+		return isFieldValueComputedByUser(FieldHelper.getInstance()
+				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_TO_DATE));
+	}
+	
 	public LoggingHelper.Message.Builder getLoggingMessageBuilder(Boolean createIfNull){
 		if(loggingMessageBuilder == null && Boolean.TRUE.equals(createIfNull))
 			loggingMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
@@ -88,6 +94,10 @@ public abstract class AbstractModelElement implements Serializable{
 	
 	protected <T> T getFromCode(Class<T> aClass,String code){
 		return InstanceHelper.getInstance().getByIdentifier(aClass, code, ClassHelper.Listener.IdentifierType.BUSINESS);
+	}
+	
+	protected <T extends Number> T getNumberFromObject(Class<T> aClass,Object value){
+		return NumberHelper.getInstance().get(aClass, value, null);
 	}
 	
 	/**/

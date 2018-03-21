@@ -312,9 +312,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			//previous cumul  = sum of previous value
 			Boolean computePreviousCumul = movement.getBirthDate()!=null;
 			logMessageBuilder.addNamedParameters("compute prev cum",computePreviousCumul);
-			if(computePreviousCumul)
-				movement.setPreviousCumul(dao.sumValueWhereExistencePeriodFromDateIsLessThan(movement));
-			else
+			if(computePreviousCumul){
+				movement.setPreviousCumul(NumberHelper.getInstance().get(BigDecimal.class
+						, NumberHelper.getInstance().add(movement.getCollection().getInitialValue(),dao.sumValueWhereExistencePeriodFromDateIsLessThan(movement))));
+			}else
 				movement.setPreviousCumul(movement.getCollection().getValue());
 			/*
 			if(Boolean.TRUE.equals(isNotIdentified(movement)) || movement.getBirthDate() == null){

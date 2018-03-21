@@ -21,13 +21,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS) @Accessors(chain=true)
 public class MovementCollection extends AbstractCollection<Movement> implements Serializable {
 	private static final long serialVersionUID = -4946585596435850782L;
 	
-	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE) @Accessors(chain=true) private BigDecimal value;
+	@Column(name=COLUMN_INITIAL_VALUE,precision=20,scale=FLOAT_SCALE) private BigDecimal initialValue;
+	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE) private BigDecimal value;
  
-	@ManyToOne @JoinColumn(name=COLUMN_TYPE) @Accessors(chain=true) private MovementCollectionType type;
+	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private MovementCollectionType type;
 	
 	@Override
 	public MovementCollection setCode(String code) {
@@ -39,9 +40,21 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 		return this;
 	}
 	
+	public MovementCollection setInitialValueFromObject(Object value){
+		this.initialValue = getNumberFromObject(BigDecimal.class, value);
+		return this;
+	}
+	
+	public MovementCollection setValueFromObject(Object value){
+		this.value = getNumberFromObject(BigDecimal.class, value);
+		return this;
+	}
+	
+	public static final String FIELD_INITIAL_VALUE = "initialValue";
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_TYPE = "type";
 	
+	public static final String COLUMN_INITIAL_VALUE = FIELD_INITIAL_VALUE;
 	public static final String COLUMN_VALUE = COLUMN_NAME_UNKEYWORD+FIELD_VALUE;
 	public static final String COLUMN_TYPE = COLUMN_NAME_UNKEYWORD+FIELD_TYPE;
 	

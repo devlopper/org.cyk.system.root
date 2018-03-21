@@ -22,7 +22,6 @@ import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
-import org.cyk.utility.common.helper.NumberHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -95,7 +94,12 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	}
 	
 	public Movement setValueFromObject(Object value){
-		this.value = NumberHelper.getInstance().get(BigDecimal.class, value, null);
+		this.value = getNumberFromObject(BigDecimal.class, value);
+		return this;
+	}
+	
+	public Movement setValueAbsoluteFromObject(Object value){
+		this.valueAbsolute = getNumberFromObject(BigDecimal.class, value);
 		return this;
 	}
 	

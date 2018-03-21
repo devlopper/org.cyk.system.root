@@ -18,4 +18,11 @@ public interface MovementCollectionBusiness extends AbstractCollectionBusiness<M
 	BigDecimal computeValue(MovementCollection movementCollection,MovementAction movementAction,BigDecimal increment);
 	
 	Collection<MovementCollection> findByTypeByJoin(MovementCollectionType type,AbstractIdentifiable join);
+	
+	/**
+	 * add sum of movement values and initial value of movement collection
+	 * @param movementCollection
+	 * @return
+	 */
+	BigDecimal computeValue(MovementCollection movementCollection);
 }

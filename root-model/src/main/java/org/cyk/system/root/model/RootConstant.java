@@ -384,7 +384,7 @@ public interface RootConstant {
 		public static class MovementCollection implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
-			public static String CASH_REGISTER = "CASHREGISTER";
+			public static final String CASH_REGISTER = "CASHREGISTER";
 			
 		}
 		

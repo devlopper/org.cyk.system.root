@@ -156,6 +156,8 @@ public class DataSet extends AbstractBean implements Serializable {
 			logger.getMessageBuilder().addManyParameters(new Object[]{"duration",new TimeHelper.Stringifier.Duration.Adapter.Default(timeCollection.getDuration()).execute()});
 			logger.execute(getClass(),LoggingHelper.Logger.Level.TRACE,null);
 		}
+		Listener listener = ClassHelper.getInstance().instanciateOne(Listener.class);
+		listener.instanciate(this);
 	}
 	
 	public DataSet instanciate(){
@@ -318,6 +320,8 @@ public class DataSet extends AbstractBean implements Serializable {
 		Collection<Class<?>> getRelatedClasses(Class<?> aClass);
 		void processRelatedClasses(Class<?> aClass,Collection<Class<?>> classes);
 		
+		void instanciate(DataSet dataSet);
+		
 		@Getter
 		public static class Adapter extends AbstractBean implements DataSet.Listener {
 			private static final long serialVersionUID = 1L;
@@ -337,6 +341,9 @@ public class DataSet extends AbstractBean implements Serializable {
 			
 			@Override
 			public void processRelatedClasses(Class<?> aClass,Collection<Class<?>> classes) {}
+			
+			@Override
+			public void instanciate(DataSet dataSet) {}
 			
 			/**/
 			

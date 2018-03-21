@@ -22,6 +22,10 @@ import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.ObjectFieldValues;
+import org.cyk.utility.common.helper.ConditionHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.NumberHelper;
+import org.cyk.utility.common.helper.LoggingHelper.Message.Builder;
 
 public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao,MovementBusiness> implements MovementCollectionBusiness,Serializable {
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -34,6 +38,9 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Override
 	protected void afterCrud(MovementCollection movementCollection, Crud crud) {
 		super.afterCrud(movementCollection, crud);
+		if(Crud.isCreateOrUpdate(crud)){
+			throw__(ConditionHelper.Condition.getBuilderComparison(movementCollection, computeValue(movementCollection), null, Boolean.FALSE, MovementCollection.FIELD_VALUE) );
+		}
 		if(Crud.CREATE.equals(crud)){
 			if(movementCollection.getType()!=null && Boolean.TRUE.equals(movementCollection.getType().getAutomaticallyJoinIdentifiablePeriodCollection())){
 				/*IdentifiablePeriodCollection identifiablePeriodCollection = inject(IdentifiablePeriodCollectionBusiness.class).instanciateOne();
@@ -71,6 +78,22 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public BigDecimal computeValue(MovementCollection movementCollection, MovementAction movementAction,BigDecimal increment) {
 		return inject(MovementActionBusiness.class).computeValue(movementAction, movementCollection.getValue(), increment);
+	}
+	
+	@Override
+	public BigDecimal computeValue(MovementCollection movementCollection) {
+		if(isNotIdentified(movementCollection))
+			return movementCollection.getValue();
+		return InstanceHelper.getInstance().getIfNotNullElseDefault(NumberHelper.getInstance().get(BigDecimal.class, NumberHelper.getInstance().add(inject(MovementDao.class)
+				.sumValueByCollection(movementCollection), movementCollection.getInitialValue())),BigDecimal.ZERO);
+	}
+	
+	@Override
+	protected void computeChanges(MovementCollection movementCollection, Builder logMessageBuilder) {
+		super.computeChanges(movementCollection, logMessageBuilder);
+		if(movementCollection.getInitialValue() == null && isNotIdentified(movementCollection)){
+			movementCollection.setInitialValue(movementCollection.getValue());
+		}
 	}
 	
 	public static class BuilderOneDimensionArray extends AbstractCollectionBusinessImpl.BuilderOneDimensionArray<MovementCollection> implements Serializable {

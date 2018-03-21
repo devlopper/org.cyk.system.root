@@ -20,6 +20,7 @@ import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * A join between a period and an identifiable
@@ -28,7 +29,7 @@ import lombok.Setter;
  */
 @Getter @Setter @Entity  @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_PERIOD_COLLECTION
-		,IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
+		,IdentifiablePeriodCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})}) @Accessors(chain=true)
 public class IdentifiablePeriodCollectionIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 	private static final long serialVersionUID = -165832578043422718L;
 	
@@ -39,6 +40,22 @@ public class IdentifiablePeriodCollectionIdentifiableGlobalIdentifier extends Ab
 	public IdentifiablePeriodCollectionIdentifiableGlobalIdentifier(IdentifiablePeriodCollection identifiablePeriodCollection,AbstractIdentifiable identifiable){
 		this.identifiablePeriodCollection = identifiablePeriodCollection;
 		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
+	}
+	
+	public IdentifiablePeriodCollectionIdentifiableGlobalIdentifier setIdentifiablePeriodCollectionFromCode(String code){
+		this.identifiablePeriodCollection = getFromCode(IdentifiablePeriodCollection.class, code);
+		return this;
+	}
+	
+	@Override
+	public <IDENTIFIABLE extends AbstractIdentifiable> IdentifiablePeriodCollectionIdentifiableGlobalIdentifier setIdentifiableGlobalIdentifierFromCode(
+			Class<IDENTIFIABLE> aClass, String code) {
+		return (IdentifiablePeriodCollectionIdentifiableGlobalIdentifier) super.setIdentifiableGlobalIdentifierFromCode(aClass, code);
+	}
+	
+	@Override
+	public IdentifiablePeriodCollectionIdentifiableGlobalIdentifier setIdentifiableGlobalIdentifier(GlobalIdentifier identifiableGlobalIdentifier) {
+		return (IdentifiablePeriodCollectionIdentifiableGlobalIdentifier) super.setIdentifiableGlobalIdentifier(identifiableGlobalIdentifier);
 	}
 	
 	public static final String FIELD_IDENTIFIABLE_PERIOD_COLLECTION = "identifiablePeriodCollection";

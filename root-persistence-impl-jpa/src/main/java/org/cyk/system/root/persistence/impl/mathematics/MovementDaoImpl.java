@@ -21,16 +21,11 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 
 	private static final long serialVersionUID = 6306356272165070761L;
 	
-	private String /*sumValueWhereExistencePeriodFromDateIsLessThan*/readByParent;
+	private String readByParent/*,sumValueWhereExistencePeriodFromDateIsLessThan,sumValueByCollection*/;
 	
 	@Override
 	protected void namedQueriesInitialisation() {
 		super.namedQueriesInitialisation();
-		/*
-		String dateFieldName = commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE);
-		registerNamedQuery(sumValueWhereExistencePeriodFromDateIsLessThan, _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.LT)
-				.and(AbstractIdentifiable.FIELD_IDENTIFIER, ArithmeticOperator.NEQ));
-		*/
 		registerNamedQuery(readByParent, _select().where(Movement.FIELD_PARENT));
 	}
 	
@@ -48,7 +43,6 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 		}
 	}
 			
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected <T> void processQueryWrapper(Class<T> aClass,QueryWrapper<T> queryWrapper, String queryName,Object[] arguments) {
@@ -73,6 +67,15 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 		BigDecimal sum = BigDecimal.ZERO;
 		for(Movement m : movements)
 			sum = sum.add(m.getValue());
+		return sum;
+	}
+	
+	@Override
+	public BigDecimal sumValueByCollection(MovementCollection movementCollection) {
+		Collection<Movement> movements = readByCollection(movementCollection);
+		BigDecimal sum = BigDecimal.ZERO;
+		for(Movement index : movements)
+			sum = sum.add(index.getValue());
 		return sum;
 	}
 	
