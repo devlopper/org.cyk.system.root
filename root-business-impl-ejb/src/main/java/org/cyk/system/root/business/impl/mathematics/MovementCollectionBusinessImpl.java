@@ -4,18 +4,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.Crud;
-import org.cyk.system.root.business.api.mathematics.MovementActionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.Movement;
-import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionType;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
@@ -24,8 +20,8 @@ import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
-import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.LoggingHelper.Message.Builder;
+import org.cyk.utility.common.helper.NumberHelper;
 
 public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao,MovementBusiness> implements MovementCollectionBusiness,Serializable {
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -63,21 +59,8 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	}
 	
 	@Override
-	public MovementCollection instanciateOne(String typeCode,BigDecimal value,AbstractIdentifiable join){
-		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne();
-		movementCollection.setType(inject(MovementCollectionTypeDao.class).read(typeCode));
-		movementCollection.setValue(value);
-		return movementCollection;
-	}
-	
-	@Override
 	public Collection<MovementCollection> findByTypeByJoin(MovementCollectionType type, AbstractIdentifiable join) {
 		return dao.readByTypeByJoin(type, join);
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public BigDecimal computeValue(MovementCollection movementCollection, MovementAction movementAction,BigDecimal increment) {
-		return inject(MovementActionBusiness.class).computeValue(movementAction, movementCollection.getValue(), increment);
 	}
 	
 	@Override

@@ -228,6 +228,14 @@ public interface RootConstant {
 			public static String YEAR = "YEAR";
 		}
 		
+		public static class DurationType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String FULL = "FULL";
+			public static String PARTIAL = "PARTIAL";
+			
+		}
+		
 		public static class BusinessServiceCollection implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
@@ -319,7 +327,7 @@ public interface RootConstant {
 			private static final long serialVersionUID = 1L;
 		
 			public static final String CASH_REGISTER_WORKING_DAY = "CASHREGISTERWORKINGDAY";
-		
+			
 		}
 		
 		public static class IdentifiablePeriodCollection implements Serializable {

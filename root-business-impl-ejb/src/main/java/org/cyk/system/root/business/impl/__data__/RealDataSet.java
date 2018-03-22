@@ -50,6 +50,7 @@ import org.cyk.system.root.model.security.BusinessServiceCollection;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.Software;
+import org.cyk.system.root.model.time.DurationType;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
@@ -113,6 +114,7 @@ public class RealDataSet extends DataSet implements Serializable {
     
     private void time(){ 
     	addClass(TimeDivisionType.class);
+    	addClass(DurationType.class);
     	addClass(IdentifiablePeriodCollectionType.class);
     	addClass(IdentifiablePeriodCollection.class);
     }
