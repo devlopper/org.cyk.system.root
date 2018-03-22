@@ -33,6 +33,7 @@ import org.cyk.system.root.model.mathematics.MovementMode;
 import org.cyk.system.root.model.party.BusinessRole;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
+import org.cyk.system.root.model.time.DurationType;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionType;
@@ -378,7 +379,7 @@ public class DataSet extends AbstractBean implements Serializable {
 						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class
 					    	,MovementMode.class,MovementCollectionType.class,MovementCollectionTypeMode.class,MovementCollection.class));
 					}else if(IdentifiablePeriod.class.equals(aClass)){
-						classes.addAll(Arrays.asList(TimeDivisionType.class,IdentifiablePeriodCollection.class,IdentifiablePeriodCollectionType.class));
+						classes.addAll(Arrays.asList(TimeDivisionType.class,DurationType.class,IdentifiablePeriodCollection.class,IdentifiablePeriodCollectionType.class));
 					}else if(Value.class.equals(aClass)){
 						classes.addAll(Arrays.asList(Measure.class,MeasureType.class));
 					}else if(Party.class.equals(aClass)){

@@ -7,8 +7,10 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.Crud;
+import org.cyk.system.root.business.api.time.DurationTypeBusiness;
 import org.cyk.system.root.business.api.time.IdentifiablePeriodBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriod.Filter;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
@@ -84,8 +86,25 @@ public class IdentifiablePeriodBusinessImpl extends AbstractCollectionItemBusine
 			Long duration;
 			if(identifiablePeriod.getCollection() == null || identifiablePeriod.getCollection().getType() == null)
 				duration = new Long(DateTimeConstants.MILLIS_PER_DAY);
-			else
-				duration = identifiablePeriod.getCollection().getType().getTimeDivisionType().getMeasure().getValue().longValue();
+			else {
+				if(identifiablePeriod.getCollection().getType().getPeriodDurationType() == null)
+					duration = identifiablePeriod.getCollection().getType().getTimeDivisionType().getMeasure().getValue().longValue();
+				else {
+					Date expectedFromDate = null , expectedToDate = null;
+					if(RootConstant.Code.TimeDivisionType.DAY.equals(identifiablePeriod.getCollection().getType().getTimeDivisionType().getCode())) {
+						expectedFromDate = TimeHelper.getInstance().getEarliestOfTheDay(identifiablePeriod.getBirthDate());
+						expectedToDate = TimeHelper.getInstance().getLatestOfTheDay(identifiablePeriod.getBirthDate());
+					}
+					
+					if(expectedFromDate == null)
+						expectedFromDate = TimeHelper.getInstance().getEarliestOfTheDay(identifiablePeriod.getBirthDate());
+					if(expectedToDate == null)
+						expectedToDate = TimeHelper.getInstance().getLatestOfTheDay(identifiablePeriod.getBirthDate());
+					
+					duration = inject(DurationTypeBusiness.class).computeNumberOfMillisecond(identifiablePeriod.getCollection().getType().getPeriodDurationType()
+							, expectedFromDate, expectedToDate, identifiablePeriod.getBirthDate());
+				}
+			}
 			identifiablePeriod.setDeathDate(new Date(identifiablePeriod.getBirthDate().getTime() + duration ));
 		}
 		

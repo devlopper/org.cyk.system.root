@@ -43,7 +43,9 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	}
 	
 	public <IDENTIFIABLE extends AbstractIdentifiable> AbstractJoinGlobalIdentifier setIdentifiableGlobalIdentifierFromCode(Class<IDENTIFIABLE> aClass,String code){
-		identifiableGlobalIdentifier = getFromCode(aClass, code).getGlobalIdentifier();
+		AbstractIdentifiable identifiable = getFromCode(aClass, code);
+		if(identifiable!=null)
+			identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
 		return this;
 	}
 	

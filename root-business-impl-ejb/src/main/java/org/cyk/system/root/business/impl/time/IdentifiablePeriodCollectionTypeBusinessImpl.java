@@ -27,7 +27,8 @@ public class IdentifiablePeriodCollectionTypeBusinessImpl extends AbstractDataTr
 
 		public BuilderOneDimensionArray() {
 			super(IdentifiablePeriodCollectionType.class);
-			addParameterArrayElementStringIndexInstance(2,IdentifiablePeriodCollectionType.FIELD_TIME_DIVISION_TYPE,3,IdentifiablePeriodCollectionType.FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL);
+			addParameterArrayElementStringIndexInstance(2,IdentifiablePeriodCollectionType.FIELD_TIME_DIVISION_TYPE
+					,3,IdentifiablePeriodCollectionType.FIELD_PERIOD_DURATION_TYPE,4,IdentifiablePeriodCollectionType.FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL);
 		}
 		
 	}
