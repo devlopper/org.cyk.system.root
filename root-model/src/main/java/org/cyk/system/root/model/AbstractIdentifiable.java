@@ -653,6 +653,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public static final String FIELD_IDENTIFIER = "identifier";
 	public static final String FIELD_GLOBAL_IDENTIFIER = "globalIdentifier";
 	public static final String FIELD___PARENT__ = "__parent__";
+	public static final String FIELD___IDENTIFIABLE___PERIOD = "__identifiablePeriod__";
 	public static final String FIELD_IDENTIFIABLES = "identifiables";
 	
 	//TODO very strange , those followings instructions make strange errors appearing on integration test

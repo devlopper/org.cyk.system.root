@@ -135,7 +135,6 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	/**/
 	
-	public static final String FIELD_IDENTIFIABLE_PERIOD = "identifiablePeriod";
 	public static final String FIELD_ACTION = "action";
 	public static final String FIELD_MODE = "mode";
 	public static final String FIELD_VALUE = "value";
