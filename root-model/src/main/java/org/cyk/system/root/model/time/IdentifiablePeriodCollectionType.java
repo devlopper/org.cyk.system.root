@@ -2,6 +2,7 @@ package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,8 +25,9 @@ public class IdentifiablePeriodCollectionType extends AbstractDataTreeType imple
 	@ManyToOne @JoinColumn(name=COLUMN_PERIOD_DURATION_TYPE) @Accessors(chain=true) private DurationType periodDurationType;
 	@ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL) @Accessors(chain=true) private Interval numberOfNotClosedAtTimeInterval;
 	@ManyToOne @JoinColumn(name=COLUMN_NUMBER_OF_MILLISECOND_OF_GAP_INTERVAL) @Accessors(chain=true) private Interval numberOfMillisecondOfGapInterval;
-	private Boolean automaticallyCreateIdentifiablePeriodWhenNoneFound;
-	private Boolean automaticallyCloseIdentifiablePeriodWhenDurationOver;
+	@Column(name=COLUMN_AUTOMATICALLY_CREATE_IDENTIFIABLE_PERIOD_WHEN_NONE_FOUND) private Boolean automaticallyCreateIdentifiablePeriodWhenNoneFound;
+	@Column(name=COLUMN_AUTOMATICALLY_SET_CREATED_IDENTIFIABLE_PERIOD_EXISTENCE_FROM_DATE_TO_NOW_IF_NULL) private Boolean automaticallySetCreatedIdentifiablePeriodExistenceFromDateToNowIfNull = Boolean.TRUE;
+	@Column(name=COLUMN_AUTOMATICALLY_CLOSE_IDENTIFIABLE_PERIOD_WHEN_DURATION_OVER) private Boolean automaticallyCloseIdentifiablePeriodWhenDurationOver;
 	
 	/**/
 	
@@ -48,9 +50,16 @@ public class IdentifiablePeriodCollectionType extends AbstractDataTreeType imple
 	public static final String FIELD_PERIOD_DURATION_TYPE = "periodDurationType";
 	public static final String FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = "numberOfNotClosedAtTimeInterval";
 	public static final String FIELD_NUMBER_OF_MILLISECOND_OF_GAP_INTERVAL = "numberOfMillisecondOfGapInterval";
+	public static final String FIELD_AUTOMATICALLY_CREATE_IDENTIFIABLE_PERIOD_WHEN_NONE_FOUND = "automaticallyCreateIdentifiablePeriodWhenNoneFound";
+	public static final String FIELD_AUTOMATICALLY_SET_CREATED_IDENTIFIABLE_PERIOD_EXISTENCE_FROM_DATE_TO_NOW_IF_NULL = "automaticallySetCreatedIdentifiablePeriodExistenceFromDateToNowIfNull";
+	public static final String FIELD_AUTOMATICALLY_CLOSE_IDENTIFIABLE_PERIOD_WHEN_DURATION_OVER = "automaticallyCloseIdentifiablePeriodWhenDurationOver";
 	
 	public static final String COLUMN_TIME_DIVISION_TYPE = FIELD_TIME_DIVISION_TYPE;
 	public static final String COLUMN_PERIOD_DURATION_TYPE = FIELD_PERIOD_DURATION_TYPE;
 	public static final String COLUMN_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL = FIELD_NUMBER_OF_NOT_CLOSED_AT_TIME_INTERVAL;
 	public static final String COLUMN_NUMBER_OF_MILLISECOND_OF_GAP_INTERVAL = FIELD_NUMBER_OF_MILLISECOND_OF_GAP_INTERVAL;
+	
+	public static final String COLUMN_AUTOMATICALLY_CREATE_IDENTIFIABLE_PERIOD_WHEN_NONE_FOUND = "autoCreatePeriodWhenNoneFound";
+	public static final String COLUMN_AUTOMATICALLY_SET_CREATED_IDENTIFIABLE_PERIOD_EXISTENCE_FROM_DATE_TO_NOW_IF_NULL = "autoSetCreatedPeriodFromDateToNowIfNull";
+	public static final String COLUMN_AUTOMATICALLY_CLOSE_IDENTIFIABLE_PERIOD_WHEN_DURATION_OVER = "autoClosePeriodWhenDurationOver";
 }

@@ -70,7 +70,7 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     }
     
     @Test
-    public void crudTwoIdentifiablePeriod(){
+    public void crudTwoIdentifiablePeriodWithDateSetBySystem(){
     	TestCase testCase = instanciateTestCase();
     	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
@@ -78,9 +78,8 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     	String identifiablePeriodCode01 = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode01).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
-    	IdentifiablePeriod identifiablePeriod = testCase.readCollectionItem(IdentifiablePeriod.class,IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode,identifiablePeriodCode01);
-    	identifiablePeriod.setClosed(Boolean.TRUE);
-    	testCase.update(identifiablePeriod);
+    	testCase.update(testCase.readCollectionItem(IdentifiablePeriod.class,IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode,identifiablePeriodCode01)
+    			.setClosed(Boolean.TRUE));
     	
     	String identifiablePeriodCode02 = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02).setCollectionFromCode(identifiablePeriodCollectionCode));
@@ -98,6 +97,23 @@ public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
     	String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode).setBirthDateFromString("1/1/2000 0:0")
     			.setDeathDateFromString("1/1/2000 23:59").setCollectionFromCode(identifiablePeriodCollectionCode));
+    	
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudTwoIdentifiablePeriodWithDateSetByUser(){
+    	TestCase testCase = instanciateTestCase();
+    	
+    	String identifiablePeriodCode01 = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode01).setBirthDateFromString("1/1/2000 0:0")
+    			.setDeathDateFromString("1/1/2000 23:59:59:999").setCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY));
+    	
+    	testCase.update(testCase.readCollectionItem(IdentifiablePeriod.class,IdentifiablePeriodCollection.class,RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY,identifiablePeriodCode01)
+    			.setClosed(Boolean.TRUE));
+    	
+    	String identifiablePeriodCode02 = testCase.getRandomHelper().getAlphabetic(5);
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode02).setCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY));
     	
     	testCase.clean();
     }

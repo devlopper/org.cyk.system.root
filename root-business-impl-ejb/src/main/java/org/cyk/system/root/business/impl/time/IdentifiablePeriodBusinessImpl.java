@@ -61,25 +61,29 @@ public class IdentifiablePeriodBusinessImpl extends AbstractCollectionItemBusine
 	protected void computeChanges(IdentifiablePeriod identifiablePeriod, LoggingHelper.Message.Builder loggingMessageBuilder) {
 		super.computeChanges(identifiablePeriod, loggingMessageBuilder);
 		if(identifiablePeriod.getBirthDate() == null) {
-			Long countAll = dao.countAll();
-			if(countAll > 0) {
-				//Long numberOfNotClosed = dao.countByClosed(Boolean.FALSE);				
-				if(identifiablePeriod.getCollection() == null || identifiablePeriod.getCollection().getType()==null) {
-					
-				}else {
-					
-				}
-				Collection<IdentifiablePeriod> recents = dao.readByFilter(new Filter(), new DataReadConfiguration().setFirstResultIndex(countAll-1).setMaximumResultCount(1l));
-				if(CollectionHelper.getInstance().isEmpty(recents)) {
-					identifiablePeriod.setBirthDate(TimeHelper.getInstance().getUniversalTimeCoordinated());
-				}else {
-					identifiablePeriod.setBirthDate(recents.iterator().next().getDeathDate());
-				}
-							
-			}else {
+			if(identifiablePeriod.getCollection()!=null && identifiablePeriod.getCollection().getType()!=null && 
+					Boolean.TRUE.equals(identifiablePeriod.getCollection().getType().getAutomaticallySetCreatedIdentifiablePeriodExistenceFromDateToNowIfNull())){
 				identifiablePeriod.setBirthDate(TimeHelper.getInstance().getUniversalTimeCoordinated());
+			}else{
+				Long countAll = dao.countAll();
+				if(countAll > 0) {
+					//Long numberOfNotClosed = dao.countByClosed(Boolean.FALSE);				
+					if(identifiablePeriod.getCollection() == null || identifiablePeriod.getCollection().getType()==null) {
+						
+					}else {
+						
+					}
+					Collection<IdentifiablePeriod> recents = dao.readByFilter(new Filter(), new DataReadConfiguration().setFirstResultIndex(countAll-1).setMaximumResultCount(1l));
+					if(CollectionHelper.getInstance().isEmpty(recents)) {
+						identifiablePeriod.setBirthDate(TimeHelper.getInstance().getUniversalTimeCoordinated());
+					}else {
+						identifiablePeriod.setBirthDate(new Date(recents.iterator().next().getDeathDate().getTime()+1));
+					}
+								
+				}else {
+					identifiablePeriod.setBirthDate(TimeHelper.getInstance().getUniversalTimeCoordinated());
+				}	
 			}
-				
 		}
 		
 		if(identifiablePeriod.getDeathDate() == null) {
