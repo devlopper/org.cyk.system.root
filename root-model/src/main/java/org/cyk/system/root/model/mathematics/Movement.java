@@ -20,8 +20,6 @@ import org.cyk.utility.common.annotation.FieldOverrides;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
-import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.InstanceHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +33,7 @@ import lombok.experimental.Accessors;
 public class Movement extends AbstractCollectionItem<MovementCollection> implements Serializable {	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	@Transient private IdentifiablePeriod identifiablePeriod;
+	//@Transient private IdentifiablePeriod identifiablePeriod;
 	@ManyToOne @JoinColumn(name=COLUMN_ACTION) private MovementAction action;	
 	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
 	@ManyToOne @JoinColumn(name=COLUMN_MODE) private MovementMode mode;
@@ -103,9 +101,13 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 		return this;
 	}
 	
-	public Movement setIdentifiablePeriodFromCode(String code){
-		this.identifiablePeriod = InstanceHelper.getInstance().getByIdentifier(IdentifiablePeriod.class, code, ClassHelper.Listener.IdentifierType.BUSINESS);
-		return this;
+	@Override
+	public Movement set__identifiablePeriod__(IdentifiablePeriod identifiablePeriod) {
+		return (Movement) super.set__identifiablePeriod__(identifiablePeriod);
+	}
+	
+	public Movement set__identifiablePeriod__fromCode(String code){
+		return (Movement) super.set__identifiablePeriod__fromCode(code);
 	}
 	
 	public Movement __set__(String collectionCode,Boolean isIncrementation,Object value,Boolean isBirthDateComputedByUser,String birthDate){

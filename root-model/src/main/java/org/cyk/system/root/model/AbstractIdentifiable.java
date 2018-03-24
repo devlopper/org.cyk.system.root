@@ -35,6 +35,7 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier.Processing;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.party.PartyIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.model.userinterface.style.CascadeStyleSheet;
 import org.cyk.utility.common.AbstractMethod;
@@ -100,6 +101,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	@Transient private IdentifiableRuntimeCollection<MetricCollectionIdentifiableGlobalIdentifier> metricCollectionIdentifiableGlobalIdentifiers;
 	@Transient private IdentifiableRuntimeCollection<PartyIdentifiableGlobalIdentifier> partyIdentifiableGlobalIdentifiers;
 	
+	@Transient @Accessors(chain=true) private IdentifiablePeriod __identifiablePeriod__;
 	@Transient private IdentifiableRuntimeCollection<AbstractIdentifiable> identifiables;
 	
 	@Transient protected Properties joinedIdentifiableRuntimeCollectionMap;
@@ -181,6 +183,11 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		if(metricCollectionIdentifiableGlobalIdentifiers == null)
 			metricCollectionIdentifiableGlobalIdentifiers = new IdentifiableRuntimeCollection<>();
 		return metricCollectionIdentifiableGlobalIdentifiers;
+	}
+	
+	public AbstractIdentifiable set__identifiablePeriod__fromCode(String code){
+		this.__identifiablePeriod__ = getFromCode(IdentifiablePeriod.class, code);
+		return this;
 	}
 	
 	public AbstractIdentifiable setCode(String code){

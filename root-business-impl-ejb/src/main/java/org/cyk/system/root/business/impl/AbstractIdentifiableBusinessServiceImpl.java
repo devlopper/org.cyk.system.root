@@ -30,6 +30,7 @@ import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCri
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.system.root.model.security.UserAccount;
+import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.GenericDao;
 import org.cyk.system.root.persistence.api.PersistenceService;
@@ -820,6 +821,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		
 	}
 	
+	protected Boolean isDoesNotBelongsToIdentifiablePeriodVerifiable(IDENTIFIABLE identifiable){
+		return Boolean.FALSE;
+	}
+	
 	@Override
 	public void computeChanges(IDENTIFIABLE identifiable){
 		LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
@@ -843,6 +848,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setValueNameIdentifier("existence")
 					.setDomainNameIdentifier(identifiable.getClass().getSimpleName()).setValue1(identifiable.getBirthDate().getTime())
 					.setValue2(identifiable.getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
+		}
+		
+		if(Boolean.TRUE.equals(IdentifiablePeriod.isManaged(identifiable)) && Boolean.TRUE.equals(isDoesNotBelongsToIdentifiablePeriodVerifiable(identifiable))){
+			computeChangesIdentifiablePeriod(identifiable, logMessageBuilder);
 		}
 		
 		if(Boolean.TRUE.equals(identifiable.getCascadeOperationToMaster())){
@@ -875,6 +884,23 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				}
 			}.execute();
 		}
+	}
+	
+	protected void computeChangesIdentifiablePeriod(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder logMessageBuilder){
+		/*if(identifiable.get__identifiablePeriod__() == null){
+			Collection<IdentifiablePeriodCollection> identifiablePeriodCollections = inject(IdentifiablePeriodCollectionDao.class)
+					.readByTypeByJoin(identifiable.getCollection().getType().getIdentifiablePeriodCollectionType(), identifiable.getCollection());
+			IdentifiablePeriodCollection identifiablePeriodCollection = CollectionHelper.getInstance().getFirst(identifiablePeriodCollections);
+			
+			if(identifiablePeriodCollection != null){
+				identifiable.set__identifiablePeriod__(inject(IdentifiablePeriodBusiness.class).findFirstNotClosedOrInstanciateOneByIdentifiablePeriodCollection(identifiablePeriodCollection));
+				if(inject(IdentifiablePeriodBusiness.class).isNotIdentified(identifiable.get__identifiablePeriod__())){
+					//identifiable.addIdentifiables(movement.get__identifiablePeriod__());
+				}
+			}
+		}
+		*/
+		throwIfDoesNotBelongsToIdentifiablePeriod(identifiable);
 	}
 	
 	/* Filtering */

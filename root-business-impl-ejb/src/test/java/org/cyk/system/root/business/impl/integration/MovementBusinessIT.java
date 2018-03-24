@@ -91,7 +91,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
     	testCase.computeChanges(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
-    			.setBirthDateFromString("1/1/2000 1:0").setIdentifiablePeriodFromCode(RootConstant.Code.generate(identifiablePeriodCollection, identifiablePeriodCode)));
+    			.setBirthDateFromString("1/1/2000 1:0").set__identifiablePeriod__fromCode(RootConstant.Code.generate(identifiablePeriodCollection, identifiablePeriodCode)));
     	
     	testCase.clean();
     }
@@ -122,9 +122,9 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	
     	Movement movement01 = testCase.instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
     			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(2)).setActionFromIncrementation(Boolean.TRUE).setValueFromObject(1)
-    			.setIdentifiablePeriodFromCode(identifiablePeriodCode);
+    			.set__identifiablePeriod__fromCode(identifiablePeriodCode);
     	testCase.computeChanges(movement01);
-    	assertNotNull(movement01.getIdentifiablePeriod());
+    	assertNotNull(movement01.get__identifiablePeriod__());
     	testCase.create(movement01);
     	    	
     	testCase.clean();
@@ -147,16 +147,16 @@ public class MovementBusinessIT extends AbstractBusinessIT {
     	
     	Movement movement01 = testCase.instanciateOne(Movement.class).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER).__setBirthDateComputedByUser__(Boolean.TRUE)
     			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(2)).setActionFromIncrementation(Boolean.TRUE).setValueFromObject(1)
-    			.setIdentifiablePeriodFromCode(identifiablePeriodCode);
+    			.set__identifiablePeriod__fromCode(identifiablePeriodCode);
     	testCase.computeChanges(movement01);
-    	assertNotNull(movement01.getIdentifiablePeriod());
+    	assertNotNull(movement01.get__identifiablePeriod__());
     	testCase.create(movement01);
     	
     	Movement movement02 = testCase.instanciateOne(Movement.class).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER).__setBirthDateComputedByUser__(Boolean.TRUE)
     			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(3)).setActionFromIncrementation(Boolean.TRUE).setValueFromObject(2)
-    			.setIdentifiablePeriodFromCode(identifiablePeriodCode);
+    			.set__identifiablePeriod__fromCode(identifiablePeriodCode);
     	testCase.computeChanges(movement02);
-    	assertNotNull(movement02.getIdentifiablePeriod());
+    	assertNotNull(movement02.get__identifiablePeriod__());
     	testCase.create(movement02);
     	
     	testCase.clean();
@@ -362,7 +362,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		testCase.create(identifiablePeriod);
 		
     	Movement movement = testCase.instanciateOneMovement(null,movementCollectionCode);
-    	movement.setValue(BigDecimal.ONE).setIdentifiablePeriod(identifiablePeriod).setBirthDate(date(2000, 1, 1, 0, 5));
+    	movement.setValue(BigDecimal.ONE).set__identifiablePeriod__(identifiablePeriod).setBirthDate(date(2000, 1, 1, 0, 5));
     	testCase.create(movement);
     	testCase.assertMovement(movement.getCode(), "1", "1");
     	testCase.clean();
@@ -384,7 +384,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		testCase.create(identifiablePeriod);
 		
     	Movement movement = testCase.instanciateOneMovement(null,movementCollectionCode);
-    	movement.setValue(BigDecimal.ONE).setIdentifiablePeriod(identifiablePeriod);
+    	movement.setValue(BigDecimal.ONE).set__identifiablePeriod__(identifiablePeriod);
     	testCase.create(movement);
     	movement = testCase.read(Movement.class, movement.getCode());
     	assertNotNull(movement.getBirthDate());
@@ -972,7 +972,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		String cashRegisterMovementCode = testCase.getRandomAlphabetic();
 		Movement cashRegisterMovement = testCase.instanciateOne(Movement.class,cashRegisterMovementCode).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER)
 				.setActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("1/1/2000 0:5")
-				.setParentActionIsOppositeOfChildAction(Boolean.TRUE).setIdentifiablePeriodFromCode(identifiablePeriodCode);
+				.setParentActionIsOppositeOfChildAction(Boolean.TRUE).set__identifiablePeriod__fromCode(identifiablePeriodCode);
 		
 		String saleMovementCode = testCase.getRandomAlphabetic();
 		Movement movement = testCase.instanciateOne(Movement.class,saleMovementCode).setCollectionFromCode(saleMovementCollectionCode)
@@ -1004,7 +1004,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		String cashRegisterMovementCode = testCase.getRandomAlphabetic();
 		Movement cashRegisterMovement = testCase.instanciateOne(Movement.class,cashRegisterMovementCode).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER)
 				.setActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).__setBirthDateComputedByUser__(Boolean.FALSE)
-				.setParentActionIsOppositeOfChildAction(Boolean.TRUE).setIdentifiablePeriodFromCode(identifiablePeriodCode);
+				.setParentActionIsOppositeOfChildAction(Boolean.TRUE).set__identifiablePeriod__fromCode(identifiablePeriodCode);
 		
 		String saleMovementCode = testCase.getRandomAlphabetic();
 		Movement movement = testCase.instanciateOne(Movement.class,saleMovementCode).setCollectionFromCode(saleMovementCollectionCode)
@@ -1036,7 +1036,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		String cashRegisterMovementCode = testCase.getRandomAlphabetic();
 		Movement cashRegisterMovement = testCase.instanciateOne(Movement.class,cashRegisterMovementCode).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER)
 				.setActionFromIncrementation(Boolean.TRUE).setValueFromObject(100)
-				.setParentActionIsOppositeOfChildAction(Boolean.TRUE).setIdentifiablePeriodFromCode(identifiablePeriodCode);
+				.setParentActionIsOppositeOfChildAction(Boolean.TRUE).set__identifiablePeriod__fromCode(identifiablePeriodCode);
 		
 		String saleMovementCode = testCase.getRandomAlphabetic();
 		cashRegisterMovement.addIdentifiables(testCase.instanciateOne(Movement.class,saleMovementCode).setCollectionFromCode(saleMovementCollectionCode)
@@ -1064,7 +1064,7 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 		
 		String parentCode = testCase.getRandomAlphabetic();
 		Movement parent = testCase.instanciateOne(Movement.class,parentCode).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER)
-				.setActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).setIdentifiablePeriodFromCode(identifiablePeriodCode);
+				.setActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).set__identifiablePeriod__fromCode(identifiablePeriodCode);
 		String child1Code = testCase.getRandomAlphabetic();
 		parent.addIdentifiables(testCase.instanciateOne(Movement.class,child1Code).setCollectionFromCode(movementCollectionCode)
 				.__setBirthDateComputedByUser__(Boolean.TRUE).setValueSettableFromAbsolute(Boolean.TRUE).setValueAbsoluteFromObject(35).setParent(parent));
@@ -1113,6 +1113,23 @@ public class MovementBusinessIT extends AbstractBusinessIT {
 			private static final long serialVersionUID = 1L;
 			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setCollectionFromCode(collectionCode).setValueFromObject(1));}
     	}, null, "La valeur de l'attribut <<période identifiable>> de l'entité <<mouvement>> doit être non nulle.");
+	}
+	
+	@Test
+    public void throwDoesNotBelongsToIdentifiablePeriod(){
+		TestCase testCase = instanciateTestCase();
+		
+		final IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class).setBirthDateFromString("1/1/2000 0:0")
+    			.setDeathDateFromString("1/1/2000 23:59").setCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY));
+		
+    	testCase.assertThrowable(new Runnable(testCase) {
+			private static final long serialVersionUID = 1L;
+			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class)
+					.setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER)
+					.set__identifiablePeriod__(identifiablePeriod).__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("2/2/2000 10:30").setValueFromObject(1));}
+    	}, null, "La valeur(02/02/2000 10:30) de l'attribut <<du>> de l'entité <<mouvement>> doit être inférieure ou égale à 01/01/2000 23:59.");
+		
+		testCase.clean();
 	}
 	
 	@Test

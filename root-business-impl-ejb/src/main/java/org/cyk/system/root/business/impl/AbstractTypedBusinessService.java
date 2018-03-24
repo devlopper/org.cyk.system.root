@@ -50,6 +50,7 @@ import org.cyk.system.root.model.mathematics.MetricCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.mathematics.MetricValue;
 import org.cyk.system.root.model.mathematics.MetricValueIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.party.Party;
@@ -86,6 +87,7 @@ import org.cyk.utility.common.formatter.DateFormatter;
 import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.CollectionHelper.Instance;
+import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
@@ -310,7 +312,22 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void beforeCrud(IDENTIFIABLE identifiable,Crud crud){}
-	protected void afterCrud(IDENTIFIABLE identifiable,Crud crud){}
+	protected void afterCrud(IDENTIFIABLE identifiable,Crud crud){
+		if(Boolean.TRUE.equals(IdentifiablePeriod.isManaged(identifiable)))
+			createIdentifiablePeriod(identifiable, crud);
+	}
+	
+	protected void createIdentifiablePeriod(IDENTIFIABLE identifiable,Crud crud){
+		if(Crud.CREATE.equals(crud)){
+			if(identifiable.get__identifiablePeriod__()!=null){
+				IdentifiablePeriodIdentifiableGlobalIdentifier identifiablePeriodIdentifiableGlobalIdentifier = 
+						inject(IdentifiablePeriodIdentifiableGlobalIdentifierBusiness.class).instanciateOne();
+				identifiablePeriodIdentifiableGlobalIdentifier.setIdentifiablePeriod(identifiable.get__identifiablePeriod__());
+				identifiablePeriodIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(identifiable.getGlobalIdentifier());
+				inject(IdentifiablePeriodIdentifiableGlobalIdentifierBusiness.class).create(identifiablePeriodIdentifiableGlobalIdentifier);
+			}	
+		}
+	}
 	
 	protected void beforeCreate(IDENTIFIABLE identifiable){
 		setAutoSettedProperties(identifiable, Crud.CREATE);
@@ -1037,6 +1054,13 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	public <T> T convert(ManyConverter<IDENTIFIABLE, T> converter) {
 		T result = converter.execute();
 		return result;
+	}
+	
+	/**/
+	
+	public void throwIfBelongsTo(AbstractIdentifiable identifiable,Date fromDate,Date toDate){
+		throw__(ConditionHelper.Condition.getBuildersDoesNotBelongsTo(identifiable, fromDate, toDate
+				, Movement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
 	}
 	
 	/**/

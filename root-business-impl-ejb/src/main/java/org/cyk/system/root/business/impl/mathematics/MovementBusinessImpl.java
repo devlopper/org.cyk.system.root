@@ -15,7 +15,6 @@ import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.time.IdentifiablePeriodBusiness;
-import org.cyk.system.root.business.api.time.IdentifiablePeriodIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -24,8 +23,6 @@ import org.cyk.system.root.model.mathematics.MovementAction;
 import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
-import org.cyk.system.root.model.time.IdentifiablePeriodIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.mathematics.MovementActionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierDao;
@@ -40,6 +37,7 @@ import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.LoggingHelper.Message.Builder;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.StringHelper;
@@ -153,15 +151,15 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		}
 		
 		if(!Crud.DELETE.equals(crud)){
-			if(Crud.CREATE.equals(crud)){
-				if(movement.getIdentifiablePeriod()!=null){
+			/*if(Crud.CREATE.equals(crud)){
+				if(movement.get__identifiablePeriod__()!=null){
 					IdentifiablePeriodIdentifiableGlobalIdentifier identifiablePeriodIdentifiableGlobalIdentifier = 
 							inject(IdentifiablePeriodIdentifiableGlobalIdentifierBusiness.class).instanciateOne();
-					identifiablePeriodIdentifiableGlobalIdentifier.setIdentifiablePeriod(movement.getIdentifiablePeriod());
+					identifiablePeriodIdentifiableGlobalIdentifier.setIdentifiablePeriod(movement.get__identifiablePeriod__());
 					identifiablePeriodIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifier(movement.getGlobalIdentifier());
 					inject(IdentifiablePeriodIdentifiableGlobalIdentifierBusiness.class).create(identifiablePeriodIdentifiableGlobalIdentifier);
 				}	
-			}
+			}*/
 			
 			Collection<Movement> children = dao.readByFilter(new Movement.Filter().addMaster(movement), null);
 			if(CollectionHelper.getInstance().isNotEmpty(children)){
@@ -266,28 +264,33 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
-	public void computeChanges(Movement movement,LoggingHelper.Message.Builder logMessageBuilder) {		
-		super.computeChanges(movement,logMessageBuilder);
-			
+	protected Boolean isDoesNotBelongsToIdentifiablePeriodVerifiable(Movement movement) {
+		return movement.getCollection()!=null && movement.getCollection().getType()!=null && movement.getCollection().getType().getIdentifiablePeriodCollectionType()!=null;
+	}
+	
+	@Override
+	protected void computeChangesIdentifiablePeriod(Movement movement, Builder logMessageBuilder) {
 		if(movement.getCollection()!=null && movement.getCollection().getType()!=null && movement.getCollection().getType().getIdentifiablePeriodCollectionType()!=null){
-			if(movement.getIdentifiablePeriod() == null){
+			if(movement.get__identifiablePeriod__() == null){
 				IdentifiablePeriodCollection identifiablePeriodCollection = CollectionHelper.getInstance().getFirst(inject(IdentifiablePeriodCollectionDao.class)
 						.readByTypeByJoin(movement.getCollection().getType().getIdentifiablePeriodCollectionType(), movement.getCollection()));
 				
 				if(identifiablePeriodCollection != null){
-					movement.setIdentifiablePeriod(inject(IdentifiablePeriodBusiness.class).findFirstNotClosedOrInstanciateOneByIdentifiablePeriodCollection(identifiablePeriodCollection));
-					if(inject(IdentifiablePeriodBusiness.class).isNotIdentified(movement.getIdentifiablePeriod())){
-						movement.addIdentifiables(movement.getIdentifiablePeriod());
+					movement.set__identifiablePeriod__(inject(IdentifiablePeriodBusiness.class).findFirstNotClosedOrInstanciateOneByIdentifiablePeriodCollection(identifiablePeriodCollection));
+					if(inject(IdentifiablePeriodBusiness.class).isNotIdentified(movement.get__identifiablePeriod__())){
+						
+						//movement.addIdentifiables(movement.get__identifiablePeriod__());
 					}
 				}
 			}
-			
-			throw__(ConditionHelper.Condition.getBuilderNull(movement, Movement.FIELD_IDENTIFIABLE_PERIOD));
-			throw__(ConditionHelper.Condition.getBelongsTo(movement, movement.getIdentifiablePeriod().getBirthDate(), movement.getIdentifiablePeriod().getDeathDate()
-					, Movement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
-			
 		}
-		
+		super.computeChangesIdentifiablePeriod(movement, logMessageBuilder);
+	}
+	
+	@Override
+	public void computeChanges(Movement movement,LoggingHelper.Message.Builder logMessageBuilder) {		
+		super.computeChanges(movement,logMessageBuilder);
+					
 		if(movement.getAction() == null){
 			if(movement.getParent()!=null){
 				Boolean parentActionIsOppositeOfChildAction = movement.getParent().getParentActionIsOppositeOfChildAction();

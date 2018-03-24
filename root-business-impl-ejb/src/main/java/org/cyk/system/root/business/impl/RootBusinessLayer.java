@@ -58,6 +58,7 @@ import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.UserAccount;
+import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.TimeDivisionType;
 import org.cyk.system.root.model.userinterface.UserInterfaceCommand;
 import org.cyk.system.root.model.userinterface.UserInterfaceMenu;
@@ -122,6 +123,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     protected void initialisation() {
     	INSTANCE = this; 
         super.initialisation();
+        IdentifiablePeriod.manage(Movement.class);
+        
         ThrowableHelper.getInstance().setDefaultThrowableClass(BusinessThrowable.class);
         org.cyk.utility.common.cdi.annotation.Log.Interceptor.COLLECTION.add(new LogInterceptorAdapter() /*inject(LogInterceptorAdapter.class)*/);
         

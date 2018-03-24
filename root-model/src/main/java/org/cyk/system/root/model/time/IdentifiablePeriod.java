@@ -1,7 +1,11 @@
 package org.cyk.system.root.model.time;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -11,7 +15,9 @@ import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.annotation.FieldOverride;
 import org.cyk.utility.common.annotation.FieldOverrides;
+import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 
 import lombok.Getter;
@@ -97,4 +103,26 @@ public class IdentifiablePeriod extends AbstractCollectionItem<IdentifiablePerio
 	public static final String FIELD_TYPE = "type";
 	
 	public static final String COLUMN_TYPE = FIELD_TYPE;
+	
+	/**/
+	
+	public static final Set<Class<?>> MANAGED_CLASSES = new HashSet<>();
+	
+	public static void manage(Collection<Class<?>> classes){
+		if(CollectionHelper.getInstance().isNotEmpty(classes))
+			MANAGED_CLASSES.addAll(classes);
+	}
+	
+	public static void manage(Class<?>...classes){
+		if(ArrayHelper.getInstance().isNotEmpty(classes))
+			manage(Arrays.asList(classes));
+	}
+	
+	public static Boolean isManaged(Class<?> aClass){
+		return aClass == null ? Boolean.FALSE : MANAGED_CLASSES.contains(aClass);
+	}
+	
+	public static Boolean isManaged(AbstractIdentifiable identifiable){
+		return isManaged(identifiable == null ? null : identifiable.getClass());
+	}
 }
