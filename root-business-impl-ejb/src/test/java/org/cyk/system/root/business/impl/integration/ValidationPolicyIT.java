@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
-import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__test__.Runnable;
+import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.utility.common.helper.ClassHelper;

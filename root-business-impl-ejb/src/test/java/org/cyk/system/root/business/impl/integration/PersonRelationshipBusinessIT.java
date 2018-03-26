@@ -7,7 +7,7 @@ import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeRoleBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipTypeRoleNameBusiness;
-import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;

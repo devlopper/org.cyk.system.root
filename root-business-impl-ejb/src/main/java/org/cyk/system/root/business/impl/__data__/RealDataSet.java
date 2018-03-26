@@ -50,6 +50,8 @@ import org.cyk.system.root.model.security.BusinessServiceCollection;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.model.security.Software;
+import org.cyk.system.root.model.store.Store;
+import org.cyk.system.root.model.store.StoreType;
 import org.cyk.system.root.model.time.DurationType;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifier;
@@ -73,6 +75,7 @@ public class RealDataSet extends DataSet implements Serializable {
 		file();
     	values();
     	geography();
+    	store();
         event();
         time();
         language();
@@ -175,6 +178,11 @@ public class RealDataSet extends DataSet implements Serializable {
     	addClass(NullString.class);
     	addClass(ValueProperties.class);
     	addClass(Value.class);
+    }
+    
+    private void store(){ 
+    	addClass(StoreType.class);
+    	addClass(Store.class);	
     }
     
     private void information(){ 

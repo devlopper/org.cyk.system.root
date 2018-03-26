@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.inject.Singleton;
 
+import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper;
+
 import lombok.Getter;
 import lombok.Setter;
 

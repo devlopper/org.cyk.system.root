@@ -5,7 +5,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.globalidentification.GlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.party.person.SexBusiness;
-import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.geography.Location;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.person.Sex;

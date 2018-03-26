@@ -1,6 +1,6 @@
 package org.cyk.system.root.business.impl.integration;
 
-import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.junit.Test;

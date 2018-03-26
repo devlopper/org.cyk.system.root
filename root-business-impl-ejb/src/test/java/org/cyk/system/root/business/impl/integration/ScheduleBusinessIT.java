@@ -2,7 +2,7 @@ package org.cyk.system.root.business.impl.integration;
 
 import org.cyk.system.root.business.api.time.ScheduleBusiness;
 import org.cyk.system.root.business.api.time.ScheduleItemBusiness;
-import org.cyk.system.root.business.impl.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.time.Schedule;
 import org.cyk.system.root.model.time.ScheduleItem;
 import org.cyk.system.root.persistence.api.time.ScheduleItemDao;

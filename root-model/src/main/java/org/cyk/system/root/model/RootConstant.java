@@ -450,6 +450,31 @@ public interface RootConstant {
 			public static final String SIGNER="SIGNER";
 			public static final String IN_CHARGE="INCHARGE";
 			public static final String PROVIDER="PROVIDER";
+			/**
+			 * a place where things are kept before they are sent out to shop
+			 */
+			public static final String WAREHOUSE="WAREHOUSE";
+			/**
+			 * a place where you can buy things
+			 */
+			public static final String STORE="STORE";
+			
+		}
+		
+		public static class StoreType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static final String PRODUCT="PRODUCT";
+			public static final String PRODUCT_WAREHOUSE="PRODUCTWAREHOUSE";
+			public static final String PRODUCT_SHOP="PRODUCTSHOP";
+		}
+		
+		public static class Store implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static final String PRODUCT="PRODUCT";
+			public static final String PRODUCT_WAREHOUSE="PRODUCTWAREHOUSE";
+			public static final String PRODUCT_SHOP="PRODUCTSHOP";
 		}
 		
 		/**/
