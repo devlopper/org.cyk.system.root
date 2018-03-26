@@ -812,12 +812,12 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			T result = object;
 			if(expectedThrowableIdentifier==null && StringHelper.getInstance().isBlank(expectedThrowableMessage)) {
 				InstanceHelper.getInstance().act(action, object);
-	    		result = (T) InstanceHelper.getInstance().getByIdentifier(object.getClass(), InstanceHelper.getInstance().getFieldValue(object, ClassHelper.Listener.FieldName.IDENTIFIER
-	    				, ClassHelper.Listener.FieldName.ValueUsageType.SYSTEM), ClassHelper.Listener.IdentifierType.SYSTEM);
+				Object identifier = InstanceHelper.getInstance().getIdentifier(object, ClassHelper.Listener.FieldName.ValueUsageType.SYSTEM);
+	    		result = (T) InstanceHelper.getInstance().getByIdentifier(object.getClass(), identifier, ClassHelper.Listener.IdentifierType.SYSTEM);
 	    		if(Constant.Action.DELETE.equals(action))
-	    			assertThat("object is not null", object==null);
+	    			assertNull(object);
 	    		else
-	    			assertThat("object is null", object!=null);
+	    			assertNotNull(object);
 	    		if(Constant.Action.CREATE.equals(action))
 	    			add((AbstractIdentifiable) result);
 			}else {
