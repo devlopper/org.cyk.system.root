@@ -23,7 +23,7 @@ import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.junit.Test;
 
-public class IdentifiablePeriodBusinessIT extends AbstractBusinessIT {
+public class IdentifiablePeriodIT extends AbstractBusinessIT {
     private static final long serialVersionUID = -6691092648665798471L;
 
     static {

@@ -118,6 +118,7 @@ import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.NumberHelper;
+import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
@@ -753,7 +754,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		private static final long serialVersionUID = -6026836126124339547L;
 
 		protected String name;
-		protected AbstractBusinessTestHelper helper;
+		@Deprecated protected AbstractBusinessTestHelper helper;
 		protected List<AbstractIdentifiable> identifiables;
 		protected Boolean cleaned = Boolean.FALSE;
 		protected Set<Class<?>> classes=new LinkedHashSet<>();
@@ -792,7 +793,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 				
 		}
 
-		public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
+		/*public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
 			@SuppressWarnings("unchecked")
 			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
 			if(StringUtils.isNotBlank(identifiable.getCode()) && StringUtils.isBlank(expectedThrowableMessage))
@@ -804,6 +805,40 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 				add(created);
 			}
 			return created;
+		}*/
+		
+		@SuppressWarnings("unchecked")
+		public <T> T act(final Constant.Action action,final T object,Object expectedThrowableIdentifier,String expectedThrowableMessage){
+			T result = object;
+			if(expectedThrowableIdentifier==null && StringHelper.getInstance().isBlank(expectedThrowableMessage)) {
+				InstanceHelper.getInstance().act(action, object);
+	    		result = (T) InstanceHelper.getInstance().getByIdentifier(object.getClass(), InstanceHelper.getInstance().getFieldValue(object, ClassHelper.Listener.FieldName.IDENTIFIER
+	    				, ClassHelper.Listener.FieldName.ValueUsageType.SYSTEM), ClassHelper.Listener.IdentifierType.SYSTEM);
+	    		if(Constant.Action.DELETE.equals(action))
+	    			assertThat("object is not null", object==null);
+	    		else
+	    			assertThat("object is null", object!=null);
+	    		if(Constant.Action.CREATE.equals(action))
+	    			add((AbstractIdentifiable) result);
+			}else {
+				new org.cyk.utility.common.test.Try(new Runnable() {
+					private static final long serialVersionUID = 1L;
+					@Override
+					protected void __run__() throws Throwable {
+						InstanceHelper.getInstance().act(action, object);
+					}
+				}).setExpectedThrowableIdentifier(expectedThrowableIdentifier).setExpectedThrowableMessage(expectedThrowableMessage).execute();
+			}
+			return result;
+		}
+		
+		public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
+			@SuppressWarnings("unchecked")
+			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
+			if(StringUtils.isNotBlank(identifiable.getCode()) && StringUtils.isBlank(expectedThrowableMessage))
+				assertThat("Object to create with code <<"+identifiable.getCode()+">> already exist", dao.read(identifiable.getCode())==null);
+			
+			return act(Constant.Action.CREATE, identifiable, null, expectedThrowableMessage);
 		}
 		
 		public <T extends AbstractIdentifiable> T create(final T identifiable){
