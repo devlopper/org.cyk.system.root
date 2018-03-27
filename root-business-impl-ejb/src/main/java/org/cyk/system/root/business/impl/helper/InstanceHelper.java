@@ -143,8 +143,9 @@ public class InstanceHelper implements Serializable {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				if(ClassHelper.Listener.IdentifierType.SYSTEM.equals(identifierType))
 					return (T) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find(NumberHelper.getInstance().get(Long.class, identifier));
-				else if(ClassHelper.Listener.IdentifierType.BUSINESS.equals(identifierType))
+				else if(ClassHelper.Listener.IdentifierType.BUSINESS.equals(identifierType)){
 					return (T) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).find((String) identifier);
+				}
 			if(GlobalIdentifier.class.equals(aClass))
 				return (T) inject(GlobalIdentifierBusiness.class).find(identifier.toString());
 			return super.getByIdentifier(aClass, identifier,identifierType);

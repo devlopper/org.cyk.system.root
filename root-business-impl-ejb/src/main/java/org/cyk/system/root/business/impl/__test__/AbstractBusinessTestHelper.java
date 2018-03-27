@@ -807,19 +807,27 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return created;
 		}*/
 		
-		@SuppressWarnings("unchecked")
 		public <T> T act(final Constant.Action action,final T object,Object expectedThrowableIdentifier,String expectedThrowableMessage){
 			T result = object;
 			if(expectedThrowableIdentifier==null && StringHelper.getInstance().isBlank(expectedThrowableMessage)) {
+				Object identifier = getIdentifierWhereValueUsageTypeIsBusiness(object);
+				if(identifier==null){
+					
+				}else{
+					if( StringHelper.getInstance().isNotBlank((CharSequence) identifier) ){
+						if(Constant.Action.CREATE.equals(action))
+							assertNull("Object to create with code <<"+identifier+">> already exist",getByIdentifierWhereValueUsageTypeIsBusiness(object,identifier));
+					}
+				}
 				InstanceHelper.getInstance().act(action, object);
-				Object identifier = InstanceHelper.getInstance().getIdentifier(object, ClassHelper.Listener.FieldName.ValueUsageType.SYSTEM);
-	    		result = (T) InstanceHelper.getInstance().getByIdentifier(object.getClass(), identifier, ClassHelper.Listener.IdentifierType.SYSTEM);
+				result = getByIdentifierWhereValueUsageTypeIsSystem(object);
 	    		if(Constant.Action.DELETE.equals(action))
 	    			assertNull(object);
-	    		else
+	    		else{
 	    			assertNotNull(object);
-	    		if(Constant.Action.CREATE.equals(action))
-	    			add((AbstractIdentifiable) result);
+	    			if(Constant.Action.CREATE.equals(action))
+		    			add((AbstractIdentifiable) result);
+	    		}
 			}else {
 				new org.cyk.utility.common.test.Try(new Runnable() {
 					private static final long serialVersionUID = 1L;
@@ -833,11 +841,6 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		}
 		
 		public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
-			@SuppressWarnings("unchecked")
-			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
-			if(StringUtils.isNotBlank(identifiable.getCode()) && StringUtils.isBlank(expectedThrowableMessage))
-				assertThat("Object to create with code <<"+identifiable.getCode()+">> already exist", dao.read(identifiable.getCode())==null);
-			
 			return act(Constant.Action.CREATE, identifiable, null, expectedThrowableMessage);
 		}
 		
