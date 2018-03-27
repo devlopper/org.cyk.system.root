@@ -810,16 +810,15 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 				}
 				InstanceHelper.getInstance().act(action, object);
 				result = getByIdentifierWhereValueUsageTypeIsSystem(object);
-	    		if(Constant.Action.DELETE.equals(action))
-	    			assertNull(object);
-	    		else{
+	    		if(Constant.Action.DELETE.equals(action)){
+	    			assertNull(getByIdentifierWhereValueUsageTypeIsBusiness(object,identifier));
+	    			remove((AbstractIdentifiable) object);
+	    		}else{
 	    			assertNotNull(object);
 	    			if(Constant.Action.CREATE.equals(action))
 		    			add((AbstractIdentifiable) result);
 	    			else if(Constant.Action.READ.equals(action))
 	    				;
-	    			else if(Constant.Action.DELETE.equals(action))
-	    				remove((AbstractIdentifiable) object);
 	    		}
 			}else {
 				new org.cyk.utility.common.test.Try(new Runnable() {
@@ -932,7 +931,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		}*/
 		
 		/* Delete */
-		/*
+		
 		public <T extends AbstractIdentifiable> T delete(final T identifiable,ThrowableHelper.Throwable expectedThrowable){
 			return act(Constant.Action.DELETE, identifiable, expectedThrowable);
 		}
@@ -948,8 +947,8 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public <T extends AbstractIdentifiable> T delete(final T identifiable){
 			return act(Constant.Action.DELETE,identifiable);
 		}
-		*/
 		
+		/*
 		public <T extends AbstractIdentifiable> T delete(final T identifiable,String expectedThrowableMessage){
 			T deleted = null;
 			if(identifiable!=null){
@@ -962,7 +961,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		public <T extends AbstractIdentifiable> T delete(final T identifiable){
 			return delete(identifiable,null);
 		}
-		
+		*/
 		public <T extends AbstractIdentifiable> T deleteByCode(final Class<T> aClass,final String code){
 			TypedDao<T> dao = inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
 			T identifiable = dao.read(code);
