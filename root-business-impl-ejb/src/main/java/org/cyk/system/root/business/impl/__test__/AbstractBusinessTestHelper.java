@@ -119,6 +119,7 @@ import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.ThrowableHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
@@ -793,23 +794,11 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 				
 		}
 
-		/*public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
-			@SuppressWarnings("unchecked")
-			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
-			if(StringUtils.isNotBlank(identifiable.getCode()) && StringUtils.isBlank(expectedThrowableMessage))
-				assertThat("Object to create with code <<"+identifiable.getCode()+">> already exist", dao.read(identifiable.getCode())==null);
-			T created = helper.create(identifiable,expectedThrowableMessage);
-			if(StringUtils.isBlank(expectedThrowableMessage)){
-				created = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier());
-				assertThat("Object created not found", created!=null);
-				add(created);
-			}
-			return created;
-		}*/
+		/*  Act */
 		
-		public <T> T act(final Constant.Action action,final T object,Object expectedThrowableIdentifier,String expectedThrowableMessage){
+		public <T> T act(final Constant.Action action,final T object,ThrowableHelper.Throwable expectedThrowable){
 			T result = object;
-			if(expectedThrowableIdentifier==null && StringHelper.getInstance().isBlank(expectedThrowableMessage)) {
+			if(expectedThrowable == null) {
 				Object identifier = getIdentifierWhereValueUsageTypeIsBusiness(object);
 				if(identifier==null){
 					
@@ -827,6 +816,10 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	    			assertNotNull(object);
 	    			if(Constant.Action.CREATE.equals(action))
 		    			add((AbstractIdentifiable) result);
+	    			else if(Constant.Action.READ.equals(action))
+	    				;
+	    			else if(Constant.Action.DELETE.equals(action))
+	    				remove((AbstractIdentifiable) object);
 	    		}
 			}else {
 				new org.cyk.utility.common.test.Try(new Runnable() {
@@ -835,34 +828,82 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 					protected void __run__() throws Throwable {
 						InstanceHelper.getInstance().act(action, object);
 					}
-				}).setExpectedThrowableIdentifier(expectedThrowableIdentifier).setExpectedThrowableMessage(expectedThrowableMessage).execute();
+				}).setExpectedThrowable(expectedThrowable).execute();
 			}
 			return result;
 		}
 		
-		public <T extends AbstractIdentifiable> T create(final T identifiable,String expectedThrowableMessage){
-			return act(Constant.Action.CREATE, identifiable, null, expectedThrowableMessage);
+		public <T> T act(final Constant.Action action,final T object,Object expectedThrowableIdentifier,String expectedThrowableMessage){
+			return act(action, object, new ThrowableHelper.Throwable().setIdentifier(expectedThrowableIdentifier).setMessages(expectedThrowableMessage));
+		}
+		
+		public <T> T act(final Constant.Action action,final T object,Object expectedThrowableIdentifier){
+			return act(action, object, expectedThrowableIdentifier,null);
+		}
+		
+		public <T> T act(final Constant.Action action,final T object){
+			return act(action, object,null);
+		}
+		
+		/* Create */
+		
+		public <T extends AbstractIdentifiable> T create(final T identifiable,ThrowableHelper.Throwable expectedThrowable){
+			return act(Constant.Action.CREATE, identifiable, expectedThrowable);
+		}
+		
+		public <T extends AbstractIdentifiable> T create(final T identifiable,Object expectedThrowableIdentifier,String expectedThrowableMessage){
+			return act(Constant.Action.CREATE, identifiable, expectedThrowableIdentifier, expectedThrowableMessage);
+		}
+		
+		public <T extends AbstractIdentifiable> T create(final T identifiable,Object expectedThrowableIdentifier){
+			return act(Constant.Action.CREATE,identifiable, expectedThrowableIdentifier);
 		}
 		
 		public <T extends AbstractIdentifiable> T create(final T identifiable){
-			return create(identifiable,null);
+			return act(Constant.Action.CREATE,identifiable);
 		}
 		
-		public <T extends AbstractIdentifiable> T read(Class<T> aClass,String code,String expectedThrowableMessage){
-			T read = helper.read(aClass,code,expectedThrowableMessage);
-			assertThat("Object read not found", read!=null);
-			return read;
+		/* Read */
+		
+		public <T extends AbstractIdentifiable> T read(Class<T> aClass,Object identifier,ThrowableHelper.Throwable expectedThrowable){
+			return act(Constant.Action.READ, getByIdentifierWhereValueUsageTypeIsBusiness(aClass, identifier), expectedThrowable);
 		}
 		
-		public <T extends AbstractIdentifiable> T read(Class<T> aClass,String code){
-			return read(aClass,code,null);
+		public <T extends AbstractIdentifiable> T read(Class<T> aClass,Object identifier,Object expectedThrowableIdentifier,String expectedThrowableMessage){
+			return act(Constant.Action.READ, getByIdentifierWhereValueUsageTypeIsBusiness(aClass, identifier), expectedThrowableIdentifier, expectedThrowableMessage);
+		}
+		
+		public <T extends AbstractIdentifiable> T read(Class<T> aClass,Object identifier,Object expectedThrowableIdentifier){
+			return act(Constant.Action.READ,getByIdentifierWhereValueUsageTypeIsBusiness(aClass, identifier), expectedThrowableIdentifier);
+		}
+		
+		public <T extends AbstractIdentifiable> T read(Class<T> aClass,Object identifier){
+			return act(Constant.Action.READ,getByIdentifierWhereValueUsageTypeIsBusiness(aClass, identifier));
 		}
 		
 		public <T extends AbstractIdentifiable> T readCollectionItem(Class<T> aClass,Class<? extends AbstractCollection<?>> collectionClass,String collectionCode,String code){
 			return read(aClass,RootConstant.Code.generate((AbstractCollection<?>)read(collectionClass,collectionCode), code));
 		}
 		
-		public <T extends AbstractIdentifiable> T update(final T identifiable,Object[][] values,String expectedThrowableMessage){
+		/* Update */
+		
+		public <T extends AbstractIdentifiable> T update(final T identifiable,ThrowableHelper.Throwable expectedThrowable){
+			return act(Constant.Action.UPDATE, identifiable, expectedThrowable);
+		}
+		
+		public <T extends AbstractIdentifiable> T update(final T identifiable,Object expectedThrowableIdentifier,String expectedThrowableMessage){
+			return act(Constant.Action.UPDATE, identifiable, expectedThrowableIdentifier, expectedThrowableMessage);
+		}
+		
+		public <T extends AbstractIdentifiable> T update(final T identifiable,Object expectedThrowableIdentifier){
+			return act(Constant.Action.UPDATE,identifiable, expectedThrowableIdentifier);
+		}
+		
+		public <T extends AbstractIdentifiable> T update(final T identifiable){
+			return act(Constant.Action.UPDATE,identifiable);
+		}
+		
+		/*public <T extends AbstractIdentifiable> T update(final T identifiable,Object[][] values,String expectedThrowableMessage){
 			@SuppressWarnings("unchecked")
 			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
 			assertThat("Object to update not found", dao.read(identifiable.getCode())!=null);
@@ -888,7 +929,26 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		
 		public <T extends AbstractIdentifiable> T update(final T identifiable){
 			return update(identifiable,null,null);
+		}*/
+		
+		/* Delete */
+		/*
+		public <T extends AbstractIdentifiable> T delete(final T identifiable,ThrowableHelper.Throwable expectedThrowable){
+			return act(Constant.Action.DELETE, identifiable, expectedThrowable);
 		}
+		
+		public <T extends AbstractIdentifiable> T delete(final T identifiable,Object expectedThrowableIdentifier,String expectedThrowableMessage){
+			return act(Constant.Action.DELETE, identifiable, expectedThrowableIdentifier, expectedThrowableMessage);
+		}
+		
+		public <T extends AbstractIdentifiable> T delete(final T identifiable,Object expectedThrowableIdentifier){
+			return act(Constant.Action.DELETE,identifiable, expectedThrowableIdentifier);
+		}
+		
+		public <T extends AbstractIdentifiable> T delete(final T identifiable){
+			return act(Constant.Action.DELETE,identifiable);
+		}
+		*/
 		
 		public <T extends AbstractIdentifiable> T delete(final T identifiable,String expectedThrowableMessage){
 			T deleted = null;
@@ -1424,7 +1484,7 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			create(instance);
 	    	String code = inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(instance.getIdentifier()).getCode();
 	    	read(aClass,code);
-	    	update(aClass,code, values);    	
+	    	//update(aClass,code, values);    	
 	    	deleteByCode(aClass,code);
 	    	clean();
 	    }

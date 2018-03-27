@@ -34,7 +34,7 @@ import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.junit.Test;
 
-public class MovementBusinessIT extends AbstractBusinessIT {
+public class MovementIT extends AbstractBusinessIT {
     private static final long serialVersionUID = -6691092648665798471L;
 
     static {

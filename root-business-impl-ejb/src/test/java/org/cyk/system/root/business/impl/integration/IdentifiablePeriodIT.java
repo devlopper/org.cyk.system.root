@@ -6,7 +6,6 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.time.IdentifiablePeriodBusiness;
 import org.cyk.system.root.business.impl.__data__.DataSet;
-import org.cyk.system.root.business.impl.__test__.Runnable;
 import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
@@ -21,6 +20,7 @@ import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.ThrowableHelper;
 import org.junit.Test;
 
 public class IdentifiablePeriodIT extends AbstractBusinessIT {
@@ -266,12 +266,9 @@ public class IdentifiablePeriodIT extends AbstractBusinessIT {
 	@Test
     public void throwCollectionIsNull(){
 		TestCase testCase = instanciateTestCase();
-		testCase.assertThrowable(new Runnable(testCase) {
-			private static final long serialVersionUID = 1L;
-
-			@Override protected void __run__() throws Throwable {create(instanciateOne(IdentifiablePeriod.class));}
-    	}, FieldHelper.Field.get(IdentifiablePeriod.class,IdentifiablePeriod.FIELD_COLLECTION).getIdentifier(ConditionHelper.Condition.Builder.Null.class), null);
-    	testCase.clean();
+		testCase.create(testCase.instanciateOne(IdentifiablePeriod.class), new ThrowableHelper.Throwable().setIdentifier(
+				FieldHelper.Field.get(IdentifiablePeriod.class,IdentifiablePeriod.FIELD_COLLECTION).getIdentifier(ConditionHelper.Condition.Builder.Null.class)));		
+		testCase.clean();
 	}
 
     /**/
