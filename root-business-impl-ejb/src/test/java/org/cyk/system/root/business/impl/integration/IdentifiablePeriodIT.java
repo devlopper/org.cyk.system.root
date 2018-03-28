@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.api.time.IdentifiablePeriodBusiness;
 import org.cyk.system.root.business.impl.__data__.DataSet;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;

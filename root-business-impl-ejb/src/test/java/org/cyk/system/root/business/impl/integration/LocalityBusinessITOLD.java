@@ -3,7 +3,7 @@ package org.cyk.system.root.business.impl.integration;
 import java.util.Collection;
 
 import org.cyk.system.root.business.api.geography.LocalityBusiness;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.persistence.api.geography.LocalityDao;

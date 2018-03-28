@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl.integration;
+package org.cyk.system.root.business.impl.__test__;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,9 +10,6 @@ import org.cyk.system.root.business.api.mathematics.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.MovementCollectionTypeBusiness;
-import org.cyk.system.root.business.impl.__data__.DataSet;
-import org.cyk.system.root.business.impl.__test__.Runnable;
-import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.Movement;
 import org.cyk.system.root.model.mathematics.MovementCollection;
@@ -22,28 +19,20 @@ import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
-import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.RandomHelper;
 import org.cyk.utility.common.helper.TimeHelper;
-import org.junit.Test;
 
-public class MovementIT extends AbstractBusinessIT {
-    private static final long serialVersionUID = -6691092648665798471L;
+public class MovementTestCases extends AbstractTestCases implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    static {
-    	ClassHelper.getInstance().map(DataSet.Listener.class, Data.class);
-    }
-    
-    @Test
     public void crudOneMovementCollectionType(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	MovementCollectionType movementCollectionType = inject(MovementCollectionTypeBusiness.class).instanciateOne(testCase.getRandomAlphabetic());
     	assertNotNull(movementCollectionType.getInterval());
     	assertNotNull(movementCollectionType.getIncrementAction());
@@ -51,10 +40,9 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.create(movementCollectionType);
     	testCase.clean();
     }
-    
-    @Test
+        
     public void crudOneMovementCollection(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(testCase.getRandomAlphabetic());
     	assertNotNull(movementCollection.getType());
     	assertNotNull(movementCollection.getType().getInterval());
@@ -62,10 +50,9 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.create(movementCollection);
     	testCase.clean();
     }
-    
-    @Test
+        
     public void instanciateOneMovement(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	String collectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
     	testCase.assertNotNullByBusinessIdentifier(MovementCollection.class, collectionCode);
@@ -75,10 +62,9 @@ public class MovementIT extends AbstractBusinessIT {
     	assertNotNull(movement.getCollection());
     	testCase.clean();
     }
-    
-    @Test
+        
     public void instanciateOneMovementInIdentifiablePeriod(){
-    	final TestCase testCase = instanciateTestCase();
+    	final TestCase testCase = instanciateOneCase();
     	final String collectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
     	testCase.assertNotNullByBusinessIdentifier(MovementCollection.class, collectionCode);
@@ -88,26 +74,24 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	final String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
-    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
+    			.setBirthDate(getDate(2000, 1, 1, 0, 0)).setDeathDate(getDate(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
     	testCase.computeChanges(testCase.instanciateOne(Movement.class).setCollectionFromCode(collectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
     			.setBirthDateFromString("1/1/2000 1:0").set__identifiablePeriod__fromCode(RootConstant.Code.generate(identifiablePeriodCollection, identifiablePeriodCode)));
     	
     	testCase.clean();
     }
-    
-    @Test
+        
     public void crudOneMovement(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionCode));
     	testCase.create(testCase.instanciateOne(Movement.class).setValueFromObject(1).setCollectionFromCode(movementCollectionCode));
     	testCase.clean();
     }
-    
-    @Test
+        
     public void crudOneMovementWhereIdentifiablePeriodIsSetToNotClosed(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	
     	String movementCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
@@ -129,10 +113,9 @@ public class MovementIT extends AbstractBusinessIT {
     	    	
     	testCase.clean();
     }
-    
-    @Test
+        
     public void crudTwoMovementsWhereIdentifiablePeriodIsSetToNotClosed(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	
     	/*String movementCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
@@ -161,10 +144,9 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	testCase.clean();
     }
-    
-    @Test
+     
     public void assertComputedMovementBirthDateIsIncrementedWhenSetBySystem(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	Movement movement = testCase.instanciateOne(Movement.class);
     	assertNull(movement.getBirthDate());
     	inject(MovementBusiness.class).computeChanges(movement);
@@ -189,40 +171,38 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	testCase.clean();
     }
-    
-    @Test
+        
     public void assertComputedMovementBirthDateIsNotChangedBySystemWhenSetByUser(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	Movement movement = testCase.instanciateOne(Movement.class);
     	movement.__setBirthDateComputedByUser__(Boolean.TRUE);
     	assertNull(movement.getBirthDate());
     	inject(MovementBusiness.class).computeChanges(movement);
     	assertNull(movement.getBirthDate());
     	
-    	movement.setBirthDate(date(2000, 1, 1));
+    	movement.setBirthDate(getDate(2000, 1, 1));
     	
     	Date date1 = movement.getBirthDate();
-    	assertEquals(date(2000, 1, 1), date1);    
+    	assertEquals(getDate(2000, 1, 1), date1);    
     	
     	inject(MovementBusiness.class).computeChanges(movement);
     	Date date2 = movement.getBirthDate();
-    	assertEquals(date(2000, 1, 1), date2);  
+    	assertEquals(getDate(2000, 1, 1), date2);  
     	
     	assertEquals(Boolean.TRUE, date1.compareTo(date2) == 0);
     	
     	inject(MovementBusiness.class).computeChanges(movement);
     	date2 = movement.getBirthDate();
-    	assertEquals(date(2000, 1, 1), date2);  
+    	assertEquals(getDate(2000, 1, 1), date2);  
     	
     	assertEquals(Boolean.TRUE, date1.compareTo(date2) == 0);
     	
     	testCase.clean();
     }
-    
-    @Test
+        
     public void createCreateMovementsWithDateSetBySystem(){
-    	TestCase testCase = instanciateTestCase();    	
-    	testCase.assertCreateMovements(date(2000, 1, 1, 0, 0), date(2000, 1, 1, 23, 59), new Object[][]{
+    	TestCase testCase = instanciateOneCase();    	
+    	testCase.assertCreateMovements(getDate(2000, 1, 1, 0, 0), getDate(2000, 1, 1, 23, 59), new Object[][]{
     		{"true",null,"1","1","1",new String[][] {
     			{"0","1","1","true"}
     		}}
@@ -239,19 +219,18 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     	testCase.deleteAll(IdentifiablePeriod.class);
     }
-    
-    @Test
+        
     public void createCreateMovementsWithDateSetByUserAscending(){
-    	TestCase testCase = instanciateTestCase();    	
-    	testCase.assertCreateMovements(date(2000, 1, 1, 0, 0), date(2000, 1, 1, 23, 59), new Object[][]{
-    		{"true",date(2000, 1, 1, 0, 5),"1","1","1",new String[][] {
+    	TestCase testCase = instanciateOneCase();    	
+    	testCase.assertCreateMovements(getDate(2000, 1, 1, 0, 0), getDate(2000, 1, 1, 23, 59), new Object[][]{
+    		{"true",getDate(2000, 1, 1, 0, 5),"1","1","1",new String[][] {
     			{"0","1","1","true"}
     		}}
-    		,{"true",date(2000, 1, 1, 0, 6),"2","3","2",new String[][] {
+    		,{"true",getDate(2000, 1, 1, 0, 6),"2","3","2",new String[][] {
     			{"0","1","1","true"}
     			,{"1","2","3","true"}
     		}}
-    		,{"true",date(2000, 1, 1, 0, 7),"3","6","3",new String[][] {
+    		,{"true",getDate(2000, 1, 1, 0, 7),"3","6","3",new String[][] {
     			{"0","1","1","true"}
     			,{"1","2","3","true"}
     			,{"2","3","6","true"}
@@ -260,19 +239,18 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     	testCase.deleteAll(IdentifiablePeriod.class);
     }
-    
-    @Test
+        
     public void createCreateMovementsWithDateSetByUserDescending(){
-    	TestCase testCase = instanciateTestCase();    	
-    	testCase.assertCreateMovements(date(2000, 1, 1, 0, 0), date(2000, 1, 1, 23, 59), new Object[][]{
-    		{"true",date(2000, 1, 1, 0, 7),"3","3","1",new String[][] {
+    	TestCase testCase = instanciateOneCase();    	
+    	testCase.assertCreateMovements(getDate(2000, 1, 1, 0, 0), getDate(2000, 1, 1, 23, 59), new Object[][]{
+    		{"true",getDate(2000, 1, 1, 0, 7),"3","3","1",new String[][] {
     			{"0","3","3","true"}
     		}}
-    		,{"true",date(2000, 1, 1, 0, 6),"2","5","2",new String[][] {
+    		,{"true",getDate(2000, 1, 1, 0, 6),"2","5","2",new String[][] {
     			{"0","2","2","true"}
     			,{"1","3","5","true"}
     		}}
-    		,{"true",date(2000, 1, 1, 0, 5),"1","6","3",new String[][] {
+    		,{"true",getDate(2000, 1, 1, 0, 5),"1","6","3",new String[][] {
     			{"0","1","1","true"}
     			,{"1","2","3","true"}
     			,{"2","3","6","true"}
@@ -281,12 +259,11 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     	testCase.deleteAll(IdentifiablePeriod.class);
     }
-    
-    @Test
+        
     public void createCreateMovementsWithDateFirstSpecifiedAncestorSecondNotSpecifiedNewest(){
-    	TestCase testCase = instanciateTestCase();    	
-    	testCase.assertCreateMovements(date(2000, 1, 1, 0, 0), date(2000, 1, 1, 23, 59), new Object[][]{
-    		{"true",date(2000, 1, 1, 0, 5),"1","1","1",new String[][] {
+    	TestCase testCase = instanciateOneCase();    	
+    	testCase.assertCreateMovements(getDate(2000, 1, 1, 0, 0), getDate(2000, 1, 1, 23, 59), new Object[][]{
+    		{"true",getDate(2000, 1, 1, 0, 5),"1","1","1",new String[][] {
     			{"0","1","1","true"}
     		}}
     		,{"true",null,"2","3","2",new String[][] {
@@ -297,11 +274,10 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     	testCase.deleteAll(IdentifiablePeriod.class);
     }
-    
-    @Test
+        
     public void createCreateMovementsWithDateFirstSpecifiedNewestSecondNotSpecifiedAncestor(){
-    	TestCase testCase = instanciateTestCase();    	
-    	testCase.assertCreateMovements(date(2000, 1, 1, 0, 0), date(2000, 1, 1, 23, 59), new Object[][]{
+    	TestCase testCase = instanciateOneCase();    	
+    	testCase.assertCreateMovements(getDate(2000, 1, 1, 0, 0), getDate(2000, 1, 1, 23, 59), new Object[][]{
     		{"true",new Date(System.currentTimeMillis()+1000*60*5),"1","1","1",new String[][] {
     			{"0","1","1","true"}
     		}}
@@ -313,11 +289,10 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     	testCase.deleteAll(IdentifiablePeriod.class);
     }
-    
-    @Test
+        
     public void createCreateMovementsWithDateFirstNotSpecifiedAncestorSecondSpecifiedNewest(){
-    	TestCase testCase = instanciateTestCase();    	
-    	testCase.assertCreateMovements(date(2000, 1, 1, 0, 0), date(2000, 1, 1, 23, 59), new Object[][]{
+    	TestCase testCase = instanciateOneCase();    	
+    	testCase.assertCreateMovements(getDate(2000, 1, 1, 0, 0), getDate(2000, 1, 1, 23, 59), new Object[][]{
     		{"true",null,"1","1","1",new String[][] {
     			{"0","1","1","true"}
     		}}
@@ -329,15 +304,14 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     	testCase.deleteAll(IdentifiablePeriod.class);
     }
-    
-    @Test
+        
     public void createCreateMovementsWithDateFirstNotSpecifiedNewestSecondSpecifiedAncestor(){
-    	TestCase testCase = instanciateTestCase();    	
-    	testCase.assertCreateMovements(date(2000, 1, 1, 0, 0), date(2000, 1, 1, 23, 59), new Object[][]{
+    	TestCase testCase = instanciateOneCase();    	
+    	testCase.assertCreateMovements(getDate(2000, 1, 1, 0, 0), getDate(2000, 1, 1, 23, 59), new Object[][]{
     		{"true",null,"1","1","1",new String[][] {
     			{"0","1","1","true"}
     		}}
-    		,{"true",date(2000, 1, 1, 0, 6),"2","3","2",new String[][] {
+    		,{"true",getDate(2000, 1, 1, 0, 6),"2","3","2",new String[][] {
     			{"0","2","2","true"}
     			,{"1","1","3","true"}
     		}}
@@ -345,10 +319,9 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     	testCase.deleteAll(IdentifiablePeriod.class);
     }
-    
-    @Test
+        
     public void crudOneMovementWithSpecifiedDate(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode));
     	
@@ -357,20 +330,19 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class).setCollectionFromCode(identifiablePeriodCollectionCode);
 		identifiablePeriod.setCode(testCase.getRandomHelper().getAlphabetic(5));
-		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
-		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59));
+		identifiablePeriod.setBirthDate(getDate(2000, 1, 1, 0, 0));
+		identifiablePeriod.setDeathDate(getDate(2000, 1, 1, 23, 59));
 		testCase.create(identifiablePeriod);
 		
     	Movement movement = testCase.instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode);
-    	movement.setValue(BigDecimal.ONE).set__identifiablePeriod__(identifiablePeriod).setBirthDate(date(2000, 1, 1, 0, 5));
+    	movement.setValue(BigDecimal.ONE).set__identifiablePeriod__(identifiablePeriod).setBirthDate(getDate(2000, 1, 1, 0, 5));
     	testCase.create(movement);
     	testCase.assertMovement(movement.getCode(), "1", "1");
     	testCase.clean();
     }
-    
-    @Test
+        
     public void crudOneMovementWithoutSpecifiedDate(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode).setValue(BigDecimal.ZERO));
     	
@@ -379,8 +351,8 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class);
 		identifiablePeriod.setCode(testCase.getRandomHelper().getAlphabetic(5));
-		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
-		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode);
+		identifiablePeriod.setBirthDate(getDate(2000, 1, 1, 0, 0));
+		identifiablePeriod.setDeathDate(getDate(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode);
 		testCase.create(identifiablePeriod);
 		
     	Movement movement = testCase.instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode);
@@ -391,10 +363,9 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.assertMovement(movement.getCode(), "1", "1");
     	testCase.clean();
     }
-    
-    @Test
+        
     public void crudOneMovementCollectionAndMovements(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(testCase.getRandomAlphabetic());
     	Movement movement = inject(MovementBusiness.class).instanciateOne(movementCollection);
     	movement.setCode(RandomHelper.getInstance().getAlphabetic(3));
@@ -412,10 +383,9 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	testCase.clean();
     }
-    
-    @Test
+        
     public void useValueAbsolute(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	String movementCollectionCode = testCase.getRandomAlphabetic();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementCollectionCode);
     	movementCollection.setValue(new BigDecimal("0"));
@@ -444,10 +414,9 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	testCase.clean();
     }
-    
-    @Test
+        
     public void useNullAction(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	String movementCollectionCode = testCase.getRandomAlphabetic();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementCollectionCode);
     	movementCollection.setValue(new BigDecimal("0"));
@@ -471,10 +440,9 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	testCase.clean();
     }
-    
-    @Test
+        
     public void addSequenceAscending(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	String movementCollectionCode = testCase.getRandomAlphabetic();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(movementCollectionCode);
     	movementCollection.setValue(new BigDecimal("0"));
@@ -501,10 +469,9 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	testCase.clean();
     }
-    
-    @Test
+        
     public void addSequenceDescending(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	MovementCollection movementCollection = testCase.instanciateOneWithRandomIdentifier(MovementCollection.class);
     	String movementCollectionCode = movementCollection.getCode();
     	testCase.create(movementCollection);
@@ -630,10 +597,9 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	testCase.clean();
     }
-    
-    @Test
+        
     public void findPrevious(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	String movementUpdatesUnlimitedIdentifier = testCase.getRandomAlphabetic();
     	MovementCollection movementUpdatesUnlimited = inject(MovementCollectionBusiness.class).instanciateOne(movementUpdatesUnlimitedIdentifier);
     	movementUpdatesUnlimited.setValue(new BigDecimal("0"));
@@ -645,7 +611,7 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.create(movementUnlimited);
     	
     	Movement movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "15",Boolean.TRUE);
-    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 5, 2));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(getDate(2000, 5, 2));
     	movement = testCase.create(movement);
     	String code001 = movement.getCode();
     	testCase.assertMovement(code001, "15","15",Boolean.TRUE);
@@ -653,11 +619,11 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 0);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 5, 3));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(getDate(2000, 5, 3));
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,movement, 1);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 5, 1));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(getDate(2000, 5, 1));
     	movement = testCase.create(movement);
     	String code002 = movement.getCode();
     	testCase.assertMovement(code002, "10","10",Boolean.TRUE);
@@ -665,7 +631,7 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code001, 1);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUpdatesUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 5, 3));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(getDate(2000, 5, 3));
     	movement = testCase.create(movement);
     	String code003 = movement.getCode();
     	testCase.assertMovement(code003, "10","35",Boolean.TRUE);
@@ -674,7 +640,7 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.assertWhereExistencePeriodFromDateIsLessThanCount(Movement.class,code003, 2);
     	
     	movement = inject(MovementBusiness.class).instanciateOne(RandomHelper.getInstance().getAlphabetic(3),movementUnlimitedIdentifier, "10",Boolean.TRUE);
-    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(date(2000, 4, 1));
+    	movement.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDate(getDate(2000, 4, 1));
     	movement = testCase.create(movement);
     	String code001A = movement.getCode();
     	testCase.assertMovement(code001A, "10","10",Boolean.TRUE);
@@ -687,9 +653,8 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     }
     
-    @Test
     public void doMovementsAndUpdates(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(testCase.getRandomAlphabetic());
     	movementCollection.setValue(new BigDecimal("0"));
     	testCase.create(movementCollection);
@@ -761,9 +726,8 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     }
     
-    @Test
     public void filter(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	MovementCollection movementCollection01 = inject(MovementCollectionBusiness.class).instanciateOne(testCase.getRandomAlphabetic());
     	testCase.create(movementCollection01);
     	
@@ -833,9 +797,8 @@ public class MovementIT extends AbstractBusinessIT {
     	});
     }
     
-    @Test
     public void crudOneMovementCollectionIdentifiableGlobalIdentifier(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(testCase.getRandomAlphabetic());
     	movementCollection.setValue(new BigDecimal("0"));
     	testCase.create(movementCollection);
@@ -866,9 +829,8 @@ public class MovementIT extends AbstractBusinessIT {
     	}
     }
     
-	@Test
 	public void computeChanges() {
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
 		
 		String movementCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(inject(MovementCollectionBusiness.class).instanciateOne(movementCollectionCode).setValue(new BigDecimal(7)));
@@ -923,9 +885,8 @@ public class MovementIT extends AbstractBusinessIT {
 		testCase.clean();
 	}
     
-	@Test
     public void crudMovementsWithDestination(){
-    	TestCase testCase = instanciateTestCase();
+    	TestCase testCase = instanciateOneCase();
     	String invoiceMovementCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(inject(MovementCollectionBusiness.class).instanciateOne(invoiceMovementCollectionCode).setValue(new BigDecimal("100")));
     	String cashRegisterMovementCollectionCode = testCase.getRandomAlphabetic();
@@ -957,13 +918,12 @@ public class MovementIT extends AbstractBusinessIT {
     	
     }
 	
-	@Test
     public void createOneMovementAndOneChildrenWithDateSetByUser(){
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
 		
     	String identifiablePeriodCode = testCase.getRandomAlphabetic();
 		testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
-				.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY));
+				.setBirthDate(getDate(2000, 1, 1, 0, 0)).setDeathDate(getDate(2000, 1, 1, 23, 59)).setCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY));
 		
 		String saleMovementCollectionCode = testCase.getRandomAlphabetic();
 		MovementCollection saleMovementCollection = testCase.create(testCase.instanciateOne(MovementCollection.class,saleMovementCollectionCode).setValueFromObject(1000));
@@ -989,9 +949,8 @@ public class MovementIT extends AbstractBusinessIT {
 		testCase.clean();
     }
 	
-	@Test
     public void createOneMovementAndOneChildrenWithDateSetBySystem(){
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
 		
     	String identifiablePeriodCode = testCase.getRandomAlphabetic();
 		testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
@@ -1021,9 +980,8 @@ public class MovementIT extends AbstractBusinessIT {
 		testCase.clean();
     }
 	
-	@Test
     public void createOneMovementAndOneChildren(){
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
 		
     	String identifiablePeriodCode = testCase.getRandomAlphabetic();
 		testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
@@ -1051,9 +1009,8 @@ public class MovementIT extends AbstractBusinessIT {
 		testCase.clean();
     }
 	
-	@Test
     public void createOneMovementAndManyChildren(){
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
 		
 		String movementCollectionCode = testCase.getRandomAlphabetic();
 		testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode).setValueFromObject(1000));
@@ -1083,9 +1040,8 @@ public class MovementIT extends AbstractBusinessIT {
     
     /* Exceptions */
     
-	@Test
     public void throwCollectionIsNull(){
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
 		testCase.assertThrowable(new Runnable(testCase) {
 			private static final long serialVersionUID = 1L;
 			@Override protected void __run__() throws Throwable {create(instanciateOne(Movement.class).setValueFromObject(1));}
@@ -1093,9 +1049,8 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
 	}
 	
-	@Test
     public void throwValueIsNull(){
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
     	final String collectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
 		testCase.assertThrowable(new Runnable(testCase) {
@@ -1104,9 +1059,8 @@ public class MovementIT extends AbstractBusinessIT {
     	}, null, "La valeur de l'attribut <<valeur>> de l'entité <<mouvement>> doit être non nulle.");
 	}
 	
-	@Test
     public void throwIdentifiableCollectionIsNull(){
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
     	final String collectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
 		testCase.assertThrowable(new Runnable(testCase) {
@@ -1115,9 +1069,8 @@ public class MovementIT extends AbstractBusinessIT {
     	}, null, "La valeur de l'attribut <<période identifiable>> de l'entité <<mouvement>> doit être non nulle.");
 	}
 	
-	@Test
     public void throwDoesNotBelongsToIdentifiablePeriod(){
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
 		
 		final IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class).setBirthDateFromString("1/1/2000 0:0")
     			.setDeathDateFromString("1/1/2000 23:59").setCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY));
@@ -1132,9 +1085,8 @@ public class MovementIT extends AbstractBusinessIT {
 		testCase.clean();
 	}
 	
-	@Test
     public void throwValueIsZero(){
-		TestCase testCase = instanciateTestCase();
+		TestCase testCase = instanciateOneCase();
     	final String collectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode));
 		testCase.assertThrowable(new Runnable(testCase) {
@@ -1144,19 +1096,5 @@ public class MovementIT extends AbstractBusinessIT {
 		testCase.clean();
 	}
     
-    /**/
-    
-	/**/
 	
-    @SuppressWarnings("unchecked")
-	public static class Data extends DataSet.Listener.Adapter.Default implements Serializable {
-		private static final long serialVersionUID = 1L;
-    	
-		@SuppressWarnings({ "rawtypes" })
-		@Override
-		public Collection getClasses() {
-			return Arrays.asList(Movement.class,IdentifiablePeriod.class,Value.class);
-		}
-		
-    }
 }

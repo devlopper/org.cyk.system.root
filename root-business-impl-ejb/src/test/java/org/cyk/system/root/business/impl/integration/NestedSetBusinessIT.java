@@ -1,6 +1,6 @@
 package org.cyk.system.root.business.impl.integration;
 
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;

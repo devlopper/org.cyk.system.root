@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.persistence.EntityGraph;
 
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.person.Person;

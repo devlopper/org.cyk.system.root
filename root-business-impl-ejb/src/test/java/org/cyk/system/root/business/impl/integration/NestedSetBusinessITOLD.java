@@ -3,7 +3,7 @@ package org.cyk.system.root.business.impl.integration;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.pattern.tree.NestedSetNodeBusiness;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.pattern.tree.NestedSet;
 import org.cyk.system.root.model.pattern.tree.NestedSetNode;
 

@@ -3,7 +3,7 @@ package org.cyk.system.root.business.impl.integration;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.persistence.api.network.UniformResourceLocatorParameterDao;

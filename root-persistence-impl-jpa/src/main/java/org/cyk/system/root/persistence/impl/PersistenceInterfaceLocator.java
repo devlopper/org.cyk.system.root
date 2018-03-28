@@ -52,7 +52,10 @@ public class PersistenceInterfaceLocator extends ClassLocator implements Seriali
 
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractIdentifiable> TypedDao<T> injectTyped(Class<T> aClass) {
-		return (TypedDao<T>) super.injectLocated(aClass);
+		TypedDao<T> dao = (TypedDao<T>) super.injectLocated(aClass);
+		if(dao == null)
+			logWarning("Persistence not yet define for class {}", aClass);
+		return dao;
 	}
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractIdentifiable> TypedDao<T> injectTypedByObject(T object) {

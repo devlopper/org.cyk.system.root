@@ -16,6 +16,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
+import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.Constant.Action;
@@ -109,16 +110,6 @@ public class InstanceHelper implements Serializable {
 		
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T> Long count(Class<T> aClass, DataReadConfiguration dataReadConfiguration) {
-			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
-				return inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).countAll();
-			if(GlobalIdentifier.class.equals(aClass))
-				inject(GlobalIdentifierBusiness.class).countAll();
-			return super.count(aClass, dataReadConfiguration);
-		}
-		
-		@SuppressWarnings("unchecked")
-		@Override
 		public <T> Collection<T> get(Class<T> aClass,FilterHelper.Filter<T> filter, DataReadConfiguration dataReadConfiguration) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return (Collection<T>) inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).findByFilter((Filter<AbstractIdentifiable>) filter,dataReadConfiguration);
@@ -129,11 +120,35 @@ public class InstanceHelper implements Serializable {
 		
 		@SuppressWarnings("unchecked")
 		@Override
+		public <T> Long count(Class<T> aClass, DataReadConfiguration dataReadConfiguration) {
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
+				return inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).countAll();
+			if(GlobalIdentifier.class.equals(aClass))
+				return inject(GlobalIdentifierBusiness.class).countAll();
+			return super.count(aClass, dataReadConfiguration);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> Long count(Class<T> aClass) {
+			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass)){
+				TypedDao<AbstractIdentifiable> persistence = inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass);
+				if( persistence == null){
+					return 0l;
+				}
+				return persistence.countAll();
+			}if(GlobalIdentifier.class.equals(aClass))
+				return inject(GlobalIdentifierBusiness.class).countAll();
+			return super.count(aClass);
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
 		public <T> Long count(Class<T> aClass,FilterHelper.Filter<T> filter, DataReadConfiguration dataReadConfiguration) {
 			if(ClassHelper.getInstance().isInstanceOf(AbstractIdentifiable.class, aClass))
 				return inject(BusinessInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass).countByFilter((Filter<AbstractIdentifiable>) filter, dataReadConfiguration);
 			if(GlobalIdentifier.class.equals(aClass))
-				inject(GlobalIdentifierBusiness.class).countByFilter((Filter<GlobalIdentifier>) filter,dataReadConfiguration);
+				return inject(GlobalIdentifierBusiness.class).countByFilter((Filter<GlobalIdentifier>) filter,dataReadConfiguration);
 			return super.count(aClass,filter, dataReadConfiguration);
 		}
     

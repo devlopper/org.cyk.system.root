@@ -15,7 +15,7 @@ import org.cyk.system.root.business.impl.BusinessIntegrationTestHelper;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.RootBusinessLayer;
 import org.cyk.system.root.business.impl.RootBusinessTestHelper;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.business.impl.party.ApplicationBusinessImpl;
 import org.cyk.system.root.business.impl.validation.DefaultValidator;
 import org.cyk.system.root.business.impl.validation.ExceptionUtils;
@@ -95,8 +95,8 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
     	installApplication();
     }
     
-    protected TestCase instanciateTestCase(){
-    	return rootBusinessTestHelper.instanciateTestCase().setName(MethodHelper.getInstance().getNameFromStackTraceAt(3))
+    protected org.cyk.system.root.business.impl.__test__.TestCase instanciateTestCase(){
+    	return (org.cyk.system.root.business.impl.__test__.TestCase) rootBusinessTestHelper.instanciateTestCase().setName(MethodHelper.getInstance().getNameFromStackTraceAt(3))
     			.prepare();
 	}
 	  

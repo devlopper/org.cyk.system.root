@@ -138,6 +138,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         
         ClassHelper.getInstance().map(ClassHelper.Listener.class, org.cyk.system.root.business.impl.helper.ClassHelper.Listener.class);
         ClassHelper.getInstance().map(TestCase.class, AbstractBusinessTestHelper.TestCase.class);
+        ClassHelper.getInstance().map(TestCase.class, org.cyk.system.root.business.impl.__test__.TestCase.class);
         
         FileHelper.Listener.Adapter.Default.FILE_CLASS = File.class;
         

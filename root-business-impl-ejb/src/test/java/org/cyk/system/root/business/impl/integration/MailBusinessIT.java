@@ -15,7 +15,7 @@ import org.cyk.system.root.business.api.message.MailBusiness;
 import org.cyk.system.root.business.api.message.MessageSendingBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.business.impl.data.Data;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;

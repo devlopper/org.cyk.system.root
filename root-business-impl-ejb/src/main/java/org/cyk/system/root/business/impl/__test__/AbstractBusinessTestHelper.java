@@ -11,18 +11,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -30,14 +26,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.inject.Inject;
-import javax.persistence.Entity;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.text.WordUtils;
-import org.cyk.system.OrgCykSystemPackage;
 import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
@@ -81,7 +75,6 @@ import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineAlphabet;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineFinalState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineState;
 import org.cyk.system.root.model.mathematics.machine.FiniteStateMachineTransition;
-import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
@@ -96,7 +89,6 @@ import org.cyk.system.root.persistence.api.TypedDao;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberDao;
-import org.cyk.system.root.persistence.api.globalidentification.GlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.MovementDao;
 import org.cyk.system.root.persistence.api.mathematics.machine.FiniteStateMachineAlphabetDao;
@@ -115,11 +107,8 @@ import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
-import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.NumberHelper;
-import org.cyk.utility.common.helper.StringHelper;
-import org.cyk.utility.common.helper.ThrowableHelper;
 import org.cyk.utility.common.helper.TimeHelper;
 import org.cyk.utility.common.test.TestEnvironmentListener;
 import org.cyk.utility.common.test.TestEnvironmentListener.Try;
@@ -751,352 +740,15 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	
 	@Getter @Setter @Accessors(chain=true) @NoArgsConstructor
 	public static class TestCase extends org.cyk.utility.common.test.TestCase implements Serializable {
-
 		private static final long serialVersionUID = -6026836126124339547L;
 
-		protected String name;
-		@Deprecated protected AbstractBusinessTestHelper helper;
-		protected List<AbstractIdentifiable> identifiables;
-		protected Boolean cleaned = Boolean.FALSE;
-		protected Set<Class<?>> classes=new LinkedHashSet<>();
-		protected Map<Class<?>,Long> countAllMap = new HashMap<>();
-		
 		{
 			this.defaultThrowableClass = BusinessThrowable.class;
 		}
 		
-		public TestCase(AbstractBusinessTestHelper helper) {
-			super();
-			this.helper = helper;
-		}
-		
-		public Movement instanciateOneMovement(String code,String collectionCode){
-			Movement movement = instanciateOne(Movement.class, code);
-			movement.setCollection(InstanceHelper.getInstance().getByIdentifier(MovementCollection.class, collectionCode,ClassHelper.Listener.IdentifierType.BUSINESS));
-			return movement;
-		}
-		
-		public void add(AbstractIdentifiable identifiable){
-			if(identifiables==null)
-				identifiables = new ArrayList<>();
-			identifiables.add(identifiable);
-		}
-		
-		public void remove(AbstractIdentifiable identifiable){
-			if(identifiables!=null){
-				for(int i = 0 ; i< identifiables.size() ; )
-					if(identifiables.get(i).equals(identifiable)){
-						identifiables.remove(i);
-						break;
-					}else
-						i++;
-			}
-				
-		}
-
-		/*  Act */
-		
-		public <T> T act(final Constant.Action action,final T object,ThrowableHelper.Throwable expectedThrowable){
-			T result = object;
-			if(expectedThrowable == null) {
-				Object identifier = getIdentifierWhereValueUsageTypeIsBusiness(object);
-				if(identifier==null){
-					
-				}else{
-					if( StringHelper.getInstance().isNotBlank((CharSequence) identifier) ){
-						if(Constant.Action.CREATE.equals(action))
-							assertNull("Object to create with code <<"+identifier+">> already exist",getByIdentifierWhereValueUsageTypeIsBusiness(object,identifier));
-					}
-				}
-				InstanceHelper.getInstance().act(action, object);
-				result = getByIdentifierWhereValueUsageTypeIsSystem(object);
-	    		if(Constant.Action.DELETE.equals(action)){
-	    			assertNull(getByIdentifierWhereValueUsageTypeIsBusiness(object,identifier));
-	    			remove((AbstractIdentifiable) object);
-	    		}else{
-	    			assertNotNull(object);
-	    			if(Constant.Action.CREATE.equals(action))
-		    			add((AbstractIdentifiable) result);
-	    			else if(Constant.Action.READ.equals(action))
-	    				;
-	    		}
-			}else {
-				new org.cyk.utility.common.test.Try(new Runnable() {
-					private static final long serialVersionUID = 1L;
-					@Override
-					protected void __run__() throws Throwable {
-						InstanceHelper.getInstance().act(action, object);
-					}
-				}).setExpectedThrowable(expectedThrowable).execute();
-			}
-			return result;
-		}
-		
-		public <T> T act(final Constant.Action action,final T object,Object expectedThrowableIdentifier,String expectedThrowableMessage){
-			return act(action, object, new ThrowableHelper.Throwable().setIdentifier(expectedThrowableIdentifier).setMessages(expectedThrowableMessage));
-		}
-		
-		public <T> T act(final Constant.Action action,final T object,Object expectedThrowableIdentifier){
-			return act(action, object, expectedThrowableIdentifier,null);
-		}
-		
-		public <T> T act(final Constant.Action action,final T object){
-			return act(action, object,null);
-		}
-		
-		/* Create */
-		
-		public <T extends AbstractIdentifiable> T create(final T identifiable,ThrowableHelper.Throwable expectedThrowable){
-			return act(Constant.Action.CREATE, identifiable, expectedThrowable);
-		}
-		
-		public <T extends AbstractIdentifiable> T create(final T identifiable,Object expectedThrowableIdentifier,String expectedThrowableMessage){
-			return act(Constant.Action.CREATE, identifiable, expectedThrowableIdentifier, expectedThrowableMessage);
-		}
-		
-		public <T extends AbstractIdentifiable> T create(final T identifiable,Object expectedThrowableIdentifier){
-			return act(Constant.Action.CREATE,identifiable, expectedThrowableIdentifier);
-		}
-		
-		public <T extends AbstractIdentifiable> T create(final T identifiable){
-			return act(Constant.Action.CREATE,identifiable);
-		}
-		
-		/* Read */
-		
-		public <T extends AbstractIdentifiable> T read(Class<T> aClass,Object identifier,ThrowableHelper.Throwable expectedThrowable){
-			return act(Constant.Action.READ, getByIdentifierWhereValueUsageTypeIsBusiness(aClass, identifier), expectedThrowable);
-		}
-		
-		public <T extends AbstractIdentifiable> T read(Class<T> aClass,Object identifier,Object expectedThrowableIdentifier,String expectedThrowableMessage){
-			return act(Constant.Action.READ, getByIdentifierWhereValueUsageTypeIsBusiness(aClass, identifier), expectedThrowableIdentifier, expectedThrowableMessage);
-		}
-		
-		public <T extends AbstractIdentifiable> T read(Class<T> aClass,Object identifier,Object expectedThrowableIdentifier){
-			return act(Constant.Action.READ,getByIdentifierWhereValueUsageTypeIsBusiness(aClass, identifier), expectedThrowableIdentifier);
-		}
-		
-		public <T extends AbstractIdentifiable> T read(Class<T> aClass,Object identifier){
-			return act(Constant.Action.READ,getByIdentifierWhereValueUsageTypeIsBusiness(aClass, identifier));
-		}
-		
-		public <T extends AbstractIdentifiable> T readCollectionItem(Class<T> aClass,Class<? extends AbstractCollection<?>> collectionClass,String collectionCode,String code){
+		public <T> T readCollectionItem(Class<T> aClass,Class<? extends AbstractCollection<?>> collectionClass,String collectionCode,String code){
 			return read(aClass,RootConstant.Code.generate((AbstractCollection<?>)read(collectionClass,collectionCode), code));
-		}
-		
-		/* Update */
-		
-		public <T extends AbstractIdentifiable> T update(final T identifiable,ThrowableHelper.Throwable expectedThrowable){
-			return act(Constant.Action.UPDATE, identifiable, expectedThrowable);
-		}
-		
-		public <T extends AbstractIdentifiable> T update(final T identifiable,Object expectedThrowableIdentifier,String expectedThrowableMessage){
-			return act(Constant.Action.UPDATE, identifiable, expectedThrowableIdentifier, expectedThrowableMessage);
-		}
-		
-		public <T extends AbstractIdentifiable> T update(final T identifiable,Object expectedThrowableIdentifier){
-			return act(Constant.Action.UPDATE,identifiable, expectedThrowableIdentifier);
-		}
-		
-		public <T extends AbstractIdentifiable> T update(final T identifiable){
-			return act(Constant.Action.UPDATE,identifiable);
-		}
-		
-		/*public <T extends AbstractIdentifiable> T update(final T identifiable,Object[][] values,String expectedThrowableMessage){
-			@SuppressWarnings("unchecked")
-			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(identifiable.getClass());
-			assertThat("Object to update not found", dao.read(identifiable.getCode())!=null);
-			if(values!=null)
-				for(int i = 0 ; i < values.length ; i++){
-					commonUtils.setProperty(identifiable, (String)values[i][0], values[i][1]);
-				}
-			T updated = helper.update(identifiable,expectedThrowableMessage);
-			updated = inject(PersistenceInterfaceLocator.class).injectTypedByObject(identifiable).read(identifiable.getIdentifier());
-			if(values!=null)
-				for(int i = 0 ; i < values.length ; i++){
-					assertThat("Updated "+values[i][0], commonUtils.readProperty(updated, (String)values[i][0]).equals(values[i][1]));
-				}
-			assertThat("Object updated not found", updated!=null);
-			return updated;
-		}
-		
-		public <T extends AbstractIdentifiable> T update(Class<T> aClass,String code,Object[][] values){
-			TypedDao<T> dao = (TypedDao<T>) inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
-			T identifiable = dao.read(code);
-			return update(identifiable, values, null);
-		}
-		
-		public <T extends AbstractIdentifiable> T update(final T identifiable){
-			return update(identifiable,null,null);
-		}*/
-		
-		/* Delete */
-		
-		public <T extends AbstractIdentifiable> T delete(final T identifiable,ThrowableHelper.Throwable expectedThrowable){
-			return act(Constant.Action.DELETE, identifiable, expectedThrowable);
-		}
-		
-		public <T extends AbstractIdentifiable> T delete(final T identifiable,Object expectedThrowableIdentifier,String expectedThrowableMessage){
-			return act(Constant.Action.DELETE, identifiable, expectedThrowableIdentifier, expectedThrowableMessage);
-		}
-		
-		public <T extends AbstractIdentifiable> T delete(final T identifiable,Object expectedThrowableIdentifier){
-			return act(Constant.Action.DELETE,identifiable, expectedThrowableIdentifier);
-		}
-		
-		public <T extends AbstractIdentifiable> T delete(final T identifiable){
-			return act(Constant.Action.DELETE,identifiable);
-		}
-		
-		/*
-		public <T extends AbstractIdentifiable> T delete(final T identifiable,String expectedThrowableMessage){
-			T deleted = null;
-			if(identifiable!=null){
-				deleted = helper.delete(identifiable,expectedThrowableMessage);
-				remove(deleted);
-			}
-			return deleted;
-		}
-		
-		public <T extends AbstractIdentifiable> T delete(final T identifiable){
-			return delete(identifiable,null);
-		}
-		*/
-		public <T extends AbstractIdentifiable> T deleteByCode(final Class<T> aClass,final String code){
-			TypedDao<T> dao = inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
-			T identifiable = dao.read(code);
-			assertThat("Object to delete not found", dao.read(code)!=null);
-			delete(identifiable);
-			identifiable = dao.read(code);
-			assertThat("Object deleted found", dao.read(code)==null);
-			return identifiable;
-		}
-		
-		public void throwMessage(final Runnable runnable,String expectedThrowableMessage){
-			helper.throwMessage(runnable, expectedThrowableMessage);
-		}
-		
-		public TestCase prepare(){
-			addIdentifiableClasses();
-			addClasses(GlobalIdentifier.class);
-			System.out.println("Preparing test case "+name+". #Classes="+classes.size());
-			countAll(classes);
-			return this;
-		}
-		
-		public void clean(){
-			if(Boolean.TRUE.equals(cleaned))
-				return;
-			System.out.println(StringUtils.repeat("#", 5)+" CLEAN "+StringUtils.repeat("#", 5));
-			if(identifiables!=null){
-				Collections.reverse(identifiables);
-				for(AbstractIdentifiable identifiable : identifiables)
-					if(identifiable.getCode()==null)
-						helper.delete(identifiable);
-					else
-						helper.delete(identifiable.getClass(), identifiable.getCode()); //inject(GenericBusiness.class).delete(identifiable);
-						
-			}
-			cleaned = Boolean.TRUE;
-			assertCountAll(classes);
-		}
-		
-		public TestCase addClasses(Class<?>...classes){
-			if(classes!=null){
-				Collection<Class<?>> collection = new ArrayList<>();
-				for(@SuppressWarnings("rawtypes") Class aClass : classes)
-					collection.add(aClass);
-				addClasses(collection);
-			}
-			return this;
-		}
-		
-		public TestCase addClasses(Collection<Class<?>> classes){
-			this.classes.addAll(classes);
-			return this;
-		}
-		
-		public TestCase addIdentifiableClasses(){
-			Collection<Class<?>> classes = new ArrayList<>();
-			for(Class<?> aClass : new ClassHelper.Get.Adapter.Default(OrgCykSystemPackage.class.getPackage())
-					.setBaseClass(AbstractIdentifiable.class).addAnnotationClasses(Entity.class).execute()){
-				if(!Modifier.isAbstract(aClass.getModifiers()) && !Party.class.equals(aClass)){
-					@SuppressWarnings("unchecked")
-					TypedDao<AbstractIdentifiable> dao = (TypedDao<AbstractIdentifiable>) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass);
-					if(dao!=null)
-						classes.add(aClass);	
-				}
-			}
-				
-			addClasses(classes);
-				
-			return this;
-		}
-		
-		protected Long getCountAll(Class<?> aClass){
-			if(GlobalIdentifier.class.equals(aClass)){
-				return inject(GlobalIdentifierDao.class).countAll();	
-			}else{
-				@SuppressWarnings("unchecked")
-				TypedDao<AbstractIdentifiable> dao = (TypedDao<AbstractIdentifiable>) inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass);
-				if(dao==null)
-					return null;
-				else
-					return dao.countAll();
-			}
-		}
-		
-		public void countAll(Collection<Class<?>> classes){
-			for(@SuppressWarnings("rawtypes") Class aClass : classes){
-				countAllMap.put((Class<?>) aClass, getCountAll(aClass));	
-			}
-		}
-		
-		public TestCase countAll(Class<?>...classes){
-			if(classes!=null)
-				countAll(Arrays.asList(classes));
-			return this;
-		}
-		
-		public TestCase assertCountAll(@SuppressWarnings("rawtypes") Class aClass,Integer increment){
-			assertEquals(aClass.getSimpleName()+" count all is not correct", new Long(commonUtils.getValueIfNotNullElseDefault(countAllMap.get(aClass),0l)+increment)
-					, getCountAll(aClass));
-			return this;
-		}
-		
-		public TestCase assertCountAll(Collection<Class<?>> classes){
-			for(Class<?> aClass : classes)
-				assertCountAll(aClass,0);
-			return this;
-		}
-		
-		public TestCase assertCountAll(Class<?>...classes){
-			if(classes!=null)
-				assertCountAll(Arrays.asList(classes));
-			return this;
-		}
-		
-		public TestCase assertNull(Class<? extends AbstractIdentifiable> aClass,String code){
-			AbstractBusinessTestHelper.assertNull(aClass+" with code "+code+" is not null", inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code));
-			return this;
-		}
-		
-		public TestCase assertNotNull(final Class<? extends AbstractIdentifiable> aClass,Collection<String> codes){
-			new CollectionHelper.Iterator.Adapter.Default<String>(codes){
-				private static final long serialVersionUID = 1L;
-
-				protected void __executeForEach__(String code) {
-					AbstractBusinessTestHelper.assertThat(aClass+" with code "+code+" is null", inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code)!=null);
-				}
-			}.execute();
-			return this;
-		}
-		
-		public TestCase assertNotNull(final Class<? extends AbstractIdentifiable> aClass,String...codes){
-			if(ArrayHelper.getInstance().isNotEmpty(codes))
-				assertNotNull(aClass, Arrays.asList(codes));
-			return this;
-		}
+		}		
 		
 		/**/
 		
@@ -1151,26 +803,6 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		}
 		
 		/**/
-		
-		private void assertList(List<?> collection,List<?> expected){
-			assertEquals("collection size not equals", CollectionHelper.getInstance().getSize(expected), CollectionHelper.getInstance().getSize(collection));
-			if(collection!=null)
-				for(Integer index = 0 ; index < collection.size() ; index++){
-					assertEquals("element at position "+index+" not equals", expected.get(index.intValue()), collection.get(index.intValue()));
-				}
-		}
-		
-		public void assertFieldValueEquals(Class<? extends AbstractIdentifiable> aClass,String code,Object...objects){
-			assertFieldValueEquals(read(aClass, code), objects);
-		}
-		
-		public void assertFieldValueEquals(Object instance,Object...objects){
-			if(ArrayHelper.getInstance().isNotEmpty(objects)){
-				for(Integer index = 0 ; index < objects.length - 2; index = index + 2){
-					assertEquals("not equal", objects[index+1], FieldHelper.getInstance().read(instance, (String)objects[index]));
-				}
-			}
-		}
 		
 		public void assertPersonRelationship(String person1Code,String role1Code,String role2Code,String[] expectedPersonCodes){
 			__assertPersonRelationship__(person1Code, role1Code, role2Code, expectedPersonCodes,Boolean.TRUE);
@@ -1498,25 +1130,13 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 			return inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
 		} 
 		
-		public TestCase deleteAll(Collection<Class<?>> classes){
-			new CollectionHelper.Iterator.Adapter.Default<Class<?>>((Collection<Class<?>>) classes){
-				private static final long serialVersionUID = 1L;
-				@SuppressWarnings("unchecked")
-				protected void __executeForEach__(java.lang.Class<?> aClass) {
-					Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
-					identifiables.addAll(getPersistence((Class<AbstractIdentifiable>)aClass).readAll());
-					inject(GenericBusiness.class).delete(identifiables);
-				}
-			}.execute();
-			return this;
+		@SuppressWarnings("unchecked")
+		@Override
+		public void deleteInstances(Collection<?> instances) {
+			super.deleteInstances(instances);
+			inject(GenericBusiness.class).delete((Collection<AbstractIdentifiable>)instances);
 		}
-		
-		public TestCase deleteAll(Class<?>...classes){
-			if(ArrayHelper.getInstance().isNotEmpty(classes))
-				deleteAll(Arrays.asList(classes));
-			return this;
-		}
-		
+	
 		/**/
 		
 		protected String toString(AbstractIdentifiable identifiable,Integer actionIdentifier){
@@ -1530,13 +1150,12 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 		protected static final Integer EXISTENCE_PERIOD_FROM_DATE_IS_LESS_THAN = 0;
 	}
 
-	public TestCase instanciateTestCase(AbstractBusinessTestHelper helper){
-		TestCase testCase = (TestCase) ClassHelper.getInstance().instanciateOne(org.cyk.utility.common.test.TestCase.class);
-		testCase.setHelper(helper);
+	public org.cyk.system.root.business.impl.__test__.TestCase instanciateTestCase(AbstractBusinessTestHelper helper){
+		org.cyk.system.root.business.impl.__test__.TestCase testCase = (org.cyk.system.root.business.impl.__test__.TestCase) ClassHelper.getInstance().instanciateOne(org.cyk.utility.common.test.TestCase.class);
 		return testCase;
 	}
 	
-	public TestCase instanciateTestCase(){
+	public org.cyk.system.root.business.impl.__test__.TestCase instanciateTestCase(){
 		return instanciateTestCase(this);
 	}
 }

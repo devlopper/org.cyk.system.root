@@ -3,7 +3,7 @@ package org.cyk.system.root.business.impl.integration;
 import java.math.BigDecimal;
 
 import org.cyk.system.root.business.api.FormatterBusiness;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.junit.Test;
 

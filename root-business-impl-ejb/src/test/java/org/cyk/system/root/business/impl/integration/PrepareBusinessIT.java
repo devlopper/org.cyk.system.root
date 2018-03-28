@@ -2,7 +2,7 @@ package org.cyk.system.root.business.impl.integration;
 
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.geography.ContactCollectionBusiness;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.junit.Test;
 

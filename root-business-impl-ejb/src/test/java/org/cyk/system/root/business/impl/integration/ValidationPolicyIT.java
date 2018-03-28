@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__test__.Runnable;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper.TestCase;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.utility.common.helper.ClassHelper;
@@ -47,7 +47,7 @@ public class ValidationPolicyIT extends AbstractBusinessIT {
     	TestCase testCase = instanciateTestCase();
     	final String sexCode01 = testCase.getRandomHelper().getAlphabetic(5);
     	testCase.create(testCase.instanciateOne(Sex.class,sexCode01));
-    	testCase.assertNotNull(Sex.class, sexCode01);
+    	testCase.assertNotNullByBusinessIdentifier(Sex.class, sexCode01);
     	
     	testCase.assertThrowable(new Runnable(testCase) {
 			private static final long serialVersionUID = 1L;
