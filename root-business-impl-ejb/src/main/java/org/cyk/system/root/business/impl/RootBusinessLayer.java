@@ -27,7 +27,6 @@ import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__data__.RealDataSet;
-import org.cyk.system.root.business.impl.__test__.AbstractBusinessTestHelper;
 import org.cyk.system.root.business.impl.event.NotificationBuilderAdapter;
 import org.cyk.system.root.business.impl.file.FileValidator;
 import org.cyk.system.root.business.impl.file.report.AbstractReportRepository;
@@ -137,7 +136,6 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         ClassHelper.getInstance().map(InstanceHelper.Listener.class, org.cyk.system.root.business.impl.helper.InstanceHelper.Listener.class);
         
         ClassHelper.getInstance().map(ClassHelper.Listener.class, org.cyk.system.root.business.impl.helper.ClassHelper.Listener.class);
-        ClassHelper.getInstance().map(TestCase.class, AbstractBusinessTestHelper.TestCase.class);
         ClassHelper.getInstance().map(TestCase.class, org.cyk.system.root.business.impl.__test__.TestCase.class);
         
         FileHelper.Listener.Adapter.Default.FILE_CLASS = File.class;

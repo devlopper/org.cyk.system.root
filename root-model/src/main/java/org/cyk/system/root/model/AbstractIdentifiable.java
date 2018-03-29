@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -108,6 +109,26 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	@SuppressWarnings("rawtypes")
 	@Transient protected InstanceHelper.ActionListener actionListener;
+	
+	public AbstractIdentifiable addCascadeOperationToChildrenFieldNames(Collection<String> fieldNames) {
+		cascadeOperationToChildrenFieldNames = CollectionHelper.getInstance().add(Set.class, cascadeOperationToChildrenFieldNames, Boolean.TRUE, fieldNames);
+		return this;
+	}
+	
+	public AbstractIdentifiable addCascadeOperationToChildrenFieldNames(String...fieldNames) {
+		cascadeOperationToChildrenFieldNames = CollectionHelper.getInstance().add(Set.class, cascadeOperationToChildrenFieldNames, Boolean.TRUE, fieldNames);
+		return this;
+	}
+	
+	public AbstractIdentifiable addCascadeOperationToMasterFieldNames(Collection<String> fieldNames) {
+		cascadeOperationToMasterFieldNames = CollectionHelper.getInstance().add(Set.class, cascadeOperationToMasterFieldNames, Boolean.TRUE, fieldNames);
+		return this;
+	}
+	
+	public AbstractIdentifiable addCascadeOperationToMasterFieldNames(String...fieldNames) {
+		cascadeOperationToMasterFieldNames = CollectionHelper.getInstance().add(Set.class, cascadeOperationToMasterFieldNames, Boolean.TRUE, fieldNames);
+		return this;
+	}
 	
 	public AbstractIdentifiable addIdentifiables(Collection<AbstractIdentifiable> identifiables){
 		if(CollectionHelper.getInstance().isNotEmpty(identifiables)){

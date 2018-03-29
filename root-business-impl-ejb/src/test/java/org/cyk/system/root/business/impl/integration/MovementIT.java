@@ -41,7 +41,7 @@ public class MovementIT extends AbstractBusinessIT {
     	ClassHelper.getInstance().map(DataSet.Listener.class, Data.class);
     }
     
-    @Test
+    @Test 
     public void crudOneMovementCollectionType(){
     	TestCase testCase = instanciateTestCase();
     	MovementCollectionType movementCollectionType = inject(MovementCollectionTypeBusiness.class).instanciateOne(testCase.getRandomAlphabetic());
