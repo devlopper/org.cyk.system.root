@@ -214,7 +214,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}
 		
 		if(Crud.CREATE.equals(crud)){
-			if(Boolean.TRUE.equals(identifiable.getCascadeOperationToMaster())){
+			if(Boolean.TRUE.equals(identifiable.isCascadeOperationToMaster())){
 				new CollectionHelper.Iterator.Adapter.Default<String>(identifiable.getCascadeOperationToMasterFieldNames()){
 					private static final long serialVersionUID = 1L;
 					@Override

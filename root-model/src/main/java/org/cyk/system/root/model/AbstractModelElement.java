@@ -100,6 +100,18 @@ public abstract class AbstractModelElement implements Serializable{
 		return NumberHelper.getInstance().get(aClass, value, null);
 	}
 	
+	protected <T> T instanciateOne(Class<T> aClass){
+		return ClassHelper.getInstance().instanciateOne(aClass);
+	}
+	
+	protected <T> T readFieldValue(String fieldName,Class<T> fieldValueClass,Boolean instanciateIfValueIsNull){
+		return FieldHelper.getInstance().read(this, fieldValueClass, instanciateIfValueIsNull, fieldName);
+	}
+	
+	protected <T> T readFieldValue(String fieldName,Boolean instanciateIfValueIsNull){
+		return FieldHelper.getInstance().read(this, instanciateIfValueIsNull, fieldName);
+	}
+	
 	/**/
 	
 	public static String generateColumnName(String fieldName){

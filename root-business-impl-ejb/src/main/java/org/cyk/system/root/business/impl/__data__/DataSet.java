@@ -21,6 +21,9 @@ import org.cyk.system.root.business.impl.globalidentification.GlobalIdentifierBu
 import org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.information.Comment;
+import org.cyk.system.root.model.information.Tag;
+import org.cyk.system.root.model.information.Tangibility;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
@@ -388,6 +391,8 @@ public class DataSet extends AbstractBean implements Serializable {
 						classes.addAll(Arrays.asList(BusinessRole.class));
 					}else if(Store.class.equals(aClass)){
 						classes.addAll(Arrays.asList(Store.class,StoreType.class));
+					}else if(Tangibility.class.equals(aClass)){
+						classes.addAll(Arrays.asList(Tangibility.class,Comment.class,Tag.class));
 					}
 				}
 				

@@ -78,13 +78,13 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/* Transients */
 	
-	@Transient @Accessors(chain=true) protected Boolean cascadeOperationToMaster = Boolean.FALSE;
+	@Transient @Accessors(chain=true) protected Boolean cascadeOperationToMaster;
 	/**
 	 * null means no restriction
 	 */
 	@Transient @Accessors(chain=true) protected Collection<String> cascadeOperationToMasterFieldNames;
 	
-	@Transient @Accessors(chain=true) protected Boolean cascadeOperationToChildren = Boolean.FALSE;
+	@Transient @Accessors(chain=true) protected Boolean cascadeOperationToChildren;
 	/**
 	 * null means no restriction
 	 */
@@ -128,6 +128,11 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public AbstractIdentifiable addCascadeOperationToMasterFieldNames(String...fieldNames) {
 		cascadeOperationToMasterFieldNames = CollectionHelper.getInstance().add(Set.class, cascadeOperationToMasterFieldNames, Boolean.TRUE, fieldNames);
 		return this;
+	}
+	
+	public Boolean isCascadeOperationToMaster(){
+		return getCascadeOperationToMaster() == null ?
+				CollectionHelper.getInstance().isNotEmpty(getCascadeOperationToMasterFieldNames()) : getCascadeOperationToMaster();
 	}
 	
 	public AbstractIdentifiable addIdentifiables(Collection<AbstractIdentifiable> identifiables){

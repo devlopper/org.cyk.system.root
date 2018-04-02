@@ -18,4 +18,9 @@ import lombok.Setter;
 public class StoreType extends AbstractDataTreeType implements Serializable  {
 	private static final long serialVersionUID = -6128937819261060725L;
 	
+	@Override
+	public StoreType setCode(String code) {
+		return (StoreType) super.setCode(code);
+	}
+	
 }

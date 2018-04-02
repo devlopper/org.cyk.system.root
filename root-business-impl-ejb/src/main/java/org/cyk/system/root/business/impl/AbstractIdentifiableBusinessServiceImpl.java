@@ -853,8 +853,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		if(Boolean.TRUE.equals(IdentifiablePeriod.isManaged(identifiable)) && Boolean.TRUE.equals(isDoesNotBelongsToIdentifiablePeriodVerifiable(identifiable))){
 			computeChangesIdentifiablePeriod(identifiable, logMessageBuilder);
 		}
-		
-		if(Boolean.TRUE.equals(identifiable.getCascadeOperationToMaster())){
+		if(Boolean.TRUE.equals(identifiable.isCascadeOperationToMaster())){
 			new CollectionHelper.Iterator.Adapter.Default<String>(identifiable.getCascadeOperationToMasterFieldNames()){
 				private static final long serialVersionUID = 1L;
 				@Override

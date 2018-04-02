@@ -3,7 +3,9 @@ package org.cyk.system.root.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +20,16 @@ public interface RootConstant {
 		
 		public static String SEPARATOR = Constant.EMPTY_STRING;
 
+		private static final Map<Class<?>,String> DEFAULT_MAP = new HashMap<>();
+		
+		public static String getDefault(Class<?> aClass){
+			return DEFAULT_MAP.get(aClass);
+		}
+		
+		public static void setDefault(Class<?> aClass,String code){
+			DEFAULT_MAP.put(aClass, code);
+		}
+		
 		public static String generateFromString(String string){
 			return StringUtils.remove(string, Constant.CHARACTER_SPACE);
 		}
@@ -56,6 +68,13 @@ public interface RootConstant {
 		}
 		
 		/**/
+		
+		public static class Tangibility implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static final String TANGIBLE = "TANGIBLE";
+			public static final String INTANGIBLE = "INTANGIBLE";
+		}
 		
 		public static class Software implements Serializable {
 			private static final long serialVersionUID = 1L;
@@ -520,6 +539,13 @@ public interface RootConstant {
 			private static final long serialVersionUID = 1L;
 			
 			public static Locale LOCALE = Locale.FRENCH;
+			
+		}
+		
+		public static class StoreType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static String DEFAULT_CODE;
 			
 		}
 		
