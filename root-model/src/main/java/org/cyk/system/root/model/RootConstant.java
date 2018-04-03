@@ -496,6 +496,20 @@ public interface RootConstant {
 			public static final String PRODUCT_SHOP="PRODUCTSHOP";
 		}
 		
+		public static class InformationState implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			/**
+			 * a plan or an idea which is suggested to think about and decide upon
+			 */
+			public static final String PROPOSAL = "PROPOSAL";
+			
+			/**
+			 * thing that is known or proved to be true
+			 */
+			public static final String FACT = "FACT";
+		}
+		
 		/**/
 		
 	}

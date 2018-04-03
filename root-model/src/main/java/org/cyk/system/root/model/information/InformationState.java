@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
-public class Tangibility extends AbstractEnumeration implements Serializable  {
+public class InformationState extends AbstractEnumeration implements Serializable  {
 	private static final long serialVersionUID = -4876159772208660975L;
 
 }
