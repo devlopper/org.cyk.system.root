@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.information.TangibilityBusiness;
+import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.information.Tangibility;
 import org.cyk.system.root.persistence.api.information.TangibilityDao;
@@ -17,4 +18,13 @@ public class TangibilityBusinessImpl extends AbstractTypedBusinessService<Tangib
         super(dao);
     } 
 
+	/**/
+	
+	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<Tangibility> implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		public BuilderOneDimensionArray() {
+			super(Tangibility.class);
+		}
+	}
 }
