@@ -1,8 +1,8 @@
 package org.cyk.system.root.persistence.api.information;
 
 import org.cyk.system.root.model.information.InformationState;
-import org.cyk.system.root.persistence.api.TypedDao;
+import org.cyk.system.root.persistence.api.AbstractEnumerationDao;
 
-public interface InformationStateDao extends TypedDao<InformationState> {
+public interface InformationStateDao extends AbstractEnumerationDao<InformationState> {
 
 }
