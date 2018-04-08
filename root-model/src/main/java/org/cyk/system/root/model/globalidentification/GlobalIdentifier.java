@@ -65,9 +65,17 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 */
 	
 	@Id private String identifier;
+	//private String identifierOfOwner;
+	//private Boolean deleteWhenOwnerIsDeleted;
+	
 	@Transient private AbstractIdentifiable identifiable;
 	@Column @Temporal(TemporalType.TIMESTAMP) private Date creationDate;
 	@ManyToOne @JoinColumn(name=COLUMN_CREATED_BY) private Party createdBy;
+	
+	/**
+	 * The one in charge of
+	 */
+	@ManyToOne @JoinColumn(name=COLUMN_OWNER) private Party owner;
 	
 	@Transient protected Processing processing;
 	
@@ -150,10 +158,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	@OneToOne @JoinColumn(name=COLUMN_BIRTH_LOCATION) private Location birthLocation;
 	@OneToOne @JoinColumn(name=COLUMN_DEATH_LOCATION) private Location deathLocation;
 	
-	/**
-	 * The one in charge of
-	 */
-	@ManyToOne @JoinColumn(name=COLUMN_OWNER) private Party owner;
+	
 	
 	@Embedded private CascadeStyleSheet cascadeStyleSheet;
 	

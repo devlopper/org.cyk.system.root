@@ -9,6 +9,7 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Movement;
+import org.cyk.system.root.model.mathematics.MovementCollection;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.person.JobTitle;
@@ -40,6 +41,9 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
 				,Period.FIELD_FROM_DATE)).getConstraints().setDatePart(Constant.Date.Part.DATE_AND_TIME_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND_MILLISECOND);
 		FieldHelper.Field.get(IdentifiablePeriod.class, FieldHelper.getInstance().buildPath(IdentifiablePeriod.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD
 				,Period.FIELD_TO_DATE)).getConstraints().setDatePart(Constant.Date.Part.DATE_AND_TIME_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND_MILLISECOND);
+		
+		//FieldHelper.Field.get(MovementCollection.class, FieldHelper.getInstance().buildPath(MovementCollection.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
+		//		)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
 		
 		FieldHelper.Field.get(Movement.class, Movement.FIELD_COLLECTION).getConstraints().setIsNullable(Boolean.FALSE);
 		FieldHelper.Field.get(Movement.class, FieldHelper.getInstance().buildPath(Movement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD

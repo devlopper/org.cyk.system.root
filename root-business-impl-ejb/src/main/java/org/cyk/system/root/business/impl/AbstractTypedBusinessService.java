@@ -221,6 +221,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					protected void __executeForEach__(String fieldName) {
 						java.lang.reflect.Field masterField = FieldHelper.getInstance().get(identifiable.getClass(), fieldName);
 						AbstractIdentifiable master = (AbstractIdentifiable) FieldHelper.getInstance().read(identifiable, masterField);
+						//master.getGlobalIdentifierCreateIfNull().setIdentifierOfOwner(identifierOfOwner);
 						createMaster(identifiable,master);
 					}
 				}.execute();
