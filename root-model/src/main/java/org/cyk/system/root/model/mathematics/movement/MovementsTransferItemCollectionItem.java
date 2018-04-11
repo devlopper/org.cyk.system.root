@@ -52,6 +52,9 @@ public class MovementsTransferItemCollectionItem extends AbstractCollectionItem<
 	
 	public static final String FIELD_SOURCE = "source";
 	public static final String FIELD_DESTINATION = "destination";
+	public static final String FIELD_SOURCE_MOVEMENT_COLLECTION = "sourceMovementCollection";
+	public static final String FIELD_DESTINATION_MOVEMENT_COLLECTION = "destinationMovementCollection";
+	public static final String FIELD_VALUE = "value";
 	
 	public static final String COLUMN_SOURCE = FIELD_SOURCE;
 	public static final String COLUMN_DESTINATION = FIELD_DESTINATION;
