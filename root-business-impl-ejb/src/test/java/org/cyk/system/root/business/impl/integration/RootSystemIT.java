@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__test__.RootSystemTestCases;
-import org.cyk.system.root.model.mathematics.Movement;
+import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.value.Value;
 import org.cyk.utility.common.helper.ClassHelper;

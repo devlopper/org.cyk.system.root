@@ -1,0 +1,8 @@
+package org.cyk.system.root.business.api.transfer;
+
+import org.cyk.system.root.business.api.globalidentification.JoinGlobalIdentifierBusiness;
+import org.cyk.system.root.model.transfer.TransferItemCollectionItemIdentifiableGlobalIdentifier;
+
+public interface TransferItemCollectionItemIdentifiableGlobalIdentifierBusiness extends JoinGlobalIdentifierBusiness<TransferItemCollectionItemIdentifiableGlobalIdentifier,TransferItemCollectionItemIdentifiableGlobalIdentifier.SearchCriteria> {
+	
+}

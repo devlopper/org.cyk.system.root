@@ -1,0 +1,21 @@
+package org.cyk.system.root.business.impl.transfer;
+
+import java.io.Serializable;
+
+import javax.inject.Inject;
+
+import org.cyk.system.root.business.api.transfer.TransferItemCollectionItemIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.impl.globalidentification.AbstractJoinGlobalIdentifierBusinessImpl;
+import org.cyk.system.root.model.transfer.TransferItemCollectionItemIdentifiableGlobalIdentifier;
+import org.cyk.system.root.persistence.api.transfer.TransferItemCollectionItemIdentifiableGlobalIdentifierDao;
+
+public class TransferItemCollectionItemIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGlobalIdentifierBusinessImpl<TransferItemCollectionItemIdentifiableGlobalIdentifier, TransferItemCollectionItemIdentifiableGlobalIdentifierDao,TransferItemCollectionItemIdentifiableGlobalIdentifier.SearchCriteria> implements TransferItemCollectionItemIdentifiableGlobalIdentifierBusiness,Serializable {
+
+	private static final long serialVersionUID = -3799482462496328200L;
+
+	@Inject
+	public TransferItemCollectionItemIdentifiableGlobalIdentifierBusinessImpl(TransferItemCollectionItemIdentifiableGlobalIdentifierDao dao) {
+		super(dao); 
+	}
+	
+}

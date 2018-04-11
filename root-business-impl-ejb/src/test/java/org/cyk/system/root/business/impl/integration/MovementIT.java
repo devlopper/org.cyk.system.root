@@ -6,25 +6,30 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
-import org.cyk.system.root.business.api.mathematics.MovementBusiness;
-import org.cyk.system.root.business.api.mathematics.MovementCollectionBusiness;
-import org.cyk.system.root.business.api.mathematics.MovementCollectionIdentifiableGlobalIdentifierBusiness;
-import org.cyk.system.root.business.api.mathematics.MovementCollectionTypeBusiness;
+import org.cyk.system.root.business.api.mathematics.movement.MovementBusiness;
+import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionBusiness;
+import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionTypeBusiness;
 import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__test__.Runnable;
 import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.mathematics.Movement;
-import org.cyk.system.root.model.mathematics.MovementCollection;
-import org.cyk.system.root.model.mathematics.MovementCollectionIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.mathematics.MovementCollectionType;
+import org.cyk.system.root.model.mathematics.movement.Movement;
+import org.cyk.system.root.model.mathematics.movement.MovementCollection;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionType;
+import org.cyk.system.root.model.mathematics.movement.MovementsTransfer;
+import org.cyk.system.root.model.mathematics.movement.MovementsTransferAcknowledgement;
+import org.cyk.system.root.model.mathematics.movement.MovementsTransferItemCollection;
+import org.cyk.system.root.model.mathematics.movement.MovementsTransferItemCollectionItem;
+import org.cyk.system.root.model.mathematics.movement.MovementsTransferType;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.value.Value;
-import org.cyk.system.root.persistence.api.mathematics.MovementCollectionDao;
-import org.cyk.system.root.persistence.api.mathematics.MovementDao;
+import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.movement.MovementDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
@@ -83,10 +88,10 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.create(testCase.instanciateOne(MovementCollection.class,collectionCode).setTypeFromCode(RootConstant.Code.MovementCollectionType.CASH_REGISTER));
     	testCase.assertNotNullByBusinessIdentifier(MovementCollection.class, collectionCode);
     	
-    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
     	IdentifiablePeriodCollection identifiablePeriodCollection = testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
     	
-    	final String identifiablePeriodCode = testCase.getRandomHelper().getAlphabetic(5);
+    	final String identifiablePeriodCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
     			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
@@ -99,7 +104,7 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovement(){
     	TestCase testCase = instanciateTestCase();
-    	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	String movementCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionCode));
     	testCase.create(testCase.instanciateOne(Movement.class).setValueFromObject(1).setCollectionFromCode(movementCollectionCode));
     	testCase.clean();
@@ -349,14 +354,14 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementWithSpecifiedDate(){
     	TestCase testCase = instanciateTestCase();
-    	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	String movementCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode));
     	
-    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
     	
     	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class).setCollectionFromCode(identifiablePeriodCollectionCode);
-		identifiablePeriod.setCode(testCase.getRandomHelper().getAlphabetic(5));
+		identifiablePeriod.setCode(testCase.getRandomAlphabetic());
 		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
 		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59));
 		testCase.create(identifiablePeriod);
@@ -371,14 +376,14 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementWithoutSpecifiedDate(){
     	TestCase testCase = instanciateTestCase();
-    	String movementCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	String movementCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode).setValue(BigDecimal.ZERO));
     	
-    	String identifiablePeriodCollectionCode = testCase.getRandomHelper().getAlphabetic(5);
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
     	
     	IdentifiablePeriod identifiablePeriod = testCase.instanciateOne(IdentifiablePeriod.class);
-		identifiablePeriod.setCode(testCase.getRandomHelper().getAlphabetic(5));
+		identifiablePeriod.setCode(testCase.getRandomAlphabetic());
 		identifiablePeriod.setBirthDate(date(2000, 1, 1, 0, 0));
 		identifiablePeriod.setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode);
 		testCase.create(identifiablePeriod);
@@ -509,7 +514,7 @@ public class MovementIT extends AbstractBusinessIT {
     	String movementCollectionCode = movementCollection.getCode();
     	testCase.create(movementCollection);
     	
-    	String code001 = testCase.getRandomHelper().getAlphabetic(5);
+    	String code001 = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(Movement.class,code001).__set__(movementCollectionCode,Boolean.TRUE,15,Boolean.TRUE,"30/1/2000"));
     	testCase.assertMovementCollection(movementCollectionCode, "15", "1").assertMovements(movementCollectionCode
     			, new String[]{"0","15","15","true"}
@@ -528,7 +533,7 @@ public class MovementIT extends AbstractBusinessIT {
     			, new String[]{"2","15","32","true"}
     	);
     	
-    	String code004 = testCase.getRandomHelper().getAlphabetic(5);
+    	String code004 = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(Movement.class,code004).__set__(movementCollectionCode,Boolean.FALSE,-7,Boolean.TRUE,"27/1/2000"));
     	testCase.assertMovementCollection(movementCollectionCode, "25", "4").assertMovements(movementCollectionCode
     			, new String[]{"0","-7","-7","false"}
@@ -546,7 +551,7 @@ public class MovementIT extends AbstractBusinessIT {
     			, new String[]{"4","15","45","true"}
     	);
     	
-    	String code007 = testCase.getRandomHelper().getAlphabetic(5);
+    	String code007 = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(Movement.class,code007).__set__(movementCollectionCode,Boolean.TRUE,8,Boolean.TRUE,"24/1/2000"));
     	testCase.assertMovementCollection(movementCollectionCode, "53", "6").assertMovements(movementCollectionCode
     			, new String[]{"0","8","8","true"}
@@ -1081,9 +1086,174 @@ public class MovementIT extends AbstractBusinessIT {
 		testCase.clean();
     }
     
+	/* Transfer */
+	
+    @Test
+    public void crudOneMovementsTransferType(){
+    	TestCase testCase = instanciateTestCase(); 
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementsTransferType.class,code));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementsTransfer(){
+    	TestCase testCase = instanciateTestCase(); 
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementsTransfer.class,code));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementsTransferItemCollection(){
+    	TestCase testCase = instanciateTestCase(); 
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementsTransferItemCollection.class,code));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementsTransferItemCollectionItem(){
+    	TestCase testCase = instanciateTestCase(); 
+    	
+    	String movementCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionCode));
+    	Movement movement01 = testCase.create(testCase.instanciateOne(Movement.class).setValueFromObject(-1).setCollectionFromCode(movementCollectionCode));
+    	Movement movement02 = testCase.create(testCase.instanciateOne(Movement.class).setValueFromObject(1).setCollectionFromCode(movementCollectionCode));
+    	
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementsTransferItemCollectionItem.class,code).setSource(movement01).setDestination(movement02));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementsTransferItemCollectionItemWithMovementCollection(){
+    	TestCase testCase = instanciateTestCase(); 
+    	
+    	testCase.assertCountAll(Movement.class);
+    	
+    	String movementCollectionSourceCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionSourceCode));
+    	
+    	String movementCollectionDestinationCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionDestinationCode));
+    
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementsTransferItemCollectionItem.class,code).setSourceMovementCollectionFromCode(movementCollectionSourceCode)
+    			.setDestinationMovementCollectionFromCode(movementCollectionDestinationCode).setValueFromObject(3));
+    	
+    	testCase.assertCountAll(Movement.class,2);
+    	
+    	testCase.assertMovements(movementCollectionSourceCode
+    			, new String[]{"0","-3","-3","false"}
+    	);
+    	
+    	testCase.assertMovements(movementCollectionDestinationCode
+    			, new String[]{"0","3","3","true"}
+    	);
+    	
+    	testCase.clean();
+    	testCase.deleteAll(Movement.class);
+    }
+    
+    @Test
+    public void crudOneMovementsTransferItemCollectionWithMovementCollectionSourceAndDestination(){
+    	TestCase testCase = instanciateTestCase(); 
+    	testCase.assertCountAll(Movement.class);
+    	
+    	String sourceMovementCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, sourceMovementCollectionCode));
+    	
+    	String destinationMovementCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, destinationMovementCollectionCode));
+    	
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementsTransferItemCollection.class,code).setItemsSynchonizationEnabled(Boolean.TRUE)
+    			.addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(sourceMovementCollectionCode, destinationMovementCollectionCode, 3));
+    	
+    	testCase.assertCountAll(Movement.class,2);
+    	
+    	testCase.assertMovements(sourceMovementCollectionCode
+    			, new String[]{"0","-3","-3","false"}
+    	);
+    	
+    	testCase.assertMovements(destinationMovementCollectionCode
+    			, new String[]{"0","3","3","true"}
+    	);
+    	
+    	testCase.clean();
+    	testCase.deleteAll(Movement.class);
+    }
+	
+    @Test
+    public void crudOneMovementsTransferAndItsAcknowledgement(){
+    	TestCase testCase = instanciateTestCase(); 
+    	String movementsTransferCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementsTransfer.class,movementsTransferCode));
+    	String movementsTransferAcknowledgementCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementsTransferAcknowledgement.class,movementsTransferAcknowledgementCode)
+    			.setMovementsTransferFromCode(movementsTransferCode));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementsTransferWithOneItemAndItsAcknowledgement(){
+    	TestCase testCase = instanciateTestCase(); 
+    	testCase.countAll(Movement.class);
+    	
+    	String sourceMovementCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, sourceMovementCollectionCode));
+    	
+    	String tempMovementCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, tempMovementCollectionCode));
+    	
+    	String destinationMovementCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, destinationMovementCollectionCode));
+    	
+    	String movementsTransferCode = testCase.getRandomAlphabetic();
+    	MovementsTransfer movementsTransfer = testCase.instanciateOne(MovementsTransfer.class,movementsTransferCode);
+    	movementsTransfer.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(sourceMovementCollectionCode, tempMovementCollectionCode, 3);
+    	testCase.create(movementsTransfer);
+    	
+    	testCase.assertCountAll(Movement.class,2);
+    	
+    	testCase.assertMovements(sourceMovementCollectionCode
+    			, new String[]{"0","-3","-3","false"}
+    	);
+    	
+    	testCase.assertMovements(tempMovementCollectionCode
+    			, new String[]{"0","3","3","true"}
+    	);
+    	
+    	String movementsTransferAcknowledgementCode = testCase.getRandomAlphabetic();
+    	MovementsTransferAcknowledgement movementsTransferAcknowledgement = testCase.instanciateOne(MovementsTransferAcknowledgement.class,movementsTransferAcknowledgementCode)
+    			.setMovementsTransferFromCode(movementsTransferCode);
+    	movementsTransferAcknowledgement.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(tempMovementCollectionCode, destinationMovementCollectionCode, 3);
+    	testCase.create(movementsTransferAcknowledgement);
+    	
+    	testCase.assertCountAll(Movement.class,4);
+    	
+    	testCase.assertMovements(sourceMovementCollectionCode
+    			, new String[]{"0","-3","-3","false"}
+    	);
+    	
+    	testCase.assertMovements(tempMovementCollectionCode
+    			, new String[]{"0","3","3","true"}
+    			, new String[]{"1","-3","0","false"}
+    	);
+    	
+    	testCase.assertMovements(destinationMovementCollectionCode
+    			, new String[]{"0","3","3","true"}
+    	);
+    	
+    	testCase.clean();
+    	testCase.deleteAll(Movement.class);
+    }
+    
     /* Exceptions */
     
-	@Test
+	
+    @Test
     public void throwCollectionIsNull(){
 		TestCase testCase = instanciateTestCase();
 		testCase.assertThrowable(new Runnable(testCase) {

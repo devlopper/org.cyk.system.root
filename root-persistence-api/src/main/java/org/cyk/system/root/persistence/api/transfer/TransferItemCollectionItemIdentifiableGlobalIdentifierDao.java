@@ -1,0 +1,8 @@
+package org.cyk.system.root.persistence.api.transfer;
+
+import org.cyk.system.root.model.transfer.TransferItemCollectionItemIdentifiableGlobalIdentifier;
+import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdentifierDao;
+
+public interface TransferItemCollectionItemIdentifiableGlobalIdentifierDao extends JoinGlobalIdentifierDao<TransferItemCollectionItemIdentifiableGlobalIdentifier,TransferItemCollectionItemIdentifiableGlobalIdentifier.SearchCriteria> {
+	
+}

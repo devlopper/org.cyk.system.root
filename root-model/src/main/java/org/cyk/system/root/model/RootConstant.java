@@ -469,6 +469,8 @@ public interface RootConstant {
 			public static final String SIGNER="SIGNER";
 			public static final String IN_CHARGE="INCHARGE";
 			public static final String PROVIDER="PROVIDER";
+			public static final String SENDER="SENDER";
+			public static final String RECEIVER="RECEIVER";
 			/**
 			 * a place where things are kept before they are sent out to shop
 			 */
@@ -508,6 +510,14 @@ public interface RootConstant {
 			 * thing that is known or proved to be true
 			 */
 			public static final String FACT = "FACT";
+		}
+		
+		public static class TransferType implements Serializable {
+			private static final long serialVersionUID = 1L;
+			
+			public static final String TANGIBLE="TANGIBLE";
+			public static final String PRODUCT="PRODUCT";
+			
 		}
 		
 		/**/

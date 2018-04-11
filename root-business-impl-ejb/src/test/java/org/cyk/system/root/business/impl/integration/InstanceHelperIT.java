@@ -1,7 +1,7 @@
 package org.cyk.system.root.business.impl.integration;
 
 import org.cyk.system.root.business.impl.__test__.TestCase;
-import org.cyk.system.root.model.mathematics.Movement;
+import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.utility.common.helper.InstanceHelper;
