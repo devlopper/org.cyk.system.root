@@ -23,6 +23,9 @@ import org.cyk.system.root.model.mathematics.movement.MovementsTransferAcknowled
 import org.cyk.system.root.model.mathematics.movement.MovementsTransferItemCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementsTransferItemCollectionItem;
 import org.cyk.system.root.model.mathematics.movement.MovementsTransferType;
+import org.cyk.system.root.model.party.BusinessRole;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
@@ -30,6 +33,7 @@ import org.cyk.system.root.model.time.IdentifiablePeriodCollectionIdentifiableGl
 import org.cyk.system.root.model.value.Value;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementDao;
+import org.cyk.system.root.persistence.api.party.PartyIdentifiableGlobalIdentifierDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.helper.ClassHelper;
@@ -1100,8 +1104,18 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementsTransfer(){
     	TestCase testCase = instanciateTestCase(); 
+    	String senderCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Person.class,senderCode));
+    	String receiverCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Person.class,receiverCode));
     	String code = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementsTransfer.class,code));
+    	testCase.create(testCase.instanciateOne(MovementsTransfer.class,code).setSenderFromCode(senderCode).setReceiverFromCode(receiverCode));
+    	testCase.assertNotNull(inject(PartyIdentifiableGlobalIdentifierDao.class).readByPartyByIdentifiableGlobalIdentifierByRole(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Party.class, senderCode)
+    			, testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementsTransfer.class,code).getGlobalIdentifier()
+    			, testCase.getByIdentifierWhereValueUsageTypeIsBusiness(BusinessRole.class,RootConstant.Code.BusinessRole.SENDER)));
+    	testCase.assertNotNull(inject(PartyIdentifiableGlobalIdentifierDao.class).readByPartyByIdentifiableGlobalIdentifierByRole(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Party.class, receiverCode)
+    			, testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementsTransfer.class,code).getGlobalIdentifier()
+    			, testCase.getByIdentifierWhereValueUsageTypeIsBusiness(BusinessRole.class,RootConstant.Code.BusinessRole.RECEIVER)));
     	testCase.clean();
     }
     
@@ -1298,7 +1312,7 @@ public class MovementIT extends AbstractBusinessIT {
 		@SuppressWarnings({ "rawtypes" })
 		@Override
 		public Collection getClasses() {
-			return Arrays.asList(Movement.class,IdentifiablePeriod.class,Value.class);
+			return Arrays.asList(Movement.class,IdentifiablePeriod.class,Value.class,Party.class);
 		}
 		
     }

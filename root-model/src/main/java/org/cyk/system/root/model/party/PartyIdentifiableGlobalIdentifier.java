@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.utility.common.helper.FieldHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,6 +52,12 @@ public class PartyIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentif
 	
 	public PartyIdentifiableGlobalIdentifier setBusinessRoleFromCode(String code){
 		businessRole = getFromCode(BusinessRole.class, code);
+		return this;
+	}
+	
+	public PartyIdentifiableGlobalIdentifier setPartyAndBusinessRoleFromCode(AbstractIdentifiable identifiable,String partyFieldName,String businessRoleCode){
+		setParty((Party)FieldHelper.getInstance().read(identifiable, partyFieldName)).setBusinessRoleFromCode(businessRoleCode)
+			.setIdentifiableGlobalIdentifier(identifiable.getGlobalIdentifier());
 		return this;
 	}
 	

@@ -46,6 +46,7 @@ import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
@@ -147,6 +148,14 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	public AbstractIdentifiable addIdentifiables(AbstractIdentifiable...identifiables){
 		if(ArrayHelper.getInstance().isNotEmpty(identifiables))
 			addIdentifiables(Arrays.asList(identifiables));
+		return this;
+	}
+	
+	public AbstractIdentifiable addIdentifiablesPartyIdentifiableGlobalIdentifierFromField(String fieldName,String businessRoleCode){
+		Object value = FieldHelper.getInstance().read(this, fieldName);
+		if(value!=null){
+			addIdentifiables(instanciateOne(PartyIdentifiableGlobalIdentifier.class).setPartyAndBusinessRoleFromCode(this, fieldName, businessRoleCode));	
+		}
 		return this;
 	}
 	
