@@ -38,6 +38,8 @@ import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
+import org.cyk.system.root.model.mathematics.movement.MovementsTransfer;
+import org.cyk.system.root.model.mathematics.movement.MovementsTransferAcknowledgement;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
@@ -442,6 +444,78 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     	return this;
     }
 	
+	 public void assertOneMovementsTransferWithOneItemAndItsAcknowledgement(Object transferValue,Object acknownledgementValue){
+    	countAll(Movement.class);
+    	
+    	String sourceMovementCollectionCode = getRandomAlphabetic();
+    	create(instanciateOne(MovementCollection.class, sourceMovementCollectionCode));
+    	
+    	String tempMovementCollectionCode = getRandomAlphabetic();
+    	create(instanciateOne(MovementCollection.class, tempMovementCollectionCode));
+    	
+    	String destinationMovementCollectionCode = getRandomAlphabetic();
+    	create(instanciateOne(MovementCollection.class, destinationMovementCollectionCode));
+    	
+    	String movementsTransferCode = getRandomAlphabetic();
+    	MovementsTransfer movementsTransfer = instanciateOne(MovementsTransfer.class,movementsTransferCode);
+    	movementsTransfer.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(sourceMovementCollectionCode, tempMovementCollectionCode, transferValue);
+    	create(movementsTransfer);
+    	
+    	assertCountAll(Movement.class,2);
+    	
+    	assertMovements(sourceMovementCollectionCode
+    			, new String[]{"0","-"+transferValue,"-"+transferValue,"false"}
+    	);
+    	
+    	assertMovements(tempMovementCollectionCode
+    			, new String[]{"0",""+transferValue,""+transferValue,"true"}
+    	);
+    	
+    	String movementsTransferAcknowledgementCode = getRandomAlphabetic();
+    	MovementsTransferAcknowledgement movementsTransferAcknowledgement = instanciateOne(MovementsTransferAcknowledgement.class,movementsTransferAcknowledgementCode)
+    			.setMovementsTransferFromCode(movementsTransferCode);
+    	movementsTransferAcknowledgement.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(tempMovementCollectionCode, destinationMovementCollectionCode
+    			, acknownledgementValue);
+    	create(movementsTransferAcknowledgement);
+    	
+    	Number gap = NumberHelper.getInstance().subtract(NumberHelper.getInstance().get(transferValue),NumberHelper.getInstance().get(acknownledgementValue));
+    	
+    	if(NumberHelper.getInstance().isGreaterThanZero(gap)){
+    		assertCountAll(Movement.class,6);
+    	}else {
+    		assertCountAll(Movement.class,4);
+    	}
+    	
+    	assertMovements(sourceMovementCollectionCode
+    			, new String[]{"0","-"+transferValue,"-"+transferValue,"false"}
+    	);
+    	
+    	assertMovements(tempMovementCollectionCode
+    			, new String[]{"0",""+transferValue,""+transferValue,"true"}
+    			, new String[]{"1","-"+acknownledgementValue,""+gap,"false"}
+    	);
+    	
+    	if(NumberHelper.getInstance().isGreaterThanZero(gap)){
+    		Object sourceMovementCollectionValue = NumberHelper.getInstance().add(NumberHelper.getInstance().negate(NumberHelper.getInstance().get(transferValue)),gap);
+    		assertMovementCollection(sourceMovementCollectionCode, sourceMovementCollectionValue, 2);
+    		assertMovements(sourceMovementCollectionCode
+        			, new String[]{"1",""+gap,""+sourceMovementCollectionValue,"true"}
+        	);
+    		
+    		assertMovementCollection(tempMovementCollectionCode, 0, 3);
+    		assertMovements(tempMovementCollectionCode
+        			, new String[]{"2","-"+gap,"0","false"}
+        	);
+    	}
+    	
+    	assertMovements(destinationMovementCollectionCode
+    			, new String[]{"0",""+acknownledgementValue,""+acknownledgementValue,"true"}
+    	);
+    	
+    	clean();
+    	deleteAll(Movement.class);
+    } 
+	 
 	/**/
 	
 	public <T extends AbstractIdentifiable> void crud(final Class<T> aClass,T instance,Object[][] values){

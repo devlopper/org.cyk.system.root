@@ -63,10 +63,10 @@ public class MovementsTransferItemCollectionItem extends AbstractCollectionItem<
 	
 	public BigDecimal getValue(){
 		if(value==null){
-			if(sourceMovementCollection!=null && sourceMovementCollection.getValue()!=null)
-				value = sourceMovementCollection.getValue().abs();
-			if(value == null && destinationMovementCollection!=null && destinationMovementCollection.getValue()!=null){
-				value = destinationMovementCollection.getValue();
+			if(source!=null && source.getValue()!=null)
+				value = source.getValue().abs();
+			if(value == null && destination!=null && destination.getValue()!=null){
+				value = destination.getValue();
 			}
 		}
 		return value;

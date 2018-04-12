@@ -1214,57 +1214,13 @@ public class MovementIT extends AbstractBusinessIT {
     }
     
     @Test
-    public void crudOneMovementsTransferWithOneItemAndItsAcknowledgement(){
-    	TestCase testCase = instanciateTestCase(); 
-    	testCase.countAll(Movement.class);
-    	
-    	String sourceMovementCollectionCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class, sourceMovementCollectionCode));
-    	
-    	String tempMovementCollectionCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class, tempMovementCollectionCode));
-    	
-    	String destinationMovementCollectionCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class, destinationMovementCollectionCode));
-    	
-    	String movementsTransferCode = testCase.getRandomAlphabetic();
-    	MovementsTransfer movementsTransfer = testCase.instanciateOne(MovementsTransfer.class,movementsTransferCode);
-    	movementsTransfer.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(sourceMovementCollectionCode, tempMovementCollectionCode, 3);
-    	testCase.create(movementsTransfer);
-    	
-    	testCase.assertCountAll(Movement.class,2);
-    	
-    	testCase.assertMovements(sourceMovementCollectionCode
-    			, new String[]{"0","-3","-3","false"}
-    	);
-    	
-    	testCase.assertMovements(tempMovementCollectionCode
-    			, new String[]{"0","3","3","true"}
-    	);
-    	
-    	String movementsTransferAcknowledgementCode = testCase.getRandomAlphabetic();
-    	MovementsTransferAcknowledgement movementsTransferAcknowledgement = testCase.instanciateOne(MovementsTransferAcknowledgement.class,movementsTransferAcknowledgementCode)
-    			.setMovementsTransferFromCode(movementsTransferCode);
-    	movementsTransferAcknowledgement.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(tempMovementCollectionCode, destinationMovementCollectionCode, 3);
-    	testCase.create(movementsTransferAcknowledgement);
-    	
-    	testCase.assertCountAll(Movement.class,4);
-    	
-    	testCase.assertMovements(sourceMovementCollectionCode
-    			, new String[]{"0","-3","-3","false"}
-    	);
-    	
-    	testCase.assertMovements(tempMovementCollectionCode
-    			, new String[]{"0","3","3","true"}
-    			, new String[]{"1","-3","0","false"}
-    	);
-    	
-    	testCase.assertMovements(destinationMovementCollectionCode
-    			, new String[]{"0","3","3","true"}
-    	);
-    	
-    	testCase.clean();
-    	testCase.deleteAll(Movement.class);
+    public void crudOneMovementsTransferWithOneItemAndItsAcknowledgementBackNone(){
+    	instanciateTestCase().assertOneMovementsTransferWithOneItemAndItsAcknowledgement(3, 3);
+    }
+    
+    @Test
+    public void crudOneMovementsTransferWithOneItemAndItsAcknowledgementWithBackSome(){
+    	instanciateTestCase().assertOneMovementsTransferWithOneItemAndItsAcknowledgement(3, 2);
     }
     
     /* Exceptions */
