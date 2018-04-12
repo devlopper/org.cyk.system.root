@@ -14,6 +14,7 @@ import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.annotation.user.interfaces.Text;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,8 +28,8 @@ public class MovementsTransferItemCollectionItem extends AbstractCollectionItem<
 	@ManyToOne @JoinColumn(name=COLUMN_SOURCE) @NotNull private Movement source;
 	@ManyToOne @JoinColumn(name=COLUMN_DESTINATION) @NotNull private Movement destination;
 	
-	@Transient private MovementCollection sourceMovementCollection;
-	@Transient private MovementCollection destinationMovementCollection;
+	@Transient @Text(value="source") private MovementCollection sourceMovementCollection;
+	@Transient @Text(value="destination") private MovementCollection destinationMovementCollection;
 	@Transient private BigDecimal value;
 	
 	/**/
@@ -46,6 +47,29 @@ public class MovementsTransferItemCollectionItem extends AbstractCollectionItem<
 	public MovementsTransferItemCollectionItem setValueFromObject(Object value){
 		this.value = getNumberFromObject(BigDecimal.class, value);
 		return this;
+	}
+	
+	public MovementCollection getSourceMovementCollection(){
+		if(sourceMovementCollection==null && source!=null)
+			sourceMovementCollection = source.getCollection();
+		return sourceMovementCollection;
+	}
+	
+	public MovementCollection getDestinationMovementCollection(){
+		if(destinationMovementCollection==null && destination!=null)
+			destinationMovementCollection = destination.getCollection();
+		return destinationMovementCollection;
+	}
+	
+	public BigDecimal getValue(){
+		if(value==null){
+			if(sourceMovementCollection!=null && sourceMovementCollection.getValue()!=null)
+				value = sourceMovementCollection.getValue().abs();
+			if(value == null && destinationMovementCollection!=null && destinationMovementCollection.getValue()!=null){
+				value = destinationMovementCollection.getValue();
+			}
+		}
+		return value;
 	}
 	
 	/**/

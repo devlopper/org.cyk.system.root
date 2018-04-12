@@ -315,17 +315,17 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractCollection<I>,I extends AbstractCollectionItem<T>> TestCase assertCollection(Class<T> aClass,Class<I> itemClass,T collection,String expectedNumberOfItem){
-		assertEquals("number of "+itemClass.getSimpleName()+" is not equal", NumberHelper.getInstance().get(Long.class, expectedNumberOfItem), ((AbstractCollectionItemDao<I, T>)getPersistence(itemClass)).countByCollection(collection));
+	public <T extends AbstractCollection<I>,I extends AbstractCollectionItem<T>> TestCase assertCollection(Class<T> aClass,Class<I> itemClass,T collection,Object expectedNumberOfItem){
+		assertEqualsNumber("number of "+itemClass.getSimpleName()+" is not equal", NumberHelper.getInstance().get(Long.class, expectedNumberOfItem), ((AbstractCollectionItemDao<I, T>)getPersistence(itemClass)).countByCollection(collection));
 		return this;
 	}
 	
-	public TestCase assertMovementCollection(String code,String expectedValue,String expectedNumberOfMovement){
+	public TestCase assertMovementCollection(String code,Object expectedValue,Object expectedNumberOfMovement){
     	assertMovementCollection(inject(MovementCollectionDao.class).read(code), expectedValue,expectedNumberOfMovement);
     	return this;
     }
 	
-	public TestCase assertMovementCollection(MovementCollection movementCollection,String expectedValue,String expectedNumberOfMovement){
+	public TestCase assertMovementCollection(MovementCollection movementCollection,Object expectedValue,Object expectedNumberOfMovement){
     	assertEqualsNumber("Collection value",NumberHelper.getInstance().get(BigDecimal.class, expectedValue, null), movementCollection.getValue());
     	assertCollection(MovementCollection.class, Movement.class, movementCollection, expectedNumberOfMovement);
     	return this;

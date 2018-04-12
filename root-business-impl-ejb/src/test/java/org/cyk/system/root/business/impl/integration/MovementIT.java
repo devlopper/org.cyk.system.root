@@ -1139,10 +1139,21 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionDestinationCode));
     
     	String code = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementsTransferItemCollectionItem.class,code).setSourceMovementCollectionFromCode(movementCollectionSourceCode)
+    	MovementsTransferItemCollectionItem movementsTransferItemCollectionItem = testCase.create(testCase.instanciateOne(MovementsTransferItemCollectionItem.class,code).setSourceMovementCollectionFromCode(movementCollectionSourceCode)
     			.setDestinationMovementCollectionFromCode(movementCollectionDestinationCode).setValueFromObject(3));
     	
+    	movementsTransferItemCollectionItem = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementsTransferItemCollectionItem.class
+    			,movementsTransferItemCollectionItem.getCode());
+    	
+    	testCase.assertNotNull(movementsTransferItemCollectionItem.getSource());
+    	testCase.assertNotNull(movementsTransferItemCollectionItem.getDestination());
+    	testCase.assertNotNull(movementsTransferItemCollectionItem.getSourceMovementCollection());
+    	testCase.assertNotNull(movementsTransferItemCollectionItem.getDestinationMovementCollection());
+    	
     	testCase.assertCountAll(Movement.class,2);
+    	
+    	testCase.assertMovementCollection(movementCollectionSourceCode, -3, 1);
+    	testCase.assertMovementCollection(movementCollectionDestinationCode, 3, 1);
     	
     	testCase.assertMovements(movementCollectionSourceCode
     			, new String[]{"0","-3","-3","false"}
@@ -1151,6 +1162,11 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.assertMovements(movementCollectionDestinationCode
     			, new String[]{"0","3","3","true"}
     	);
+    	
+    	testCase.delete(movementsTransferItemCollectionItem);
+    	
+    	testCase.assertMovementCollection(movementCollectionSourceCode, 0, 2);
+    	testCase.assertMovementCollection(movementCollectionDestinationCode, 0, 2);
     	
     	testCase.clean();
     	testCase.deleteAll(Movement.class);
