@@ -78,6 +78,7 @@ public class MovementIT extends AbstractBusinessIT {
     	Movement movement = testCase.instanciateOne(Movement.class,"code").setCollectionFromCode(collectionCode);
     	assertEquals("code", movement.getCode());
     	assertNotNull(movement.getCollection());
+    	
     	testCase.clean();
     }
     

@@ -20,6 +20,7 @@ public interface MovementBusiness extends AbstractCollectionItemBusiness<Movemen
 	void create(AbstractIdentifiable identifiableJoin, String typeCode, Crud crud,AbstractIdentifiable valueIdentifiable, String valueFieldName,Boolean isPositiveDecrement
 			,String destinationMovementCollectionCode);
 	
+	
 	/**/
 	
 }

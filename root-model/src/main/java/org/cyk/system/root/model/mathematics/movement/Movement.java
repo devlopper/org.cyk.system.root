@@ -20,6 +20,7 @@ import org.cyk.utility.common.annotation.FieldOverrides;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.NumberHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -91,6 +92,10 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 		return this;
 	}
 	
+	public Movement setActionFromValue(){
+		return setActionFromIncrementation(NumberHelper.getInstance().isGreaterThanZero(value));
+	}
+	
 	public Movement setValueFromObject(Object value){
 		this.value = getNumberFromObject(BigDecimal.class, value);
 		return this;
@@ -121,6 +126,10 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	public Movement __set__(String collectionCode,Boolean isIncrementation,Object value){
 		return __set__(collectionCode, isIncrementation, value, null, null);
+	}
+	
+	public Movement setCollectionAndValueUsingOppositeAndAction(Movement movement) {
+		return setCollection(movement.getCollection()).setValue(movement.getValue().negate()).setActionFromValue();
 	}
 	
 	@Override
