@@ -25,30 +25,32 @@ import lombok.experimental.Accessors;
  *
  */
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE) @Accessors(chain=true)
-public class MovementsTransfer extends AbstractIdentifiable implements Serializable  {
+public class MovementCollectionValuesTransfer extends AbstractIdentifiable implements Serializable  {
 	private static final long serialVersionUID = -4876159772208660975L;
 
-	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private MovementsTransferType type;
-	@ManyToOne @JoinColumn(name=COLUMN_ITEMS) @NotNull private MovementsTransferItemCollection items;
+	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private MovementCollectionValuesTransferType type;
+	@ManyToOne @JoinColumn(name=COLUMN_ITEMS) @NotNull private MovementCollectionValuesTransferItemCollection items;
 	
 	@Transient private Party sender;
 	@Transient private Party receiver;
 	
+	@Transient private MovementCollection buffer;
+	
 	/**/
 	
-	public MovementsTransfer setSenderFromCode(String code){
+	public MovementCollectionValuesTransfer setSenderFromCode(String code){
 		this.sender = getFromCode(Party.class, code);
 		return this;
 	}
 	
-	public MovementsTransfer setReceiverFromCode(String code){
+	public MovementCollectionValuesTransfer setReceiverFromCode(String code){
 		this.receiver = getFromCode(Party.class, code);
 		return this;
 	}
 	
 	@Override
-	public MovementsTransfer addCascadeOperationToMasterFieldNames(String... fieldNames) {
-		return (MovementsTransfer) super.addCascadeOperationToMasterFieldNames(fieldNames);
+	public MovementCollectionValuesTransfer addCascadeOperationToMasterFieldNames(String... fieldNames) {
+		return (MovementCollectionValuesTransfer) super.addCascadeOperationToMasterFieldNames(fieldNames);
 	}
 	
 	/**/
@@ -60,5 +62,7 @@ public class MovementsTransfer extends AbstractIdentifiable implements Serializa
 	
 	public static final String COLUMN_TYPE = FIELD_TYPE;
 	public static final String COLUMN_ITEMS = FIELD_ITEMS;
+	
+	public static final String TABLE_NAME_PREFIX = "MVT_COL_VAL_TR_";
 }
 

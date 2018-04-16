@@ -1,8 +1,0 @@
-package org.cyk.system.root.persistence.api.mathematics.movement;
-
-import org.cyk.system.root.model.mathematics.movement.MovementsTransferItemCollectionItemIdentifiableGlobalIdentifier;
-import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdentifierDao;
-
-public interface MovementsTransferItemCollectionItemIdentifiableGlobalIdentifierDao extends JoinGlobalIdentifierDao<MovementsTransferItemCollectionItemIdentifiableGlobalIdentifier,MovementsTransferItemCollectionItemIdentifiableGlobalIdentifier.SearchCriteria> {
-	
-}

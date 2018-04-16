@@ -1,0 +1,9 @@
+package org.cyk.system.root.business.api.mathematics.movement;
+
+import org.cyk.system.root.business.api.AbstractCollectionItemBusiness;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollection;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollectionItem;
+
+public interface MovementCollectionValuesTransferItemCollectionItemBusiness extends AbstractCollectionItemBusiness<MovementCollectionValuesTransferItemCollectionItem,MovementCollectionValuesTransferItemCollection> {
+	
+}

@@ -21,16 +21,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @Entity @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
-@Table(uniqueConstraints={@UniqueConstraint(columnNames = {MovementsTransferItemCollectionItemIdentifiableGlobalIdentifier.FIELD_MOVEMENTS_TRANSFER_ITEM_COLLECTION_ITEM
-		,MovementsTransferItemCollectionItemIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
-public class MovementsTransferItemCollectionItemIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
+@Table(name=MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifier.TABLE_NAME,uniqueConstraints={@UniqueConstraint(columnNames = {MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifier.FIELD_MOVEMENT_COLLECTION_VALUES_TRANSFER_ITEM_COLLECTION_ITEM
+		,MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
+public class MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 	private static final long serialVersionUID = 8167875049554197503L;
 
-	@ManyToOne @NotNull @JoinColumn(name=COLUMN_MOVEMENTS_TRANSFER_ITEM_COLLECTION_ITEM) private MovementsTransferItemCollectionItem movementsTransferItemCollectionItem;
+	@ManyToOne @NotNull @JoinColumn(name=COLUMN_MOVEMENT_COLLECTION_VALUES_TRANSFER_ITEM_COLLECTION_ITEM) private MovementCollectionValuesTransferItemCollectionItem movementCollectionValuesTransferItemCollectionItem;
 	
-	public static final String FIELD_MOVEMENTS_TRANSFER_ITEM_COLLECTION_ITEM = "movementsTransferItemCollectionItem";
+	public static final String FIELD_MOVEMENT_COLLECTION_VALUES_TRANSFER_ITEM_COLLECTION_ITEM = "movementCollectionValuesTransferItemCollectionItem";
 	
-	public static final String COLUMN_MOVEMENTS_TRANSFER_ITEM_COLLECTION_ITEM = FIELD_MOVEMENTS_TRANSFER_ITEM_COLLECTION_ITEM;
+	public static final String COLUMN_MOVEMENT_COLLECTION_VALUES_TRANSFER_ITEM_COLLECTION_ITEM = FIELD_MOVEMENT_COLLECTION_VALUES_TRANSFER_ITEM_COLLECTION_ITEM;
+	
+	public static final String TABLE_NAME = MovementCollectionValuesTransfer.TABLE_NAME_PREFIX+"ITEM_COL_ITEM_IGID";
 	
 	@Getter @Setter
 	public static class SearchCriteria extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria implements Serializable {

@@ -14,19 +14,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE)
-public class MovementsTransferItemCollection extends AbstractCollection<MovementsTransferItemCollectionItem> implements Serializable  {
+public class MovementCollectionValuesTransferItemCollection extends AbstractCollection<MovementCollectionValuesTransferItemCollectionItem> implements Serializable  {
 	private static final long serialVersionUID = -4876159772208660975L;
 
 	@Override
-	public MovementsTransferItemCollection setItemsSynchonizationEnabled(Boolean synchonizationEnabled) {
-		return (MovementsTransferItemCollection) super.setItemsSynchonizationEnabled(synchonizationEnabled);
+	public MovementCollectionValuesTransferItemCollection setItemsSynchonizationEnabled(Boolean synchonizationEnabled) {
+		return (MovementCollectionValuesTransferItemCollection) super.setItemsSynchonizationEnabled(synchonizationEnabled);
 	}
 	
-	public MovementsTransferItemCollection addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue
+	public MovementCollectionValuesTransferItemCollection addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue
 		(String sourceMovementCollectionCode,String destinationMovementCollectionCode,Object value){
-		add(instanciateOne(MovementsTransferItemCollectionItem.class)
+		add(instanciateOne(MovementCollectionValuesTransferItemCollectionItem.class)
 				.setSourceMovementCollectionFromCode(sourceMovementCollectionCode).setDestinationMovementCollectionFromCode(destinationMovementCollectionCode)
-				.setValueFromObject(value));
+				.setSourceValueAbsoluteFromObject(value));
 		return this;
 	}
 	

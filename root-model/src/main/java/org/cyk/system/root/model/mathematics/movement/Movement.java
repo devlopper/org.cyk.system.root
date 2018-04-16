@@ -52,6 +52,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	@Transient private MovementCollection destinationMovementCollection;
 	@Transient private Movement destinationMovement;
+	@Transient private Boolean actionIsIncrementation;
 	
 	@ManyToOne @JoinColumn(name=COLUMN_PARENT) private Movement parent;
 	private Boolean parentActionIsOppositeOfChildAction;
@@ -85,6 +86,8 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public Movement setActionFromIncrementation(Boolean isIncrementation){
 		if(isIncrementation == null)
 			this.action = null;
+		else if(this.collection == null)
+			setActionIsIncrementation(isIncrementation);
 		else if(isIncrementation)
 			this.action=this.collection.getType().getIncrementAction();
 		else

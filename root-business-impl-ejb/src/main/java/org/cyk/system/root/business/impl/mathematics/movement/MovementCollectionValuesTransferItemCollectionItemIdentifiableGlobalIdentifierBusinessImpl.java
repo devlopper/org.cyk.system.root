@@ -1,0 +1,21 @@
+package org.cyk.system.root.business.impl.mathematics.movement;
+
+import java.io.Serializable;
+
+import javax.inject.Inject;
+
+import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.impl.globalidentification.AbstractJoinGlobalIdentifierBusinessImpl;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifier;
+import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifierDao;
+
+public class MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifierBusinessImpl extends AbstractJoinGlobalIdentifierBusinessImpl<MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifier, MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifierDao,MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifier.SearchCriteria> implements MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifierBusiness,Serializable {
+
+	private static final long serialVersionUID = -3799482462496328200L;
+
+	@Inject
+	public MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifierBusinessImpl(MovementCollectionValuesTransferItemCollectionItemIdentifiableGlobalIdentifierDao dao) {
+		super(dao); 
+	}
+	
+}

@@ -1,8 +1,0 @@
-package org.cyk.system.root.business.api.mathematics.movement;
-
-import org.cyk.system.root.business.api.globalidentification.JoinGlobalIdentifierBusiness;
-import org.cyk.system.root.model.mathematics.movement.MovementsTransferItemCollectionItemIdentifiableGlobalIdentifier;
-
-public interface MovementsTransferItemCollectionItemIdentifiableGlobalIdentifierBusiness extends JoinGlobalIdentifierBusiness<MovementsTransferItemCollectionItemIdentifiableGlobalIdentifier,MovementsTransferItemCollectionItemIdentifiableGlobalIdentifier.SearchCriteria> {
-	
-}

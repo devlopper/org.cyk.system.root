@@ -290,20 +290,25 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	@Override
 	public void computeChanges(Movement movement,LoggingHelper.Message.Builder logMessageBuilder) {		
 		super.computeChanges(movement,logMessageBuilder);
-					
+		
 		if(movement.getAction() == null){
-			if(movement.getParent()!=null){
-				Boolean parentActionIsOppositeOfChildAction = movement.getParent().getParentActionIsOppositeOfChildAction();
-				if(movement.getParent().getCollection().getType().getIncrementAction().equals(movement.getParent().getAction()))
-					if(Boolean.TRUE.equals(parentActionIsOppositeOfChildAction))
-						movement.setAction(movement.getCollection().getType().getDecrementAction());
-					else
-						movement.setAction(movement.getCollection().getType().getIncrementAction());
-				else if(movement.getParent().getCollection().getType().getDecrementAction().equals(movement.getParent().getAction()))
-					if(Boolean.TRUE.equals(parentActionIsOppositeOfChildAction))
-						movement.setAction(movement.getCollection().getType().getIncrementAction());	
-					else
-						movement.setAction(movement.getCollection().getType().getDecrementAction());
+			if(movement.getActionIsIncrementation() == null){
+				if(movement.getParent()!=null){
+					Boolean parentActionIsOppositeOfChildAction = movement.getParent().getParentActionIsOppositeOfChildAction();
+					if(movement.getParent().getCollection().getType().getIncrementAction().equals(movement.getParent().getAction()))
+						if(Boolean.TRUE.equals(parentActionIsOppositeOfChildAction))
+							movement.setAction(movement.getCollection().getType().getDecrementAction());
+						else
+							movement.setAction(movement.getCollection().getType().getIncrementAction());
+					else if(movement.getParent().getCollection().getType().getDecrementAction().equals(movement.getParent().getAction()))
+						if(Boolean.TRUE.equals(parentActionIsOppositeOfChildAction))
+							movement.setAction(movement.getCollection().getType().getIncrementAction());	
+						else
+							movement.setAction(movement.getCollection().getType().getDecrementAction());
+				}	
+			}else{
+				if(movement.getCollection()!=null)
+					movement.setActionFromIncrementation(movement.getActionIsIncrementation());
 			}
 		}
 		logMessageBuilder.addNamedParameters("col",movement.getCollection(),"act",movement.getAction(),"prev cum",movement.getPreviousCumul(),"val abs"

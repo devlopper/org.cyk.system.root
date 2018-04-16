@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
-public class MovementsTransferType extends AbstractDataTreeType implements Serializable {
+public class MovementCollectionValuesTransferType extends AbstractDataTreeType implements Serializable {
 	private static final long serialVersionUID = -4946585596435850782L;
 
 }

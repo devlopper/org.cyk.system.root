@@ -74,9 +74,13 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Override
 	protected void computeChanges(MovementCollection movementCollection, Builder logMessageBuilder) {
 		super.computeChanges(movementCollection, logMessageBuilder);
-		if(movementCollection.getInitialValue() == null && isNotIdentified(movementCollection)){
-			movementCollection.setInitialValue(movementCollection.getValue());
+		
+		if(isNotIdentified(movementCollection)){
+			if(movementCollection.getInitialValue() == null)
+				movementCollection.setInitialValue(movementCollection.getValue());
+			
 		}
+		
 	}
 	
 	public static class BuilderOneDimensionArray extends AbstractCollectionBusinessImpl.BuilderOneDimensionArray<MovementCollection> implements Serializable {

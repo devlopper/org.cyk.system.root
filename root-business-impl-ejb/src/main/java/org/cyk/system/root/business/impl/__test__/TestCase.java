@@ -38,8 +38,8 @@ import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
-import org.cyk.system.root.model.mathematics.movement.MovementsTransfer;
-import org.cyk.system.root.model.mathematics.movement.MovementsTransferAcknowledgement;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferAcknowledgement;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
@@ -444,7 +444,7 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     	return this;
     }
 	
-	 public void assertOneMovementsTransferWithOneItemAndItsAcknowledgement(Object transferValue,Object acknownledgementValue){
+	 public void assertOneMovementCollectionValuesTransferWithOneItemAndItsAcknowledgement(Object transferValue,Object acknownledgementValue){
     	countAll(Movement.class);
     	
     	String sourceMovementCollectionCode = getRandomAlphabetic();
@@ -457,7 +457,7 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     	create(instanciateOne(MovementCollection.class, destinationMovementCollectionCode));
     	
     	String movementsTransferCode = getRandomAlphabetic();
-    	MovementsTransfer movementsTransfer = instanciateOne(MovementsTransfer.class,movementsTransferCode);
+    	MovementCollectionValuesTransfer movementsTransfer = instanciateOne(MovementCollectionValuesTransfer.class,movementsTransferCode);
     	movementsTransfer.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(sourceMovementCollectionCode, tempMovementCollectionCode, transferValue);
     	create(movementsTransfer);
     	
@@ -472,8 +472,8 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     	);
     	
     	String movementsTransferAcknowledgementCode = getRandomAlphabetic();
-    	MovementsTransferAcknowledgement movementsTransferAcknowledgement = instanciateOne(MovementsTransferAcknowledgement.class,movementsTransferAcknowledgementCode)
-    			.setMovementsTransferFromCode(movementsTransferCode);
+    	MovementCollectionValuesTransferAcknowledgement movementsTransferAcknowledgement = instanciateOne(MovementCollectionValuesTransferAcknowledgement.class,movementsTransferAcknowledgementCode)
+    			.setTransferFromCode(movementsTransferCode);
     	movementsTransferAcknowledgement.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(tempMovementCollectionCode, destinationMovementCollectionCode
     			, acknownledgementValue);
     	create(movementsTransferAcknowledgement);

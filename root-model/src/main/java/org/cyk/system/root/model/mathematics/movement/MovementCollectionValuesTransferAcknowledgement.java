@@ -18,30 +18,32 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE) @Accessors(chain=true)
-public class MovementsTransferAcknowledgement extends AbstractIdentifiable implements Serializable  {
+public class MovementCollectionValuesTransferAcknowledgement extends AbstractIdentifiable implements Serializable  {
 	private static final long serialVersionUID = -4876159772208660975L;
 
-	@ManyToOne @JoinColumn(name=COLUMN_MOVEMENTS_TRANSFER) @NotNull private MovementsTransfer movementsTransfer;
-	@ManyToOne @JoinColumn(name=COLUMN_ITEMS) @NotNull private MovementsTransferItemCollection items;
+	@ManyToOne @JoinColumn(name=COLUMN_TRANSFER) @NotNull private MovementCollectionValuesTransfer transfer;
+	@ManyToOne @JoinColumn(name=COLUMN_ITEMS) @NotNull private MovementCollectionValuesTransferItemCollection items;
 	
 	/**/
 	
 	@Override
-	public MovementsTransferAcknowledgement addCascadeOperationToMasterFieldNames(String... fieldNames) {
-		return (MovementsTransferAcknowledgement) super.addCascadeOperationToMasterFieldNames(fieldNames);
+	public MovementCollectionValuesTransferAcknowledgement addCascadeOperationToMasterFieldNames(String... fieldNames) {
+		return (MovementCollectionValuesTransferAcknowledgement) super.addCascadeOperationToMasterFieldNames(fieldNames);
 	}
 	
-	public MovementsTransferAcknowledgement setMovementsTransferFromCode(String code){
-		this.movementsTransfer = getFromCode(MovementsTransfer.class, code);
+	public MovementCollectionValuesTransferAcknowledgement setTransferFromCode(String code){
+		this.transfer = getFromCode(MovementCollectionValuesTransfer.class, code);
 		return this;
 	}
 	
 	/**/
 	
-	public static final String FIELD_MOVEMENTS_TRANSFER = "movementsTransfer";
+	public static final String FIELD_TRANSFER = "transfer";
 	public static final String FIELD_ITEMS = "items";
 	
-	public static final String COLUMN_MOVEMENTS_TRANSFER = FIELD_MOVEMENTS_TRANSFER;
+	public static final String COLUMN_TRANSFER = FIELD_TRANSFER;
 	public static final String COLUMN_ITEMS = FIELD_ITEMS;
+	
+	
 }
 
