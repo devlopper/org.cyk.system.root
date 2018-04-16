@@ -73,9 +73,10 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     @Test
     public void crudPersonRandomly(){
     	TestCase testCase = instanciateTestCase();
-    	String personCode = testCase.getRandomHelper().getAlphabetic(5);
+    	String personCode = testCase.getRandomAlphabetic();
     	Person person = inject(PersonBusiness.class).instanciateOneRandomly(personCode);
     	testCase.create(person);
+    	
     	testCase.assertCountAll(File.class, 2);
     	testCase.deleteByCode(Person.class, personCode);
     	testCase.clean();

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.store.StoreBusiness;
 import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeBusinessImpl;
 import org.cyk.system.root.model.RootConstant;
@@ -27,6 +28,12 @@ public class StoreBusinessImpl extends AbstractDataTreeBusinessImpl<Store,StoreD
 		if(StringHelper.getInstance().isNotBlank(RootConstant.Code.getDefault(StoreType.class)))
 			store.setType(read(StoreType.class, RootConstant.Code.getDefault(StoreType.class)));
 		return store;
+	}
+	
+	@Override
+	protected void beforeCrud(Store store, Crud crud) {
+		super.beforeCrud(store, crud);
+		store.addIdentifiablesPartyIdentifiableGlobalIdentifierFromField(Store.FIELD_PARTY_COMPANY,RootConstant.Code.BusinessRole.COMPANY);
 	}
 	
 	public static class BuilderOneDimensionArray extends AbstractDataTreeBusinessImpl.BuilderOneDimensionArray<Store> implements Serializable {

@@ -585,7 +585,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void deleteMovementCollectionIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
-		if(identifiable instanceof MovementCollectionIdentifiableGlobalIdentifier || identifiable instanceof MovementCollection/* || identifiable instanceof File || identifiable instanceof Location*/){
+		if(identifiable instanceof MovementCollectionIdentifiableGlobalIdentifier || identifiable instanceof MovementCollection || identifiable instanceof File || identifiable instanceof Location){
 			
 		}else{
 			Collection<MovementCollectionIdentifiableGlobalIdentifier> movementCollectionIdentifiableGlobalIdentifiers = inject(MovementCollectionIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
@@ -594,7 +594,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void deleteIdentifiablePeriodIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
-		if(identifiable instanceof IdentifiablePeriodIdentifiableGlobalIdentifier || identifiable instanceof IdentifiablePeriod/* || identifiable instanceof File || identifiable instanceof Location*/){
+		if(identifiable instanceof IdentifiablePeriodIdentifiableGlobalIdentifier || identifiable instanceof IdentifiablePeriod || identifiable instanceof File || identifiable instanceof Location){
 			
 		}else{
 			Collection<IdentifiablePeriodIdentifiableGlobalIdentifier> movementCollectionIdentifiableGlobalIdentifiers = inject(IdentifiablePeriodIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);
@@ -603,7 +603,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void deletePartyIdentifiableGlobalIdentifier(IDENTIFIABLE identifiable){
-		if(identifiable instanceof PartyIdentifiableGlobalIdentifier /*|| identifiable instanceof Party/* || identifiable instanceof File || identifiable instanceof Location*/){
+		if(identifiable instanceof PartyIdentifiableGlobalIdentifier /*|| identifiable instanceof Party*/ || identifiable instanceof File || identifiable instanceof Location){
 			
 		}else{
 			Collection<PartyIdentifiableGlobalIdentifier> partyIdentifiableGlobalIdentifiers = inject(PartyIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(identifiable);

@@ -40,6 +40,8 @@ import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferAcknowledgement;
+import org.cyk.system.root.model.party.BusinessRole;
+import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
@@ -54,6 +56,7 @@ import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementDao;
+import org.cyk.system.root.persistence.api.party.PartyIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipTypeRoleDao;
@@ -79,6 +82,12 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
 
 	{
 		this.defaultThrowableClass = BusinessThrowable.class;
+	}
+	
+	public void assertNotNullPartyIdentifiableGlobalIdentifier(String partyCode,String businessRoleCode,Class<? extends AbstractIdentifiable> identifiableClass,String identifiableCode) {
+		assertNotNull("party identifiable global identifier ("+partyCode+","+businessRoleCode+","+identifiableClass+","+identifiableCode+") is null",inject(PartyIdentifiableGlobalIdentifierDao.class).readByPartyByIdentifiableGlobalIdentifierByRole(getByIdentifierWhereValueUsageTypeIsBusiness(Party.class, partyCode,Boolean.TRUE)
+    			, getByIdentifierWhereValueUsageTypeIsBusiness(identifiableClass,identifiableCode,Boolean.TRUE).getGlobalIdentifier()
+    			, getByIdentifierWhereValueUsageTypeIsBusiness(BusinessRole.class,businessRoleCode,Boolean.TRUE)));
 	}
 	
 	public <T> T readCollectionItem(Class<T> aClass,Class<? extends AbstractCollection<?>> collectionClass,String collectionCode,String code){

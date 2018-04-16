@@ -469,6 +469,7 @@ public interface RootConstant {
 			public static final String SIGNER="SIGNER";
 			public static final String IN_CHARGE="INCHARGE";
 			public static final String PROVIDER="PROVIDER";
+			public static final String COMPANY="COMPANY";
 			public static final String SENDER="SENDER";
 			public static final String RECEIVER="RECEIVER";
 			/**
