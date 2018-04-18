@@ -35,6 +35,18 @@ import org.cyk.system.root.model.mathematics.movement.MovementCollectionTypeMode
 import org.cyk.system.root.model.mathematics.movement.MovementMode;
 import org.cyk.system.root.model.party.BusinessRole;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.person.Allergy;
+import org.cyk.system.root.model.party.person.BloodGroup;
+import org.cyk.system.root.model.party.person.JobFunction;
+import org.cyk.system.root.model.party.person.JobTitle;
+import org.cyk.system.root.model.party.person.MaritalStatus;
+import org.cyk.system.root.model.party.person.Medication;
+import org.cyk.system.root.model.party.person.PersonRelationshipType;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeGroup;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
+import org.cyk.system.root.model.party.person.PersonRelationshipTypeRoleName;
+import org.cyk.system.root.model.party.person.PersonTitle;
+import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
 import org.cyk.system.root.model.store.Store;
 import org.cyk.system.root.model.store.StoreType;
@@ -388,7 +400,9 @@ public class DataSet extends AbstractBean implements Serializable {
 					}else if(Value.class.equals(aClass)){
 						classes.addAll(Arrays.asList(Measure.class,MeasureType.class));
 					}else if(Party.class.equals(aClass)){
-						classes.addAll(Arrays.asList(BusinessRole.class));
+						classes.addAll(Arrays.asList(BusinessRole.class,Sex.class,MaritalStatus.class,JobFunction.class,JobTitle.class,PersonTitle.class,BloodGroup.class
+								,Allergy.class,Medication.class,PersonRelationshipTypeGroup.class,PersonRelationshipType.class,PersonRelationshipTypeRoleName.class
+								,PersonRelationshipTypeRole.class));
 					}else if(Store.class.equals(aClass)){
 						classes.addAll(Arrays.asList(Store.class,StoreType.class));
 					}else if(Tangibility.class.equals(aClass)){

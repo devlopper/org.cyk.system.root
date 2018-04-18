@@ -90,6 +90,12 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     			, getByIdentifierWhereValueUsageTypeIsBusiness(BusinessRole.class,businessRoleCode,Boolean.TRUE)));
 	}
 	
+	public void assertNullPartyIdentifiableGlobalIdentifier(String partyCode,String businessRoleCode,Class<? extends AbstractIdentifiable> identifiableClass,String identifiableCode) {
+		assertNull("party identifiable global identifier ("+partyCode+","+businessRoleCode+","+identifiableClass+","+identifiableCode+") is not null",inject(PartyIdentifiableGlobalIdentifierDao.class).readByPartyByIdentifiableGlobalIdentifierByRole(getByIdentifierWhereValueUsageTypeIsBusiness(Party.class, partyCode,Boolean.TRUE)
+    			, getByIdentifierWhereValueUsageTypeIsBusiness(identifiableClass,identifiableCode,Boolean.TRUE).getGlobalIdentifier()
+    			, getByIdentifierWhereValueUsageTypeIsBusiness(BusinessRole.class,businessRoleCode,Boolean.TRUE)));
+	}
+	
 	public <T> T readCollectionItem(Class<T> aClass,Class<? extends AbstractCollection<?>> collectionClass,String collectionCode,String code){
 		return read(aClass,RootConstant.Code.generate((AbstractCollection<?>)read(collectionClass,collectionCode), code));
 	}		
@@ -116,7 +122,7 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
 	}
 	
 	public PersonRelationship createOnePersonRelationship(String person1Code,String role1Code,String person2Code,String role2Code){
-		return create((PersonRelationship) inject(PersonRelationshipBusiness.class).instanciateOne(person1Code,role1Code,person2Code,role2Code));
+		return create(inject(PersonRelationshipBusiness.class).instanciateOne(person1Code,role1Code,person2Code,role2Code));
 	}
 	
 	public void createParentChildrenPersonRelationship(String parentPersonCode,String parentRoleCode,String[] sonPersonCodes,String[] daughterPersonCodes){

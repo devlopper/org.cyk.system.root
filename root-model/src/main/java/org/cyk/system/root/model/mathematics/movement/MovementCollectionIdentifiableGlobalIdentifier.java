@@ -57,6 +57,11 @@ public class MovementCollectionIdentifiableGlobalIdentifier extends AbstractJoin
 	
 	/**/
 	
+	public static class Filter extends AbstractJoinGlobalIdentifier.Filter<MovementCollectionIdentifiableGlobalIdentifier> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	
+    }
+	
 	@Getter @Setter
 	public static class SearchCriteria extends AbstractJoinGlobalIdentifier.AbstractSearchCriteria implements Serializable {
 

@@ -6,9 +6,11 @@ import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractCollectionItem;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -24,6 +26,8 @@ public class MovementCollectionValuesTransferItemCollectionItem extends Abstract
 
 	@ManyToOne @JoinColumn(name=COLUMN_SOURCE) @NotNull private Movement source;
 	@ManyToOne @JoinColumn(name=COLUMN_DESTINATION) @NotNull private Movement destination;
+	
+	@Transient private AbstractIdentifiable identifiableJoined;
 	
 	/**/
 	

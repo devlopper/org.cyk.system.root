@@ -431,18 +431,25 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 			}
 			inject(MetricValueBusiness.class).create(metricValues);
 		}
+		saveIdentifiables(identifiable,Crud.CREATE);
+		afterCreate(getListeners(), identifiable);
+		afterCrud(identifiable, Crud.CREATE);
+	}
+	
+	protected void saveIdentifiables(IDENTIFIABLE identifiable,Crud crud){
 		if(identifiable.getIdentifiables()!=null && CollectionHelper.getInstance().isNotEmpty(identifiable.getIdentifiables().getElements())){
 			for(AbstractIdentifiable index : identifiable.getIdentifiables().getElements()){
 				if(index.getBirthDate() == null && Boolean.TRUE.equals(index.isBirthDateComputedByUser()))
 					index.setBirthDate(identifiable.getBirthDate());
 				if(index.getDeathDate() == null && Boolean.TRUE.equals(index.isDeathDateComputedByUser()))
 					index.setDeathDate(identifiable.getDeathDate());
-				
 			}
-			inject(GenericBusiness.class).create(identifiable.getIdentifiables().getElements());
+			if(Crud.CREATE.equals(crud))
+				inject(GenericBusiness.class).create(identifiable.getIdentifiables().getElements());
+			else if(Crud.UPDATE.equals(crud)) {
+				inject(GenericBusiness.class).update(identifiable.getIdentifiables().getElements());
+			}
 		}
-		afterCreate(getListeners(), identifiable);
-		afterCrud(identifiable, Crud.CREATE);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -533,6 +540,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	}
 	
 	protected void afterUpdate(IDENTIFIABLE identifiable){
+		saveIdentifiables(identifiable,Crud.UPDATE);
 		afterUpdate(getListeners(), identifiable);
 		afterCrud(identifiable, Crud.UPDATE);
 	}

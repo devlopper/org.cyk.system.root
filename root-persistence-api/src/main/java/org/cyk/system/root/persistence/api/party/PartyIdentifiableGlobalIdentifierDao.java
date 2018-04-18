@@ -14,4 +14,5 @@ public interface PartyIdentifiableGlobalIdentifierDao extends JoinGlobalIdentifi
 	Collection<PartyIdentifiableGlobalIdentifier> readByIdentifiableGlobalIdentifierByRole(GlobalIdentifier globalIdentifier,BusinessRole role);
 	
 	Collection<PartyIdentifiableGlobalIdentifier> readByParty(Party party);
+	Collection<PartyIdentifiableGlobalIdentifier> readByPartyByBusinessRole(Party party,BusinessRole role);
 }

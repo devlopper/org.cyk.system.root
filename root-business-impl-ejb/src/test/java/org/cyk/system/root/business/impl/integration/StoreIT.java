@@ -8,6 +8,7 @@ import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.PartyIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.store.Store;
 import org.cyk.utility.common.helper.ClassHelper;
@@ -25,6 +26,7 @@ public class StoreIT extends AbstractBusinessIT {
     	TestCase testCase = instanciateTestCase();
     	String storeCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(Store.class,storeCode).setTypeFromCode(RootConstant.Code.StoreType.PRODUCT));
+    	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class);
     	testCase.clean();
     }
     
@@ -39,6 +41,69 @@ public class StoreIT extends AbstractBusinessIT {
     	testCase.create(testCase.instanciateOne(Store.class,storeCode).setTypeFromCode(RootConstant.Code.StoreType.PRODUCT).setPartyCompanyFromCode(partyCode));
     	
     	testCase.assertNotNullPartyIdentifiableGlobalIdentifier(partyCode, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
+    	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class,1);
+    	testCase.clean();
+    }
+    
+    @Test 
+    public void crudOneStoreJoinPartyAsCompanyOnUpdate(){
+    	TestCase testCase = instanciateTestCase();
+    	
+    	String partyCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Person.class, partyCode)); 
+    	
+    	String storeCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Store.class,storeCode).setTypeFromCode(RootConstant.Code.StoreType.PRODUCT));
+    	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class);
+    	testCase.assertNullPartyIdentifiableGlobalIdentifier(partyCode, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
+    	
+    	testCase.update(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Store.class,storeCode).setPartyCompanyFromCode(partyCode));
+    	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class,1);
+    	testCase.assertNotNullPartyIdentifiableGlobalIdentifier(partyCode, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
+    	
+    	testCase.clean();
+    }
+    
+    @Test 
+    public void crudOneStoreJoinPartyAsCompanyOnCreateAndChangePartyAsCompanyOnUpdate(){
+    	TestCase testCase = instanciateTestCase();
+    	
+    	String party01Code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Person.class, party01Code)); 
+    	
+    	String party02Code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Person.class, party02Code)); 
+    	
+    	String storeCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Store.class,storeCode).setTypeFromCode(RootConstant.Code.StoreType.PRODUCT).setPartyCompanyFromCode(party01Code));
+    	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class,1);
+    	testCase.assertNotNullPartyIdentifiableGlobalIdentifier(party01Code, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
+    	
+    	testCase.update(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Store.class,storeCode).setPartyCompanyFromCode(party02Code));
+    	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class,1);
+    	testCase.assertNotNullPartyIdentifiableGlobalIdentifier(party02Code, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
+    	
+    	testCase.clean();
+    }
+    
+    @Test 
+    public void crudOneStoreJoinPartyAsCompanyOnCreateAndChangePartyAsCompanyOnUpdateSetNull(){
+    	TestCase testCase = instanciateTestCase();
+    	
+    	String party01Code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Person.class, party01Code)); 
+    	
+    	String party02Code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Person.class, party02Code)); 
+    	
+    	String storeCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Store.class,storeCode).setTypeFromCode(RootConstant.Code.StoreType.PRODUCT).setPartyCompanyFromCode(party01Code));
+    	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class,1);
+    	testCase.assertNotNullPartyIdentifiableGlobalIdentifier(party01Code, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
+    	
+    	testCase.update(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Store.class,storeCode).setPartyCompany(null));
+    	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class);
+    	testCase.assertNullPartyIdentifiableGlobalIdentifier(party02Code, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
     	
     	testCase.clean();
     }

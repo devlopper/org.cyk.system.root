@@ -37,6 +37,11 @@ public class PartyIdentifiableGlobalIdentifierDaoImpl extends AbstractJoinGlobal
 	}
 	
 	@Override
+	public Collection<PartyIdentifiableGlobalIdentifier> readByPartyByBusinessRole(Party party, BusinessRole role) {
+		return readByFilter(new PartyIdentifiableGlobalIdentifier.Filter().addMaster(party).addMaster(role));
+	}
+	
+	@Override
 	protected void listenInstanciateJpqlBuilder(String name, JavaPersistenceQueryLanguage builder) {
 		super.listenInstanciateJpqlBuilder(name, builder);
 		if(readByFilter.equals(name)){

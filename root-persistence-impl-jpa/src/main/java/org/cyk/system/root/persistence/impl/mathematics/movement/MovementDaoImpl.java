@@ -18,16 +18,7 @@ import org.cyk.utility.common.helper.FilterHelper.Filter;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
 
 public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,MovementCollection> implements MovementDao,Serializable {
-
 	private static final long serialVersionUID = 6306356272165070761L;
-	
-	private String readByParent/*,sumValueWhereExistencePeriodFromDateIsLessThan,sumValueByCollection*/;
-	
-	@Override
-	protected void namedQueriesInitialisation() {
-		super.namedQueriesInitialisation();
-		registerNamedQuery(readByParent, _select().where(Movement.FIELD_PARENT));
-	}
 	
 	@Override
 	protected void listenInstanciateJpqlBuilder(String name, JavaPersistenceQueryLanguage builder) {
@@ -36,10 +27,6 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 			builder.setFieldName(Movement.FIELD_ACTION).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
 			builder.setFieldName(Movement.FIELD_MODE).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
 			builder.setFieldName(Movement.FIELD_PARENT).where().and().in(GlobalIdentifier.FIELD_IDENTIFIER);
-			
-			//builder.where().addTokens("AND ((:actionIdentifierSetIsEmpty = true AND :actionIdentifierSetIsEmptyMeansAll = true) OR t.action.identifier IN :actionIdentifierSet)");
-			
-			
 		}
 	}
 			
@@ -52,12 +39,6 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 			queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementAction.class),Movement.FIELD_ACTION,GlobalIdentifier.FIELD_IDENTIFIER);
 			queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementMode.class),Movement.FIELD_MODE,GlobalIdentifier.FIELD_IDENTIFIER);
 			queryWrapper.parameterInIdentifiers(filter.filterMasters(Movement.class),Movement.FIELD_PARENT,GlobalIdentifier.FIELD_IDENTIFIER);
-			
-			//queryWrapper.parameter("actionIdentifierSetIsEmpty", Boolean.TRUE);
-			//queryWrapper.parameter("actionIdentifierSetIsEmptyMeansAll", Boolean.TRUE);
-			//queryWrapper.parameter("actionIdentifierSet", Arrays.asList(Long.MIN_VALUE));
-			
-			//queryWrapper.parameterInIdentifiers(filter.filterMasters(MovementAction.class),Movement.FIELD_ACTION,GlobalIdentifier.FIELD_IDENTIFIER);
 		}
 	}
 
@@ -78,11 +59,6 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 			sum = sum.add(index.getValue());
 		return sum;
 	}
-	
-	/*@Override
-	public Collection<Movement> readByParent(Movement parent) {
-		return namedQuery(readByParent).parameter(Movement.FIELD_PARENT, parent).resultMany();
-	}*/
 	
 }
  

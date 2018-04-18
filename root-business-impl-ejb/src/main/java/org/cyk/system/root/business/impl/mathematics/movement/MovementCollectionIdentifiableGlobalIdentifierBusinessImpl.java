@@ -1,11 +1,13 @@
 package org.cyk.system.root.business.impl.mathematics.movement;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.globalidentification.AbstractJoinGlobalIdentifierBusinessImpl;
+import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifierDao;
 
@@ -18,4 +20,8 @@ public class MovementCollectionIdentifiableGlobalIdentifierBusinessImpl extends 
 		super(dao); 
 	}
 
+	@Override
+	public Collection<MovementCollectionIdentifiableGlobalIdentifier> findByMovementCollection(MovementCollection movementCollection) {
+		return dao.readByMovementCollection(movementCollection);
+	}
 }
