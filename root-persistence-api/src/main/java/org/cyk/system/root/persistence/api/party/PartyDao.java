@@ -10,6 +10,10 @@ public interface PartyDao extends AbstractPartyDao<Party> {
 
 	Collection<Party> readByIdentifiableByBusinessRole(AbstractIdentifiable identifiable,BusinessRole businessRole);
 	Collection<Party> readByIdentifiableByBusinessRoleCode(AbstractIdentifiable identifiable,String businessRoleCode);
+	
+	Long countByIdentifiableByBusinessRole(AbstractIdentifiable identifiable,BusinessRole businessRole);
+	Long countByIdentifiableByBusinessRoleCode(AbstractIdentifiable identifiable,String businessRoleCode);
+	
 	Party readFirstByIdentifiableByBusinessRole(AbstractIdentifiable identifiable,BusinessRole businessRole);
 	Party readFirstByIdentifiableByBusinessRoleCode(AbstractIdentifiable identifiable,String businessRoleCode);
 

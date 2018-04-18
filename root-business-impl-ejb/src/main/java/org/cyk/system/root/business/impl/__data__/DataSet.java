@@ -35,6 +35,8 @@ import org.cyk.system.root.model.mathematics.movement.MovementCollectionTypeMode
 import org.cyk.system.root.model.mathematics.movement.MovementMode;
 import org.cyk.system.root.model.party.BusinessRole;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.Store;
+import org.cyk.system.root.model.party.StoreType;
 import org.cyk.system.root.model.party.person.Allergy;
 import org.cyk.system.root.model.party.person.BloodGroup;
 import org.cyk.system.root.model.party.person.JobFunction;
@@ -48,8 +50,6 @@ import org.cyk.system.root.model.party.person.PersonRelationshipTypeRoleName;
 import org.cyk.system.root.model.party.person.PersonTitle;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.model.pattern.tree.AbstractDataTreeNode;
-import org.cyk.system.root.model.store.Store;
-import org.cyk.system.root.model.store.StoreType;
 import org.cyk.system.root.model.time.DurationType;
 import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.system.root.model.time.IdentifiablePeriodCollection;

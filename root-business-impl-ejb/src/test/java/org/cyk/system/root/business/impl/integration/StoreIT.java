@@ -9,8 +9,8 @@ import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.PartyIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.party.Store;
 import org.cyk.system.root.model.party.person.Person;
-import org.cyk.system.root.model.store.Store;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.junit.Test;
 
@@ -31,17 +31,25 @@ public class StoreIT extends AbstractBusinessIT {
     }
     
     @Test 
+    public void crudOneStoreCreatePartyAsCompany(){
+    	TestCase testCase = instanciateTestCase();
+    	String storeCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Store.class,storeCode).setTypeFromCode(RootConstant.Code.StoreType.PRODUCT).setHasPartyAsCompany(Boolean.TRUE));
+    	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class,1);
+    	testCase.deleteAll(Party.class);
+    	testCase.clean();
+    }
+    
+    @Test 
     public void crudOneStoreJoinPartyAsCompany(){
     	TestCase testCase = instanciateTestCase();
     	
-    	String partyCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Person.class, partyCode)); 
-    	
     	String storeCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Store.class,storeCode).setTypeFromCode(RootConstant.Code.StoreType.PRODUCT).setPartyCompanyFromCode(partyCode));
+    	testCase.create(testCase.instanciateOne(Store.class,storeCode).setTypeFromCode(RootConstant.Code.StoreType.PRODUCT).setHasPartyAsCompany(Boolean.TRUE));
     	
-    	testCase.assertNotNullPartyIdentifiableGlobalIdentifier(partyCode, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
+    	testCase.assertNotNullPartyIdentifiableGlobalIdentifier(storeCode, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
     	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class,1);
+    	testCase.deleteAll(Party.class);
     	testCase.clean();
     }
     
@@ -49,17 +57,15 @@ public class StoreIT extends AbstractBusinessIT {
     public void crudOneStoreJoinPartyAsCompanyOnUpdate(){
     	TestCase testCase = instanciateTestCase();
     	
-    	String partyCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Person.class, partyCode)); 
-    	
     	String storeCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(Store.class,storeCode).setTypeFromCode(RootConstant.Code.StoreType.PRODUCT));
     	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class);
-    	testCase.assertNullPartyIdentifiableGlobalIdentifier(partyCode, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
     	
-    	testCase.update(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Store.class,storeCode).setPartyCompanyFromCode(partyCode));
+    	testCase.update(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Store.class,storeCode).setHasPartyAsCompany(Boolean.TRUE));
     	testCase.assertCountAll(PartyIdentifiableGlobalIdentifier.class,1);
-    	testCase.assertNotNullPartyIdentifiableGlobalIdentifier(partyCode, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
+    	testCase.assertNotNullPartyIdentifiableGlobalIdentifier(storeCode, RootConstant.Code.BusinessRole.COMPANY, Store.class, storeCode);
+    	
+    	testCase.deleteAll(Party.class);
     	
     	testCase.clean();
     }

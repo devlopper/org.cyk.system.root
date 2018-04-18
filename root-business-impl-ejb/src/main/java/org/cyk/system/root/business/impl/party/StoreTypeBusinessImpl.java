@@ -1,13 +1,13 @@
-package org.cyk.system.root.business.impl.store;
+package org.cyk.system.root.business.impl.party;
 
 import java.io.Serializable;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.store.StoreTypeBusiness;
+import org.cyk.system.root.business.api.party.StoreTypeBusiness;
 import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeTypeBusinessImpl;
-import org.cyk.system.root.model.store.StoreType;
-import org.cyk.system.root.persistence.api.store.StoreTypeDao;
+import org.cyk.system.root.model.party.StoreType;
+import org.cyk.system.root.persistence.api.party.StoreTypeDao;
 
 import lombok.Getter;
 import lombok.Setter;

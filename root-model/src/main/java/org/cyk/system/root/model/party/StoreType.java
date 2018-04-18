@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.store;
+package org.cyk.system.root.model.party;
 import java.io.Serializable;
 
 import javax.persistence.Entity;

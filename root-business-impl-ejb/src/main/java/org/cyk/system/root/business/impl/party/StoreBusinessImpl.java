@@ -1,17 +1,23 @@
-package org.cyk.system.root.business.impl.store;
+package org.cyk.system.root.business.impl.party;
 
 import java.io.Serializable;
 
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.Crud;
+import org.cyk.system.root.business.api.party.PartyBusiness;
 import org.cyk.system.root.business.api.party.PartyIdentifiableGlobalIdentifierBusiness;
-import org.cyk.system.root.business.api.store.StoreBusiness;
+import org.cyk.system.root.business.api.party.StoreBusiness;
+import org.cyk.system.root.business.impl.helper.FieldHelper;
 import org.cyk.system.root.business.impl.pattern.tree.AbstractDataTreeBusinessImpl;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.store.Store;
-import org.cyk.system.root.model.store.StoreType;
-import org.cyk.system.root.persistence.api.store.StoreDao;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.Store;
+import org.cyk.system.root.model.party.StoreType;
+import org.cyk.system.root.persistence.api.party.PartyDao;
+import org.cyk.system.root.persistence.api.party.StoreDao;
 import org.cyk.utility.common.helper.StringHelper;
 
 public class StoreBusinessImpl extends AbstractDataTreeBusinessImpl<Store,StoreDao,StoreType> implements StoreBusiness {
@@ -25,7 +31,7 @@ public class StoreBusinessImpl extends AbstractDataTreeBusinessImpl<Store,StoreD
 	
 	@Override
 	public Store instanciateOne() {
-		Store store = super.instanciateOne();
+		Store store = super.instanciateOne();//.addCascadeOperationToMasterFieldNames(Store.FIELD_PARTY_COMPANY);
 		if(StringHelper.getInstance().isNotBlank(RootConstant.Code.getDefault(StoreType.class)))
 			store.setType(read(StoreType.class, RootConstant.Code.getDefault(StoreType.class)));
 		return store;
@@ -34,6 +40,18 @@ public class StoreBusinessImpl extends AbstractDataTreeBusinessImpl<Store,StoreD
 	@Override
 	protected void beforeCrud(Store store, Crud crud) {
 		super.beforeCrud(store, crud);
+		if(Boolean.TRUE.equals(store.getHasPartyAsCompany())){
+			if(store.getPartyCompany() == null){				
+				if(Crud.CREATE.equals(crud) || (Crud.UPDATE.equals(crud) && (inject(PartyDao.class).countByIdentifiableByBusinessRoleCode(store, RootConstant.Code.BusinessRole.COMPANY) == 0))){
+					store.setPartyCompany(instanciateOne(Party.class));
+					FieldHelper.getInstance().copy(store, store.getPartyCompany(),Boolean.FALSE
+							,org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
+									AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE),org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
+											AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME));
+					inject(PartyBusiness.class).create(store.getPartyCompany());
+				}
+			}
+		}
 		store.addIdentifiablesPartyIdentifiableGlobalIdentifierFromField(Store.FIELD_PARTY_COMPANY,RootConstant.Code.BusinessRole.COMPANY);
 	}
 	

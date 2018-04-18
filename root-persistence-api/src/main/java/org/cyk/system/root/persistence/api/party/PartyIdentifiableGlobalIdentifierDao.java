@@ -13,6 +13,8 @@ public interface PartyIdentifiableGlobalIdentifierDao extends JoinGlobalIdentifi
 	PartyIdentifiableGlobalIdentifier readByPartyByIdentifiableGlobalIdentifierByRole(Party party,GlobalIdentifier globalIdentifier,BusinessRole role);
 	Collection<PartyIdentifiableGlobalIdentifier> readByIdentifiableGlobalIdentifierByRole(GlobalIdentifier globalIdentifier,BusinessRole role);
 	
+	Long countByIdentifiableGlobalIdentifierByBusinessRole(GlobalIdentifier globalIdentifier,BusinessRole businessRole);
+	
 	Collection<PartyIdentifiableGlobalIdentifier> readByParty(Party party);
 	Collection<PartyIdentifiableGlobalIdentifier> readByPartyByBusinessRole(Party party,BusinessRole role);
 }

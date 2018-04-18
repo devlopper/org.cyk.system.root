@@ -21,6 +21,16 @@ public class PartyDaoImpl extends AbstractPartyDaoImpl<Party> implements PartyDa
 		return MethodHelper.getInstance().callGet(inject(PartyIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifierByRole(identifiable
 				.getGlobalIdentifier(), businessRole), Party.class, PartyIdentifiableGlobalIdentifier.FIELD_PARTY) ;
 	}
+	
+	@Override
+	public Long countByIdentifiableByBusinessRole(AbstractIdentifiable identifiable, BusinessRole businessRole) {
+		return inject(PartyIdentifiableGlobalIdentifierDao.class).countByIdentifiableGlobalIdentifierByBusinessRole(identifiable.getGlobalIdentifier(), businessRole);
+	}
+	
+	@Override
+	public Long countByIdentifiableByBusinessRoleCode(AbstractIdentifiable identifiable, String businessRoleCode) {
+		return countByIdentifiableByBusinessRole(identifiable, inject(BusinessRoleDao.class).read(businessRoleCode));
+	}
 
 	@Override
 	public Collection<Party> readByIdentifiableByBusinessRoleCode(AbstractIdentifiable identifiable,String businessRoleCode) {
