@@ -74,6 +74,11 @@ public class MovementCollectionValuesTransferItemCollectionItemBusinessImpl exte
 		}
 		
 		if(movementsTransferItemCollectionItem.getSource() != null && movementsTransferItemCollectionItem.getDestination()!=null) {
+			System.out
+					.println("MovementCollectionValuesTransferItemCollectionItemBusinessImpl.computeChanges()");
+			System.out.println(movementsTransferItemCollectionItem.getSource().getValue() == null);
+			System.out.println(movementsTransferItemCollectionItem.getValue());
+			System.out.println(movementsTransferItemCollectionItem.getSource().getValue());
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setFieldObject(movementsTransferItemCollectionItem.getDestination())
 					.setFieldName(Movement.FIELD_VALUE).setValue2((movementsTransferItemCollectionItem.getSource().getValue() == null ? movementsTransferItemCollectionItem.getValue()
 							:  movementsTransferItemCollectionItem.getSource().getValue()).negate()).setEqual(Boolean.FALSE));	
