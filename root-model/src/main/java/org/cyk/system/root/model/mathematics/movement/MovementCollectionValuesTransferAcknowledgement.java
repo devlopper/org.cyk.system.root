@@ -36,6 +36,16 @@ public class MovementCollectionValuesTransferAcknowledgement extends AbstractIde
 		return this;
 	}
 	
+	public MovementCollectionValuesTransferAcknowledgement setItemsSourceMovementCollectionIsBuffer(Boolean itemsSourceMovementCollectionIsBuffer){
+		getItems().getSource().setMovementCollectionIsBuffer(itemsSourceMovementCollectionIsBuffer);
+		return this;
+	}
+	
+	public MovementCollectionValuesTransferAcknowledgement setItemsDestinationMovementCollectionIsBuffer(Boolean itemsDestinationMovementCollectionIsBuffer){
+		getItems().getDestination().setMovementCollectionIsBuffer(itemsDestinationMovementCollectionIsBuffer);
+		return this;
+	}
+	
 	/**/
 	
 	public static final String FIELD_TRANSFER = "transfer";

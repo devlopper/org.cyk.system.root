@@ -81,8 +81,10 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             exceptionUtils().exception(identifiable.getIdentifier()!=null,"exception.value.set.system",new Object[]{"identifier"});
             
             for(FieldHelper.Field index : FieldHelper.Field.get(anIdentifiable.getClass())){
-            	if(index.getConstraints().getIsNullable() != null && Boolean.FALSE.equals(index.getConstraints().getIsNullable()))
+            	if(index.getConstraints().getIsNullable() != null && Boolean.FALSE.equals(index.getConstraints().getIsNullable())){
+            		logDebug("field <<{}.{}>> must not be null", identifiable.getClass().getName(),index.getName());
             		throw__(ConditionHelper.Condition.getBuilderNull(identifiable,index.getName()));	
+            	}
             	
         	}
         }

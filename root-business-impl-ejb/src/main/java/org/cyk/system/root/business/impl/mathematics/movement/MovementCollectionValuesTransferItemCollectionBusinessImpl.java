@@ -20,5 +20,5 @@ public class MovementCollectionValuesTransferItemCollectionBusinessImpl extends 
     public MovementCollectionValuesTransferItemCollectionBusinessImpl(MovementCollectionValuesTransferItemCollectionDao dao) {
         super(dao);
     } 
-
+	
 }

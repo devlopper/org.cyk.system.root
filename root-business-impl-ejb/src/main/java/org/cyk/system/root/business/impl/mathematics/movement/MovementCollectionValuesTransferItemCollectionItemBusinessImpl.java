@@ -11,9 +11,11 @@ import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollectionItem;
+import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionValuesTransferItemCollectionItemDao;
 import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.ThrowableHelper;
 
 public class MovementCollectionValuesTransferItemCollectionItemBusinessImpl extends AbstractCollectionItemBusinessImpl<MovementCollectionValuesTransferItemCollectionItem, MovementCollectionValuesTransferItemCollectionItemDao,MovementCollectionValuesTransferItemCollection> implements MovementCollectionValuesTransferItemCollectionItemBusiness,Serializable {
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -59,6 +61,13 @@ public class MovementCollectionValuesTransferItemCollectionItemBusinessImpl exte
 				if(movementsTransferItemCollectionItem.getSource().getValue() == null && movementsTransferItemCollectionItem.getDestination().getValue()!=null)
 					movementsTransferItemCollectionItem.getSource().setValue(movementsTransferItemCollectionItem.getDestination().getValue().abs());
 			}
+			
+			if(movementsTransferItemCollectionItem.getCollection()!=null && Boolean.TRUE.equals(movementsTransferItemCollectionItem.getCollection().getSource().getMovementCollectionIsBuffer()) && movementsTransferItemCollectionItem.getSource().getCollection()!=null){
+				Boolean isBuffer = inject(MovementCollectionDao.class).countByBuffer(movementsTransferItemCollectionItem.getSource().getCollection()) > 0;
+				if(!isBuffer)
+					ThrowableHelper.getInstance().throw_("source "+movementsTransferItemCollectionItem.getSource().getCollection()+" must be a buffer");
+			}
+			
 			inject(MovementBusiness.class).computeChanges(movementsTransferItemCollectionItem.getSource());
 		}
 		
@@ -70,19 +79,22 @@ public class MovementCollectionValuesTransferItemCollectionItemBusinessImpl exte
 				if(movementsTransferItemCollectionItem.getDestination().getValue() == null && movementsTransferItemCollectionItem.getSource().getValue()!=null)
 					movementsTransferItemCollectionItem.getDestination().setValue(movementsTransferItemCollectionItem.getSource().getValue().abs());
 			}
+			
+			if(movementsTransferItemCollectionItem.getCollection()!=null && Boolean.TRUE.equals(movementsTransferItemCollectionItem.getCollection().getDestination().getMovementCollectionIsBuffer()) && movementsTransferItemCollectionItem.getDestination().getCollection()!=null){
+				Boolean isBuffer = inject(MovementCollectionDao.class).countByBuffer(movementsTransferItemCollectionItem.getDestination().getCollection()) > 0;
+				if(!isBuffer)
+					ThrowableHelper.getInstance().throw_("destination "+movementsTransferItemCollectionItem.getDestination().getCollection()+" must be a buffer");
+			}
+			
 			inject(MovementBusiness.class).computeChanges(movementsTransferItemCollectionItem.getDestination());
 		}
 		
-		if(movementsTransferItemCollectionItem.getSource() != null && movementsTransferItemCollectionItem.getDestination()!=null) {
-			System.out
-					.println("MovementCollectionValuesTransferItemCollectionItemBusinessImpl.computeChanges()");
-			System.out.println(movementsTransferItemCollectionItem.getSource().getValue() == null);
-			System.out.println(movementsTransferItemCollectionItem.getValue());
-			System.out.println(movementsTransferItemCollectionItem.getSource().getValue());
+		if(movementsTransferItemCollectionItem.getSource() != null && movementsTransferItemCollectionItem.getDestination()!=null && movementsTransferItemCollectionItem.getValue()!=null) {
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setFieldObject(movementsTransferItemCollectionItem.getDestination())
-					.setFieldName(Movement.FIELD_VALUE).setValue2((movementsTransferItemCollectionItem.getSource().getValue() == null ? movementsTransferItemCollectionItem.getValue()
-							:  movementsTransferItemCollectionItem.getSource().getValue()).negate()).setEqual(Boolean.FALSE));	
+					.setFieldName(Movement.FIELD_VALUE).setValue2(movementsTransferItemCollectionItem.getSource().getValue().negate()).setEqual(Boolean.FALSE));	
 		}
+		
+		
 		
 	}
 	

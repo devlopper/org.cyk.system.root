@@ -403,6 +403,7 @@ public interface RootConstant {
 			private static final long serialVersionUID = 1L;
 			
 			public static String DEFAULT = "DEFAULT";
+			
 			public static String CASH_REGISTER = "CASHREGISTER";
 			public static String STOCK_REGISTER = "STOCKREGISTER";
 			public static String SALE_BALANCE = "SALEBALANCE";

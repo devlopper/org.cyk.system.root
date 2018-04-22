@@ -7,15 +7,14 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionValuesTransferBusiness;
-import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionValuesTransferItemCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollection;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionValuesTransferDao;
 import org.cyk.utility.common.helper.CollectionHelper;
 
 public class MovementCollectionValuesTransferBusinessImpl extends AbstractTypedBusinessService<MovementCollectionValuesTransfer, MovementCollectionValuesTransferDao> implements MovementCollectionValuesTransferBusiness,Serializable {
-
 	private static final long serialVersionUID = -3799482462496328200L;
 	
 	@Inject
@@ -25,8 +24,8 @@ public class MovementCollectionValuesTransferBusinessImpl extends AbstractTypedB
 
 	@Override
 	public MovementCollectionValuesTransfer instanciateOne() {
-		return super.instanciateOne().setItems(inject(MovementCollectionValuesTransferItemCollectionBusiness.class).instanciateOne().setItemsSynchonizationEnabled(Boolean.TRUE))
-				.addCascadeOperationToMasterFieldNames(MovementCollectionValuesTransfer.FIELD_ITEMS);
+		return super.instanciateOne().setItems(instanciateOne(MovementCollectionValuesTransferItemCollection.class).setItemsSynchonizationEnabled(Boolean.TRUE))
+				.addCascadeOperationToMasterFieldNames(MovementCollectionValuesTransfer.FIELD_ITEMS).setItemsDestinationMovementCollectionIsBuffer(Boolean.TRUE);
 	}
 	
 	@Override

@@ -30,8 +30,9 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 	
 	@Override
 	public MovementCollectionValuesTransferAcknowledgement instanciateOne() {
-		return super.instanciateOne().setItems(inject(MovementCollectionValuesTransferItemCollectionBusiness.class).instanciateOne().setItemsSynchonizationEnabled(Boolean.TRUE))
-				.addCascadeOperationToMasterFieldNames(MovementCollectionValuesTransferAcknowledgement.FIELD_ITEMS);
+		return super.instanciateOne().setItems(inject(MovementCollectionValuesTransferItemCollectionBusiness.class).instanciateOne()
+				.setItemsSynchonizationEnabled(Boolean.TRUE)).addCascadeOperationToMasterFieldNames(MovementCollectionValuesTransferAcknowledgement.FIELD_ITEMS)
+				.setItemsSourceMovementCollectionIsBuffer(Boolean.TRUE);
 	}
 	
 	@Override

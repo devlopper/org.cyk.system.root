@@ -53,6 +53,16 @@ public class MovementCollectionValuesTransfer extends AbstractIdentifiable imple
 		return (MovementCollectionValuesTransfer) super.addCascadeOperationToMasterFieldNames(fieldNames);
 	}
 	
+	public MovementCollectionValuesTransfer setItemsSourceMovementCollectionIsBuffer(Boolean itemsSourceMovementCollectionIsBuffer){
+		getItems().getSource().setMovementCollectionIsBuffer(itemsSourceMovementCollectionIsBuffer);
+		return this;
+	}
+	
+	public MovementCollectionValuesTransfer setItemsDestinationMovementCollectionIsBuffer(Boolean itemsDestinationMovementCollectionIsBuffer){
+		getItems().getDestination().setMovementCollectionIsBuffer(itemsDestinationMovementCollectionIsBuffer);
+		return this;
+	}
+	
 	/**/
 	
 	public static final String FIELD_TYPE = "type";

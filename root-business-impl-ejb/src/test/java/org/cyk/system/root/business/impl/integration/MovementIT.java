@@ -17,6 +17,8 @@ import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventoryItemCollection;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventoryItemCollectionItem;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionType;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferAcknowledgement;
@@ -69,6 +71,15 @@ public class MovementIT extends AbstractBusinessIT {
     	assertNotNull(movementCollection.getType().getInterval());
     	movementCollection.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection);
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementCollectionAndItsBuffer(){
+    	TestCase testCase = instanciateTestCase();
+    	String movementCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode).setIsCreateBufferAutomatically(Boolean.TRUE));
+    	testCase.assertCountAll(MovementCollection.class, 2);
     	testCase.clean();
     }
     
@@ -1157,27 +1168,6 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.clean();
     }
     
-    //@Test
-    public void computeChangesMovementCollectionValuesTransferItemCollectionItem(){
-    	TestCase testCase = instanciateTestCase(); 
-    	
-    	String sourceMovementCollectionCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class, sourceMovementCollectionCode)).setInitialValueFromObject(10);
-    	
-    	String destinationMovementCollectionCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class, destinationMovementCollectionCode));
-    	
-    	String code = testCase.getRandomAlphabetic();
-    	MovementCollectionValuesTransferItemCollectionItem movementCollectionValuesTransferItemCollectionItem = testCase.instanciateOne(MovementCollectionValuesTransferItemCollectionItem.class,code)
-    			.setDestinationValueAbsoluteFromObject(1).setSourceMovementCollectionFromCode(sourceMovementCollectionCode)
-    			.setDestinationMovementCollectionFromCode(destinationMovementCollectionCode);
-    	
-    	testCase.computeChanges(movementCollectionValuesTransferItemCollectionItem);
-    	testCase.assertEqualsNumber(10, movementCollectionValuesTransferItemCollectionItem.getSource().getCumul());
-    	
-    	testCase.clean();
-    }
-    
     @Test
     public void crudOneMovementCollectionValuesTransferItemCollectionItemWithMovementCollection(){
     	TestCase testCase = instanciateTestCase(); 
@@ -1274,6 +1264,30 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementCollectionValuesTransferWithOneItemAndItsAcknowledgementWithBackSome(){
     	instanciateTestCase().assertOneMovementCollectionValuesTransferWithOneItemAndItsAcknowledgement(3, 2);
+    }
+    
+    /* Inventory */
+    
+    @Test
+    public void crudOneMovementCollectionInventoryItemCollection(){
+    	TestCase testCase = instanciateTestCase(); 
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventoryItemCollection.class,code));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementCollectionInventoryItemCollectionItem(){
+    	TestCase testCase = instanciateTestCase(); 
+    	
+    	String movementCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionCode));
+    	
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventoryItemCollectionItem.class,code).setMovementCollectionFromCode(movementCollectionCode)
+    			.setValueFromObject(0));
+    	
+    	testCase.clean();
     }
     
     /* Exceptions */

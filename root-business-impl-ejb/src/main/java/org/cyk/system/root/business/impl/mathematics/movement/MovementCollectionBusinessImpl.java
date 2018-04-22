@@ -32,6 +32,14 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	}
 	
 	@Override
+	protected void createMaster(MovementCollection movementCollection,String fieldName, AbstractIdentifiable master) {
+		super.createMaster(movementCollection,fieldName, master);
+		if(master instanceof MovementCollection && MovementCollection.FIELD_BUFFER.equals(fieldName)){
+			master.setCode(movementCollection.getCode()+"BUFFER");
+		}
+	}
+	
+	@Override
 	protected void afterCrud(MovementCollection movementCollection, Crud crud) {
 		super.afterCrud(movementCollection, crud);
 		if(Crud.isCreateOrUpdate(crud)){
@@ -48,6 +56,9 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 						identifiablePeriodCollection, movementCollection));
 				*/
 			}
+		}else if(Crud.DELETE.equals(crud)){
+			if(movementCollection.getBuffer()!=null)
+				delete(movementCollection.getBuffer());
 		}
 	}
 	

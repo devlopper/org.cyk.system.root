@@ -12,4 +12,7 @@ public interface MovementCollectionDao extends AbstractCollectionDao<MovementCol
 
 	Collection<MovementCollection> readByTypeByJoin(MovementCollectionType type,AbstractIdentifiable join);
 	
+	Collection<MovementCollection> readByBuffer(MovementCollection movementCollection);
+	Long countByBuffer(MovementCollection movementCollection);
+	
 }

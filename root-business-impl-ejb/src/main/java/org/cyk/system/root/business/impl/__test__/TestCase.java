@@ -462,18 +462,17 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
 	 public void assertOneMovementCollectionValuesTransferWithOneItemAndItsAcknowledgement(Object transferValue,Object acknownledgementValue){
     	countAll(Movement.class);
     	
-    	String sourceMovementCollectionCode = getRandomAlphabetic();
+    	String sourceMovementCollectionCode = "SRC"+getRandomAlphabetic();
     	create(instanciateOne(MovementCollection.class, sourceMovementCollectionCode));
     	
-    	String tempMovementCollectionCode = getRandomAlphabetic();
-    	create(instanciateOne(MovementCollection.class, tempMovementCollectionCode));
+    	String destinationMovementCollectionCode = "DEST"+getRandomAlphabetic();
+    	create(instanciateOne(MovementCollection.class, destinationMovementCollectionCode).setIsCreateBufferAutomatically(Boolean.TRUE));
     	
-    	String destinationMovementCollectionCode = getRandomAlphabetic();
-    	create(instanciateOne(MovementCollection.class, destinationMovementCollectionCode));
+    	String destinationBufferMovementCollectionCode = getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollection.class, destinationMovementCollectionCode).getBuffer().getCode();
     	
     	String movementsTransferCode = getRandomAlphabetic();
     	MovementCollectionValuesTransfer movementsTransfer = instanciateOne(MovementCollectionValuesTransfer.class,movementsTransferCode);
-    	movementsTransfer.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(sourceMovementCollectionCode, tempMovementCollectionCode, transferValue);
+    	movementsTransfer.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(sourceMovementCollectionCode, destinationBufferMovementCollectionCode, transferValue);
     	create(movementsTransfer);
     	
     	assertCountAll(Movement.class,2);
@@ -482,14 +481,14 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     			, new String[]{"0","-"+transferValue,"-"+transferValue,"false"}
     	);
     	
-    	assertMovements(tempMovementCollectionCode
+    	assertMovements(destinationBufferMovementCollectionCode
     			, new String[]{"0",""+transferValue,""+transferValue,"true"}
     	);
     	
     	String movementsTransferAcknowledgementCode = getRandomAlphabetic();
     	MovementCollectionValuesTransferAcknowledgement movementsTransferAcknowledgement = instanciateOne(MovementCollectionValuesTransferAcknowledgement.class,movementsTransferAcknowledgementCode)
     			.setTransferFromCode(movementsTransferCode);
-    	movementsTransferAcknowledgement.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(tempMovementCollectionCode, destinationMovementCollectionCode
+    	movementsTransferAcknowledgement.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(destinationBufferMovementCollectionCode, destinationMovementCollectionCode
     			, acknownledgementValue);
     	create(movementsTransferAcknowledgement);
     	
@@ -505,7 +504,7 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     			, new String[]{"0","-"+transferValue,"-"+transferValue,"false"}
     	);
     	
-    	assertMovements(tempMovementCollectionCode
+    	assertMovements(destinationBufferMovementCollectionCode
     			, new String[]{"0",""+transferValue,""+transferValue,"true"}
     			, new String[]{"1","-"+acknownledgementValue,""+gap,"false"}
     	);
@@ -517,8 +516,8 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
         			, new String[]{"1",""+gap,""+sourceMovementCollectionValue,"true"}
         	);
     		
-    		assertMovementCollection(tempMovementCollectionCode, 0, 3);
-    		assertMovements(tempMovementCollectionCode
+    		assertMovementCollection(destinationBufferMovementCollectionCode, 0, 3);
+    		assertMovements(destinationBufferMovementCollectionCode
         			, new String[]{"2","-"+gap,"0","false"}
         	);
     	}

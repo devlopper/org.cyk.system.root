@@ -9,6 +9,11 @@ import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.movement.Movement;
+import org.cyk.system.root.model.mathematics.movement.MovementCollection;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventoryItemCollection;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferAcknowledgement;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollection;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.person.JobTitle;
@@ -41,12 +46,21 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
 		FieldHelper.Field.get(IdentifiablePeriod.class, FieldHelper.getInstance().buildPath(IdentifiablePeriod.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD
 				,Period.FIELD_TO_DATE)).getConstraints().setDatePart(Constant.Date.Part.DATE_AND_TIME_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND_MILLISECOND);
 		
-		//FieldHelper.Field.get(MovementCollection.class, FieldHelper.getInstance().buildPath(MovementCollection.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
-		//		)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
+		FieldHelper.Field.get(MovementCollection.class, FieldHelper.getInstance().buildPath(MovementCollection.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
+				)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
 		
 		FieldHelper.Field.get(Movement.class, Movement.FIELD_COLLECTION).getConstraints().setIsNullable(Boolean.FALSE);
 		FieldHelper.Field.get(Movement.class, FieldHelper.getInstance().buildPath(Movement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD
 				,Period.FIELD_FROM_DATE)).getConstraints().setDatePart(Constant.Date.Part.DATE_AND_TIME_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND_MILLISECOND);
+		
+		FieldHelper.Field.get(MovementCollectionValuesTransferItemCollection.class, FieldHelper.getInstance().buildPath(MovementCollectionValuesTransfer.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
+				)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
+		FieldHelper.Field.get(MovementCollectionValuesTransfer.class, FieldHelper.getInstance().buildPath(MovementCollectionValuesTransfer.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
+				)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
+		FieldHelper.Field.get(MovementCollectionValuesTransferAcknowledgement.class, FieldHelper.getInstance().buildPath(MovementCollectionValuesTransferAcknowledgement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
+				)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
+		FieldHelper.Field.get(MovementCollectionInventoryItemCollection.class, FieldHelper.getInstance().buildPath(MovementCollectionValuesTransferAcknowledgement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
+				)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
 		
 		GlobalIdentifierPersistenceMappingConfiguration configuration = new GlobalIdentifierPersistenceMappingConfiguration();
         Property property = new Property(commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE),new Column() {

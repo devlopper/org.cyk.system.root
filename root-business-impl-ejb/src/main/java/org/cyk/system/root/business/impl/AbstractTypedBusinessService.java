@@ -222,7 +222,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 						java.lang.reflect.Field masterField = FieldHelper.getInstance().get(identifiable.getClass(), fieldName);
 						AbstractIdentifiable master = (AbstractIdentifiable) FieldHelper.getInstance().read(identifiable, masterField);
 						//master.getGlobalIdentifierCreateIfNull().setIdentifierOfOwner(identifierOfOwner);
-						createMaster(identifiable,master);
+						createMaster(identifiable,fieldName,master);
 					}
 				}.execute();
 			}else{
@@ -231,7 +231,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		}		
 	}
 	
-	protected void createMaster(IDENTIFIABLE identifiable,AbstractIdentifiable master){
+	protected void createMaster(IDENTIFIABLE identifiable,String fieldName,AbstractIdentifiable master){
 		createIfNotIdentified(master);
 	}
 	

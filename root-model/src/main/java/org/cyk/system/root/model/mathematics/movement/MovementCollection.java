@@ -7,13 +7,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
-import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.CollectionHelper;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,13 +30,22 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
  
 	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private MovementCollectionType type;
 	
+	@ManyToOne @JoinColumn(name=COLUMN_BUFFER) private MovementCollection buffer;
+	
+	@Transient private Boolean isCreateBufferAutomatically;
+	
 	@Override
 	public MovementCollection setCode(String code) {
 		return (MovementCollection) super.setCode(code);
 	}
 	
 	public MovementCollection setTypeFromCode(String code){
-		this.type = InstanceHelper.getInstance().getByIdentifier(MovementCollectionType.class, code, ClassHelper.Listener.IdentifierType.BUSINESS);
+		this.type = getFromCode(MovementCollectionType.class, code);
+		return this;
+	}
+	
+	public MovementCollection setBufferFromCode(String code){
+		this.buffer = getFromCode(MovementCollection.class, code);
 		return this;
 	}
 	
@@ -50,12 +59,30 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 		return this;
 	}
 	
+	public MovementCollection setIsCreateBufferAutomatically(Boolean isCreateBufferAutomatically){
+		this.isCreateBufferAutomatically = isCreateBufferAutomatically;
+		if(Boolean.TRUE.equals(this.isCreateBufferAutomatically))
+			addCascadeOperationToMasterFieldNames(FIELD_BUFFER);
+		else
+			CollectionHelper.getInstance().removeElement(cascadeOperationToMasterFieldNames, FIELD_BUFFER);
+		return this;
+	}
+	
 	public static final String FIELD_INITIAL_VALUE = "initialValue";
 	public static final String FIELD_VALUE = "value";
 	public static final String FIELD_TYPE = "type";
+	public static final String FIELD_BUFFER = "buffer";
+	public static final String FIELD_IS_CREATE_BUFFER_AUTOMATICALLY = "isCreateBufferAutomatically";
 	
 	public static final String COLUMN_INITIAL_VALUE = FIELD_INITIAL_VALUE;
 	public static final String COLUMN_VALUE = COLUMN_NAME_UNKEYWORD+FIELD_VALUE;
 	public static final String COLUMN_TYPE = COLUMN_NAME_UNKEYWORD+FIELD_TYPE;
+	public static final String COLUMN_BUFFER = COLUMN_NAME_UNKEYWORD+FIELD_BUFFER;
 	
+	/**/
+	
+	public static class Filter extends AbstractCollection.Filter<MovementCollection> implements Serializable{
+		private static final long serialVersionUID = 1L;
+    	
+    }
 }
