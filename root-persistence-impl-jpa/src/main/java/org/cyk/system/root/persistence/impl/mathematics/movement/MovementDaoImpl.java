@@ -13,6 +13,8 @@ import org.cyk.system.root.model.mathematics.movement.MovementMode;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementDao;
 import org.cyk.system.root.persistence.impl.AbstractCollectionItemDaoImpl;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
+import org.cyk.utility.common.computation.DataReadConfiguration;
+import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.FilterHelper.Filter;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
@@ -59,6 +61,16 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 			sum = sum.add(index.getValue());
 		return sum;
 	}
+
+	@Override
+	public Movement readByCollectionByFromDateAscendingOrderIndex(MovementCollection collection,Long index) {
+		return CollectionHelper.getInstance().getFirst(readByFilter(new Movement.Filter().addMaster(collection), new DataReadConfiguration()
+				.setFirstResultIndex(index).setMaximumResultCount(1l)));
+	}
 	
+	@Override
+	public Movement readLatestFromDateAscendingOrderIndexByCollection(MovementCollection collection) {
+		return readByCollectionByFromDateAscendingOrderIndex(collection, countByFilter(new Movement.Filter().addMaster(collection)) -1);
+	}
 }
  

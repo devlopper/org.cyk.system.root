@@ -348,6 +348,20 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     	return this;
     }
 	
+	public TestCase assertMovementCollectionLatestFromDateAscendingOrderIndex(String movementCollectionCode,String movementCode) {
+		assertEquals(movementCode+" is not the latest movement of "+movementCollectionCode,movementCode, 
+				inject(MovementDao.class).readLatestFromDateAscendingOrderIndexByCollection(getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollection.class
+						, movementCollectionCode)).getCode());
+		return this;
+	}
+	
+	public TestCase assertMovementCollectionLatestFromDateAscendingOrderIndexIsNull(String movementCollectionCode) {
+		Movement movement = inject(MovementDao.class).readLatestFromDateAscendingOrderIndexByCollection(getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollection.class
+				, movementCollectionCode));
+		assertNull(movement == null ? "" : movementCollectionCode+" has a latest which is "+movement.getCode(), movement);
+		return this;
+	}
+	
 	public TestCase assertMovement(String code,String expectedValue,String expectedCumul,Boolean increment,String expectedSupportingDocumentProvider,String expectedSupportingDocumentIdentifier){
     	assertMovement(read(Movement.class, code), expectedValue,expectedCumul, increment, expectedSupportingDocumentProvider, expectedSupportingDocumentIdentifier);
     	return this;

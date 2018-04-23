@@ -34,10 +34,10 @@ import lombok.experimental.Accessors;
 public class Movement extends AbstractCollectionItem<MovementCollection> implements Serializable {	
 	private static final long serialVersionUID = -4946585596435850782L;
 
-	//@Transient private IdentifiablePeriod identifiablePeriod;
 	@ManyToOne @JoinColumn(name=COLUMN_ACTION) private MovementAction action;	
 	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
 	@ManyToOne @JoinColumn(name=COLUMN_MODE) private MovementMode mode;
+	@ManyToOne @JoinColumn(name=COLUMN_REASON) private MovementReason reason;
 	
 	@Transient private BigDecimal valueAbsolute;
 	@Transient private Boolean valueSettableFromAbsolute;
@@ -158,12 +158,14 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	public static final String FIELD_DESTINATION_MOVEMENT = "destinationMovement";
 	public static final String FIELD_PARENT = "parent";
 	public static final String FIELD_PARENT_ACTION_IS_OPPOSITE_OF_CHILD_ACTION = "parentActionIsOppositeOfChildAction";
+	public static final String FIELD_REASON = "reason";
 	
 	public static final String COLUMN_MODE = FIELD_MODE;
 	public static final String COLUMN_ACTION = FIELD_ACTION;
 	public static final String COLUMN_VALUE = FIELD_VALUE;
 	public static final String COLUMN_CUMUL = FIELD_CUMUL;
 	public static final String COLUMN_PARENT = FIELD_PARENT;
+	public static final String COLUMN_REASON = FIELD_REASON;
 	
 	/**/
 	

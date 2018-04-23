@@ -3,6 +3,8 @@ package org.cyk.system.root.model.mathematics.movement;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.utility.common.annotation.ModelBean;
@@ -18,6 +20,12 @@ import lombok.experimental.Accessors;
 public class MovementCollectionInventoryItemCollection extends AbstractCollection<MovementCollectionInventoryItemCollectionItem> implements Serializable  {
 	private static final long serialVersionUID = -4876159772208660975L;
 
+	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private MovementCollectionInventoryType type;
 	
+	/**/
+	
+	public static final String FIELD_TYPE = "type";
+	
+	public static final String COLUMN_TYPE = FIELD_TYPE;
 }
 
