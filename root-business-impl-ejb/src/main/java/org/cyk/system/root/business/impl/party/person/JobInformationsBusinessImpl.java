@@ -40,4 +40,5 @@ public class JobInformationsBusinessImpl extends AbstractPersonExtendedInformati
 		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(jobInformations), Boolean.FALSE, JobInformations.FIELD_CONTACT_COLLECTION);
 	}
 	
+	
 }

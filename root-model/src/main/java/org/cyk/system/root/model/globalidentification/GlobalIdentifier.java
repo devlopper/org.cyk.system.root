@@ -71,6 +71,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	@Transient private AbstractIdentifiable identifiable;
 	@Column @Temporal(TemporalType.TIMESTAMP) private Date creationDate;
 	@ManyToOne @JoinColumn(name=COLUMN_CREATED_BY) private Party createdBy;
+	private Long creationOrderNumber;
 	
 	/**
 	 * The one in charge of

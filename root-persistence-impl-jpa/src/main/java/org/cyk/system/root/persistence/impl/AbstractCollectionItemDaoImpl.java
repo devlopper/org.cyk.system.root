@@ -92,7 +92,8 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 		if(readByFilter.equals(name)){
 			builder.setFieldName(AbstractCollectionItem.FIELD_COLLECTION).where().and().in(AbstractIdentifiable.FIELD_IDENTIFIER);
 			builder.setFieldName(null).orderBy().asc(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
-		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsGreaterThan}, name)){
+		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsGreaterThan
+				,readWhereOrderNumberIsGreaterThan}, name)){
 			builder.where().and().eq(AbstractCollectionItem.FIELD_COLLECTION);
 		}
 	}
@@ -104,7 +105,9 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 		if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
 			FilterHelper.Filter<T> filter = (Filter<T>) arguments[0];
 			queryWrapper.parameterInIdentifiers(filter.filterMasters(collectionClass),AbstractCollectionItem.FIELD_COLLECTION,AbstractIdentifiable.FIELD_IDENTIFIER); 
-		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,countWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsGreaterThan,countWhereExistencePeriodFromDateIsGreaterThan}, queryName)){
+		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,countWhereExistencePeriodFromDateIsLessThan
+				,readWhereExistencePeriodFromDateIsGreaterThan,countWhereExistencePeriodFromDateIsGreaterThan
+				,readWhereOrderNumberIsGreaterThan,countWhereOrderNumberIsGreaterThan}, queryName)){
 			AbstractCollectionItem<?> item = (AbstractCollectionItem<?>) arguments[0];
 			queryWrapper.parameter(AbstractCollectionItem.FIELD_COLLECTION, item.getCollection());
 		} 

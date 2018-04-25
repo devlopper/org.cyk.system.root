@@ -315,6 +315,13 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return globalIdentifier == null ? null : globalIdentifier.getOrderNumber();
 	}
 	
+	public void setCreationOrderNumber(Long orderNumber){
+		getGlobalIdentifierCreateIfNull().setCreationOrderNumber(orderNumber);
+	}
+	public Long getCreationOrderNumber(){
+		return globalIdentifier == null ? null : globalIdentifier.getCreationOrderNumber();
+	}
+	
 	public void setOtherDetails(String otherDetails){
 		getGlobalIdentifierCreateIfNull().setOtherDetails(otherDetails);
 	}

@@ -50,6 +50,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		,readByGlobalIdentifierSupportingDocumentCode,countByGlobalIdentifierSupportingDocumentCode,readByIdentifiers,readFirstWhereExistencePeriodFromDateIsLessThan
 		,readWhereExistencePeriodFromDateIsLessThan,countWhereExistencePeriodFromDateIsLessThan
 		,readWhereExistencePeriodFromDateIsGreaterThan,countWhereExistencePeriodFromDateIsGreaterThan,readWhereExistencePeriodCross,countWhereExistencePeriodCross
+		,readWhereOrderNumberIsGreaterThan,countWhereOrderNumberIsGreaterThan
 		,readByFilter,countByFilter;
 	/*
 	@SuppressWarnings("unchecked")
@@ -125,25 +126,15 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		}
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereExistencePeriodFromDateIsLessThan())){
-			/*
-			String dateFieldName = commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE);
-			QueryStringBuilder queryStringBuilder = _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.LT)
-					.and(AbstractIdentifiable.FIELD_IDENTIFIER, ArithmeticOperator.NEQ);
-			processQueryStringBuilder(queryStringBuilder, readWhereExistencePeriodFromDateIsLessThan);
-			queryStringBuilder.orderBy(dateFieldName, Boolean.FALSE);
-			*/
 			registerNamedQuery(readWhereExistencePeriodFromDateIsLessThan, getJpqlString(readWhereExistencePeriodFromDateIsLessThan));
 		}
 		
 		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereExistencePeriodFromDateIsGreaterThan())){
-			/*
-			String dateFieldName = commonUtils.attributePath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE);
-			QueryStringBuilder queryStringBuilder = _select().where(dateFieldName,Period.FIELD_FROM_DATE,ArithmeticOperator.GT)
-					.and(AbstractIdentifiable.FIELD_IDENTIFIER, ArithmeticOperator.NEQ);
-			processQueryStringBuilder(queryStringBuilder, readWhereExistencePeriodFromDateIsGreaterThan);
-			queryStringBuilder.orderBy(dateFieldName, Boolean.FALSE);
-			*/
 			registerNamedQuery(readWhereExistencePeriodFromDateIsGreaterThan, getJpqlString(readWhereExistencePeriodFromDateIsGreaterThan));
+		}
+		
+		if(Boolean.TRUE.equals(allowAll) || Boolean.TRUE.equals(configuration.getReadWhereOrderNumberIsGreaterThan())){
+			registerNamedQuery(readWhereOrderNumberIsGreaterThan, getJpqlString(readWhereOrderNumberIsGreaterThan));
 		}
 		
 		String readByGlobalIdentifierSearchCriteriaQuery = null;
@@ -209,6 +200,11 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			.gt(Period.FIELD_FROM_DATE, Period.FIELD_FROM_DATE).and().getParent().setFieldName(null).where()
 			.neq(AbstractIdentifiable.FIELD_IDENTIFIER, AbstractIdentifiable.FIELD_IDENTIFIER);
 			builder.orderBy().desc("globalIdentifier.existencePeriod.fromDate");
+		}else if(readWhereOrderNumberIsGreaterThan.equals(name)){
+			builder.setFieldName(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER).where()
+			.gt(GlobalIdentifier.FIELD_ORDER_NUMBER, GlobalIdentifier.FIELD_ORDER_NUMBER).and().getParent().setFieldName(null).where()
+			.neq(AbstractIdentifiable.FIELD_IDENTIFIER, AbstractIdentifiable.FIELD_IDENTIFIER);
+			builder.orderBy().desc("globalIdentifier.existencePeriod.fromDate");
 		}
 	}
 	
@@ -220,6 +216,11 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			@SuppressWarnings("unchecked")
 			IDENTIFIABLE identifiable = (IDENTIFIABLE) arguments[0];
 			queryWrapper.parameter(Period.FIELD_FROM_DATE, identifiable.getBirthDate())
+			.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, InstanceHelper.getInstance().getIfNotNullElseDefault(identifiable.getIdentifier(),-1l));
+		}else if(ArrayUtils.contains(new String[]{readWhereOrderNumberIsGreaterThan,countWhereOrderNumberIsGreaterThan}, queryName)){
+			@SuppressWarnings("unchecked")
+			IDENTIFIABLE identifiable = (IDENTIFIABLE) arguments[0];
+			queryWrapper.parameter(GlobalIdentifier.FIELD_ORDER_NUMBER, identifiable.getOrderNumber())
 			.parameter(AbstractIdentifiable.FIELD_IDENTIFIER, InstanceHelper.getInstance().getIfNotNullElseDefault(identifiable.getIdentifier(),-1l));
 		}else if(ArrayUtils.contains(new String[]{readByFilter,countByFilter}, queryName)){
 			FilterHelper.Filter<?> filter = (FilterHelper.Filter<?>) arguments[0];
@@ -619,6 +620,28 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		return getCountWhereExistencePeriodFromDateIsGreaterThanQueryWrapper(identifiable).resultOne();
 	}
 	
+	protected QueryWrapper<IDENTIFIABLE> getReadWhereOrderNumberIsGreaterThanQueryWrapper(IDENTIFIABLE identifiable) {
+		QueryWrapper<IDENTIFIABLE> queryWrapper = namedQuery(readWhereOrderNumberIsGreaterThan);
+		processQueryWrapper(clazz, queryWrapper, readWhereOrderNumberIsGreaterThan,new Object[]{identifiable});
+		return queryWrapper;
+	}
+	
+	protected QueryWrapper<Long> getCountWhereOrderNumberIsGreaterThanQueryWrapper(IDENTIFIABLE identifiable) {
+		QueryWrapper<Long> queryWrapper = countNamedQuery(countWhereOrderNumberIsGreaterThan);
+		processQueryWrapper(Long.class, queryWrapper, countWhereOrderNumberIsGreaterThan,new Object[]{identifiable});
+		return queryWrapper;
+	}
+	
+	@Override
+	public Collection<IDENTIFIABLE> readWhereOrderNumberIsGreaterThan(IDENTIFIABLE identifiable) {
+		return getReadWhereOrderNumberIsGreaterThanQueryWrapper(identifiable).resultMany();
+	}
+	
+	@Override
+	public Long countWhereOrderNumberIsGreaterThan(IDENTIFIABLE identifiable) {
+		return getCountWhereOrderNumberIsGreaterThanQueryWrapper(identifiable).resultOne();
+	}
+	
 	/**/
 
 	protected String criteriaSearchQueryId(AbstractFieldValueSearchCriteria<?> searchCriteria,String ascendingOrderQueryId,String descendingOrderQueryId){
@@ -656,6 +679,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 		private Boolean readFirstWhereExistencePeriodFromDateIsLessThan = Boolean.TRUE;
 		private Boolean readWhereExistencePeriodFromDateIsLessThan = Boolean.TRUE;
 		private Boolean readWhereExistencePeriodFromDateIsGreaterThan = Boolean.TRUE;
+		private Boolean readWhereOrderNumberIsGreaterThan = Boolean.TRUE;
 		
 		private Boolean readByClasses = Boolean.FALSE;
 		private Boolean readByNotClasses = Boolean.FALSE;

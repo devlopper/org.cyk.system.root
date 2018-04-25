@@ -453,6 +453,14 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
 		return this;
     }
 	
+	@SuppressWarnings("unchecked")
+	public TestCase assertEqualsCountWhereOrderNumbeIsGreaterThanrByBusinessIdentifier(Class<?> aClass,Object identifier,Object count){
+		assertEqualsNumber(count, 
+				inject(PersistenceInterfaceLocator.class).injectTyped((Class<AbstractIdentifiable>)aClass)
+				.countWhereOrderNumberIsGreaterThan((AbstractIdentifiable) getByIdentifierWhereValueUsageTypeIsBusiness(aClass, identifier)));
+		return this;
+	}
+	
 	 public TestCase assertComputedChanges(Movement movement,String previousCumul,String cumul){
     	if(movement.getCollection()==null || movement.getCollection().getValue()==null){
     		AbstractBusinessTestHelper.assertNull("expected movement previous cumul is not null",previousCumul); 

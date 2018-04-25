@@ -17,15 +17,18 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @NoArgsConstructor @Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.FEMALE) @Accessors(chain=true)
-public class MovementCollectionInventoryItemCollection extends AbstractCollection<MovementCollectionInventoryItemCollectionItem> implements Serializable  {
+public class MovementCollectionInventory extends AbstractCollection<MovementCollectionInventoryItem> implements Serializable  {
 	private static final long serialVersionUID = -4876159772208660975L;
 
+	@ManyToOne @JoinColumn(name=COLUMN_MOVEMENT_GROUP) private MovementGroup movementGroup;
 	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private MovementCollectionInventoryType type;
 	
 	/**/
 	
+	public static final String FIELD_MOVEMENT_GROUP = "movementGroup";
 	public static final String FIELD_TYPE = "type";
 	
+	public static final String COLUMN_MOVEMENT_GROUP = FIELD_MOVEMENT_GROUP;
 	public static final String COLUMN_TYPE = FIELD_TYPE;
 }
 

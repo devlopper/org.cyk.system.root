@@ -370,7 +370,16 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 					beforeCreate(identifiable);
 					if(identifiable.getActionListener()!=null)
 						identifiable.getActionListener().actBefore(identifiable, Constant.Action.CREATE);
+					
 					__create__(identifiable);
+					
+					if(Boolean.TRUE.equals(isComputeCreationOrderNumber(identifiable))){
+						if(identifiable.getGlobalIdentifier()!=null && identifiable.getGlobalIdentifier().getCreationOrderNumber()==null)
+							identifiable.getGlobalIdentifier().setCreationOrderNumber(computeCreationOrderNumber(identifiable));	
+					}
+					if(identifiable.getOrderNumber() == null)
+						identifiable.setOrderNumber(computeOrderNumber(identifiable));
+					
 					if(identifiable.getActionListener()!=null)
 						identifiable.getActionListener().actAfter(identifiable, Constant.Action.CREATE);
 					
@@ -380,25 +389,21 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 				}
 				
 			}.execute();
-			/*
-			Long millisecond = System.currentTimeMillis();
-			LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("create",new Object[]{"entity",identifiable.getClass().getSimpleName()}
-	    	,new Object[]{"code",identifiable.getCode()},new Object[]{"identifier",identifiable.getIdentifier()}).getLogger().execute(getClass(),LoggingHelper.Logger.Level.TRACE
-	    			,LoggingHelper.getInstance().getMarkerName(identifiable.getClass().getSimpleName(),"CREATE"));
-			
-			beforeCreate(identifiable);
-	        identifiable = dao.create(identifiable);
-	        afterCreate(identifiable);	
-	        
-	        String duration = new TimeHelper.Stringifier.Duration.Adapter.Default(System.currentTimeMillis()-millisecond).execute();
-	        
-	        LoggingHelper.getInstance().getLogger().getMessageBuilder(Boolean.TRUE).addManyParameters("created",new Object[]{"entity",identifiable.getClass().getSimpleName()}
-    		,new Object[]{"code",identifiable.getCode()},new Object[]{"identifier",identifiable.getIdentifier()},new Object[]{"duration",duration}).getLogger().execute(getClass(),LoggingHelper.Logger.Level.DEBUG
-    				,LoggingHelper.getInstance().getMarkerName(identifiable.getClass().getSimpleName(),"CREATED"));
-	        */
 		}
 		
         return identifiable;
+	}
+	
+	protected Boolean isComputeCreationOrderNumber(IDENTIFIABLE identifiable){
+		return Boolean.FALSE;
+	}
+	
+	protected Long computeCreationOrderNumber(IDENTIFIABLE identifiable){
+		return dao.countAll()-1;
+	}
+	
+	protected Long computeOrderNumber(IDENTIFIABLE identifiable){
+		return identifiable.getGlobalIdentifier().getCreationOrderNumber();
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

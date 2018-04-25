@@ -13,8 +13,10 @@ import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
 public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCollectionItem<COLLECTION>,DAO extends AbstractCollectionItemDao<ITEM,COLLECTION>,COLLECTION extends AbstractCollection<ITEM>> extends AbstractEnumerationBusinessImpl<ITEM, DAO> implements AbstractCollectionItemBusiness<ITEM,COLLECTION>,Serializable {
@@ -120,6 +122,13 @@ public abstract class AbstractCollectionItemBusinessImpl<ITEM extends AbstractCo
 		ITEM item = super.__instanciateOne__(values, listener);
 		set(listener.getSetListener().setIndex(10).setFieldType(getCollectionClass()), AbstractCollectionItem.FIELD_COLLECTION);
 		return item;
+	}
+	
+	@Override
+	public Long computeOrderNumber(ITEM item) {		
+		if(item.getCollection()==null)
+			return super.computeOrderNumber(item);
+		return dao.countByCollection(item.getCollection())-1;
 	}
 	
 	/**/

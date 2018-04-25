@@ -59,6 +59,11 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
+	protected Boolean isComputeCreationOrderNumber(Movement identifiable) {
+		return Boolean.TRUE;
+	}
+	
+	@Override
 	protected Object[] getPropertyValueTokens(Movement movement, String name) {
 		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_NAME}, name))
 			return new Object[]{movement.getCollection(),movement.getAction()};
@@ -189,20 +194,27 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			logMessageBuilder.addManyParameters("update successors");
 			
 			BigDecimal increment = null;
-			if(Crud.CREATE.equals(crud))
+			if(Crud.CREATE.equals(crud)){				
 				increment = movement.getValue();
-			else if(Crud.UPDATE.equals(crud))
+			}else if(Crud.UPDATE.equals(crud))
 				increment = movement.getValue().subtract(dao.read(movement.getIdentifier()).getValue());
-			else if(Crud.DELETE.equals(crud))
+			else if(Crud.DELETE.equals(crud)){
 				increment = movement.getValue().negate();
+			}
 			logMessageBuilder.addNamedParameters("#",movements.size(),"cum inc",increment);
 			
 			for(Movement index : movements){
 				NumberHelper.getInstance().add(BigDecimal.class, index, Movement.FIELD_CUMUL, increment);
+				index.setOrderNumber(index.getOrderNumber()+1);
 				dao.update(index);
 			}
 			logTrace(logMessageBuilder);	
 		}
+	}
+	
+	@Override
+	public Long computeOrderNumber(Movement movement) {		
+		return dao.countByCollection(movement.getCollection())-1-dao.countWhereExistencePeriodFromDateIsGreaterThan(movement);
 	}
 	
 	//TODO should be moved to MovementCollectionBusinessImpl

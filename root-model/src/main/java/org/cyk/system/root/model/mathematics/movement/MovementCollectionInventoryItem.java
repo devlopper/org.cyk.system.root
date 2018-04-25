@@ -21,37 +21,52 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter @Setter @Entity @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS) @Accessors(chain=true)
-public class MovementCollectionInventoryItemCollectionItem extends AbstractCollectionItem<MovementCollectionInventoryItemCollection> implements Serializable {
+public class MovementCollectionInventoryItem extends AbstractCollectionItem<MovementCollectionInventory> implements Serializable {
 	private static final long serialVersionUID = 8167875049554197503L;
 
 	@ManyToOne @JoinColumn(name=COLUMN_MOVEMENT_COLLECTION) @NotNull private MovementCollection movementCollection;
-	@ManyToOne @JoinColumn(name=COLUMN_MOVEMENT_BEFORE_EXISTENCE) private Movement movementBeforeExistence;
+	//@ManyToOne @JoinColumn(name=COLUMN_MOVEMENT_BEFORE_EXISTENCE) private Movement movementBeforeExistence;
 	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal value;
-	@ManyToOne @JoinColumn(name=COLUMN_VALUE_GAP_MOVEMENT) private Movement valueGapMovement;
+	@ManyToOne @JoinColumn(name=COLUMN_VALUE_GAP_MOVEMENT_GROUP_ITEM) private MovementGroupItem valueGapMovementGroupItem;
+	//@ManyToOne @JoinColumn(name=COLUMN_VALUE_GAP_MOVEMENT) private Movement valueGapMovement;
 	
 	@Transient private BigDecimal valueGap;
 	
-	public MovementCollectionInventoryItemCollectionItem setMovementCollectionFromCode(String code){
+	@Override
+	public MovementCollectionInventoryItem setCollectionFromCode(String code) {
+		return (MovementCollectionInventoryItem) super.setCollectionFromCode(code);
+	}
+	
+	public MovementCollectionInventoryItem setMovementCollectionFromCode(String code){
 		this.movementCollection = getFromCode(MovementCollection.class, code);
 		return this;
 	}
 	
-	public MovementCollectionInventoryItemCollectionItem setValueFromObject(Object value){
+	public MovementCollectionInventoryItem setValueFromObject(Object value){
 		this.value = getNumberFromObject(BigDecimal.class, value);
 		return this;
+	}
+	
+	public BigDecimal getValueGap(){
+		if(this.valueGap == null && valueGapMovementGroupItem!=null && valueGapMovementGroupItem.getMovement()!=null){
+			this.valueGap = valueGapMovementGroupItem.getMovement().getValue();
+		}
+		return this.valueGap;
 	}
 	
 	/**/
 	
 	public static final String FIELD_MOVEMENT_COLLECTION = "movementCollection";
-	public static final String FIELD_MOVEMENT_BEFORE_EXISTENCE = "movementBeforeExistence";
+	//public static final String FIELD_MOVEMENT_BEFORE_EXISTENCE = "movementBeforeExistence";
 	public static final String FIELD_VALUE = "value";
+	public static final String FIELD_VALUE_GAP_MOVEMENT_GROUP_ITEM = "valueGapMovementGroupItem";
 	public static final String FIELD_VALUE_GAP_MOVEMENT = "valueGapMovement";
 	public static final String FIELD_VALUE_GAP = "valueGap";
 	
 	public static final String COLUMN_MOVEMENT_COLLECTION = FIELD_MOVEMENT_COLLECTION;
-	public static final String COLUMN_MOVEMENT_BEFORE_EXISTENCE = FIELD_MOVEMENT_BEFORE_EXISTENCE;
+	//public static final String COLUMN_MOVEMENT_BEFORE_EXISTENCE = FIELD_MOVEMENT_BEFORE_EXISTENCE;
 	public static final String COLUMN_VALUE = FIELD_VALUE;
+	public static final String COLUMN_VALUE_GAP_MOVEMENT_GROUP_ITEM = FIELD_VALUE_GAP_MOVEMENT_GROUP_ITEM;
 	public static final String COLUMN_VALUE_GAP_MOVEMENT = FIELD_VALUE_GAP_MOVEMENT;
 	
 }

@@ -20,4 +20,5 @@ public abstract class AbstractPartyExtendedInformationsBusinessImpl<INFORMATIONS
 	public INFORMATIONS findByParty(PARTY party) {
 		return dao.readByParty(party);
 	}
+	
 }

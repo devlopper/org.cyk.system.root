@@ -10,7 +10,7 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
-import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventoryItemCollection;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventory;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferAcknowledgement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollection;
@@ -59,7 +59,7 @@ public class RootGlobalIdentifierPersistenceMappingConfigurationsRegistrator ext
 				)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
 		FieldHelper.Field.get(MovementCollectionValuesTransferAcknowledgement.class, FieldHelper.getInstance().buildPath(MovementCollectionValuesTransferAcknowledgement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
 				)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
-		FieldHelper.Field.get(MovementCollectionInventoryItemCollection.class, FieldHelper.getInstance().buildPath(MovementCollectionValuesTransferAcknowledgement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
+		FieldHelper.Field.get(MovementCollectionInventory.class, FieldHelper.getInstance().buildPath(MovementCollectionValuesTransferAcknowledgement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE
 				)).getConstraints().setIsNullable(Boolean.FALSE).setIsUnique(Boolean.TRUE);
 		
 		GlobalIdentifierPersistenceMappingConfiguration configuration = new GlobalIdentifierPersistenceMappingConfiguration();

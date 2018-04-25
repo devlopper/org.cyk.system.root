@@ -204,9 +204,9 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	/**/
 	
 	@Override
-	protected void computeChanges(COLLECTION identifiable,LoggingHelper.Message.Builder logMessageBuilder) {
-		super.computeChanges(identifiable, logMessageBuilder);
-		logMessageBuilder.addNamedParameters("#items",CollectionHelper.getInstance().getSize(identifiable.getItems().getElements())
+	protected void computeChanges(COLLECTION identifiable,LoggingHelper.Message.Builder loggingMessageBuilder) {
+		super.computeChanges(identifiable, loggingMessageBuilder);
+		loggingMessageBuilder.addNamedParameters("#items",CollectionHelper.getInstance().getSize(identifiable.getItems().getElements())
 				,"items synchronized",identifiable.getItems().isSynchonizationEnabled());
 		if(Boolean.TRUE.equals(identifiable.getItems().isSynchonizationEnabled())){
 			new CollectionHelper.Iterator.Adapter.Default<ITEM>(identifiable.getItems().getElements()){

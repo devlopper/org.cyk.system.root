@@ -38,7 +38,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	TestCase testCase = instanciateTestCase();
     	String personCode = testCase.getRandomAlphabetic();
     	testCase.assertCountAll(File.class, 0);
-    	testCase.create(testCase.instanciateOne(Person.class,personCode));
+    	testCase.create(testCase.instanciateOne(Person.class,personCode).setContactCollection(null));
     	testCase.assertCountAll(File.class, 0);
     	testCase.deleteByCode(Person.class, personCode);
     	testCase.clean();

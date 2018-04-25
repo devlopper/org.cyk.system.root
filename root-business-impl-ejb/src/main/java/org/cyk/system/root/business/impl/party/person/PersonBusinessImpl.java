@@ -131,7 +131,7 @@ public class PersonBusinessImpl extends AbstractPartyBusinessImpl<Person, Person
 		person.getImage().setName("Identity image");
 		
 		person.setBirthLocation((Location) inject(LocationBusiness.class).instanciateOneRandomly());
-			
+		
 		return person;
 	}
 	

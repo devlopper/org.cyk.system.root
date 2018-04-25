@@ -885,7 +885,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		}
 	}
 	
-	protected void computeChangesIdentifiablePeriod(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder logMessageBuilder){
+	protected void computeChangesIdentifiablePeriod(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder loggingMessageBuilder){
 		/*if(identifiable.get__identifiablePeriod__() == null){
 			Collection<IdentifiablePeriodCollection> identifiablePeriodCollections = inject(IdentifiablePeriodCollectionDao.class)
 					.readByTypeByJoin(identifiable.getCollection().getType().getIdentifiablePeriodCollectionType(), identifiable.getCollection());
@@ -906,10 +906,21 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	
 	@Override
 	public Collection<IDENTIFIABLE> findByFilter(FilterHelper.Filter<IDENTIFIABLE> filter,DataReadConfiguration dataReadConfiguration) {
+		Collection<IDENTIFIABLE> identifiables;
 		if(filter.isNull())
-    		return findAll(dataReadConfiguration);
-		listenBeforeFilter(filter,dataReadConfiguration);
-    	return getPersistenceService().readByFilter(filter,dataReadConfiguration);
+			identifiables = findAll(dataReadConfiguration);
+		else{
+			listenBeforeFilter(filter,dataReadConfiguration);
+			identifiables = getPersistenceService().readByFilter(filter,dataReadConfiguration);
+		}
+		//System.out.println("AbstractIdentifiableBusinessServiceImpl.findByFilter()");
+		new CollectionHelper.Iterator.Adapter.Default<IDENTIFIABLE>(identifiables){
+			private static final long serialVersionUID = 1L;
+			protected void __executeForEach__(IDENTIFIABLE identifiable) {
+				InstanceHelper.getInstance().computeChanges(identifiable);
+			}
+		}.execute();
+    	return identifiables;
 	}
 
 	@Override

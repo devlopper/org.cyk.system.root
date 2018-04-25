@@ -86,6 +86,19 @@ public class GenericDaoImpl extends AbstractPersistenceService<AbstractIdentifia
 		return null;
 	}
 
+	
+	@Override
+	public Collection<AbstractIdentifiable> readWhereOrderNumberIsGreaterThan(AbstractIdentifiable identifiable) {
+		throwNotYetImplemented();
+		return null;
+	}
+
+	@Override
+	public Long countWhereOrderNumberIsGreaterThan(AbstractIdentifiable identifiable) {
+		throwNotYetImplemented();
+		return null;
+	}
+
    
 	
 }
