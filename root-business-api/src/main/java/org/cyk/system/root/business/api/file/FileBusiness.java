@@ -61,5 +61,8 @@ public interface FileBusiness extends TypedBusiness<File> {
     	String TEXT = "text";
     	String APPLICATION_OCTET_STREAM = "application/octet-stream";
     }
-	
+
+    /**/
+    
+    String BYTES_OR_URI_IS_REQUIRED = "BYTES_OR_URI_IS_REQUIRED";
 }

@@ -20,74 +20,32 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Entity @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS)
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Entity @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS) @Accessors(chain=true)
 public class ValueProperties extends AbstractIdentifiable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne @JoinColumn(name=COLUMN_MEASURE) private Measure measure;
 	@ManyToOne @JoinColumn(name=COLUMN_INTERVAL_COLLECTION) private IntervalCollection intervalCollection;
-	@Enumerated(EnumType.ORDINAL) @Column(name="thetype") private ValueType type = ValueType.DEFAULT;
-	@Enumerated(EnumType.ORDINAL) @Column(name="theset") private ValueSet set = ValueSet.DEFAULT;
+	@Enumerated(EnumType.ORDINAL) @Column(name=COLUMN_TYPE) private ValueType type = ValueType.DEFAULT;
+	@Enumerated(EnumType.ORDINAL) @Column(name=COLUMN_SET) private ValueSet set = ValueSet.DEFAULT;
 	
-	/*
-	 * it is not the same concept as derived in global identifier
-	 * Means if the value is derived
-	 */
-	private Boolean derived;
 	@ManyToOne @JoinColumn(name=COLUMN_DERIVATION_SCRIPT) private Script derivationScript;
 	
 	private Boolean nullable;
 	@ManyToOne @JoinColumn(name=COLUMN_NULL_STRING) private NullString nullString;
 	
-	public ValueProperties setIntervalCollection(IntervalCollection intervalCollection){
-		this.intervalCollection = intervalCollection;
-		return this;
+	public Boolean isValueTypeBoolean(){
+		return ValueType.BOOLEAN.equals(type);
 	}
 	
-	public ValueProperties setMeasure(Measure measure){
-		this.measure = measure;
-		return this;
+	public Boolean isValueTypeNumber(){
+		return ValueType.NUMBER.equals(type);
 	}
 	
-	public ValueProperties setType(ValueType type){
-		this.type = type;
-		return this;
-	}
-	
-	public ValueProperties setSet(ValueSet set){
-		this.set = set;
-		return this;
-	}
-	
-	public ValueProperties setNullable(Boolean nullable){
-		this.nullable = nullable;
-		return this;
-	}
-	
-	public ValueProperties setNullString(NullString nullString){
-		this.nullString = nullString;
-		return this;
-	}
-		
-	public ValueType getType(){
-		return type == null ? ValueType.STRING : type;
-	}
-	
-	public Boolean getNullable(){
-		return nullable == null ? Boolean.TRUE : nullable;
-	}
-	
-	public Boolean isBoolean(){
-		return type == null ? Boolean.FALSE : ValueType.BOOLEAN.equals(type);
-	}
-	
-	public Boolean isNumber(){
-		return type == null ? Boolean.FALSE : ValueType.NUMBER.equals(type);
-	}
-	
-	public Boolean isString(){
-		return type == null ? Boolean.FALSE : ValueType.STRING.equals(type);
+	public Boolean isValueTypeString(){
+		return ValueType.STRING.equals(type);
 	}
 	
 	public static final String FIELD_INTERVAL_COLLECTION = "intervalCollection";
@@ -103,4 +61,6 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	public static final String COLUMN_MEASURE = FIELD_MEASURE;
 	public static final String COLUMN_NULL_STRING = FIELD_NULL_STRING;
 	public static final String COLUMN_DERIVATION_SCRIPT = FIELD_DERIVATION_SCRIPT;
+	public static final String COLUMN_TYPE = COLUMN_NAME_UNKEYWORD+FIELD_TYPE;
+	public static final String COLUMN_SET = COLUMN_NAME_UNKEYWORD+FIELD_SET;
 }

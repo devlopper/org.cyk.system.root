@@ -33,6 +33,8 @@ import org.cyk.system.root.persistence.api.file.ScriptDao;
 import org.cyk.system.root.persistence.api.file.ScriptVariableDao;
 import org.cyk.utility.common.ListenerUtils;
 import org.cyk.utility.common.LogMessage;
+import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.ThrowableHelper;
 
 public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, ScriptDao> implements ScriptBusiness, Serializable {
 	private static final long serialVersionUID = 8072220305781523624L;
@@ -56,12 +58,6 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 	}
 	
 	@Override
-	protected void afterUpdate(Script script) {
-		super.afterUpdate(script);
-		
-	}
-	
-	@Override
 	protected Script __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<Script> listener) {
 		listener.getInstance().getGlobalIdentifierCreateIfNull();
     	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
@@ -75,10 +71,11 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 	
 	@Override
 	public Object evaluate(final Script script) {
-		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Evaluate", "script");
+		LoggingHelper.Logger<?,?,?> loggingMessageBuilder = LoggingHelper.getInstance().getLogger();
+		loggingMessageBuilder.addNamedParameters("Evaluate", "script");
 		ScriptEngineManager manager = new ScriptEngineManager();
 		String engineName = script.getEvaluationEngine().getCode();
-		logMessageBuilder.addParameters("Engine",engineName);
+		loggingMessageBuilder.addNamedParameters("Engine",engineName);
 		ScriptEngine engine = manager.getEngineByName(engineName);
 		
 		Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
@@ -99,26 +96,26 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		});
 		
 		if(!script.getInputs().isEmpty())
-			logMessageBuilder.addParameters("Inputs",script.getInputs());
+			loggingMessageBuilder.addNamedParameters("Inputs",script.getInputs());
 		for (Entry<String, Object> entry : script.getInputs().entrySet())
 			bindings.put(entry.getKey(), entry.getValue());
 		
 		try {
 			String string = IOUtils.toString(inject(FileBusiness.class).findInputStream(script.getFile()));
-			logMessageBuilder.addParameters("Text",string);
+			loggingMessageBuilder.addNamedParameters("Text",string);
 			script.setReturned(engine.eval(string, bindings));
-			logMessageBuilder.addParameters("Returned",script.getReturned());
+			loggingMessageBuilder.addNamedParameters("Returned",script.getReturned());
 			
 			script.getOutputs().clear();
 			for (ScriptVariable scriptVariable : inject(ScriptVariableDao.class).readByScript(script))
 				script.getOutputs().put(scriptVariable.getCode(), bindings.get(scriptVariable.getCode()));
 			if(!script.getOutputs().containsKey(RootConstant.Configuration.ScriptVariable.RETURNED))
 				script.getOutputs().put(RootConstant.Configuration.ScriptVariable.RETURNED, script.getReturned());
-			logMessageBuilder.addParameters("Outputs",script.getOutputs());
-		} catch (Exception e) {
-			exceptionUtils().exception(e);
+			loggingMessageBuilder.addNamedParameters("Outputs",script.getOutputs());
+		} catch (Exception exception) {
+			ThrowableHelper.getInstance().throw_(exception);
 		} finally {
-			logTrace(logMessageBuilder);
+			logTrace(loggingMessageBuilder);
 		}
 		return script.getReturned();
 	}

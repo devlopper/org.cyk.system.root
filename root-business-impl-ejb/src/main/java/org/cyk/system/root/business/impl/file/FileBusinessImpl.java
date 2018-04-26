@@ -28,6 +28,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessThrowable;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness;
 import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
@@ -47,6 +48,9 @@ import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.FileExtension;
 import org.cyk.utility.common.LogMessage;
+import org.cyk.utility.common.helper.ArrayHelper;
+import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.ThrowableHelper;
 
 public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao> implements FileBusiness,Serializable {
 
@@ -69,6 +73,17 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_NAME}, name) && file.getRepresentationType()!=null)
 			return new Object[]{file.getRepresentationType()};
 		return super.getPropertyValueTokens(file, name);
+	}
+	
+	@Override
+	protected void beforeCrud(File file, Crud crud) {
+		super.beforeCrud(file, crud);
+		if(Crud.isCreateOrUpdate(crud)) {
+			//throw__(Condition.);
+			if(ArrayHelper.getInstance().isEmpty(file.getBytes()) && StringHelper.getInstance().isBlank(file.getUri()) ) {
+				ThrowableHelper.getInstance().throw_("file content or location is required");
+			}
+		}
 	}
 	
 	@Override

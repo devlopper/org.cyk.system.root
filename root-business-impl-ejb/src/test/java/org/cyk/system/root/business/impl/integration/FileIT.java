@@ -1,21 +1,60 @@
 package org.cyk.system.root.business.impl.integration;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
+import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.party.person.SexDao;
+import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.test.TestCase;
+import org.junit.Test;
 
-public class FileBusinessIT extends AbstractBusinessIT {
-
+public class FileIT extends AbstractBusinessIT {
     private static final long serialVersionUID = -6691092648665798471L;
 
+    static {
+    	ClassHelper.getInstance().map(DataSet.Listener.class, Data.class);
+    }
+    
+    /* File */
+    
+    @Test
+    public void crudFile() {
+    	TestCase testCase = instanciateTestCase();
+    	String fileCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(File.class,fileCode));
+    	testCase.clean();
+    }
+    
+    /* Script */
+    
+    //@Test
+    public void crudScript() {
+    	TestCase testCase = instanciateTestCase();
+    	String scriptCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode));
+    	testCase.clean();
+    }
+    
+    //@Test
+    public void evaluateScript() {
+    	TestCase testCase = instanciateTestCase();
+    	String scriptCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode));
+    	
+    	testCase.clean();
+    }
+    
 	@Override
 	protected void businesses() {
 		FileBusiness fileBusiness = inject(FileBusiness.class);
@@ -73,6 +112,16 @@ public class FileBusinessIT extends AbstractBusinessIT {
 		
 	}
    
-    
+	@SuppressWarnings("unchecked")
+	public static class Data extends DataSet.Listener.Adapter.Default implements Serializable {
+		private static final long serialVersionUID = 1L;
+    	
+		@SuppressWarnings({ "rawtypes" })
+		@Override
+		public Collection getClasses() {
+			return Arrays.asList(File.class);
+		}
+		
+    }
     
 }
