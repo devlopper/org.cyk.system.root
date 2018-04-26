@@ -36,6 +36,7 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 		super.createMaster(movementCollection,fieldName, master);
 		if(master instanceof MovementCollection && MovementCollection.FIELD_BUFFER.equals(fieldName)){
 			master.setCode(movementCollection.getCode()+"BUFFER");
+			master.setName(movementCollection.getName()+" buffer");
 		}
 	}
 	

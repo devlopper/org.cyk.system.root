@@ -8,11 +8,16 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionValuesTransferBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
+import org.cyk.system.root.business.impl.helper.FieldHelper;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollection;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionValuesTransferDao;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.LoggingHelper.Message.Builder;
 
 public class MovementCollectionValuesTransferBusinessImpl extends AbstractTypedBusinessService<MovementCollectionValuesTransfer, MovementCollectionValuesTransferDao> implements MovementCollectionValuesTransferBusiness,Serializable {
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -39,4 +44,13 @@ public class MovementCollectionValuesTransferBusinessImpl extends AbstractTypedB
 	public Collection<String> findRelatedInstanceFieldNames(MovementCollectionValuesTransfer identifiable) {
 		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(identifiable), Boolean.TRUE, MovementCollectionValuesTransfer.FIELD_ITEMS);
 	}
+	
+	/*@Override
+	protected void computeChanges(MovementCollectionValuesTransfer movementCollectionValuesTransfer, LoggingHelper.Message.Builder loggingMessageBuilder) {
+		super.computeChanges(movementCollectionValuesTransfer, loggingMessageBuilder);
+		FieldHelper.getInstance().copy(movementCollectionValuesTransfer, movementCollectionValuesTransfer.getPartyCompany(),Boolean.FALSE
+				,org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
+						AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE),org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
+								AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME));
+	}*/
 }
