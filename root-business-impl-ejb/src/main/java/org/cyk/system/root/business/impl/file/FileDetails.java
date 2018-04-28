@@ -31,7 +31,7 @@ public class FileDetails extends AbstractOutputDetails<File> implements Serializ
 		if(master==null){
 			
 		}else{
-			uniformResourceLocator = master.getUri() == null ? Constant.EMPTY_STRING : master.getUri().toString();
+			uniformResourceLocator = master.getUniformResourceIdentifier() == null ? Constant.EMPTY_STRING : master.getUniformResourceIdentifier();
 			extension = master.getExtension();
 			mime = master.getMime();	
 			generator = master.getGenerator();

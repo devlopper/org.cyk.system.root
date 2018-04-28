@@ -195,14 +195,14 @@ public class GlobalIdentifierBusinessImpl extends AbstractBean implements Global
 			addParameterArrayElementString(GlobalIdentifier.FIELD_IDENTIFIER,GlobalIdentifier.FIELD_CODE,GlobalIdentifier.FIELD_NAME);
 			addParameterArrayElementStringIndexInstance(10,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
 			addParameterArrayElementStringIndexInstance(11,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_TO_DATE));
-			addParameterArrayElementStringIndexInstance(12,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_URI));
+			addParameterArrayElementStringIndexInstance(12,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_UNIFORM_RESOURCE_IDENTIFIER));
 			addParameterArrayElementStringIndexInstance(13,FieldHelper.getInstance().buildPath(GlobalIdentifier.FIELD_IMAGE,File.FIELD_EXTENSION));
 		}
     	
     	protected GlobalIdentifier __execute__() {
     		GlobalIdentifier globalIdentifier = super.__execute__();
-			if(globalIdentifier.getImage()!=null && !StringHelper.getInstance().isBlank(globalIdentifier.getImage().getUri())){
-				String name = globalIdentifier.getImage().getUri()+"."+globalIdentifier.getImage().getExtension();
+			if(globalIdentifier.getImage()!=null && !StringHelper.getInstance().isBlank(globalIdentifier.getImage().getUniformResourceIdentifier())){
+				String name = globalIdentifier.getImage().getUniformResourceIdentifier()+"."+globalIdentifier.getImage().getExtension();
 				String path = imageDirectoryPath+name;
 				byte[] bytes;
 				try {

@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessThrowable;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
+import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.party.person.PersonRelationshipBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
@@ -32,6 +33,7 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractCollectionItem;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.PhoneNumber;
@@ -192,16 +194,16 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
 		ContactCollection contactCollection = read(ContactCollection.class, contactCollectionCode);
 		Collection<ElectronicMailAddress> electronicMails = CollectionHelper.getInstance().cast(ElectronicMailAddress.class
 				,inject(ElectronicMailAddressDao.class).readByCollection(contactCollection));
-		assertList(CollectionHelper.getInstance().createList(MethodHelper.getInstance().callGet(electronicMails, String.class, ElectronicMailAddress.FIELD_ADDRESS))
-				, ArrayHelper.getInstance().isEmpty(electronicMailAddresses) ? new ArrayList<>() : Arrays.asList(electronicMailAddresses));
+		assertCollection(ArrayHelper.getInstance().isEmpty(electronicMailAddresses) ? new ArrayList<>() : Arrays.asList(electronicMailAddresses)
+				,CollectionHelper.getInstance().createList(MethodHelper.getInstance().callGet(electronicMails, String.class, ElectronicMailAddress.FIELD_ADDRESS)));
 	}
 	
 	public void assertContactCollectionPhoneNumbers(String contactCollectionCode,String[] phoneNumberValues){
 		ContactCollection contactCollection = read(ContactCollection.class, contactCollectionCode);
 		Collection<PhoneNumber> phoneNumbers = CollectionHelper.getInstance().cast(PhoneNumber.class
 				,inject(PhoneNumberDao.class).readByCollection(contactCollection));
-		assertList(CollectionHelper.getInstance().createList(MethodHelper.getInstance().callGet(phoneNumbers, String.class, PhoneNumber.FIELD_NUMBER))
-				, ArrayHelper.getInstance().isEmpty(phoneNumberValues) ? new ArrayList<>() : Arrays.asList(phoneNumberValues));
+		assertCollection(ArrayHelper.getInstance().isEmpty(phoneNumberValues) ? new ArrayList<>() : Arrays.asList(phoneNumberValues)
+				,CollectionHelper.getInstance().createList(MethodHelper.getInstance().callGet(phoneNumbers, String.class, PhoneNumber.FIELD_NUMBER)));
 	}
 	
 	public <T extends AbstractIdentifiable> void assertWhereExistencePeriodFromDateIsLessThanCount(final Class<T> aClass,final String code,Integer count){
@@ -319,7 +321,7 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     	if(ArrayHelper.getInstance().isNotEmpty(parentsCodes))
     		for(String index : parentsCodes)
     			parents.add(read(aClass, index));
-    	assertList(parents, (List<AbstractIdentifiable>)identifiable.getParents());
+    	assertCollection((List<AbstractIdentifiable>)identifiable.getParents(),parents);
     	return this;
 	}
 	
@@ -551,6 +553,19 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     	clean();
     	deleteAll(Movement.class);
     } 
+	
+	 public TestCase assertScriptEvaluate(String scriptCode,Object...expectedValues){
+		 Script script = getByIdentifierWhereValueUsageTypeIsBusiness(Script.class, scriptCode);
+		 inject(ScriptBusiness.class).evaluate(script);
+		 if(expectedValues!=null){
+			 for(int i = 0;i<expectedValues.length;i=i+2)
+				 if(NumberHelper.getInstance().isNumber(expectedValues[i+1]))
+					 assertEqualsNumber(expectedValues[i].toString(),expectedValues[i+1], script.getOutputs().get(expectedValues[i]));
+				 else
+					 assertEquals(expectedValues[i].toString(),expectedValues[i+1], script.getOutputs().get(expectedValues[i]));
+		 }
+		 return this;
+	 }
 	 
 	/**/
 	

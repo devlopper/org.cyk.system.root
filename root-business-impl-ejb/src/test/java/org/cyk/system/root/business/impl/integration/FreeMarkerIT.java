@@ -32,7 +32,7 @@ public class FreeMarkerIT extends AbstractBusinessIT {
         template2 = fileBusiness.create(fileBusiness.process("Our name should be : ${name}".getBytes(), "template2.txt"));
         template3 = new File();
         try {
-            template3.setUri(FreeMarkerIT.class.getResource("template.html").toURI().toString());
+            template3.setUniformResourceIdentifier(FreeMarkerIT.class.getResource("template.html").toURI().toString());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

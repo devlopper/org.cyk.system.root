@@ -1,5 +1,6 @@
 package org.cyk.system.root.business.impl.integration;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,15 +9,17 @@ import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.__data__.DataSet;
+import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.file.ScriptVariable;
+import org.cyk.system.root.model.file.ScriptVariableCollection;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.party.person.SexDao;
 import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.test.TestCase;
 import org.junit.Test;
 
 public class FileIT extends AbstractBusinessIT {
@@ -29,29 +32,104 @@ public class FileIT extends AbstractBusinessIT {
     /* File */
     
     @Test
-    public void crudFile() {
+    public void crudFileUsingUniformResourceIdentifier() {
     	TestCase testCase = instanciateTestCase();
     	String fileCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(File.class,fileCode));
+    	testCase.create(testCase.instanciateOne(File.class,fileCode).setUniformResourceIdentifier("http://myresource"));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudFileUsingBytes() throws IOException {
+    	TestCase testCase = instanciateTestCase();
+    	String fileCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(File.class,fileCode).setBytesFromInputStream(getClass().getResourceAsStream("file/pointofsale.pdf")));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudFileUsingString() throws IOException {
+    	TestCase testCase = instanciateTestCase();
+    	String fileCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(File.class,fileCode).setBytesFromString("This is a text."));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void throwFileBytesOrUniformResourceIdentifierIsNull() {
+    	TestCase testCase = instanciateTestCase();
+    	String fileCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(File.class,fileCode),null
+    			,"La valeur de l'attribut <<octets ou identifiant uniforme de resource>> de l'entité <<fichier>> doit être non nulle.");
     	testCase.clean();
     }
     
     /* Script */
     
-    //@Test
+    @Test
     public void crudScript() {
     	TestCase testCase = instanciateTestCase();
     	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode));
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("my script"));
     	testCase.clean();
     }
     
-    //@Test
-    public void evaluateScript() {
+    @Test
+    public void crudScriptWithVariables() {
     	TestCase testCase = instanciateTestCase();
     	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode));
-    	
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("my script").addVariableCollectionItemsByName("a","r2"));
+    	testCase.assertNotNull(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Script.class, scriptCode).getVariableCollection());
+    	testCase.assertCountAll(ScriptVariableCollection.class, 1);
+    	testCase.assertCountAll(ScriptVariable.class, 2);
+    	testCase.clean();
+    }
+    
+    @Test
+    public void evaluateScriptPrintln() {
+    	TestCase testCase = instanciateTestCase();
+    	String scriptCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("println('THIS IS IT')"));
+    	testCase.assertScriptEvaluate(scriptCode);
+    	testCase.clean();
+    }
+    
+    @Test
+    public void evaluateScriptSum() {
+    	TestCase testCase = instanciateTestCase();
+    	String scriptCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("a = 1 + 2; r2 = 10+6").addVariableCollectionItemsByName("a","r2"));
+    	testCase.assertScriptEvaluate(scriptCode,"a",3,"r2",16);
+    	testCase.clean();
+    }
+    
+    @Test
+    public void evaluateScriptFindScriptEvaluationEngineByCode() {
+    	TestCase testCase = instanciateTestCase();
+    	String scriptCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString(
+    			"code = genericBusiness.find('ScriptEvaluationEngine','javascript').getCode()+'';"
+    			+ "name = genericBusiness.find('ScriptEvaluationEngine','javascript').getName()+'';").addVariableCollectionItemsByName("code","name"));
+    	testCase.assertScriptEvaluate(scriptCode,"code","javascript","name","javascript");
+    	testCase.clean();
+    }
+    
+    @Test
+    public void evaluateScriptFindScriptEvaluationEngineByCodeUsingReturnValue() {
+    	TestCase testCase = instanciateTestCase();
+    	String scriptCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString(
+    			"code = genericBusiness.find('ScriptEvaluationEngine','javascript').getCode()+'';"));
+    	testCase.assertScriptEvaluate(scriptCode,RootConstant.Configuration.ScriptVariable.RETURNED,"javascript");
+    	testCase.clean();
+    }
+    
+    @Test
+    public void evaluateScriptIfElse() {
+    	TestCase testCase = instanciateTestCase();
+    	String scriptCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("mystring = 'hello'; a = mystring.charAt(0)==='1' ? 'Match' : 'No matching';").addVariableCollectionItemsByName("a"));
+    	testCase.assertScriptEvaluate(scriptCode,"a","No matching");
     	testCase.clean();
     }
     
@@ -112,6 +190,8 @@ public class FileIT extends AbstractBusinessIT {
 		
 	}
    
+	/**/
+	
 	@SuppressWarnings("unchecked")
 	public static class Data extends DataSet.Listener.Adapter.Default implements Serializable {
 		private static final long serialVersionUID = 1L;

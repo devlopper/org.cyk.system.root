@@ -35,7 +35,6 @@ import org.cyk.system.root.business.api.file.MediaBusiness.ThumnailSize;
 import org.cyk.system.root.business.api.file.StreamBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.business.impl.PersistDataListener;
-import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
@@ -47,10 +46,8 @@ import org.cyk.system.root.persistence.api.file.FileIdentifiableGlobalIdentifier
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.FileExtension;
-import org.cyk.utility.common.LogMessage;
-import org.cyk.utility.common.helper.ArrayHelper;
-import org.cyk.utility.common.helper.StringHelper;
-import org.cyk.utility.common.helper.ThrowableHelper;
+import org.cyk.utility.common.helper.ConditionHelper.Condition;
+import org.cyk.utility.common.helper.LoggingHelper;
 
 public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao> implements FileBusiness,Serializable {
 
@@ -79,10 +76,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	protected void beforeCrud(File file, Crud crud) {
 		super.beforeCrud(file, crud);
 		if(Crud.isCreateOrUpdate(crud)) {
-			//throw__(Condition.);
-			if(ArrayHelper.getInstance().isEmpty(file.getBytes()) && StringHelper.getInstance().isBlank(file.getUri()) ) {
-				ThrowableHelper.getInstance().throw_("file content or location is required");
-			}
+			throw__(Condition.getBuilderNullMultiple(file, File.FIELD_BYTES,File.FIELD_UNIFORM_RESOURCE_IDENTIFIER));
 		}
 	}
 	
@@ -92,36 +86,15 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		//exceptionUtils().exception(file.getBytes()==null, "file.bytes.required");
 	}
 	
-	@Override
-	protected File __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<File> listener) {
-		listener.getInstance().getGlobalIdentifierCreateIfNull();
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_NAME);
-    	Integer index = listener.getSetListener().getIndex();
-    	Package basePackage = PersistDataListener.Adapter.process(File.class, listener.getInstance().getCode(),PersistDataListener.BASE_PACKAGE, Package.getPackage(values[index++]));
-		String relativePath = PersistDataListener.Adapter.process(File.class, listener.getInstance().getCode(), PersistDataListener.RELATIVE_PATH, values[index++]);
-		String extension = FilenameUtils.getExtension(relativePath);
-		//logMessageBuilder.addParameters("Code",code,"Name",name,"Package",basePackage,"Relative path",relativePath);
-		//File file = null;
-		if(StringUtils.isNotBlank(relativePath)){
-			if(StringUtils.isBlank(listener.getInstance().getName()))
-				listener.getInstance().setName(FilenameUtils.getName(relativePath));
-			process(listener.getInstance(),getResourceAsBytes(getClass(),basePackage,relativePath),listener.getInstance().getName()+Constant.CHARACTER_DOT+extension);
-			//if(StringUtils.isNotBlank(listener.getInstance().getCode()))
-			//	listener.getInstance().setCode(listener.getInstance().getCode());
-		}
-    	return listener.getInstance();
-	}
-	
-	protected static byte[] getResourceAsBytes(Class aClass,Package basePackage,String relativePath){
-		LogMessage.Builder logMessageBuilder = new LogMessage.Builder("Get", "resource as bytes");
+	protected static byte[] getResourceAsBytes(Class<?> aClass,Package basePackage,String relativePath){
+		LoggingHelper.Message.Builder loggingMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default("Get resource as bytes");
 		String path = "/"+StringUtils.replace(basePackage.getName(), Constant.CHARACTER_DOT.toString(), "/")+"/";
     	path += relativePath;
-    	logMessageBuilder.addParameters("Path",path);
+    	loggingMessageBuilder.addNamedParameters("Path",path);
     	try {
     		return IOUtils.toByteArray(aClass.getResourceAsStream(path));
 		} catch (IOException e) {
-			logMessageBuilder.addParameters("Exception",e.toString());
+			loggingMessageBuilder.addNamedParameters("Exception",e.toString());
 			return null;
 		} finally {
 			//logTrace(logMessageBuilder);
@@ -251,10 +224,10 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     public InputStream findInputStream(File file,Boolean keep) {
     	InputStream inputStream = null;
     	if(file.getBytes()==null)
-            if(file.getUri()==null)
+            if(file.getUniformResourceIdentifier()==null)
                 exceptionUtils().exception("exception.file.nocontentnouri");
             else{
-            	URI uri = URI.create(file.getUri());
+            	URI uri = URI.create(file.getUniformResourceIdentifier());
                 if(FILE.equals(uri.getScheme()))
                     try {
                     	inputStream = new FileInputStream(StringUtils.substring(uri.getPath(), 1));
@@ -291,7 +264,7 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
     
     @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Path findSystemPath(File file, Boolean createTemporaryIfNotExist) {
-    	if(file.getUri()==null){
+    	if(file.getUniformResourceIdentifier()==null){
     		try {
 				Path temporaryFilePath = Files.createTempFile(null, null);
 				IOUtils.write(file.getBytes(), new FileOutputStream(temporaryFilePath.toFile()));
@@ -314,12 +287,12 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public URI findThumbnailUri(File file,ThumnailSize size) {
-		return mediaBusiness.findThumbnailUri(URI.create(file.getUri()), size);
+		return mediaBusiness.findThumbnailUri(URI.create(file.getUniformResourceIdentifier()), size);
 	}
 
 	@Override @TransactionAttribute(TransactionAttributeType.NEVER)
 	public URI findEmbeddedUri(File file) {
-		return mediaBusiness.findEmbeddedUri(URI.create(file.getUri()));
+		return mediaBusiness.findEmbeddedUri(URI.create(file.getUniformResourceIdentifier()));
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)

@@ -20,8 +20,14 @@ import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.business.impl.globalidentification.GlobalIdentifierBusinessImpl;
 import org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.FileRepresentationType;
+import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.file.ScriptEvaluationEngine;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.information.Comment;
+import org.cyk.system.root.model.information.Entity;
+import org.cyk.system.root.model.information.Property;
 import org.cyk.system.root.model.information.Tag;
 import org.cyk.system.root.model.information.Tangibility;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -392,7 +398,9 @@ public class DataSet extends AbstractBean implements Serializable {
 				@Override
 				public void processRelatedClasses(Class<?> aClass,Collection<Class<?>> classes) {
 					super.processRelatedClasses(aClass,classes);
-					if(Movement.class.equals(aClass)){
+					if(File.class.equals(aClass)){
+						classes.addAll(Arrays.asList(FileRepresentationType.class,ScriptEvaluationEngine.class,Script.class));
+					}else if(Movement.class.equals(aClass)){
 						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class
 					    	,MovementMode.class,MovementCollectionType.class,MovementCollectionTypeMode.class,MovementCollection.class));
 					}else if(IdentifiablePeriod.class.equals(aClass)){
@@ -402,11 +410,9 @@ public class DataSet extends AbstractBean implements Serializable {
 					}else if(Party.class.equals(aClass)){
 						classes.addAll(Arrays.asList(BusinessRole.class,Sex.class,MaritalStatus.class,JobFunction.class,JobTitle.class,PersonTitle.class,BloodGroup.class
 								,Allergy.class,Medication.class,PersonRelationshipTypeGroup.class,PersonRelationshipType.class,PersonRelationshipTypeRoleName.class
-								,PersonRelationshipTypeRole.class));
-					}else if(Store.class.equals(aClass)){
-						classes.addAll(Arrays.asList(Store.class,StoreType.class));
-					}else if(Tangibility.class.equals(aClass)){
-						classes.addAll(Arrays.asList(Tangibility.class,Comment.class,Tag.class));
+								,PersonRelationshipTypeRole.class,Store.class,StoreType.class));
+					}else if(Entity.class.equals(aClass)){
+						classes.addAll(Arrays.asList(Tangibility.class,Comment.class,Tag.class,Entity.class,Property.class));
 					}
 				}
 				

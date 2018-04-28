@@ -69,6 +69,16 @@ public interface RootConstant {
 		
 		/**/
 		
+		public static interface Entity {
+			String PERSON = "PERSON";
+			String STORE = "STORE";
+		}
+		
+		public static interface Property {
+			String CODE = "CODE";
+			String NAME = "NAME";
+		}
+		
 		public static class Tangibility implements Serializable {
 			private static final long serialVersionUID = 1L;
 			
@@ -547,18 +557,18 @@ public interface RootConstant {
 			
 		}
 		
-		public static class Script implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String GENERIC_BUSINESS = "genericBusiness";
-			public static String FORMATTER_BUSINESS = "formatterBusiness";
-			public static String NUMBER_BUSINESS = "numberBusiness";
-			public static String TIME_BUSINESS = "timeBusiness";
-			public static String NUMBER_BUSINESS_FORMAT_ARGUMENTS = NUMBER_BUSINESS+"FormatArguments";
-			public static String METRIC_BUSINESS = "metricBusiness";
-			public static String METRIC_VALUE_BUSINESS = "metricValueBusiness";
-			public static String VALUE_BUSINESS = "valueBusiness";
-			public static String IS_DRAFT = "isDraft";
+		public static interface Script {
+			String STRING_HELPER = "stringHelper";
+			String FIELD_HELPER = "fieldHelper";
+			String GENERIC_BUSINESS = "genericBusiness";
+			String FORMATTER_BUSINESS = "formatterBusiness";
+			String NUMBER_BUSINESS = "numberBusiness";
+			String TIME_BUSINESS = "timeBusiness";
+			String NUMBER_BUSINESS_FORMAT_ARGUMENTS = NUMBER_BUSINESS+"FormatArguments";
+			String METRIC_BUSINESS = "metricBusiness";
+			String METRIC_VALUE_BUSINESS = "metricValueBusiness";
+			String VALUE_BUSINESS = "valueBusiness";
+			String IS_DRAFT = "isDraft";
 		}
 		
 		public static class ReportTemplate implements Serializable {

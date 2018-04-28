@@ -12,10 +12,11 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 import org.apache.commons.io.IOUtils;
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.GenericBusiness;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.ScriptBusiness;
-import org.cyk.system.root.business.api.file.ScriptVariableBusiness;
+import org.cyk.system.root.business.api.file.ScriptVariableCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
@@ -23,17 +24,19 @@ import org.cyk.system.root.business.api.time.TimeBusiness;
 import org.cyk.system.root.business.api.value.ValueBusiness;
 import org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.file.ScriptEvaluationEngine;
 import org.cyk.system.root.model.file.ScriptVariable;
-import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.persistence.api.file.ScriptDao;
 import org.cyk.system.root.persistence.api.file.ScriptVariableDao;
 import org.cyk.utility.common.ListenerUtils;
-import org.cyk.utility.common.LogMessage;
+import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 
 public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, ScriptDao> implements ScriptBusiness, Serializable {
@@ -45,30 +48,30 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 	}
 	
 	@Override
-	protected void beforeCreate(Script script) {
-		super.beforeCreate(script);
-		createIfNotIdentified(script.getFile());
+	public Script instanciateOne() {
+		return super.instanciateOne().setEvaluationEngine(InstanceHelper.getInstance().getDefaultUsingBusinessIdentifier(ScriptEvaluationEngine.class));
 	}
 	
 	@Override
-	protected void afterCreate(Script script) {
-		super.afterCreate(script);
-		if(script.getVariables().isSynchonizationEnabled())
-			inject(ScriptVariableBusiness.class).create(script.getVariables().getElements());
+	public Collection<String> findRelatedInstanceFieldNames(Script identifiable) {
+		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(identifiable),Script.FIELD_FILE/*,Script.FIELD_VARIABLE_COLLECTION*/);
 	}
 	
 	@Override
-	protected Script __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<Script> listener) {
-		listener.getInstance().getGlobalIdentifierCreateIfNull();
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_NAME);
-    	set(listener.getSetListener(), Script.FIELD_EVALUATION_ENGINE);
-    	Integer index = listener.getSetListener().getIndex();
-    	listener.getInstance().setFile(new File());
-    	listener.getInstance().getFile().setBytes(values[index++].getBytes());
-    	return listener.getInstance();
+	protected void beforeCrud(Script script, Crud crud) {
+		super.beforeCrud(script, crud);
+		if(Crud.isCreateOrUpdate(crud)){
+			createIfNotIdentified(script.getVariableCollection());
+		}
 	}
 	
+	@Override
+	protected void afterDelete(Script script) {
+		super.afterDelete(script);
+		if(script.getVariableCollection()!=null)
+			inject(ScriptVariableCollectionBusiness.class).delete(script.getVariableCollection());
+	}
+		
 	@Override
 	public Object evaluate(final Script script) {
 		LoggingHelper.Logger<?,?,?> loggingMessageBuilder = LoggingHelper.getInstance().getLogger();
@@ -80,6 +83,9 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		
 		Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 		bindings.clear();
+		
+		bindings.put(RootConstant.Configuration.Script.STRING_HELPER, StringHelper.getInstance());
+		bindings.put(RootConstant.Configuration.Script.FIELD_HELPER, FieldHelper.getInstance());
 		
 		bindings.put(RootConstant.Configuration.Script.GENERIC_BUSINESS, inject(GenericBusiness.class));
 		bindings.put(RootConstant.Configuration.Script.NUMBER_BUSINESS, inject(NumberBusiness.class));
@@ -107,8 +113,9 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 			loggingMessageBuilder.addNamedParameters("Returned",script.getReturned());
 			
 			script.getOutputs().clear();
-			for (ScriptVariable scriptVariable : inject(ScriptVariableDao.class).readByScript(script))
-				script.getOutputs().put(scriptVariable.getCode(), bindings.get(scriptVariable.getCode()));
+			if(script.getVariableCollection()!=null)
+				for (ScriptVariable scriptVariable : inject(ScriptVariableDao.class).readByCollection(script.getVariableCollection()))
+					script.getOutputs().put(scriptVariable.getCode(), bindings.get(scriptVariable.getCode()));
 			if(!script.getOutputs().containsKey(RootConstant.Configuration.ScriptVariable.RETURNED))
 				script.getOutputs().put(RootConstant.Configuration.ScriptVariable.RETURNED, script.getReturned());
 			loggingMessageBuilder.addNamedParameters("Outputs",script.getOutputs());

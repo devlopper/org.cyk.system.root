@@ -1,8 +1,8 @@
 package org.cyk.system.root.persistence.api.information;
 
-import org.cyk.system.root.model.information.Tag;
+import org.cyk.system.root.model.information.Property;
 import org.cyk.system.root.persistence.api.AbstractEnumerationDao;
 
-public interface TagDao extends AbstractEnumerationDao<Tag> {
+public interface PropertyDao extends AbstractEnumerationDao<Property> {
 
 }

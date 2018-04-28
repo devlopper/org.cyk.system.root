@@ -20,8 +20,10 @@ import org.cyk.system.root.model.geography.Locality;
 import org.cyk.system.root.model.geography.LocalityType;
 import org.cyk.system.root.model.geography.LocationType;
 import org.cyk.system.root.model.geography.PhoneNumberType;
+import org.cyk.system.root.model.information.Entity;
 import org.cyk.system.root.model.information.IdentifiableCollectionType;
 import org.cyk.system.root.model.information.InformationState;
+import org.cyk.system.root.model.information.Property;
 import org.cyk.system.root.model.information.Tangibility;
 import org.cyk.system.root.model.language.Language;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -191,6 +193,8 @@ public class RealDataSet extends DataSet implements Serializable {
     	addClass(IdentifiableCollectionType.class);
     	addClass(Tangibility.class);
     	addClass(InformationState.class);
+    	addClass(Entity.class);
+    	addClass(Property.class);
     }
     
     private void userInterface(){ 

@@ -75,6 +75,19 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		}
 	}
 	
+	public AbstractCollection<ITEM> addItemsByName(Collection<String> names){
+		if(CollectionHelper.getInstance().isNotEmpty(names))
+			for(String index : names)
+				addItem(index, index);
+		return this;
+	}
+	
+	public AbstractCollection<ITEM> addItemsByName(String...names){
+		if(ArrayHelper.getInstance().isNotEmpty(names))
+			addItemsByName(Arrays.asList(names));
+		return this;
+	}
+	
 	public AbstractCollection<ITEM> add(Collection<ITEM> items){
 		new CollectionHelper.Iterator.Adapter.Default<ITEM>(items) {
 			private static final long serialVersionUID = 1L;

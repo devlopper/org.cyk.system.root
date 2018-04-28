@@ -39,6 +39,7 @@ import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.event.Notification;
 import org.cyk.system.root.model.event.Notification.RemoteEndPoint;
 import org.cyk.system.root.model.file.File;
+import org.cyk.system.root.model.file.ScriptEvaluationEngine;
 import org.cyk.system.root.model.file.report.AbstractReportTemplateFile;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.generator.StringValueGenerator;
@@ -124,6 +125,8 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	INSTANCE = this; 
         super.initialisation();
         IdentifiablePeriod.manage(Movement.class);
+        
+        InstanceHelper.getInstance().setDefaultBusinessIdentifier(ScriptEvaluationEngine.class, RootConstant.Code.ScriptEvaluationEngine.JAVASCRIPT);
         
         ThrowableHelper.getInstance().setDefaultThrowableClass(BusinessThrowable.class);
         org.cyk.utility.common.cdi.annotation.Log.Interceptor.COLLECTION.add(new LogInterceptorAdapter() /*inject(LogInterceptorAdapter.class)*/);

@@ -1,5 +1,6 @@
 package org.cyk.system.root.model.file;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
@@ -11,20 +12,22 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
+@Getter @Setter @Entity @NoArgsConstructor @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE) @Accessors(chain=true)
 public class File extends AbstractIdentifiable implements Serializable{
-
 	private static final long serialVersionUID = 129506142716551683L;
 	
 	/*
@@ -40,7 +43,7 @@ public class File extends AbstractIdentifiable implements Serializable{
 	 * Outside storage
 	 */
 	
-	private String uri;//in case we need to point to a file outside the database
+	private String uniformResourceIdentifier;//in case we need to point to a file outside the database
 	
 	/**
 	 * Text representation of the bytes. This enable lookup into text
@@ -64,15 +67,30 @@ public class File extends AbstractIdentifiable implements Serializable{
 	
 	@Transient transient private InputStream inputStream;
 	
+	public File setBytesFromInputStream(InputStream inputStream){
+		try {
+			setBytes(IOUtils.toByteArray(inputStream));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return this;
+	}
+	
+	public File setBytesFromString(String string){
+		if(string!=null)
+			setBytes(string.getBytes());
+		return this;
+	}
+	
 	@Override
 	public String toString() {
 		return identifier==null?super.toString()
-				:StringUtils.isNotBlank(getName()) ? getName() : ((uri==null?(extension+Constant.CHARACTER_LEFT_PARENTHESIS+mime+Constant.CHARACTER_RIGHT_PARENTHESIS):(uri.toString()))+"("+identifier+")");
+				:StringUtils.isNotBlank(getName()) ? getName() : ((StringHelper.getInstance().isBlank(uniformResourceIdentifier)?(extension+Constant.CHARACTER_LEFT_PARENTHESIS+mime+Constant.CHARACTER_RIGHT_PARENTHESIS):(uniformResourceIdentifier))+"("+identifier+")");
 	}
 	
 	public static final String FIELD_EXTENSION = "extension";
 	public static final String FIELD_BYTES = "bytes";
-	public static final String FIELD_URI = "uri";
+	public static final String FIELD_UNIFORM_RESOURCE_IDENTIFIER = "uniformResourceIdentifier";
 	public static final String FIELD_TEXT = "text";
 	public static final String FIELD_MIME = "mime";
 	public static final String FIELD_REPRESENTATION_TYPE = "representationType";
