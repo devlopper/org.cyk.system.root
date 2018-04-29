@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.information;
+package org.cyk.system.root.model.metadata;
 
 import java.io.Serializable;
 
@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.Script;
+import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -24,9 +25,19 @@ import lombok.experimental.Accessors;
 public class EntityProperty extends AbstractIdentifiable implements Serializable  {
 	private static final long serialVersionUID = -4876159772208660975L;
 
+	/* Data */
 	@ManyToOne @JoinColumn(name=COLUMN_ENTITY) @NotNull private Entity entity;
 	@ManyToOne @JoinColumn(name=COLUMN_PROPERTY) @NotNull private Property property;
+	
+	/* Evaluation */
 	@ManyToOne @JoinColumn(name=COLUMN_VALUE_GENERATOR_SCRIPT) private Script valueGeneratorScript;
+	private Boolean evaluatableWhenInputChange;
+	private Boolean evaluatableWhenPersist;
+	
+	/* Constraints */
+	private Boolean nullable,updatable,computableByUser;
+	private Integer length,precision,scale,minimumNumberOfOccurence,maximumNumberOfOccurence;
+	private Constant.Date.Part datePart;
 	
 	public EntityProperty setEntityFromCode(String code){
 		this.entity = getFromCode(Entity.class, code);
@@ -48,6 +59,8 @@ public class EntityProperty extends AbstractIdentifiable implements Serializable
 	public static final String FIELD_ENTITY = "entity";
 	public static final String FIELD_PROPERTY = "property";
 	public static final String FIELD_VALUE_GENERATOR_SCRIPT = "valueGeneratorScript";
+	public static final String FIELD_EVALUATED_WHEN_INPUT_CHANGE = "evaluatedWhenInputChange";
+	public static final String FIELD_EVALUATED_WHEN_PERSIST = "evaluatedWhenPersist";
 	
 	public static final String COLUMN_ENTITY = FIELD_ENTITY;
 	public static final String COLUMN_PROPERTY = FIELD_PROPERTY;

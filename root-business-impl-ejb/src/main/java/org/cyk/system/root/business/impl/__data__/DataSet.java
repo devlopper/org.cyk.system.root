@@ -26,8 +26,6 @@ import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.ScriptEvaluationEngine;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.information.Comment;
-import org.cyk.system.root.model.information.Entity;
-import org.cyk.system.root.model.information.Property;
 import org.cyk.system.root.model.information.Tag;
 import org.cyk.system.root.model.information.Tangibility;
 import org.cyk.system.root.model.mathematics.Interval;
@@ -39,6 +37,8 @@ import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionType;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionTypeMode;
 import org.cyk.system.root.model.mathematics.movement.MovementMode;
+import org.cyk.system.root.model.metadata.Entity;
+import org.cyk.system.root.model.metadata.Property;
 import org.cyk.system.root.model.party.BusinessRole;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.Store;
@@ -412,7 +412,9 @@ public class DataSet extends AbstractBean implements Serializable {
 								,Allergy.class,Medication.class,PersonRelationshipTypeGroup.class,PersonRelationshipType.class,PersonRelationshipTypeRoleName.class
 								,PersonRelationshipTypeRole.class,Store.class,StoreType.class));
 					}else if(Entity.class.equals(aClass)){
-						classes.addAll(Arrays.asList(Tangibility.class,Comment.class,Tag.class,Entity.class,Property.class));
+						classes.addAll(Arrays.asList(Entity.class,Property.class));
+					}else if(Tangibility.class.equals(aClass)){
+						classes.addAll(Arrays.asList(Tangibility.class,Comment.class,Tag.class));
 					}
 				}
 				

@@ -558,6 +558,7 @@ public interface RootConstant {
 		}
 		
 		public static interface Script {
+			String INSTANCE = "instance";
 			String STRING_HELPER = "stringHelper";
 			String FIELD_HELPER = "fieldHelper";
 			String GENERIC_BUSINESS = "genericBusiness";

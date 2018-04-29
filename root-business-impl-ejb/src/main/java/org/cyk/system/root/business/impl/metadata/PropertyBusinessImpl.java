@@ -1,13 +1,13 @@
-package org.cyk.system.root.business.impl.information;
+package org.cyk.system.root.business.impl.metadata;
 
 import java.io.Serializable;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.information.PropertyBusiness;
+import org.cyk.system.root.business.api.metadata.PropertyBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
-import org.cyk.system.root.model.information.Property;
-import org.cyk.system.root.persistence.api.information.PropertyDao;
+import org.cyk.system.root.model.metadata.Property;
+import org.cyk.system.root.persistence.api.metadata.PropertyDao;
 
 public class PropertyBusinessImpl extends AbstractEnumerationBusinessImpl<Property,PropertyDao> implements PropertyBusiness,Serializable {
 	private static final long serialVersionUID = -5970296090669949506L;
@@ -24,6 +24,7 @@ public class PropertyBusinessImpl extends AbstractEnumerationBusinessImpl<Proper
 
 		public BuilderOneDimensionArray() {
 			super(Property.class);
+			addParameterArrayElementStringIndexInstance(2,Property.FIELD_PATH);
 		}
 	}
 }

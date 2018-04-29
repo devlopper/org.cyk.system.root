@@ -22,8 +22,10 @@ import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.api.TypedBusiness.CreateReportFileArguments;
 import org.cyk.system.root.business.api.file.FileBusiness;
 import org.cyk.system.root.business.api.file.FileIdentifiableGlobalIdentifierBusiness;
+import org.cyk.system.root.business.api.metadata.EntityPropertyBusiness;
 import org.cyk.system.root.business.api.validation.ValidationPolicy;
 import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier.SearchCriteria;
@@ -825,6 +827,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return Boolean.FALSE;
 	}
 	
+	protected void evaluateEntityProperty(IDENTIFIABLE identifiable,Boolean isChange,Boolean isPersist){
+		//inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable);
+	}
+	
 	@Override
 	public void computeChanges(IDENTIFIABLE identifiable){
 		LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
@@ -834,6 +840,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 	}
 	
 	protected void computeChanges(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder logMessageBuilder){
+		inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable,Boolean.TRUE,Boolean.FALSE);
+		
 		Boolean isBirthDateComputedByUser = identifiable.isFieldValueComputedByUser(FieldHelper.getInstance()
 				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
 		if(isBirthDateComputedByUser!=null){

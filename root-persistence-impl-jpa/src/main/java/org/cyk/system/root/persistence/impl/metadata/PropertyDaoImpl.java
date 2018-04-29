@@ -1,9 +1,9 @@
-package org.cyk.system.root.persistence.impl.information;
+package org.cyk.system.root.persistence.impl.metadata;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.model.information.Property;
-import org.cyk.system.root.persistence.api.information.PropertyDao;
+import org.cyk.system.root.model.metadata.Property;
+import org.cyk.system.root.persistence.api.metadata.PropertyDao;
 import org.cyk.system.root.persistence.impl.AbstractEnumerationDaoImpl;
 
 public class PropertyDaoImpl extends AbstractEnumerationDaoImpl<Property> implements PropertyDao,Serializable {

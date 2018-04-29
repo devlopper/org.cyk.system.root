@@ -1,13 +1,13 @@
-package org.cyk.system.root.persistence.impl.information;
+package org.cyk.system.root.persistence.impl.metadata;
 
 import java.io.Serializable;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
-import org.cyk.system.root.model.information.Entity;
-import org.cyk.system.root.model.information.EntityProperty;
-import org.cyk.system.root.model.information.Property;
-import org.cyk.system.root.persistence.api.information.EntityPropertyDao;
+import org.cyk.system.root.model.metadata.Entity;
+import org.cyk.system.root.model.metadata.EntityProperty;
+import org.cyk.system.root.model.metadata.Property;
+import org.cyk.system.root.persistence.api.metadata.EntityPropertyDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
 import org.cyk.utility.common.helper.CollectionHelper;

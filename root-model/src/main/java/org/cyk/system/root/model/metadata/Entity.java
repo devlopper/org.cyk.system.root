@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.information;
+package org.cyk.system.root.model.metadata;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @javax.persistence.Entity @ModelBean(crudStrategy=CrudStrategy.BUSINESS,genderType=GenderType.MALE)
-public class Property extends AbstractEnumeration implements Serializable  {
+public class Entity extends AbstractEnumeration implements Serializable  {
 	private static final long serialVersionUID = -4876159772208660975L;
 
 }

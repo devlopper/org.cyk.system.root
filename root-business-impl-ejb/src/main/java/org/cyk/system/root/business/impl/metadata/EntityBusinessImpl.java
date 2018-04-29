@@ -1,13 +1,13 @@
-package org.cyk.system.root.business.impl.information;
+package org.cyk.system.root.business.impl.metadata;
 
 import java.io.Serializable;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.information.EntityBusiness;
+import org.cyk.system.root.business.api.metadata.EntityBusiness;
 import org.cyk.system.root.business.impl.AbstractEnumerationBusinessImpl;
-import org.cyk.system.root.model.information.Entity;
-import org.cyk.system.root.persistence.api.information.EntityDao;
+import org.cyk.system.root.model.metadata.Entity;
+import org.cyk.system.root.persistence.api.metadata.EntityDao;
 
 public class EntityBusinessImpl extends AbstractEnumerationBusinessImpl<Entity,EntityDao> implements EntityBusiness,Serializable {
 	private static final long serialVersionUID = -5970296090669949506L;
@@ -17,6 +17,11 @@ public class EntityBusinessImpl extends AbstractEnumerationBusinessImpl<Entity,E
         super(dao);
     } 
 
+	@Override
+	public Entity findByClassName(Class<?> aClass) {
+		return dao.read(aClass.getSimpleName().toUpperCase());
+	}
+	
 	/**/
 	
 	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<Entity> implements Serializable {
@@ -26,4 +31,6 @@ public class EntityBusinessImpl extends AbstractEnumerationBusinessImpl<Entity,E
 			super(Entity.class);
 		}
 	}
+
+	
 }
