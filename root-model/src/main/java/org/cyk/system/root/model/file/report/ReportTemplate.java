@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.language.programming.Script;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;

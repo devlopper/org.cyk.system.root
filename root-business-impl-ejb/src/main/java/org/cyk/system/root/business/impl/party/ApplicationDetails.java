@@ -33,8 +33,7 @@ public class ApplicationDetails extends AbstractOutputDetails<Application> imple
 			webContext = application.getWebContext();
 			if(application.getSmtpProperties()!=null)
 				smtpProperties = new FieldValue(application.getSmtpProperties());
-			if(application.getLicense()!=null)
-				license = new FieldValue(application.getLicense());
+			
 		}
 	}
 	

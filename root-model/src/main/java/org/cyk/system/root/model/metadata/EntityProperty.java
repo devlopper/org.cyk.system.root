@@ -2,6 +2,7 @@ package org.cyk.system.root.model.metadata;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -9,7 +10,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.language.programming.Script;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
@@ -36,7 +37,10 @@ public class EntityProperty extends AbstractIdentifiable implements Serializable
 	
 	/* Constraints */
 	private Boolean nullable,updatable,computableByUser;
-	private Integer length,precision,scale,minimumNumberOfOccurence,maximumNumberOfOccurence;
+	private @Column(name=COLUMN_LENGTH) Integer length;
+	private @Column(name=COLUMN_PRECISION) Integer precision;
+	private @Column(name=COLUMN_SCALE) Integer scale;
+	private Integer minimumNumberOfOccurence,maximumNumberOfOccurence;
 	private Constant.Date.Part datePart;
 	
 	public EntityProperty setEntityFromCode(String code){
@@ -61,11 +65,18 @@ public class EntityProperty extends AbstractIdentifiable implements Serializable
 	public static final String FIELD_VALUE_GENERATOR_SCRIPT = "valueGeneratorScript";
 	public static final String FIELD_EVALUATED_WHEN_INPUT_CHANGE = "evaluatedWhenInputChange";
 	public static final String FIELD_EVALUATED_WHEN_PERSIST = "evaluatedWhenPersist";
+	public static final String FIELD_LENGTH = "length";
+	public static final String FIELD_PRECISION = "precision";
+	public static final String FIELD_SCALE = "scale";
 	
 	public static final String COLUMN_ENTITY = FIELD_ENTITY;
-	public static final String COLUMN_PROPERTY = FIELD_PROPERTY;
+	public static final String COLUMN_PROPERTY = COLUMN_NAME_UNKEYWORD+FIELD_PROPERTY;
 	public static final String COLUMN_VALUE_GENERATOR_SCRIPT = FIELD_VALUE_GENERATOR_SCRIPT;
 
+	public static final String COLUMN_LENGTH = COLUMN_NAME_UNKEYWORD+FIELD_LENGTH;
+	public static final String COLUMN_PRECISION = COLUMN_NAME_UNKEYWORD+FIELD_PRECISION;
+	public static final String COLUMN_SCALE = COLUMN_NAME_UNKEYWORD+FIELD_SCALE;
+	
 	public static class Filter extends AbstractIdentifiable.Filter<EntityProperty> implements Serializable{
 		private static final long serialVersionUID = 1L;
     	

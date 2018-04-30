@@ -48,6 +48,7 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.FileExtension;
 import org.cyk.utility.common.helper.ConditionHelper.Condition;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao> implements FileBusiness,Serializable {
 
@@ -70,6 +71,13 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_NAME}, name) && file.getRepresentationType()!=null)
 			return new Object[]{file.getRepresentationType()};
 		return super.getPropertyValueTokens(file, name);
+	}
+	
+	@Override
+	protected void computeChanges(File file, LoggingHelper.Message.Builder loggingMessageBuilder) {
+		super.computeChanges(file, loggingMessageBuilder);
+		if(StringHelper.getInstance().isBlank(file.getText()) && Boolean.TRUE.equals(file.getGetTextFromBytesAutomatically()))
+			file.setTextFromBytes();		
 	}
 	
 	@Override

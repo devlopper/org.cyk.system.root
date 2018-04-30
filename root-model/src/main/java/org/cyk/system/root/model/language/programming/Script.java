@@ -1,4 +1,4 @@
-package org.cyk.system.root.model.file;
+package org.cyk.system.root.model.language.programming;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -29,20 +29,15 @@ import lombok.experimental.Accessors;
 public class Script extends AbstractIdentifiable implements Serializable{
 	private static final long serialVersionUID = 129506142716551683L;
 	
-	@ManyToOne @JoinColumn(name=COLUMN_FILE) @NotNull private File file;
 	@ManyToOne @JoinColumn(name=COLUMN_EVALUATION_ENGINE) @NotNull private ScriptEvaluationEngine evaluationEngine;
 	@ManyToOne @JoinColumn(name=COLUMN_VARIABLE_COLLECTION) private ScriptVariableCollection variableCollection;
 	
 	@Transient private Map<String, Object> inputs,outputs;
 	@Transient private Object returned;
 	
-	public File getFile(Boolean instanciateIfValueIsNull){
-		return readFieldValue(FIELD_FILE, instanciateIfValueIsNull);
-	}
-	
-	public Script setFileBytesFromString(String string){
-		getFile(Boolean.TRUE).setBytesFromString(string);
-		return this;
+	@Override
+	public Script setText(String text) {
+		return (Script) super.setText(text);
 	}
 	
 	public ScriptVariableCollection getVariableCollection(Boolean instanciateIfValueIsNull){
@@ -66,11 +61,9 @@ public class Script extends AbstractIdentifiable implements Serializable{
 		return outputs;
 	}
 	
-	public static final String FIELD_FILE = "file";
 	public static final String FIELD_EVALUATION_ENGINE = "evaluationEngine";
 	public static final String FIELD_VARIABLE_COLLECTION = "variableCollection";
 	
-	public static final String COLUMN_FILE = FIELD_FILE;
 	public static final String COLUMN_EVALUATION_ENGINE = FIELD_EVALUATION_ENGINE;
 	public static final String COLUMN_VARIABLE_COLLECTION = FIELD_VARIABLE_COLLECTION;
 }

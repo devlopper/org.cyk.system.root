@@ -15,5 +15,7 @@ import lombok.Setter;
 public class Entity extends AbstractEnumeration implements Serializable  {
 	private static final long serialVersionUID = -4876159772208660975L;
 
+	private Integer minimumNumberOfInstance,maximumNumberOfInstance;
+	
 }
 

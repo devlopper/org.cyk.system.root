@@ -1,9 +1,9 @@
-package org.cyk.system.root.business.impl.file;
+package org.cyk.system.root.business.impl.language.programming;
 
 import java.io.Serializable;
 
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
-import org.cyk.system.root.model.file.ScriptVariable;
+import org.cyk.system.root.model.language.programming.ScriptVariable;
 
 import lombok.Getter;
 import lombok.Setter;

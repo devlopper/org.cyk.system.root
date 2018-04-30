@@ -187,7 +187,7 @@ public abstract class AbstractBusinessIT extends AbstractIntegrationTestJpaBased
 		public void installationStarted(Installation installation) {
 			super.installationStarted(installation);
 			installation.setIsCreateAccounts(Boolean.FALSE);
-			installation.setIsCreateLicence(Boolean.FALSE);
+			
 		}
 		
     }

@@ -34,10 +34,10 @@ import org.cyk.system.root.business.impl.validation.FieldValidatorMethod;
 import org.cyk.system.root.business.impl.validation.ValidatorMap;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.Script;
 import org.cyk.system.root.model.file.report.AbstractReport;
 import org.cyk.system.root.model.file.report.AbstractReportConfiguration;
 import org.cyk.system.root.model.generator.StringGenerator;
+import org.cyk.system.root.model.language.programming.Script;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
@@ -46,7 +46,6 @@ import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.AbstractActor;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.security.Installation;
-import org.cyk.system.root.model.security.License;
 import org.cyk.system.root.model.security.Permission;
 import org.cyk.system.root.model.security.Role;
 import org.cyk.system.root.persistence.api.GenericDao;
@@ -205,8 +204,6 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     	installation.setAdministratorCredentials(inject(CredentialsBusiness.class).instanciateOne("admin", "123"));
     	installation.setApplication(new Application());
     	installation.getApplication().setName("Application");
-    	installation.setLicense(new License());
-    	//installation.getLicense().setPeriod(new Period(new Date(), new Date()));
     	installation.setManager(new Person("ManagerFirstName","ManagerLastName"));
     	installation.setManagerCredentials(inject(CredentialsBusiness.class).instanciateOne("manager", "123"));
     	return installation;
@@ -317,7 +314,7 @@ public abstract class AbstractBusinessLayer extends AbstractLayer<AbstractIdenti
     
     protected Script script(String text,String name){
     	Script script = new Script();
-    	script.setFile(inject(FileBusiness.class).process(text.getBytes(), name+".txt"));
+    	//script.setFile(inject(FileBusiness.class).process(text.getBytes(), name+".txt"));
     	return script;
     }
 

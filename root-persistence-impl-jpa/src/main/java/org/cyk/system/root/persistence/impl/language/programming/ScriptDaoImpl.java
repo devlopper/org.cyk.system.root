@@ -1,9 +1,9 @@
-package org.cyk.system.root.persistence.impl.file;
+package org.cyk.system.root.persistence.impl.language.programming;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.model.file.Script;
-import org.cyk.system.root.persistence.api.file.ScriptDao;
+import org.cyk.system.root.model.language.programming.Script;
+import org.cyk.system.root.persistence.api.language.programming.ScriptDao;
 import org.cyk.system.root.persistence.impl.AbstractTypedDao;
 
 public class ScriptDaoImpl extends AbstractTypedDao<Script> implements ScriptDao,Serializable {

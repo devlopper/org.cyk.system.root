@@ -8,12 +8,10 @@ import org.cyk.system.root.business.api.metadata.EntityPropertyBusiness;
 import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.language.programming.Script;
 import org.cyk.system.root.model.metadata.Entity;
 import org.cyk.system.root.model.metadata.EntityProperty;
 import org.cyk.system.root.model.metadata.Property;
-import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
@@ -61,7 +59,7 @@ public class MetadataIT extends AbstractBusinessIT {
     public void evaluateEntityPropertyValueGeneratorScript() {
     	TestCase testCase = instanciateTestCase();
     	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("'thecode'"));
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setText("'thecode'"));
     	
     	String entityCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(Entity.class,entityCode));
@@ -83,7 +81,7 @@ public class MetadataIT extends AbstractBusinessIT {
     public void evaluatePersonCode_initials_01() {
     	TestCase testCase = instanciateTestCase();
     	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("stringHelper.concatenateFirstLetterOfEach(instance.name+' '+instance.lastnames)"));
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setText("stringHelper.concatenateFirstLetterOfEach(instance.name+' '+instance.lastnames)"));
     	
     	Person person = testCase.instanciateOne(Person.class).setName("Komenan").setLastnames("Yao Christian");
     	
@@ -107,7 +105,7 @@ public class MetadataIT extends AbstractBusinessIT {
     public void createPersonWithCodeScriptSet() {
     	TestCase testCase = instanciateTestCase();
     	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("stringHelper.concatenateFirstLetterOfEach(instance.name+' '+instance.lastnames)"));
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setText("stringHelper.concatenateFirstLetterOfEach(instance.name+' '+instance.lastnames)"));
     	String entityPropertyCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(EntityProperty.class,entityPropertyCode).setEntityFromCode(RootConstant.Code.Entity.PERSON)
     			.setPropertyFromCode(RootConstant.Code.Property.CODE).setValueGeneratorScriptFromCode(scriptCode));
@@ -124,7 +122,7 @@ public class MetadataIT extends AbstractBusinessIT {
     public void computeChangesOfPersonCodeWithScriptSet() {
     	TestCase testCase = instanciateTestCase();
     	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("stringHelper.concatenateFirstLetterOfEach(instance.name+' '+instance.lastnames)"));
+    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setText("stringHelper.concatenateFirstLetterOfEach(instance.name+' '+instance.lastnames)"));
     	String entityPropertyCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(EntityProperty.class,entityPropertyCode).setEntityFromCode(RootConstant.Code.Entity.PERSON)
     			.setPropertyFromCode(RootConstant.Code.Property.CODE).setValueGeneratorScriptFromCode(scriptCode));
@@ -165,7 +163,7 @@ public class MetadataIT extends AbstractBusinessIT {
 		@SuppressWarnings({ "rawtypes" })
 		@Override
 		public Collection getClasses() {
-			return Arrays.asList(Entity.class,File.class,Party.class);
+			return Arrays.asList(Entity.class,Script.class);
 		}
 		
     }

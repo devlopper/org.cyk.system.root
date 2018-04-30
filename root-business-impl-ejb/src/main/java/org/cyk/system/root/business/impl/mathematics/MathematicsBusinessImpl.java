@@ -10,14 +10,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.file.ScriptBusiness;
 import org.cyk.system.root.business.api.language.LanguageBusiness;
+import org.cyk.system.root.business.api.language.programming.ScriptBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness.RankOptions.RankType;
 import org.cyk.system.root.business.api.mathematics.Sortable;
 import org.cyk.system.root.business.api.mathematics.WeightedValue;
 import org.cyk.system.root.business.impl.AbstractBusinessServiceImpl;
-import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.language.programming.Script;
 import org.cyk.system.root.model.mathematics.Average;
 import org.cyk.system.root.model.mathematics.Rank;
 import org.cyk.utility.common.cdi.BeanAdapter;

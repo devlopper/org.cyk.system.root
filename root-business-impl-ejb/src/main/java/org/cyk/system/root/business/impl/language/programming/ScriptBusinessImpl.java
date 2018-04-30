@@ -1,4 +1,4 @@
-package org.cyk.system.root.business.impl.file;
+package org.cyk.system.root.business.impl.language.programming;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,12 +11,10 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-import org.apache.commons.io.IOUtils;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.GenericBusiness;
-import org.cyk.system.root.business.api.file.FileBusiness;
-import org.cyk.system.root.business.api.file.ScriptBusiness;
-import org.cyk.system.root.business.api.file.ScriptVariableCollectionBusiness;
+import org.cyk.system.root.business.api.language.programming.ScriptBusiness;
+import org.cyk.system.root.business.api.language.programming.ScriptVariableCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricBusiness;
 import org.cyk.system.root.business.api.mathematics.MetricValueBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
@@ -25,14 +23,13 @@ import org.cyk.system.root.business.api.value.ValueBusiness;
 import org.cyk.system.root.business.impl.AbstractIdentifiableBusinessServiceImpl;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.RootConstant;
-import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.Script;
-import org.cyk.system.root.model.file.ScriptEvaluationEngine;
-import org.cyk.system.root.model.file.ScriptVariable;
-import org.cyk.system.root.persistence.api.file.ScriptDao;
-import org.cyk.system.root.persistence.api.file.ScriptVariableDao;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
+import org.cyk.system.root.model.language.programming.Script;
+import org.cyk.system.root.model.language.programming.ScriptEvaluationEngine;
+import org.cyk.system.root.model.language.programming.ScriptVariable;
+import org.cyk.system.root.persistence.api.language.programming.ScriptDao;
+import org.cyk.system.root.persistence.api.language.programming.ScriptVariableDao;
 import org.cyk.utility.common.ListenerUtils;
-import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
@@ -52,10 +49,10 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		return super.instanciateOne().setEvaluationEngine(InstanceHelper.getInstance().getDefaultUsingBusinessIdentifier(ScriptEvaluationEngine.class));
 	}
 	
-	@Override
+	/*@Override
 	public Collection<String> findRelatedInstanceFieldNames(Script identifiable) {
-		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(identifiable),Script.FIELD_FILE/*,Script.FIELD_VARIABLE_COLLECTION*/);
-	}
+		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(identifiable),Script.FIELD_VARIABLE_COLLECTION);
+	}*/
 	
 	@Override
 	protected void beforeCrud(Script script, Crud crud) {
@@ -107,7 +104,7 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 			bindings.put(entry.getKey(), entry.getValue());
 		
 		try {
-			String string = IOUtils.toString(inject(FileBusiness.class).findInputStream(script.getFile()));
+			String string = script.getText();
 			loggingMessageBuilder.addNamedParameters("Text",string);
 			script.setReturned(engine.eval(string, bindings));
 			loggingMessageBuilder.addNamedParameters("Returned",script.getReturned());
@@ -127,6 +124,11 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 		return script.getReturned();
 	}
 	
+	@Override
+	protected void computeChanges(Script script, LoggingHelper.Message.Builder loggingMessageBuilder) {
+		super.computeChanges(script, loggingMessageBuilder);		
+	}
+
 	/**/
 	
 	public static interface Listener extends AbstractIdentifiableBusinessServiceImpl.Listener<Script> {
@@ -174,14 +176,7 @@ public class ScriptBusinessImpl extends AbstractTypedBusinessService<Script, Scr
 			super(Script.class);
 			addFieldCodeName();
 			addParameterArrayElementString(Script.FIELD_EVALUATION_ENGINE);
-		}
-		
-		@Override
-		protected Script __execute__() {
-			Script script = super.__execute__();
-			script.setFile(new File());
-			script.getFile().setBytes( ((java.lang.String)getInput()[3]).getBytes());
-			return script;
+			addParameterArrayElementString(FieldHelper.getInstance().buildPath(Script.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_TEXT));
 		}
 		
 	}

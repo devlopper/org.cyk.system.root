@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.language.programming.Script;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
@@ -54,7 +54,6 @@ public class ValueProperties extends AbstractIdentifiable implements Serializabl
 	public static final String FIELD_NULLABLE = "nullable";
 	public static final String FIELD_NULL_STRING = "nullString";
 	public static final String FIELD_MEASURE = "measure";
-	public static final String FIELD_DERIVED = "derived";
 	public static final String FIELD_DERIVATION_SCRIPT = "derivationScript";
 	
 	public static final String COLUMN_INTERVAL_COLLECTION = FIELD_INTERVAL_COLLECTION;

@@ -827,10 +827,6 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		return Boolean.FALSE;
 	}
 	
-	protected void evaluateEntityProperty(IDENTIFIABLE identifiable,Boolean isChange,Boolean isPersist){
-		//inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable);
-	}
-	
 	@Override
 	public void computeChanges(IDENTIFIABLE identifiable){
 		LoggingHelper.Message.Builder logMessageBuilder = new LoggingHelper.Message.Builder.Adapter.Default();
@@ -921,13 +917,13 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			listenBeforeFilter(filter,dataReadConfiguration);
 			identifiables = getPersistenceService().readByFilter(filter,dataReadConfiguration);
 		}
-		//System.out.println("AbstractIdentifiableBusinessServiceImpl.findByFilter()");
-		new CollectionHelper.Iterator.Adapter.Default<IDENTIFIABLE>(identifiables){
-			private static final long serialVersionUID = 1L;
-			protected void __executeForEach__(IDENTIFIABLE identifiable) {
-				InstanceHelper.getInstance().computeChanges(identifiable);
-			}
-		}.execute();
+		if(Boolean.TRUE.equals(dataReadConfiguration.getComputeChanges()))
+			new CollectionHelper.Iterator.Adapter.Default<IDENTIFIABLE>(identifiables){
+				private static final long serialVersionUID = 1L;
+				protected void __executeForEach__(IDENTIFIABLE identifiable) {
+					InstanceHelper.getInstance().computeChanges(identifiable);
+				}
+			}.execute();
     	return identifiables;
 	}
 

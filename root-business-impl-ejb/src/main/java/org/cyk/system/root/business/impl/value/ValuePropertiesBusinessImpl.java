@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.value.ValuePropertiesBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.value.ValueProperties;
 import org.cyk.system.root.persistence.api.value.ValuePropertiesDao;
 
@@ -27,22 +26,7 @@ public class ValuePropertiesBusinessImpl extends AbstractTypedBusinessService<Va
 			if(valueProperties.getIntervalCollection()!=null)
 				valueProperties.setCode(valueProperties.getIntervalCollection().getCode());
 	}
-	
-	@Override
-	protected ValueProperties __instanciateOne__(String[] values,InstanciateOneListener<ValueProperties> listener) {
-		listener.getInstance().getGlobalIdentifierCreateIfNull();
-		set(listener.getSetListener(), ValueProperties.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE);
-		set(listener.getSetListener(), ValueProperties.FIELD_TYPE);
-		set(listener.getSetListener(), ValueProperties.FIELD_SET);
-		set(listener.getSetListener(), ValueProperties.FIELD_INTERVAL_COLLECTION);
-		set(listener.getSetListener(), ValueProperties.FIELD_MEASURE);
-		set(listener.getSetListener(), ValueProperties.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_DERIVED);
-		set(listener.getSetListener(), ValueProperties.FIELD_DERIVATION_SCRIPT);
-		set(listener.getSetListener(), ValueProperties.FIELD_NULLABLE);
-		set(listener.getSetListener(), ValueProperties.FIELD_NULL_STRING);
-		return listener.getInstance();
-	}
-	
+		
 	/**/
 	
 	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<ValueProperties> implements Serializable {
@@ -51,7 +35,7 @@ public class ValuePropertiesBusinessImpl extends AbstractTypedBusinessService<Va
 		public BuilderOneDimensionArray() {
 			super(ValueProperties.class);
 			addFieldCode().addParameterArrayElementString(ValueProperties.FIELD_TYPE,ValueProperties.FIELD_SET,ValueProperties.FIELD_INTERVAL_COLLECTION
-					,ValueProperties.FIELD_MEASURE,ValueProperties.FIELD_DERIVED,ValueProperties.FIELD_DERIVATION_SCRIPT,ValueProperties.FIELD_NULLABLE,ValueProperties.FIELD_NULL_STRING);
+					,ValueProperties.FIELD_MEASURE/*,ValueProperties.FIELD_DERIVED*/,ValueProperties.FIELD_DERIVATION_SCRIPT,ValueProperties.FIELD_NULLABLE,ValueProperties.FIELD_NULL_STRING);
 		}	
 	}
 

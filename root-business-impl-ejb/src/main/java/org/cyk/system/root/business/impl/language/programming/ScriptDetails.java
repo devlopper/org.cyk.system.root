@@ -1,9 +1,9 @@
-package org.cyk.system.root.business.impl.file;
+package org.cyk.system.root.business.impl.language.programming;
 
 import java.io.Serializable;
 
 import org.cyk.system.root.business.impl.AbstractOutputDetails;
-import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.language.programming.Script;
 import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 
@@ -25,8 +25,6 @@ public class ScriptDetails extends AbstractOutputDetails<Script> implements Seri
 	public void setMaster(Script script) {
 		super.setMaster(script);
 		if(script!=null){
-			if(script.getFile()!=null)
-				file = new FieldValue(script.getFile());
 			if(script.getEvaluationEngine()!=null)
 				evaluationEngine = new FieldValue(script.getEvaluationEngine());
 		}

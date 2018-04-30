@@ -225,6 +225,26 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return this;
 	}
 	
+	/**/
+	
+	public AbstractIdentifiable __set__(String fieldName,Object value){
+		FieldHelper.getInstance().set(getGlobalIdentifierCreateIfNull(), value,fieldName);
+		return this;
+	}
+	public Object __get__(String fieldName){
+		return globalIdentifier == null ? null : FieldHelper.getInstance().read(globalIdentifier, fieldName);
+	}
+	
+	/**/
+	
+	public AbstractIdentifiable setText(String text){
+		__set__(GlobalIdentifier.FIELD_TEXT, text);
+		return this;
+	}
+	public String getText(){
+		return (String) __get__(GlobalIdentifier.FIELD_TEXT);
+	}
+	
 	public AbstractIdentifiable setCode(String code){
 		getGlobalIdentifierCreateIfNull().setCode(code);
 		return this;
@@ -341,6 +361,20 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	}
 	public Boolean getRequired(){
 		return globalIdentifier == null ? null : globalIdentifier.getRequired();
+	}
+	
+	public void setExpirable(Boolean expirable){
+		getGlobalIdentifierCreateIfNull().setExpirable(expirable);
+	}
+	public Boolean getExpirable(){
+		return globalIdentifier == null ? null : globalIdentifier.getExpirable();
+	}
+	
+	public void setExpired(Boolean expired){
+		getGlobalIdentifierCreateIfNull().setExpired(expired);
+	}
+	public Boolean getExpired(){
+		return globalIdentifier == null ? null : globalIdentifier.getExpired();
 	}
 	
 	public AbstractIdentifiable setClosed(Boolean closed){

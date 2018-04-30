@@ -84,7 +84,19 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 * Common business informations
 	 */
 	
-	@ManyToOne @JoinColumn(name=COLUMN_IMAGE) private File image; //an image can be shared for better space management
+	/**
+	 * Human visible representation. can be shared for better space management
+	 */
+	@ManyToOne @JoinColumn(name=COLUMN_IMAGE) private File image;
+	
+	/**
+	 * Human readable representation. This enable lookup into text
+	 */
+	@Column(name=COLUMN_TEXT) private String text;
+	
+	/**
+	 * Document supporting the existence.
+	 */
 	@ManyToOne @JoinColumn(name=COLUMN_SUPPORTING_DOCUMENT) private File supportingDocument; //a file can be shared for better space management
 	
 	private String code;
@@ -150,6 +162,10 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 */
 	@Column(name="f_constant") private Boolean constant;
 	
+	private Boolean expirable;
+	
+	private Boolean expired;
+	
 	/**
 	 * True if default value, False otherwise.
 	 */
@@ -158,8 +174,6 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	@Embedded private Period existencePeriod = new Period();
 	@OneToOne @JoinColumn(name=COLUMN_BIRTH_LOCATION) private Location birthLocation;
 	@OneToOne @JoinColumn(name=COLUMN_DEATH_LOCATION) private Location deathLocation;
-	
-	
 	
 	@Embedded private CascadeStyleSheet cascadeStyleSheet;
 	
@@ -257,6 +271,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String FIELD_CASCADE_STYLE_SHEET = "cascadeStyleSheet";
 	public static final String FIELD_SOURCE = "source";
 	public static final String FIELD_DESTINATION = "destination";
+	public static final String FIELD_TEXT = "text";
 	
 	public static final String COLUMN_CREATED_BY = "createdby";
 	public static final String COLUMN_OWNER = "owner";
@@ -266,6 +281,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	public static final String COLUMN_DEATH_LOCATION = "deathlocation";
 	public static final String COLUMN_SOURCE = FIELD_SOURCE;
 	public static final String COLUMN_DESTINATION = FIELD_DESTINATION;
+	public static final String COLUMN_TEXT = COLUMN_NAME_UNKEYWORD+FIELD_TEXT;
 	
 	/**/
 	
@@ -374,6 +390,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 		public static final String FIELD_DESCRIPTION = "description";
 		public static final String FIELD_EXTERNAL_IDENTIFIER = "externalIdentifier";
 		public static final String FIELD_REQUIRED = "required";
+		
 	}
 	
 	/**/

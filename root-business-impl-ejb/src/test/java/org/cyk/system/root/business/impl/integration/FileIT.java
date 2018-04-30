@@ -13,9 +13,6 @@ import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileIdentifiableGlobalIdentifier;
-import org.cyk.system.root.model.file.Script;
-import org.cyk.system.root.model.file.ScriptVariable;
-import org.cyk.system.root.model.file.ScriptVariableCollection;
 import org.cyk.system.root.model.party.person.Sex;
 import org.cyk.system.root.persistence.api.file.FileRepresentationTypeDao;
 import org.cyk.system.root.persistence.api.party.person.SexDao;
@@ -51,7 +48,10 @@ public class FileIT extends AbstractBusinessIT {
     public void crudFileUsingString() throws IOException {
     	TestCase testCase = instanciateTestCase();
     	String fileCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(File.class,fileCode).setBytesFromString("This is a text."));
+    	testCase.create(testCase.instanciateOne(File.class,fileCode).setGetTextFromBytesAutomatically(Boolean.TRUE).setBytesFromString("This is a text."));
+    	testCase.assertEquals("This is a text.", testCase.getByIdentifierWhereValueUsageTypeIsBusiness(File.class, fileCode).getText());
+    	testCase.update(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(File.class, fileCode).setGetTextFromBytesAutomatically(Boolean.TRUE).setBytesFromString("This is a text new version."));
+    	testCase.assertEquals("This is a text new version.", testCase.getByIdentifierWhereValueUsageTypeIsBusiness(File.class, fileCode).getText());
     	testCase.clean();
     }
     
@@ -63,76 +63,7 @@ public class FileIT extends AbstractBusinessIT {
     			,"La valeur de l'attribut <<octets ou identifiant uniforme de resource>> de l'entité <<fichier>> doit être non nulle.");
     	testCase.clean();
     }
-    
-    /* Script */
-    
-    @Test
-    public void crudScript() {
-    	TestCase testCase = instanciateTestCase();
-    	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("my script"));
-    	testCase.clean();
-    }
-    
-    @Test
-    public void crudScriptWithVariables() {
-    	TestCase testCase = instanciateTestCase();
-    	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("my script").addVariableCollectionItemsByName("a","r2"));
-    	testCase.assertNotNull(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Script.class, scriptCode).getVariableCollection());
-    	testCase.assertCountAll(ScriptVariableCollection.class, 1);
-    	testCase.assertCountAll(ScriptVariable.class, 2);
-    	testCase.clean();
-    }
-    
-    @Test
-    public void evaluateScriptPrintln() {
-    	TestCase testCase = instanciateTestCase();
-    	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("println('THIS IS IT')"));
-    	testCase.assertScriptEvaluate(scriptCode);
-    	testCase.clean();
-    }
-    
-    @Test
-    public void evaluateScriptSum() {
-    	TestCase testCase = instanciateTestCase();
-    	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("a = 1 + 2; r2 = 10+6").addVariableCollectionItemsByName("a","r2"));
-    	testCase.assertScriptEvaluate(scriptCode,"a",3,"r2",16);
-    	testCase.clean();
-    }
-    
-    @Test
-    public void evaluateScriptFindScriptEvaluationEngineByCode() {
-    	TestCase testCase = instanciateTestCase();
-    	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString(
-    			"code = genericBusiness.find('ScriptEvaluationEngine','javascript').getCode()+'';"
-    			+ "name = genericBusiness.find('ScriptEvaluationEngine','javascript').getName()+'';").addVariableCollectionItemsByName("code","name"));
-    	testCase.assertScriptEvaluate(scriptCode,"code","javascript","name","javascript");
-    	testCase.clean();
-    }
-    
-    @Test
-    public void evaluateScriptFindScriptEvaluationEngineByCodeUsingReturnValue() {
-    	TestCase testCase = instanciateTestCase();
-    	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString(
-    			"code = genericBusiness.find('ScriptEvaluationEngine','javascript').getCode()+'';"));
-    	testCase.assertScriptEvaluate(scriptCode,RootConstant.Configuration.ScriptVariable.RETURNED,"javascript");
-    	testCase.clean();
-    }
-    
-    @Test
-    public void evaluateScriptIfElse() {
-    	TestCase testCase = instanciateTestCase();
-    	String scriptCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Script.class,scriptCode).setFileBytesFromString("mystring = 'hello'; a = mystring.charAt(0)==='1' ? 'Match' : 'No matching';").addVariableCollectionItemsByName("a"));
-    	testCase.assertScriptEvaluate(scriptCode,"a","No matching");
-    	testCase.clean();
-    }
-    
+        
 	@Override
 	protected void businesses() {
 		FileBusiness fileBusiness = inject(FileBusiness.class);

@@ -1,10 +1,10 @@
-package org.cyk.system.root.persistence.impl.file;
+package org.cyk.system.root.persistence.impl.language.programming;
 
 import java.io.Serializable;
 
-import org.cyk.system.root.model.file.ScriptVariable;
-import org.cyk.system.root.model.file.ScriptVariableCollection;
-import org.cyk.system.root.persistence.api.file.ScriptVariableCollectionDao;
+import org.cyk.system.root.model.language.programming.ScriptVariable;
+import org.cyk.system.root.model.language.programming.ScriptVariableCollection;
+import org.cyk.system.root.persistence.api.language.programming.ScriptVariableCollectionDao;
 import org.cyk.system.root.persistence.impl.AbstractCollectionDaoImpl;
 
 public class ScriptVariableCollectionDaoImpl extends AbstractCollectionDaoImpl<ScriptVariableCollection,ScriptVariable> implements ScriptVariableCollectionDao,Serializable {

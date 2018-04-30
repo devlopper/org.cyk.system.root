@@ -1,16 +1,16 @@
-package org.cyk.system.root.business.impl.file;
+package org.cyk.system.root.business.impl.language.programming;
 
 import java.io.Serializable;
 
 import javax.inject.Inject;
 
-import org.cyk.system.root.business.api.file.ScriptVariableBusiness;
-import org.cyk.system.root.business.api.file.ScriptVariableCollectionBusiness;
+import org.cyk.system.root.business.api.language.programming.ScriptVariableBusiness;
+import org.cyk.system.root.business.api.language.programming.ScriptVariableCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
-import org.cyk.system.root.model.file.ScriptVariable;
-import org.cyk.system.root.model.file.ScriptVariableCollection;
-import org.cyk.system.root.persistence.api.file.ScriptVariableCollectionDao;
-import org.cyk.system.root.persistence.api.file.ScriptVariableDao;
+import org.cyk.system.root.model.language.programming.ScriptVariable;
+import org.cyk.system.root.model.language.programming.ScriptVariableCollection;
+import org.cyk.system.root.persistence.api.language.programming.ScriptVariableCollectionDao;
+import org.cyk.system.root.persistence.api.language.programming.ScriptVariableDao;
 
 public class ScriptVariableCollectionBusinessImpl extends AbstractCollectionBusinessImpl<ScriptVariableCollection,ScriptVariable, ScriptVariableCollectionDao,ScriptVariableDao,ScriptVariableBusiness> implements ScriptVariableCollectionBusiness,Serializable {
 

@@ -3,7 +3,6 @@ package org.cyk.system.root.model.security;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.utility.common.annotation.ModelBean;
@@ -16,19 +15,6 @@ import lombok.Setter;
 
 @Entity @Getter @Setter @NoArgsConstructor @ModelBean(genderType=GenderType.FEMALE,crudStrategy=CrudStrategy.BUSINESS) 
 public class License extends AbstractIdentifiable implements Serializable {
-
 	private static final long serialVersionUID = -1426919647717880937L;
-	
-	@NotNull
-	/**
-	 * 
-	 */
-	private Boolean expirable = Boolean.FALSE;
-	
-	@NotNull
-	/**
-	 * 
-	 */
-	private Boolean expired = Boolean.FALSE;
 	
 }

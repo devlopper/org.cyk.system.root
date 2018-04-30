@@ -8,9 +8,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness;
 import org.cyk.system.root.business.api.mathematics.MathematicsBusiness.SortOptions;
@@ -18,8 +15,7 @@ import org.cyk.system.root.business.api.mathematics.Sortable;
 import org.cyk.system.root.business.api.mathematics.ValueComparator;
 import org.cyk.system.root.business.api.mathematics.ValueComparator.ValueReader;
 import org.cyk.system.root.business.api.mathematics.WeightedValue;
-import org.cyk.system.root.model.file.File;
-import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.language.programming.Script;
 import org.cyk.system.root.model.mathematics.Average;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
@@ -27,6 +23,9 @@ import org.cyk.system.root.model.mathematics.Rank;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 public class MathematicsBusinessIT extends AbstractBusinessIT {
 
@@ -60,8 +59,8 @@ public class MathematicsBusinessIT extends AbstractBusinessIT {
     
     private Script script(String text,String...variables){
         Script script = new Script();
-        script.setFile(new File());
-        script.getFile().setBytes(text.getBytes());
+        //script.setFile(new File());
+        //script.getFile().setBytes(text.getBytes());
         /*if(variables!=null)
         	for(String variable : variables)
         		;//script.getVariables().add(variable);

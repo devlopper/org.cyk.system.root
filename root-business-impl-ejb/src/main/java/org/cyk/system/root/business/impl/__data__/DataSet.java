@@ -22,12 +22,12 @@ import org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensi
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.file.File;
 import org.cyk.system.root.model.file.FileRepresentationType;
-import org.cyk.system.root.model.file.Script;
-import org.cyk.system.root.model.file.ScriptEvaluationEngine;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.information.Comment;
 import org.cyk.system.root.model.information.Tag;
 import org.cyk.system.root.model.information.Tangibility;
+import org.cyk.system.root.model.language.programming.Script;
+import org.cyk.system.root.model.language.programming.ScriptEvaluationEngine;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
 import org.cyk.system.root.model.mathematics.MetricCollectionType;
@@ -398,8 +398,10 @@ public class DataSet extends AbstractBean implements Serializable {
 				@Override
 				public void processRelatedClasses(Class<?> aClass,Collection<Class<?>> classes) {
 					super.processRelatedClasses(aClass,classes);
-					if(File.class.equals(aClass)){
-						classes.addAll(Arrays.asList(FileRepresentationType.class,ScriptEvaluationEngine.class,Script.class));
+					if(Script.class.equals(aClass)){
+						classes.addAll(Arrays.asList(ScriptEvaluationEngine.class,Script.class));
+					}else if(File.class.equals(aClass)){
+						classes.addAll(Arrays.asList(FileRepresentationType.class));
 					}else if(Movement.class.equals(aClass)){
 						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class
 					    	,MovementMode.class,MovementCollectionType.class,MovementCollectionTypeMode.class,MovementCollection.class));

@@ -27,8 +27,6 @@ public class Installation extends AbstractModelElement implements Serializable {
 	private Person manager;
 	private Credentials managerCredentials;
 	
-	private License license;
-	
 	private SmtpProperties smtpProperties;
 	
 	private Collection<AbstractIdentifiable> identifiables = new ArrayList<>();
@@ -36,11 +34,5 @@ public class Installation extends AbstractModelElement implements Serializable {
 	private Map<String, Set<String>> urlRolesMap = new HashMap<>();
 	
 	private Boolean isCreateAccounts = Boolean.TRUE;
-	private Boolean isCreateLicence = Boolean.TRUE;
 	
-	@Override
-	public String getUiString() {
-		return application.getUiString();
-	}
-
 }

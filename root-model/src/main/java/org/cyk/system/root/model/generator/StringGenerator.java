@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.file.Script;
+import org.cyk.system.root.model.language.programming.Script;
 
 @Getter @Setter @Entity @NoArgsConstructor
 public class StringGenerator extends AbstractIdentifiable implements Serializable {

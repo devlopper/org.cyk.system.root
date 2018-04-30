@@ -19,6 +19,7 @@ import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.FileHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
@@ -46,11 +47,6 @@ public class File extends AbstractIdentifiable implements Serializable{
 	private String uniformResourceIdentifier;//in case we need to point to a file outside the database
 	
 	/**
-	 * Text representation of the bytes. This enable lookup into text
-	 */
-	private String text;
-	
-	/**
 	 * Multipurpose Internet Mail Extension
 	 */
 	private String mime;
@@ -66,6 +62,7 @@ public class File extends AbstractIdentifiable implements Serializable{
 	/****/
 	
 	@Transient transient private InputStream inputStream;
+	@Transient private Boolean getTextFromBytesAutomatically;
 	
 	public File setBytesFromInputStream(InputStream inputStream){
 		try {
@@ -82,6 +79,18 @@ public class File extends AbstractIdentifiable implements Serializable{
 		return this;
 	}
 	
+	public File setBytes(byte[] bytes){
+		this.bytes = bytes;
+		if(Boolean.TRUE.equals(getTextFromBytesAutomatically))
+			setTextFromBytes();
+		return this;
+	}
+	
+	public File setTextFromBytes(){
+		setText(FileHelper.getInstance().getText(this.bytes, Boolean.TRUE, Boolean.TRUE));
+		return this;
+	}
+	
 	@Override
 	public String toString() {
 		return identifier==null?super.toString()
@@ -91,7 +100,6 @@ public class File extends AbstractIdentifiable implements Serializable{
 	public static final String FIELD_EXTENSION = "extension";
 	public static final String FIELD_BYTES = "bytes";
 	public static final String FIELD_UNIFORM_RESOURCE_IDENTIFIER = "uniformResourceIdentifier";
-	public static final String FIELD_TEXT = "text";
 	public static final String FIELD_MIME = "mime";
 	public static final String FIELD_REPRESENTATION_TYPE = "representationType";
 	public static final String FIELD_GENERATOR = "generator";

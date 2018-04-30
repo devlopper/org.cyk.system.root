@@ -25,7 +25,6 @@ import org.cyk.system.root.business.api.message.SmtpPropertiesBusiness;
 import org.cyk.system.root.business.api.party.ApplicationBusiness;
 import org.cyk.system.root.business.api.party.person.PersonBusiness;
 import org.cyk.system.root.business.api.security.ApplicationPropertiesProvider;
-import org.cyk.system.root.business.api.security.LicenseBusiness;
 import org.cyk.system.root.business.api.security.ShiroConfigurator;
 import org.cyk.system.root.business.api.security.SoftwareBusiness;
 import org.cyk.system.root.business.api.security.UserAccountBusiness;
@@ -69,12 +68,17 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
     @Inject private LanguageBusiness languageBusiness;
     @Inject private PersonBusiness personBusiness;
 	@Inject private UserAccountBusiness userAccountBusiness;
-	@Inject private LicenseBusiness licenseBusiness;
 	@Inject private SmtpPropertiesBusiness smtpPropertiesBusiness;
 	
 	@Inject
 	public ApplicationBusinessImpl(ApplicationDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	protected void beforeCreate(Application application) {
+		super.beforeCreate(application);
+		createIfNotIdentified(application.getSmtpProperties());
 	}
 
 	/**
@@ -97,8 +101,6 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 						installData(installation);
 						if(Boolean.TRUE.equals(installation.getIsCreateAccounts()))
 							installAccounts(installation);
-						if(Boolean.TRUE.equals(installation.getIsCreateLicence()))
-							installLicense(installation);
 						
 						if(installation.getSmtpProperties()!=null){
 							smtpPropertiesBusiness.create(installation.getSmtpProperties());
@@ -159,12 +161,6 @@ public class ApplicationBusinessImpl extends AbstractPartyBusinessImpl<Applicati
 		userAccountBusiness.create(managerAccount);
 		
 		logInfo("Creating others accounts");
-	}
-	
-	private void installLicense(Installation installation){
-		logInfo("Creating license");
-		installation.getApplication().setLicense(installation.getLicense());
-		licenseBusiness.create(installation.getLicense());	
 	}
 	
 	@Override @TransactionAttribute(TransactionAttributeType.REQUIRED)

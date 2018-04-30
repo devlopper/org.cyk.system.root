@@ -72,6 +72,7 @@ public interface RootConstant {
 		public static interface Entity {
 			String PERSON = "PERSON";
 			String STORE = "STORE";
+			String PRODUCT = "PRODUCT";
 		}
 		
 		public static interface Property {

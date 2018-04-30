@@ -377,9 +377,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 						if(identifiable.getGlobalIdentifier()!=null && identifiable.getGlobalIdentifier().getCreationOrderNumber()==null)
 							identifiable.getGlobalIdentifier().setCreationOrderNumber(computeCreationOrderNumber(identifiable));	
 					}
-					if(identifiable.getOrderNumber() == null)
-						identifiable.setOrderNumber(computeOrderNumber(identifiable));
-					
+					if(Boolean.TRUE.equals(isComputeOrderNumber(identifiable))){
+						if(identifiable.getOrderNumber() == null)
+							identifiable.setOrderNumber(computeOrderNumber(identifiable));
+					}
 					if(identifiable.getActionListener()!=null)
 						identifiable.getActionListener().actAfter(identifiable, Constant.Action.CREATE);
 					
@@ -402,8 +403,12 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return dao.countAll()-1;
 	}
 	
+	protected Boolean isComputeOrderNumber(IDENTIFIABLE identifiable){
+		return Boolean.FALSE;
+	}
+	
 	protected Long computeOrderNumber(IDENTIFIABLE identifiable){
-		return identifiable.getGlobalIdentifier().getCreationOrderNumber();
+		return identifiable.getGlobalIdentifier() == null ? null : identifiable.getGlobalIdentifier().getCreationOrderNumber();
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
