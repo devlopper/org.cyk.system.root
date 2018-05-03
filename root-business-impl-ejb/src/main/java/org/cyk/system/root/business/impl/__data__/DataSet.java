@@ -36,7 +36,9 @@ import org.cyk.system.root.model.mathematics.movement.MovementAction;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionType;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionTypeMode;
+import org.cyk.system.root.model.mathematics.movement.MovementGroupType;
 import org.cyk.system.root.model.mathematics.movement.MovementMode;
+import org.cyk.system.root.model.mathematics.movement.MovementReason;
 import org.cyk.system.root.model.metadata.Entity;
 import org.cyk.system.root.model.metadata.Property;
 import org.cyk.system.root.model.party.BusinessRole;
@@ -403,8 +405,8 @@ public class DataSet extends AbstractBean implements Serializable {
 					}else if(File.class.equals(aClass)){
 						classes.addAll(Arrays.asList(FileRepresentationType.class));
 					}else if(Movement.class.equals(aClass)){
-						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class
-					    	,MovementMode.class,MovementCollectionType.class,MovementCollectionTypeMode.class,MovementCollection.class));
+						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class,MovementReason.class
+					    	,MovementMode.class,MovementGroupType.class,MovementCollectionType.class,MovementCollectionTypeMode.class,MovementCollection.class));
 					}else if(IdentifiablePeriod.class.equals(aClass)){
 						classes.addAll(Arrays.asList(TimeDivisionType.class,DurationType.class,IdentifiablePeriodCollection.class,IdentifiablePeriodCollectionType.class));
 					}else if(Value.class.equals(aClass)){

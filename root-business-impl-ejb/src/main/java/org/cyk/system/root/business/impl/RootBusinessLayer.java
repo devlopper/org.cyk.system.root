@@ -48,6 +48,7 @@ import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.language.programming.ScriptEvaluationEngine;
 import org.cyk.system.root.model.mathematics.movement.Movement;
+import org.cyk.system.root.model.mathematics.movement.MovementGroupType;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
@@ -127,6 +128,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         IdentifiablePeriod.manage(Movement.class);
         
         InstanceHelper.getInstance().setDefaultBusinessIdentifier(ScriptEvaluationEngine.class, RootConstant.Code.ScriptEvaluationEngine.JAVASCRIPT);
+        InstanceHelper.getInstance().setDefaultBusinessIdentifier(MovementGroupType.class, RootConstant.Code.MovementGroupType.INCREMENTATION_DECREMENTATION);
         
         ThrowableHelper.getInstance().setDefaultThrowableClass(BusinessThrowable.class);
         org.cyk.utility.common.cdi.annotation.Log.Interceptor.COLLECTION.add(new LogInterceptorAdapter() /*inject(LogInterceptorAdapter.class)*/);

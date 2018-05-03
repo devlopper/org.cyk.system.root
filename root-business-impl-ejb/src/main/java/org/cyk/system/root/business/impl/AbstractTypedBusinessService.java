@@ -337,6 +337,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	    beforeCreate(getListeners(), identifiable);
 	    beforeCrud(identifiable, Crud.CREATE);
 	    inject(GenericBusiness.class).createIfNotIdentified(findRelatedInstances(identifiable));
+	    InstanceHelper.getInstance().cascadeAct(Constant.Action.CREATE, identifiable, FieldHelper.Field.Relationship.PARENT);
 	}
 	
 	protected void __create__(final IDENTIFIABLE identifiable){
@@ -498,6 +499,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		beforeUpdate(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.UPDATE);
 		inject(GenericBusiness.class).updateIfIdentifiedElseCreate(findRelatedInstances(identifiable));
+		InstanceHelper.getInstance().cascadeAct(Constant.Action.UPDATE, identifiable, FieldHelper.Field.Relationship.PARENT);
 	}
 
 	@Override
@@ -572,6 +574,11 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		deletePartyIdentifiableGlobalIdentifier(identifiable);
 		beforeDelete(getListeners(), identifiable);
 		beforeCrud(identifiable, Crud.DELETE);
+		
+		deleteRelatedInstances(identifiable);
+	}
+	
+	protected void deleteRelatedInstances(IDENTIFIABLE identifiable){
 		inject(GenericBusiness.class).deleteIfIdentified(findRelatedInstances(identifiable,Boolean.TRUE,null));
 	}
 	
@@ -634,6 +641,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 	protected void afterDelete(IDENTIFIABLE identifiable){
 		afterDelete(getListeners(), identifiable);
 		afterCrud(identifiable, Crud.DELETE);
+		InstanceHelper.getInstance().cascadeAct(Constant.Action.DELETE, identifiable, FieldHelper.Field.Relationship.PARENT);
 	}
 	
 	protected void __delete__(final IDENTIFIABLE identifiable){
@@ -668,7 +676,7 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 							inject(GlobalIdentifierBusiness.class).delete(identifiable.getGlobalIdentifier());
 							identifiable.setGlobalIdentifier(null);
 						}		
-						__delete__(identifiable);
+						__delete__(identifiable);//TODO i think we should delete identifiable first then global identifier second
 						if(identifiable.getActionListener()!=null)
 							identifiable.getActionListener().actAfter(identifiable, Constant.Action.DELETE);
 						afterDelete(identifiable);	

@@ -42,6 +42,7 @@ import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferAcknowledgement;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollectionItem;
 import org.cyk.system.root.model.party.BusinessRole;
 import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.model.party.person.Person;
@@ -512,10 +513,15 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     	String movementsTransferAcknowledgementCode = getRandomAlphabetic();
     	MovementCollectionValuesTransferAcknowledgement movementsTransferAcknowledgement = instanciateOne(MovementCollectionValuesTransferAcknowledgement.class,movementsTransferAcknowledgementCode)
     			.setTransferFromCode(movementsTransferCode);
-    	movementsTransferAcknowledgement.getItems().addBySourceMovementCollectionCodeByDestinationMovementCollectionCodeByValue(destinationBufferMovementCollectionCode, destinationMovementCollectionCode
-    			, acknownledgementValue);
-    	create(movementsTransferAcknowledgement);
     	
+    	assertEqualsNumber(0, CollectionHelper.getInstance().getSize(movementsTransferAcknowledgement.getItems().getItems().getElements()));
+    	computeChanges(movementsTransferAcknowledgement);
+    	assertEqualsNumber(1, CollectionHelper.getInstance().getSize(movementsTransferAcknowledgement.getItems().getItems().getElements()));
+    	movementsTransferAcknowledgement.getItems().setDestinationMovementCollectionAndValueBySourceMovementCollectionCode(destinationBufferMovementCollectionCode
+    			, destinationMovementCollectionCode, acknownledgementValue,RootConstant.Code.MovementReason.TRANSFER_ACKNOWLEDGMENT);
+    	
+    	create(movementsTransferAcknowledgement);
+    	assertCountAll(MovementCollectionValuesTransferItemCollectionItem.class, 2);
     	Number gap = NumberHelper.getInstance().subtract(NumberHelper.getInstance().get(transferValue),NumberHelper.getInstance().get(acknownledgementValue));
     	
     	if(NumberHelper.getInstance().isGreaterThanZero(gap)){

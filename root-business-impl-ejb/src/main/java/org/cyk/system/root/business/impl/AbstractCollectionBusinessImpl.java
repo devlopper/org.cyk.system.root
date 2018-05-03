@@ -142,7 +142,7 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 		if(CollectionHelper.getInstance().isEmpty(collection.getItemsDeletable()))
 			identifiables.addAll(getItemDao().readByCollection(collection));
 		else	
-			identifiables.addAll(collection.getItemsDeletable().getElements());		
+			identifiables.addAll(collection.getItemsDeletable().getElements());
 		getItemBusiness().delete(identifiables);
 	}
 

@@ -11,8 +11,10 @@ import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollection;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollectionItem;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionValuesTransferDao;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.LoggingHelper;
 
 public class MovementCollectionValuesTransferBusinessImpl extends AbstractTypedBusinessService<MovementCollectionValuesTransfer, MovementCollectionValuesTransferDao> implements MovementCollectionValuesTransferBusiness,Serializable {
 	private static final long serialVersionUID = -3799482462496328200L;
@@ -29,10 +31,10 @@ public class MovementCollectionValuesTransferBusinessImpl extends AbstractTypedB
 	}
 	
 	@Override
-	protected void beforeCrud(MovementCollectionValuesTransfer movementsTransfer, Crud crud) {
-		super.beforeCrud(movementsTransfer, crud);
-		movementsTransfer.addIdentifiablesPartyIdentifiableGlobalIdentifierFromField(MovementCollectionValuesTransfer.FIELD_SENDER,RootConstant.Code.BusinessRole.SENDER);
-		movementsTransfer.addIdentifiablesPartyIdentifiableGlobalIdentifierFromField(MovementCollectionValuesTransfer.FIELD_RECEIVER,RootConstant.Code.BusinessRole.RECEIVER);
+	protected void beforeCrud(MovementCollectionValuesTransfer movementCollectionValuesTransfer, Crud crud) {
+		super.beforeCrud(movementCollectionValuesTransfer, crud);
+		movementCollectionValuesTransfer.addIdentifiablesPartyIdentifiableGlobalIdentifierFromField(MovementCollectionValuesTransfer.FIELD_SENDER,RootConstant.Code.BusinessRole.SENDER);
+		movementCollectionValuesTransfer.addIdentifiablesPartyIdentifiableGlobalIdentifierFromField(MovementCollectionValuesTransfer.FIELD_RECEIVER,RootConstant.Code.BusinessRole.RECEIVER);
 	}
 	
 	@Override
@@ -40,12 +42,16 @@ public class MovementCollectionValuesTransferBusinessImpl extends AbstractTypedB
 		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(identifiable), Boolean.TRUE, MovementCollectionValuesTransfer.FIELD_ITEMS);
 	}
 	
-	/*@Override
+	@Override
 	protected void computeChanges(MovementCollectionValuesTransfer movementCollectionValuesTransfer, LoggingHelper.Message.Builder loggingMessageBuilder) {
 		super.computeChanges(movementCollectionValuesTransfer, loggingMessageBuilder);
-		FieldHelper.getInstance().copy(movementCollectionValuesTransfer, movementCollectionValuesTransfer.getPartyCompany(),Boolean.FALSE
-				,org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
-						AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE),org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
-								AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME));
-	}*/
+		if(Boolean.TRUE.equals(movementCollectionValuesTransfer.getItems().getItems().isSynchonizationEnabled()))
+			for(MovementCollectionValuesTransferItemCollectionItem index : movementCollectionValuesTransfer.getItems().getItems().getElements()){
+				if(index.getSource()!=null)
+					index.getSource().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER);
+				if(index.getDestination()!=null)
+					index.getDestination().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER);
+			}
+				
+	}
 }

@@ -47,6 +47,11 @@ public class MovementGroupItem extends AbstractCollectionItem<MovementGroup> imp
 		return this;
 	}
 	
+	public MovementGroupItem setMovementReasonFromCode(String code) {
+		getMovement(Boolean.TRUE).setReasonFromCode(code);
+		return this;
+	}
+	
 	public MovementGroupItem setMovementCollectionFromCode(String code) {
 		getMovement(Boolean.TRUE).setCollectionFromCode(code);
 		return this;

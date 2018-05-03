@@ -3,9 +3,7 @@ package org.cyk.system.root.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
@@ -20,16 +18,6 @@ public interface RootConstant {
 		
 		public static String SEPARATOR = Constant.EMPTY_STRING;
 
-		private static final Map<Class<?>,String> DEFAULT_MAP = new HashMap<>();
-		
-		public static String getDefault(Class<?> aClass){
-			return DEFAULT_MAP.get(aClass);
-		}
-		
-		public static void setDefault(Class<?> aClass,String code){
-			DEFAULT_MAP.put(aClass, code);
-		}
-		
 		public static String generateFromString(String string){
 			return StringUtils.remove(string, Constant.CHARACTER_SPACE);
 		}
@@ -80,456 +68,431 @@ public interface RootConstant {
 			String NAME = "NAME";
 		}
 		
-		public static class Tangibility implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface Tangibility {
 			
-			public static final String TANGIBLE = "TANGIBLE";
-			public static final String INTANGIBLE = "INTANGIBLE";
+			String TANGIBLE = "TANGIBLE";
+			String INTANGIBLE = "INTANGIBLE";
 		}
 		
-		public static class Software implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface Software {
 			
-			public static String INSTALLED = "INSTALLED";
-			public static String GOOGLEMAIL = "GOOGLEMAIL";
-			public static String YAHOOMAIL = "YAHOOMAIL";
+			String INSTALLED = "INSTALLED";
+			String GOOGLEMAIL = "GOOGLEMAIL";
+			String YAHOOMAIL = "YAHOOMAIL";
 		}
 		
-		public static class UserAccount implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface UserAccount {
 			
-			public static String APPLICATION = "APPLICATION";
+			String APPLICATION = "APPLICATION";
 			
 		}
 		
-		public static class Sex implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface Sex {
 			
-			public static String MALE = "MALE";
-			public static String FEMALE = "FEMALE";
-			
-		}
-		
-		public static class NotificationTemplate implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String ALARM_EMAIL = "ALARMMAIL";
-			public static String ALARM_SMS = "ALARMSMS";
-			public static String ALARM_USER_INTERFACE = "ALARMUSERINTERFACE";
+			String MALE = "MALE";
+			String FEMALE = "FEMALE";
 			
 		}
 		
-		public static class LocationType implements Serializable {
-			private static final long serialVersionUID = 1L;
-		
-			public static String HOME = "HOME";
-			public static String OFFICE = "OFFICE";
-		}
-		
-		public static class PhoneNumberType implements Serializable {
-			private static final long serialVersionUID = 1L;
-		
-			public static String LAND = "LAND";
-			public static String MOBILE = "MOBILE";
+		public static interface NotificationTemplate {
 			
-			public static String __DEFAULT__ = MOBILE;
-		}
-		
-		public static class LocalityType implements Serializable {
-			private static final long serialVersionUID = 1L;
-		
-			public static String COUNTRY = "COUNTRY";
-			public static String CITY = "CITY";
-			public static String CONTINENT = "CONTINENT";
-		}
-		
-		public static class Locality implements Serializable {
-			private static final long serialVersionUID = 1L;
-		
-			public static String AFRICA = "AFRICA";
-			public static String AMERICA = "AMERICA";
-			public static String ASIA = "ASIA";
-			public static String AUSTRALIA = "AUSTRALIA";
-			public static String EUROPE = "EUROPA";
-		}
-		
-		public static class Country implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String COTE_DIVOIRE = "CI";
-			
-			public static String __DEFAULT__ = COTE_DIVOIRE;
-		}
-		
-		public static class MaritalStatus implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String BACHELOR = "BACHELOR";
-			public static String MARRIED = "MARRIED";
+			String ALARM_EMAIL = "ALARMMAIL";
+			String ALARM_SMS = "ALARMSMS";
+			String ALARM_USER_INTERFACE = "ALARMUSERINTERFACE";
 			
 		}
 		
-		public static class JobFunction implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface LocationType {
+			
+			String HOME = "HOME";
+			String OFFICE = "OFFICE";
+		}
+		
+		public static interface PhoneNumberType {
+			
+			String LAND = "LAND";
+			String MOBILE = "MOBILE";
+			
+			String __DEFAULT__ = MOBILE;
+		}
+		
+		public static interface LocalityType {
+			
+			String COUNTRY = "COUNTRY";
+			String CITY = "CITY";
+			String CONTINENT = "CONTINENT";
+		}
+		
+		public static interface Locality {
+			
+			String AFRICA = "AFRICA";
+			String AMERICA = "AMERICA";
+			String ASIA = "ASIA";
+			String AUSTRALIA = "AUSTRALIA";
+			String EUROPE = "EUROPA";
+		}
+		
+		public static interface Country {
+			
+			String COTE_DIVOIRE = "CI";
+			
+			String __DEFAULT__ = COTE_DIVOIRE;
+		}
+		
+		public static interface MaritalStatus {
+			
+			String BACHELOR = "BACHELOR";
+			String MARRIED = "MARRIED";
+			
+		}
+		
+		public static interface JobFunction {
 			
 			
 		}
 		
-		public static class JobTitle implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface JobTitle {
 			
 			
 		}
 		
-		public static class PersonTitle implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface PersonTitle {
 			
-			public static String MISTER = "MISTER";
-			public static String MADAM = "MADAM";
-			public static String MISS = "MISS";
-			public static String DOCTOR = "DOCTOR";
+			String MISTER = "MISTER";
+			String MADAM = "MADAM";
+			String MISS = "MISS";
+			String DOCTOR = "DOCTOR";
 		}
 		
-		public static class FileRepresentationType implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface FileRepresentationType {
 			
-			public static String IDENTITY_IMAGE = "IDENTITY_IMAGE";
-			public static String IDENTITY_DOCUMENT = "IDENTITY_DOCUMENT";
-			public static String REPORT_BACKGROUND_IMAGE = "REPORT_BACKGROUND_IMAGE";
-			
-		}
-		
-		public static class PersonRelationshipTypeGroup implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String FAMILY = "FAMILY";
-			public static String SOCIETY = "SOCIETY";
+			String IDENTITY_IMAGE = "IDENTITY_IMAGE";
+			String IDENTITY_DOCUMENT = "IDENTITY_DOCUMENT";
+			String REPORT_BACKGROUND_IMAGE = "REPORT_BACKGROUND_IMAGE";
 			
 		}
 		
-		public static class PersonRelationshipType implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface PersonRelationshipTypeGroup {
 			
-			public static String FAMILY_PARENT = generate(PersonRelationshipTypeGroup.FAMILY,"PARENT");
-			public static String FAMILY_SPOUSE = generate(PersonRelationshipTypeGroup.FAMILY,"SPOUSE");
-			public static String FAMILY_BROTHER = generate(PersonRelationshipTypeGroup.FAMILY,"BROTHER");
-			
-			public static String SOCIETY_TO_CONTACT_IN_EMERGENCY_CASE = generate(PersonRelationshipTypeGroup.SOCIETY,"TOCONTACTINEMERGENCYCASE");
-			public static String SOCIETY_DOCTOR = generate(PersonRelationshipTypeGroup.SOCIETY,"DOCTOR");
+			String FAMILY = "FAMILY";
+			String SOCIETY = "SOCIETY";
 			
 		}
 		
-		public static class PersonRelationshipTypeRoleName implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface PersonRelationshipType {
 			
-			public static String HUSBAND = "HUSBAND";
-			public static String WIFE = "WIFE";
-			public static String FATHER = "FATHER";
-			public static String MOTHER = "MOTHER";
-			public static String SON = "SON";
-			public static String DAUGHTER = "DAUGHTER";
-			public static String BROTHER = "BROTHER";
-			public static String SISTER = "SISTER";
+			String FAMILY_PARENT = generate(PersonRelationshipTypeGroup.FAMILY,"PARENT");
+			String FAMILY_SPOUSE = generate(PersonRelationshipTypeGroup.FAMILY,"SPOUSE");
+			String FAMILY_BROTHER = generate(PersonRelationshipTypeGroup.FAMILY,"BROTHER");
+			
+			String SOCIETY_TO_CONTACT_IN_EMERGENCY_CASE = generate(PersonRelationshipTypeGroup.SOCIETY,"TOCONTACTINEMERGENCYCASE");
+			String SOCIETY_DOCTOR = generate(PersonRelationshipTypeGroup.SOCIETY,"DOCTOR");
 			
 		}
 		
-		public static class PersonRelationshipTypeRole implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface PersonRelationshipTypeRoleName {
 			
-			public static String FAMILY_PARENT_FATHER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.FATHER);
-			public static String FAMILY_PARENT_MOTHER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.MOTHER);
-			public static String FAMILY_SPOUSE_HUSBAND = generate(PersonRelationshipType.FAMILY_SPOUSE,PersonRelationshipTypeRoleName.HUSBAND);
-			public static String FAMILY_SPOUSE_WIFE = generate(PersonRelationshipType.FAMILY_SPOUSE,PersonRelationshipTypeRoleName.WIFE);
-			public static String FAMILY_PARENT_SON = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.SON);
-			public static String FAMILY_PARENT_DAUGHTER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.DAUGHTER);
+			String HUSBAND = "HUSBAND";
+			String WIFE = "WIFE";
+			String FATHER = "FATHER";
+			String MOTHER = "MOTHER";
+			String SON = "SON";
+			String DAUGHTER = "DAUGHTER";
+			String BROTHER = "BROTHER";
+			String SISTER = "SISTER";
+			
+		}
+		
+		public static interface PersonRelationshipTypeRole {
+			
+			String FAMILY_PARENT_FATHER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.FATHER);
+			String FAMILY_PARENT_MOTHER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.MOTHER);
+			String FAMILY_SPOUSE_HUSBAND = generate(PersonRelationshipType.FAMILY_SPOUSE,PersonRelationshipTypeRoleName.HUSBAND);
+			String FAMILY_SPOUSE_WIFE = generate(PersonRelationshipType.FAMILY_SPOUSE,PersonRelationshipTypeRoleName.WIFE);
+			String FAMILY_PARENT_SON = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.SON);
+			String FAMILY_PARENT_DAUGHTER = generate(PersonRelationshipType.FAMILY_PARENT,PersonRelationshipTypeRoleName.DAUGHTER);
 			
 		}
 		
 		/**/
 		
-		public static class TimeDivisionType implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface TimeDivisionType {
 			
-			public static String DAY = "DAY";
-			public static String WEEK = "WEEK";
-			public static String MONTH = "MONTH";
-			public static String TRIMESTER = "TRIMESTER";
-			public static String SEMESTER = "SEMESTER";
-			public static String YEAR = "YEAR";
+			String DAY = "DAY";
+			String WEEK = "WEEK";
+			String MONTH = "MONTH";
+			String TRIMESTER = "TRIMESTER";
+			String SEMESTER = "SEMESTER";
+			String YEAR = "YEAR";
 		}
 		
-		public static class DurationType implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface DurationType {
 			
-			public static String FULL = "FULL";
-			public static String PARTIAL = "PARTIAL";
-			
-		}
-		
-		public static class BusinessServiceCollection implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String EVENT = "EVENT";
-			public static String FILE = "FILE";
-			public static String GEOGRAPHY = "GEOGRAPHY";
-			public static String INFORMATION = "INFORMATION";
-			public static String LANGUAGE = "LANGUAGE";
-			public static String MATHEMATICS = "MATHEMATICS";
-			public static String MESSAGE = "MESSAGE";
-			public static String NETWORK = "NETWORK";
-			public static String PARTY = "PARTY";
-			public static String TREE = "TREE";
-			public static String SECURITY = "SECURITY";
-			public static String TIME = "TIME";
-		}
-		
-		public static class MetricCollectionType implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String ATTENDANCE = "ATTENDANCE";
-			public static String BEHAVIOUR = "BEHAVIOUR";
-			public static String COMMUNICATION = "COMMUNICATION";
-		}
-		
-		public static class MetricCollection implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String ATTENDANCE = "ATTENDANCE";
-			public static String BEHAVIOUR = "BEHAVIOUR";
-			public static String COMMUNICATION = "COMMUNICATION";
-			public static String IDENTIFIABLE_COLLECTION_MOVEMENT = "IDENTIFIABLECOLLECTIONMOVEMENT";
-		}
-		
-		public static class MeasureType implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String DISTANCE = "DISTANCE";
-			public static String TIME = "TIME";
+			String FULL = "FULL";
+			String PARTIAL = "PARTIAL";
 			
 		}
 		
-		public static class Measure implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface BusinessServiceCollection {
 			
-			public static String TIME_DAY = generate(MeasureType.TIME,"DAY");
-			public static String TIME_WEEK = generate(MeasureType.TIME,"WEEK");
-			public static String TIME_MONTH = generate(MeasureType.TIME,"MONTH");
-			public static String TIME_TRIMESTER = generate(MeasureType.TIME,"TRIMESTER");
-			public static String TIME_SEMESTER = generate(MeasureType.TIME,"SEMESTER");
-			public static String TIME_YEAR = generate(MeasureType.TIME,"YEAR");
+			String EVENT = "EVENT";
+			String FILE = "FILE";
+			String GEOGRAPHY = "GEOGRAPHY";
+			String INFORMATION = "INFORMATION";
+			String LANGUAGE = "LANGUAGE";
+			String MATHEMATICS = "MATHEMATICS";
+			String MESSAGE = "MESSAGE";
+			String NETWORK = "NETWORK";
+			String PARTY = "PARTY";
+			String TREE = "TREE";
+			String SECURITY = "SECURITY";
+			String TIME = "TIME";
+		}
+		
+		public static interface MetricCollectionType {
+			
+			String ATTENDANCE = "ATTENDANCE";
+			String BEHAVIOUR = "BEHAVIOUR";
+			String COMMUNICATION = "COMMUNICATION";
+		}
+		
+		public static interface MetricCollection {
+			
+			String ATTENDANCE = "ATTENDANCE";
+			String BEHAVIOUR = "BEHAVIOUR";
+			String COMMUNICATION = "COMMUNICATION";
+			String IDENTIFIABLE_COLLECTION_MOVEMENT = "IDENTIFIABLECOLLECTIONMOVEMENT";
+		}
+		
+		public static interface MeasureType {
+			
+			String DISTANCE = "DISTANCE";
+			String TIME = "TIME";
 			
 		}
 		
-		public static class NullString implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface Measure {
 			
-			public static String NOT_ASSESSED = "NA";
+			String TIME_DAY = generate(MeasureType.TIME,"DAY");
+			String TIME_WEEK = generate(MeasureType.TIME,"WEEK");
+			String TIME_MONTH = generate(MeasureType.TIME,"MONTH");
+			String TIME_TRIMESTER = generate(MeasureType.TIME,"TRIMESTER");
+			String TIME_SEMESTER = generate(MeasureType.TIME,"SEMESTER");
+			String TIME_YEAR = generate(MeasureType.TIME,"YEAR");
+			
+		}
+		
+		public static interface NullString {
+			
+			String NOT_ASSESSED = "NA";
 			
 			
 		}
 		
-		public static class SmtpProperties implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface SmtpProperties {
 			
-			public static String DEFAULT = "DEFAULT";
-			
-			
-		}
-		
-		public static class ScriptEvaluationEngine implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String JAVASCRIPT = "javascript";
+			String DEFAULT = "DEFAULT";
 			
 			
 		}
 		
-		public static class IdentifiableCollectionType implements Serializable {
-			private static final long serialVersionUID = 1L;
-		
-			public static final String CONTACT_COLLECTION = "CONTACTCOLLECTION";
-			public static final String PERSON = "PERSON";
-			public static final String MOVEMENT = "MOVEMENT";
+		public static interface ScriptEvaluationEngine {
+			
+			String JAVASCRIPT = "javascript";
+			
 			
 		}
 		
-		public static class IdentifiablePeriodCollectionType implements Serializable {
-			private static final long serialVersionUID = 1L;
-		
-			public static final String CASH_REGISTER_WORKING_DAY = "CASHREGISTERWORKINGDAY";
+		public static interface IdentifiableCollectionType {
+			
+			String CONTACT_COLLECTION = "CONTACTCOLLECTION";
+			String PERSON = "PERSON";
+			String MOVEMENT = "MOVEMENT";
 			
 		}
 		
-		public static class IdentifiablePeriodCollection implements Serializable {
-			private static final long serialVersionUID = 1L;
-		
-			public static final String CASH_REGISTER_WORKING_DAY = "CASHREGISTERWORKINGDAY";
-		
-		}
-		
-		public static class Role implements Serializable {
-			private static final long serialVersionUID = 1L;
-		
-			public static String ADMINISTRATOR = "ADMINISTRATOR";
-			public static String MANAGER = "MANAGER";
-			public static String SECURITY_MANAGER = "SECURITY_MANAGER";//TODO remove underscore
-			public static String SETTING_MANAGER = "SETTING_MANAGER";
-			public static String USER = "USER";
+		public static interface IdentifiablePeriodCollectionType {
+			
+			String CASH_REGISTER_WORKING_DAY = "CASHREGISTERWORKINGDAY";
 			
 		}
 		
-		public static class IntervalCollection implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface IdentifiablePeriodCollection {
+			
+			String CASH_REGISTER_WORKING_DAY = "CASHREGISTERWORKINGDAY";
+		
+		}
+		
+		public static interface Role {
+			
+			String ADMINISTRATOR = "ADMINISTRATOR";
+			String MANAGER = "MANAGER";
+			String SECURITY_MANAGER = "SECURITY_MANAGER";//TODO remove underscore
+			String SETTING_MANAGER = "SETTING_MANAGER";
+			String USER = "USER";
 			
 		}
 		
-		public static class Interval implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface IntervalCollection {
 			
-			public static String MOVEMENT_ACTION_INCREMENT = "MOVEMENTACTIONINCREMENT";
-			public static String MOVEMENT_ACTION_DECREMENT = "MOVEMENTACTIONDECREMENT";
-			public static String MOVEMENT_COLLECTION_VALUE = "MOVEMENTCOLLECTIONVALUE";
+		}
+		
+		public static interface Interval {
+			
+			String MOVEMENT_ACTION_INCREMENT = "MOVEMENTACTIONINCREMENT";
+			String MOVEMENT_ACTION_DECREMENT = "MOVEMENTACTIONDECREMENT";
+			String MOVEMENT_COLLECTION_VALUE = "MOVEMENTCOLLECTIONVALUE";
 	
 		}
 		
-		public static class MovementAction implements Serializable {
-			private static final long serialVersionUID = 1L;
-			
-			public static String INCREMENT = "INCREMENT";
-			public static String DECREMENT = "DECREMENT";
+		public static interface MovementGroupType {
+			String INCREMENTATION_DECREMENTATION = "INCREMENTATIONDECREMENTATION";
+			String INVENTORY = "INVENTORY";
+			String PROCUREMENT = "PROCUREMENT";
+			String TRANSFER = "TRANSFER";
+			String TRANSFER_ACKNOWLEDGMENT = "TRANSFERACKNOWLEDGMENT";
+			String TRANSFER_BACK = "TRANSFERBACK";
+			String SALE = "SALE";
+			String SALE_BACK = "SALEBACK";
 		}
 		
-		public static class MovementMode implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface MovementReason {
 			
-			public static String CASH = "CASH";
-			public static String CHEQUE = "CHEQUE";
-			public static String BANK_TRANSFER = "BANKTRANSFER";
-			public static String MOBILE_PAYMENT = "MOBILEPAYMENT";
-			public static String GIFT_CARD = "GIFTCARD";
+			String INVENTORY = "INVENTORY";
+			String PROCUREMENT = "PROCUREMENT";
+			String TRANSFER = "TRANSFER";
+			String TRANSFER_ACKNOWLEDGMENT = "TRANSFERACKNOWLEDGMENT";
+			String TRANSFER_BACK = "TRANSFERBACK";
+			String TRANSFER_DELETE = "TRANSFERDELETE";
+			String SALE = "SALE";
+			String SALE_BACK = "SALEBACK";
+			String DELETION = "DELETION";
+		}
+		
+		public static interface MovementAction {
+			
+			String INCREMENT = "INCREMENT";
+			String DECREMENT = "DECREMENT";
+		}
+		
+		public static interface MovementMode {
+			
+			String CASH = "CASH";
+			String CHEQUE = "CHEQUE";
+			String BANK_TRANSFER = "BANKTRANSFER";
+			String MOBILE_PAYMENT = "MOBILEPAYMENT";
+			String GIFT_CARD = "GIFTCARD";
 			
 		}
 		
-		public static class MovementCollectionType implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface MovementCollectionType {
 			
-			public static String DEFAULT = "DEFAULT";
+			String DEFAULT = "DEFAULT";
 			
-			public static String CASH_REGISTER = "CASHREGISTER";
-			public static String STOCK_REGISTER = "STOCKREGISTER";
-			public static String SALE_BALANCE = "SALEBALANCE";
+			String CASH_REGISTER = "CASHREGISTER";
+			String STOCK_REGISTER = "STOCKREGISTER";
+			String SALE_BALANCE = "SALEBALANCE";
 		}
 		
-		public static class MovementCollection implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface MovementCollection {
 			
-			public static final String CASH_REGISTER = "CASHREGISTER";
+			String CASH_REGISTER = "CASHREGISTER";
 			
 		}
 		
-		public static class LanguageEntry implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface LanguageEntry {
 			
-			public static final String YES = "yes";
-			public static final String NO = "no";
-			public static final String NOT_SPECIFIED = "not.specified";
-			public static final String NO_RESULT_FOUND = "noresultfound";
+			String YES = "yes";
+			String NO = "no";
+			String NOT_SPECIFIED = "not.specified";
+			String NO_RESULT_FOUND = "noresultfound";
 		}
 		
-		public static class UniformResourceLocatorParameter implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface UniformResourceLocatorParameter {
 			
 			public static String ENCODED="encoded";
 			
 		}
 		
-		public static class UserInterfaceMenuRenderType implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface UserInterfaceMenuRenderType {
 			
-			public static final String PLAIN="PLAIN";
-			public static final String SLIDE="SLIDE";
-			public static final String PANEL="PANEL";
-			public static final String TAB="TAB";
-			public static final String BREAD_CRUMB="BREAD_CRUMB";
-			public static final String BAR="BAR";
+			String PLAIN="PLAIN";
+			String SLIDE="SLIDE";
+			String PANEL="PANEL";
+			String TAB="TAB";
+			String BREAD_CRUMB="BREAD_CRUMB";
+			String BAR="BAR";
 
 		}
 		
-		public static class UserInterfaceMenuLocation implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface UserInterfaceMenuLocation {
 			
-			public static final String NORTH="NORTH";
-			public static final String EAST="EAST";
-			public static final String SOUTH="SOUTH";
-			public static final String WEST="WEST";
+			String NORTH="NORTH";
+			String EAST="EAST";
+			String SOUTH="SOUTH";
+			String WEST="WEST";
 
 		}
 		
-		public static class UserInterfaceMenuType implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface UserInterfaceMenuType {
 			
-			public static final String PRIMARY="PRIMARY";
-			public static final String SECONDARY="SECONDARY";
-			public static final String MAIN="MAIN";
+			String PRIMARY="PRIMARY";
+			String SECONDARY="SECONDARY";
+			String MAIN="MAIN";
 			
 		}
 		
-		public static class BusinessRole implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface BusinessRole {
 			
-			public static final String MANAGER="MANAGER";
-			public static final String SIGNER="SIGNER";
-			public static final String IN_CHARGE="INCHARGE";
-			public static final String PROVIDER="PROVIDER";
-			public static final String COMPANY="COMPANY";
-			public static final String SENDER="SENDER";
-			public static final String RECEIVER="RECEIVER";
+			String MANAGER="MANAGER";
+			String SIGNER="SIGNER";
+			String IN_CHARGE="INCHARGE";
+			String PROVIDER="PROVIDER";
+			String COMPANY="COMPANY";
+			String SENDER="SENDER";
+			String RECEIVER="RECEIVER";
 			/**
 			 * a place where things are kept before they are sent out to shop
 			 */
-			public static final String WAREHOUSE="WAREHOUSE";
+			String WAREHOUSE="WAREHOUSE";
 			/**
 			 * a place where you can buy things
 			 */
-			public static final String STORE="STORE";
+			String STORE="STORE";
 			
 		}
 		
-		public static class StoreType implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface StoreType {
 			
-			public static final String PRODUCT="PRODUCT";
-			public static final String PRODUCT_WAREHOUSE="PRODUCTWAREHOUSE";
-			public static final String PRODUCT_SHOP="PRODUCTSHOP";
+			String PRODUCT="PRODUCT";
+			String PRODUCT_WAREHOUSE="PRODUCTWAREHOUSE";
+			String PRODUCT_SHOP="PRODUCTSHOP";
 		}
 		
-		public static class Store implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface Store {
 			
-			public static final String PRODUCT="PRODUCT";
-			public static final String PRODUCT_WAREHOUSE="PRODUCTWAREHOUSE";
-			public static final String PRODUCT_SHOP="PRODUCTSHOP";
+			String PRODUCT="PRODUCT";
+			String PRODUCT_WAREHOUSE="PRODUCTWAREHOUSE";
+			String PRODUCT_SHOP="PRODUCTSHOP";
 		}
 		
-		public static class InformationState implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface InformationState {
 			
 			/**
 			 * a plan or an idea which is suggested to think about and decide upon
 			 */
-			public static final String PROPOSAL = "PROPOSAL";
+			String PROPOSAL = "PROPOSAL";
 			
 			/**
 			 * thing that is known or proved to be true
 			 */
-			public static final String FACT = "FACT";
+			String FACT = "FACT";
 		}
 		
-		public static class TransferType implements Serializable {
-			private static final long serialVersionUID = 1L;
+		public static interface TransferType {
 			
-			public static final String TANGIBLE="TANGIBLE";
-			public static final String PRODUCT="PRODUCT";
+			String TANGIBLE="TANGIBLE";
+			String PRODUCT="PRODUCT";
 			
 		}
 		

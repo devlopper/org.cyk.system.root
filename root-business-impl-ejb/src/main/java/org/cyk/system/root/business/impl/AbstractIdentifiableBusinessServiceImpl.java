@@ -835,8 +835,13 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		logTrace(logMessageBuilder);
 	}
 	
+	protected void evaluateEntityPropertyCode(IDENTIFIABLE identifiable,Boolean isInputChange,Boolean isPersist){
+		inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable,isInputChange,isPersist);
+	}
+	
 	protected void computeChanges(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder logMessageBuilder){
-		inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable,Boolean.TRUE,Boolean.FALSE);
+		evaluateEntityPropertyCode(identifiable, Boolean.TRUE,Boolean.FALSE);
+		//inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable,Boolean.TRUE,Boolean.FALSE);
 		
 		Boolean isBirthDateComputedByUser = identifiable.isFieldValueComputedByUser(FieldHelper.getInstance()
 				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));

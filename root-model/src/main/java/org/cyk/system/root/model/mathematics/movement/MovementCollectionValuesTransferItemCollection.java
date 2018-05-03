@@ -9,6 +9,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 
 import org.cyk.system.root.model.AbstractCollection;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -68,6 +69,20 @@ public class MovementCollectionValuesTransferItemCollection extends AbstractColl
 				.setSourceValueAbsoluteFromObject(value));
 		return this;
 	}
+	
+	public MovementCollectionValuesTransferItemCollection setDestinationMovementCollectionAndValueBySourceMovementCollectionCode
+	(String sourceMovementCollectionCode,String destinationMovementCollectionCode,Object value,String reasonCode){
+		for(MovementCollectionValuesTransferItemCollectionItem index : getItems().getElements()){
+			if(index.getSource().getCollection().getCode().equals(sourceMovementCollectionCode)){
+				index.setDestinationMovementCollectionFromCode(destinationMovementCollectionCode).setSourceValueAbsoluteFromObject(value)
+				;
+				index.getDestination().setValueSettableFromAbsolute(Boolean.TRUE).setActionFromIncrementation(Boolean.TRUE)
+					.setReasonFromCode(reasonCode);
+				break;
+			}
+		}
+	return this;
+}
 	
 	/**/
 	

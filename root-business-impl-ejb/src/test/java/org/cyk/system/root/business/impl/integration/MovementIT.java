@@ -10,6 +10,7 @@ import org.cyk.system.root.business.api.mathematics.movement.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionTypeBusiness;
+import org.cyk.system.root.business.api.mathematics.movement.MovementGroupBusiness;
 import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__test__.Runnable;
 import org.cyk.system.root.business.impl.__test__.TestCase;
@@ -1238,7 +1239,7 @@ public class MovementIT extends AbstractBusinessIT {
     			.setActionFromValue()).getCode();
     	
     	Movement movement = CollectionHelper.getInstance().getFirst(inject(MovementBusiness.class).findByFilter(new Movement.Filter().addMaster(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollection.class
-    			, movementCollectionCode)), new DataReadConfiguration()));
+    			, movementCollectionCode)), new DataReadConfiguration().setComputeChanges(Boolean.TRUE)));
     	
     	testCase.assertEqualsNumber(10, movement.getPreviousCumul());
     	
@@ -1436,7 +1437,6 @@ public class MovementIT extends AbstractBusinessIT {
     	String movementCode02 = testCase.create(testCase.instanciateOne(MovementGroupItem.class).setCollectionFromCode(movementGroupCode)
     			.setMovementCollectionFromCode(movementCollectionCode02).setMovementValueFromObject(1)).getMovement().getCode();
     	
-    	debug(testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Movement.class, movementCode01));
     	testCase.assertEquals(movementCollectionCode01, testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Movement.class, movementCode01).getCollection().getCode());
     	testCase.assertEquals(movementCollectionCode02, testCase.getByIdentifierWhereValueUsageTypeIsBusiness(Movement.class, movementCode02).getCollection().getCode());
     	
@@ -1450,6 +1450,14 @@ public class MovementIT extends AbstractBusinessIT {
     	TestCase testCase = instanciateTestCase(); 
     	String code = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code));
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementCollectionInventoryWithGroup(){
+    	TestCase testCase = instanciateTestCase(); 
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code).setMovementGroup(inject(MovementGroupBusiness.class).instanciateOne()));
     	testCase.clean();
     }
     
@@ -1479,7 +1487,7 @@ public class MovementIT extends AbstractBusinessIT {
     			.setValueFromObject(10));
     	
     	testCase.assertMovementCollection(movementCollectionCode, "10", 0);
-    	
+    	testCase.assertCountAll(MovementGroup.class);
     	testCase.clean();
     }
     
@@ -1493,13 +1501,17 @@ public class MovementIT extends AbstractBusinessIT {
     	String movementCollectionInventoryCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode));
     	
-    	String code = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventoryItem.class,code).setCollectionFromCode(movementCollectionInventoryCode)
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventoryItem.class)
+    			.setCollectionFromCode(movementCollectionInventoryCode)
     			.setMovementCollectionFromCode(movementCollectionCode)
-    			.setValueFromObject(12));
+    			.setValueFromObject(12)
+    			).getCode();
     	
     	testCase.assertMovements(movementCollectionCode
     			, new String[] {"0","2","12","true"});
+    	testCase.assertCountAll(MovementGroup.class, 1);
+    	testCase.assertCountAll(MovementGroupItem.class, 1);
+    	testCase.assertCountAll(Movement.class, 1);
     	
     	testCase.clean();
     }
@@ -1521,6 +1533,7 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	testCase.assertMovements(movementCollectionCode
     			, new String[] {"0","-3","7","false"});
+    	testCase.assertCountAll(MovementGroup.class, 1);
     	
     	testCase.clean();
     }

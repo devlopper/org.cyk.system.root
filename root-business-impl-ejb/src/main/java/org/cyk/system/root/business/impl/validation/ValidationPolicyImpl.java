@@ -64,14 +64,14 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
     /**/
     
     protected void applyValidatorObject(Identifiable<?> anIdentifiable){
-        @SuppressWarnings("unchecked")
-        AbstractValidator<Identifiable<?>> validator = (AbstractValidator<Identifiable<?>>) ValidatorMap.getInstance().validatorOf(anIdentifiable.getClass());
-        if(validator==null)
+        //@SuppressWarnings("unchecked")
+        //AbstractValidator<Identifiable<?>> validator = (AbstractValidator<Identifiable<?>>) ValidatorMap.getInstance().validatorOf(anIdentifiable.getClass());
+        //if(validator==null)
             //DefaultValidator.getInstance().validate(anIdentifiable);
         	//inject(DefaultValidator.class).validate(anIdentifiable);
         	new ValidationHelper.Validate.Adapter.Default(anIdentifiable).setIsThrowMessages(Boolean.TRUE).setThrowableClass(BusinessThrowable.class).execute();
-        else
-            validator.validate(anIdentifiable);
+        //else
+          //  ;//validator.validate(anIdentifiable);
     }
     
     protected void checkValueSetConstraints(Identifiable<?> anIdentifiable){
@@ -81,7 +81,8 @@ public class ValidationPolicyImpl extends AbstractBean implements ValidationPoli
             exceptionUtils().exception(identifiable.getIdentifier()!=null,"exception.value.set.system",new Object[]{"identifier"});
             
             for(FieldHelper.Field index : FieldHelper.Field.get(anIdentifiable.getClass())){
-            	if(index.getConstraints().getIsNullable() != null && Boolean.FALSE.equals(index.getConstraints().getIsNullable())){
+            	if(index.getConstraints().getIsNullable() != null && Boolean.FALSE.equals(index.getConstraints().getIsNullable()) 
+            			&& FieldHelper.getInstance().read(anIdentifiable, index.getName())==null){
             		logDebug("field <<{}.{}>> must not be null", identifiable.getClass().getName(),index.getName());
             		throw__(ConditionHelper.Condition.getBuilderNull(identifiable,index.getName()));	
             	}

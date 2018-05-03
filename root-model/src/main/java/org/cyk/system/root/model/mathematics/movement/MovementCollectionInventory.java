@@ -23,6 +23,11 @@ public class MovementCollectionInventory extends AbstractCollection<MovementColl
 	@ManyToOne @JoinColumn(name=COLUMN_MOVEMENT_GROUP) private MovementGroup movementGroup;
 	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private MovementCollectionInventoryType type;
 	
+	@Override
+	public MovementCollectionInventory addCascadeOperationToMasterFieldNames(String... fieldNames) {
+		return (MovementCollectionInventory) super.addCascadeOperationToMasterFieldNames(fieldNames);
+	}
+	
 	/**/
 	
 	public static final String FIELD_MOVEMENT_GROUP = "movementGroup";

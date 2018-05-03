@@ -2,17 +2,23 @@ package org.cyk.system.root.business.impl.mathematics.movement;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionInventoryItemBusiness;
+import org.cyk.system.root.business.api.mathematics.movement.MovementGroupBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
+import org.cyk.system.root.business.impl.helper.FieldHelper;
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventory;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventoryItem;
+import org.cyk.system.root.model.mathematics.movement.MovementGroup;
 import org.cyk.system.root.model.mathematics.movement.MovementGroupItem;
+import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionInventoryDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionInventoryItemDao;
-import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.NumberHelper;
@@ -25,31 +31,23 @@ public class MovementCollectionInventoryItemBusinessImpl extends AbstractCollect
 		super(dao); 
 	}
 	
-	/*@Override
+	@Override
 	protected void beforeCrud(MovementCollectionInventoryItem movementCollectionInventoryItem, Crud crud) {
 		super.beforeCrud(movementCollectionInventoryItem, crud);
 		if(Crud.isCreateOrUpdate(crud)) {
-			if(inject(MovementBusiness.class).isNotIdentified(movementCollectionInventoryItem.getValueGapMovement()))
-				inject(MovementBusiness.class).create(identifiables);
+			if(movementCollectionInventoryItem.getValueGapMovementGroupItem()!=null 
+					&& movementCollectionInventoryItem.getValueGapMovementGroupItem().getCollection()!=null
+					&& inject(MovementGroupBusiness.class).isNotIdentified(movementCollectionInventoryItem.getValueGapMovementGroupItem().getCollection())){
+				inject(MovementGroupBusiness.class).create(movementCollectionInventoryItem.getValueGapMovementGroupItem().getCollection());
+				inject(MovementCollectionInventoryDao.class).update(movementCollectionInventoryItem.getCollection());
+			}
 		}
-	}*/
-	
-	@Override
-	public Collection<String> findRelatedInstanceFieldNames(MovementCollectionInventoryItem movementCollectionInventoryItem) {
-		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(movementCollectionInventoryItem),MovementCollectionInventoryItem.FIELD_VALUE_GAP_MOVEMENT_GROUP_ITEM);
 	}
 	
 	@Override
 	protected void computeChanges(MovementCollectionInventoryItem movementCollectionInventoryItem,LoggingHelper.Message.Builder loggingMessageBuilder) {
 		super.computeChanges(movementCollectionInventoryItem, loggingMessageBuilder);
 			
-		/*if(movementCollectionInventoryItem.getMovementBeforeExistence() == null) {
-			if(movementCollectionInventoryItem.getMovementCollection()!=null) {
-				movementCollectionInventoryItem.setMovementBeforeExistence(inject(MovementDao.class).readLatestFromDateAscendingOrderIndexByCollection(
-						movementCollectionInventoryItem.getMovementCollection()));
-			}
-		}*/
-		
 		if(movementCollectionInventoryItem.getMovementCollection()==null) {
 			movementCollectionInventoryItem.setValueGap(null);
 		}else {
@@ -57,24 +55,14 @@ public class MovementCollectionInventoryItemBusinessImpl extends AbstractCollect
 					,movementCollectionInventoryItem.getMovementCollection().getValue())));
 		}
 		
-		/*
-		if(BigDecimal.ZERO.equals(movementCollectionInventoryItem.getValueGap())) {
-			movementCollectionInventoryItem.setValueGapMovement(null);
-		}else {
-			if(movementCollectionInventoryItem.getValueGapMovement()==null)
-				movementCollectionInventoryItem.setValueGapMovement(instanciateOne(Movement.class)
-						.setCollection(movementCollectionInventoryItem.getMovementCollection()));
-			
-			movementCollectionInventoryItem.getValueGapMovement().setValue(movementCollectionInventoryItem.getValueGap()).setActionFromValue();
-		}
-		
-		if(movementCollectionInventoryItem.getValueGapMovement()!=null)
-			inject(MovementBusiness.class).computeChanges(movementCollectionInventoryItem.getValueGapMovement());
-		*/
-		
 		if(BigDecimal.ZERO.equals(movementCollectionInventoryItem.getValueGap())) {
 			movementCollectionInventoryItem.setValueGapMovementGroupItem(null);
 		}else {
+			if(movementCollectionInventoryItem.getCollection().getMovementGroup() == null){
+				movementCollectionInventoryItem.getCollection().setMovementGroup(instanciateOne(MovementGroup.class)
+						.setCode(movementCollectionInventoryItem.getCollection().getCode())
+						.setTypeFromCode(RootConstant.Code.MovementGroupType.INVENTORY));
+			}
 			if(movementCollectionInventoryItem.getValueGapMovementGroupItem()==null){
 				movementCollectionInventoryItem.setValueGapMovementGroupItem(instanciateOne(MovementGroupItem.class)
 						.setCollection(movementCollectionInventoryItem.getCollection().getMovementGroup())
@@ -86,5 +74,11 @@ public class MovementCollectionInventoryItemBusinessImpl extends AbstractCollect
 		
 		if(movementCollectionInventoryItem.getValueGapMovementGroupItem()!=null)
 			InstanceHelper.getInstance().computeChanges(movementCollectionInventoryItem.getValueGapMovementGroupItem());
+		
+		if(movementCollectionInventoryItem.getValueGapMovementGroupItem()!=null && movementCollectionInventoryItem.getValueGapMovementGroupItem().getCollection()!=null)
+			FieldHelper.getInstance().copy(movementCollectionInventoryItem.getCollection(), movementCollectionInventoryItem.getValueGapMovementGroupItem().getCollection(),Boolean.FALSE
+				,org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
+						AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE),org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
+								AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME));
 	}
 }

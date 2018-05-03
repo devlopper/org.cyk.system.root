@@ -8,6 +8,7 @@ import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.movement.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionValuesTransferItemCollectionItemBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
+import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferItemCollectionItem;
@@ -45,8 +46,10 @@ public class MovementCollectionValuesTransferItemCollectionItemBusinessImpl exte
 	@Override
 	protected void afterDelete(MovementCollectionValuesTransferItemCollectionItem movementsTransferItemCollectionItem) {
 		super.afterDelete(movementsTransferItemCollectionItem);
-		inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollectionAndValueUsingOppositeAndAction(movementsTransferItemCollectionItem.getSource()));
-		inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollectionAndValueUsingOppositeAndAction(movementsTransferItemCollectionItem.getDestination()));		
+		inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollectionAndValueUsingOppositeAndAction(movementsTransferItemCollectionItem.getSource())
+				.setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_DELETE));
+		inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollectionAndValueUsingOppositeAndAction(movementsTransferItemCollectionItem.getDestination())
+				.setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_DELETE));		
 	}
 	
 	@Override
@@ -89,7 +92,8 @@ public class MovementCollectionValuesTransferItemCollectionItemBusinessImpl exte
 			inject(MovementBusiness.class).computeChanges(movementsTransferItemCollectionItem.getDestination());
 		}
 		
-		if(movementsTransferItemCollectionItem.getSource() != null && movementsTransferItemCollectionItem.getDestination()!=null && movementsTransferItemCollectionItem.getValue()!=null) {
+		if(movementsTransferItemCollectionItem.getSource() != null && movementsTransferItemCollectionItem.getSource().getValue()!=null 
+				&& movementsTransferItemCollectionItem.getDestination()!=null && movementsTransferItemCollectionItem.getValue()!=null) {
 			throw__(new ConditionHelper.Condition.Builder.Comparison.Adapter.Default().setFieldObject(movementsTransferItemCollectionItem.getDestination())
 					.setFieldName(Movement.FIELD_VALUE).setValue2(movementsTransferItemCollectionItem.getSource().getValue().negate()).setEqual(Boolean.FALSE));	
 		}

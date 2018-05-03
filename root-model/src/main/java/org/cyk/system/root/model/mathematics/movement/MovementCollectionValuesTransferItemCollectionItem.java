@@ -27,6 +27,7 @@ public class MovementCollectionValuesTransferItemCollectionItem extends Abstract
 	@ManyToOne @JoinColumn(name=COLUMN_SOURCE) @NotNull private Movement source;
 	@ManyToOne @JoinColumn(name=COLUMN_DESTINATION) @NotNull private Movement destination;
 	
+	@Transient private MovementCollectionValuesTransferItemCollectionItem transfered;
 	@Transient private AbstractIdentifiable identifiableJoined;
 	
 	/**/

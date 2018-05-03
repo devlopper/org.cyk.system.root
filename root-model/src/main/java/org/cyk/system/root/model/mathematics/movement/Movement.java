@@ -109,6 +109,11 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 		return this;
 	}
 	
+	public Movement setReasonFromCode(String code){
+		this.reason = getFromCode(MovementReason.class, code);
+		return this;
+	}
+	
 	@Override
 	public Movement set__identifiablePeriod__(IdentifiablePeriod identifiablePeriod) {
 		return (Movement) super.set__identifiablePeriod__(identifiablePeriod);

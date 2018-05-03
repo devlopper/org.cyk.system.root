@@ -59,6 +59,11 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
+	protected Boolean isComputeOrderNumber(Movement identifiable) {
+		return Boolean.TRUE;
+	}
+	
+	@Override
 	protected Boolean isComputeCreationOrderNumber(Movement identifiable) {
 		return Boolean.TRUE;
 	}
@@ -205,7 +210,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			
 			for(Movement index : movements){
 				NumberHelper.getInstance().add(BigDecimal.class, index, Movement.FIELD_CUMUL, increment);
-				index.setOrderNumber(index.getOrderNumber()+1);
+				if(index.getOrderNumber()!=null)
+					index.setOrderNumber(index.getOrderNumber()+1);
 				dao.update(index);
 			}
 			logTrace(logMessageBuilder);	

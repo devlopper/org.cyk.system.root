@@ -67,6 +67,11 @@ public class FileBusinessImpl extends AbstractTypedBusinessService<File, FileDao
 	}
 	
 	@Override
+	protected void evaluateEntityPropertyCode(File identifiable, Boolean isInputChange, Boolean isPersist) {
+		//TODO causing error while persist. cascade persist
+	}
+	
+	@Override
 	protected Object[] getPropertyValueTokens(File file, String name) {
 		if(ArrayUtils.contains(new String[]{GlobalIdentifier.FIELD_NAME}, name) && file.getRepresentationType()!=null)
 			return new Object[]{file.getRepresentationType()};

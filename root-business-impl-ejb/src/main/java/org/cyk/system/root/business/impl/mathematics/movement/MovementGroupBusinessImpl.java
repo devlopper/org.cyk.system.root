@@ -9,8 +9,10 @@ import org.cyk.system.root.business.api.mathematics.movement.MovementGroupItemBu
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.model.mathematics.movement.MovementGroup;
 import org.cyk.system.root.model.mathematics.movement.MovementGroupItem;
+import org.cyk.system.root.model.mathematics.movement.MovementGroupType;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementGroupDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementGroupItemDao;
+import org.cyk.utility.common.helper.InstanceHelper;
 
 public class MovementGroupBusinessImpl extends AbstractCollectionBusinessImpl<MovementGroup,MovementGroupItem,MovementGroupDao,MovementGroupItemDao,MovementGroupItemBusiness> implements MovementGroupBusiness,Serializable {
 
@@ -20,5 +22,10 @@ public class MovementGroupBusinessImpl extends AbstractCollectionBusinessImpl<Mo
     public MovementGroupBusinessImpl(MovementGroupDao dao) {
         super(dao);
     } 
+	
+	@Override
+	public MovementGroup instanciateOne() {
+		return super.instanciateOne().setType(InstanceHelper.getInstance().getDefaultUsingBusinessIdentifier(MovementGroupType.class));
+	}
 	
 }

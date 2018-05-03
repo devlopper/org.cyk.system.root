@@ -18,7 +18,7 @@ import org.cyk.system.root.model.party.Store;
 import org.cyk.system.root.model.party.StoreType;
 import org.cyk.system.root.persistence.api.party.PartyDao;
 import org.cyk.system.root.persistence.api.party.StoreDao;
-import org.cyk.utility.common.helper.StringHelper;
+import org.cyk.utility.common.helper.InstanceHelper;
 
 public class StoreBusinessImpl extends AbstractDataTreeBusinessImpl<Store,StoreDao,StoreType> implements StoreBusiness {
  
@@ -32,8 +32,7 @@ public class StoreBusinessImpl extends AbstractDataTreeBusinessImpl<Store,StoreD
 	@Override
 	public Store instanciateOne() {
 		Store store = super.instanciateOne();//.addCascadeOperationToMasterFieldNames(Store.FIELD_PARTY_COMPANY);
-		if(StringHelper.getInstance().isNotBlank(RootConstant.Code.getDefault(StoreType.class)))
-			store.setType(read(StoreType.class, RootConstant.Code.getDefault(StoreType.class)));
+		store.setType(InstanceHelper.getInstance().getDefaultUsingBusinessIdentifier(StoreType.class));
 		return store;
 	}
 	

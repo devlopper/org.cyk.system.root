@@ -31,7 +31,9 @@ import org.cyk.system.root.model.mathematics.movement.MovementAction;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionType;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionTypeMode;
+import org.cyk.system.root.model.mathematics.movement.MovementGroupType;
 import org.cyk.system.root.model.mathematics.movement.MovementMode;
+import org.cyk.system.root.model.mathematics.movement.MovementReason;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.metadata.Entity;
 import org.cyk.system.root.model.metadata.Property;
@@ -91,6 +93,7 @@ public class RealDataSet extends DataSet implements Serializable {
         
         message();
         mathematics();
+        movement();
         information();
         metaData();
         
@@ -175,8 +178,13 @@ public class RealDataSet extends DataSet implements Serializable {
     	addClass(IntervalCollection.class);
     	addClass(Interval.class);
     	addClass(MetricCollectionType.class);
+    }
+    
+    private void movement(){ 
+    	addClass(MovementReason.class);
     	addClass(MovementAction.class);
     	addClass(MovementMode.class);
+    	addClass(MovementGroupType.class);
     	addClass(MovementCollectionType.class);
     	addClass(MovementCollectionTypeMode.class);
     	addClass(MovementCollection.class);
