@@ -15,6 +15,7 @@ import org.cyk.system.root.business.impl.__data__.DataSet;
 import org.cyk.system.root.business.impl.__test__.Runnable;
 import org.cyk.system.root.business.impl.__test__.TestCase;
 import org.cyk.system.root.model.RootConstant;
+import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifier;
@@ -1601,6 +1602,17 @@ public class MovementIT extends AbstractBusinessIT {
     	}, null, "La valeur(0) de l'attribut <<valeur>> de l'entité <<mouvement>> doit être différente à 0.");
 		testCase.clean();
 	}
+	
+	@Test
+    public void throwMovementCollectionValueMustBeGreaterThanZero(){
+		TestCase testCase = instanciateTestCase();
+    	testCase.assertThrowable(new Runnable(testCase) {
+			private static final long serialVersionUID = 1L;
+			@Override protected void __run__() throws Throwable {create(inject(MovementCollectionBusiness.class).instanciateOne(testCase.getRandomAlphabetic())
+	    			.setTypeFromCode(RootConstant.Code.MovementCollectionType.STOCK_REGISTER).setValueFromObject(-1));}	
+    	}, null, "La valeur(-1) de l'attribut <<valeur>> de l'entité <<collection de mouvement>> doit être supérieure ou égale à 0.");
+		testCase.clean();
+    }
     
     /**/
     
@@ -1613,7 +1625,7 @@ public class MovementIT extends AbstractBusinessIT {
 		@SuppressWarnings({ "rawtypes" })
 		@Override
 		public Collection getClasses() {
-			return Arrays.asList(Movement.class,IdentifiablePeriod.class,Value.class,Party.class);
+			return Arrays.asList(Movement.class,Interval.class,IdentifiablePeriod.class,Value.class,Party.class);
 		}
 		
     }

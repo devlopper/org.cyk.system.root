@@ -23,6 +23,7 @@ public class MovementCollectionValuesTransferAcknowledgement extends AbstractIde
 
 	@ManyToOne @JoinColumn(name=COLUMN_TRANSFER) @NotNull private MovementCollectionValuesTransfer transfer;
 	@ManyToOne @JoinColumn(name=COLUMN_ITEMS) @NotNull private MovementCollectionValuesTransferItemCollection items;
+	private Boolean itemsMustBeSubSetOfTransferItems;
 	
 	/**/
 	
@@ -50,6 +51,7 @@ public class MovementCollectionValuesTransferAcknowledgement extends AbstractIde
 	
 	public static final String FIELD_TRANSFER = "transfer";
 	public static final String FIELD_ITEMS = "items";
+	public static final String FIELD_ITEMS_MUST_BE_SUB_SET_OF_TRANSFER_ITEMS = "itemsMustBeSubSetOfTransferItems";
 	
 	public static final String COLUMN_TRANSFER = FIELD_TRANSFER;
 	public static final String COLUMN_ITEMS = FIELD_ITEMS;

@@ -7,6 +7,7 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.Crud;
+import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
@@ -19,7 +20,9 @@ import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollecti
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementDao;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.helper.ConditionHelper;
+import org.cyk.utility.common.helper.ConditionHelper.Condition;
 import org.cyk.utility.common.helper.InstanceHelper;
+import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.LoggingHelper.Message.Builder;
 import org.cyk.utility.common.helper.NumberHelper;
 
@@ -39,6 +42,16 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 			master.setName(movementCollection.getName()+" buffer");
 			((MovementCollection)master).setType(movementCollection.getType());
 		}
+	}
+	
+	@Override
+	protected void beforeCrud(MovementCollection movementCollection, Crud crud) {
+		super.beforeCrud(movementCollection, crud);
+		if(movementCollection.getType()!=null && movementCollection.getType().getInterval()!=null)
+			throw__(Condition.getBuildersDoesNotBelongsTo(movementCollection
+					, movementCollection.getType().getInterval().getLow().getValueWithoutExcludedInformation()
+					, movementCollection.getType().getInterval().getHigh().getValueWithoutExcludedInformation(), MovementCollection.FIELD_VALUE));
+		
 	}
 	
 	@Override
@@ -85,8 +98,8 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	}
 	
 	@Override
-	protected void computeChanges(MovementCollection movementCollection, Builder logMessageBuilder) {
-		super.computeChanges(movementCollection, logMessageBuilder);
+	protected void computeChanges(MovementCollection movementCollection, LoggingHelper.Message.Builder loggingMessageBuilder) {
+		super.computeChanges(movementCollection, loggingMessageBuilder);
 		
 		if(isNotIdentified(movementCollection)){
 			if(movementCollection.getInitialValue() == null)

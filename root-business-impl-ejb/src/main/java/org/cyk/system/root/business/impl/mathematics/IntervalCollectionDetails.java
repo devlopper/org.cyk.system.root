@@ -10,16 +10,15 @@ import org.cyk.utility.common.annotation.user.interfaces.InputText;
 public class IntervalCollectionDetails extends AbstractCollectionDetails.Extends<IntervalCollection> implements Serializable{
 	private static final long serialVersionUID = -4741435164709063863L;
 	
-	@Input @InputText private String lowestValue,highestValue,numberOfDecimalAfterDot;
+	@Input @InputText private String lowestValue,highestValue;
 	
 	public IntervalCollectionDetails(IntervalCollection intervalCollection) {
 		super(intervalCollection);
 		lowestValue = formatNumber(intervalCollection.getLowestValue());
 		highestValue = formatNumber(intervalCollection.getHighestValue());
-		numberOfDecimalAfterDot = formatNumber(intervalCollection.getNumberOfDecimalAfterDot());
 	}
 	
 	public static final String FIELD_LOWEST_VALUE = "lowestValue";
 	public static final String FIELD_HIGHEST_VALUE = "highestValue";
-	public static final String FIELD_NUMBER_OF_DECIMAL_AFTER_DOT = "numberOfDecimalAfterDot";
+
 }

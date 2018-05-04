@@ -11,6 +11,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
+import org.cyk.system.root.business.api.mathematics.IntervalExtremityBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionItemBusinessImpl;
 import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.IntervalCollection;
@@ -18,7 +19,7 @@ import org.cyk.system.root.model.mathematics.IntervalExtremity;
 import org.cyk.system.root.persistence.api.mathematics.IntervalCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.IntervalDao;
 import org.cyk.utility.common.helper.FieldHelper;
-import org.cyk.utility.common.helper.NumberHelper;
+import org.cyk.utility.common.helper.LoggingHelper;
 
 public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Interval, IntervalDao,IntervalCollection> implements IntervalBusiness,Serializable {
 
@@ -28,7 +29,14 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	public IntervalBusinessImpl(IntervalDao dao) {
 		super(dao); 
 	}
-		
+	
+	@Override
+	protected void computeChanges(Interval interval, LoggingHelper.Message.Builder loggingMessageBuilder) {
+		super.computeChanges(interval, loggingMessageBuilder);
+		inject(IntervalExtremityBusiness.class).computeChanges(interval.getLow());
+		inject(IntervalExtremityBusiness.class).computeChanges(interval.getHigh());
+	}
+	
 	@Override
 	protected void afterCreate(Interval interval) {
 		super.afterCreate(interval);
@@ -50,27 +58,6 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		collection.setHighestValue(intervalCollectionDao.readHighestValue(collection));
 		intervalCollectionDao.update(collection);
 	}
-	
-	@Override
-	protected Interval __instanciateOne__(String[] values,InstanciateOneListener<Interval> listener) {
-		super.__instanciateOne__(values, listener);
-		set(listener.getSetListener().setIndex(15), Interval.FIELD_LOW,IntervalExtremity.FIELD_VALUE);
-		set(listener.getSetListener(), Interval.FIELD_HIGH,IntervalExtremity.FIELD_VALUE);
-		set(listener.getSetListener(), Interval.FIELD_VALUE);
-		
-		set(listener.getSetListener(), Interval.FIELD_LOW,IntervalExtremity.FIELD_EXCLUDED);
-		set(listener.getSetListener(), Interval.FIELD_HIGH,IntervalExtremity.FIELD_EXCLUDED);
-		return listener.getInstance();
-	}
-	
-	/*@Override
-	public Interval instanciateOne(String[] values) {
-		Interval interval = super.instanciateOne(values);
-		//FIXME should use index after 10
-		interval.getLow().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 2)));
-		interval.getHigh().setValue(commonUtils.getBigDecimal(commonUtils.getValueAt(values, 3)));
-		return interval;
-	}*/
 	
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Interval instanciateOne(IntervalCollection collection, String code, String low, String high) {
@@ -101,12 +88,6 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 	@Override
 	public Interval findByCollectionByValue(String collectionCode, String value, String scale) {
 		return findByCollectionByValue(inject(IntervalCollectionDao.class).read(collectionCode), new BigDecimal(value), Integer.parseInt(scale));
-	}
-	
-	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public Boolean isLowerEqualsToHigher(Interval interval) {
-		BigDecimal l1=findGreatestLowestValue(interval),l2=findLowestGreatestValue(interval);
-		return l1!=null && l2!=null && l1.equals(l2);
 	}
 	
 	private Boolean isOutOfExtremity(IntervalExtremity intervalExtremity,Boolean low, BigDecimal value, Integer scale) {
@@ -181,22 +162,6 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 		return dao.readByCollection(collection);
 	}  
 
-    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public BigDecimal findLowestGreatestValue(Interval interval) {
-    	/*if(interval==null)
-    		return null;*/
-    	return interval.getHigh().getValue()==null ? null 
-    			: Boolean.FALSE.equals(interval.getHigh().getExcluded()) ? interval.getHigh().getValue() : interval.getHigh().getValue().add(BigDecimal.ONE);
-    }
-    
-    @Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public BigDecimal findGreatestLowestValue(Interval interval) {
-    	/*if(interval==null)
-    		return null;*/
-    	return interval.getLow().getValue()==null ? null 
-    			: Boolean.FALSE.equals(interval.getLow().getExcluded()) ? interval.getLow().getValue() : interval.getLow().getValue().subtract(BigDecimal.ONE);
-    }
-
 	@Override
 	public Collection<BigDecimal> findByContains(Interval interval,Integer scale,Collection<BigDecimal> values) {
 		Collection<BigDecimal> result = new ArrayList<>();
@@ -208,7 +173,7 @@ public class IntervalBusinessImpl extends AbstractCollectionItemBusinessImpl<Int
 
 	@Override
 	public Collection<Long> findIntegers(Interval interval) {
-		return NumberHelper.getInstance().getIntegers(findGreatestLowestValue(interval), findLowestGreatestValue(interval));
+		return null;//NumberHelper.getInstance().getIntegers(findGreatestLowestValue(interval), findLowestGreatestValue(interval));
 	}
 
 	public static class BuilderOneDimensionArray extends AbstractCollectionItemBusinessImpl.BuilderOneDimensionArray<Interval> implements Serializable {

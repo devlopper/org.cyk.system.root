@@ -32,7 +32,9 @@ public class MovementGroupItemBusinessImpl extends AbstractCollectionItemBusines
 		if(movementGroupItem.getMovement() != null) {
 			if(movementGroupItem.getCollection()!=null && movementGroupItem.getCollection().getType()!=null)
 				movementGroupItem.getMovement().setReasonFromCode(movementGroupItem.getCollection().getType().getCode());
-			InstanceHelper.getInstance().computeChanges(movementGroupItem.getMovement());	
+			InstanceHelper.getInstance().computeChanges(movementGroupItem.getMovement());
+			if(movementGroupItem.getMovement().getAction() == null && movementGroupItem.getMovement().getValue()!=null)
+				movementGroupItem.getMovement().setActionFromValue();
 		}
 		
 	}

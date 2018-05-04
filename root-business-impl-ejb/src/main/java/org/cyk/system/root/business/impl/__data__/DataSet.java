@@ -404,9 +404,11 @@ public class DataSet extends AbstractBean implements Serializable {
 						classes.addAll(Arrays.asList(ScriptEvaluationEngine.class,Script.class));
 					}else if(File.class.equals(aClass)){
 						classes.addAll(Arrays.asList(FileRepresentationType.class));
+					}else if(Interval.class.equals(aClass)){
+						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class));
 					}else if(Movement.class.equals(aClass)){
-						classes.addAll(Arrays.asList(IntervalCollection.class,Interval.class,MetricCollectionType.class,MovementAction.class,MovementReason.class
-					    	,MovementMode.class,MovementGroupType.class,MovementCollectionType.class,MovementCollectionTypeMode.class,MovementCollection.class));
+						classes.addAll(Arrays.asList(MetricCollectionType.class,MovementAction.class,MovementReason.class,MovementMode.class,MovementGroupType.class
+								,MovementCollectionType.class,MovementCollectionTypeMode.class,MovementCollection.class));
 					}else if(IdentifiablePeriod.class.equals(aClass)){
 						classes.addAll(Arrays.asList(TimeDivisionType.class,DurationType.class,IdentifiablePeriodCollection.class,IdentifiablePeriodCollectionType.class));
 					}else if(Value.class.equals(aClass)){

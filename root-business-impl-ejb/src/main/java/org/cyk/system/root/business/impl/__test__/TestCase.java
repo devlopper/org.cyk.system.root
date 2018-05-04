@@ -38,6 +38,7 @@ import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.geography.PhoneNumber;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.language.programming.Script;
+import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
@@ -572,6 +573,36 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
 		 }
 		 return this;
 	 }
+	
+	public TestCase assertIntervalExtremitiesValueWithoutExcludedInformation(Object numberOfDecimalAfterDot,Object lowValue,Boolean lowExcluded,Object expectedLowValueWithoutExcludedInformation,Object highValue,Boolean highExcluded
+			,Object expectedHighValueWithoutExcludedInformation) {
+		String intervalCode = getRandomAlphabetic();
+		create(instanciateOne(Interval.class, intervalCode).setNumberOfDecimalAfterDotFromObject(numberOfDecimalAfterDot).setLowValueFromObject(lowValue)
+				.setLowExcluded(lowExcluded).setHighValueFromObject(highValue).setHighExcluded(highExcluded));
+
+		Interval interval = getByIdentifierWhereValueUsageTypeIsBusiness(Interval.class, intervalCode);
+		
+		assertEqualsNumber(lowValue,interval.getLow().getValue());
+		assertEqualsNumber(expectedLowValueWithoutExcludedInformation,interval.getLow().getValueWithoutExcludedInformation());
+		assertEquals(lowExcluded,interval.getLow().getExcluded());
+
+		assertEqualsNumber(highValue,interval.getHigh().getValue());
+		assertEqualsNumber(expectedHighValueWithoutExcludedInformation,interval.getHigh().getValueWithoutExcludedInformation());
+		assertEquals(highExcluded,interval.getHigh().getExcluded());
+		return this;
+	}
+	
+	public TestCase assertIntervalContains(String code,Object...values){
+		for(Object value : values)
+			assertTrue("interval "+code+" does not contains "+value, getByIdentifierWhereValueUsageTypeIsBusiness(Interval.class, code).contains(value));
+		return this;
+	}
+	
+	public TestCase assertIntervalDoesNotContain(String code,Object...values){
+		for(Object value : values)
+			assertFalse("interval "+code+" contains "+value, getByIdentifierWhereValueUsageTypeIsBusiness(Interval.class, code).contains(value));
+		return this;
+	}
 	 
 	/**/
 	

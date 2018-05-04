@@ -23,12 +23,14 @@ import lombok.Setter;
  */
 @Getter @Setter @Embeddable
 public class CascadeStyleSheet extends AbstractModelElement implements Serializable {
-
 	private static final long serialVersionUID = 738142431416512052L;
 	
 	private @Column(name=COLUMN_CLASS) String clazz;
 	private @Column(name=COLUMN_INLINE) String inline;
 	private @Column(name=COLUMN_UNIQUE_CLASS) String uniqueClass;
+	
+	/* color support right now */
+	//private String style;
 	
 	public void addClasses(String...classes){
 		setClazz(CommonUtils.getInstance().concatenate(getClazz(), classes, CLAZZ_SEPARATOR,Boolean.TRUE));
@@ -61,6 +63,25 @@ public class CascadeStyleSheet extends AbstractModelElement implements Serializa
 		this.uniqueClass = uniqueClass;
 		addClasses(getUniqueClass());
 	}
+	
+	/*	
+	public String getColor(){
+		if(style==null)
+			return "";
+		int colorIndex = style.indexOf("color:")+6;
+		if(colorIndex==-1)
+			return "";
+		int comaIndex = style.indexOf(";",colorIndex);
+		if(comaIndex==-1)
+			return "";
+		return style.substring(colorIndex, comaIndex);
+	}
+	*/
+	/*
+	public String getColorAsHexadecimal(){
+		return String.format("#%06X", (0xFFFFFF & color.getRGB()));
+	}
+	*/	
 	
 	@Override
 	public String getUiString() {

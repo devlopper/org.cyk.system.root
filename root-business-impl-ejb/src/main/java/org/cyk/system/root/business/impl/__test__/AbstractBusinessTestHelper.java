@@ -608,13 +608,13 @@ public abstract class AbstractBusinessTestHelper extends AbstractBean implements
 	}*/
 	
 	private void collectionValueMustNotBeOffThanIntervalExtremity(String movementCollectionCode,Boolean incrementAction){
-		MovementCollection movementCollection = inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode);
+		/*MovementCollection movementCollection = inject(MovementCollectionBusiness.class).findByGlobalIdentifierCode(movementCollectionCode);
 		BigDecimal value = Boolean.TRUE.equals(incrementAction) 
 				? inject(IntervalBusiness.class).findLowestGreatestValue(movementCollection.getType().getInterval()).add(BigDecimal.ONE) 
 				: inject(IntervalBusiness.class).findGreatestLowestValue(movementCollection.getType().getInterval()).subtract(BigDecimal.ONE);
 		if(value==null)
 			return;
-		createMovement(movementCollectionCode,value.toString(), null,getThrowableMessage(movementCollectionCode, isIncrementAction(value.toString()),3));
+		createMovement(movementCollectionCode,value.toString(), null,getThrowableMessage(movementCollectionCode, isIncrementAction(value.toString()),3));*/
 	}
 	public void collectionValueMustNotBeLessThanIntervalLow(String movementCollectionCode){
 		collectionValueMustNotBeOffThanIntervalExtremity(movementCollectionCode,Boolean.FALSE);

@@ -3,7 +3,6 @@ package org.cyk.system.root.business.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -192,12 +191,13 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	
 	public IntervalCollection createIntervalCollection(String code,String[][] values,String codeSeparator,Boolean create){
 		IntervalCollection collection = new IntervalCollection(code);
-		for(String[] v : values){
+		/*for(String[] v : values){
 			collection.getItems().getElements().add(new Interval(collection,StringUtils.isBlank(codeSeparator)?v[0]:(code+codeSeparator+v[0])
 					,v[1],new BigDecimal(v[2]),new BigDecimal(v[3])));
 		}
 		if(Boolean.TRUE.equals(create))
 			return intervalCollectionBusiness.create(collection);
+		*/
 		return collection;
 	}
 	public IntervalCollection createIntervalCollection(String code,String[][] values,String codeSeparator){
@@ -208,7 +208,7 @@ public class RootDataProducerHelper extends AbstractBean implements Serializable
 	}
 	
 	public Interval createInterval(IntervalCollection collection,String code,String name,String low,String high){
-		Interval interval = new Interval(collection, code, name, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
+		Interval interval = null;//new Interval(collection, code, name, commonUtils.getBigDecimal(low), commonUtils.getBigDecimal(high));
 		
 		return interval;
 	}

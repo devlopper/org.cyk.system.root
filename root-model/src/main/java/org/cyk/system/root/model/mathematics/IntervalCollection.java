@@ -18,12 +18,10 @@ import lombok.Setter;
 
 @Getter @Setter @Entity  @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 public class IntervalCollection extends AbstractCollection<Interval> implements Serializable {
-
 	private static final long serialVersionUID = -165832578043422718L;
 
 	@Column(precision=IntervalExtremity.COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal lowestValue;
 	@Column(precision=IntervalExtremity.COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal highestValue;
-	@Column private Byte numberOfDecimalAfterDot;
 	
 	public IntervalCollection(String code) {
 		super(code, code,null,null);
@@ -41,6 +39,5 @@ public class IntervalCollection extends AbstractCollection<Interval> implements 
 	
 	public static final String FIELD_LOWEST_VALUE = "lowestValue";
 	public static final String FIELD_HIGHEST_VALUE = "highestValue";
-	public static final String FIELD_NUMBER_OF_DECIMAL_AFTER_DOT = "numberOfDecimalAfterDot";
 	
 }

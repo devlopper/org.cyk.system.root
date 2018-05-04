@@ -49,7 +49,7 @@ public class IntervalCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Boolean isAllIntervalLowerEqualsToHigher(IntervalCollection intervalCollection) {
 		for(Interval interval : getItemDao().readByCollection(intervalCollection, Boolean.TRUE))
-			if( !Boolean.TRUE.equals(inject(IntervalBusiness.class).isLowerEqualsToHigher(interval)) )
+			if( !Boolean.TRUE.equals(interval.isLowAndHighValuesWithoutExcludedInformationEquals()) )
 				return Boolean.FALSE;
 		return Boolean.TRUE;
 	}
