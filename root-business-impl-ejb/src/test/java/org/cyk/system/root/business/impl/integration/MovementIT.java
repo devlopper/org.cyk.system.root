@@ -1455,6 +1455,40 @@ public class MovementIT extends AbstractBusinessIT {
     }
     
     @Test
+    public void crudOneMovementCollectionInventoryWithGeneratedCode(){
+    	TestCase testCase = instanciateTestCase(); 
+    	String movementCollectionInventoryCode = testCase.create(testCase.instanciateOne(MovementCollectionInventory.class)).getCode();
+    	testCase.assertNotNull(movementCollectionInventoryCode);
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementCollectionInventoryWithJoinToParty(){
+    	TestCase testCase = instanciateTestCase(); 
+    	String partyCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Party.class,partyCode));
+    	
+    	String movementCollectionCode01 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode01));
+    	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
+    			.setMovementCollectionFromCode(movementCollectionCode01).setIdentifiableGlobalIdentifierFromCode(Party.class, partyCode));
+    	
+    	String movementCollectionCode02 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode02));
+    	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
+    			.setMovementCollectionFromCode(movementCollectionCode02).setIdentifiableGlobalIdentifierFromCode(Party.class, partyCode));
+    	
+    	String movementCollectionInventoryCode = testCase.getRandomAlphabetic();
+    	MovementCollectionInventory movementCollectionInventory = testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode).setPartyFromCode(partyCode);
+    	testCase.computeChanges(movementCollectionInventory);
+    	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(movementCollectionInventory.getItems().getElements()));
+    	CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 0).setValueFromObject(0);
+    	CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 1).setValueFromObject(1);
+    	testCase.create(movementCollectionInventory);
+    	testCase.clean();
+    }
+    
+    @Test
     public void crudOneMovementCollectionInventoryWithGroup(){
     	TestCase testCase = instanciateTestCase(); 
     	String code = testCase.getRandomAlphabetic();

@@ -27,8 +27,23 @@ public class PartyIdentifiableGlobalIdentifierDaoImpl extends AbstractJoinGlobal
 	}
 	
 	@Override
+	public Collection<PartyIdentifiableGlobalIdentifier> readByIdentifiableGlobalIdentifiersByRole(Collection<GlobalIdentifier> globalIdentifiers,BusinessRole role) {
+		return readByFilter(new PartyIdentifiableGlobalIdentifier.Filter().addMaster(role).addMasterIdentifiableGlobalIdentifiers(globalIdentifiers));
+	}
+	
+	@Override
 	public Collection<PartyIdentifiableGlobalIdentifier> readByIdentifiableGlobalIdentifierByRole(GlobalIdentifier globalIdentifier,BusinessRole role) {
 		return readByFilter(new PartyIdentifiableGlobalIdentifier.Filter().addMaster(role).addMasterIdentifiableGlobalIdentifier(globalIdentifier));
+	}
+	
+	@Override
+	public Long countByIdentifiableGlobalIdentifiersByRole(Collection<GlobalIdentifier> globalIdentifiers,BusinessRole businessRole) {
+		return countByFilter(new PartyIdentifiableGlobalIdentifier.Filter().addMaster(businessRole).addMasterIdentifiableGlobalIdentifiers(globalIdentifiers));
+	}
+
+	@Override
+	public Long countByIdentifiableGlobalIdentifierByRole(Collection<GlobalIdentifier> globalIdentifiers, BusinessRole businessRole) {
+		return countByIdentifiableGlobalIdentifiersByRole(globalIdentifiers,businessRole);
 	}
 	
 	@Override
@@ -69,5 +84,7 @@ public class PartyIdentifiableGlobalIdentifierDaoImpl extends AbstractJoinGlobal
 			
 		} 
 	}
+
+	
 }
  

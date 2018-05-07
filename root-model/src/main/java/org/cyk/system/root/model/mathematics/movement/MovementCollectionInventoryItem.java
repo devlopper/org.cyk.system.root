@@ -33,6 +33,11 @@ public class MovementCollectionInventoryItem extends AbstractCollectionItem<Move
 	@Transient private BigDecimal valueGap;
 	
 	@Override
+	public MovementCollectionInventoryItem setCollection(MovementCollectionInventory collection) {
+		return (MovementCollectionInventoryItem) super.setCollection(collection);
+	}
+	
+	@Override
 	public MovementCollectionInventoryItem setCollectionFromCode(String code) {
 		return (MovementCollectionInventoryItem) super.setCollectionFromCode(code);
 	}

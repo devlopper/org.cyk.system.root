@@ -32,7 +32,7 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	@Embedded @AttributeOverrides(value={
 			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=COLUMN_LOW_VALUE,precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE))
 			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=COLUMN_LOW_EXCLUDED))
-			,@AttributeOverride(name=IntervalExtremity.FIELD_VALUE_WITHOUT_EXCLUDED_INFORMATION,column=@Column(name=COLUMN_LOW_VALUE_WITHOUT_EXCLUDED_INFORMATION,precision=200,scale=50))
+			,@AttributeOverride(name=IntervalExtremity.FIELD_VALUE_WITHOUT_EXCLUDED_INFORMATION,column=@Column(name=COLUMN_LOW_VALUE_WITHOUT_EXCLUDED_INFORMATION,precision=30,scale=10))
 			,@AttributeOverride(name=IntervalExtremity.FIELD_IS_LOW,column=@Column(name=COLUMN_LOW_IS_LOW))
 	})
 	@Valid
@@ -41,7 +41,7 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	@Embedded @AttributeOverrides(value={
 			@AttributeOverride(name=IntervalExtremity.FIELD_VALUE,column=@Column(name=COLUMN_HIGH_VALUE,precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE))
 			,@AttributeOverride(name=IntervalExtremity.FIELD_EXCLUDED,column=@Column(name=COLUMN_HIGH_EXCLUDED))
-			,@AttributeOverride(name=IntervalExtremity.FIELD_VALUE_WITHOUT_EXCLUDED_INFORMATION,column=@Column(name=COLUMN_HIGH_VALUE_WITHOUT_EXCLUDED_INFORMATION,precision=200,scale=50))
+			,@AttributeOverride(name=IntervalExtremity.FIELD_VALUE_WITHOUT_EXCLUDED_INFORMATION,column=@Column(name=COLUMN_HIGH_VALUE_WITHOUT_EXCLUDED_INFORMATION,precision=30,scale=10))
 			,@AttributeOverride(name=IntervalExtremity.FIELD_IS_LOW,column=@Column(name=COLUMN_HIGH_IS_LOW))
 	})
 	@Valid
@@ -52,7 +52,7 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	/**
 	 * It is the value we use When we belongs to this interval
 	 */
-	@Column(precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal value;
+	@Column(name=COLUMN_VALUE,precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal value;
 	
 	{
 		if(low!=null)
@@ -136,6 +136,7 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	
 	public static final String FIELD_LOW = "low";
 	public static final String FIELD_HIGH = "high";
+	public static final String FIELD_VALUE = "value";
 	
 	public static final String COLUMN_LOW_PREFIX = FIELD_LOW+COLUMN_NAME_WORD_SEPARATOR;
 	public static final String COLUMN_LOW_VALUE = COLUMN_LOW_PREFIX+IntervalExtremity.FIELD_VALUE;
@@ -149,7 +150,7 @@ public class Interval extends AbstractCollectionItem<IntervalCollection> impleme
 	public static final String COLUMN_HIGH_VALUE_WITHOUT_EXCLUDED_INFORMATION = COLUMN_HIGH_PREFIX+IntervalExtremity.FIELD_VALUE_WITHOUT_EXCLUDED_INFORMATION;
 	public static final String COLUMN_HIGH_IS_LOW = COLUMN_HIGH_PREFIX+IntervalExtremity.FIELD_IS_LOW;
 	
-	public static final String FIELD_VALUE = "value";
+	public static final String COLUMN_VALUE = COLUMN_NAME_UNKEYWORD+FIELD_VALUE;
 	
 	public static final String LOG_FORMAT = Interval.class.getSimpleName()+"(%s%s , %s%s)";
 	

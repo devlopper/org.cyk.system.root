@@ -55,9 +55,9 @@ public class MovementCollectionInventoryItemBusinessImpl extends AbstractCollect
 					,movementCollectionInventoryItem.getMovementCollection().getValue())));
 		}
 		
-		if(BigDecimal.ZERO.equals(movementCollectionInventoryItem.getValueGap())) {
+		if(movementCollectionInventoryItem.getValueGap() == null || BigDecimal.ZERO.equals(movementCollectionInventoryItem.getValueGap())) {
 			movementCollectionInventoryItem.setValueGapMovementGroupItem(null);
-		}else {
+		}else if(movementCollectionInventoryItem.getCollection()!=null) {
 			if(movementCollectionInventoryItem.getCollection().getMovementGroup() == null){
 				movementCollectionInventoryItem.getCollection().setMovementGroup(instanciateOne(MovementGroup.class)
 						.setCode(movementCollectionInventoryItem.getCollection().getCode())
@@ -68,7 +68,6 @@ public class MovementCollectionInventoryItemBusinessImpl extends AbstractCollect
 						.setCollection(movementCollectionInventoryItem.getCollection().getMovementGroup())
 						.setMovementCollection(movementCollectionInventoryItem.getMovementCollection()));
 			}
-			
 			movementCollectionInventoryItem.getValueGapMovementGroupItem().getMovement().setValue(movementCollectionInventoryItem.getValueGap()).setActionFromValue();
 		}
 		

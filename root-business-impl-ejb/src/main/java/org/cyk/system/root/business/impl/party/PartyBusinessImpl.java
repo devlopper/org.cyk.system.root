@@ -37,6 +37,11 @@ public class PartyBusinessImpl extends AbstractPartyBusinessImpl<Party, PartyDao
 	@Override
 	public Party findFirstByIdentifiableByBusinessRoleCode(AbstractIdentifiable identifiable, String businessRoleCode) {
 		return dao.readFirstByIdentifiableByBusinessRoleCode(identifiable, businessRoleCode);
+	}
+
+	@Override
+	public Collection<Party> findByIdentifiablesByBusinessRoleCode(Collection<? extends AbstractIdentifiable> identifiables, String businessRoleCode) {
+		return dao.readByIdentifiablesByBusinessRoleCode(identifiables, businessRoleCode);
 	}  
 	
 }

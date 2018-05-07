@@ -30,7 +30,6 @@ import lombok.Setter;
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {MovementCollectionIdentifiableGlobalIdentifier.FIELD_MOVEMENT_COLLECTION
 		})})
 public class MovementCollectionIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
-
 	private static final long serialVersionUID = -165832578043422718L;
 	
 	@ManyToOne @JoinColumn(name=COLUMN_MOVEMENT_COLLECTION) @NotNull private MovementCollection movementCollection;
@@ -40,6 +39,11 @@ public class MovementCollectionIdentifiableGlobalIdentifier extends AbstractJoin
 	public MovementCollectionIdentifiableGlobalIdentifier(MovementCollection movementCollection,AbstractIdentifiable identifiable){
 		super(identifiable);
 		this.movementCollection = movementCollection;
+	}
+	
+	public MovementCollectionIdentifiableGlobalIdentifier setMovementCollectionFromCode(String code){
+		this.movementCollection = getFromCode(MovementCollection.class, code);
+		return this;
 	}
 	
 	/**/

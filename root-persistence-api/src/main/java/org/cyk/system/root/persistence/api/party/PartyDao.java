@@ -8,8 +8,14 @@ import org.cyk.system.root.model.party.Party;
 
 public interface PartyDao extends AbstractPartyDao<Party> {
 
+	Collection<Party> readByIdentifiablesByBusinessRole(Collection<? extends AbstractIdentifiable> identifiables,BusinessRole businessRole);
+	Collection<Party> readByIdentifiablesByBusinessRoleCode(Collection<? extends AbstractIdentifiable> identifiables,String businessRoleCode);
+	
 	Collection<Party> readByIdentifiableByBusinessRole(AbstractIdentifiable identifiable,BusinessRole businessRole);
 	Collection<Party> readByIdentifiableByBusinessRoleCode(AbstractIdentifiable identifiable,String businessRoleCode);
+	
+	Long countByIdentifiablesByBusinessRole(Collection<? extends AbstractIdentifiable> identifiables,BusinessRole businessRole);
+	Long countByIdentifiablesByBusinessRoleCode(Collection<? extends AbstractIdentifiable> identifiables,String businessRoleCode);
 	
 	Long countByIdentifiableByBusinessRole(AbstractIdentifiable identifiable,BusinessRole businessRole);
 	Long countByIdentifiableByBusinessRoleCode(AbstractIdentifiable identifiable,String businessRoleCode);

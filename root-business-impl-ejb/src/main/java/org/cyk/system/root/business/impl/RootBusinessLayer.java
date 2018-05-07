@@ -54,6 +54,7 @@ import org.cyk.system.root.model.network.UniformResourceLocator;
 import org.cyk.system.root.model.network.UniformResourceLocatorParameter;
 import org.cyk.system.root.model.party.Application;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.party.StoreType;
 import org.cyk.system.root.model.party.person.Person;
 import org.cyk.system.root.model.party.person.PersonRelationship;
 import org.cyk.system.root.model.party.person.PersonRelationshipTypeRole;
@@ -127,6 +128,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
         super.initialisation();
         IdentifiablePeriod.manage(Movement.class);
         
+        InstanceHelper.getInstance().setDefaultBusinessIdentifier(StoreType.class, RootConstant.Code.StoreType.PRODUCT);
         InstanceHelper.getInstance().setDefaultBusinessIdentifier(ScriptEvaluationEngine.class, RootConstant.Code.ScriptEvaluationEngine.JAVASCRIPT);
         InstanceHelper.getInstance().setDefaultBusinessIdentifier(MovementGroupType.class, RootConstant.Code.MovementGroupType.INCREMENTATION_DECREMENTATION);
         

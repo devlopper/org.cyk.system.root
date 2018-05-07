@@ -60,6 +60,7 @@ import org.cyk.system.root.persistence.api.geography.ElectronicMailAddressDao;
 import org.cyk.system.root.persistence.api.geography.PhoneNumberDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementDao;
+import org.cyk.system.root.persistence.api.party.PartyDao;
 import org.cyk.system.root.persistence.api.party.PartyIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.party.person.PersonDao;
 import org.cyk.system.root.persistence.api.party.person.PersonRelationshipDao;
@@ -98,6 +99,11 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
 		assertNull("party identifiable global identifier ("+partyCode+","+businessRoleCode+","+identifiableClass+","+identifiableCode+") is not null",inject(PartyIdentifiableGlobalIdentifierDao.class).readByPartyByIdentifiableGlobalIdentifierByRole(getByIdentifierWhereValueUsageTypeIsBusiness(Party.class, partyCode,Boolean.TRUE)
     			, getByIdentifierWhereValueUsageTypeIsBusiness(identifiableClass,identifiableCode,Boolean.TRUE).getGlobalIdentifier()
     			, getByIdentifierWhereValueUsageTypeIsBusiness(BusinessRole.class,businessRoleCode,Boolean.TRUE)));
+	}
+	
+	public TestCase assertEqualsNumberPartyByIdentifiablesByBusinessRoleCode(Object expected,Collection<? extends AbstractIdentifiable> identifiables,String businessRoleCode){
+		assertEqualsNumber(expected, inject(PartyDao.class).countByIdentifiablesByBusinessRoleCode(identifiables, businessRoleCode));
+		return this;
 	}
 	
 	public <T> T readCollectionItem(Class<T> aClass,Class<? extends AbstractCollection<?>> collectionClass,String collectionCode,String code){
