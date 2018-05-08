@@ -36,7 +36,7 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 		= new HashMap<>();
 	
 	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_GLOBAL_IDENTIFIER) @NotNull protected GlobalIdentifier identifiableGlobalIdentifier;
-	protected Boolean onDeleteCascadeToJoin;
+	//protected Boolean onDeleteCascadeToJoin;
 	
 	public AbstractJoinGlobalIdentifier(AbstractIdentifiable identifiable){
 		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();

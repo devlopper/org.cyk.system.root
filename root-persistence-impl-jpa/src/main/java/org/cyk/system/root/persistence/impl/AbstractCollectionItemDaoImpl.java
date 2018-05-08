@@ -90,12 +90,19 @@ public abstract class AbstractCollectionItemDaoImpl<ITEM extends AbstractCollect
 	protected void listenInstanciateJpqlBuilder(String name, JavaPersistenceQueryLanguage builder) {
 		super.listenInstanciateJpqlBuilder(name, builder);
 		if(readByFilter.equals(name)){
-			builder.setFieldName(AbstractCollectionItem.FIELD_COLLECTION).where().and().in(AbstractIdentifiable.FIELD_IDENTIFIER);
-			builder.setFieldName(null).orderBy().asc(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
+			builder.setFieldName(AbstractCollectionItem.FIELD_COLLECTION).where().and().in(AbstractIdentifiable.FIELD_IDENTIFIER);			
 		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsGreaterThan
 				,readWhereOrderNumberIsGreaterThan}, name)){
 			builder.where().and().eq(AbstractCollectionItem.FIELD_COLLECTION);
 		}
+	}
+	
+	@Override
+	protected void listenInstanciateJpqlBuilderOrderBy(String name, JavaPersistenceQueryLanguage builder) {
+		if(readByFilter.equals(name)){
+			builder.setFieldName(null).orderBy().asc(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
+		}else
+			super.listenInstanciateJpqlBuilderOrderBy(name, builder);
 	}
 		
 	@SuppressWarnings("unchecked")

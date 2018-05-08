@@ -549,5 +549,7 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 	
 	/**/
 
+	/**/
+	
 	public static final String PARAMETER_INDEX = "pindex";
 }

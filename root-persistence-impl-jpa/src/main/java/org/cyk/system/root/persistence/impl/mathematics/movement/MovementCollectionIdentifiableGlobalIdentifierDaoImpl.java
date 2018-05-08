@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.impl.QueryWrapper;
 import org.cyk.system.root.persistence.impl.globalidentification.AbstractJoinGlobalIdentifierDaoImpl;
+import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 import org.cyk.utility.common.helper.FilterHelper.Filter;
 import org.cyk.utility.common.helper.StructuredQueryLanguageHelper.Builder.Adapter.Default.JavaPersistenceQueryLanguage;
@@ -40,6 +42,15 @@ public class MovementCollectionIdentifiableGlobalIdentifierDaoImpl extends Abstr
 		return readByFilter(new MovementCollectionIdentifiableGlobalIdentifier.Filter().addMaster(movementCollection));
 	}
 	
-	
+	@Override
+	public MovementCollectionIdentifiableGlobalIdentifier readByMovementCollectionByIdentifiableGlobalIdentifier(MovementCollection movementCollection, GlobalIdentifier globalIdentifier) {
+		return CollectionHelper.getInstance().getFirst(readByFilter(new MovementCollectionIdentifiableGlobalIdentifier.Filter().addMaster(movementCollection)
+				.addMasterIdentifiableGlobalIdentifier(globalIdentifier)));
+	}
+
+	@Override
+	public MovementCollectionIdentifiableGlobalIdentifier readByMovementCollectionByIdentifiable(MovementCollection movementCollection, AbstractIdentifiable identifiable) {
+		return readByMovementCollectionByIdentifiableGlobalIdentifier(movementCollection,identifiable.getGlobalIdentifier());
+	}
 }
  

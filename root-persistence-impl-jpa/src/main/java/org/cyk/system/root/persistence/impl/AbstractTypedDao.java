@@ -3,6 +3,7 @@ package org.cyk.system.root.persistence.impl;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -190,6 +191,7 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			processReadByFilterQueryBuilderWhereConditions(builder);
 			builder.getWhere().rp();
 			builder.setFieldName(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER).where().and().addEqual(GlobalIdentifier.FIELD_CLOSED,Boolean.FALSE,3);
+			listenInstanciateJpqlBuilderOrderBy(name, builder);
 		}else if(readWhereExistencePeriodFromDateIsLessThan.equals(name)){
 			builder.setFieldName(FieldHelper.getInstance().buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD)).where()
 				.lt(Period.FIELD_FROM_DATE, Period.FIELD_FROM_DATE).and().getParent().setFieldName(null).where()
@@ -205,6 +207,14 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 			.gt(GlobalIdentifier.FIELD_ORDER_NUMBER, GlobalIdentifier.FIELD_ORDER_NUMBER).and().getParent().setFieldName(null).where()
 			.neq(AbstractIdentifiable.FIELD_IDENTIFIER, AbstractIdentifiable.FIELD_IDENTIFIER);
 			builder.orderBy().desc("globalIdentifier.existencePeriod.fromDate");
+		}
+	}
+	
+	protected void listenInstanciateJpqlBuilderOrderBy(String name,JavaPersistenceQueryLanguage builder){
+		if(readByFilter.equals(name)){
+			builder.setFieldName(null).orderBy().asc("globalIdentifier.creationDate");	
+		}else if(ArrayUtils.contains(new String[]{readWhereExistencePeriodFromDateIsLessThan,readWhereExistencePeriodFromDateIsGreaterThan,readWhereOrderNumberIsGreaterThan}, name)){
+			builder.setFieldName(null).orderBy().desc("globalIdentifier.existencePeriod.fromDate");
 		}
 	}
 	
@@ -644,6 +654,19 @@ public abstract class AbstractTypedDao<IDENTIFIABLE extends AbstractIdentifiable
 	
 	/**/
 
+	protected <T extends AbstractIdentifiable> T read(Class<T> aClass,String code){
+		return inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(code);
+	}
+	
+	protected <T extends AbstractIdentifiable> Collection<T> readMany(Class<T> aClass,Collection<String> codes){
+		return inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(codes);
+	}
+	
+	protected <T extends AbstractIdentifiable> Collection<T> readMany(Class<T> aClass,String...codes){
+		return readMany(aClass,Arrays.asList(codes));
+	}
+	/**/
+	
 	protected String criteriaSearchQueryId(AbstractFieldValueSearchCriteria<?> searchCriteria,String ascendingOrderQueryId,String descendingOrderQueryId){
 		if(searchCriteria.getAscendingOrdered()!=null)
 			return Boolean.TRUE.equals(searchCriteria.getAscendingOrdered())?ascendingOrderQueryId:descendingOrderQueryId;

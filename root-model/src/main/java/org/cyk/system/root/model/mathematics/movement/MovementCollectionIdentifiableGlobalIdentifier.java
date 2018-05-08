@@ -28,7 +28,7 @@ import lombok.Setter;
  */
 @Getter @Setter @Entity  @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {MovementCollectionIdentifiableGlobalIdentifier.FIELD_MOVEMENT_COLLECTION
-		})})
+		,MovementCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
 public class MovementCollectionIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 	private static final long serialVersionUID = -165832578043422718L;
 	
@@ -64,6 +64,16 @@ public class MovementCollectionIdentifiableGlobalIdentifier extends AbstractJoin
 	public static class Filter extends AbstractJoinGlobalIdentifier.Filter<MovementCollectionIdentifiableGlobalIdentifier> implements Serializable{
 		private static final long serialVersionUID = 1L;
     	
+		@Override
+		public Filter addMaster(Object master) {
+			return (Filter) super.addMaster(master);
+		}
+		
+		@Override
+		public Filter addMasterIdentifiableGlobalIdentifier(GlobalIdentifier... masterIdentifiableGlobalIdentifiers) {
+			return (Filter) super.addMasterIdentifiableGlobalIdentifier(masterIdentifiableGlobalIdentifiers);
+		}
+		
     }
 	
 	@Getter @Setter

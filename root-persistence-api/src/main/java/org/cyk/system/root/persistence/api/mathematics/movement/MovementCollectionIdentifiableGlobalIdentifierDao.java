@@ -2,6 +2,8 @@ package org.cyk.system.root.persistence.api.mathematics.movement;
 
 import java.util.Collection;
 
+import org.cyk.system.root.model.AbstractIdentifiable;
+import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifier;
 import org.cyk.system.root.persistence.api.globalidentification.JoinGlobalIdentifierDao;
@@ -10,4 +12,7 @@ public interface MovementCollectionIdentifiableGlobalIdentifierDao extends JoinG
 	
 	Collection<MovementCollectionIdentifiableGlobalIdentifier> readByMovementCollection(MovementCollection movementCollection);
 	
+	MovementCollectionIdentifiableGlobalIdentifier readByMovementCollectionByIdentifiableGlobalIdentifier(MovementCollection movementCollection,GlobalIdentifier globalIdentifier);
+	MovementCollectionIdentifiableGlobalIdentifier readByMovementCollectionByIdentifiable(MovementCollection movementCollection,AbstractIdentifiable identifiable);
+
 }
