@@ -51,8 +51,15 @@ public class MovementCollectionInventoryItemBusinessImpl extends AbstractCollect
 		if(movementCollectionInventoryItem.getMovementCollection()==null) {
 			movementCollectionInventoryItem.setValueGap(null);
 		}else {
-			movementCollectionInventoryItem.setValueGap(NumberHelper.getInstance().get(BigDecimal.class,NumberHelper.getInstance().subtract(movementCollectionInventoryItem.getValue()
-					,movementCollectionInventoryItem.getMovementCollection().getValue())));
+			if(isIdentified(movementCollectionInventoryItem))
+				;
+			else{
+				if(movementCollectionInventoryItem.getValue() == null)
+					;
+				else
+					movementCollectionInventoryItem.setValueGap(NumberHelper.getInstance().get(BigDecimal.class,NumberHelper.getInstance().subtract(movementCollectionInventoryItem.getValue()
+							,movementCollectionInventoryItem.getMovementCollection().getValue())));	
+			}
 		}
 		
 		if(movementCollectionInventoryItem.getValueGap() == null || BigDecimal.ZERO.equals(movementCollectionInventoryItem.getValueGap())) {

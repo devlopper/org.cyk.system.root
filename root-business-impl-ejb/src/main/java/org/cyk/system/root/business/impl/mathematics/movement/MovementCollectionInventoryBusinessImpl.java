@@ -73,12 +73,12 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractCollectionB
 				}else{
 					//clean items
 					Collection<MovementCollectionInventoryItem> toDelete = new ArrayList<>();
-					//remove those not belonging to movement collections
+					//remove those not belonging to movement collections 
 					for(MovementCollectionInventoryItem index : movementCollectionInventory.getItems().getElements())
 						if(!CollectionHelper.getInstance().contains(movementCollections, index.getMovementCollection()))
 							toDelete.add(index);
-					
 					CollectionHelper.getInstance().remove(movementCollectionInventory.getItems().getElements(), toDelete);
+					movementCollectionInventory.getItems().getElements().removeAll(toDelete);
 					toDelete.clear();
 					
 					/*
@@ -89,7 +89,20 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractCollectionB
 					CollectionHelper.getInstance().remove(acknowledgedItems, notTransferedItems);
 					notTransferedItems.clear();
 					*/
-					
+					//add those not belonging to items
+					for(MovementCollection index : movementCollections){
+						Boolean found = Boolean.FALSE;
+						for(MovementCollectionInventoryItem movementCollectionInventoryItemIndex : movementCollectionInventory.getItems().getElements()){
+							if(movementCollectionInventoryItemIndex.getMovementCollection().equals(index)){
+								found = Boolean.TRUE;
+								break;
+							}
+						}
+						if(Boolean.FALSE.equals(found)){
+							movementCollectionInventory.getItems().addOne(instanciateOne(MovementCollectionInventoryItem.class)
+									.setCollection(movementCollectionInventory).setMovementCollection(index));
+						}
+					}
 				}
 			}
 		}
