@@ -36,7 +36,8 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 		return super.instanciateOne().setItems(inject(MovementCollectionValuesTransferItemCollectionBusiness.class).instanciateOne()
 				.setItemsSynchonizationEnabled(Boolean.TRUE)).addCascadeOperationToMasterFieldNames(MovementCollectionValuesTransferAcknowledgement.FIELD_ITEMS)
 				.setItemsSourceMovementCollectionIsBuffer(Boolean.TRUE)
-				.setItemsMustBeSubSetOfTransferItems(Boolean.TRUE);
+				.setItemsMustBeSubSetOfTransferItems(Boolean.TRUE)
+				.__setBirthDateComputedByUser__(Boolean.FALSE);
 	}
 	
 	@Override

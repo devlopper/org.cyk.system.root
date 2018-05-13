@@ -1457,8 +1457,18 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementCollectionInventoryWithGeneratedCode(){
     	TestCase testCase = instanciateTestCase(); 
-    	String movementCollectionInventoryCode = testCase.create(testCase.instanciateOne(MovementCollectionInventory.class)).getCode();
-    	testCase.assertNotNull(movementCollectionInventoryCode);
+    	String movementCollectionInventoryCode = testCase.create(testCase.instanciateOne(MovementCollectionInventory.class)
+    			.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("12/3/2015 10:50")).getCode();
+    	testCase.assertEquals("INV1203201510500001", movementCollectionInventoryCode);
+    	
+    	movementCollectionInventoryCode = testCase.create(testCase.instanciateOne(MovementCollectionInventory.class)
+    			.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("12/3/2015 10:50")).getCode();
+    	testCase.assertEquals("INV1203201510500002", movementCollectionInventoryCode);
+    	
+    	movementCollectionInventoryCode = testCase.create(testCase.instanciateOne(MovementCollectionInventory.class)
+    			.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("12/3/2015 10:50")).getCode();
+    	testCase.assertEquals("INV1203201510500003", movementCollectionInventoryCode);
+    	
     	testCase.clean();
     }
     

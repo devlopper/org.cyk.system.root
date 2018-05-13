@@ -7,7 +7,6 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.Crud;
-import org.cyk.system.root.business.api.mathematics.IntervalBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
@@ -23,7 +22,6 @@ import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.ConditionHelper.Condition;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
-import org.cyk.utility.common.helper.LoggingHelper.Message.Builder;
 import org.cyk.utility.common.helper.NumberHelper;
 
 public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollection,Movement, MovementCollectionDao,MovementDao,MovementBusiness> implements MovementCollectionBusiness,Serializable {
@@ -108,6 +106,59 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 		}
 		
 	}
+	
+	/*public void computeItemsByParty(AbstractCollection<?> collection,String partyFieldName){
+		if(Boolean.TRUE.equals(collection.getItems().isSynchonizationEnabled())){
+			Party party = (Party) FieldHelper.getInstance().read(collection, partyFieldName);
+			Collection<MovementCollection> movementCollections = new ArrayList<>();
+			if(party==null){
+				
+			}else{
+				collection.setMovementCollections(ClassHelper.getInstance().instanciateOne(Listener.class).findMovementCollectionByParty(party));
+				CollectionHelper.getInstance().add(movementCollections, Boolean.TRUE, collection.getMovementCollections());
+			}
+			
+			if(CollectionHelper.getInstance().isNotEmpty(movementCollections)){
+				if(collection.getItems().isEmpty()){
+					//add all items
+					if(Boolean.TRUE.equals(collection.getItems().getHasAlreadyContainedElements())){
+						
+					}else{
+						for(MovementCollection index : movementCollections){					
+							collection.getItems().addOne(instanciateOne(MovementCollectionInventoryItem.class)
+									.setCollection(collection).setMovementCollection(index));
+						}	
+					}
+				}else{
+					//clean items
+					Collection<MovementCollectionInventoryItem> toDelete = new ArrayList<>();
+					//remove those not belonging to movement collections 
+					for(MovementCollectionInventoryItem index : collection.getItems().getElements())
+						if(!CollectionHelper.getInstance().contains(movementCollections, index.getMovementCollection()))
+							toDelete.add(index);
+					CollectionHelper.getInstance().remove(collection.getItems().getElements(), toDelete);
+					collection.getItems().getElements().removeAll(toDelete);
+					toDelete.clear();
+					
+					
+					//add those not belonging to items
+					for(MovementCollection index : movementCollections){
+						Boolean found = Boolean.FALSE;
+						for(MovementCollectionInventoryItem collectionItemIndex : collection.getItems().getElements()){
+							if(collectionItemIndex.getMovementCollection().equals(index)){
+								found = Boolean.TRUE;
+								break;
+							}
+						}
+						if(Boolean.FALSE.equals(found)){
+							collection.getItems().addOne(instanciateOne(MovementCollectionInventoryItem.class)
+									.setCollection(collection).setMovementCollection(index));
+						}
+					}
+				}
+			}
+		}
+	}*/
 	
 	public static class BuilderOneDimensionArray extends AbstractCollectionBusinessImpl.BuilderOneDimensionArray<MovementCollection> implements Serializable {
 		private static final long serialVersionUID = 1L;

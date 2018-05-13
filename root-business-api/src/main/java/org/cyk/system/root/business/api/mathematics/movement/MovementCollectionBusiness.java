@@ -19,4 +19,6 @@ public interface MovementCollectionBusiness extends AbstractCollectionBusiness<M
 	 * @return
 	 */
 	BigDecimal computeValue(MovementCollection movementCollection);
+	
+	//void computeItems();
 }

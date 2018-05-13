@@ -47,6 +47,11 @@ public class MovementCollectionValuesTransferAcknowledgement extends AbstractIde
 		return this;
 	}
 	
+	@Override
+	public MovementCollectionValuesTransferAcknowledgement __setBirthDateComputedByUser__(Boolean value) {
+		return (MovementCollectionValuesTransferAcknowledgement) super.__setBirthDateComputedByUser__(value);
+	}
+	
 	/**/
 	
 	public static final String FIELD_TRANSFER = "transfer";

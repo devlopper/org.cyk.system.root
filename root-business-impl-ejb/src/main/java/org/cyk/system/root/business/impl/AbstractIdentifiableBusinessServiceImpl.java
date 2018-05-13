@@ -859,6 +859,9 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 					.setValue2(identifiable.getDeathDate().getTime()).setEqual(Boolean.FALSE).setGreater(Boolean.TRUE));
 		}
 		
+		if(StringHelper.getInstance().isBlank(identifiable.getCode()) && InstanceHelper.getInstance().isBusinessIdentifierGeneratable(identifiable.getClass()))
+			identifiable.setCode(InstanceHelper.getInstance().generateBusinessIdentifier(identifiable, identifiable.getBirthDate() == null ? TimeHelper.getInstance().getUniversalTimeCoordinated() : identifiable.getBirthDate()));
+		
 		if(Boolean.TRUE.equals(IdentifiablePeriod.isManaged(identifiable)) && Boolean.TRUE.equals(isDoesNotBelongsToIdentifiablePeriodVerifiable(identifiable))){
 			computeChangesIdentifiablePeriod(identifiable, logMessageBuilder);
 		}

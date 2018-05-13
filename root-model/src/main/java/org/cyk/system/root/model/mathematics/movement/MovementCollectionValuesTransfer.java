@@ -63,6 +63,11 @@ public class MovementCollectionValuesTransfer extends AbstractIdentifiable imple
 		return this;
 	}
 	
+	@Override
+	public MovementCollectionValuesTransfer __setBirthDateComputedByUser__(Boolean value) {
+		return (MovementCollectionValuesTransfer) super.__setBirthDateComputedByUser__(value);
+	}
+	
 	/**/
 	
 	public static final String FIELD_TYPE = "type";

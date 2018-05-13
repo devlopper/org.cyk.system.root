@@ -48,6 +48,10 @@ import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.language.programming.ScriptEvaluationEngine;
 import org.cyk.system.root.model.mathematics.movement.Movement;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventory;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
+import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransferAcknowledgement;
+import org.cyk.system.root.model.mathematics.movement.MovementGroup;
 import org.cyk.system.root.model.mathematics.movement.MovementGroupType;
 import org.cyk.system.root.model.message.SmtpProperties;
 import org.cyk.system.root.model.network.UniformResourceLocator;
@@ -127,6 +131,16 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	INSTANCE = this; 
         super.initialisation();
         IdentifiablePeriod.manage(Movement.class);
+        
+        InstanceHelper.getInstance().addGeneratableBusinessIdentifiers(MovementCollectionInventory.class);
+        InstanceHelper.getInstance().addGeneratableBusinessIdentifiers(MovementGroup.class);
+        InstanceHelper.getInstance().addGeneratableBusinessIdentifiers(MovementCollectionValuesTransfer.class);
+        InstanceHelper.getInstance().addGeneratableBusinessIdentifiers(MovementCollectionValuesTransferAcknowledgement.class);
+        
+        InstanceHelper.getInstance().setBusinessIdentifierPrefix(MovementCollectionInventory.class, "INV");
+        InstanceHelper.getInstance().setBusinessIdentifierPrefix(MovementGroup.class, "MVTGR");
+        InstanceHelper.getInstance().setBusinessIdentifierPrefix(MovementCollectionValuesTransfer.class, "TR");
+        InstanceHelper.getInstance().setBusinessIdentifierPrefix(MovementCollectionValuesTransferAcknowledgement.class, "ATR");
         
         InstanceHelper.getInstance().setDefaultBusinessIdentifier(StoreType.class, RootConstant.Code.StoreType.PRODUCT);
         InstanceHelper.getInstance().setDefaultBusinessIdentifier(ScriptEvaluationEngine.class, RootConstant.Code.ScriptEvaluationEngine.JAVASCRIPT);

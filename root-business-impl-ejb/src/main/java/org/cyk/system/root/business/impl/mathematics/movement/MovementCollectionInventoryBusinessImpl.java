@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionInventoryBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionInventoryItemBusiness;
-import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.business.impl.helper.FieldHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
@@ -25,9 +24,8 @@ import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
-import org.cyk.utility.common.helper.StringHelper;
 
-public class MovementCollectionInventoryBusinessImpl extends AbstractCollectionBusinessImpl<MovementCollectionInventory,MovementCollectionInventoryItem,MovementCollectionInventoryDao,MovementCollectionInventoryItemDao,MovementCollectionInventoryItemBusiness> implements MovementCollectionInventoryBusiness,Serializable {
+public class MovementCollectionInventoryBusinessImpl extends AbstractMovementCollectionsBusinessImpl<MovementCollectionInventory,MovementCollectionInventoryItem,MovementCollectionInventoryDao,MovementCollectionInventoryItemDao,MovementCollectionInventoryItemBusiness> implements MovementCollectionInventoryBusiness,Serializable {
 	private static final long serialVersionUID = -5970296090669949506L;
 
 	static {
@@ -41,15 +39,13 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractCollectionB
 	
 	@Override
 	public MovementCollectionInventory instanciateOne() {
-		return super.instanciateOne().setItemsSynchonizationEnabled(Boolean.TRUE);
+		return super.instanciateOne().__setBirthDateComputedByUser__(Boolean.FALSE).setItemsSynchonizationEnabled(Boolean.TRUE);
 	}
 	
 	@Override
 	protected void computeChanges(MovementCollectionInventory movementCollectionInventory, LoggingHelper.Message.Builder loggingMessageBuilder) {
 		super.computeChanges(movementCollectionInventory, loggingMessageBuilder);
-		if(StringHelper.getInstance().isBlank(movementCollectionInventory.getCode()))
-			movementCollectionInventory.setCode("INV"+dao.countAll());
-		
+		/*
 		if(Boolean.TRUE.equals(movementCollectionInventory.getItems().isSynchonizationEnabled())){
 			Collection<MovementCollection> movementCollections = new ArrayList<>();
 			if(movementCollectionInventory.getParty()==null){
@@ -81,14 +77,6 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractCollectionB
 					movementCollectionInventory.getItems().getElements().removeAll(toDelete);
 					toDelete.clear();
 					
-					/*
-					//remove those where value is zero
-					for(MovementCollectionValuesTransferItemCollectionItem index : acknowledgedItems)
-						if(index.getSource()!=null && NumberHelper.getInstance().isZero(index.getSource().getValue()))
-							notTransferedItems.add(index);						
-					CollectionHelper.getInstance().remove(acknowledgedItems, notTransferedItems);
-					notTransferedItems.clear();
-					*/
 					//add those not belonging to items
 					for(MovementCollection index : movementCollections){
 						Boolean found = Boolean.FALSE;
@@ -106,7 +94,7 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractCollectionB
 				}
 			}
 		}
-		
+		*/
 		if(movementCollectionInventory.getMovementGroup()!=null)
 			FieldHelper.getInstance().copy(movementCollectionInventory, movementCollectionInventory.getMovementGroup(),Boolean.FALSE
 				,org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
@@ -123,24 +111,21 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractCollectionB
 		public static class Adapter extends AbstractBean implements Listener,Serializable {
 			private static final long serialVersionUID = 1L;
 			
-			@Override
-			public Collection<MovementCollection> findMovementCollectionByParty(Party party) {
-				return null;
-			}
-			
 			public static class Default extends Listener.Adapter implements Serializable {
 				private static final long serialVersionUID = 1L;
-				
+								
 				@Override
 				public Collection<MovementCollection> findMovementCollectionByParty(Party party) {
 					return MethodHelper.getInstance().callGet(inject(MovementCollectionIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(party)
 							, MovementCollection.class, MovementCollectionIdentifiableGlobalIdentifier.FIELD_MOVEMENT_COLLECTION);
-				}
-				
+				}				
 			}
-			
-		}
 		
+			@Override
+			public Collection<MovementCollection> findMovementCollectionByParty(Party party) {
+				return null;
+			}
+		}
 	}
 	
 }

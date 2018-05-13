@@ -27,7 +27,8 @@ public class MovementCollectionValuesTransferBusinessImpl extends AbstractTypedB
 	@Override
 	public MovementCollectionValuesTransfer instanciateOne() {
 		return super.instanciateOne().setItems(instanciateOne(MovementCollectionValuesTransferItemCollection.class).setItemsSynchonizationEnabled(Boolean.TRUE))
-				.addCascadeOperationToMasterFieldNames(MovementCollectionValuesTransfer.FIELD_ITEMS).setItemsDestinationMovementCollectionIsBuffer(Boolean.TRUE);
+				.addCascadeOperationToMasterFieldNames(MovementCollectionValuesTransfer.FIELD_ITEMS).setItemsDestinationMovementCollectionIsBuffer(Boolean.TRUE)
+				.__setBirthDateComputedByUser__(Boolean.FALSE);
 	}
 	
 	@Override

@@ -13,6 +13,7 @@ import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 
 import lombok.AllArgsConstructor;
@@ -78,6 +79,8 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	public static final String COLUMN_VALUE = COLUMN_NAME_UNKEYWORD+FIELD_VALUE;
 	public static final String COLUMN_TYPE = COLUMN_NAME_UNKEYWORD+FIELD_TYPE;
 	public static final String COLUMN_BUFFER = COLUMN_NAME_UNKEYWORD+FIELD_BUFFER;
+	
+	public static final String VARIABLE_NAME = ClassHelper.getInstance().getVariableName(MovementCollection.class);
 	
 	/**/
 	
