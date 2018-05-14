@@ -75,6 +75,15 @@ public class MovementCollectionValuesTransferItemCollectionItemBusinessImpl exte
 		}
 		
 		if(movementsTransferItemCollectionItem.getDestination() != null){
+			if(movementsTransferItemCollectionItem.getDestination().getCollection() == null){
+				if(movementsTransferItemCollectionItem.getCollection()!=null && movementsTransferItemCollectionItem.getCollection().getDestination()!=null
+						&& Boolean.TRUE.equals(movementsTransferItemCollectionItem.getCollection().getDestination().getMovementCollectionIsBuffer())){
+					if(movementsTransferItemCollectionItem.getSource()!=null && movementsTransferItemCollectionItem.getSource().getCollection()!=null)
+						movementsTransferItemCollectionItem.getDestination().setCollection(movementsTransferItemCollectionItem.getSource().getCollection().getBuffer());
+				}
+			}
+			
+			
 			if(Boolean.TRUE.equals(movementsTransferItemCollectionItem.getDestination().getValueSettableFromAbsolute())){
 				if(movementsTransferItemCollectionItem.getDestination().getValueAbsolute() == null && movementsTransferItemCollectionItem.getSource()!=null)
 					movementsTransferItemCollectionItem.getDestination().setValueAbsolute(movementsTransferItemCollectionItem.getSource().getValueAbsolute());

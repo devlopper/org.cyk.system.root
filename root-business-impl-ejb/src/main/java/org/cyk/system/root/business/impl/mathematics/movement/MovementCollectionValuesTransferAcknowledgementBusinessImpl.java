@@ -70,8 +70,10 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 	@Override
 	protected void computeChanges(MovementCollectionValuesTransferAcknowledgement movementCollectionValuesTransferAcknowledgement, LoggingHelper.Message.Builder loggingMessageBuilder) {
 		super.computeChanges(movementCollectionValuesTransferAcknowledgement, loggingMessageBuilder);
+		
 		if(Boolean.TRUE.equals(movementCollectionValuesTransferAcknowledgement.getItems().getItems().isSynchonizationEnabled())) {
-			Collection<MovementCollectionValuesTransferItemCollectionItem> transferedItems = inject(MovementCollectionValuesTransferItemCollectionItemDao.class).readByCollection(movementCollectionValuesTransferAcknowledgement.getTransfer().getItems());
+			Collection<MovementCollectionValuesTransferItemCollectionItem> transferedItems = movementCollectionValuesTransferAcknowledgement.getTransfer() == null ? null
+					: inject(MovementCollectionValuesTransferItemCollectionItemDao.class).readByCollection(movementCollectionValuesTransferAcknowledgement.getTransfer().getItems());
 			Collection<MovementCollectionValuesTransferItemCollectionItem> acknowledgedItems = movementCollectionValuesTransferAcknowledgement.getItems().getItems().getElements();
 			
 			if(movementCollectionValuesTransferAcknowledgement.getItems().getItems().isEmpty()){				
@@ -94,20 +96,25 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 				//clean acknowledged items
 				if(Boolean.TRUE.equals(movementCollectionValuesTransferAcknowledgement.getItemsMustBeSubSetOfTransferItems())){
 					Collection<MovementCollectionValuesTransferItemCollectionItem> notTransferedItems = new ArrayList<>();
-					//remove those not transfered
-					for(MovementCollectionValuesTransferItemCollectionItem index : acknowledgedItems){
-						Boolean transfered = Boolean.FALSE;
-						if(index.getSource()!=null && index.getSource().getCollection()!=null){
-							for(MovementCollectionValuesTransferItemCollectionItem indexTransferedItem : transferedItems){
-								if(index.getSource().getCollection().equals(indexTransferedItem.getDestination().getCollection())){
-									transfered = Boolean.TRUE;
-									break;
+					if(CollectionHelper.getInstance().isEmpty(transferedItems)){
+						
+					}else {
+						//remove those not transfered	
+						for(MovementCollectionValuesTransferItemCollectionItem index : acknowledgedItems){
+							Boolean transfered = Boolean.FALSE;
+							if(index.getSource()!=null && index.getSource().getCollection()!=null){								
+								for(MovementCollectionValuesTransferItemCollectionItem indexTransferedItem : transferedItems){
+									if(index.getSource().getCollection().equals(indexTransferedItem.getDestination().getCollection())){
+										transfered = Boolean.TRUE;
+										break;
+									}
 								}
+								if(Boolean.FALSE.equals(transfered))
+									notTransferedItems.add(index);
 							}
-							if(Boolean.FALSE.equals(transfered))
-								notTransferedItems.add(index);
 						}
 					}
+					
 					CollectionHelper.getInstance().remove(acknowledgedItems, notTransferedItems);
 					notTransferedItems.clear();
 					
@@ -126,6 +133,8 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 				if(index.getDestination()!=null)
 					index.getDestination().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_ACKNOWLEDGMENT);
 			}
+			
+			inject(MovementCollectionValuesTransferItemCollectionBusiness.class).computeChanges(movementCollectionValuesTransferAcknowledgement.getItems());
 		}
 	}
 	

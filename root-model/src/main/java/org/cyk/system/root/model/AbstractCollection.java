@@ -118,6 +118,10 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		return items == null ? null : items.getOneAt(aClass, index);
 	}
 	
+	public ITEM getItemAt(Integer index){
+		return (ITEM) (items == null ? null : items.getAt(index));
+	}
+	
 	public <CLASS> void removeItem(ITEM item){
 		if(items!=null)
 			items.removeOne(item);

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionValuesTransferBusiness;
+import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionValuesTransferItemCollectionBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionValuesTransfer;
@@ -46,6 +47,7 @@ public class MovementCollectionValuesTransferBusinessImpl extends AbstractTypedB
 	@Override
 	protected void computeChanges(MovementCollectionValuesTransfer movementCollectionValuesTransfer, LoggingHelper.Message.Builder loggingMessageBuilder) {
 		super.computeChanges(movementCollectionValuesTransfer, loggingMessageBuilder);
+		inject(MovementCollectionValuesTransferItemCollectionBusiness.class).computeChanges(movementCollectionValuesTransfer.getItems());
 		if(Boolean.TRUE.equals(movementCollectionValuesTransfer.getItems().getItems().isSynchonizationEnabled()))
 			for(MovementCollectionValuesTransferItemCollectionItem index : movementCollectionValuesTransfer.getItems().getItems().getElements()){
 				if(index.getSource()!=null)

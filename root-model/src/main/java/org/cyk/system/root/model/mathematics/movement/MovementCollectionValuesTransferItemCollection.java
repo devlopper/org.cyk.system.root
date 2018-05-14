@@ -82,6 +82,11 @@ public class MovementCollectionValuesTransferItemCollection extends AbstractMove
 	return this;
 }
 	
+	@Override
+	public MovementCollectionValuesTransferItemCollection setPartyFromCode(String code) {
+		return (MovementCollectionValuesTransferItemCollection) super.setPartyFromCode(code);
+	}
+	
 	/**/
 	
 	public static final String FIELD_SOURCE = "source";
