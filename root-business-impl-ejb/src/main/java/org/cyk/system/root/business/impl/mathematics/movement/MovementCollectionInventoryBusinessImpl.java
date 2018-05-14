@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl.mathematics.movement;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -21,7 +20,6 @@ import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollecti
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionInventoryItemDao;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 
@@ -39,62 +37,13 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractMovementCol
 	
 	@Override
 	public MovementCollectionInventory instanciateOne() {
-		return super.instanciateOne().__setBirthDateComputedByUser__(Boolean.FALSE).setItemsSynchonizationEnabled(Boolean.TRUE);
+		return super.instanciateOne();
 	}
 	
 	@Override
 	protected void computeChanges(MovementCollectionInventory movementCollectionInventory, LoggingHelper.Message.Builder loggingMessageBuilder) {
 		super.computeChanges(movementCollectionInventory, loggingMessageBuilder);
-		/*
-		if(Boolean.TRUE.equals(movementCollectionInventory.getItems().isSynchonizationEnabled())){
-			Collection<MovementCollection> movementCollections = new ArrayList<>();
-			if(movementCollectionInventory.getParty()==null){
-				
-			}else{
-				movementCollectionInventory.setMovementCollections(ClassHelper.getInstance().instanciateOne(Listener.class).findMovementCollectionByParty(movementCollectionInventory.getParty()));
-				CollectionHelper.getInstance().add(movementCollections, Boolean.TRUE, movementCollectionInventory.getMovementCollections());
-			}
-			
-			if(CollectionHelper.getInstance().isNotEmpty(movementCollections)){
-				if(movementCollectionInventory.getItems().isEmpty()){
-					//add all items
-					if(Boolean.TRUE.equals(movementCollectionInventory.getItems().getHasAlreadyContainedElements())){
-						
-					}else{
-						for(MovementCollection index : movementCollections){					
-							movementCollectionInventory.getItems().addOne(instanciateOne(MovementCollectionInventoryItem.class)
-									.setCollection(movementCollectionInventory).setMovementCollection(index));
-						}	
-					}
-				}else{
-					//clean items
-					Collection<MovementCollectionInventoryItem> toDelete = new ArrayList<>();
-					//remove those not belonging to movement collections 
-					for(MovementCollectionInventoryItem index : movementCollectionInventory.getItems().getElements())
-						if(!CollectionHelper.getInstance().contains(movementCollections, index.getMovementCollection()))
-							toDelete.add(index);
-					CollectionHelper.getInstance().remove(movementCollectionInventory.getItems().getElements(), toDelete);
-					movementCollectionInventory.getItems().getElements().removeAll(toDelete);
-					toDelete.clear();
-					
-					//add those not belonging to items
-					for(MovementCollection index : movementCollections){
-						Boolean found = Boolean.FALSE;
-						for(MovementCollectionInventoryItem movementCollectionInventoryItemIndex : movementCollectionInventory.getItems().getElements()){
-							if(movementCollectionInventoryItemIndex.getMovementCollection().equals(index)){
-								found = Boolean.TRUE;
-								break;
-							}
-						}
-						if(Boolean.FALSE.equals(found)){
-							movementCollectionInventory.getItems().addOne(instanciateOne(MovementCollectionInventoryItem.class)
-									.setCollection(movementCollectionInventory).setMovementCollection(index));
-						}
-					}
-				}
-			}
-		}
-		*/
+		
 		if(movementCollectionInventory.getMovementGroup()!=null)
 			FieldHelper.getInstance().copy(movementCollectionInventory, movementCollectionInventory.getMovementGroup(),Boolean.FALSE
 				,org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(

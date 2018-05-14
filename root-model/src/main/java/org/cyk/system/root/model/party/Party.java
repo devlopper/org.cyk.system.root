@@ -14,6 +14,7 @@ import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.FilterHelper;
 
 import lombok.Getter;
@@ -62,6 +63,8 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 	public static final String FIELD_CONTACT_COLLECTION = "contactCollection";
 
 	public static final String COLUMN_CONTACT_COLLECTION = FIELD_CONTACT_COLLECTION;
+	
+	public static final String VARIABLE_NAME = ClassHelper.getInstance().getVariableName(Party.class);
 	/**/
 	
 	@Getter @Setter

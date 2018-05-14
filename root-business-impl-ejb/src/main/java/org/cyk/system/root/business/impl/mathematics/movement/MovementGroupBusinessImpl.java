@@ -42,63 +42,8 @@ public class MovementGroupBusinessImpl extends AbstractMovementCollectionsBusine
 	
 	@Override
 	public MovementGroup instanciateOne() {
-		return super.instanciateOne().setType(InstanceHelper.getInstance().getDefaultUsingBusinessIdentifier(MovementGroupType.class))
-				.__setBirthDateComputedByUser__(Boolean.FALSE);
+		return super.instanciateOne().setType(InstanceHelper.getInstance().getDefaultUsingBusinessIdentifier(MovementGroupType.class));
 	}
-	
-	/*@Override
-	protected void computeChanges(MovementGroup movementGroup, LoggingHelper.Message.Builder loggingMessageBuilder) {
-		super.computeChanges(movementGroup, loggingMessageBuilder);
-		
-		if(Boolean.TRUE.equals(movementGroup.getItems().isSynchonizationEnabled())){
-			Collection<MovementCollection> movementCollections = new ArrayList<>();
-			if(movementGroup.getParty()==null){
-				
-			}else{
-				movementGroup.setMovementCollections(ClassHelper.getInstance().instanciateOne(Listener.class).findMovementCollectionByParty(movementGroup.getParty()));
-				CollectionHelper.getInstance().add(movementCollections, Boolean.TRUE, movementGroup.getMovementCollections());
-			}
-			
-			if(CollectionHelper.getInstance().isNotEmpty(movementCollections)){
-				if(movementGroup.getItems().isEmpty()){
-					//add all items
-					if(Boolean.TRUE.equals(movementGroup.getItems().getHasAlreadyContainedElements())){
-						
-					}else{
-						for(MovementCollection index : movementCollections){					
-							movementGroup.getItems().addOne(instanciateOne(MovementGroupItem.class)
-									.setCollection(movementGroup).setMovementCollection(index));
-						}	
-					}
-				}else{
-					//clean items
-					Collection<MovementGroupItem> toDelete = new ArrayList<>();
-					//remove those not belonging to movement collections 
-					for(MovementGroupItem index : movementGroup.getItems().getElements())
-						if(!CollectionHelper.getInstance().contains(movementCollections, index.getMovement().getCollection()))
-							toDelete.add(index);
-					CollectionHelper.getInstance().remove(movementGroup.getItems().getElements(), toDelete);
-					movementGroup.getItems().getElements().removeAll(toDelete);
-					toDelete.clear();
-					
-					//add those not belonging to items
-					for(MovementCollection index : movementCollections){
-						Boolean found = Boolean.FALSE;
-						for(MovementGroupItem movementGroupItemIndex : movementGroup.getItems().getElements()){
-							if(movementGroupItemIndex.getMovement().getCollection().equals(index)){
-								found = Boolean.TRUE;
-								break;
-							}
-						}
-						if(Boolean.FALSE.equals(found)){
-							movementGroup.getItems().addOne(instanciateOne(MovementGroupItem.class)
-									.setCollection(movementGroup).setMovementCollection(index));
-						}
-					}
-				}
-			}
-		}
-	}*/
 	
 	/**/
 	

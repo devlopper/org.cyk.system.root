@@ -28,6 +28,12 @@ public abstract class AbstractMovementCollectionsBusinessImpl<COLLECTION extends
         super(dao);
     } 
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public COLLECTION instanciateOne() {
+		return (COLLECTION) super.instanciateOne().__setBirthDateComputedByUser__(Boolean.FALSE).setItemsSynchonizationEnabled(Boolean.TRUE);
+	}
+	
 	@Override
 	public Collection<MovementCollection> findMovementCollectionByParty(Party party) {
 		return MethodHelper.getInstance().callGet(inject(MovementCollectionIdentifiableGlobalIdentifierDao.class).readByIdentifiableGlobalIdentifier(party)
