@@ -6,6 +6,10 @@
 			<!--MarkerFilter marker="Sex_create_BEFORE" onMatch="ACCEPT" onMismatch="DENY" /!-->		
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
+		<Console name="UpdateMovementCollectionConsole" target="SYSTEM_OUT">
+			<RegexFilter regex=".*update col.*" onMatch="ACCEPT" onMismatch="DENY"/>		
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
 		<Console name="BusinessConsole" target="SYSTEM_OUT">
 			<Filters>
 				<!--MarkerFilter marker="create" onMatch="ACCEPT" onMismatch="DENY" /-->
@@ -24,6 +28,9 @@
 		</Console>
 	</Appenders>
 	<Loggers>
+		<!--Logger name="org.cyk.system.root.business.impl.mathematics.movement.MovementBusinessImpl" level="trace">
+			<AppenderRef ref="UpdateMovementCollectionConsole" />
+		</Logger-->
 		<!--Logger name="org.cyk.utility.common.helper.ConditionHelper$Condition$Builder$Comparison$Adapter$Default" level="trace">
 			<AppenderRef ref="Console" />
 		</Logger-->

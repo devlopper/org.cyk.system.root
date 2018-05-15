@@ -52,6 +52,20 @@ public class MovementCollectionValuesTransferAcknowledgement extends AbstractIde
 		return (MovementCollectionValuesTransferAcknowledgement) super.__setBirthDateComputedByUser__(value);
 	}
 	
+	public MovementCollectionValuesTransferAcknowledgement setSourceValueAbsoluteFromObject(Integer index,Object value){
+		items.getItemAt(index).getSource().setValueAbsoluteFromObject(value);
+		return this;
+	}
+	
+	public MovementCollectionValuesTransferAcknowledgement setDestinationCollectionFromCode(Integer index,String code){
+		items.getItemAt(index).getDestination().setCollectionFromCode(code);
+		return this;
+	}
+	
+	public MovementCollectionValuesTransferItemCollectionItem getItemAt(Integer index){
+		return items.getItemAt(index);
+	}
+	
 	/**/
 	
 	public static final String FIELD_TRANSFER = "transfer";

@@ -45,19 +45,16 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 		super.afterCrud(movementsTransferAcknowledgement, crud);
 		if(Crud.isCreateOrUpdate(crud)){
 			if(Crud.CREATE.equals(crud)){
-				Collection<MovementCollectionValuesTransferItemCollectionItem> transfered = inject(MovementCollectionValuesTransferItemCollectionItemDao.class).readByCollection(movementsTransferAcknowledgement.getTransfer().getItems());
 				Collection<MovementCollectionValuesTransferItemCollectionItem> acknownledged = inject(MovementCollectionValuesTransferItemCollectionItemDao.class).readByCollection(movementsTransferAcknowledgement.getItems());
-				for(MovementCollectionValuesTransferItemCollectionItem indexTransfered : transfered){
-					for(MovementCollectionValuesTransferItemCollectionItem indexAcknownledged : acknownledged){
-						BigDecimal gap = indexTransfered.getValue().subtract(indexAcknownledged.getValue());
-						if(NumberHelper.getInstance().isGreaterThanZero(gap)){
-							inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollection(indexTransfered.getSource().getCollection())
-									.setValue(gap).setActionFromValue().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_BACK));
-							inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollection(indexAcknownledged.getSource().getCollection())
-									.setValue(gap.negate()).setActionFromValue().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_BACK));
-						}
-					}	
-				}
+				for(MovementCollectionValuesTransferItemCollectionItem index : acknownledged){
+					BigDecimal gap = index.getTransfered().getValue().subtract(index.getValue());
+					if(NumberHelper.getInstance().isGreaterThanZero(gap)){
+						inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollection(index.getTransfered().getSource().getCollection())
+								.setValue(gap).setActionFromValue().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_BACK));
+						inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollection(index.getSource().getCollection())
+								.setValue(gap.negate()).setActionFromValue().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_BACK));
+					}
+				}	
 			}
 		}
 	}

@@ -46,6 +46,11 @@ public class MovementCollectionInventory extends AbstractMovementCollections<Mov
 		return (MovementCollectionInventory) super.setBirthDateFromString(date);
 	}
 	
+	public MovementCollectionInventory setValueFromObject(Integer index,Object value){
+		items.getAt(index).setValueFromObject(value);
+		return this;
+	}
+	
 	/**/
 	
 	public static final String FIELD_MOVEMENT_GROUP = "movementGroup";

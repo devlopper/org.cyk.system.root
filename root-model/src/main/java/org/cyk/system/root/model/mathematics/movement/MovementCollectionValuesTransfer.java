@@ -68,6 +68,11 @@ public class MovementCollectionValuesTransfer extends AbstractIdentifiable imple
 		return (MovementCollectionValuesTransfer) super.__setBirthDateComputedByUser__(value);
 	}
 	
+	public MovementCollectionValuesTransfer setSourceValueAbsoluteFromObject(Integer index,Object value){
+		items.getItemAt(index).getSource().setValueAbsoluteFromObject(value);
+		return this;
+	}
+	
 	/**/
 	
 	public static final String FIELD_TYPE = "type";

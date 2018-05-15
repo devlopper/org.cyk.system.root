@@ -237,6 +237,8 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 		
 		logMessageBuilder.addNamedParameters("cod",movement.getCollection().getCode(),"val",oldValue,
 				"mov val",movement.getValue(),"mov act",movement.getAction()==null?Constant.EMPTY_STRING:movement.getAction().getName());
+		if(movement.getReason() != null)
+			logMessageBuilder.addNamedParameters("reason",movement.getReason().getCode());
 		if(Crud.isCreateOrUpdate(crud)){
 			if(Crud.CREATE.equals(crud)){
 				newValue = oldValue.add(movement.getValue());
@@ -249,9 +251,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			//exceptionUtils().comparisonBetween(newValue,movement.getCollection().getType().getInterval(), movement.getCollection().getName());
 			
 			movement.getCollection().setValue(newValue);
-			throw__(Condition.getBuildersDoesNotBelongsTo(movement.getCollection(), movement.getCollection().getType().getInterval()
+			/*throw__(Condition.getBuildersDoesNotBelongsTo(movement.getCollection(), movement.getCollection().getType().getInterval()
 					.getLow().getValueWithoutExcludedInformation(), movement.getCollection().getType().getInterval().getHigh().getValueWithoutExcludedInformation()
 					, MovementCollection.FIELD_VALUE));
+			*/
 		}else if(Crud.DELETE.equals(crud)) {
 			newValue = oldValue.subtract(movement.getValue());
 			movement.getCollection().setValue(newValue);
@@ -262,6 +265,10 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			movementCollectionDao.update(movement.getCollection());
 		logMessageBuilder.addNamedParameters("col new val",newValue);
 		logTrace(logMessageBuilder);
+		
+		throw__(Condition.getBuildersDoesNotBelongsTo(movement.getCollection(), movement.getCollection().getType().getInterval()
+				.getLow().getValueWithoutExcludedInformation(), movement.getCollection().getType().getInterval().getHigh().getValueWithoutExcludedInformation()
+				, MovementCollection.FIELD_VALUE));
 	}
 			
 	@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
