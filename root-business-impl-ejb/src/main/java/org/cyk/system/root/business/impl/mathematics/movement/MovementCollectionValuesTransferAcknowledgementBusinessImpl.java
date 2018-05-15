@@ -67,6 +67,13 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 		return CollectionHelper.getInstance().add(super.findRelatedInstanceFieldNames(identifiable), Boolean.TRUE, MovementCollectionValuesTransferAcknowledgement.FIELD_ITEMS);
 	}
 	
+	protected void addOneItem(MovementCollectionValuesTransferAcknowledgement movementCollectionValuesTransferAcknowledgement,MovementCollectionValuesTransferItemCollectionItem transfered){
+		movementCollectionValuesTransferAcknowledgement.getItems().getItems().addOne(instanciateOne(MovementCollectionValuesTransferItemCollectionItem.class)
+				.setTransfered(transfered).setSource(instanciateOne(Movement.class).setCollection(transfered.getDestination().getCollection())
+						.setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_ACKNOWLEDGMENT).setValueSettableFromAbsolute(Boolean.TRUE)
+						.setActionFromIncrementation(Boolean.FALSE)));
+	}
+	
 	@Override
 	protected void computeChanges(MovementCollectionValuesTransferAcknowledgement movementCollectionValuesTransferAcknowledgement, LoggingHelper.Message.Builder loggingMessageBuilder) {
 		super.computeChanges(movementCollectionValuesTransferAcknowledgement, loggingMessageBuilder);
@@ -83,12 +90,19 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 					if(Boolean.TRUE.equals(movementCollectionValuesTransferAcknowledgement.getItems().getItems().getHasAlreadyContainedElements())){
 						
 					}else{
-						for(MovementCollectionValuesTransferItemCollectionItem index : transferedItems){					
-							movementCollectionValuesTransferAcknowledgement.getItems().getItems().addOne(instanciateOne(MovementCollectionValuesTransferItemCollectionItem.class)
-									.setTransfered(index).setSource(instanciateOne(Movement.class).setCollection(index.getDestination().getCollection())
-											.setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_ACKNOWLEDGMENT).setValueSettableFromAbsolute(Boolean.TRUE)
-											.setActionFromIncrementation(Boolean.FALSE)));
-						}	
+						if(CollectionHelper.getInstance().isEmpty(transferedItems)){
+							
+						}else{
+							for(MovementCollectionValuesTransferItemCollectionItem index : transferedItems){		
+								addOneItem(movementCollectionValuesTransferAcknowledgement, index);
+								/*movementCollectionValuesTransferAcknowledgement.getItems().getItems().addOne(instanciateOne(MovementCollectionValuesTransferItemCollectionItem.class)
+										.setTransfered(index).setSource(instanciateOne(Movement.class).setCollection(index.getDestination().getCollection())
+												.setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_ACKNOWLEDGMENT).setValueSettableFromAbsolute(Boolean.TRUE)
+												.setActionFromIncrementation(Boolean.FALSE)));
+								*/
+							}		
+						}
+						
 					}
 					
 				}
@@ -124,8 +138,24 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 							notTransferedItems.add(index);						
 					CollectionHelper.getInstance().remove(acknowledgedItems, notTransferedItems);
 					notTransferedItems.clear();
+					
+					//add those not belonging to items
+					for(MovementCollectionValuesTransferItemCollectionItem index : transferedItems){
+						Boolean found = Boolean.FALSE;
+						for(MovementCollectionValuesTransferItemCollectionItem acknowlegdedIndex : acknowledgedItems){
+							if(acknowlegdedIndex.getSource().getCollection().equals(index.getDestination().getCollection())){
+								found = Boolean.TRUE;
+								break;
+							}
+						}
+						if(Boolean.FALSE.equals(found))
+							addOneItem(movementCollectionValuesTransferAcknowledgement, index);
+						
+					}
 				}
 			}
+			
+			inject(MovementCollectionValuesTransferItemCollectionBusiness.class).computeChanges(movementCollectionValuesTransferAcknowledgement.getItems());
 			
 			for(MovementCollectionValuesTransferItemCollectionItem index : movementCollectionValuesTransferAcknowledgement.getItems().getItems().getElements()){
 				if(index.getSource()!=null)
@@ -134,7 +164,6 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 					index.getDestination().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_ACKNOWLEDGMENT);
 			}
 			
-			inject(MovementCollectionValuesTransferItemCollectionBusiness.class).computeChanges(movementCollectionValuesTransferAcknowledgement.getItems());
 		}
 	}
 	

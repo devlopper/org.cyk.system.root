@@ -34,6 +34,7 @@ import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.ConditionHelper;
+import org.cyk.utility.common.helper.ConditionHelper.Condition;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
@@ -245,8 +246,12 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				newValue = oldValue.add(difference);
 				logMessageBuilder.addNamedParameters("mov old val",oldMovement.getValue(),"diff",difference);
 			}
-			exceptionUtils().comparisonBetween(newValue,movement.getCollection().getType().getInterval(), movement.getCollection().getName());
+			//exceptionUtils().comparisonBetween(newValue,movement.getCollection().getType().getInterval(), movement.getCollection().getName());
+			
 			movement.getCollection().setValue(newValue);
+			throw__(Condition.getBuildersDoesNotBelongsTo(movement.getCollection(), movement.getCollection().getType().getInterval()
+					.getLow().getValueWithoutExcludedInformation(), movement.getCollection().getType().getInterval().getHigh().getValueWithoutExcludedInformation()
+					, MovementCollection.FIELD_VALUE));
 		}else if(Crud.DELETE.equals(crud)) {
 			newValue = oldValue.subtract(movement.getValue());
 			movement.getCollection().setValue(newValue);

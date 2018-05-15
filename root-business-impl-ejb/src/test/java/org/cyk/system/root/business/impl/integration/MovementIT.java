@@ -1549,79 +1549,92 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementCollectionValuesTransferAcknowlegdmentWithJoinToParty(){
     	TestCase testCase = instanciateTestCase(); 
-    	String partyCode01 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Party.class,partyCode01));
+    	String warehouseCode01 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Party.class,warehouseCode01));
     	
-    	String partyCode02 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(Party.class,partyCode02));
+    	String warehouseCode02 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Party.class,warehouseCode02));
     	
-    	String movementCollectionCode01 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode01).setIsCreateBufferAutomatically(Boolean.TRUE));
+    	String storeCode01 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Party.class,storeCode01));
+    	
+    	String warehouse01P01 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,warehouse01P01).setIsCreateBufferAutomatically(Boolean.TRUE));
     	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
-    			.setMovementCollectionFromCode(movementCollectionCode01).setIdentifiableGlobalIdentifierFromCode(Party.class, partyCode01));
+    			.setMovementCollectionFromCode(warehouse01P01).setIdentifiableGlobalIdentifierFromCode(Party.class, warehouseCode01));
     	
-    	String movementCollectionCode02 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode02).setIsCreateBufferAutomatically(Boolean.TRUE));
+    	String warehouse01P02 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,warehouse01P02).setIsCreateBufferAutomatically(Boolean.TRUE));
     	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
-    			.setMovementCollectionFromCode(movementCollectionCode02).setIdentifiableGlobalIdentifierFromCode(Party.class, partyCode01));
+    			.setMovementCollectionFromCode(warehouse01P02).setIdentifiableGlobalIdentifierFromCode(Party.class, warehouseCode01));
     	
-    	String movementCollectionCode03 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode03).setIsCreateBufferAutomatically(Boolean.TRUE));
+    	String warehouse02P01 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,warehouse02P01).setIsCreateBufferAutomatically(Boolean.TRUE));
     	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
-    			.setMovementCollectionFromCode(movementCollectionCode03).setIdentifiableGlobalIdentifierFromCode(Party.class, partyCode02));
+    			.setMovementCollectionFromCode(warehouse02P01).setIdentifiableGlobalIdentifierFromCode(Party.class, warehouseCode02));
     	
-    	String movementCollectionValuesTransferCode = testCase.getRandomAlphabetic();
-    	MovementCollectionValuesTransfer movementCollectionValuesTransfer = testCase.instanciateOne(MovementCollectionValuesTransfer.class
-    			,movementCollectionValuesTransferCode);
-    	movementCollectionValuesTransfer.getItems().setPartyFromCode(partyCode01);
+    	String store01P01 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,store01P01).setIsCreateBufferAutomatically(Boolean.TRUE));
+    	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
+    			.setMovementCollectionFromCode(store01P01).setIdentifiableGlobalIdentifierFromCode(Party.class, storeCode01));
+    	
+    	String store01P02 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,store01P02).setIsCreateBufferAutomatically(Boolean.TRUE));
+    	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
+    			.setMovementCollectionFromCode(store01P02).setIdentifiableGlobalIdentifierFromCode(Party.class, storeCode01));
+    	
+    	String transfer01 = testCase.getRandomAlphabetic();
+    	MovementCollectionValuesTransfer movementCollectionValuesTransfer = testCase.instanciateOne(MovementCollectionValuesTransfer.class,transfer01);
+    	movementCollectionValuesTransfer.getItems().setPartyFromCode(warehouseCode01);
     	testCase.computeChanges(movementCollectionValuesTransfer);
     	movementCollectionValuesTransfer.getItems().getItemAt(0).getSource().setValueAbsoluteFromObject(8);
     	movementCollectionValuesTransfer.getItems().getItemAt(1).getSource().setValueAbsoluteFromObject(1);    	
     	testCase.create(movementCollectionValuesTransfer);
     	
-    	String movementCollectionValuesTransferAcknowledgementCode = testCase.getRandomAlphabetic();
-    	MovementCollectionValuesTransferAcknowledgement movementCollectionValuesTransferAcknowledgement = testCase.instanciateOne(MovementCollectionValuesTransferAcknowledgement.class
-    			,movementCollectionValuesTransferAcknowledgementCode);
-    	movementCollectionValuesTransferAcknowledgement.setTransferFromCode(movementCollectionValuesTransferCode);
-    	movementCollectionValuesTransferAcknowledgement.getItems().setPartyFromCode(partyCode01);
-    	testCase.computeChanges(movementCollectionValuesTransferAcknowledgement);
-    	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(movementCollectionValuesTransferAcknowledgement.getItems().getItems().getElements()));
+    	String transfer02 = testCase.getRandomAlphabetic();
+    	movementCollectionValuesTransfer = testCase.instanciateOne(MovementCollectionValuesTransfer.class,transfer02);
+    	movementCollectionValuesTransfer.getItems().setPartyFromCode(warehouseCode02);
+    	testCase.computeChanges(movementCollectionValuesTransfer);
+    	movementCollectionValuesTransfer.getItems().getItemAt(0).getSource().setValueAbsoluteFromObject(10);
+    	testCase.create(movementCollectionValuesTransfer);
     	
-    	testCase.computeChanges(movementCollectionValuesTransferAcknowledgement);
-    	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(movementCollectionValuesTransferAcknowledgement.getItems().getItems().getElements()));
+    	String acknowledgement01 = testCase.getRandomAlphabetic();
+    	MovementCollectionValuesTransferAcknowledgement acknowledgement = testCase.instanciateOne(MovementCollectionValuesTransferAcknowledgement.class
+    			,acknowledgement01);
+    	acknowledgement.setTransferFromCode(transfer01);
+    	//movementCollectionValuesTransferAcknowledgement.getItems().setPartyFromCode(partyCode01);
+    	testCase.computeChanges(acknowledgement);
+    	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(acknowledgement.getItems().getItems().getElements()));    	
+    	testCase.computeChanges(acknowledgement);
+    	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(acknowledgement.getItems().getItems().getElements()));
     	
-    	movementCollectionValuesTransferAcknowledgement.getItems().setPartyFromCode(partyCode02);
-    	testCase.computeChanges(movementCollectionValuesTransferAcknowledgement);
-    	testCase.assertEqualsNumber(1, CollectionHelper.getInstance().getSize(movementCollectionValuesTransferAcknowledgement.getItems().getItems().getElements()));
+    	//movementCollectionValuesTransferAcknowledgement.getItems().setPartyFromCode(partyCode02);
+    	acknowledgement.setTransferFromCode(transfer02);
+    	testCase.computeChanges(acknowledgement);
+    	testCase.assertEqualsNumber(1, CollectionHelper.getInstance().getSize(acknowledgement.getItems().getItems().getElements()));
     	
-    	movementCollectionValuesTransferAcknowledgement.getItems().setPartyFromCode(partyCode01);
-    	testCase.computeChanges(movementCollectionValuesTransferAcknowledgement);
-    	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(movementCollectionValuesTransferAcknowledgement.getItems().getItems().getElements()));
+    	//movementCollectionValuesTransferAcknowledgement.getItems().setPartyFromCode(partyCode01);
+    	acknowledgement.setTransferFromCode(transfer01);
+    	testCase.computeChanges(acknowledgement);
+    	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(acknowledgement.getItems().getItems().getElements()));
     	
-    	movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(0).getSource().setValueAbsoluteFromObject(8);
-    	movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(1).getSource().setValueAbsoluteFromObject(1);
-    	testCase.computeChanges(movementCollectionValuesTransferAcknowledgement);
+    	acknowledgement.getItems().getItemAt(0).getSource().setValueAbsoluteFromObject(8);
+    	acknowledgement.getItems().getItemAt(0).getDestination().setCollectionFromCode(store01P01);
+    	acknowledgement.getItems().getItemAt(1).getSource().setValueAbsoluteFromObject(1);
+    	acknowledgement.getItems().getItemAt(1).getDestination().setCollectionFromCode(store01P02);
+    	testCase.computeChanges(acknowledgement);
     	
-    	testCase.assertNotNull(movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(0).getSource().getCollection());
-    	testCase.assertEqualsNumber("-8", movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(0).getSource().getValue());
+    	testCase.assertNotNull(acknowledgement.getItems().getItemAt(0).getSource().getCollection());
+    	testCase.assertEqualsNumber("-8", acknowledgement.getItems().getItemAt(0).getSource().getValue());
     	
-    	testCase.assertNotNull(movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(0).getDestination().getCollection());
-    	testCase.assertEqualsNumber("8", movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(0).getDestination().getValue());
+    	testCase.assertNotNull(acknowledgement.getItems().getItemAt(0).getDestination().getCollection());
+    	testCase.assertEqualsNumber("8", acknowledgement.getItems().getItemAt(0).getDestination().getValue());
     	
-    	testCase.assertNotNull(movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(1).getSource().getCollection());    	
-    	testCase.assertNotNull(movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(1).getDestination().getCollection());
+    	testCase.assertNotNull(acknowledgement.getItems().getItemAt(1).getSource().getCollection());    	
+    	testCase.assertNotNull(acknowledgement.getItems().getItemAt(1).getDestination().getCollection());
     	
-    	testCase.create(movementCollectionValuesTransferAcknowledgement);
+    	testCase.create(acknowledgement);
     	
-    	movementCollectionValuesTransferAcknowledgementCode = testCase.getRandomAlphabetic();
-    	movementCollectionValuesTransferAcknowledgement = testCase.instanciateOne(MovementCollectionValuesTransferAcknowledgement.class,movementCollectionValuesTransferAcknowledgementCode);
-    	movementCollectionValuesTransferAcknowledgement.getItems().setPartyFromCode(partyCode01);
-    	testCase.computeChanges(movementCollectionValuesTransferAcknowledgement);
-    	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(movementCollectionValuesTransferAcknowledgement.getItems().getItems().getElements()));
-    	
-    	testCase.assertNotNull(movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(0).getSource().getCollection());
-    	testCase.assertNotNull(movementCollectionValuesTransferAcknowledgement.getItems().getItemAt(1).getSource().getCollection());
-    	   	
     	testCase.clean();
     }
     
