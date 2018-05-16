@@ -5,9 +5,12 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
+import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.helper.ArrayHelper;
 import org.cyk.utility.common.helper.ClassHelper;
@@ -16,10 +19,10 @@ import org.cyk.utility.common.helper.CollectionHelper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@MappedSuperclass @Getter @Setter @NoArgsConstructor
+@MappedSuperclass @Getter @Setter @NoArgsConstructor @Accessors(chain=true)
 public abstract class AbstractCollection<ITEM extends AbstractEnumeration> extends AbstractEnumeration implements Serializable {
-
 	private static final long serialVersionUID = -3099832512046879464L;
 	
 	public static String ITEM_CODE_SEPARATOR = Constant.CHARACTER_UNDESCORE.toString();
@@ -29,10 +32,14 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	/**
 	 * True if aggregated attributes values must be an aggregation of item value specific attribute
 	 */
-	private Boolean itemAggregationApplied = Boolean.TRUE;
+	private Boolean itemAggregationApplied;
+	
+	@ManyToOne @JoinColumn(name=COLUMN_ITEMS_COUNT_INTERVAL) private Interval itemsCountInterval;
 	
 	@Transient protected IdentifiableRuntimeCollection<ITEM> items = new IdentifiableRuntimeCollection<>();
 	@Transient protected IdentifiableRuntimeCollection<ITEM> itemsDeletable = new IdentifiableRuntimeCollection<>();
+	
+	@Transient protected Integer itemsCount;
 	
 	{
 		getItems().setElementObjectClass(ClassHelper.getInstance().getParameterAt(getClass(), 0, Object.class));
@@ -40,6 +47,11 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	
 	public AbstractCollection(String code, String name, String abbreviation,String description) {
 		super(code, name, abbreviation, description);
+	}
+	
+	public AbstractCollection<ITEM> setItemsCountIntervalFromCode(String code){
+		this.itemsCountInterval = getFromCode(Interval.class, code);
+		return this;
 	}
 	
 	public AbstractCollection<ITEM> setItemsSynchonizationEnabled(Boolean synchonizationEnabled){
@@ -135,5 +147,9 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 	public static final String FIELD_ITEM_CODE_SEPARATOR = "itemCodeSeparator"; 
 	public static final String FIELD_ITEM_AGGREGATION_APPLIED = "itemAggregationApplied";
 	public static final String FIELD_ITEMS = "items";
+	public static final String FIELD_ITEMS_COUNT_INTERVAL = "itemsCountInterval";
+	public static final String FIELD_ITEMS_COUNT = "itemsCount";
+	
+	public static final String COLUMN_ITEMS_COUNT_INTERVAL = FIELD_ITEMS_COUNT_INTERVAL;
 	
 }

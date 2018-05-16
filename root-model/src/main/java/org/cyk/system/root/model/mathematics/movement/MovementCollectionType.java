@@ -17,18 +17,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Getter @Setter @NoArgsConstructor @Entity @FieldOverride(name=AbstractDataTreeType.FIELD___PARENT__,type=MovementCollectionType.class)
+@Getter @Setter @NoArgsConstructor @Entity @FieldOverride(name=AbstractDataTreeType.FIELD___PARENT__,type=MovementCollectionType.class) @Accessors(chain=true)
 public class MovementCollectionType extends AbstractDataTreeType implements Serializable  {
 	private static final long serialVersionUID = -6838401709866343401L;
 
-	@ManyToOne @JoinColumn(name=COLUMN_INTERVAL) @Accessors(chain=true) private Interval interval;
-	@ManyToOne @JoinColumn(name=COLUMN_INCREMENT_ACTION) @Accessors(chain=true) private MovementAction incrementAction;
-	@ManyToOne @JoinColumn(name=COLUMN_DECREMENT_ACTION) @Accessors(chain=true) private MovementAction decrementAction;
-	private @Accessors(chain=true) Boolean movementParentable;
-	private @Accessors(chain=true) Boolean supportDocumentIdentifier;
-	@ManyToOne @JoinColumn(name=COLUMN_DOCUMENT_IDENTIFIER_COUNT_INTERVAL) @Accessors(chain=true) private Interval documentIdentifierCountInterval;
+	@ManyToOne @JoinColumn(name=COLUMN_INTERVAL) private Interval interval;
+	@ManyToOne @JoinColumn(name=COLUMN_INCREMENT_ACTION) private MovementAction incrementAction;
+	@ManyToOne @JoinColumn(name=COLUMN_DECREMENT_ACTION) private MovementAction decrementAction;
+	private Boolean movementParentable;
+	private Boolean supportDocumentIdentifier;
+	@ManyToOne @JoinColumn(name=COLUMN_DOCUMENT_IDENTIFIER_COUNT_INTERVAL) private Interval documentIdentifierCountInterval;
 	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_PERIOD_COLLECTION_TYPE) private IdentifiablePeriodCollectionType identifiablePeriodCollectionType;
-	private @Accessors(chain=true) Boolean automaticallyJoinIdentifiablePeriodCollection;
+	private Boolean automaticallyJoinIdentifiablePeriodCollection;
+	private Boolean valueIsAggregated;
 	
 	//TODO to be model using a class which can be called MovementCollectionAlert or something like that. really i do not know so to think about
 	//@Column(precision=10,scale=FLOAT_SCALE,nullable=false) @NotNull private BigDecimal minimalQuantityAlert = BigDecimal.ZERO;
@@ -56,6 +57,7 @@ public class MovementCollectionType extends AbstractDataTreeType implements Seri
 	public static final String FIELD_DOCUMENT_IDENTIFIER_COUNT_INTERVAL = "documentIdentifierCountInterval";
 	public static final String FIELD_IDENTIFIABLE_PERIOD_COLLECTION_TYPE = "identifiablePeriodCollectionType";
 	public static final String FIELD_AUTOMATICALLY_JOIN_IDENTIFIABLE_PERIOD_COLLECTION = "automaticallyJoinIdentifiablePeriodCollection";
+	public static final String FIELD_VALUE_IS_AGGREGATED = "valueIsAggregated";
 	
 	public static final String COLUMN_INTERVAL = COLUMN_NAME_UNKEYWORD+FIELD_INTERVAL;
 	public static final String COLUMN_INCREMENT_ACTION = FIELD_INCREMENT_ACTION;

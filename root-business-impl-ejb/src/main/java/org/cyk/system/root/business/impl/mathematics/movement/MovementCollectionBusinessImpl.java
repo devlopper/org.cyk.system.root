@@ -9,12 +9,14 @@ import javax.inject.Inject;
 import org.cyk.system.root.business.api.Crud;
 import org.cyk.system.root.business.api.mathematics.movement.MovementBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionBusiness;
+import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifierBusiness;
 import org.cyk.system.root.business.impl.AbstractCollectionBusinessImpl;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.mathematics.movement.Movement;
 import org.cyk.system.root.model.mathematics.movement.MovementCollection;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionType;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionDao;
+import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionTypeDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementDao;
 import org.cyk.utility.common.ObjectFieldValues;
@@ -30,6 +32,11 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	@Inject
 	public MovementCollectionBusinessImpl(MovementCollectionDao dao) {
 		super(dao); 
+	}
+	
+	@Override
+	public MovementCollection instanciateOne() {
+		return super.instanciateOne().setType(inject(MovementCollectionTypeDao.class).readDefaulted());
 	}
 	
 	@Override
@@ -56,7 +63,11 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	protected void afterCrud(MovementCollection movementCollection, Crud crud) {
 		super.afterCrud(movementCollection, crud);
 		if(Crud.isCreateOrUpdate(crud)){
-			throw__(ConditionHelper.Condition.getBuilderComparison(movementCollection, computeValue(movementCollection), null, Boolean.FALSE, MovementCollection.FIELD_VALUE) );
+			if(movementCollection.getType()!=null && Boolean.TRUE.equals(movementCollection.getType().getValueIsAggregated()) 
+					&& Boolean.TRUE.equals(movementCollection.getItemAggregationApplied())){
+				throw__(ConditionHelper.Condition.getBuilderComparison(movementCollection, computeValue(movementCollection), null, Boolean.FALSE
+						, MovementCollection.FIELD_VALUE) );
+			}
 		}
 		if(Crud.CREATE.equals(crud)){
 			if(movementCollection.getType()!=null && Boolean.TRUE.equals(movementCollection.getType().getAutomaticallyJoinIdentifiablePeriodCollection())){
@@ -97,68 +108,20 @@ public class MovementCollectionBusinessImpl extends AbstractCollectionBusinessIm
 	
 	@Override
 	protected void computeChanges(MovementCollection movementCollection, LoggingHelper.Message.Builder loggingMessageBuilder) {
-		super.computeChanges(movementCollection, loggingMessageBuilder);
-		
+		super.computeChanges(movementCollection, loggingMessageBuilder);		
 		if(isNotIdentified(movementCollection)){
 			if(movementCollection.getInitialValue() == null)
 				movementCollection.setInitialValue(movementCollection.getValue());
 			
-		}
-		
+		}		
 	}
 	
-	/*public void computeItemsByParty(AbstractCollection<?> collection,String partyFieldName){
-		if(Boolean.TRUE.equals(collection.getItems().isSynchonizationEnabled())){
-			Party party = (Party) FieldHelper.getInstance().read(collection, partyFieldName);
-			Collection<MovementCollection> movementCollections = new ArrayList<>();
-			if(party==null){
-				
-			}else{
-				collection.setMovementCollections(ClassHelper.getInstance().instanciateOne(Listener.class).findMovementCollectionByParty(party));
-				CollectionHelper.getInstance().add(movementCollections, Boolean.TRUE, collection.getMovementCollections());
-			}
-			
-			if(CollectionHelper.getInstance().isNotEmpty(movementCollections)){
-				if(collection.getItems().isEmpty()){
-					//add all items
-					if(Boolean.TRUE.equals(collection.getItems().getHasAlreadyContainedElements())){
-						
-					}else{
-						for(MovementCollection index : movementCollections){					
-							collection.getItems().addOne(instanciateOne(MovementCollectionInventoryItem.class)
-									.setCollection(collection).setMovementCollection(index));
-						}	
-					}
-				}else{
-					//clean items
-					Collection<MovementCollectionInventoryItem> toDelete = new ArrayList<>();
-					//remove those not belonging to movement collections 
-					for(MovementCollectionInventoryItem index : collection.getItems().getElements())
-						if(!CollectionHelper.getInstance().contains(movementCollections, index.getMovementCollection()))
-							toDelete.add(index);
-					CollectionHelper.getInstance().remove(collection.getItems().getElements(), toDelete);
-					collection.getItems().getElements().removeAll(toDelete);
-					toDelete.clear();
-					
-					
-					//add those not belonging to items
-					for(MovementCollection index : movementCollections){
-						Boolean found = Boolean.FALSE;
-						for(MovementCollectionInventoryItem collectionItemIndex : collection.getItems().getElements()){
-							if(collectionItemIndex.getMovementCollection().equals(index)){
-								found = Boolean.TRUE;
-								break;
-							}
-						}
-						if(Boolean.FALSE.equals(found)){
-							collection.getItems().addOne(instanciateOne(MovementCollectionInventoryItem.class)
-									.setCollection(collection).setMovementCollection(index));
-						}
-					}
-				}
-			}
-		}
-	}*/
+	@Override
+	protected void beforeDelete(MovementCollection movementCollection) {
+		super.beforeDelete(movementCollection);
+		inject(MovementCollectionIdentifiableGlobalIdentifierBusiness.class).delete(inject(MovementCollectionIdentifiableGlobalIdentifierDao.class)
+				.readByMovementCollection(movementCollection));
+	}
 	
 	public static class BuilderOneDimensionArray extends AbstractCollectionBusinessImpl.BuilderOneDimensionArray<MovementCollection> implements Serializable {
 		private static final long serialVersionUID = 1L;

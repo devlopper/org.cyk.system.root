@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.globalidentification;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,9 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.utility.common.helper.FieldHelper;
+import org.cyk.utility.common.helper.StringHelper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,12 +38,32 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	
 	private static final Map<Class<? extends AbstractJoinGlobalIdentifier> , Collection<Class<? extends AbstractIdentifiable>>> USER_DEFINED_JOINABLE_CLASSES
 		= new HashMap<>();
+	private static final Map<Class<? extends AbstractJoinGlobalIdentifier> , String> MASTER_FIELD_NAME_MAP = new HashMap<>();
 	
 	@ManyToOne @JoinColumn(name=COLUMN_IDENTIFIABLE_GLOBAL_IDENTIFIER) @NotNull protected GlobalIdentifier identifiableGlobalIdentifier;
 	//protected Boolean onDeleteCascadeToJoin;
 	
 	public AbstractJoinGlobalIdentifier(AbstractIdentifiable identifiable){
 		identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
+	}
+	
+	public String getMasterFieldName(){
+		return getMasterFieldName(getClass());
+	}
+	
+	public Field getMasterField(){
+		return FieldHelper.getInstance().get(getClass(), getMasterFieldName());
+	}
+	
+	public AbstractJoinGlobalIdentifier setMaster(AbstractIdentifiable identifiable){
+		FieldHelper.getInstance().set(this, identifiable, getMasterField());
+		return this;
+	}
+	
+	public AbstractJoinGlobalIdentifier setMasterFromCode(String code){
+		Field masterField = getMasterField();
+		FieldHelper.getInstance().set(this, getFromCode(FieldHelper.getInstance().getType(getClass(), masterField), code), masterField);
+		return this;
 	}
 	
 	public <IDENTIFIABLE extends AbstractIdentifiable> AbstractJoinGlobalIdentifier setIdentifiableGlobalIdentifierFromCode(Class<IDENTIFIABLE> aClass,String code){
@@ -50,6 +74,18 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	}
 	
 	/**/
+	
+	public static void setMasterFieldName(Class<? extends AbstractJoinGlobalIdentifier> aClass,String fieldName){
+		MASTER_FIELD_NAME_MAP.put(aClass, fieldName);
+	}
+	
+	public static String getMasterFieldName(Class<? extends AbstractJoinGlobalIdentifier> aClass){
+		String fieldName = MASTER_FIELD_NAME_MAP.get(aClass);
+		if(StringHelper.getInstance().isBlank(fieldName)){
+			fieldName = StringHelper.getInstance().normalizeToVariableName(StringUtils.substringBefore(aClass.getSimpleName(),"IdentifiableGlobalIdentifier"));
+		}
+		return fieldName;
+	}
 	
 	@Getter @Setter
 	public static abstract class AbstractSearchCriteria extends AbstractFieldValueSearchCriteriaSet implements Serializable {

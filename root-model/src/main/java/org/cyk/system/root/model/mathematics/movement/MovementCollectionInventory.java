@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.cyk.system.root.model.mathematics.Interval;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -49,6 +50,16 @@ public class MovementCollectionInventory extends AbstractMovementCollections<Mov
 	public MovementCollectionInventory setValueFromObject(Integer index,Object value){
 		items.getAt(index).setValueFromObject(value);
 		return this;
+	}
+	
+	@Override
+	public MovementCollectionInventory setItemsCountInterval(Interval itemsCountInterval) {
+		return (MovementCollectionInventory) super.setItemsCountInterval(itemsCountInterval);
+	}
+	
+	@Override
+	public MovementCollectionInventory setItemsCountIntervalFromCode(String code) {
+		return (MovementCollectionInventory) super.setItemsCountIntervalFromCode(code);
 	}
 	
 	/**/

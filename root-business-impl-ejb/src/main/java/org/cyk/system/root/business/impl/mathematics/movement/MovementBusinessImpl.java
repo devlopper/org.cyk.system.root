@@ -44,10 +44,7 @@ import org.cyk.utility.common.helper.NumberHelper;
 import org.cyk.utility.common.helper.StringHelper;
 
 public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Movement, MovementDao,MovementCollection> implements MovementBusiness,Serializable {
-
 	private static final long serialVersionUID = -3799482462496328200L;
-	
-	@Inject private MovementCollectionDao movementCollectionDao;
 	
 	@Inject
 	public MovementBusinessImpl(MovementDao dao) {
@@ -261,11 +258,14 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			//commonUtils.increment(BigDecimal.class, movement.getCollection(), MovementCollection.FIELD_VALUE, movement.getValue().negate());
 		}else
 			return;
-		if(newValue!=null)
-			movementCollectionDao.update(movement.getCollection());
+		if(newValue!=null){
+			//TODO we should call update from MovementCollectionBusiness. We did it and it is throwing a NPE on jpa api merge
+			inject(MovementCollectionDao.class).update(movement.getCollection());
+		}
 		logMessageBuilder.addNamedParameters("col new val",newValue);
 		logTrace(logMessageBuilder);
 		
+		//inject(MovementCollectionDao.class).update(movement.getCollection());
 		throw__(Condition.getBuildersDoesNotBelongsTo(movement.getCollection(), movement.getCollection().getType().getInterval()
 				.getLow().getValueWithoutExcludedInformation(), movement.getCollection().getType().getInterval().getHigh().getValueWithoutExcludedInformation()
 				, MovementCollection.FIELD_VALUE));

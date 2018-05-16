@@ -21,6 +21,7 @@ import org.cyk.utility.common.annotation.user.interfaces.Input;
 import org.cyk.utility.common.annotation.user.interfaces.InputText;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
+import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 
@@ -104,11 +105,14 @@ public abstract class AbstractCollectionBusinessImpl<COLLECTION extends Abstract
 	@Override
 	protected void beforeCrud(COLLECTION collection,Crud crud) {
 		super.beforeCrud(collection,crud);
-		/*if(collection.getItems().isSynchonizationEnabled()){
-			if(ArrayUtils.contains(new Crud[]{Crud.CREATE, Crud.UPDATE,Crud.DELETE},crud)){
-				computeChanges(collection);
-			}	
-		}*/
+		if(collection.getItemsCountInterval() != null){
+			if(Boolean.TRUE.equals(collection.getItems().isSynchonizationEnabled())){
+				collection.setItemsCount(CollectionHelper.getInstance().getSize(collection.getItems().getElements()));
+				throw__(org.cyk.system.root.business.impl.ConditionHelper.getBuildersDoesNotBelongsTo(collection, collection.getItemsCountInterval()
+						, AbstractCollection.FIELD_ITEMS_COUNT));	
+			}
+			
+		}
 		
 	}
 	

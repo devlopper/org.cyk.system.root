@@ -44,6 +44,7 @@ import org.cyk.system.root.model.file.report.ReportBasedOnTemplateFile;
 import org.cyk.system.root.model.file.report.ReportFile;
 import org.cyk.system.root.model.file.report.ReportTemplate;
 import org.cyk.system.root.model.geography.Location;
+import org.cyk.system.root.model.globalidentification.AbstractJoinGlobalIdentifier;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.mathematics.Metric;
 import org.cyk.system.root.model.mathematics.MetricCollection;
@@ -85,6 +86,7 @@ import org.cyk.utility.common.converter.ManyConverter;
 import org.cyk.utility.common.converter.OneConverter;
 import org.cyk.utility.common.formatter.DateFormatter;
 import org.cyk.utility.common.helper.ArrayHelper;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.CollectionHelper.Instance;
 import org.cyk.utility.common.helper.ConditionHelper;
@@ -312,7 +314,21 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		return list;
 	}
 	
-	protected void beforeCrud(IDENTIFIABLE identifiable,Crud crud){}
+	protected void beforeCrud(final IDENTIFIABLE identifiable,Crud crud){
+		new CollectionHelper.Iterator.Adapter.Default<AbstractIdentifiable>(identifiable.getJoinedIdentifiables()){
+			private static final long serialVersionUID = 1L;
+			@Override
+			protected void __executeForEach__(AbstractIdentifiable index) {
+				identifiable.addIdentifiables(instanciateJoinGlobalIdentifier(identifiable,index));
+			}
+		}.execute();
+	}
+	
+	protected AbstractJoinGlobalIdentifier instanciateJoinGlobalIdentifier(IDENTIFIABLE identifiable,AbstractIdentifiable join){
+		return ((AbstractJoinGlobalIdentifier) instanciateOne(ClassHelper.getInstance().getByName(identifiable.getClass().getName()+"IdentifiableGlobalIdentifier")))
+				.setMaster(identifiable).setIdentifiableGlobalIdentifier(join.getGlobalIdentifier());
+	}
+	
 	protected void afterCrud(IDENTIFIABLE identifiable,Crud crud){
 		if(Boolean.TRUE.equals(IdentifiablePeriod.isManaged(identifiable)))
 			createIdentifiablePeriod(identifiable, crud);

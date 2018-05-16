@@ -20,6 +20,7 @@ import org.cyk.utility.common.annotation.ModelBean.GenderType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * A join between a movement collection and an identifiable
@@ -28,7 +29,7 @@ import lombok.Setter;
  */
 @Getter @Setter @Entity  @NoArgsConstructor @ModelBean(genderType=GenderType.MALE,crudStrategy=CrudStrategy.BUSINESS)
 @Table(uniqueConstraints={@UniqueConstraint(columnNames = {MovementCollectionIdentifiableGlobalIdentifier.FIELD_MOVEMENT_COLLECTION
-		,MovementCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})})
+		,MovementCollectionIdentifiableGlobalIdentifier.FIELD_IDENTIFIABLE_GLOBAL_IDENTIFIER})}) @Accessors(chain=true)
 public class MovementCollectionIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentifier implements Serializable {
 	private static final long serialVersionUID = -165832578043422718L;
 	

@@ -28,9 +28,7 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 	
 	@Column(name=COLUMN_INITIAL_VALUE,precision=20,scale=FLOAT_SCALE) private BigDecimal initialValue;
 	@Column(name=COLUMN_VALUE,precision=20,scale=FLOAT_SCALE) private BigDecimal value;
- 
 	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private MovementCollectionType type;
-	
 	@ManyToOne @JoinColumn(name=COLUMN_BUFFER) private MovementCollection buffer;
 	
 	@Transient private Boolean isCreateBufferAutomatically;
@@ -67,6 +65,17 @@ public class MovementCollection extends AbstractCollection<Movement> implements 
 		else
 			CollectionHelper.getInstance().removeElement(cascadeOperationToMasterFieldNames, FIELD_BUFFER);
 		return this;
+	}
+	
+	@Override
+	public <T> MovementCollection __setJoinedIdentifiablesFromCodes__(Class<T> aClass, String... codes) {
+		super.__setJoinedIdentifiablesFromCodes__(aClass, codes);
+		return this;
+	}
+	
+	@Override
+	public MovementCollection setItemAggregationApplied(Boolean itemAggregationApplied) {
+		return (MovementCollection) super.setItemAggregationApplied(itemAggregationApplied);
 	}
 	
 	public static final String FIELD_INITIAL_VALUE = "initialValue";

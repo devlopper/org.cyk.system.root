@@ -70,9 +70,24 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementCollection(){
     	TestCase testCase = instanciateTestCase();
-    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(testCase.getRandomAlphabetic());
+    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(testCase.getRandomAlphabetic())
+    			.setItemAggregationApplied(Boolean.TRUE);
     	assertNotNull(movementCollection.getType());
     	assertNotNull(movementCollection.getType().getInterval());
+    	movementCollection.getType().getInterval().getLow().setValue(null);
+    	testCase.create(movementCollection);
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudOneMovementCollectionWithValueAsOne(){
+    	TestCase testCase = instanciateTestCase();
+    	MovementCollection movementCollection = inject(MovementCollectionBusiness.class).instanciateOne(testCase.getRandomAlphabetic())
+    			.setItemAggregationApplied(Boolean.TRUE).setValueFromObject(1);
+    	assertNotNull(movementCollection.getType());
+    	assertNotNull(movementCollection.getType().getInterval());
+    	assertEquals(Boolean.TRUE, movementCollection.getType().getValueIsAggregated());
+    	assertEquals(Boolean.TRUE, movementCollection.getItemAggregationApplied());
     	movementCollection.getType().getInterval().getLow().setValue(null);
     	testCase.create(movementCollection);
     	testCase.clean();
@@ -1488,19 +1503,16 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.create(testCase.instanciateOne(Party.class,partyCode02));
     	
     	String movementCollectionCode01 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode01).setIsCreateBufferAutomatically(Boolean.TRUE));
-    	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
-    			.setMovementCollectionFromCode(movementCollectionCode01).setIdentifiableGlobalIdentifierFromCode(Party.class, partyCode01));
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode01).setIsCreateBufferAutomatically(Boolean.TRUE)
+    			.__setJoinedIdentifiablesFromCodes__(Party.class, partyCode01));
     	
     	String movementCollectionCode02 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode02).setIsCreateBufferAutomatically(Boolean.TRUE));
-    	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
-    			.setMovementCollectionFromCode(movementCollectionCode02).setIdentifiableGlobalIdentifierFromCode(Party.class, partyCode01));
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode02).setIsCreateBufferAutomatically(Boolean.TRUE)
+    			.__setJoinedIdentifiablesFromCodes__(Party.class, partyCode01));
     	
     	String movementCollectionCode03 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode03).setIsCreateBufferAutomatically(Boolean.TRUE));
-    	testCase.create(testCase.instanciateOne(MovementCollectionIdentifiableGlobalIdentifier.class)
-    			.setMovementCollectionFromCode(movementCollectionCode03).setIdentifiableGlobalIdentifierFromCode(Party.class, partyCode02));
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode03).setIsCreateBufferAutomatically(Boolean.TRUE)
+    			.__setJoinedIdentifiablesFromCodes__(Party.class, partyCode02));
     	
     	String movementCollectionValuesTransferCode = testCase.getRandomAlphabetic();
     	MovementCollectionValuesTransfer movementCollectionValuesTransfer = testCase.instanciateOne(MovementCollectionValuesTransfer.class
@@ -1803,6 +1815,14 @@ public class MovementIT extends AbstractBusinessIT {
     }
     
     @Test
+    public void crudOneMovementCollectionInventoryWithItemsIntervalCountPositive(){
+    	TestCase testCase = instanciateTestCase(); 
+    	String code = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code).setItemsCountIntervalFromCode(RootConstant.Code.Interval.POSITIVE_INTEGER_NUMBERS));
+    	testCase.clean();
+    }
+    
+    @Test
     public void crudOneMovementCollectionInventoryWithGeneratedCode(){
     	TestCase testCase = instanciateTestCase(); 
     	String movementCollectionInventoryCode = testCase.create(testCase.instanciateOne(MovementCollectionInventory.class)
@@ -1972,6 +1992,33 @@ public class MovementIT extends AbstractBusinessIT {
     			, new String[] {"0","-3","7","false"});
     	testCase.assertCountAll(MovementGroup.class, 1);
     	
+    	testCase.clean();
+    }
+    
+    @Test
+    public void crudManyMovementCollectionInventory(){
+    	TestCase testCase = instanciateTestCase(); 
+    	
+    	String partyCode01 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Party.class,partyCode01));
+    	
+    	String partyCode02 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(Party.class,partyCode02));
+    	
+    	String movementCollectionCode01 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode01).setIsCreateBufferAutomatically(Boolean.TRUE)
+    			.__setJoinedIdentifiablesFromCodes__(Party.class, partyCode01));
+    	
+    	String movementCollectionCode02 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode02).setIsCreateBufferAutomatically(Boolean.TRUE)
+    			.__setJoinedIdentifiablesFromCodes__(Party.class, partyCode01));
+    	
+    	String movementCollectionCode03 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollection.class,movementCollectionCode03).setIsCreateBufferAutomatically(Boolean.TRUE)
+    			.__setJoinedIdentifiablesFromCodes__(Party.class, partyCode02));
+    	
+    	String inventory01 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory01));
     	testCase.clean();
     }
     

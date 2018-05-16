@@ -191,7 +191,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 		return identifiables;
 	}
 	
-	public <T> void __setJoinedIdentifiables__(Class<T> aClass,Collection<T> identifiables){
+	public <T> AbstractIdentifiable __setJoinedIdentifiables__(Class<T> aClass,Collection<T> identifiables){
 		if(CollectionHelper.getInstance().isNotEmpty(identifiables)){
 			IdentifiableRuntimeCollection<T> collection = new IdentifiableRuntimeCollection<T>();
 			collection.addMany(identifiables);
@@ -199,12 +199,31 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 				joinedIdentifiableRuntimeCollectionMap = new Properties();
 			joinedIdentifiableRuntimeCollectionMap.set(aClass, collection);
 		}
+		return this;
 	}
 	
-	public <T> void __setJoinedIdentifiables__(Class<T> aClass,@SuppressWarnings("unchecked") T...identifiables){
+	public <T> AbstractIdentifiable __setJoinedIdentifiables__(Class<T> aClass,@SuppressWarnings("unchecked") T...identifiables){
 		if(ArrayHelper.getInstance().isNotEmpty(identifiables)){
 			__setJoinedIdentifiables__(aClass, Arrays.asList(identifiables));
 		}
+		return this;
+	}
+	
+	public <T> AbstractIdentifiable __setJoinedIdentifiablesFromCodes__(Class<T> aClass,Collection<String> codes){
+		if(CollectionHelper.getInstance().isNotEmpty(codes)){
+			Collection<T> identifiables = new ArrayList<T>();
+			for(String index : codes)
+				identifiables.add(InstanceHelper.getInstance().getByIdentifier(aClass, index, ClassHelper.Listener.IdentifierType.BUSINESS));
+			__setJoinedIdentifiables__(aClass,identifiables);
+		}
+		return this;
+	}
+	
+	public <T> AbstractIdentifiable __setJoinedIdentifiablesFromCodes__(Class<T> aClass,String...codes){
+		if(ArrayHelper.getInstance().isNotEmpty(codes)){
+			__setJoinedIdentifiablesFromCodes__(aClass, Arrays.asList(codes));
+		}
+		return this;
 	}
 	
 	@SuppressWarnings("unchecked")
