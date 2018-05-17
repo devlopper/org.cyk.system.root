@@ -66,9 +66,9 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractMovementCol
 								.getMovement().getCollection(),movementCollectionInventoryItem.getValueGapMovementGroupItem().getMovement().getOrderNumber()-1);
 					
 					if(previous == null)
-						movementCollectionInventoryItem.setValuePrevious(movementCollectionInventoryItem.getMovementCollection().getInitialValue());
+						movementCollectionInventoryItem.setPreviousValue(movementCollectionInventoryItem.getMovementCollection().getInitialValue());
 					else
-						movementCollectionInventoryItem.setValuePrevious(previous.getCumul());
+						movementCollectionInventoryItem.setPreviousValue(previous.getCumul());
 				}
 			}
 		}.execute();

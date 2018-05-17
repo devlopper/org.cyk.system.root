@@ -30,7 +30,7 @@ public class MovementCollectionInventoryItem extends AbstractCollectionItem<Move
 	@ManyToOne @JoinColumn(name=COLUMN_VALUE_GAP_MOVEMENT_GROUP_ITEM) private MovementGroupItem valueGapMovementGroupItem;
 	//@ManyToOne @JoinColumn(name=COLUMN_VALUE_GAP_MOVEMENT) private Movement valueGapMovement;
 	
-	@Transient private BigDecimal valuePrevious;
+	@Transient private BigDecimal previousValue;
 	@Transient private BigDecimal valueGap;
 	
 	@Override
@@ -68,7 +68,7 @@ public class MovementCollectionInventoryItem extends AbstractCollectionItem<Move
 	public static final String FIELD_VALUE_GAP_MOVEMENT_GROUP_ITEM = "valueGapMovementGroupItem";
 	public static final String FIELD_VALUE_GAP_MOVEMENT = "valueGapMovement";
 	public static final String FIELD_VALUE_GAP = "valueGap";
-	public static final String FIELD_VALUE_PREVIOUS = "valuePrevious";
+	public static final String FIELD_PREVIOUS_VALUE = "previousValue";
 	
 	public static final String COLUMN_MOVEMENT_COLLECTION = FIELD_MOVEMENT_COLLECTION;
 	//public static final String COLUMN_MOVEMENT_BEFORE_EXISTENCE = FIELD_MOVEMENT_BEFORE_EXISTENCE;
