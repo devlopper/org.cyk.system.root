@@ -67,7 +67,7 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 						
 						Collection<IDENTIFIABLE> readByClosed(Boolean closed);
 						Long countByClosed(Boolean closed);
-					    
+						
 					    /*Collection<IDENTIFIABLE> readWhereExistencePeriodFromDateIsLessThan(Date date);
 	    				Long countWhereExistencePeriodFromDateIsLessThan(Date date);*/
 					    IDENTIFIABLE readFirstWhereExistencePeriodFromDateIsLessThan(IDENTIFIABLE identifiable);
@@ -93,6 +93,8 @@ public interface PersistenceService<IDENTIFIABLE extends Identifiable<IDENTIFIER
 	                    void detach(IDENTIFIABLE identifiable);
 	                    
 	                    void flush();
+	                    
+	                    Long countAll();
 	                    
 	                    IDENTIFIER readOneIdentifierRandomly();
 	                    Collection<IDENTIFIER> readManyIdentifiersRandomly(Integer count);

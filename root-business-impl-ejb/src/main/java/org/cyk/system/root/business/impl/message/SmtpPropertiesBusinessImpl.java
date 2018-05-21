@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.message.SmtpPropertiesBusiness;
 import org.cyk.system.root.business.api.security.CredentialsBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.RootConstant;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.message.SmtpProperties;
@@ -23,17 +22,6 @@ public class SmtpPropertiesBusinessImpl extends AbstractTypedBusinessService<Smt
 	@Inject
 	public SmtpPropertiesBusinessImpl(SmtpPropertiesDao dao) {
 		super(dao);
-	}
-	
-	@Override
-	protected SmtpProperties __instanciateOne__(String[] values,InstanciateOneListener<SmtpProperties> listener) {
-		listener.getInstance().getGlobalIdentifierCreateIfNull();
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_SERVICE);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_CREDENTIALS);
-    	set(listener.getSetListener(), SmtpProperties.FIELD_FROM);
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_DEFAULTED);
-    	return listener.getInstance();
 	}
 	
 	@Override

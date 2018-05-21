@@ -32,6 +32,8 @@ import org.cyk.system.root.persistence.impl.PersistenceInterfaceLocator;
 import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.ObjectFieldValues;
 import org.cyk.utility.common.computation.ArithmeticOperator;
+import org.cyk.utility.common.computation.Trigger;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.ConditionHelper.Condition;
@@ -57,10 +59,15 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	}
 	
 	@Override
+	public Movement instanciateOne() {
+		return super.instanciateOne().register(Trigger.SYSTEM, ClassHelper.Listener.FieldName.ORDER_NUMBER);
+	}
+	/*
+	@Override
 	protected Boolean isComputeOrderNumber(Movement identifiable) {
 		return Boolean.TRUE;
 	}
-	
+	*/
 	@Override
 	protected Boolean isComputeCreationOrderNumber(Movement identifiable) {
 		return Boolean.TRUE;
@@ -381,6 +388,12 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 			movement.setCumul(movement.getPreviousCumul().add(movement.getValue()));
 		}
 		logMessageBuilder.addNamedParameters("prev cum",movement.getPreviousCumul(),"val",movement.getValue(),"cum",movement.getCumul());
+	}
+	
+	@Override
+	protected Long computeChangesOrderNumber(Movement movement, Builder loggingMessageBuilder) {
+		//return movement.getCollection() == null ? null : countByCollection(movement.getCollection());
+		return movement.getCollection() == null ? null : dao.countByCollection(movement.getCollection())-dao.countWhereExistencePeriodFromDateIsGreaterThan(movement);
 	}
 	
 	@Override

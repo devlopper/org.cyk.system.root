@@ -36,16 +36,6 @@ public class PersonRelationshipTypeRoleBusinessImpl extends AbstractTypedBusines
 		return instanciateOne(new String[]{null,null,typeCode,roleCode});
 	}
 	
-	@Override
-	protected PersonRelationshipTypeRole __instanciateOne__(String[] values,InstanciateOneListener<PersonRelationshipTypeRole> listener) {
-		super.__instanciateOne__(values, listener);
-		set(listener.getSetListener(), PersonRelationshipTypeRole.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
-		set(listener.getSetListener(), PersonRelationshipTypeRole.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_NAME);
-		set(listener.getSetListener(), PersonRelationshipTypeRole.FIELD_PERSON_RELATIONSHIP_TYPE);
-		set(listener.getSetListener(), PersonRelationshipTypeRole.FIELD_ROLE);
-		return listener.getInstance();
-	}
-
 	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<PersonRelationshipTypeRole> implements Serializable {
 		private static final long serialVersionUID = 1L;
 

@@ -87,4 +87,5 @@ public class MovementCollectionInventoryItemBusinessImpl extends AbstractCollect
 						AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_CODE),org.cyk.utility.common.helper.FieldHelper.getInstance().buildPath(
 								AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_NAME));
 	}
+	
 }

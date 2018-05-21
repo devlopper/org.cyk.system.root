@@ -46,23 +46,7 @@ public class ReportTemplateBusinessImpl extends AbstractEnumerationBusinessImpl<
 			inject(FileRepresentationTypeBusiness.class).create(fileRepresentationType);
 		}
 	}
-	
-	@Override
-	protected ReportTemplate __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<ReportTemplate> listener) {
-		ReportTemplate reportTemplate = super.__instanciateOne__(values, listener);
-		set(listener.getSetListener().setIndex(10),ReportTemplate.FIELD_TEMPLATE);
-		set(listener.getSetListener(), ReportTemplate.FIELD_HEADER_IMAGE);
-		set(listener.getSetListener(), ReportTemplate.FIELD_FOOTER_IMAGE);
-		set(listener.getSetListener(), ReportTemplate.FIELD_BACKGROUND_IMAGE);
-		set(listener.getSetListener(), ReportTemplate.FIELD_DRAFT_BACKGROUND_IMAGE);
-		set(listener.getSetListener(), ReportTemplate.FIELD_SIGNER);
-		set(listener.getSetListener(), ReportTemplate.FIELD_RESULT_FILE_NAMING_SCRIPT);
-		set(listener.getSetListener(), ReportTemplate.FIELD_HEADER_SCRIPT);
-		set(listener.getSetListener(), ReportTemplate.FIELD_FOOTER_SCRIPT);
-		set(listener.getSetListener(), ReportTemplate.FIELD_NAME_SCRIPT);
-		return reportTemplate;
-	}
-	
+		
 	public static class BuilderOneDimensionArray extends AbstractEnumerationBusinessImpl.BuilderOneDimensionArray<ReportTemplate> implements Serializable {
 		private static final long serialVersionUID = 1L;
 

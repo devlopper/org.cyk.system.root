@@ -1,7 +1,6 @@
 package org.cyk.system.root.business.impl;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -9,7 +8,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessService;
 import org.cyk.system.root.business.api.TypedBusiness;
-import org.cyk.system.root.business.api.TypedBusiness.SetListener;
 import org.cyk.system.root.business.api.generator.StringGeneratorBusiness;
 import org.cyk.system.root.business.api.mathematics.NumberBusiness;
 import org.cyk.system.root.business.api.time.TimeBusiness;
@@ -19,13 +17,11 @@ import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.GenericDao;
-import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 
 public abstract class AbstractBusinessServiceImpl extends AbstractBean implements BusinessService, Serializable {
-
 	private static final long serialVersionUID = 6437552355933877400L;
 	
 	@Inject protected TimeBusiness timeBusiness;
@@ -72,15 +68,6 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 	
 	protected <T extends AbstractIdentifiable> T read(Class<T> aClass,String code){
 		return inject(GenericDao.class).read(aClass, code);
-	}
-	
-	protected void set(Object instance,Field field,Class<?> fieldType,Integer index,String[] values,LogMessage.Builder logMessageBuilder) {
-		
-	}
-	
-	@Deprecated
-	protected void set(SetListener listener,String...fieldNames) {
-		
 	}
 	
 	@Deprecated

@@ -49,7 +49,9 @@ import org.cyk.utility.common.computation.ArithmeticOperator;
 import org.cyk.utility.common.computation.DataReadConfiguration;
 import org.cyk.utility.common.computation.Function;
 import org.cyk.utility.common.computation.LogicalOperator;
+import org.cyk.utility.common.computation.Trigger;
 import org.cyk.utility.common.file.ExcelSheetReader;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
@@ -839,18 +841,27 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable,isInputChange,isPersist);
 	}
 	
-	protected void computeChanges(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder logMessageBuilder){
+	protected void computeChanges(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder loggingMessageBuilder){
 		evaluateEntityPropertyCode(identifiable, Boolean.TRUE,Boolean.FALSE);
 		//inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable,Boolean.TRUE,Boolean.FALSE);
 		
 		Boolean isBirthDateComputedByUser = identifiable.isFieldValueComputedByUser(FieldHelper.getInstance()
 				.buildPath(AbstractIdentifiable.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_EXISTENCE_PERIOD,Period.FIELD_FROM_DATE));
 		if(isBirthDateComputedByUser!=null){
-			logMessageBuilder.addNamedParameters("birth date computed by user",isBirthDateComputedByUser);
+			loggingMessageBuilder.addNamedParameters("birth date computed by user",isBirthDateComputedByUser);
 			if(Boolean.FALSE.equals(isBirthDateComputedByUser)){
 				identifiable.setBirthDate(TimeHelper.getInstance().getUniversalTimeCoordinated());
 			}
-			logMessageBuilder.addNamedParameters("birth date",identifiable.getBirthDate());	
+			loggingMessageBuilder.addNamedParameters("birth date",identifiable.getBirthDate());	
+		}
+		
+		Trigger trigger = identifiable.getTrigger(ClassHelper.Listener.FieldName.ORDER_NUMBER);
+		if(trigger!=null){
+			loggingMessageBuilder.addNamedParameters("order number computation trigger by ",trigger);
+			if(Trigger.SYSTEM.equals(trigger)){
+				identifiable.setOrderNumber(computeChangesOrderNumber(identifiable, loggingMessageBuilder));
+			}
+			loggingMessageBuilder.addNamedParameters("order number",identifiable.getOrderNumber());	
 		}
 		
 		if(identifiable.getBirthDate()!=null && identifiable.getDeathDate()!=null){
@@ -863,7 +874,7 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 			identifiable.setCode(InstanceHelper.getInstance().generateBusinessIdentifier(identifiable, identifiable.getBirthDate() == null ? TimeHelper.getInstance().getUniversalTimeCoordinated() : identifiable.getBirthDate()));
 		
 		if(Boolean.TRUE.equals(IdentifiablePeriod.isManaged(identifiable)) && Boolean.TRUE.equals(isDoesNotBelongsToIdentifiablePeriodVerifiable(identifiable))){
-			computeChangesIdentifiablePeriod(identifiable, logMessageBuilder);
+			computeChangesIdentifiablePeriod(identifiable, loggingMessageBuilder);
 		}
 		if(Boolean.TRUE.equals(identifiable.isCascadeOperationToMaster())){
 			new CollectionHelper.Iterator.Adapter.Default<String>(identifiable.getCascadeOperationToMasterFieldNames()){
@@ -895,6 +906,10 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 				}
 			}.execute();
 		}
+	}
+	
+	protected Long computeChangesOrderNumber(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder loggingMessageBuilder){
+		return getPersistenceService().countAll();
 	}
 	
 	protected void computeChangesIdentifiablePeriod(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder loggingMessageBuilder){

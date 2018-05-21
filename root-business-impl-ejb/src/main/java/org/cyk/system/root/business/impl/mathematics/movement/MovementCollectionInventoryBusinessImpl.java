@@ -73,10 +73,15 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractMovementCol
 							//		.getMovementCollection(),movementCollectionInventoryItem.getOrderNumber()-1);
 						}else{
 							Long orderNumber = movementCollectionInventoryItem.getValueGapMovementGroupItem().getMovement().getOrderNumber();
-							if(orderNumber == null)
-								orderNumber = inject(MovementDao.class).countByCollection(movementCollectionInventoryItem.getValueGapMovementGroupItem()
-									.getMovement().getCollection());
-							previous = inject(MovementDao.class).readByCollectionByFromDateAscendingOrderIndex(movementCollectionInventoryItem.getValueGapMovementGroupItem()
+							if(orderNumber == null){
+								System.out.println(
+										"MovementCollectionInventoryBusinessImpl.computeChanges(...).new Default() {...}.__executeForEach__() NUULLLL");
+								//orderNumber = inject(MovementDao.class).countByCollection(movementCollectionInventoryItem.getValueGapMovementGroupItem()
+								//	.getMovement().getCollection());
+								
+								previous = null;
+							}else
+								previous = inject(MovementDao.class).readByCollectionByFromDateAscendingOrderIndex(movementCollectionInventoryItem.getValueGapMovementGroupItem()
 									.getMovement().getCollection(),orderNumber-1);	
 						}
 					}

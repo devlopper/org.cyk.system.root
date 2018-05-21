@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.geography.ElectronicMailAddressBusiness;
-import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.geography.Contact;
 import org.cyk.system.root.model.geography.ContactCollection;
 import org.cyk.system.root.model.geography.ElectronicMailAddress;
@@ -124,15 +123,7 @@ public class ElectronicMailAddressBusinessImpl extends AbstractContactBusinessIm
 	public Collection<String> findAddresses(Person person, Collection<String> personRelationshipTypeCodes) {
 		return null;
 	}
-	
-	@Override
-	protected Contact __instanciateOne__(String[] values,InstanciateOneListener<Contact> listener) {
-		listener.getInstance().getGlobalIdentifierCreateIfNull();
-		set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
-		set(listener.getSetListener(), ElectronicMailAddress.FIELD_ADDRESS);
-		return listener.getInstance();
-	}
-	
+
 	public static class BuilderOneDimensionArray extends org.cyk.system.root.business.impl.helper.InstanceHelper.BuilderOneDimensionArray<ElectronicMailAddress> implements Serializable {
 		private static final long serialVersionUID = 1L;
 

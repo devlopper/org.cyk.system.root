@@ -10,7 +10,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.cyk.system.root.business.api.security.CredentialsBusiness;
 import org.cyk.system.root.business.api.security.SoftwareBusiness;
 import org.cyk.system.root.business.impl.AbstractTypedBusinessService;
-import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.security.Credentials;
 import org.cyk.system.root.model.security.Software;
@@ -67,16 +66,6 @@ public class CredentialsBusinessImpl extends AbstractTypedBusinessService<Creden
 		return credentials;
 	}
 	
-	@Override
-	protected Credentials __instanciateOne__(String[] values,InstanciateOneListener<Credentials> listener) {
-		listener.getInstance().getGlobalIdentifierCreateIfNull();
-		set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
-		set(listener.getSetListener(), Credentials.FIELD_SOFTWARE);
-		set(listener.getSetListener(), Credentials.FIELD_USERNAME);
-    	set(listener.getSetListener(), Credentials.FIELD_PASSWORD);
-    	return listener.getInstance();
-	}
-
 	@Override
 	public Credentials findBySoftwareByUsernameByPassword(Software software, String aUsername, String password) {
 		return dao.readBySoftwareByUsernameByPassword(software, aUsername, password);

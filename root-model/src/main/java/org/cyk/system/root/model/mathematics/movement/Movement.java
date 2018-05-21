@@ -20,6 +20,8 @@ import org.cyk.utility.common.annotation.FieldOverrides;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
+import org.cyk.utility.common.computation.Trigger;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.NumberHelper;
 
 import lombok.Getter;
@@ -143,6 +145,11 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	@Override
 	public Movement __setBirthDateComputedByUser__(Boolean value) {
 		return (Movement) super.__setBirthDateComputedByUser__(value);
+	}
+	
+	@Override
+	public Movement register(Trigger trigger, ClassHelper.Listener.FieldName fieldName) {
+		return (Movement) super.register(trigger, fieldName);
 	}
 	
 	@Override

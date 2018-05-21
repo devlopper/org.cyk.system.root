@@ -174,6 +174,11 @@ public abstract class AbstractPersistenceService<IDENTIFIABLE extends AbstractId
 		return null;
 	}
 	
+	@Override
+	public Long countAll() {
+		return null;
+	}
+	
     @Override
     public IDENTIFIABLE update(IDENTIFIABLE object) {
         return entityManager.merge(object);

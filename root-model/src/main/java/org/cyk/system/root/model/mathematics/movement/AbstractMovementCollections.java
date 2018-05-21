@@ -9,6 +9,9 @@ import javax.persistence.Transient;
 import org.cyk.system.root.model.AbstractCollection;
 import org.cyk.system.root.model.AbstractEnumeration;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.utility.common.computation.Trigger;
+import org.cyk.utility.common.helper.ClassHelper;
+import org.cyk.utility.common.model.identifiable.Common;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +45,18 @@ public abstract class AbstractMovementCollections<ITEM extends AbstractEnumerati
 	@Override
 	public AbstractMovementCollections<ITEM> __setBirthDateComputedByUser__(Boolean value) {
 		return (AbstractMovementCollections<ITEM>) super.__setBirthDateComputedByUser__(value);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public AbstractMovementCollections<ITEM> register(Trigger trigger, ClassHelper.Listener.FieldName fieldName) {
+		return (AbstractMovementCollections<ITEM>) super.register(trigger, fieldName);
+	}
+	
+	@Override
+	public Common register(Trigger trigger, String... fieldNames) {
+		// TODO Auto-generated method stub
+		return super.register(trigger, fieldNames);
 	}
 	
 	@SuppressWarnings("unchecked")

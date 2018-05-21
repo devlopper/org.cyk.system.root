@@ -36,34 +36,7 @@ public class MetricCollectionBusinessImpl extends AbstractCollectionBusinessImpl
 		createIfNotIdentified(metricCollection.getValueProperties());
 		return super.create(metricCollection);
 	}
-	
-	@Override
-	protected MetricCollection __instanciateOne__(String[] values,org.cyk.system.root.business.api.TypedBusiness.InstanciateOneListener<MetricCollection> listener) {
-		MetricCollection metricCollection = super.__instanciateOne__(values, listener);
-		set(listener.getSetListener().setIndex(10),MetricCollection.FIELD_TYPE);
-		set(listener.getSetListener(),MetricCollection.FIELD_VALUE_PROPERTIES);
-		set(listener.getSetListener(),MetricCollection.FIELD_VALUE);
-		return metricCollection;
-	}
-			 
-	/*@Override @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-	public MetricCollection instanciateOne(String code,String name,MetricCollectionType type,MetricValueType metricValueType,String[] items,String intervalCollectionName,String[][] intervals){
-		MetricCollection collection = instanciateOne(code,name,items);
-		collection.setType(type);
-		collection.setValueType(metricValueType);
-		if(StringUtils.isNotBlank(intervalCollectionName) && intervals!=null){
-			if(intervalCollectionName==null)
-				intervalCollectionName = code+Constant.CHARACTER_UNDESCORE+collection.getClass().getSimpleName()+Constant.CHARACTER_UNDESCORE+Interval.class.getSimpleName();
-			collection.setValueIntervalCollection(inject(IntervalCollectionBusiness.class).instanciateOne(code, intervalCollectionName, intervals));
-		}
-		return collection;
-	}
-	
-	@Override
-	public MetricCollection instanciateOne(String code, String name,MetricCollectionType type, MetricValueType metricValueType, String[] items,String[][] intervals) {
-		return instanciateOne(code, name,type, metricValueType, items, null, intervals);
-	}*/
-	
+				 	
 	@Override
 	public MetricCollection instanciateOne(String code, String name, String metricCollectionTypeCode, String[] items) {
 		MetricCollection collection = instanciateOne(code,name,items);

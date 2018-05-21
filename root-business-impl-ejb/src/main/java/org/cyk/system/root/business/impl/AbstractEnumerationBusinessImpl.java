@@ -48,19 +48,6 @@ public abstract class AbstractEnumerationBusinessImpl<ENUMERATION extends Abstra
 		return instanciateOne((String)null, (String)null);
 	}
 	
-    @Override
-	protected ENUMERATION __instanciateOne__(String[] values, InstanciateOneListener<ENUMERATION> listener) {
-    	ENUMERATION enumeration = listener.getInstance();
-    	enumeration.getGlobalIdentifierCreateIfNull();
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_CODE);
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_NAME);
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_ABBREVIATION);
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_ORDER_NUMBER);
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_WEIGHT);
-    	set(listener.getSetListener(), AbstractEnumeration.FIELD_GLOBAL_IDENTIFIER, GlobalIdentifier.FIELD_DEFAULTED);
-		return enumeration;
-	}
-
 	protected Integer getInstanciateOneEnumerationStartIndex(String[] values){
     	return 0;
     }

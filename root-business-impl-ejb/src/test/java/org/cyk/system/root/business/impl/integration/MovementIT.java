@@ -2019,6 +2019,13 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	String inventory01 = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory01));
+    	
+    	String inventory02 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory02));
+    	
+    	String inventory03 = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory03));
+    	
     	testCase.clean();
     }
     

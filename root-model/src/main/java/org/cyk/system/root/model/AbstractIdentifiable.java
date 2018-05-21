@@ -52,7 +52,6 @@ import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.TimeHelper;
-import org.cyk.utility.common.model.identifiable.IdentifiablePersistable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -62,7 +61,7 @@ import lombok.experimental.Accessors;
 
 /*mapping - jpa*/
 @MappedSuperclass @Getter @Setter @Accessors(chain=true)
-public abstract class AbstractIdentifiable extends /*IdentifiablePersistable.ByLong.BaseClass.JavaPersistenceApiEntity*/ AbstractModelElement implements Identifiable<java.lang.Long>, Serializable{
+public abstract class AbstractIdentifiable extends org.cyk.utility.common.model.identifiable.Common/*org.cyk.utility.common.model.identifiable.IdentifiablePersistable.ByLong.BaseClass.JavaPersistenceEntity*/ implements Identifiable<java.lang.Long>, Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	public static AbstractMethod<Boolean,AbstractIdentifiable> GLOBAL_IDENTIFIER_BUILDABLE;
@@ -71,6 +70,7 @@ public abstract class AbstractIdentifiable extends /*IdentifiablePersistable.ByL
 	
 	/* Persisted */
 	
+	//TODO we are using the local interface , this why we need this. If local insterface is removed then remove this property
 	@Id @GeneratedValue @Column(name=COLUMN_IDENTIFIER) protected java.lang.Long identifier;// Generation is customizable using mapping file
 	
 	/**

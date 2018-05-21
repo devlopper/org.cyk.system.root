@@ -15,6 +15,8 @@ import org.cyk.system.root.model.party.Party;
 import org.cyk.system.root.persistence.api.AbstractCollectionItemDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.AbstractMovementCollectionsDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifierDao;
+import org.cyk.utility.common.computation.Trigger;
+import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.MethodHelper;
@@ -31,7 +33,8 @@ public abstract class AbstractMovementCollectionsBusinessImpl<COLLECTION extends
 	@SuppressWarnings("unchecked")
 	@Override
 	public COLLECTION instanciateOne() {
-		return (COLLECTION) super.instanciateOne().__setBirthDateComputedByUser__(Boolean.FALSE).setItemsSynchonizationEnabled(Boolean.TRUE);
+		return (COLLECTION) super.instanciateOne().__setBirthDateComputedByUser__(Boolean.FALSE).register(Trigger.SYSTEM, ClassHelper.Listener.FieldName.ORDER_NUMBER)
+				.setItemsSynchonizationEnabled(Boolean.TRUE);
 	}
 	
 	@Override

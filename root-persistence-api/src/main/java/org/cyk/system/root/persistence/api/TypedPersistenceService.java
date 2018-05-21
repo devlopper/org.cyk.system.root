@@ -10,7 +10,7 @@ public interface TypedPersistenceService<IDENTIFIABLE extends Identifiable<IDENT
 	/* predefined query  */
     
     Collection<IDENTIFIABLE> readAll(); 
-    Long countAll();
+    //Long countAll();
     IDENTIFIABLE readDefaulted(); 
     
     Collection<IDENTIFIABLE> readByClasses(Collection<Class<?>> classes);
