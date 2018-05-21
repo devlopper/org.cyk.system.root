@@ -5,16 +5,13 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import org.cyk.system.root.model.AbstractModelElement;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Embeddable @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class ExecutedMethodInputOutput extends AbstractModelElement implements Serializable {
-
+public class ExecutedMethodInputOutput extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Byte count;

@@ -52,6 +52,7 @@ import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
 import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.TimeHelper;
+import org.cyk.utility.common.model.identifiable.IdentifiablePersistable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -60,8 +61,8 @@ import lombok.experimental.Accessors;
 /*lombok*/
 
 /*mapping - jpa*/
-@MappedSuperclass @Getter @Setter
-public abstract class AbstractIdentifiable extends AbstractModelElement implements Identifiable<Long>, Serializable{
+@MappedSuperclass @Getter @Setter @Accessors(chain=true)
+public abstract class AbstractIdentifiable extends /*IdentifiablePersistable.ByLong.BaseClass.JavaPersistenceApiEntity*/ AbstractModelElement implements Identifiable<java.lang.Long>, Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	public static AbstractMethod<Boolean,AbstractIdentifiable> GLOBAL_IDENTIFIER_BUILDABLE;
@@ -70,7 +71,7 @@ public abstract class AbstractIdentifiable extends AbstractModelElement implemen
 	
 	/* Persisted */
 	
-	@Id @GeneratedValue @Column(name=COLUMN_IDENTIFIER) protected Long identifier;// Generation is customizable using mapping file
+	@Id @GeneratedValue @Column(name=COLUMN_IDENTIFIER) protected java.lang.Long identifier;// Generation is customizable using mapping file
 	
 	/**
 	 * Used to join subsystem

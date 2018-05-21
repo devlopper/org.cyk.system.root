@@ -11,7 +11,6 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.ByteSearchCriteria;
 import org.cyk.system.root.model.search.ShortSearchCriteria;
@@ -24,8 +23,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Embeddable @Getter @Setter @Accessors(chain=true)
-public class Instant extends AbstractModelElement implements Serializable {
-
+public class Instant extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 	private static final long serialVersionUID = 6459524990626259467L;
 
 	@Column(name=COLUMN_YEAR)					private Short year;

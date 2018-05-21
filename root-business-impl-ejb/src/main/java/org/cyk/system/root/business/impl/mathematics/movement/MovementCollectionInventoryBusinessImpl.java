@@ -61,9 +61,25 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractMovementCol
 					Long count = inject(MovementDao.class).countByCollection(movementCollectionInventoryItem.getValueGapMovementGroupItem().getMovement().getCollection());
 					if(count == 0)
 						previous = null;
-					else
-						previous = inject(MovementDao.class).readByCollectionByFromDateAscendingOrderIndex(movementCollectionInventoryItem.getValueGapMovementGroupItem()
-								.getMovement().getCollection(),movementCollectionInventoryItem.getValueGapMovementGroupItem().getMovement().getOrderNumber()-1);
+					else{
+						//if(movementCollectionInventoryItem.getValueGapMovementGroupItem()!=null){
+							//previous = inject(MovementDao.class).readByCollectionByFromDateAscendingOrderIndex(movementCollectionInventoryItem.getValueGapMovementGroupItem()
+							//		.getMovement().getCollection(),movementCollectionInventoryItem.getValueGapMovementGroupItem().getMovement().getOrderNumber()-1);	
+						//}
+						
+						if(movementCollectionInventoryItem.getValueGapMovementGroupItem()==null){
+							previous = null;
+							//previous = inject(MovementDao.class).readByCollectionByFromDateAscendingOrderIndex(movementCollectionInventoryItem
+							//		.getMovementCollection(),movementCollectionInventoryItem.getOrderNumber()-1);
+						}else{
+							Long orderNumber = movementCollectionInventoryItem.getValueGapMovementGroupItem().getMovement().getOrderNumber();
+							if(orderNumber == null)
+								orderNumber = inject(MovementDao.class).countByCollection(movementCollectionInventoryItem.getValueGapMovementGroupItem()
+									.getMovement().getCollection());
+							previous = inject(MovementDao.class).readByCollectionByFromDateAscendingOrderIndex(movementCollectionInventoryItem.getValueGapMovementGroupItem()
+									.getMovement().getCollection(),orderNumber-1);	
+						}
+					}
 					
 					if(previous == null)
 						movementCollectionInventoryItem.setPreviousValue(movementCollectionInventoryItem.getMovementCollection().getInitialValue());

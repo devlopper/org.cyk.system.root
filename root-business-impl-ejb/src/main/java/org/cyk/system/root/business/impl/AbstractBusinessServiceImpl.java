@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.util.Date;
 
 import javax.inject.Inject;
-import javax.persistence.Entity;
 
 import org.apache.commons.lang3.StringUtils;
 import org.cyk.system.root.business.api.BusinessService;
@@ -20,11 +19,9 @@ import org.cyk.system.root.model.generator.StringGenerator;
 import org.cyk.system.root.model.globalidentification.GlobalIdentifier;
 import org.cyk.system.root.model.time.Period;
 import org.cyk.system.root.persistence.api.GenericDao;
-import org.cyk.utility.common.Constant;
 import org.cyk.utility.common.LogMessage;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ClassHelper;
-import org.cyk.utility.common.helper.StringHelper;
 import org.cyk.utility.common.helper.ThrowableHelper;
 
 public abstract class AbstractBusinessServiceImpl extends AbstractBean implements BusinessService, Serializable {
@@ -77,51 +74,13 @@ public abstract class AbstractBusinessServiceImpl extends AbstractBean implement
 		return inject(GenericDao.class).read(aClass, code);
 	}
 	
-	@SuppressWarnings("unchecked") @Deprecated
 	protected void set(Object instance,Field field,Class<?> fieldType,Integer index,String[] values,LogMessage.Builder logMessageBuilder) {
-		System.out.println("*************************** AbstractBusinessServiceImpl.set() ***********************************");
-		if(index >= values.length || StringUtils.isBlank(values[index])){
-			if(index >= values.length)
-				addLogMessageBuilderParameters(logMessageBuilder,"Cannot access "+field.getName()+" at index "+index,"*");
-			else if(StringUtils.isBlank(values[index]))
-				addLogMessageBuilderParameters(logMessageBuilder,"Blank value of "+field.getName()+" at index "+index,"*");
-		}else{
-			Object value = null;
-			if(fieldType.isAnnotationPresent(Entity.class)){
-				value = read((Class<AbstractIdentifiable>)fieldType, values[index]);
-				if(value==null)
-					addLogMessageBuilderParameters(logMessageBuilder,"no "+fieldType.getSimpleName()+" found for ",values[index]);	
-			}else
-				value = StringHelper.getInstance().convert(values[index], fieldType);
-			
-			commonUtils.writeField(field, instance, value);
-			addLogMessageBuilderParameters(logMessageBuilder,"set field "+field.getName()+" to",value);	
-		}
+		
 	}
 	
 	@Deprecated
 	protected void set(SetListener listener,String...fieldNames) {
-		System.out.println("################################ AbstractBusinessServiceImpl.set() ###################################");
-		ThrowableHelper.getInstance().throwNotYetImplemented();
-		String fieldName = StringUtils.join(fieldNames,Constant.CHARACTER_DOT.toString());
-		addLogMessageBuilderParameters(listener.getLogMessageBuilder(), "set",fieldName);
-		Object instance = StringUtils.contains(fieldName, Constant.CHARACTER_DOT.toString()) ? commonUtils.readProperty(listener.getInstance(),
-				StringUtils.substringBeforeLast(fieldName, Constant.CHARACTER_DOT.toString())) 
-				: listener.getInstance();
-		addLogMessageBuilderParameters(listener.getLogMessageBuilder(), "instance",instance);
-		Field field = commonUtils.getFieldFromClass(instance.getClass(),  StringUtils.contains(fieldName, Constant.CHARACTER_DOT.toString()) ? 
-				StringUtils.substringAfterLast(fieldName, Constant.CHARACTER_DOT.toString()) : fieldName);
-		if(/*instance==null || */field==null){
-			/*if(instance==null)
-				addLogMessageBuilderParameters(listener.getLogMessageBuilder(),"Cannot access instance "+fieldName+" in class "+listener.getInstance().getClass(),"*");
-			else */if(field==null)
-				addLogMessageBuilderParameters(listener.getLogMessageBuilder(),"Cannot access field "+fieldName+" in class "+instance.getClass(),"*");	
-		}else
-			set(instance, field,listener.getFieldType() == null ? listener.getFieldType(instance.getClass(), field) : listener.getFieldType(), listener.getIndex()
-					, listener.getValues(), listener.getLogMessageBuilder());
-		listener.setIndex(listener.getIndex()+listener.getIndexIncrement());
-		listener.setFieldType(null);
-		listener.setNullValue(null);
+		
 	}
 	
 	@Deprecated

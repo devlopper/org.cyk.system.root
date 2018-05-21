@@ -13,7 +13,6 @@ import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.value.AbstractNumberValue;
 import org.cyk.system.root.model.value.AbstractValue;
 import org.cyk.system.root.model.value.LongValue;
@@ -30,7 +29,7 @@ import lombok.Setter;
  */
 @Embeddable
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Period extends AbstractModelElement implements Serializable{
+public class Period extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 

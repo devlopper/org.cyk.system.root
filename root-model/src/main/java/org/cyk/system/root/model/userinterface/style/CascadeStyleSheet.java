@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.utility.common.CommonUtils;
 import org.cyk.utility.common.Constant;
 
@@ -22,7 +21,7 @@ import lombok.Setter;
  *
  */
 @Getter @Setter @Embeddable
-public class CascadeStyleSheet extends AbstractModelElement implements Serializable {
+public class CascadeStyleSheet extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 	private static final long serialVersionUID = 738142431416512052L;
 	
 	private @Column(name=COLUMN_CLASS) String clazz;

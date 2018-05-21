@@ -16,7 +16,7 @@ import lombok.Setter;
  *
  */
 @Embeddable @Getter @Setter
-public class SupportingDocumentInformations extends AbstractModelElement implements Serializable {
+public class SupportingDocumentInformations extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 
 	private static final long serialVersionUID = -2272776792804730789L;
 

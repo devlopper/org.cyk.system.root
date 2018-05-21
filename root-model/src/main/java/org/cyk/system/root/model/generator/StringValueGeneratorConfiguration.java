@@ -11,10 +11,8 @@ import javax.persistence.Embedded;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractModelElement;
-
 @Getter @Setter @Embeddable
-public class StringValueGeneratorConfiguration extends AbstractModelElement implements Serializable {
+public class StringValueGeneratorConfiguration extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 
 	private static final long serialVersionUID = 2700928054823690772L;
 

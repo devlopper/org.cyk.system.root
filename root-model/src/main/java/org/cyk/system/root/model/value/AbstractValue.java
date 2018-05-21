@@ -6,16 +6,13 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 
-import org.cyk.system.root.model.AbstractModelElement;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @MappedSuperclass
-public abstract class AbstractValue<TYPE> extends AbstractModelElement implements Serializable {
-
+public abstract class AbstractValue<TYPE> extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 	private static final long serialVersionUID = 6459524990626259467L;
 	
 	@Enumerated(EnumType.ORDINAL) protected PreferredProperty preferredProperty;

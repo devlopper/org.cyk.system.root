@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.StringSearchCriteria;
 import org.cyk.utility.common.Constant;
@@ -20,7 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @Embeddable @NoArgsConstructor @AllArgsConstructor
-public class Sort extends AbstractModelElement implements Serializable {
+public class Sort extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 
 	private static final long serialVersionUID = -971774360718770716L;
 

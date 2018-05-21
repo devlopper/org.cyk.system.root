@@ -1,19 +1,7 @@
 package org.cyk.system.root.model;
 
-/**
- * Any object that can be identifiable by a unique identifier.
- * @author Christian Yao Komenan
- * @param <IDENTIFIER>
- */
-public interface Identifiable<IDENTIFIER> {
+import org.cyk.utility.common.model.identifiable.IdentifiablePersistable;
 
-    /**
-     * Get the identifier of the object.
-     * @return Identifier of the object.
-     */
-    IDENTIFIER getIdentifier();
-    
-    void setIdentifier(IDENTIFIER anIdentifier);
+public interface Identifiable<IDENTIFIER> extends IdentifiablePersistable<IDENTIFIER> {
 
-    String getUiString();
 }

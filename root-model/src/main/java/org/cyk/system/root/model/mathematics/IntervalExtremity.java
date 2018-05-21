@@ -8,15 +8,13 @@ import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.cyk.system.root.model.AbstractModelElement;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Embeddable @Getter @Setter @NoArgsConstructor @Accessors(chain=true)
-public class IntervalExtremity extends AbstractModelElement implements Serializable {
+public class IntervalExtremity extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 	private static final long serialVersionUID = -8646753247708396439L;
 
 	@Column(precision=COLUMN_VALUE_PRECISION,scale=FLOAT_SCALE) private BigDecimal value;

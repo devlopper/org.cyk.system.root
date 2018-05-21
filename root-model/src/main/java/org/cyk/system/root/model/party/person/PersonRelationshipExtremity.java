@@ -12,10 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import org.cyk.system.root.model.AbstractModelElement;
-
 @Getter @Setter @Embeddable @NoArgsConstructor @AllArgsConstructor
-public class PersonRelationshipExtremity extends AbstractModelElement implements Serializable {
+public class PersonRelationshipExtremity extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

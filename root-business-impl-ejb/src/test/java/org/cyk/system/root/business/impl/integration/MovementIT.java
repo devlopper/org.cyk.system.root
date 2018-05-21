@@ -1879,8 +1879,8 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.computeChanges(movementCollectionInventory);
     	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(movementCollectionInventory.getItems().getElements()));
     	
-    	CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 0).setValueFromObject(8);
-    	CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 1).setValueFromObject(1);
+    	movementCollectionInventory.getItemAt(0).setValueFromObject(8);
+    	movementCollectionInventory.getItemAt(1).setValueFromObject(1);
     	testCase.create(movementCollectionInventory);
     	
     	movementCollectionInventoryCode = testCase.getRandomAlphabetic();
@@ -1888,24 +1888,24 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.computeChanges(movementCollectionInventory);
     	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(movementCollectionInventory.getItems().getElements()));
     	
-    	testCase.assertNotNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 0).getMovementCollection());
-    	testCase.computeChanges(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 0));
-    	testCase.assertNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 0).getValueGapMovementGroupItem());
-    	testCase.assertNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 0).getValueGap());
+    	testCase.assertNotNull(movementCollectionInventory.getItemAt(0).getMovementCollection());
+    	testCase.computeChanges(movementCollectionInventory.getItemAt(0));
+    	testCase.assertNull(movementCollectionInventory.getItemAt(0).getValueGapMovementGroupItem());
+    	testCase.assertNull(movementCollectionInventory.getItemAt(0).getValueGap());
     	
-    	testCase.assertNotNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 1).getMovementCollection());
-    	testCase.computeChanges(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 1));
-    	testCase.assertNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 1).getValueGapMovementGroupItem());
-    	testCase.assertNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 1).getValueGap());
+    	testCase.assertNotNull(movementCollectionInventory.getItemAt(1).getMovementCollection());
+    	testCase.computeChanges(movementCollectionInventory.getItemAt(1));
+    	testCase.assertNull(movementCollectionInventory.getItemAt(1).getValueGapMovementGroupItem());
+    	testCase.assertNull(movementCollectionInventory.getItemAt(1).getValueGap());
     	
-    	CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 0).setValueFromObject(2);
-    	CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 1).setValueFromObject(1);
+    	movementCollectionInventory.getItemAt(0).setValueFromObject(2);
+    	movementCollectionInventory.getItemAt(1).setValueFromObject(1);
     	
     	testCase.computeChanges(movementCollectionInventory);
-    	testCase.assertNotNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 0).getValueGapMovementGroupItem());
-    	testCase.assertNotNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 0).getValueGap());
-    	testCase.assertNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 1).getValueGapMovementGroupItem());
-    	testCase.assertNotNull(CollectionHelper.getInstance().getElementAt(movementCollectionInventory.getItems().getElements(), 1).getValueGap());
+    	testCase.assertNotNull(movementCollectionInventory.getItemAt(0).getValueGapMovementGroupItem());
+    	testCase.assertNotNull(movementCollectionInventory.getItemAt(0).getValueGap());
+    	testCase.assertNull(movementCollectionInventory.getItemAt(1).getValueGapMovementGroupItem());
+    	testCase.assertNotNull(movementCollectionInventory.getItemAt(1).getValueGap());
     	
     	testCase.clean();
     }

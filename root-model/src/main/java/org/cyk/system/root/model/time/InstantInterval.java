@@ -8,18 +8,17 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
+import org.cyk.system.root.model.search.StringSearchCriteria;
+import org.cyk.utility.common.helper.TimeHelper;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.cyk.system.root.model.AbstractModelElement;
-import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
-import org.cyk.system.root.model.search.StringSearchCriteria;
-import org.cyk.utility.common.helper.TimeHelper;
 
 /**
  * A period is a time interval from a start date to an end date
@@ -28,7 +27,7 @@ import org.cyk.utility.common.helper.TimeHelper;
  */
 @Embeddable
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class InstantInterval extends AbstractModelElement implements Serializable{
+public class InstantInterval extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 

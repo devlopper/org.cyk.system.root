@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends AbstractModelElement> extends AbstractBean implements Serializable {
+public abstract class AbstractModelElementOutputDetails<MODEL_ELEMENT extends org.cyk.utility.common.model.identifiable.Common> extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 7439361240545541931L;
 

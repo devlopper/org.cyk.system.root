@@ -4,14 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
-import org.cyk.system.root.model.AbstractModelElement;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Embeddable
 @Getter @Setter
-public class MovementCollectionValuesTransferItemCollectionExtremity extends AbstractModelElement implements Serializable {
+public class MovementCollectionValuesTransferItemCollectionExtremity extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Boolean movementCollectionIsBuffer;

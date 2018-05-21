@@ -9,7 +9,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -19,7 +18,6 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.cyk.system.root.model.AbstractIdentifiable;
-import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.Identifiable;
 import org.cyk.system.root.model.Rud;
 import org.cyk.system.root.model.file.File;
@@ -50,9 +48,10 @@ import org.cyk.utility.common.helper.StringHelper;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Getter @Setter @Entity @EqualsAndHashCode(callSuper=false,of="identifier")
-public class GlobalIdentifier extends AbstractModelElement implements Identifiable<String>, Serializable {
+@Getter @Setter @Entity @EqualsAndHashCode(callSuper=false,of="identifier") @Accessors(chain=true)
+public class GlobalIdentifier extends org.cyk.utility.common.model.identifiable.IdentifiablePersistable.ByString.BaseClass.JavaPersistenceEntity implements Identifiable<String>, Serializable {
 	private static final long serialVersionUID = -8743545996393946779L;
 
 	static {
@@ -64,7 +63,7 @@ public class GlobalIdentifier extends AbstractModelElement implements Identifiab
 	 * System informations
 	 */
 	
-	@Id private String identifier;
+	//@Id private String identifier;
 	//private String identifierOfOwner;
 	//private Boolean deleteWhenOwnerIsDeleted;
 	

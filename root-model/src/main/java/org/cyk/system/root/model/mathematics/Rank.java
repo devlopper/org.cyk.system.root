@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import org.cyk.system.root.model.AbstractModelElement;
 import org.cyk.system.root.model.search.AbstractFieldValueSearchCriteriaSet;
 import org.cyk.system.root.model.search.BooleanSearchCriteria;
 import org.cyk.system.root.model.search.IntegerSearchCriteria;
@@ -16,7 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter @Embeddable @EqualsAndHashCode(of={Rank.FIELD_VALUE,Rank.FIELD_EXAEQUO},callSuper=false)
-public class Rank extends AbstractModelElement implements Serializable{
+public class Rank extends org.cyk.utility.common.model.identifiable.Embeddable.BaseClass.JavaPersistenceEmbeddable implements Serializable{
 
 	private static final long serialVersionUID = -2665387343931538712L;
 	
