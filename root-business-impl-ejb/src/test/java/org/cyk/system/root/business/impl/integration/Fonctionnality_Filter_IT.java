@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.cyk.system.FilterClassLocator;
-import org.cyk.system.root.business.api.ActorBusiness;
 import org.cyk.system.root.business.api.TypedBusiness;
 import org.cyk.system.root.business.impl.BusinessInterfaceLocator;
 import org.cyk.system.root.model.AbstractIdentifiable;
@@ -134,7 +133,7 @@ public class Fonctionnality_Filter_IT extends AbstractBusinessIT {
 		Collection<T> excludedIdentifiables = excludedCodes == null ? null : inject(PersistenceInterfaceLocator.class).injectTyped(aClass).read(excludedCodes);
 		@SuppressWarnings("unchecked")
 		FilterHelper.Filter<T> filter = (Filter<T>) ClassHelper.getInstance().instanciateOne(aClass.equals(Actor.class) ? Actor.Filter.class : FilterClassLocator.getInstance().locate(aClass));
-		filter.set(string).setExcluded(excludedIdentifiables);
+		filter.use(string).setExcluded(excludedIdentifiables);
 		
 		TypedDao<T> persistence = inject(PersistenceInterfaceLocator.class).injectTyped(aClass);
 		assertEquals(expectedReturnCount.intValue(), persistence.readByFilter(filter,configuration).size());

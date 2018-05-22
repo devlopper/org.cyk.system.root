@@ -107,9 +107,9 @@ public class Party extends AbstractIdentifiable  implements Serializable{
 		}
 		
 		@Override
-		public FilterHelper.Filter<PARTY> set(String string) {
-			contactCollection.set(string);
-			return super.set(string);
+		public FilterHelper.Filter<PARTY> use(String string) {
+			contactCollection.use(string);
+			return super.use(string);
 		}
 		
 	}

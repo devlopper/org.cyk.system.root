@@ -723,9 +723,9 @@ public abstract class AbstractIdentifiable extends org.cyk.utility.common.model.
 		}
 		
 		@Override
-		public FilterHelper.Filter<T> set(String string) {
-			globalIdentifier.set(string);
-			return super.set(string);
+		public FilterHelper.Filter<T> use(String string) {
+			globalIdentifier.use(string);
+			return super.use(string);
 		}
 		
 		@Override

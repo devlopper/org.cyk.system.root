@@ -77,7 +77,7 @@ public class LocalityBusinessIT extends AbstractBusinessIT {
     	assertEquals(5l, inject(LocalityTypeBusiness.class).countByFilter(filter, dataReadConfiguration));
     	
     	filter = new LocalityType.Filter<LocalityType>();
-    	filter.set("Y");
+    	filter.use("Y");
     	assertEquals(2l, inject(LocalityTypeBusiness.class).countByFilter(filter, dataReadConfiguration));
     	
     	filter = new LocalityType.Filter<LocalityType>();

@@ -85,9 +85,9 @@ public abstract class AbstractActor extends AbstractIdentifiable implements Seri
 		}
 		
 		@Override
-		public FilterHelper.Filter<ACTOR> set(String string) {
-			person.set(string);
-			return super.set(string);
+		public FilterHelper.Filter<ACTOR> use(String string) {
+			person.use(string);
+			return super.use(string);
 		}
 		
 	}

@@ -89,9 +89,9 @@ public class ContactCollection extends AbstractCollection<Contact> implements Se
 		}
 		
 		@Override
-		public FilterHelper.Filter<ContactCollection> set(String string) {
-			electronicMailAddress.set(string);
-			return super.set(string);
+		public FilterHelper.Filter<ContactCollection> use(String string) {
+			electronicMailAddress.use(string);
+			return super.use(string);
 		}
 		
 	}

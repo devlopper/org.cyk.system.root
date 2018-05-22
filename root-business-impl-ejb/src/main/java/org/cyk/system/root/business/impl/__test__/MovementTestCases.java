@@ -824,7 +824,7 @@ public class MovementTestCases extends AbstractTestCases implements Serializable
     		Movement.Filter filter = new Movement.Filter();
     		if(index[0]!=null)
     			filter.addMasters((Collection<Object>)index[0]);
-    		filter.set((String)index[1]);
+    		filter.use((String)index[1]);
         	assertEquals((Integer)index[2], inject(MovementBusiness.class).findByFilter(filter, new DataReadConfiguration()).size());
     	}
     }
