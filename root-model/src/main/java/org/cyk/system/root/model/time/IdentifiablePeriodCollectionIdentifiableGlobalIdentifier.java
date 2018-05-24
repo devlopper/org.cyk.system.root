@@ -48,9 +48,9 @@ public class IdentifiablePeriodCollectionIdentifiableGlobalIdentifier extends Ab
 	}
 	
 	@Override
-	public <IDENTIFIABLE extends AbstractIdentifiable> IdentifiablePeriodCollectionIdentifiableGlobalIdentifier setIdentifiableGlobalIdentifierFromCode(
+	public <IDENTIFIABLE extends AbstractIdentifiable> IdentifiablePeriodCollectionIdentifiableGlobalIdentifier computeAndSetIdentifiableGlobalIdentifierFromCode(
 			Class<IDENTIFIABLE> aClass, String code) {
-		return (IdentifiablePeriodCollectionIdentifiableGlobalIdentifier) super.setIdentifiableGlobalIdentifierFromCode(aClass, code);
+		return (IdentifiablePeriodCollectionIdentifiableGlobalIdentifier) super.computeAndSetIdentifiableGlobalIdentifierFromCode(aClass, code);
 	}
 	
 	@Override

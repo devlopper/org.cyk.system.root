@@ -841,6 +841,8 @@ public abstract class AbstractIdentifiableBusinessServiceImpl<IDENTIFIABLE exten
 		inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable,isInputChange,isPersist);
 	}
 	
+	
+	
 	protected void computeChanges(final IDENTIFIABLE identifiable,LoggingHelper.Message.Builder loggingMessageBuilder){
 		evaluateEntityPropertyCode(identifiable, Boolean.TRUE,Boolean.FALSE);
 		//inject(EntityPropertyBusiness.class).evaluate(RootConstant.Code.Property.CODE, identifiable,Boolean.TRUE,Boolean.FALSE);

@@ -448,7 +448,7 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
 		
 		for(Object[] array : arrays) {
 			Movement movement = instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode)
-	    			.setActionFromIncrementation(array[0] == null ? null : Boolean.parseBoolean((String)array[0]))
+	    			.computeAndSetActionFromIncrementation(array[0] == null ? null : Boolean.parseBoolean((String)array[0]))
 	    			.set__identifiablePeriod__(identifiablePeriod).setValue(NumberHelper.getInstance().get(BigDecimal.class, array[2],null));
 			if(array[1]!=null){
 				movement.__setBirthDateComputedByUser__(Boolean.TRUE);
@@ -524,7 +524,7 @@ public class TestCase extends org.cyk.utility.common.test.TestCase implements Se
     	assertEqualsNumber(0, CollectionHelper.getInstance().getSize(movementsTransferAcknowledgement.getItems().getItems().getElements()));
     	computeChanges(movementsTransferAcknowledgement);
     	assertEqualsNumber(1, CollectionHelper.getInstance().getSize(movementsTransferAcknowledgement.getItems().getItems().getElements()));
-    	movementsTransferAcknowledgement.getItems().setDestinationMovementCollectionAndValueBySourceMovementCollectionCode(destinationBufferMovementCollectionCode
+    	movementsTransferAcknowledgement.getItems().computeAndSetDestinationMovementCollectionAndValueBySourceMovementCollectionCode(destinationBufferMovementCollectionCode
     			, destinationMovementCollectionCode, acknownledgementValue,RootConstant.Code.MovementReason.TRANSFER_ACKNOWLEDGMENT);
     	
     	create(movementsTransferAcknowledgement);

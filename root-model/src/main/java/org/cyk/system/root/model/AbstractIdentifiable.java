@@ -155,7 +155,7 @@ public abstract class AbstractIdentifiable extends org.cyk.utility.common.model.
 	public AbstractIdentifiable addIdentifiablesPartyIdentifiableGlobalIdentifierFromField(String fieldName,String businessRoleCode){
 		Object value = FieldHelper.getInstance().read(this, fieldName);
 		if(value!=null){
-			addIdentifiables(instanciateOne(PartyIdentifiableGlobalIdentifier.class).setPartyAndBusinessRoleFromCode(this, fieldName, businessRoleCode));	
+			addIdentifiables(instanciateOne(PartyIdentifiableGlobalIdentifier.class).computeAndSetPartyAndBusinessRoleFromCode(this, fieldName, businessRoleCode));	
 		}
 		return this;
 	}

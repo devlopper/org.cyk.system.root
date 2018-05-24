@@ -34,7 +34,7 @@ public class MovementGroupItemBusinessImpl extends AbstractCollectionItemBusines
 				movementGroupItem.getMovement().setReasonFromCode(movementGroupItem.getCollection().getType().getCode());
 			InstanceHelper.getInstance().computeChanges(movementGroupItem.getMovement());
 			if(movementGroupItem.getMovement().getAction() == null && movementGroupItem.getMovement().getValue()!=null)
-				movementGroupItem.getMovement().setActionFromValue();
+				movementGroupItem.getMovement().computeAndSetActionFromValue();
 		}
 		
 	}

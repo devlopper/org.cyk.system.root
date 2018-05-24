@@ -60,6 +60,19 @@ public class MovementCollectionInventoryItem extends AbstractCollectionItem<Move
 		return this.valueGap;
 	}
 	
+	public BigDecimal getMovementCollectionValue(){
+		return movementCollection == null ? null : movementCollection.getValue();
+	}
+	
+	public MovementCollectionInventoryItem computeAndSetMovementCollectionValueFromObject(Object value){
+		this.movementCollection.setValueFromObject(value);
+		return this;
+	}
+	
+	public MovementCollectionInventoryItem computeChanges(){
+		return (MovementCollectionInventoryItem) super.computeChanges();
+	}
+	
 	/**/
 	
 	public static final String FIELD_MOVEMENT_COLLECTION = "movementCollection";

@@ -1,6 +1,7 @@
 package org.cyk.system.root.model.mathematics.movement;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -47,7 +48,7 @@ public class MovementCollectionInventory extends AbstractMovementCollections<Mov
 		return (MovementCollectionInventory) super.setBirthDateFromString(date);
 	}
 	
-	public MovementCollectionInventory setValueFromObject(Integer index,Object value){
+	public MovementCollectionInventory computeAndSetValueFromObject(Integer index,Object value){
 		items.getAt(index).setValueFromObject(value);
 		return this;
 	}
@@ -60,6 +61,20 @@ public class MovementCollectionInventory extends AbstractMovementCollections<Mov
 	@Override
 	public MovementCollectionInventory setItemsCountIntervalFromCode(String code) {
 		return (MovementCollectionInventory) super.setItemsCountIntervalFromCode(code);
+	}
+	
+	public MovementCollectionInventory computeChanges(){
+		return (MovementCollectionInventory) super.computeChanges();
+	}
+	
+	public MovementCollectionInventory setItemValueFromObjectAt(Integer index,Object value){
+		getItemAt(index).setValueFromObject(value);
+		return this;
+	}
+	
+	public MovementCollectionInventory addItems(Collection<MovementCollectionInventoryItem> items){
+		getItems().addMany(items);
+		return this;
 	}
 	
 	/**/

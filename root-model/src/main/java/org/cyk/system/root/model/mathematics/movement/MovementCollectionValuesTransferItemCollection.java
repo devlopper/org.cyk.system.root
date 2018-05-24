@@ -68,13 +68,13 @@ public class MovementCollectionValuesTransferItemCollection extends AbstractMove
 		return this;
 	}
 	
-	public MovementCollectionValuesTransferItemCollection setDestinationMovementCollectionAndValueBySourceMovementCollectionCode
+	public MovementCollectionValuesTransferItemCollection computeAndSetDestinationMovementCollectionAndValueBySourceMovementCollectionCode
 	(String sourceMovementCollectionCode,String destinationMovementCollectionCode,Object value,String reasonCode){
 		for(MovementCollectionValuesTransferItemCollectionItem index : getItems().getElements()){
 			if(index.getSource().getCollection().getCode().equals(sourceMovementCollectionCode)){
 				index.setDestinationMovementCollectionFromCode(destinationMovementCollectionCode).setSourceValueAbsoluteFromObject(value)
 				;
-				index.getDestination().setValueSettableFromAbsolute(Boolean.TRUE).setActionFromIncrementation(Boolean.TRUE)
+				index.getDestination().setValueSettableFromAbsolute(Boolean.TRUE).computeAndSetActionFromIncrementation(Boolean.TRUE)
 					.setReasonFromCode(reasonCode);
 				break;
 			}

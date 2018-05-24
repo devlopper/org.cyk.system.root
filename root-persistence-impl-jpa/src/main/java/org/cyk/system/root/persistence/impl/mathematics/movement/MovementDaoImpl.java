@@ -64,6 +64,8 @@ public class MovementDaoImpl extends AbstractCollectionItemDaoImpl<Movement,Move
 
 	@Override
 	public Movement readByCollectionByFromDateAscendingOrderIndex(MovementCollection collection,Long index) {
+		if(index == null || index < 0)
+			return null;
 		return CollectionHelper.getInstance().getFirst(readByFilter(new Movement.Filter().addMaster(collection), new DataReadConfiguration()
 				.setFirstResultIndex(index).setMaximumResultCount(1l)));
 	}

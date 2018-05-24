@@ -85,7 +85,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 		return (Movement) super.setCollectionFromCode(code);
 	}
 	
-	public Movement setActionFromIncrementation(Boolean isIncrementation){
+	public Movement computeAndSetActionFromIncrementation(Boolean isIncrementation){
 		if(isIncrementation == null)
 			this.action = null;
 		else if(this.collection == null)
@@ -97,8 +97,8 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 		return this;
 	}
 	
-	public Movement setActionFromValue(){
-		return setActionFromIncrementation(NumberHelper.getInstance().isGreaterThanZero(value));
+	public Movement computeAndSetActionFromValue(){
+		return computeAndSetActionFromIncrementation(NumberHelper.getInstance().isGreaterThanZero(value));
 	}
 	
 	public Movement setValueFromObject(Object value){
@@ -127,7 +127,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	
 	public Movement __set__(String collectionCode,Boolean isIncrementation,Object value,Boolean isBirthDateComputedByUser,String birthDate){
 		setCollectionFromCode(collectionCode);
-		setActionFromIncrementation(isIncrementation);
+		computeAndSetActionFromIncrementation(isIncrementation);
 		setValueFromObject(value);
 		__setBirthDateComputedByUser__(isBirthDateComputedByUser);
 		setBirthDateFromString(birthDate);
@@ -139,7 +139,7 @@ public class Movement extends AbstractCollectionItem<MovementCollection> impleme
 	}
 	
 	public Movement setCollectionAndValueUsingOppositeAndAction(Movement movement) {
-		return setCollection(movement.getCollection()).setValue(movement.getValue().negate()).setActionFromValue();
+		return setCollection(movement.getCollection()).setValue(movement.getValue().negate()).computeAndSetActionFromValue();
 	}
 	
 	@Override

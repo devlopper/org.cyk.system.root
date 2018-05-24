@@ -28,8 +28,8 @@ public class MovementCollectionValuesTransferItemCollectionItemBusinessImpl exte
 	
 	@Override
 	public MovementCollectionValuesTransferItemCollectionItem instanciateOne() {
-		return super.instanciateOne().setSource(instanciateOne(Movement.class).setValueSettableFromAbsolute(Boolean.TRUE).setActionFromIncrementation(Boolean.FALSE))
-				.setDestination(instanciateOne(Movement.class).setValueSettableFromAbsolute(Boolean.TRUE).setActionFromIncrementation(Boolean.TRUE));
+		return super.instanciateOne().setSource(instanciateOne(Movement.class).setValueSettableFromAbsolute(Boolean.TRUE).computeAndSetActionFromIncrementation(Boolean.FALSE))
+				.setDestination(instanciateOne(Movement.class).setValueSettableFromAbsolute(Boolean.TRUE).computeAndSetActionFromIncrementation(Boolean.TRUE));
 	}
 	
 	@Override

@@ -135,7 +135,7 @@ public class PersonBusinessIT extends AbstractBusinessIT {
     	testCase.create(testCase.instanciateOne(Person.class,personCode02));
     	
     	PartyIdentifiableGlobalIdentifier partyIdentifiableGlobalIdentifier = new PartyIdentifiableGlobalIdentifier();
-    	partyIdentifiableGlobalIdentifier.setIdentifiableGlobalIdentifierFromCode(MovementCollection.class, movementCollectionCode01)
+    	partyIdentifiableGlobalIdentifier.computeAndSetIdentifiableGlobalIdentifierFromCode(MovementCollection.class, movementCollectionCode01)
     		.setPartyFromCode(personCode02).setBusinessRoleFromCode(IN_CHARGE);
     	testCase.create(partyIdentifiableGlobalIdentifier);
     	

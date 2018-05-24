@@ -60,13 +60,13 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 		return this;
 	}
 	
-	public AbstractJoinGlobalIdentifier setMasterFromCode(String code){
+	public AbstractJoinGlobalIdentifier computeAndSetMasterFromCode(String code){
 		Field masterField = getMasterField();
 		FieldHelper.getInstance().set(this, getFromCode(FieldHelper.getInstance().getType(getClass(), masterField), code), masterField);
 		return this;
 	}
 	
-	public <IDENTIFIABLE extends AbstractIdentifiable> AbstractJoinGlobalIdentifier setIdentifiableGlobalIdentifierFromCode(Class<IDENTIFIABLE> aClass,String code){
+	public <IDENTIFIABLE extends AbstractIdentifiable> AbstractJoinGlobalIdentifier computeAndSetIdentifiableGlobalIdentifierFromCode(Class<IDENTIFIABLE> aClass,String code){
 		AbstractIdentifiable identifiable = getFromCode(aClass, code);
 		if(identifiable!=null)
 			identifiableGlobalIdentifier = identifiable.getGlobalIdentifier();
@@ -75,7 +75,7 @@ public class AbstractJoinGlobalIdentifier extends AbstractIdentifiable implement
 	
 	/**/
 	
-	public static void setMasterFieldName(Class<? extends AbstractJoinGlobalIdentifier> aClass,String fieldName){
+	public static void registerMasterFieldName(Class<? extends AbstractJoinGlobalIdentifier> aClass,String fieldName){
 		MASTER_FIELD_NAME_MAP.put(aClass, fieldName);
 	}
 	

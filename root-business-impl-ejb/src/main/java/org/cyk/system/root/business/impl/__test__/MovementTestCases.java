@@ -105,7 +105,7 @@ public class MovementTestCases extends AbstractTestCases implements Serializable
     			.setCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY));
     	
     	Movement movement01 = testCase.instanciateOne(Movement.class).setCollectionFromCode(movementCollectionCode).__setBirthDateComputedByUser__(Boolean.TRUE)
-    			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(2)).setActionFromIncrementation(Boolean.TRUE).setValueFromObject(1)
+    			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(2)).computeAndSetActionFromIncrementation(Boolean.TRUE).setValueFromObject(1)
     			.set__identifiablePeriod__fromCode(identifiablePeriodCode);
     	testCase.computeChanges(movement01);
     	assertNotNull(movement01.get__identifiablePeriod__());
@@ -129,14 +129,14 @@ public class MovementTestCases extends AbstractTestCases implements Serializable
     			.setCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY));
     	
     	Movement movement01 = testCase.instanciateOne(Movement.class).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER).__setBirthDateComputedByUser__(Boolean.TRUE)
-    			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(2)).setActionFromIncrementation(Boolean.TRUE).setValueFromObject(1)
+    			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(2)).computeAndSetActionFromIncrementation(Boolean.TRUE).setValueFromObject(1)
     			.set__identifiablePeriod__fromCode(identifiablePeriodCode);
     	testCase.computeChanges(movement01);
     	assertNotNull(movement01.get__identifiablePeriod__());
     	testCase.create(movement01);
     	
     	Movement movement02 = testCase.instanciateOne(Movement.class).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER).__setBirthDateComputedByUser__(Boolean.TRUE)
-    			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(3)).setActionFromIncrementation(Boolean.TRUE).setValueFromObject(2)
+    			.setBirthDate(testCase.getTimeAfterNowByNumberOfMinute(3)).computeAndSetActionFromIncrementation(Boolean.TRUE).setValueFromObject(2)
     			.set__identifiablePeriod__fromCode(identifiablePeriodCode);
     	testCase.computeChanges(movement02);
     	assertNotNull(movement02.get__identifiablePeriod__());
@@ -931,7 +931,7 @@ public class MovementTestCases extends AbstractTestCases implements Serializable
 		
 		String cashRegisterMovementCode = testCase.getRandomAlphabetic();
 		Movement cashRegisterMovement = testCase.instanciateOne(Movement.class,cashRegisterMovementCode).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER)
-				.setActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("1/1/2000 0:5")
+				.computeAndSetActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("1/1/2000 0:5")
 				.setParentActionIsOppositeOfChildAction(Boolean.TRUE).set__identifiablePeriod__fromCode(identifiablePeriodCode);
 		
 		String saleMovementCode = testCase.getRandomAlphabetic();
@@ -962,7 +962,7 @@ public class MovementTestCases extends AbstractTestCases implements Serializable
 		
 		String cashRegisterMovementCode = testCase.getRandomAlphabetic();
 		Movement cashRegisterMovement = testCase.instanciateOne(Movement.class,cashRegisterMovementCode).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER)
-				.setActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).__setBirthDateComputedByUser__(Boolean.FALSE)
+				.computeAndSetActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).__setBirthDateComputedByUser__(Boolean.FALSE)
 				.setParentActionIsOppositeOfChildAction(Boolean.TRUE).set__identifiablePeriod__fromCode(identifiablePeriodCode);
 		
 		String saleMovementCode = testCase.getRandomAlphabetic();
@@ -993,7 +993,7 @@ public class MovementTestCases extends AbstractTestCases implements Serializable
 		
 		String cashRegisterMovementCode = testCase.getRandomAlphabetic();
 		Movement cashRegisterMovement = testCase.instanciateOne(Movement.class,cashRegisterMovementCode).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER)
-				.setActionFromIncrementation(Boolean.TRUE).setValueFromObject(100)
+				.computeAndSetActionFromIncrementation(Boolean.TRUE).setValueFromObject(100)
 				.setParentActionIsOppositeOfChildAction(Boolean.TRUE).set__identifiablePeriod__fromCode(identifiablePeriodCode);
 		
 		String saleMovementCode = testCase.getRandomAlphabetic();
@@ -1021,7 +1021,7 @@ public class MovementTestCases extends AbstractTestCases implements Serializable
 		
 		String parentCode = testCase.getRandomAlphabetic();
 		Movement parent = testCase.instanciateOne(Movement.class,parentCode).setCollectionFromCode(RootConstant.Code.MovementCollection.CASH_REGISTER)
-				.setActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).set__identifiablePeriod__fromCode(identifiablePeriodCode);
+				.computeAndSetActionFromIncrementation(Boolean.TRUE).setValueFromObject(100).set__identifiablePeriod__fromCode(identifiablePeriodCode);
 		String child1Code = testCase.getRandomAlphabetic();
 		parent.addIdentifiables(testCase.instanciateOne(Movement.class,child1Code).setCollectionFromCode(movementCollectionCode)
 				.__setBirthDateComputedByUser__(Boolean.TRUE).setValueSettableFromAbsolute(Boolean.TRUE).setValueAbsoluteFromObject(35).setParent(parent));

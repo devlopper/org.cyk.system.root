@@ -229,7 +229,7 @@ public class RealDataSet extends DataSet implements Serializable {
     	IdentifiablePeriodCollectionIdentifiableGlobalIdentifier identifiablePeriodCollectionIdentifiableGlobalIdentifier = 
     			inject(IdentifiablePeriodCollectionIdentifiableGlobalIdentifierBusiness.class).instanciateOne()
     			.setIdentifiablePeriodCollectionFromCode(RootConstant.Code.IdentifiablePeriodCollection.CASH_REGISTER_WORKING_DAY)
-    			.setIdentifiableGlobalIdentifierFromCode(MovementCollection.class, RootConstant.Code.MovementCollection.CASH_REGISTER);
+    			.computeAndSetIdentifiableGlobalIdentifierFromCode(MovementCollection.class, RootConstant.Code.MovementCollection.CASH_REGISTER);
     	if(identifiablePeriodCollectionIdentifiableGlobalIdentifier.getIdentifiablePeriodCollection()!=null && 
     			identifiablePeriodCollectionIdentifiableGlobalIdentifier.getIdentifiableGlobalIdentifier()!=null)
     		inject(GenericBusiness.class).create(identifiablePeriodCollectionIdentifiableGlobalIdentifier);

@@ -465,7 +465,7 @@ public interface RootConstant {
 			 * a place where you can buy things
 			 */
 			String STORE="STORE";
-			
+			String PARTY="PARTY";
 		}
 		
 		public static interface StoreType {

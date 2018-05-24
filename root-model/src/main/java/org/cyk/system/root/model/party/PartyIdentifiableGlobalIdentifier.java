@@ -41,8 +41,8 @@ public class PartyIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentif
 	}
 	
 	@Override
-	public <IDENTIFIABLE extends AbstractIdentifiable> PartyIdentifiableGlobalIdentifier setIdentifiableGlobalIdentifierFromCode(Class<IDENTIFIABLE> aClass, String code) {
-		return (PartyIdentifiableGlobalIdentifier) super.setIdentifiableGlobalIdentifierFromCode(aClass, code);
+	public <IDENTIFIABLE extends AbstractIdentifiable> PartyIdentifiableGlobalIdentifier computeAndSetIdentifiableGlobalIdentifierFromCode(Class<IDENTIFIABLE> aClass, String code) {
+		return (PartyIdentifiableGlobalIdentifier) super.computeAndSetIdentifiableGlobalIdentifierFromCode(aClass, code);
 	}
 	
 	public PartyIdentifiableGlobalIdentifier setPartyFromCode(String code){
@@ -55,7 +55,7 @@ public class PartyIdentifiableGlobalIdentifier extends AbstractJoinGlobalIdentif
 		return this;
 	}
 	
-	public PartyIdentifiableGlobalIdentifier setPartyAndBusinessRoleFromCode(AbstractIdentifiable identifiable,String partyFieldName,String businessRoleCode){
+	public PartyIdentifiableGlobalIdentifier computeAndSetPartyAndBusinessRoleFromCode(AbstractIdentifiable identifiable,String partyFieldName,String businessRoleCode){
 		setParty((Party)FieldHelper.getInstance().read(identifiable, partyFieldName)).setBusinessRoleFromCode(businessRoleCode)
 			.setIdentifiableGlobalIdentifier(identifiable.getGlobalIdentifier());
 		return this;

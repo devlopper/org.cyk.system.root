@@ -101,6 +101,13 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 	protected void beforeCrud(Movement movement, Crud crud) {
 		super.beforeCrud(movement, crud);
 		if(Crud.isCreateOrUpdate(crud)){
+			
+			/*if(Trigger.SYSTEM.equals(movement.getTrigger(ClassHelper.Listener.FieldName.ORDER_NUMBER))){
+				throw__(ConditionHelper.Condition.getBuilderComparison(movement, inject(MovementDao.class).countByCollection(movement.getCollection())
+						-inject(MovementDao.class).countWhereExistencePeriodFromDateIsGreaterThan(movement), null, Boolean.FALSE, org.cyk.utility.common.helper.FieldHelper
+						.getInstance().buildPath(Movement.FIELD_GLOBAL_IDENTIFIER,GlobalIdentifier.FIELD_ORDER_NUMBER)));
+			}*/
+			
 			MovementAction action = movement.getAction();	
 			if(action!=null){
 				exceptionUtils().comparisonBetween(movement.getValue(), action.getInterval(), action.getName());
@@ -345,7 +352,7 @@ public class MovementBusinessImpl extends AbstractCollectionItemBusinessImpl<Mov
 				}	
 			}else{
 				if(movement.getCollection()!=null)
-					movement.setActionFromIncrementation(movement.getActionIsIncrementation());
+					movement.computeAndSetActionFromIncrementation(movement.getActionIsIncrementation());
 			}
 		}
 		logMessageBuilder.addNamedParameters("col",movement.getCollection(),"act",movement.getAction(),"prev cum",movement.getPreviousCumul(),"val abs"

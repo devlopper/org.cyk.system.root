@@ -93,6 +93,7 @@ import org.cyk.utility.common.helper.ConditionHelper;
 import org.cyk.utility.common.helper.FieldHelper;
 import org.cyk.utility.common.helper.InstanceHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.MapHelper;
 import org.cyk.utility.common.helper.MethodHelper;
 import org.cyk.utility.common.helper.StackTraceHelper;
 
@@ -461,6 +462,10 @@ public abstract class AbstractTypedBusinessService<IDENTIFIABLE extends Abstract
 		saveIdentifiables(identifiable,Crud.CREATE);
 		afterCreate(getListeners(), identifiable);
 		afterCrud(identifiable, Crud.CREATE);
+		
+		//MapHelper.getInstance().cl
+		if(identifiable.getFieldValueComputationTriggers()!=null && identifiable.getFieldValueComputationTriggers().getMap()!=null)
+			identifiable.getFieldValueComputationTriggers().getMap().clear();//TODO is it the right way
 	}
 	
 	protected void saveIdentifiables(IDENTIFIABLE identifiable,Crud crud){

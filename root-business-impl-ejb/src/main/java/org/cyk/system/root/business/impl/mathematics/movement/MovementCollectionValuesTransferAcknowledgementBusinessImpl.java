@@ -50,9 +50,9 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 					BigDecimal gap = index.getTransfered().getValue().subtract(index.getValue());
 					if(NumberHelper.getInstance().isGreaterThanZero(gap)){
 						inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollection(index.getTransfered().getSource().getCollection())
-								.setValue(gap).setActionFromValue().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_BACK));
+								.setValue(gap).computeAndSetActionFromValue().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_BACK));
 						inject(MovementBusiness.class).create(instanciateOne(Movement.class).setCollection(index.getSource().getCollection())
-								.setValue(gap.negate()).setActionFromValue().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_BACK));
+								.setValue(gap.negate()).computeAndSetActionFromValue().setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_BACK));
 					}
 				}	
 			}
@@ -68,7 +68,7 @@ public class MovementCollectionValuesTransferAcknowledgementBusinessImpl extends
 		movementCollectionValuesTransferAcknowledgement.getItems().getItems().addOne(instanciateOne(MovementCollectionValuesTransferItemCollectionItem.class)
 				.setTransfered(transfered).setSource(instanciateOne(Movement.class).setCollection(transfered.getDestination().getCollection())
 						.setReasonFromCode(RootConstant.Code.MovementReason.TRANSFER_ACKNOWLEDGMENT).setValueSettableFromAbsolute(Boolean.TRUE)
-						.setActionFromIncrementation(Boolean.FALSE)));
+						.computeAndSetActionFromIncrementation(Boolean.FALSE)));
 	}
 	
 	@Override
