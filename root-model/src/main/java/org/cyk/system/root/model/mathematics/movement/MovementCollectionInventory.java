@@ -59,15 +59,15 @@ public class MovementCollectionInventory extends AbstractMovementCollections<Mov
 	}
 	
 	@Override
-	public MovementCollectionInventory setItemsCountIntervalFromCode(String code) {
-		return (MovementCollectionInventory) super.setItemsCountIntervalFromCode(code);
+	public MovementCollectionInventory computeAndSetItemsCountIntervalFromCode(String code) {
+		return (MovementCollectionInventory) super.computeAndSetItemsCountIntervalFromCode(code);
 	}
 	
 	public MovementCollectionInventory computeChanges(){
 		return (MovementCollectionInventory) super.computeChanges();
 	}
 	
-	public MovementCollectionInventory setItemValueFromObjectAt(Integer index,Object value){
+	public MovementCollectionInventory computeAndSetItemValueFromObjectAt(Integer index,Object value){
 		getItemAt(index).setValueFromObject(value);
 		return this;
 	}

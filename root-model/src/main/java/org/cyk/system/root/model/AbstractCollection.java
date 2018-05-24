@@ -49,7 +49,7 @@ public abstract class AbstractCollection<ITEM extends AbstractEnumeration> exten
 		super(code, name, abbreviation, description);
 	}
 	
-	public AbstractCollection<ITEM> setItemsCountIntervalFromCode(String code){
+	public AbstractCollection<ITEM> computeAndSetItemsCountIntervalFromCode(String code){
 		this.itemsCountInterval = getFromCode(Interval.class, code);
 		return this;
 	}

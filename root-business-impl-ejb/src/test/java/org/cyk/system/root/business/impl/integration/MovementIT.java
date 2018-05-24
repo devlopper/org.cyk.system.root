@@ -1822,7 +1822,7 @@ public class MovementIT extends AbstractBusinessIT {
     public void crudOneMovementCollectionInventoryWithItemsIntervalCountPositive(){
     	TestCase testCase = instanciateTestCase(); 
     	String code = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code).setItemsCountIntervalFromCode(RootConstant.Code.Interval.POSITIVE_INTEGER_NUMBERS));
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code).computeAndSetItemsCountIntervalFromCode(RootConstant.Code.Interval.POSITIVE_INTEGER_NUMBERS));
     	testCase.clean();
     }
     
@@ -2042,7 +2042,7 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	String inventory01 = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory01).setPartyFromCode(partyCode01)
-    			.computeChanges().setItemValueFromObjectAt(0, 8).setItemValueFromObjectAt(1, 1));
+    			.computeChanges().computeAndSetItemValueFromObjectAt(0, 8).computeAndSetItemValueFromObjectAt(1, 1));
     	MovementCollectionInventory inventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, inventory01);
     	inventory.setItemsSynchonizationEnabled(Boolean.TRUE).addItems(inject(MovementCollectionInventoryItemDao.class).readByCollection(inventory)).computeChanges();
     	testCase.assertEqualsNumber(0, inventory.getItemAt(0).computeChanges().getPreviousValue());    	
@@ -2050,7 +2050,7 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	String inventory02 = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory02).setPartyFromCode(partyCode01)
-    			.computeChanges().setItemValueFromObjectAt(0, 5).setItemValueFromObjectAt(1, 19));
+    			.computeChanges().computeAndSetItemValueFromObjectAt(0, 5).computeAndSetItemValueFromObjectAt(1, 19));
     	inventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, inventory02);
     	inventory.setItemsSynchonizationEnabled(Boolean.TRUE).addItems(inject(MovementCollectionInventoryItemDao.class).readByCollection(inventory)).computeChanges();
     	testCase.assertEqualsNumber(8, inventory.getItemAt(0).computeChanges().getPreviousValue());    	
