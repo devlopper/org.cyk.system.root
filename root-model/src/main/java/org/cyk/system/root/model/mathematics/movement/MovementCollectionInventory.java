@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.cyk.system.root.model.mathematics.Interval;
+import org.cyk.system.root.model.time.IdentifiablePeriod;
 import org.cyk.utility.common.annotation.ModelBean;
 import org.cyk.utility.common.annotation.ModelBean.CrudStrategy;
 import org.cyk.utility.common.annotation.ModelBean.GenderType;
@@ -23,6 +24,11 @@ public class MovementCollectionInventory extends AbstractMovementCollections<Mov
 
 	@ManyToOne @JoinColumn(name=COLUMN_MOVEMENT_GROUP) private MovementGroup movementGroup;
 	@ManyToOne @JoinColumn(name=COLUMN_TYPE) private MovementCollectionInventoryType type;
+	
+	public MovementCollectionInventory setTypeFromCode(String code){
+		type = getFromCode(MovementCollectionInventoryType.class, code);
+		return this;
+	}
 	
 	public MovementCollectionInventory setPartyFromCode(String code){
 		return (MovementCollectionInventory) super.setPartyFromCode(code);
@@ -75,6 +81,15 @@ public class MovementCollectionInventory extends AbstractMovementCollections<Mov
 	public MovementCollectionInventory addItems(Collection<MovementCollectionInventoryItem> items){
 		getItems().addMany(items);
 		return this;
+	}
+	
+	@Override
+	public MovementCollectionInventory set__identifiablePeriod__(IdentifiablePeriod identifiablePeriod) {
+		return (MovementCollectionInventory) super.set__identifiablePeriod__(identifiablePeriod);
+	}
+	
+	public MovementCollectionInventory set__identifiablePeriod__fromCode(String code){
+		return (MovementCollectionInventory) super.set__identifiablePeriod__fromCode(code);
 	}
 	
 	/**/

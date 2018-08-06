@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionInventoryBusiness;
 import org.cyk.system.root.business.api.mathematics.movement.MovementCollectionInventoryItemBusiness;
+import org.cyk.system.root.business.api.time.IdentifiablePeriodBusiness;
 import org.cyk.system.root.business.impl.helper.FieldHelper;
 import org.cyk.system.root.model.AbstractIdentifiable;
 import org.cyk.system.root.model.RootConstant;
@@ -18,15 +19,18 @@ import org.cyk.system.root.model.mathematics.movement.MovementCollectionIdentifi
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventory;
 import org.cyk.system.root.model.mathematics.movement.MovementCollectionInventoryItem;
 import org.cyk.system.root.model.party.Party;
+import org.cyk.system.root.model.time.IdentifiablePeriodCollection;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionIdentifiableGlobalIdentifierDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionInventoryDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementCollectionInventoryItemDao;
 import org.cyk.system.root.persistence.api.mathematics.movement.MovementDao;
 import org.cyk.system.root.persistence.api.party.PartyDao;
+import org.cyk.system.root.persistence.api.time.IdentifiablePeriodCollectionDao;
 import org.cyk.utility.common.cdi.AbstractBean;
 import org.cyk.utility.common.helper.ClassHelper;
 import org.cyk.utility.common.helper.CollectionHelper;
 import org.cyk.utility.common.helper.LoggingHelper;
+import org.cyk.utility.common.helper.LoggingHelper.Message.Builder;
 import org.cyk.utility.common.helper.MethodHelper;
 
 public class MovementCollectionInventoryBusinessImpl extends AbstractMovementCollectionsBusinessImpl<MovementCollectionInventory,MovementCollectionInventoryItem,MovementCollectionInventoryDao,MovementCollectionInventoryItemDao,MovementCollectionInventoryItemBusiness> implements MovementCollectionInventoryBusiness,Serializable {
@@ -43,7 +47,7 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractMovementCol
 	
 	@Override
 	public MovementCollectionInventory instanciateOne() {
-		return super.instanciateOne();
+		return super.instanciateOne().setTypeFromCode(RootConstant.Code.MovementCollectionInventoryType.STOCK_REGISTER);
 	}
 	
 	@Override
@@ -51,6 +55,28 @@ public class MovementCollectionInventoryBusinessImpl extends AbstractMovementCol
 		super.beforeCreate(movementCollectionInventory);
 		movementCollectionInventory.addIdentifiablesPartyIdentifiableGlobalIdentifierFromField(MovementCollectionInventory.FIELD_PARTY
 				, RootConstant.Code.BusinessRole.PARTY);
+	}
+	
+	@Override
+	protected Boolean isDoesNotBelongsToIdentifiablePeriodVerifiable(MovementCollectionInventory movementCollectionInventory) {
+		return Boolean.TRUE;// movementCollectionInventory.getType()!=null && movementCollectionInventory.getType().getIdentifiablePeriodCollectionType()!=null;
+	}
+	
+	@Override
+	protected void computeChangesIdentifiablePeriod(MovementCollectionInventory movementCollectionInventory, Builder logMessageBuilder) {
+		if(movementCollectionInventory.get__identifiablePeriod__() == null){
+			IdentifiablePeriodCollection identifiablePeriodCollection = read(IdentifiablePeriodCollection.class, RootConstant.Code.IdentifiablePeriodCollection.INVENTORY_WORKING_MONTH);
+					//CollectionHelper.getInstance().getFirst(inject(IdentifiablePeriodCollectionDao.class)
+					//.readByTypeByJoin(movementCollectionInventory.getType().getIdentifiablePeriodCollectionType(), movementCollectionInventory));
+			if(identifiablePeriodCollection != null){
+				movementCollectionInventory.set__identifiablePeriod__(inject(IdentifiablePeriodBusiness.class).findFirstNotClosedOrInstanciateOneByIdentifiablePeriodCollection(identifiablePeriodCollection));
+				if(inject(IdentifiablePeriodBusiness.class).isNotIdentified(movementCollectionInventory.get__identifiablePeriod__())){
+					
+					//movement.addIdentifiables(movement.get__identifiablePeriod__());
+				}
+			}
+		}
+		super.computeChangesIdentifiablePeriod(movementCollectionInventory, logMessageBuilder);
 	}
 	
 	@Override

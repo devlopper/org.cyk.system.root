@@ -1657,6 +1657,13 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementCollectionValuesTransferAcknowlegdmentWithInventoryFirst(){
     	TestCase testCase = instanciateTestCase(); 
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	String identifiablePeriodCode = testCase.getRandomAlphabetic();
+    	IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 2, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
+    	
     	String warehouse01 = testCase.create(testCase.instanciateOne(Party.class,testCase.getRandomAlphabetic())).getCode();
     	String warehouse02 = testCase.create(testCase.instanciateOne(Party.class,testCase.getRandomAlphabetic())).getCode();
     	
@@ -1689,7 +1696,8 @@ public class MovementIT extends AbstractBusinessIT {
     			.setMovementCollectionFromCode(store01P02).computeAndSetIdentifiableGlobalIdentifierFromCode(Party.class, store01));
     	
     	String inventory01 = testCase.getRandomAlphabetic();
-    	MovementCollectionInventory inventory = testCase.instanciateOne(MovementCollectionInventory.class,inventory01).setPartyFromCode(warehouse01);
+    	MovementCollectionInventory inventory = testCase.instanciateOne(MovementCollectionInventory.class,inventory01).setPartyFromCode(warehouse01)
+    			.set__identifiablePeriod__(identifiablePeriod).__setBirthDateComputedByUser__(Boolean.TRUE);
     	testCase.computeChanges(inventory);
     	inventory.computeAndSetValueFromObject(0, 8).computeAndSetValueFromObject(1, 10);
     	testCase.create(inventory);
@@ -1813,32 +1821,58 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementCollectionInventory(){
     	TestCase testCase = instanciateTestCase(); 
+    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	String identifiablePeriodCode = testCase.getRandomAlphabetic();
+    	IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 2, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
+    	
     	String code = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code));
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code).set__identifiablePeriod__(identifiablePeriod)
+    			.__setBirthDateComputedByUser__(Boolean.TRUE));
     	testCase.clean();
     }
     
     @Test
     public void crudOneMovementCollectionInventoryWithItemsIntervalCountPositive(){
     	TestCase testCase = instanciateTestCase(); 
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	String identifiablePeriodCode = testCase.getRandomAlphabetic();
+    	IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 1, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
+    	
     	String code = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code).computeAndSetItemsCountIntervalFromCode(RootConstant.Code.Interval.POSITIVE_INTEGER_NUMBERS));
+    	MovementCollectionInventory movementCollectionInventory = testCase.instanciateOne(MovementCollectionInventory.class,code)
+    			.computeAndSetItemsCountIntervalFromCode(RootConstant.Code.Interval.POSITIVE_INTEGER_NUMBERS).__setBirthDateComputedByUser__(Boolean.TRUE)
+    			.setBirthDateFromString("1/1/2000 10:0").set__identifiablePeriod__(identifiablePeriod);
+    	testCase.create(movementCollectionInventory);
     	testCase.clean();
     }
     
     @Test
     public void crudOneMovementCollectionInventoryWithGeneratedCode(){
     	TestCase testCase = instanciateTestCase(); 
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	String identifiablePeriodCode = testCase.getRandomAlphabetic();
+    	IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2015, 3, 1, 0, 0)).setDeathDate(date(2015, 4, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
+    	
     	String movementCollectionInventoryCode = testCase.create(testCase.instanciateOne(MovementCollectionInventory.class)
-    			.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("12/3/2015 10:50")).getCode();
+    			.set__identifiablePeriod__(identifiablePeriod).__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("12/3/2015 10:50")).getCode();
     	testCase.assertEquals("INV1203201510500001", movementCollectionInventoryCode);
     	
     	movementCollectionInventoryCode = testCase.create(testCase.instanciateOne(MovementCollectionInventory.class)
-    			.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("12/3/2015 10:50")).getCode();
+    			.set__identifiablePeriod__(identifiablePeriod).__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("12/3/2015 10:50")).getCode();
     	testCase.assertEquals("INV1203201510500002", movementCollectionInventoryCode);
     	
     	movementCollectionInventoryCode = testCase.create(testCase.instanciateOne(MovementCollectionInventory.class)
-    			.__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("12/3/2015 10:50")).getCode();
+    			.set__identifiablePeriod__(identifiablePeriod).__setBirthDateComputedByUser__(Boolean.TRUE).setBirthDateFromString("12/3/2015 10:50")).getCode();
     	testCase.assertEquals("INV1203201510500003", movementCollectionInventoryCode);
     	
     	testCase.clean();
@@ -1847,6 +1881,14 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementCollectionInventoryWithJoinToParty(){
     	TestCase testCase = instanciateTestCase(); 
+    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	String identifiablePeriodCode = testCase.getRandomAlphabetic();
+    	IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 2, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
+    	
     	String partyCode01 = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(Party.class,partyCode01));
     	
@@ -1869,7 +1911,8 @@ public class MovementIT extends AbstractBusinessIT {
     			.setMovementCollectionFromCode(movementCollectionCode03).computeAndSetIdentifiableGlobalIdentifierFromCode(Party.class, partyCode02));
     	
     	String movementCollectionInventoryCode = testCase.getRandomAlphabetic();
-    	MovementCollectionInventory movementCollectionInventory = testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode).setPartyFromCode(partyCode01);
+    	MovementCollectionInventory movementCollectionInventory = testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode)
+    			.setPartyFromCode(partyCode01).set__identifiablePeriod__(identifiablePeriod).__setBirthDateComputedByUser__(Boolean.TRUE);
     	testCase.computeChanges(movementCollectionInventory);
     	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(movementCollectionInventory.getItems().getElements()));
     	testCase.computeChanges(movementCollectionInventory);
@@ -1890,7 +1933,8 @@ public class MovementIT extends AbstractBusinessIT {
     	
     	testCase.create(movementCollectionInventory);
     	
-    	movementCollectionInventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, movementCollectionInventoryCode);
+    	movementCollectionInventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, movementCollectionInventoryCode)
+    			.set__identifiablePeriod__(identifiablePeriod).__setBirthDateComputedByUser__(Boolean.TRUE);
     	testCase.assertEqualsNumberPartyByIdentifiablesByBusinessRoleCode(1, Arrays.asList(movementCollectionInventory), RootConstant.Code.BusinessRole.PARTY);
     	testCase.assertEqualsNumber(0, CollectionHelper.getInstance().getSize(movementCollectionInventory.getItems().getElements()));
     	testCase.assertNull(movementCollectionInventory.getParty());
@@ -1907,7 +1951,8 @@ public class MovementIT extends AbstractBusinessIT {
     	testCase.assertEqualsNumber(0, movementCollectionInventory.getItemAt(1).getPreviousValue());
     	
     	movementCollectionInventoryCode = testCase.getRandomAlphabetic();
-    	movementCollectionInventory = testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode).setPartyFromCode(partyCode01);
+    	movementCollectionInventory = testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode).setPartyFromCode(partyCode01)
+    			.set__identifiablePeriod__(identifiablePeriod).__setBirthDateComputedByUser__(Boolean.TRUE);
     	testCase.computeChanges(movementCollectionInventory);
     	testCase.assertEqualsNumber(2, CollectionHelper.getInstance().getSize(movementCollectionInventory.getItems().getElements()));
     	
@@ -1936,8 +1981,16 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudOneMovementCollectionInventoryWithGroup(){
     	TestCase testCase = instanciateTestCase(); 
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	String identifiablePeriodCode = testCase.getRandomAlphabetic();
+    	IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 2, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
+    	
     	String code = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code).setMovementGroup(inject(MovementGroupBusiness.class).instanciateOne()));
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,code).__setBirthDateComputedByUser__(Boolean.TRUE)
+    			.set__identifiablePeriod__(identifiablePeriod).setMovementGroup(inject(MovementGroupBusiness.class).instanciateOne()));
     	testCase.clean();
     }
     
@@ -1975,11 +2028,19 @@ public class MovementIT extends AbstractBusinessIT {
     public void crudOneMovementCollectionInventoryWithOneItemWithPositiveGap(){
     	TestCase testCase = instanciateTestCase(); 
     	
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	String identifiablePeriodCode = testCase.getRandomAlphabetic();
+    	IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 2, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
+    	
     	String movementCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionCode).setValueFromObject(10));
     	
     	String movementCollectionInventoryCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode));
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode).set__identifiablePeriod__(identifiablePeriod)
+    			.__setBirthDateComputedByUser__(Boolean.TRUE));
     	
     	testCase.create(testCase.instanciateOne(MovementCollectionInventoryItem.class)
     			.setCollectionFromCode(movementCollectionInventoryCode)
@@ -2000,11 +2061,19 @@ public class MovementIT extends AbstractBusinessIT {
     public void crudOneMovementCollectionInventoryWithOneItemWithNegativeGap(){
     	TestCase testCase = instanciateTestCase(); 
     	
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	String identifiablePeriodCode = testCase.getRandomAlphabetic();
+    	IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 2, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
+    	
     	String movementCollectionCode = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollection.class, movementCollectionCode).setValueFromObject(10));
     	
     	String movementCollectionInventoryCode = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode));
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,movementCollectionInventoryCode).__setBirthDateComputedByUser__(Boolean.TRUE)
+    			.set__identifiablePeriod__(identifiablePeriod));
     	
     	String code = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(MovementCollectionInventoryItem.class,code).setCollectionFromCode(movementCollectionInventoryCode)
@@ -2021,6 +2090,13 @@ public class MovementIT extends AbstractBusinessIT {
     @Test
     public void crudManyMovementCollectionInventory(){
     	TestCase testCase = instanciateTestCase(); 
+    	
+    	String identifiablePeriodCollectionCode = testCase.getRandomAlphabetic();
+    	testCase.create(testCase.instanciateOne(IdentifiablePeriodCollection.class,identifiablePeriodCollectionCode));
+    	
+    	String identifiablePeriodCode = testCase.getRandomAlphabetic();
+    	IdentifiablePeriod identifiablePeriod = testCase.create(testCase.instanciateOne(IdentifiablePeriod.class,identifiablePeriodCode)
+    			.setBirthDate(date(2000, 1, 1, 0, 0)).setDeathDate(date(2000, 2, 1, 23, 59)).setCollectionFromCode(identifiablePeriodCollectionCode));
     	
     	String partyCode01 = testCase.getRandomAlphabetic();
     	testCase.create(testCase.instanciateOne(Party.class,partyCode01));
@@ -2041,29 +2117,32 @@ public class MovementIT extends AbstractBusinessIT {
     			.__setJoinedIdentifiablesFromCodes__(Party.class, partyCode02));
     	
     	String inventory01 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory01).setPartyFromCode(partyCode01)
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory01).set__identifiablePeriod__(identifiablePeriod)
+    			.__setBirthDateComputedByUser__(Boolean.TRUE).setPartyFromCode(partyCode01)
     			.computeChanges().computeAndSetItemValueFromObjectAt(0, 8).computeAndSetItemValueFromObjectAt(1, 1));
-    	MovementCollectionInventory inventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, inventory01);
+    	MovementCollectionInventory inventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, inventory01)
+    			.set__identifiablePeriod__(identifiablePeriod);
     	inventory.setItemsSynchonizationEnabled(Boolean.TRUE).addItems(inject(MovementCollectionInventoryItemDao.class).readByCollection(inventory)).computeChanges();
     	testCase.assertEqualsNumber(0, inventory.getItemAt(0).computeChanges().getPreviousValue());    	
     	testCase.assertEqualsNumber(0, inventory.getItemAt(1).computeChanges().getPreviousValue());
     	
     	String inventory02 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory02).setPartyFromCode(partyCode01)
-    			.computeChanges().computeAndSetItemValueFromObjectAt(0, 5).computeAndSetItemValueFromObjectAt(1, 19));
-    	inventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, inventory02);
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory02).set__identifiablePeriod__(identifiablePeriod).setPartyFromCode(partyCode01)
+    			.__setBirthDateComputedByUser__(Boolean.TRUE).computeChanges().computeAndSetItemValueFromObjectAt(0, 5).computeAndSetItemValueFromObjectAt(1, 19));
+    	inventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, inventory02).set__identifiablePeriod__(identifiablePeriod);
     	inventory.setItemsSynchonizationEnabled(Boolean.TRUE).addItems(inject(MovementCollectionInventoryItemDao.class).readByCollection(inventory)).computeChanges();
     	testCase.assertEqualsNumber(8, inventory.getItemAt(0).computeChanges().getPreviousValue());    	
     	testCase.assertEqualsNumber(1, inventory.getItemAt(1).computeChanges().getPreviousValue());
     	
-    	inventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, inventory01);
+    	inventory = testCase.getByIdentifierWhereValueUsageTypeIsBusiness(MovementCollectionInventory.class, inventory01).set__identifiablePeriod__(identifiablePeriod);
     	inventory.setItemsSynchonizationEnabled(Boolean.TRUE).addItems(inject(MovementCollectionInventoryItemDao.class).readByCollection(inventory)).computeChanges();
     	
     	testCase.assertEqualsNumber(0, inventory.getItemAt(0).computeChanges().getPreviousValue());    	
     	testCase.assertEqualsNumber(0, inventory.getItemAt(1).computeChanges().getPreviousValue());
     	
     	String inventory03 = testCase.getRandomAlphabetic();
-    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory03));
+    	testCase.create(testCase.instanciateOne(MovementCollectionInventory.class,inventory03).set__identifiablePeriod__(identifiablePeriod)
+    			.__setBirthDateComputedByUser__(Boolean.TRUE));
     	
     	testCase.clean();
     }

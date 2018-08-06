@@ -131,6 +131,7 @@ public class RootBusinessLayer extends AbstractBusinessLayer implements Serializ
     	INSTANCE = this; 
         super.initialisation();
         IdentifiablePeriod.manage(Movement.class);
+        IdentifiablePeriod.manage(MovementCollectionInventory.class);
         
         ClassHelper.Listener.FieldName.BIRTH_DATE.getValueMap().put(ClassHelper.Listener.FieldName.ValueUsageType.BUSINESS, "globalIdentifier.existencePeriod.fromDate");
         ClassHelper.Listener.FieldName.DEATH_DATE.getValueMap().put(ClassHelper.Listener.FieldName.ValueUsageType.BUSINESS, "globalIdentifier.existencePeriod.toDate");

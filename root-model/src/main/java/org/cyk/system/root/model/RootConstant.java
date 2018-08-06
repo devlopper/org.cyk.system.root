@@ -320,7 +320,8 @@ public interface RootConstant {
 		public static interface IdentifiablePeriodCollection {
 			
 			String CASH_REGISTER_WORKING_DAY = "CASHREGISTERWORKINGDAY";
-		
+			String INVENTORY_WORKING_MONTH = "INVENTORYWORKINGMONTH";
+
 		}
 		
 		public static interface Role {
@@ -404,6 +405,11 @@ public interface RootConstant {
 			
 			String CASH_REGISTER = "CASHREGISTER";
 			
+		}
+		
+		public static interface MovementCollectionInventoryType {
+			
+			String STOCK_REGISTER = "STOCKREGISTER";
 		}
 		
 		public static interface LanguageEntry {
